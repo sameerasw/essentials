@@ -53,11 +53,9 @@ fun ScreenOffSettingsSheet(
     var selectedMethod by remember { mutableStateOf(initialAction.method) }
     var selectedHaptic by remember { mutableStateOf(initialAction.haptic) }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        dragHandle = null
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

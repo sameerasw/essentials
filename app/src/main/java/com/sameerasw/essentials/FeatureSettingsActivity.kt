@@ -71,7 +71,9 @@ import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.PowerAndBatterySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
+
 import com.sameerasw.essentials.ui.composables.configs.PocketModeSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
@@ -81,6 +83,7 @@ import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySetti
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.NotificationSnoozingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
@@ -227,6 +230,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     var watchSyncSoundModeEnabled by remember {
                         mutableStateOf(prefs.getBoolean("watch_sync_sound_mode_enabled", false))
                     }
+                    var watchSyncLocationReachedEnabled by remember {
+                        mutableStateOf(prefs.getBoolean("watch_sync_location_reached_enabled", true))
+                    }
                     androidx.compose.runtime.DisposableEffect(prefs) {
                         val listener =
                             android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
@@ -234,6 +240,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     watchAdbWifiEnabled = p.getBoolean(key, false)
                                 } else if (key == "watch_sync_sound_mode_enabled") {
                                     watchSyncSoundModeEnabled = p.getBoolean(key, false)
+                                } else if (key == "watch_sync_location_reached_enabled") {
+                                    watchSyncLocationReachedEnabled = p.getBoolean(key, true)
                                 }
                             }
                         prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -298,7 +306,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                             "Snooze system notifications" -> !isNotificationListenerEnabled
                             "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
-                            "App lock" -> if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled
+                            "App lock" -> !isAccessibilityEnabled || (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else false)
                             "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context
                             )
@@ -326,6 +334,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             )
 
                             "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
+                            "Power and Battery" -> !isWriteSecureSettingsEnabled
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -518,7 +527,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                                                 "Snooze system notifications" -> !isNotificationListenerEnabled
                                                 "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
-                                                "App lock" -> if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled
+                                                "App lock" -> !isAccessibilityEnabled || (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else false)
                                                 "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                     context
                                                 )
@@ -548,6 +557,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 )
                                                 "Per app refresh rate" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !viewModel.isShizukuPermissionGranted.value
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
+                                                "Power and Battery" -> !isWriteSecureSettingsEnabled
+                                                "Disable safe volume warning" -> !isWriteSecureSettingsEnabled
+                                                "Notification snoozing" -> !isWriteSecureSettingsEnabled
                                                 else -> false
                                             }
 
@@ -574,6 +586,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             isEnabled = when (child.id) {
                                                 "Watch Wireless Debugging" -> watchAdbWifiEnabled
                                                 "Sync sound mode" -> watchSyncSoundModeEnabled
+                                                "Sync location reached status" -> watchSyncLocationReachedEnabled
                                                 else -> child.isEnabled(viewModel)
                                             },
                                             isToggleEnabled = child.isToggleEnabled(
@@ -586,13 +599,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             isBeta = child.isBeta,
                                             onToggle = permissionAwareToggle,
                                             onClick = {
-                                                BiometricSecurityHelper.runWithAuth(
-                                                    activity = this@FeatureSettingsActivity,
-                                                    feature = child,
-                                                    action = {
-                                                        child.onClick(context, viewModel)
-                                                    }
-                                                )
+                                                if (child.hasMoreSettings) {
+                                                    BiometricSecurityHelper.runWithAuth(
+                                                        activity = this@FeatureSettingsActivity,
+                                                        feature = child,
+                                                        action = {
+                                                            child.onClick(context, viewModel)
+                                                        }
+                                                    )
+                                                }
                                             },
                                             isPinned = pinnedFeatureKeys.contains(child.id),
                                             onPinToggle = { viewModel.togglePinFeature(child.id) },
@@ -624,11 +639,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Statusbar icons" -> {
-                                        StatusBarIconSettingsUI(
-                                            viewModel = statusBarViewModel,
-                                            modifier = Modifier.padding(top = 16.dp),
-                                            highlightSetting = highlightSetting
-                                        )
+                                         StatusBarIconSettingsUI(
+                                             viewModel = statusBarViewModel,
+                                             mainViewModel = viewModel,
+                                             modifier = Modifier.padding(top = 16.dp),
+                                             highlightSetting = highlightSetting
+                                         )
                                     }
 
                                     "Caffeinate" -> {
@@ -680,6 +696,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Snooze system notifications" -> {
                                         SnoozeNotificationsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Notification snoozing" -> {
+                                        NotificationSnoozingSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
@@ -868,6 +892,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
+                                        )
+                                    }
+
+                                    "Power and Battery" -> {
+                                        PowerAndBatterySettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
                                         )
                                     }
                                 }

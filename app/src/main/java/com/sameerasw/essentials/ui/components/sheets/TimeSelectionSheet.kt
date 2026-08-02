@@ -79,9 +79,8 @@ fun TimeSelectionSheet(
         if (showingEndPicker) HapticUtil.performSliderHaptic(view)
     }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         dragHandle = null
     ) {
         Column(

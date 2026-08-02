@@ -12,22 +12,35 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslationManager
+import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionCard(
     iconRes: Int,
@@ -84,6 +97,10 @@ fun PermissionCard(
         else -> null
     }
 
+    var showMenu by remember { mutableStateOf(false) }
+    var translationSheetKey by remember { mutableStateOf<String?>(null) }
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
+
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraSmall,
@@ -95,54 +112,121 @@ fun PermissionCard(
             modifier = Modifier.padding(bottom = 12.dp, start = 4.dp, end = 4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ListItem(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = null,
-                        tint = if (isGranted) grantedGreen else MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
-                },
-                supportingContent = {
-                    Column {
-                        if (resolvedDescription != null) {
-                            Text(
-                                text = resolvedDescription,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
+            Box {
+                ListItem(
+                    onClick = {
+                        if (isTranslationModeActive) {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            showMenu = true
                         }
-                        Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        dependentFeatures.forEach { f ->
-                            val resolvedFeature = when (f) {
-                                is Int -> stringResource(id = f)
-                                is String -> f
-                                else -> ""
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    colors = ListItemDefaults.colors(
+                        containerColor = Color.Transparent
+                    ),
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(id = iconRes),
+                            contentDescription = null,
+                            tint = if (isGranted) grantedGreen else MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    },
+                    supportingContent = {
+                        Column {
+                            if (resolvedDescription != null) {
+                                Text(
+                                    text = resolvedDescription,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
                             }
-                            Text(
-                                text = "• $resolvedFeature",
-                                style = MaterialTheme.typography.bodyMedium
+                            Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            dependentFeatures.forEach { f ->
+                                val resolvedFeature = when (f) {
+                                    is Int -> stringResource(id = f)
+                                    is String -> f
+                                    else -> ""
+                                }
+                                Text(
+                                    text = "• $resolvedFeature",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    },
+                    content = {
+                        Text(
+                            text = resolvedTitle,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                )
+
+                if (isTranslationModeActive) {
+                    SegmentedDropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        val context = LocalContext.current
+                        val keyTitle = remember(title) { TranslationManager.resolveKey(context, title) }
+                        val keyDesc = remember(description) { TranslationManager.resolveKey(context, description) }
+                        val keyInst = remember(instructions) { TranslationManager.resolveKey(context, instructions) }
+
+                        if (keyTitle != null) {
+                            SegmentedDropdownMenuItem(
+                                text = { Text("Translate Title ($keyTitle)") },
+                                onClick = {
+                                    showMenu = false
+                                    translationSheetKey = keyTitle
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_translate_24),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
+
+                        if (keyDesc != null) {
+                            SegmentedDropdownMenuItem(
+                                text = { Text("Translate Description ($keyDesc)") },
+                                onClick = {
+                                    showMenu = false
+                                    translationSheetKey = keyDesc
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_translate_24),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
+
+                        if (keyInst != null) {
+                            SegmentedDropdownMenuItem(
+                                text = { Text("Translate Instructions ($keyInst)") },
+                                onClick = {
+                                    showMenu = false
+                                    translationSheetKey = keyInst
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_translate_24),
+                                        contentDescription = null
+                                    )
+                                }
                             )
                         }
                     }
-                },
-                colors = androidx.compose.material3.ListItemDefaults.colors(
-                    containerColor = Color.Transparent
-                ),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                    horizontal = 16.dp,
-                    vertical = 16.dp
-                ),
-                content = {
-                    Text(text = resolvedTitle, style = MaterialTheme.typography.titleMedium)
                 }
-            )
+            }
 
             Box(modifier = Modifier.padding(horizontal = 12.dp)) {
                 if (isGranted) {
@@ -172,10 +256,13 @@ fun PermissionCard(
                             }
                         }
                     } else {
-                        OutlinedButton(onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onActionClick()
-                        }, modifier = Modifier.fillMaxWidth()) {
+                        OutlinedButton(
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onActionClick()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             Text(resolvedActionLabel)
                         }
                     }
@@ -219,10 +306,13 @@ fun PermissionCard(
                                 }
                             }
                         } else {
-                            Button(onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                onActionClick()
-                            }, modifier = Modifier.fillMaxWidth()) {
+                            Button(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onActionClick()
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
                                 Text(resolvedActionLabel)
                             }
                         }
@@ -243,5 +333,12 @@ fun PermissionCard(
                 }
             }
         }
+    }
+
+    if (translationSheetKey != null) {
+        TranslationBottomSheet(
+            stringKey = translationSheetKey!!,
+            onDismissRequest = { translationSheetKey = null }
+        )
     }
 }

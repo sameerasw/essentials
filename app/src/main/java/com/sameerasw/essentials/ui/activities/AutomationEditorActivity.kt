@@ -70,9 +70,11 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.components.sheets.BluetoothDeviceSelectionSheet
 import com.sameerasw.essentials.ui.components.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.components.sheets.ScreenOffSettingsSheet
 import com.sameerasw.essentials.ui.components.sheets.SoundModeSettingsSheet
+import com.sameerasw.essentials.ui.components.sheets.WifiNetworkSelectionSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -228,10 +230,20 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showDeviceEffectsSettings by remember { mutableStateOf(false) }
                 var showSoundModeSettings by remember { mutableStateOf(false) }
                 var showTimeSettings by remember { mutableStateOf(false) }
+                var showBluetoothSettings by remember { mutableStateOf(false) }
+                var showWifiSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
+                val isTriggerConfigured = when (val trigger = selectedTrigger) {
+                    is Trigger.BluetoothConnected -> trigger.deviceAddress.isNotBlank()
+                    is Trigger.BluetoothDisconnected -> trigger.deviceAddress.isNotBlank()
+                    is Trigger.WifiConnected -> trigger.ssid.isNotBlank()
+                    is Trigger.WifiDisconnected -> trigger.ssid.isNotBlank()
+                    else -> true
+                }
+
                 val isValid = when (automationType) {
-                    Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null
+                    Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null && isTriggerConfigured
                     Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction != null
                     Automation.Type.STATE -> selectedState != null && (selectedInAction != null || selectedOutAction != null)
                     Automation.Type.APP -> selectedApps.isNotEmpty() && (selectedInAction != null || selectedOutAction != null)
@@ -504,6 +516,26 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                 ?: 0,
                                                             days = (selectedTrigger as? Trigger.Schedule)?.days
                                                                 ?: emptySet()
+                                                        ),
+                                                        Trigger.BluetoothConnected(
+                                                            deviceAddress = (selectedTrigger as? Trigger.BluetoothConnected)?.deviceAddress
+                                                                ?: "",
+                                                            deviceName = (selectedTrigger as? Trigger.BluetoothConnected)?.deviceName
+                                                                ?: ""
+                                                        ),
+                                                        Trigger.BluetoothDisconnected(
+                                                            deviceAddress = (selectedTrigger as? Trigger.BluetoothDisconnected)?.deviceAddress
+                                                                ?: "",
+                                                            deviceName = (selectedTrigger as? Trigger.BluetoothDisconnected)?.deviceName
+                                                                ?: ""
+                                                        ),
+                                                        Trigger.WifiConnected(
+                                                            ssid = (selectedTrigger as? Trigger.WifiConnected)?.ssid
+                                                                ?: ""
+                                                        ),
+                                                        Trigger.WifiDisconnected(
+                                                            ssid = (selectedTrigger as? Trigger.WifiDisconnected)?.ssid
+                                                                ?: ""
                                                         )
                                                     )
                                                     triggers.forEach { trigger ->
@@ -514,8 +546,19 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             isConfigurable = trigger.isConfigurable,
                                                             onClick = { selectedTrigger = trigger },
                                                             onSettingsClick = {
-                                                                if (trigger is Trigger.Schedule) {
-                                                                    showTimeSettings = true
+                                                                when (trigger) {
+                                                                    is Trigger.Schedule -> showTimeSettings =
+                                                                        true
+
+                                                                    is Trigger.BluetoothConnected,
+                                                                    is Trigger.BluetoothDisconnected -> showBluetoothSettings =
+                                                                        true
+
+                                                                    is Trigger.WifiConnected,
+                                                                    is Trigger.WifiDisconnected -> showWifiSettings =
+                                                                        true
+
+                                                                    else -> {}
                                                                 }
                                                             }
                                                         )
@@ -716,6 +759,47 @@ class AutomationEditorActivity : ComponentActivity() {
                                 onSaveState = {
                                     selectedState = it
                                     showTimeSettings = false
+                                }
+                            )
+                        }
+
+                        if (showBluetoothSettings) {
+                            BluetoothDeviceSelectionSheet(
+                                onDismiss = { showBluetoothSettings = false },
+                                onSave = { address, name ->
+                                    selectedTrigger = when (selectedTrigger) {
+                                        is Trigger.BluetoothConnected -> Trigger.BluetoothConnected(
+                                            deviceAddress = address,
+                                            deviceName = name
+                                        )
+
+                                        is Trigger.BluetoothDisconnected -> Trigger.BluetoothDisconnected(
+                                            deviceAddress = address,
+                                            deviceName = name
+                                        )
+
+                                        else -> selectedTrigger
+                                    }
+                                    showBluetoothSettings = false
+                                }
+                            )
+                        }
+
+                        if (showWifiSettings) {
+                            WifiNetworkSelectionSheet(
+                                initialSsid = when (val trigger = selectedTrigger) {
+                                    is Trigger.WifiConnected -> trigger.ssid
+                                    is Trigger.WifiDisconnected -> trigger.ssid
+                                    else -> null
+                                },
+                                onDismiss = { showWifiSettings = false },
+                                onSave = { ssid ->
+                                    selectedTrigger = when (selectedTrigger) {
+                                        is Trigger.WifiConnected -> Trigger.WifiConnected(ssid = ssid)
+                                        is Trigger.WifiDisconnected -> Trigger.WifiDisconnected(ssid = ssid)
+                                        else -> selectedTrigger
+                                    }
+                                    showWifiSettings = false
                                 }
                             )
                         }

@@ -93,10 +93,7 @@ class StatusBarIconHandler(private val context: Context) {
             val isSmartDataEnabled =
                 prefs.getBoolean(StatusBarIconViewModel.PREF_SMART_DATA_ENABLED, false)
 
-            if (isSmartWiFiEnabled || isSmartDataEnabled) {
-                updateNetworkIcons(isSmartWiFiEnabled, isSmartDataEnabled)
-            }
-
+            updateNetworkIcons(isSmartWiFiEnabled, isSmartDataEnabled)
             updateBatteryPercentage()
         }
     }
@@ -193,7 +190,12 @@ class StatusBarIconHandler(private val context: Context) {
 
             val telephonyManager =
                 context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            val networkType = telephonyManager.networkType
+            val networkType = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                telephonyManager.dataNetworkType
+            } else {
+                @Suppress("DEPRECATION")
+                telephonyManager.networkType
+            }
 
             when (networkType) {
                 TelephonyManager.NETWORK_TYPE_NR -> NetworkType.NETWORK_5G

@@ -25,9 +25,8 @@ fun ExifSettingsSheet(
     onShowExifChange: (Boolean) -> Unit,
     onExifSettingsChange: (focal: Boolean, aperture: Boolean, iso: Boolean, shutter: Boolean, date: Boolean) -> Unit
 ) {
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier

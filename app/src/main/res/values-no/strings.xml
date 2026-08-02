@@ -16,7 +16,7 @@
     <string name="flashlight_pulse_tile_label">Lommelykt Pulse</string>
     <string name="check_pre_releases_label">Se etter forhåndsutgivelser</string>
     <string name="check_pre_releases_desc">Kan være ustabil</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">Standardfane</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sikkerhet</string>
     <string name="app_lock_enable_title">Aktiver applås</string>
@@ -28,11 +28,11 @@
     <string name="app_lock_description">Sikre appene dine med biometrisk autentisering. Låste apper vil kreve autentisering ved oppstart, forblir ulåst til skjermen slås av.</string>
     <string name="app_lock_warning">Vær oppmerksom på at dette ikke er en robust løsning da dette kun er en tredjepartsapplikasjon. Hvis du trenger sterk sikkerhet, bør du vurdere å bruke Private Space eller andre slike funksjoner.</string>
     <string name="app_lock_biometric_note">En annen merknad, den biometriske autentiseringsprompten lar deg bare bruke STERKE sikre klassemetoder. Sikkerhetsmetoder for ansiktslås i SVAK klasse i enheter som Pixel 7 vil kun kunne bruke de tilgjengelige andre STERKE autentiseringsmetoder som fingeravtrykk eller pin.</string>
-    <string name="setting_use_usage_access_title">Use usage access</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_title">Bruk brukstilgang</string>
+    <string name="setting_use_usage_access_desc">I stedet for tilgjengelighet (Frys, Applås, Dynamisk nattlys)</string>
     <!-- Button Remap -->
-    <string name="button_remap_enable_title">Aktiver knappen Remap</string>
-    <string name="button_remap_use_shizuku_title">Bruk Shizuku eller Root eller Root</string>
+    <string name="button_remap_enable_title">Aktiver tilordning av knapper</string>
+    <string name="button_remap_use_shizuku_title">Bruk Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Fungerer med skjerm av (anbefalt)</string>
     <string name="shizuku_not_running_toast">Shizuku kjører ikke</string>
     <string name="shizuku_detected_prefix">Oppdaget %1$s</string>
@@ -64,14 +64,14 @@
     <string name="like_song_settings_desc">Denne funksjonen krever varslingstilgang for å oppdage media som spilles for øyeblikket og utløse lignende handling. Aktiver den nedenfor.</string>
     <string name="like_song_toast_enabled">Vis toast-melding</string>
     <string name="like_song_aod_overlay_title">Vis overlegg på AOD</string>
-    <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
-    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
-    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="feat_essentials_on_display_title">Essensielle på skjerm</string>
+    <string name="feat_essentials_on_display_desc">Få et blikk på medier og informasjon på AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Dokket modus</string>
+    <string name="essentials_on_display_docked_mode_desc">La overlegget alltid være synlig mens musikk spilles på AOD</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
     <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
-    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
-    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_random_shapes_title">Tilfeldige form</string>
+    <string name="essentials_on_display_random_shapes_desc">Bruk forskjellige Material 3-former for albumgrafikket</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
     <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
@@ -89,10 +89,10 @@
     <string name="flashlight_fade_title">Fade inn og ut</string>
     <string name="flashlight_fade_desc">Bytt lommelykt jevnt</string>
     <string name="flashlight_global_title">Globale kontroller</string>
-    <string name="flashlight_global_desc">Fade-in lommelykt globalt</string>
+    <string name="flashlight_global_desc">Ton inn lommelykten globalt</string>
     <string name="flashlight_adjust_intensity_title">Juster intensiteten</string>
     <string name="flashlight_adjust_intensity_desc">Volum + - justerer lommelyktens intensitet</string>
-    <string name="flashlight_live_update_title">Live oppdatering</string>
+    <string name="flashlight_live_update_title">Live-oppdatering</string>
     <string name="flashlight_live_update_desc">Vis lysstyrke i statuslinjen</string>
     <string name="settings_section_other">Annen</string>
     <string name="flashlight_always_off_title">Slå alltid av lommelykten</string>
@@ -107,9 +107,9 @@
     <string name="caffeinate_active">Aktiv</string>
     <string name="caffeinate_notification_desc">Skjermen holdes våken</string>
     <string name="caffeinate_battery_optimization_title">Ignorer batterioptimalisering</string>
-    <string name="caffeinate_abort_screen_off_title">Avbryt med skjermen av</string>
+    <string name="caffeinate_abort_screen_off_title">Avbryt når skjermen er av</string>
     <string name="caffeinate_skip_countdown_title">Hopp over nedtellingen</string>
-    <string name="caffeinate_skip_countdown_desc">Start koffein umiddelbart.</string>
+    <string name="caffeinate_skip_countdown_desc">Start koffeinat umiddelbart.</string>
     <string name="caffeinate_timeout_presets_title">Forhåndsinnstillinger for tidsavbrudd</string>
     <string name="caffeinate_timeout_presets_desc">Velg tilgjengelige varigheter for QS-flisen</string>
     <string name="caffeinate_timeout_5m">5m</string>
@@ -170,19 +170,19 @@
     <string name="freeze_mode_suspend">App suspension</string>
     <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
-    <string name="notification_lighting_screen_off_title">Vises bare når skjermen er av</string>
+    <string name="notification_lighting_screen_off_title">Vis bare når skjermen er av</string>
     <string name="notification_lighting_skip_silent_title">Hopp over stille varsler</string>
     <string name="notification_lighting_skip_persistent_title">Hopp over vedvarende varsler</string>
     <string name="settings_section_flashlight_pulse">Lommelykt Pulse</string>
-    <string name="flashlight_pulse_title">Lommelykt puls</string>
+    <string name="flashlight_pulse_title">Lommelyktpuls</string>
     <string name="flashlight_pulse_facedown_title">Bare mens du vender ned</string>
     <string name="flashlight_pulse_same_as_lighting_title">Samme apper som varslingslys</string>
-    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_max_brightness">Makslysstyrke</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Slagjustering</string>
     <string name="notification_lighting_corner_radius_title">Hjørneradius</string>
-    <string name="notification_lighting_stroke_thickness_title">Slagtykkelse</string>
+    <string name="notification_lighting_stroke_thickness_title">Strøktykkelse</string>
     <string name="notification_lighting_glow_adjustment_section">Glødejustering</string>
     <string name="notification_lighting_glow_spread_title">Glød spredning</string>
     <string name="notification_lighting_placement_section">Plassering</string>
@@ -200,16 +200,16 @@
     <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animasjon</string>
     <string name="notification_lighting_pulse_count_title">Pulsteller</string>
-    <string name="notification_lighting_pulse_duration_title">Puls varighet</string>
+    <string name="notification_lighting_pulse_duration_title">Pulsvarighet</string>
     <string name="settings_section_color_mode">Fargemodus</string>
     <string name="settings_section_ambient_display">Ambient skjerm</string>
-    <string name="ambient_display_title">Ambient skjerm</string>
+    <string name="ambient_display_title">Omgivelsesskjerm</string>
     <string name="ambient_display_hint">Passer hvis du ikke bruker AOD.</string>
-    <string name="ambient_display_desc">Vekke skjermen og vise lys</string>
+    <string name="ambient_display_desc">Vekk skjermen og vis lys</string>
     <string name="ambient_show_lock_screen_title">Vis låseskjerm</string>
     <string name="ambient_show_lock_screen_desc">Ingen svart overlegg</string>
     <!-- Tiles -->
-    <string name="action_add">Legge til</string>
+    <string name="action_add">Legg til</string>
     <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Allerede lagt til</string>
     <string name="qs_tile_requires_android_13">Krever Android 13+</string>
@@ -276,7 +276,7 @@
     <string name="warning_title">⚠️ ADVARSEL</string>
     <string name="screen_locked_security_auth_enable">Autentiser for å aktivere skjermlåst sikkerhet</string>
     <string name="screen_locked_security_auth_disable">Autentiser for å deaktivere skjermlåst sikkerhet</string>
-    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="screen_locked_security_desc">Deaktiver QS-fliser når enheten er låst</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -345,14 +345,14 @@
     <string name="action_reset_all_icons">Tilbakestill alle ikoner</string>
     <string name="status_bar_section_advanced">Flere innstillinger</string>
     <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
-    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
-    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
-    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
-    <string name="hide_notification_icons_title">Hide notifications</string>
-    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="hide_all_system_icons_title">Skjul alle systemikoner</string>
+    <string name="hide_all_system_icons_desc">Fjern alle ikke-varslingsikoner fra statuslinjen</string>
+    <string name="hide_system_icons_locked_only_title">Bare skjul systemikoner når låst</string>
+    <string name="hide_system_icons_locked_only_desc">Skjuler systemikonene på statuslinjen når enheten er låst og gjenoppretter dem når opplåst</string>
+    <string name="hide_clock_title">Skjul klokken</string>
+    <string name="hide_clock_desc">Fjern klokken fullstendig fra statuslinjen</string>
+    <string name="hide_notification_icons_title">Skjul varslinger</string>
+    <string name="hide_notification_icons_desc">Skjul alle innkommende varslingsikoner</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
     <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
@@ -361,8 +361,8 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
-    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_other_customizations_title">Andre tilpasninger</string>
+    <string name="feat_other_customizations_desc">Ekstra systemjusteringer og modifikasjoner</string>
     <string name="status_bar_icons_disclaimer">Vær oppmerksom på at implementeringen av disse alternativene kan avhenge av OEM og at noen kanskje ikke fungerer i det hele tatt.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Annen</string>
@@ -387,7 +387,7 @@
     <string name="search_results_title">Søkeresultater</string>
     <string name="requires_following_permissions">%1$s krever følgende tillatelser</string>
     <!-- Features -->
-    <string name="feat_screen_off_widget_title">Skjerm av widget</string>
+    <string name="feat_screen_off_widget_title">Skjerm av-widget</string>
     <string name="feat_screen_off_widget_desc">Usynlig widget for å slå av skjermen</string>
     <string name="feat_statusbar_icons_title">Statuslinjeikoner</string>
     <string name="feat_statusbar_icons_desc">Kontroller statuslinjeikoners synlighet</string>
@@ -405,7 +405,7 @@
     <string name="show_bluetooth_devices_summary">Vis batterinivået til tilkoblede Bluetooth-enheter</string>
     <string name="limit_max_devices">Begrens maks enheter</string>
     <string name="limit_max_devices_summary">Juster maksimalt antall enheter som er synlige i widgeten</string>
-    <string name="widget_background_title">Widget bakgrunn</string>
+    <string name="widget_background_title">Widgetbakgrunn</string>
     <string name="widget_background_summary">Vis widgetbakgrunn</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Utløs automatisering</string>
@@ -414,7 +414,7 @@
     <string name="diy_create_state_desc">Planlegg en handling som skal utføres basert på tilstanden til en tilstand inn og ut</string>
     <string name="diy_editor_new_title">Ny automatisering</string>
     <string name="diy_editor_edit_title">Rediger automatisering</string>
-    <string name="feat_link_actions_title">Koblehandlinger</string>
+    <string name="feat_link_actions_title">Lenkehandlinger</string>
     <string name="feat_link_actions_desc">Håndter lenker med flere apper</string>
     <string name="feat_snooze_notifications_title">Utsett systemvarsler</string>
     <string name="feat_snooze_notifications_desc">Utsett vedvarende varsler</string>
@@ -424,11 +424,11 @@
     <string name="feat_button_remap_desc">Tilordne handlinger for maskinvareknapper på nytt</string>
     <string name="feat_dynamic_night_light_title">Dynamisk nattlys</string>
     <string name="feat_dynamic_night_light_desc">Slå av nattlys basert på app</string>
-    <string name="feat_screen_locked_security_title">Skjermlåst sikkerhet</string>
+    <string name="feat_screen_locked_security_title">Låst skjerm-sikkerhet</string>
     <string name="feat_app_lock_title">Applås</string>
     <string name="feat_app_lock_desc">Sikre apper med biometri</string>
-    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
-    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_title">Forsinkelse for autolåsing</string>
+    <string name="app_lock_auto_lock_delay_desc">Etter man forlater appen</string>
     <string name="app_lock_auto_lock_delay_none">None</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
@@ -439,7 +439,7 @@
     <string name="feat_freeze_desc">Deaktiver apper som sjelden brukes</string>
     <string name="feat_watermark_title">Vannmerke</string>
     <string name="feat_watermark_desc">Legg til EXIF-data og logoer til bilder</string>
-    <string name="feat_always_on_display_title">Alltid på skjermen</string>
+    <string name="feat_always_on_display_title">Alltid på-skjerm</string>
     <string name="feat_always_on_display_desc">Vis tid og informasjon mens skjermen er av</string>
     <string name="feat_calendar_sync_title">Kalendersynkronisering</string>
     <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
@@ -664,8 +664,8 @@
     <string name="label_settings">Innstillinger</string>
     <string name="action_report_bug">Rapporter en feil</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_report_mode_title">Krasjrapportering</string>
+    <string name="sentry_mode_off">Av</string>
     <string name="sentry_mode_auto">Auto</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
@@ -684,30 +684,30 @@
     <string name="preferences_title">Preferences</string>
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
-    <string name="label_app_language">Language</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
-    <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Auto check for updates</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="label_app_language">Språk</string>
+    <string name="label_haptic_feedback">Haptisk tilbakemelding</string>
+    <string name="label_updates">Oppdateringer</string>
+    <string name="label_auto_check_updates">Se etter oppdateringer automatisk</string>
+    <string name="desc_auto_check_updates">Se etter oppdateringer når appen åpnes</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
     <string name="action_see_whats_new">See what\'s new</string>
     <string name="label_mode_default">Default</string>
-    <string name="label_mode_glove">Glove mode</string>
+    <string name="label_mode_glove">Hanskemodus</string>
     <string name="tile_scale_animations">Glove Mode</string>
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
-    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
-    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
-    <string name="label_auto_rotate">Auto rotate</string>
-    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
-    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="label_increase_touch_sensitivity">Øk berøringsfølsomheten</string>
+    <string name="desc_increase_touch_sensitivity">Forbedre responsiviteten til berøringsskjermen når man bruker hansker eller skjermbeskyttere</string>
+    <string name="label_auto_rotate">Rotér automatisk</string>
+    <string name="desc_auto_rotate">Rotér skjermen automatisk når enheten er vridd</string>
+    <string name="label_screen_timeout">Tidsavbrudd for skjerm</string>
     <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="action_restart_systemui">Start SystemUI på nytt</string>
+    <string name="desc_restart_systemui">Stopper og starter SystemUI-prosesset på nytt for å ta i bruk noen endringer umiddelbart</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Ferdig</string>
@@ -719,7 +719,9 @@
     <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Varslingslys gir en vakker kantlyseffekt når du mottar varsler.\n\nDu kan tilpasse animasjonsstil, farger og oppførsel. Den fungerer selv når skjermen er av (OEM-avhengig) eller på toppen av din nåværende app. Velg apper, varslingsprioritet eller hvilken oppførsel den skal utløse fra gitte kontroller. Hvis din OEM ikke støtter overlegg over AOD, saksøk alternativet Ambient Display nedenfor.</string>
     <string name="about_desc_screen_off_widget">Slå enkelt av skjermen med et trykk på en gjennomsiktig widget som kan endres størrelse som ikke legger til ikoner eller noe rot på startskjermen.</string>
-    <string name="about_desc_statusbar_icons">Ta full kontroll over statuslinjeikonene dine.\n\nSkjul spesifikke ikoner som WiFi, Bluetooth eller mobildata for å holde statuslinjen ren. Du kan også tilpasse klokkeformatet og batteriindikatoren med noen smarte kontroller. Dette er listen over tilgjengelige AOSP-kontroller, slik at enhetens operativsystem kanskje ikke respekterer alle kontrollene.</string>
+    <string name="about_desc_statusbar_icons">Ta full kontroll over statuslinjeikonene dine.
+
+Skjul spesifikke ikoner som WiFi, Bluetooth eller mobildata for å holde statuslinjen ren. Du kan også tilpasse klokkeformatet og batteriindikatoren med noen smarte kontroller. Dette er listen over tilgjengelige AOSP-kontroller, så enhetens operativsystem kan kanskje ikke respektere alle kontrollene.</string>
     <string name="about_desc_caffeinate">Koffeinat forhindrer skjermen i å slå seg av automatisk.\n\nHold skjermen våken for en bestemt varighet eller på ubestemt tid. Nyttig når du leser lange artikler eller refererer til en oppskrift.</string>
     <string name="about_desc_maps_power_saving">Få Pixel 10-seriens eksklusive strømsparingsmodus for Google Maps med den minimale kulesvarte bakgrunnen som kan vises over låseskjermen på hvilken som helst Android-enhet. Start en navigasjonsøkt, slå skjermen av og på igjen.</string>
     <string name="about_desc_flashlight_pulse">Pulser lommelykten når du mottar et varsel.\n\nMed enheter som har maskinvarestøtte for lommelyktdimming, vil pulsen bli jevnt animert.</string>
@@ -767,7 +769,9 @@
     <string name="about_desc_bubbles">Aktiver eller deaktiver flytende varslingsbobler.\n\nVeksle raskt den systemomfattende innstillingen for samtalebobler.</string>
     <string name="about_desc_sensitive_content">Skjul sensitivt innhold på låseskjermen.\n\nVeksle om varslingsinnhold skal vises eller skjules når enheten din er låst.</string>
     <string name="about_desc_tap_to_wake">Veksle trykk for å vekke funksjonalitet.\n\nAktiver eller deaktiver muligheten til å vekke skjermen med et trykk.</string>
-    <string name="about_desc_aod">Slå av og på Alltid på skjerm.\n\nAktiver eller deaktiver den alltid på skjermen raskt for å se informasjon med et øyeblikk.</string>
+    <string name="about_desc_aod">Slå av eller på Alltid på-skjerm.
+
+Aktiver eller deaktiver alltid på-skjermen raskt for å se informasjon med et øyeblikk.</string>
     <string name="about_desc_notification_glance">Kontroller Always On Display automatisk basert på varslene dine. Når en melding eller et varsel kommer fra en valgt app, vil AOD forbli på til du avviser varselet, og sikrer at du aldri går glipp av viktig informasjon uten å kaste bort batteriet når ingen varsler er tilstede.</string>
     <string name="about_desc_mono_audio">Kombiner lydkanaler til mono.\n\nNyttig når du bruker en enkelt øreplugg eller for tilgjengelighetsformål.</string>
     <string name="about_desc_flashlight_tile">Slå på lommelykten.\n\n Et langt trykk åpner kontrollene for intensitetsjustering som kan trenge maskinvareimplementering som enkelte enheter kan mangle.</string>
@@ -948,8 +952,8 @@
     <string name="label_keyboard_always_dark">Alltid mørkt tema</string>
     <string name="label_keyboard_pitch_black">Pitch black-tema</string>
     <string name="label_keyboard_clipboard_enabled">Utklippstavlehistorikk</string>
-    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
-    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string name="label_keyboard_long_press_symbols">Langt trykk for symboler</string>
+    <string name="label_keyboard_accented_characters">Aksenttegn</string>
     <string-array name="keywords_selection">
         <item>liste</item>
         <item>plukker</item>
@@ -1146,7 +1150,7 @@
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Tastatur</string>
     <string name="feat_system_keys">Nøkler</string>
-    <string name="feat_system_keyboard_desc">Tilpass layout og oppførsel</string>
+    <string name="feat_system_keyboard_desc">Tilpass oppsett og oppførsel</string>
     <string name="search_keyboard_height_title">Tastaturhøyde</string>
     <string name="search_keyboard_height_desc">Juster den totale vertikale størrelsen på tastaturet</string>
     <string name="search_keyboard_padding_title">Bunnpolstring</string>
@@ -1157,9 +1161,9 @@
     <string name="label_keyboard_height">Tastaturhøyde</string>
     <string name="label_keyboard_bottom_padding">Bunnpolstring</string>
     <string name="label_keyboard_haptics">Haptisk tilbakemelding</string>
-    <string name="label_keyboard_roundness">Nøkkelrundhet</string>
+    <string name="label_keyboard_roundness">Tastrundhet</string>
     <string name="label_keyboard_functions_bottom">Flytt funksjoner til bunnen</string>
-    <string name="label_keyboard_functions_padding">Funksjoner sidepolstring</string>
+    <string name="label_keyboard_functions_padding">Funksjonsidepolstring</string>
     <string name="label_keyboard_haptic_strength">Haptisk tilbakemeldingsstyrke</string>
     <string name="label_keyboard_shape">Tastaturform</string>
     <string name="shape_round">Rund</string>
@@ -1247,7 +1251,7 @@
     <string name="cat_protection">Beskyttelse</string>
     <string name="cat_accessibility">Accessibility</string>
     <string name="cat_connectivity">Connectivity</string>
-    <string name="cat_privacy">Privacy</string>
+    <string name="cat_privacy">Personvern</string>
     <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
@@ -1261,7 +1265,7 @@
     <string name="kaomoji_cat_apologizing">Apologizing</string>
     <string name="kaomoji_cat_bear">Bear</string>
     <string name="kaomoji_cat_bird">Bird</string>
-    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_cat">Katt</string>
     <string name="kaomoji_cat_confusion">Confusion</string>
     <string name="kaomoji_cat_dog">Dog</string>
     <string name="kaomoji_cat_doubt">Doubt</string>
@@ -1293,7 +1297,7 @@
     <string name="kaomoji_cat_writing">Writing</string>
     <string name="msg_restrict_own_app_repo">Oi! Du kan sjekke oppdateringer i appinnstillingene. Du trenger ikke å legge til her XD</string>
     <string name="action_export">Eksport</string>
-    <string name="action_import">Import</string>
+    <string name="action_import">Importér</string>
     <string name="msg_export_success">Lagre ble eksportert</string>
     <string name="msg_export_failed">Kunne ikke eksportere repositories</string>
     <string name="msg_import_success">Lagre ble importert</string>
@@ -1301,10 +1305,10 @@
     <string name="label_apps">Apper</string>
     <string name="feat_text_animations_title">Skala og animasjoner</string>
     <string name="feat_text_animations_desc">Juster systemskala og animasjoner</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_screen_refresh_rate_title">Skjermoppdateringsfrekvens</string>
+    <string name="feat_screen_refresh_rate_desc">Angi en fast eller avstandsbasert skjermoppdateringsfrekvens</string>
     <string name="settings_section_text">Tekst</string>
-    <string name="label_font_scale">Skriftskala</string>
+    <string name="label_font_scale">Skriftstørrelse</string>
     <string name="label_font_weight">Skriftvekt</string>
     <string name="label_reset_default">Tilbakestill</string>
     <string name="settings_section_scale">Skala</string>
@@ -1319,14 +1323,14 @@
     <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
-    <string name="refresh_rate_mode_fixed">Fixed</string>
-    <string name="refresh_rate_mode_range">Range</string>
-    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
-    <string name="refresh_rate_min_title">Minimum refresh rate</string>
-    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
-    <string name="refresh_rate_peak_title">Peak refresh rate</string>
-    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_mode_fixed">Fast</string>
+    <string name="refresh_rate_mode_range">Avstandsbasert</string>
+    <string name="refresh_rate_fixed_title">Fast oppdateringsfrekvens</string>
+    <string name="refresh_rate_fixed_desc">Angir både minimum og maksimum oppdateringsfrekvens til det samme verdien</string>
+    <string name="refresh_rate_min_title">Minimum oppdateringsfrekvens</string>
+    <string name="refresh_rate_min_desc">Velg den laveste oppdateringsfrekvensen skjermen kan bruke</string>
+    <string name="refresh_rate_peak_title">Maksimum oppdateringsfrekvens</string>
+    <string name="refresh_rate_peak_desc">Velg den høyeste oppdateringsfrekvensen skjermen kan bruke</string>
     <string name="refresh_rate_system_default">System</string>
     <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
     <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
@@ -1338,7 +1342,7 @@
     <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
     <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
     <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
-    <string name="feat_aod_force_turn_off_title">Tving å slå av AOD</string>
+    <string name="feat_aod_force_turn_off_title">Tving avslåing av AOD</string>
     <string name="feat_aod_force_turn_off_desc">Tving å slå av AOD når ingen varsler. Krever tilgangstillatelse.</string>
     <string name="feat_auto_accessibility_title">Automatisk tilgjengelighet</string>
     <string name="feat_auto_accessibility_desc">Gir automatisk tilgjengelighetstillatelse ved appstart hvis den mangler ved hjelp av WRITE_SECURE_SETTINGS.</string>
@@ -1393,10 +1397,10 @@
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="feat_shut_up_desc">Jeg vet hva jeg gjør</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
-    <string name="shut_up_select_apps_title">Select Apps</string>
-    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_select_apps_title">Velg apper</string>
+    <string name="shut_up_select_apps_desc">Velg apper for å ta i bruk Shut-Up!-logikken</string>
     <string name="shut_up_settings_title">Shut-Up! Settings</string>
     <string name="shut_up_per_app_settings">Shut-Up! Features</string>
     <string name="shut_up_disable_dev_options">Disable Developer Options</string>
@@ -1440,10 +1444,10 @@
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
     <string name="about_title">About</string>
-    <string name="color_default">Default</string>
+    <string name="color_default">Standard</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
+    <string name="color_blue">Blå</string>
     <string name="color_yellow">Yellow</string>
     <string name="color_orange">Orange</string>
     <string name="color_purple">Purple</string>
@@ -1454,4 +1458,41 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="setting_swipe_tabs_title">Sveip mellom faner</string>
+    <string name="setting_swipe_tabs_desc">På startskjermen</string>
+    <string name="setting_enable_unsupported_features_title">Aktiver ikke-støttede funksjoner</string>
+    <string name="setting_enable_unsupported_features_desc">Vis OEM-spesifikke eller overflødige funksjoner som er skjult som standard</string>
+    <string name="settings_translate_mode">Oversettelsesmodus</string>
+    <string name="settings_translate_mode_desc">Trykk langt på hvilket som helst tekst for å oversette og bidra til felleskapet</string>
+    <string name="settings_translated_texts">Oversatt</string>
+    <string name="settings_translated_texts_desc">%d redigering(er) venter — trykk for å sende inn eller forkaste</string>
+    <string name="feat_safe_volume_title">Deaktiver advarsel for trygg volum</string>
+    <string name="feat_safe_volume_desc">Slå av dialoget for høy volum</string>
+    <string name="shut_up_restore_delay_title">Gjenopprettingsforsinkelse</string>
+    <string name="shut_up_restore_delay_desc">Vent et spesifikk tid før innstillingene gjenopprettes etter man avslutter en Shut-Up!-app</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ikke utløs ved DND</string>
+    <string name="label_battery_health">Helse</string>
+    <string name="action_shortcut_short_label">Handling</string>
+    <string name="feat_notification_snoozing_title">Varselslumring</string>
+    <string name="feat_notification_snoozing_desc">Planlegg varsler på nytt</string>
+    <string name="label_snooze_default">Standard slumringstid</string>
+    <string name="label_snooze_option_1">Alternativ 1</string>
+    <string name="label_snooze_option_2">Alternativ 2</string>
+    <string name="label_snooze_option_3">Alternativ 3</string>
+    <string name="label_snooze_option_4">Alternativ 4</string>
+    <string name="flashlight_pocket_title">Lommeregistrering</string>
+    <string name="flashlight_pocket_desc">Slå av lommelykten når telefonen er i lommen din</string>
+    <string name="flashlight_overheat_title">Forhindring av overoppheting</string>
+    <string name="flashlight_overheat_desc">Lavere lysstyrke i lengre bruksperioder</string>
+    <string name="feat_power_battery_title">Strøm og batteri</string>
+    <string name="feat_power_battery_desc">Konfigurer policyene for strømsparing</string>
+    <string name="feat_flashlight_title">Lommelykt</string>
+    <string name="feat_flashlight_desc">Forbedre lommelyktens oppførsel</string>
+    <string name="feat_pocket_mode_title">Lommemodus</string>
+    <string name="feat_pocket_mode_desc">Forhindre utsliktede berøringer mens i lommen</string>
+    <string name="pocket_mode_use_light_title">Bruk lyssensor</string>
+    <string name="pocket_mode_use_light_desc">Bruk omgivelseslysnivået i tillegg til nærhet for bedre nøyaktighet</string>
+    <string name="pocket_mode_trigger_delay_title">Utløsingsforsinkelse</string>
+    <string name="pocket_mode_lock_screen_only_desc">Utløs bare lommemodus når enheten er låst</string>
+    <string name="pocket_mode_lock_screen_only_title">Bare lås skjerm</string>
 </resources>

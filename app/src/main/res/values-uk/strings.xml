@@ -16,7 +16,7 @@
     <string name="flashlight_pulse_tile_label">Імпульсний ліхтарик</string>
     <string name="check_pre_releases_label">Перевірте попередні випуски</string>
     <string name="check_pre_releases_desc">Може бути нестабільним</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">Вкладка за замовчуванням </string>
     <!-- App Lock -->
     <string name="settings_section_security">Безпека</string>
     <string name="app_lock_enable_title">Увімкнути блокування програми</string>
@@ -443,8 +443,8 @@
     <string name="feat_always_on_display_desc">Показувати час і інформацію, коли екран вимкнено</string>
     <string name="feat_calendar_sync_title">Синхронізація календаря</string>
     <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Lock from Watch</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="feat_lock_from_watch_title">Блокування з годинника</string>
+    <string name="feat_lock_from_watch_desc">Заблокуй смартфон віддалено</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -664,9 +664,9 @@
     <string name="label_settings">Налаштування</string>
     <string name="action_report_bug">Повідомити про помилку</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_report_mode_title">Звіт про збій</string>
+    <string name="sentry_mode_off">Вимкнено </string>
+    <string name="sentry_mode_auto">Автоматично </string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
     <string name="welcome_title">Welcome to Essentials</string>
@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="action_restart_systemui">Перезапустити системний інтерфейс</string>
+    <string name="desc_restart_systemui">Перезапускає системний інтерфейс, аби застосувати деякі зміни миттєво </string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Готово</string>
@@ -1232,7 +1232,7 @@
     <string name="feat_widgets_desc">Короткий погляд на головному екрані</string>
     <string name="feat_display_visuals_title">Дисплей</string>
     <string name="feat_display_visuals_desc">Візуальні елементи для покращення вашого досвіду</string>
-    <string name="feat_watch_title">Дивитися</string>
+    <string name="feat_watch_title">Годинник </string>
     <string name="feat_watch_desc">Інтеграція з WearOS</string>
     <string name="watch_no_companion_title">Годинник не виявлено</string>
     <string name="watch_no_companion_desc">Схоже, на вашому годиннику не встановлено супутню програму Essentials Wear.</string>
@@ -1301,8 +1301,8 @@
     <string name="label_apps">програми</string>
     <string name="feat_text_animations_title">Масштаб і анімація</string>
     <string name="feat_text_animations_desc">Налаштуйте системний масштаб і анімацію</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_screen_refresh_rate_title">Частота оновлення екрану </string>
+    <string name="feat_screen_refresh_rate_desc">Встанови фіксовану або автоматичну частоту оновлення </string>
     <string name="settings_section_text">текст</string>
     <string name="label_font_scale">Масштаб шрифту</string>
     <string name="label_font_weight">Товщина шрифту</string>
@@ -1392,8 +1392,8 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="feat_shut_up_title">Стули пельку! </string>
+    <string name="feat_shut_up_desc">Я знаю, що я роблю </string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
     <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
@@ -1413,8 +1413,8 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_title">Годинник на екрані блокування </string>
+    <string name="feat_lock_screen_clock_desc">Кастомізуй годинник на екрані блокування Pixel </string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1454,4 +1454,24 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="settings_translated_texts">Перекладено </string>
+    <string name="feat_safe_volume_title">Вимкнути попередження про безпечну гучність </string>
+    <string name="feat_safe_volume_desc">Прибирає діалог \"небезпечної гучності\" </string>
+    <string name="feat_notification_snoozing_title">Відкладання сповіщень </string>
+    <string name="feat_notification_snoozing_desc">Переносить сповіщення </string>
+    <string name="feat_power_battery_title">Живлення та акумулятор </string>
+    <string name="feat_power_battery_desc">Налаштовує режими енергозбереження </string>
+    <string name="feat_flashlight_title">Ліхтарик </string>
+    <string name="feat_flashlight_desc">Покращення поведінки ліхтарика</string>
+    <string name="feat_pixel_searchbar_title">Пошук Pixel</string>
+    <string name="feat_pixel_searchbar_desc">Встанови Essentials як пошук за замовчуванням для домашнього екрану Pixel Launcher </string>
+    <string name="feat_watch_controls_title">Кастомізація</string>
+    <string name="feat_watch_wireless_debugging_title">Бездротове відлагодження </string>
+    <string name="feat_watch_wireless_debugging_desc">Вмикає віддалено </string>
+    <string name="feat_sync_sound_mode_title">Синхронізація режим звуку</string>
+    <string name="feat_sync_sound_mode_desc">Автоматична синхронізація з годинником </string>
+    <string name="feat_sync_location_reached_title">Синхронізація режиму \"Ми вже на місці\" </string>
+    <string name="feat_sync_location_reached_desc">Показ в плитках </string>
+    <string name="feat_daily_wallpaper_title">Шпалери </string>
+    <string name="feat_daily_wallpaper_desc">Щоденні відібрані шпалери</string>
 </resources>

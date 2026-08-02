@@ -51,10 +51,9 @@ fun DimWallpaperSettingsSheet(
 
     var dimAmount by remember { mutableFloatStateOf(initialAction.dimAmount) }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         dragHandle = null
     ) {
         Column(

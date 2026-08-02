@@ -70,9 +70,8 @@ fun EditWatermarkSheet(
     val displayDate =
         draftDate?.let { formatDate(it) } ?: stringResource(R.string.watermark_no_date)
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier

@@ -1,14 +1,44 @@
 package com.sameerasw.essentials.data.repository
 
+import android.content.Context
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.UpdateInfo
+import com.sameerasw.essentials.utils.AutoUpdateManagerHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
 import java.net.URL
 
 class UpdateRepository {
 
     suspend fun checkForUpdates(
+        context: Context,
+        isPreReleaseCheckEnabled: Boolean,
+        currentVersion: String
+    ): UpdateInfo? = withContext(Dispatchers.IO) {
+        try {
+            val autoUpdateHelper = AutoUpdateManagerHelper(context)
+            val updateFeatures = autoUpdateHelper.checkForUpdate("https://sameerasw.com/essentials-update.json")
+
+            if (updateFeatures != null && updateFeatures.latestversion.isNotEmpty()) {
+                val latestVersion = updateFeatures.latestversion
+                val hasUpdate = isNewerVersion(currentVersion, latestVersion)
+                return@withContext UpdateInfo(
+                    versionName = latestVersion,
+                    releaseNotes = updateFeatures.changelog,
+                    downloadUrl = updateFeatures.apk_url,
+                    releaseUrl = if (updateFeatures.changelog.startsWith("http")) updateFeatures.changelog else "https://github.com/sameerasw/essentials/releases",
+                    isUpdateAvailable = hasUpdate
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        checkForUpdatesFromGitHub(isPreReleaseCheckEnabled, currentVersion)
+    }
+
+    private suspend fun checkForUpdatesFromGitHub(
         isPreReleaseCheckEnabled: Boolean,
         currentVersion: String
     ): UpdateInfo? = withContext(Dispatchers.IO) {
@@ -20,7 +50,7 @@ class UpdateRepository {
             }
 
             val url = URL(urlString)
-            val connection = url.openConnection() as java.net.HttpURLConnection
+            val connection = url.openConnection() as HttpURLConnection
 
             if (connection.responseCode != 200) {
                 return@withContext null
@@ -32,7 +62,6 @@ class UpdateRepository {
                 val releases = Gson().fromJson(releaseData, Array<Any>::class.java)
                     .filterIsInstance<Map<String, Any>>()
 
-                // Find the true latest release using SemanticVersion comparison
                 releases.maxByOrNull { rel ->
                     val tagName = (rel["tag_name"] as? String)?.removePrefix("v") ?: "0.0.0"
                     SemanticVersion.parse(tagName)

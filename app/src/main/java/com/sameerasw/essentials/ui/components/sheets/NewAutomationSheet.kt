@@ -58,11 +58,8 @@ fun NewAutomationSheet(
         }
     }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        contentColor = MaterialTheme.colorScheme.onSurface
+    EssentialsBottomSheet(
+        onDismissRequest = onDismiss
     ) {
         Column(
             modifier = Modifier

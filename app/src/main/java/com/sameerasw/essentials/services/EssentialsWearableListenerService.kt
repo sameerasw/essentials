@@ -184,10 +184,14 @@ class EssentialsWearableListenerService : WearableListenerService() {
                 if (data != null && data.size >= 2) {
                     val adbWifiEnabled = data[0].toInt() == 1
                     val secureSettingsGranted = data[1].toInt() == 1
+                    val version = if (data.size >= 3) data[2].toInt() else 0
                     val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                     prefs.edit(commit = true) {
                         putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
                         putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
+                        if (version > 0) {
+                            putInt("watch_version_code", version)
+                        }
                     }
                 }
             }

@@ -284,7 +284,8 @@ fun EssentialsFloatingToolbar(
                                         text = stringResource(id = item.labelRes),
                                         style = MaterialTheme.typography.labelLarge,
                                         maxLines = 1,
-                                        color = MaterialTheme.colorScheme.primary
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.basicMarquee()
                                     )
                                 }
                             }

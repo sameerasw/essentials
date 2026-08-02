@@ -43,6 +43,8 @@ fun WatchSettingsUI(
     val isWatchDetected = viewModel.isWatchDetected.value
     val connectedWatchName = viewModel.connectedWatchName.value
 
+    val isWearUpdateRequired = viewModel.isWearUpdateRequired.value
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -58,7 +60,6 @@ fun WatchSettingsUI(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(280.dp)
                         .background(MaterialTheme.colorScheme.surfaceBright)
                         .clickable {
                             HapticUtil.performUIHaptic(view)
@@ -106,6 +107,49 @@ fun WatchSettingsUI(
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
+
+                    if (isWearUpdateRequired) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        RoundedCardContainer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.errorContainer,
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.watch_update_required_title),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = stringResource(R.string.watch_update_required_desc),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f),
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performUIHaptic(view)
+                                        uriHandler.openUri("https://github.com/sameerasw/essentials-wear/releases/latest")
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.error,
+                                        contentColor = MaterialTheme.colorScheme.onError
+                                    )
+                                ) {
+                                    Text(text = stringResource(R.string.watch_update_action))
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } else {

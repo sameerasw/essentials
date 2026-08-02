@@ -203,6 +203,13 @@ fun SetupFeatures(
         )
     }
 
+    val watchViewModel: com.sameerasw.essentials.viewmodels.WatchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val isWearUpdateRequired = watchViewModel.isWearUpdateRequired.value
+
+    LaunchedEffect(Unit) {
+        watchViewModel.check(context)
+    }
+
     // Periodic check for Caffeinate status
     LaunchedEffect(Unit) {
         while (true) {
@@ -1272,7 +1279,8 @@ fun SetupFeatures(
                                             selectedHelpFeature = feature
                                             showHelpSheet = true
                                         }
-                                    } else null
+                                    } else null,
+                                    hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false
                                 )
                             }
                         }

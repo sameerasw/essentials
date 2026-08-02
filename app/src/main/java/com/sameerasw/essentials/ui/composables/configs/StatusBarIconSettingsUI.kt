@@ -43,16 +43,19 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 
 @Composable
 fun StatusBarIconSettingsUI(
     viewModel: StatusBarIconViewModel,
+    mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
     highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val isMasterEnabled = mainViewModel.isStatusBarIconControlEnabled.value
     val isPermissionGranted =
         viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
     val hasWriteSettings = viewModel.isWriteSettingsEnabled.value
@@ -134,8 +137,9 @@ fun StatusBarIconSettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // Iterate through categories
-        categories.forEach { categoryRes ->
+        if (isMasterEnabled) {
+            // Iterate through categories
+            categories.forEach { categoryRes ->
             val iconsInCat =
                 StatusBarIconRegistry.ALL_ICONS.filter { it.categoryRes == categoryRes }
             if (iconsInCat.isNotEmpty()) {
@@ -390,6 +394,7 @@ fun StatusBarIconSettingsUI(
             enabled = isPermissionGranted
         ) {
             Text(stringResource(R.string.action_reset_all_icons))
+        }
         }
 
         // Advanced Status Bar Flags Section

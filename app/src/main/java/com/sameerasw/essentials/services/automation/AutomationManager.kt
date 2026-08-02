@@ -6,9 +6,11 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
+import com.sameerasw.essentials.services.automation.modules.BluetoothModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
 import com.sameerasw.essentials.services.automation.modules.PowerModule
 import com.sameerasw.essentials.services.automation.modules.TimeModule
+import com.sameerasw.essentials.services.automation.modules.WifiModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,6 +65,8 @@ object AutomationManager {
         val powerAutomations = mutableListOf<Automation>()
         val displayAutomations = mutableListOf<Automation>()
         val timeAutomations = mutableListOf<Automation>()
+        val bluetoothAutomations = mutableListOf<Automation>()
+        val wifiAutomations = mutableListOf<Automation>()
 
         enabledAutomations.forEach { automation ->
             when (automation.type) {
@@ -81,6 +85,16 @@ object AutomationManager {
                         is Trigger.Schedule -> {
                             requiredModuleIds.add(TimeModule.ID)
                             timeAutomations.add(automation)
+                        }
+
+                        is Trigger.BluetoothConnected, is Trigger.BluetoothDisconnected -> {
+                            requiredModuleIds.add(BluetoothModule.ID)
+                            bluetoothAutomations.add(automation)
+                        }
+
+                        is Trigger.WifiConnected, is Trigger.WifiDisconnected -> {
+                            requiredModuleIds.add(WifiModule.ID)
+                            wifiAutomations.add(automation)
                         }
 
                         else -> {}
@@ -157,6 +171,26 @@ object AutomationManager {
             module.updateAutomations(timeAutomations)
         } else {
             activeModules.remove(TimeModule.ID)?.stop(context)
+        }
+
+        // Bluetooth Module
+        if (requiredModuleIds.contains(BluetoothModule.ID)) {
+            val module = activeModules.getOrPut(BluetoothModule.ID) {
+                BluetoothModule().also { it.start(context) }
+            }
+            module.updateAutomations(bluetoothAutomations)
+        } else {
+            activeModules.remove(BluetoothModule.ID)?.stop(context)
+        }
+
+        // Wifi Module
+        if (requiredModuleIds.contains(WifiModule.ID)) {
+            val module = activeModules.getOrPut(WifiModule.ID) {
+                WifiModule().also { it.start(context) }
+            }
+            module.updateAutomations(wifiAutomations)
+        } else {
+            activeModules.remove(WifiModule.ID)?.stop(context)
         }
     }
 

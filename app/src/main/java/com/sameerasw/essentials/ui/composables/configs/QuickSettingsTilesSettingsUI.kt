@@ -67,6 +67,7 @@ import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
 import com.sameerasw.essentials.services.tiles.RefreshRateTileService
 import com.sameerasw.essentials.services.tiles.ScaleAnimationsTileService
+import com.sameerasw.essentials.services.tiles.RestartSystemUiTileService
 import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
 import com.sameerasw.essentials.services.tiles.SoundModeTileService
 import com.sameerasw.essentials.services.tiles.StayAwakeTileService
@@ -277,6 +278,14 @@ fun QuickSettingsTilesSettingsUI(
             listOf("WRITE_SECURE_SETTINGS"),
             R.string.about_desc_scale_animations_tile,
             R.string.cat_visuals
+        ),
+        QSTileInfo(
+            R.string.tile_restart_systemui,
+            R.drawable.reopen_window_24px,
+            RestartSystemUiTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
+            R.string.about_desc_restart_systemui_tile,
+            R.string.cat_utils
         ),
         QSTileInfo(
             R.string.tile_refresh_rate,

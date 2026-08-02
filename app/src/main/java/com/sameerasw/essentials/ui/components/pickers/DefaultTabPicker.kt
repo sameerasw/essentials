@@ -2,6 +2,7 @@ package com.sameerasw.essentials.ui.components.pickers
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,8 +18,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -28,6 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.translation.TranslationManager
+import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.translation.ui.TranslationMenuItems
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -37,18 +49,32 @@ fun DefaultTabPicker(
     modifier: Modifier = Modifier,
     options: List<DIYTabs> = DIYTabs.entries
 ) {
+    val view = LocalView.current
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
+
+    var showMenu by remember { mutableStateOf(false) }
+    var translationSheetKey by remember { mutableStateOf<String?>(null) }
+
+    val onLongClickAction: (() -> Unit)? = if (isTranslationModeActive) {
+        {
+            HapticUtil.performVirtualKeyHaptic(view)
+            showMenu = true
+        }
+    } else null
+
+    val optionTitleRes = options.map { if (it == DIYTabs.FREEZE) R.string.tab_freeze_title else it.title }
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(
-                MaterialTheme.colorScheme.surfaceBright,
-                shape = MaterialTheme.shapes.extraSmall
-            ),
+            .clip(MaterialTheme.shapes.extraSmall)
+            .background(MaterialTheme.colorScheme.surfaceBright),
+
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         ListItem(
             onClick = {},
+            onLongClick = onLongClickAction,
             modifier = Modifier.fillMaxWidth(),
             leadingContent = {
                 Icon(
@@ -67,11 +93,29 @@ fun DefaultTabPicker(
                 containerColor = MaterialTheme.colorScheme.surfaceBright
             ),
             content = {
-                Text(
-                    text = stringResource(R.string.label_default_tab),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Box {
+                    Text(
+                        text = stringResource(R.string.label_default_tab),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    if (showMenu) {
+                        SegmentedDropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            TranslationMenuItems(
+                                title = R.string.label_default_tab,
+                                options = optionTitleRes,
+                                onSelectKey = { key ->
+                                    showMenu = false
+                                    translationSheetKey = key
+                                }
+                            )
+                        }
+                    }
+                }
             }
         )
 
@@ -88,6 +132,7 @@ fun DefaultTabPicker(
                 ToggleButton(
                     checked = isChecked,
                     onCheckedChange = {
+                        HapticUtil.performUIHaptic(view)
                         onTabSelected(tab)
                     },
                     modifier = Modifier
@@ -120,5 +165,12 @@ fun DefaultTabPicker(
                 }
             }
         }
+    }
+
+    if (translationSheetKey != null) {
+        TranslationBottomSheet(
+            stringKey = translationSheetKey!!,
+            onDismissRequest = { translationSheetKey = null }
+        )
     }
 }

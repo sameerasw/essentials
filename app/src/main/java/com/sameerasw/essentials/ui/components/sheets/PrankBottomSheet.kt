@@ -43,14 +43,13 @@ fun PrankBottomSheet(
     var isRevealed by remember { mutableStateOf(false) }
     val view = LocalView.current
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = {
             if (isRevealed) {
                 onDismissRequest()
             }
         },
-        sheetState = sheetState,
-        dragHandle = null
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

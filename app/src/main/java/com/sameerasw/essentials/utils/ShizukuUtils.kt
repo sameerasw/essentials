@@ -87,6 +87,17 @@ object ShizukuUtils {
         }
     }
 
+    fun grantBatteryStatsPermission(): Boolean {
+        if (!hasPermission() || !isBinderAlive) return false
+
+        return try {
+            runCommand("pm grant com.sameerasw.essentials android.permission.BATTERY_STATS")
+            true
+        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
+            false
+        }
+    }
+
     fun getSystemBinder(name: String): IBinder? {
         if (!hasPermission() || !isBinderAlive) return null
 

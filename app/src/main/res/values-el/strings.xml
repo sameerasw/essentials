@@ -1221,7 +1221,7 @@
     <string name="search_sound_mode_behavior_title">Συμπεριφορά κύκλου</string>
     <string name="search_sound_mode_behavior_desc">Επιλέξτε τρόπους μετάβασης</string>
     <string name="feat_sound_haptics_title">Ήχος και Απτικά</string>
-    <string name="feat_sound_haptics_desc">Όγκος και απτικά χαρακτηριστικά</string>
+    <string name="feat_sound_haptics_desc">Χαρακτηριστικά έντασης ήχου και απτικών</string>
     <string name="feat_security_privacy_title">Ασφάλεια και Απόρρητο</string>
     <string name="feat_security_privacy_desc">Προστατέψτε και ασφαλίστε τη συσκευή σας</string>
     <string name="feat_notifications_alerts_title">Ειδοποιήσεις και ειδοποιήσεις</string>

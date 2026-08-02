@@ -1,0 +1,26 @@
+name: Validate Translations
+
+on:
+  pull_request:
+    paths:
+      - 'app/src/main/res/values*/**'
+      - 'scripts/validate_strings.py'
+  workflow_dispatch:
+
+jobs:
+  validate-strings:
+    name: Validate Android Strings XML
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run Translation Strings Validator
+        run: |
+          python3 scripts/validate_strings.py
