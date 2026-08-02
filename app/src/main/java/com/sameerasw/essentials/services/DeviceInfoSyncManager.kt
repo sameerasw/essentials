@@ -122,7 +122,7 @@ object DeviceInfoSyncManager {
         val p = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         prefChangeListener =
             android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-                if (key == "flashlight_pulse_enabled" || key == "notification_glance_enabled" || key == "watch_controls_layout" || key == "watch_sync_sound_mode_enabled") {
+                if (key == "flashlight_pulse_enabled" || key == "notification_glance_enabled" || key == "watch_controls_layout" || key == "watch_sync_sound_mode_enabled" || key == "watch_sync_location_reached_enabled") {
                     syncDeviceInfo(context)
                 }
             }
@@ -172,14 +172,16 @@ object DeviceInfoSyncManager {
             ?: android.os.Build.MODEL
 
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val travelActive = prefs.getBoolean("travel_active", false)
-        val travelName = prefs.getString("travel_name", "") ?: ""
-        val travelProgress = prefs.getFloat("travel_progress", 0f)
-        val travelRemainingTime = prefs.getString("travel_remaining_time", "") ?: ""
-        val travelRemainingDistance = prefs.getString("travel_remaining_distance", "") ?: ""
-        val travelIconName = prefs.getString("travel_icon_name", "") ?: ""
-        val travelIsPaused = prefs.getBoolean("travel_is_paused", false)
-        val travelArrived = prefs.getBoolean("travel_arrived", false)
+        val syncLocationReachedEnabled = prefs.getBoolean("watch_sync_location_reached_enabled", true)
+        
+        val travelActive = if (syncLocationReachedEnabled) prefs.getBoolean("travel_active", false) else false
+        val travelName = if (syncLocationReachedEnabled) (prefs.getString("travel_name", "") ?: "") else ""
+        val travelProgress = if (syncLocationReachedEnabled) prefs.getFloat("travel_progress", 0f) else 0f
+        val travelRemainingTime = if (syncLocationReachedEnabled) (prefs.getString("travel_remaining_time", "") ?: "") else ""
+        val travelRemainingDistance = if (syncLocationReachedEnabled) (prefs.getString("travel_remaining_distance", "") ?: "") else ""
+        val travelIconName = if (syncLocationReachedEnabled) (prefs.getString("travel_icon_name", "") ?: "") else ""
+        val travelIsPaused = if (syncLocationReachedEnabled) prefs.getBoolean("travel_is_paused", false) else false
+        val travelArrived = if (syncLocationReachedEnabled) prefs.getBoolean("travel_arrived", false) else false
 
         val flashlightPulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
         val aodState = when {

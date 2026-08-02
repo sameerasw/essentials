@@ -62,10 +62,9 @@ fun ColorPickerBottomSheet(
         ColorFormatUtils.formatColor(colorInt, selectedFormat)
     }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

@@ -19,7 +19,7 @@ fun LanguagePicker(
     modifier: Modifier = Modifier
 ) {
     val languages = LanguageUtils.languages
-    val selectedLanguage = languages.find { it.code == selectedLanguageCode } ?: languages.first()
+    val selectedLanguage = LanguageUtils.getLanguage(selectedLanguageCode)
 
     ConfigPickerItem(
         title = stringResource(R.string.label_app_language),

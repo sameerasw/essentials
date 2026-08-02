@@ -54,11 +54,9 @@ fun SoundModeSettingsSheet(
 
     var selectedMode by remember { mutableStateOf(initialAction.mode) }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        dragHandle = null
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

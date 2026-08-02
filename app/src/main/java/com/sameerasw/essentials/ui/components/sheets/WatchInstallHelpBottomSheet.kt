@@ -46,9 +46,8 @@ fun WatchInstallHelpBottomSheet(
     val uriHandler = LocalUriHandler.current
     val view = LocalView.current
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier

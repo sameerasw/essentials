@@ -3,9 +3,12 @@ package com.sameerasw.essentials.ui.components
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,6 +55,7 @@ import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DeviceHeroCard(
     deviceInfo: DeviceInfo,
@@ -65,6 +69,11 @@ fun DeviceHeroCard(
     val isPixel = deviceInfo.manufacturer.contains("Google", ignoreCase = true)
 
     var showFlashbangDialog by remember { mutableStateOf(false) }
+
+    val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
+    var showStorageMemoryMenu by remember { mutableStateOf(false) }
+    var storageMemoryTranslationKey by remember { mutableStateOf<String?>(null) }
+    val smOptionIds = remember { listOf(R.string.label_device_storage, R.string.label_device_ram) }
 
     val launchIntent = { packageName: String, className: String ->
         try {
@@ -207,77 +216,114 @@ fun DeviceHeroCard(
         }
 
 
-        Column(
-            modifier = Modifier
-                .background(
-                    MaterialTheme.colorScheme.surfaceBright,
-                    shape = Shapes.extraSmall
-                )
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Storage and Memory Info
-            Row(
+        Box {
+            Column(
                 modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.surfaceBright,
+                        shape = Shapes.extraSmall
+                    )
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .combinedClickable(
+                        onClick = {},
+                        onLongClick = if (isTranslationModeActive) {
+                            {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                showStorageMemoryMenu = true
+                            }
+                        } else null
+                    )
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Storage Section
+                // Storage and Memory Info
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_dns_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Column(horizontalAlignment = Alignment.Start) {
-                        Text(
-                            text = stringResource(R.string.label_device_storage),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    // Storage Section
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_dns_24),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
                         )
-                        Text(
-                            text = DeviceUtils.formatHardwareSize(deviceInfo.totalStorage),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                        Column(horizontalAlignment = Alignment.Start) {
+                            Text(
+                                text = stringResource(R.string.label_device_storage),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = DeviceUtils.formatHardwareSize(deviceInfo.totalStorage),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
-                }
 
-                // Memory Section
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_memory_alt_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Column(horizontalAlignment = Alignment.Start) {
-                        Text(
-                            text = stringResource(R.string.label_device_ram),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    // Memory Section
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_memory_alt_24),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
                         )
-                        Text(
-                            text = DeviceUtils.formatHardwareSize(deviceInfo.totalRam),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                        Column(horizontalAlignment = Alignment.Start) {
+                            Text(
+                                text = stringResource(R.string.label_device_ram),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = DeviceUtils.formatHardwareSize(deviceInfo.totalRam),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
                 }
             }
 
+            com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu(
+                expanded = showStorageMemoryMenu,
+                onDismissRequest = { showStorageMemoryMenu = false }
+            ) {
+                com.sameerasw.essentials.translation.ui.TranslationMenuItems(
+                    options = smOptionIds,
+                    title = R.string.label_device_storage,
+                    onSelectKey = { key ->
+                        showStorageMemoryMenu = false
+                        storageMemoryTranslationKey = key
+                    }
+                )
+            }
         }
+
+        val targetSmKey = storageMemoryTranslationKey
+        if (targetSmKey != null) {
+            val resolvedSmKey = remember(targetSmKey) {
+                com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, targetSmKey) ?: targetSmKey
+            }
+            com.sameerasw.essentials.translation.ui.TranslationBottomSheet(
+                stringKey = resolvedSmKey,
+                onDismissRequest = { storageMemoryTranslationKey = null }
+            )
+        }
+
+        com.sameerasw.essentials.ui.components.cards.BatteryInfoCard()
 
         if (isPixel) {
             Column(

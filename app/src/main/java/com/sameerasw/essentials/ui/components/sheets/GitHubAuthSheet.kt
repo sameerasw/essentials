@@ -51,13 +51,12 @@ fun GitHubAuthSheet(
     val authState by viewModel.authState
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = {
             viewModel.cancelAuthFlow()
             onDismissRequest()
         },
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

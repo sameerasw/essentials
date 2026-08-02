@@ -57,11 +57,25 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.material3.TextField
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.ToolbarItem
+import com.sameerasw.essentials.ui.modifiers.BlurDirection
+import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -145,217 +159,228 @@ fun LinkPickerScreen(
     // Pager state for swiping between tabs
     val pagerState = rememberPagerState(pageCount = { 2 })
     val scope = rememberCoroutineScope()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    Scaffold(
-        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        topBar = {
-            ReusableTopAppBar(
-                title = "Link Actions",
-                hasBack = true,
-                hasSearch = false,
-                hasSettings = false,
-                onBackClick = onFinish,
-                scrollBehavior = scrollBehavior
-            )
-        },
-        bottomBar = {
-            val items = listOf("Open With", "Share With")
-            val selectedIcons =
-                listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
-            val unselectedIcons =
-                listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
+    val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+        androidx.lifecycle.viewmodel.compose.viewModel()
+    val isBlurEnabled by mainViewModel.isBlurEnabled
 
-            NavigationBar(
-                windowInsets = NavigationBarDefaults.windowInsets
-            ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = {
-                            val selected = pagerState.currentPage == index
-                            val iconOffset by animateDpAsState(
-                                targetValue = if (selected) 0.dp else 2.dp,
-                                label = "NavIconOffset"
-                            )
-                            Icon(
-                                painter = painterResource(if (selected) selectedIcons[index] else unselectedIcons[index]),
-                                contentDescription = item,
-                                modifier = Modifier.offset(y = iconOffset)
-                            )
-                        },
-                        label = {
-                            val selected = pagerState.currentPage == index
-                            val alpha by animateFloatAsState(
-                                targetValue = if (selected) 1f else 0f,
-                                label = "NavLabelAlpha"
-                            )
-                            Text(item, modifier = Modifier.alpha(alpha))
-                        },
-                        alwaysShowLabel = true,
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            scope.launch { pagerState.animateScrollToPage(index) }
-                        }
-                    )
-                }
-            }
-        }
-    ) { innerPadding ->
-        // Track page changes for haptic feedback on swipe
-        LaunchedEffect(pagerState.currentPage) {
-            snapshotFlow { pagerState.currentPage }.collect { _ ->
-                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
-        }
+    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val density = LocalDensity.current
 
-        Column(
+    var cardHeightPx by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0) }
+    val listTopPadding = with(density) { statusBarHeight + 16.dp + cardHeightPx.toDp() + 16.dp }
+    val topBlurHeightPx = with(density) { (statusBarHeight * 1.15f).toPx() }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .progressiveBlur(
+                    blurRadius = if (isBlurEnabled) 40f else 0f,
+                    height = with(density) { topBlurHeightPx },
+                    direction = BlurDirection.TOP
+                )
         ) {
-            // Link display and Edit action
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Link display container
-                Card(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-                            val clipboard =
-                                context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            clipboard.setPrimaryClip(
-                                ClipData.newPlainText(
-                                    "Link",
-                                    currentUri.toString()
-                                )
-                            )
-                            Toast
-                                .makeText(context, "Link copied to clipboard", Toast.LENGTH_SHORT)
-                                .show()
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        },
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright
-                    ),
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.rounded_link_24),
-                            contentDescription = "Link Icon",
-                            modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-
-                        Text(
-                            text = if (demo) {
-                                "Long press an app to pin/ unpin"
-                            } else {
-                                currentUri.toString()
-                            },
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-
-                // Edit Button Container
-                Card(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clickable {
-                            editingText = currentUri.toString()
-                            showEditSheet = true
-                        },
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright
-                    ),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.rounded_edit_24),
-                            contentDescription = "Edit Link",
-                            modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-            }
-
-            // Search Bar
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                placeholder = { Text("Search apps") },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_search_24),
-                        contentDescription = "Search"
+                    .fillMaxSize()
+                    .progressiveBlur(
+                        blurRadius = if (isBlurEnabled) 80f else 0f,
+                        height = with(LocalDensity.current) { 350.dp.toPx() },
+                        direction = BlurDirection.BOTTOM
                     )
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(12.dp)
-            )
-
-            if (isLoadingApps) {
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    androidx.compose.material3.CircularProgressIndicator()
+            ) {
+                LaunchedEffect(pagerState.currentPage) {
+                    snapshotFlow { pagerState.currentPage }.collect { _ ->
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    }
                 }
-            } else {
-                // HorizontalPager fills remaining space
-                HorizontalPager(
-                    modifier = Modifier.weight(1f),
-                    state = pagerState,
-                    verticalAlignment = Alignment.Top
-                ) { page ->
-                    when (page) {
-                        0 -> {
-                            OpenWithContent(
-                                openWithApps,
-                                currentUri,
-                                onFinish,
-                                Modifier,
-                                togglePin,
-                                pinnedPackages.value,
-                                demo
-                            )
-                        }
 
-                        1 -> {
-                            ShareWithContent(
-                                shareWithApps,
-                                currentUri,
-                                onFinish,
-                                Modifier,
-                                togglePin,
-                                pinnedPackages.value,
-                                demo
-                            )
+                if (isLoadingApps) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        androidx.compose.material3.CircularProgressIndicator()
+                    }
+                } else {
+                    HorizontalPager(
+                        modifier = Modifier.fillMaxSize(),
+                        state = pagerState,
+                        verticalAlignment = Alignment.Top
+                    ) { page ->
+                        when (page) {
+                            0 -> {
+                                OpenWithContent(
+                                    openWithApps,
+                                    currentUri,
+                                    onFinish,
+                                    Modifier.fillMaxSize(),
+                                    togglePin,
+                                    pinnedPackages.value,
+                                    demo,
+                                )
+                            }
+
+                            1 -> {
+                                ShareWithContent(
+                                    shareWithApps,
+                                    currentUri,
+                                    onFinish,
+                                    Modifier.fillMaxSize(),
+                                    togglePin,
+                                    pinnedPackages.value,
+                                    demo,
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+
+        // bottom card
+        Card(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 84.dp, start = 16.dp, end = 16.dp)
+                .onGloballyPositioned { coordinates ->
+                    cardHeightPx = coordinates.size.height
+                },
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceTint
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                val clipboard =
+                                    context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboard.setPrimaryClip(
+                                    ClipData.newPlainText(
+                                        "Link",
+                                        currentUri.toString()
+                                    )
+                                )
+                                Toast
+                                    .makeText(context, "Link copied to clipboard", Toast.LENGTH_SHORT)
+                                    .show()
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            },
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_link_24),
+                                contentDescription = "Link Icon",
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+
+                            Text(
+                                text = if (demo) {
+                                    "Long press an app to pin/ unpin"
+                                } else {
+                                    currentUri.toString()
+                                },
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable {
+                                editingText = currentUri.toString()
+                                showEditSheet = true
+                            },
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_edit_24),
+                                contentDescription = "Edit Link",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Search apps") },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_search_24),
+                            contentDescription = "Search"
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(16.dp)
+                )
+            }
+        }
+
+        // toolbar
+        val toolbarItems = remember {
+            listOf(
+                ToolbarItem(
+                    iconRes = R.drawable.rounded_open_in_browser_24,
+                    labelRes = R.string.label_open_with,
+                    onClick = {
+                        scope.launch { pagerState.animateScrollToPage(0) }
+                    }
+                ),
+                ToolbarItem(
+                    iconRes = R.drawable.rounded_share_24,
+                    labelRes = R.string.label_share_with,
+                    onClick = {
+                        scope.launch { pagerState.animateScrollToPage(1) }
+                    }
+                )
+            )
+        }
+
+        EssentialsFloatingToolbar(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            selectedIndex = pagerState.currentPage,
+            items = toolbarItems,
+            fabAction = { onFinish() },
+            fabIconRes = R.drawable.rounded_arrow_back_24,
+            fabContentDescription = "Back"
+        )
     }
 
     if (showEditSheet) {

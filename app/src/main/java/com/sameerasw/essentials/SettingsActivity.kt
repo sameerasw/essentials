@@ -87,7 +87,16 @@ import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
+import com.sameerasw.essentials.translation.TranslationManager
+import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.translation.ui.TranslationSessionSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
+
+
+import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
+
 import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.components.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
@@ -254,6 +263,7 @@ fun SettingsContent(
     var isPermissionsExpanded by remember { mutableStateOf(false) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
+    val isUpdateAvailable by viewModel.isUpdateAvailable
     val isAutoUpdateEnabled by viewModel.isAutoUpdateEnabled
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
     val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
@@ -265,6 +275,42 @@ fun SettingsContent(
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showImportConfirmSheet by remember { mutableStateOf(false) }
     var selectedImportUri by remember { mutableStateOf<Uri?>(null) }
+
+    var showTranslationSessionSheet by remember { mutableStateOf(false) }
+    var showLanguagePickerSheet by remember { mutableStateOf(false) }
+    var showGitHubAuthSheet by remember { mutableStateOf(false) }
+    var showTranslationWarningDialog by remember { mutableStateOf(false) }
+    val gitHubAuthViewModel: GitHubAuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val settingsRepo = remember { com.sameerasw.essentials.data.repository.SettingsRepository(context) }
+    var currentUser by remember { mutableStateOf(settingsRepo.getGitHubUser()) }
+
+
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
+    val sessionEditsCount = TranslationManager.session.edits.size
+
+
+
+    var openTranslationPRs by remember { mutableStateOf<List<com.sameerasw.essentials.domain.model.github.GitHubPullRequest>>(emptyList()) }
+    val gitHubRepo = remember { com.sameerasw.essentials.data.repository.GitHubRepository() }
+
+    androidx.compose.runtime.LaunchedEffect(isTranslationModeActive, currentUser) {
+        val user = currentUser
+        if (isTranslationModeActive && user != null) {
+            val userToken = settingsRepo.getGitHubToken()
+            val prs = gitHubRepo.getOpenTranslationPRs(
+                owner = "sameerasw",
+                repo = "essentials",
+                author = user.login,
+                token = userToken
+            )
+            openTranslationPRs = prs
+        } else {
+            openTranslationPRs = emptyList()
+        }
+    }
+
+
+
 
     val onImportConfig: (Boolean) -> Unit = { keepPrefs ->
         selectedImportUri?.let { uri ->
@@ -416,6 +462,83 @@ fun SettingsContent(
                     .fillMaxWidth()
                     .height(72.dp)
             )
+        }
+
+        // Updates Section
+        Text(
+            text = "Updates",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_check_24,
+                title = "Auto check for updates",
+                description = "Check for updates at app launch",
+                isChecked = isAutoUpdateEnabled,
+                onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_experiment_24,
+                title = context.getString(R.string.check_pre_releases_label),
+                description = context.getString(R.string.check_pre_releases_desc),
+                isChecked = isPreReleaseCheckEnabled,
+                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                title = "Notify for new updates",
+                description = "Show a notification when an update is found",
+                isChecked = isUpdateNotificationEnabled,
+                onCheckedChange = { viewModel.setUpdateNotificationEnabled(it, context) }
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        MaterialTheme.colorScheme.surfaceBright,
+                        shape = MaterialTheme.shapes.extraSmall
+                    )
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val buttonText = if (isUpdateAvailable && !updateInfo?.versionName.isNullOrEmpty()) {
+                    stringResource(R.string.action_update_to_version, updateInfo?.versionName ?: "")
+                } else {
+                    stringResource(R.string.action_check_for_updates)
+                }
+
+                val buttonIconRes = R.drawable.rounded_mobile_arrow_down_24
+
+                Button(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.checkForUpdates(context, manual = true)
+                        showUpdateSheet = true
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp)
+                        .padding(horizontal = 4.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = buttonIconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = buttonText,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -593,6 +716,134 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Translations Section
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.settings_translations_section),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        val currentAppLocale = LocalContext.current.resources.configuration.locales[0].language
+        val isEnglishApp = currentAppLocale == "en" || currentAppLocale.isBlank()
+
+        RoundedCardContainer {
+            // GitHub Account Card (Tap to Sign In when logged out, Long Press to Sign Out when logged in)
+            FeatureCard(
+                title = if (currentUser != null) "@${currentUser?.login}" else stringResource(R.string.action_sign_in_github),
+                description = if (currentUser != null) "Logged in as ${currentUser?.name ?: currentUser?.login}" else "Sign in required to translate",
+                isEnabled = true,
+                onToggle = {},
+                onClick = {
+                    if (currentUser == null) {
+                        HapticUtil.performUIHaptic(view)
+                        showGitHubAuthSheet = true
+                    }
+                },
+                showToggle = false,
+                iconRes = R.drawable.brand_github,
+                additionalMenuItems = if (currentUser != null) {
+                    @Composable { onDismiss ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text("Sign Out") },
+                            onClick = {
+                                onDismiss()
+                                HapticUtil.performUIHaptic(view)
+                                gitHubAuthViewModel.signOut(context)
+                                currentUser = null
+                                TranslationManager.isTranslationModeEnabled.value = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_logout_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        )
+                    }
+                } else null
+
+            )
+
+            // Translation Mode Switch (IconToggleItem - clean toggle variant without sub-menu divider)
+            IconToggleItem(
+                iconRes = R.drawable.rounded_translate_24,
+                title = stringResource(R.string.settings_translate_mode),
+                description = if (isEnglishApp) "App language is English. Change app language to translate strings" else stringResource(R.string.settings_translate_mode_desc),
+                isChecked = isTranslationModeActive && !isEnglishApp,
+                enabled = !isEnglishApp,
+                onCheckedChange = { enabled ->
+                    if (enabled) {
+                        if (currentUser == null) {
+                            showGitHubAuthSheet = true
+                        } else if (!settingsRepo.isTranslationModeWarningSuppressed()) {
+                            showTranslationWarningDialog = true
+                        } else {
+                            TranslationManager.isTranslationModeEnabled.value = true
+                        }
+                    } else {
+                        TranslationManager.isTranslationModeEnabled.value = false
+                    }
+                }
+            )
+
+
+            // Pending Edits Summary Card
+            if (sessionEditsCount > 0) {
+                FeatureCard(
+                    title = R.string.settings_translated_texts,
+                    description = stringResource(R.string.settings_translated_texts_desc, sessionEditsCount),
+                    isEnabled = true,
+                    onToggle = {},
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        showTranslationSessionSheet = true
+                    },
+                    showToggle = false,
+                    iconRes = R.drawable.rounded_edit_24
+                )
+            }
+
+            // Existing Open Translation PRs
+            if (isTranslationModeActive && openTranslationPRs.isNotEmpty()) {
+                openTranslationPRs.forEach { pr ->
+                    val dateFormatted = try {
+                        pr.updatedAt.take(10)
+                    } catch (e: Exception) {
+                        ""
+                    }
+                    val subtitleText = if (dateFormatted.isNotBlank()) "PR #${pr.number} • Updated $dateFormatted" else "PR #${pr.number}"
+
+                    FeatureCard(
+                        title = "View existing PR",
+                        description = subtitleText,
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pr.htmlUrl))
+
+                            context.startActivity(intent)
+                        },
+                        showToggle = false,
+                        iconRes = R.drawable.brand_github
+                    )
+                }
+            }
+        }
+
+
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         RoundedCardContainer {
             FeatureCard(
                 title = R.string.action_restart_systemui,
@@ -604,6 +855,7 @@ fun SettingsContent(
                 iconRes = R.drawable.rounded_refresh_24
             )
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -876,75 +1128,6 @@ fun SettingsContent(
                         viewModel.requestCalendarPermission(context as ComponentActivity)
                     },
                 )
-            }
-        }
-
-        // Updates Section
-        Text(
-            text = "Updates",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        RoundedCardContainer {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_check_24,
-                title = "Auto check for updates",
-                description = "Check for updates at app launch",
-                isChecked = isAutoUpdateEnabled,
-                onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
-            )
-            IconToggleItem(
-                iconRes = R.drawable.rounded_experiment_24,
-                title = context.getString(R.string.check_pre_releases_label),
-                description = context.getString(R.string.check_pre_releases_desc),
-                isChecked = isPreReleaseCheckEnabled,
-                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) }
-            )
-            IconToggleItem(
-                iconRes = R.drawable.rounded_notifications_unread_24,
-                title = "Notify for new updates",
-                description = "Show a notification when an update is found",
-                isChecked = isUpdateNotificationEnabled,
-                onCheckedChange = { viewModel.setUpdateNotificationEnabled(it, context) }
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        MaterialTheme.colorScheme.surfaceBright,
-                        shape = MaterialTheme.shapes.extraSmall
-                    )
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-
-                // Check for updates button
-                Button(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.checkForUpdates(context, manual = true)
-                        showUpdateSheet = true
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(6.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_mobile_arrow_down_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        "Check for updates",
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-                    )
-                }
-
             }
         }
 
@@ -1304,4 +1487,41 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
     }
+
+    if (showTranslationSessionSheet) {
+        TranslationSessionSheet(
+            onDismissRequest = { showTranslationSessionSheet = false },
+            onNeedLogin = {
+                showTranslationSessionSheet = false
+                showGitHubAuthSheet = true
+            }
+        )
+    }
+
+    if (showGitHubAuthSheet) {
+
+        GitHubAuthSheet(
+            viewModel = gitHubAuthViewModel,
+            onDismissRequest = {
+                showGitHubAuthSheet = false
+                currentUser = settingsRepo.getGitHubUser()
+            }
+        )
+    }
+
+    if (showTranslationWarningDialog) {
+        com.sameerasw.essentials.translation.ui.TranslationWarningBottomSheet(
+            onDismissRequest = { showTranslationWarningDialog = false },
+            onConfirm = { dontShow ->
+                if (dontShow) {
+                    settingsRepo.setTranslationModeWarningSuppressed(true)
+                }
+                TranslationManager.isTranslationModeEnabled.value = true
+                showTranslationWarningDialog = false
+            }
+        )
+    }
 }
+
+
+

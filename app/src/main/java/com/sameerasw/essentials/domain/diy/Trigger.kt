@@ -53,4 +53,58 @@ sealed interface Trigger {
         override val icon: Int get() = R.drawable.rounded_nest_clock_farsight_analog_24
         override val isConfigurable: Boolean get() = true
     }
+
+    @Keep
+    data class BluetoothConnected(
+        @SerializedName("deviceAddress") val deviceAddress: String = "",
+        @SerializedName("deviceName") val deviceName: String = ""
+    ) : Trigger {
+        override val title: Int get() = R.string.diy_trigger_bluetooth_connected
+        override val icon: Int get() = R.drawable.rounded_bluetooth_24
+        override val isConfigurable: Boolean get() = true
+        override val permissions: List<String>
+            get() = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                listOf(android.Manifest.permission.BLUETOOTH_CONNECT)
+            } else {
+                emptyList()
+            }
+    }
+
+    @Keep
+    data class BluetoothDisconnected(
+        @SerializedName("deviceAddress") val deviceAddress: String = "",
+        @SerializedName("deviceName") val deviceName: String = ""
+    ) : Trigger {
+        override val title: Int get() = R.string.diy_trigger_bluetooth_disconnected
+        override val icon: Int get() = R.drawable.rounded_bluetooth_24
+        override val isConfigurable: Boolean get() = true
+        override val permissions: List<String>
+            get() = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                listOf(android.Manifest.permission.BLUETOOTH_CONNECT)
+            } else {
+                emptyList()
+            }
+    }
+
+    @Keep
+    data class WifiConnected(
+        @SerializedName("ssid") val ssid: String = ""
+    ) : Trigger {
+        override val title: Int get() = R.string.diy_trigger_wifi_connected
+        override val icon: Int get() = R.drawable.rounded_android_wifi_4_bar_plus_24
+        override val isConfigurable: Boolean get() = true
+        override val permissions: List<String>
+            get() = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
+    @Keep
+    data class WifiDisconnected(
+        @SerializedName("ssid") val ssid: String = ""
+    ) : Trigger {
+        override val title: Int get() = R.string.diy_trigger_wifi_disconnected
+        override val icon: Int get() = R.drawable.rounded_android_wifi_3_bar_24
+        override val isConfigurable: Boolean get() = true
+        override val permissions: List<String>
+            get() = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    }
 }

@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -368,6 +369,14 @@
 
         <activity
             android:name=".ui.activities.PrivateDnsSettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
+            android:name=".ui.activities.BatteryDetailsActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:noHistory="true"
@@ -1023,6 +1032,14 @@
         </receiver>
 
         <receiver
+            android:name=".services.receivers.DownloadUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.ACTION_DOWNLOAD_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name=".services.automation.receivers.TimeAutomationReceiver"
             android:exported="false">
             <intent-filter>
@@ -1103,6 +1120,20 @@
             <meta-data
                 android:name="android.service.quicksettings.TILE_CATEGORY"
                 android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+
+        <service
+            android:name=".services.tiles.RestartSystemUiTileService"
+            android:exported="true"
+            android:icon="@drawable/reopen_window_24px"
+            android:label="@string/tile_restart_systemui"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_UTILITIES" />
         </service>
 
         <provider

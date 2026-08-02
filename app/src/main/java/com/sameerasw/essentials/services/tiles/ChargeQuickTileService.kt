@@ -39,21 +39,47 @@ class ChargeQuickTileService : BaseTileService() {
     override fun onTileClick() {
         val adaptiveChargingEnabled = getSecureInt(ADAPTIVE_CHARGING_SETTING, 0) == 1
         val chargeOptimizationEnabled = getSecureInt(CHARGE_OPTIMIZATION_MODE, 0) == 1
+        
+        val settingsRepository = com.sameerasw.essentials.data.repository.SettingsRepository(this)
+        val enableAdaptive = settingsRepository.getBoolean("charge_opt_toggle_adaptive", true)
+        val enableLimit = settingsRepository.getBoolean("charge_opt_toggle_limit", true)
+        val enableDeactivated = settingsRepository.getBoolean("charge_opt_toggle_deactivated", true)
 
-        when {
-            adaptiveChargingEnabled -> {
-                putSecureInt(CHARGE_OPTIMIZATION_MODE, 1)
-                putSecureInt(ADAPTIVE_CHARGING_SETTING, 0)
+        val currentSelection = when {
+            chargeOptimizationEnabled -> 2 // LIMIT
+            adaptiveChargingEnabled -> 1 // ADAPTIVE
+            else -> 0 // DEACTIVATED
+        }
+
+        // Determine the next state
+        var nextSelection = currentSelection
+        for (i in 1..3) {
+            val candidate = (currentSelection + i) % 3
+            val isAllowed = when (candidate) {
+                0 -> enableDeactivated
+                1 -> enableAdaptive
+                2 -> enableLimit
+                else -> false
             }
+            if (isAllowed) {
+                nextSelection = candidate
+                break
+            }
+        }
 
-            chargeOptimizationEnabled -> {
+        // Apply new values based on selection
+        when (nextSelection) {
+            0 -> {
                 putSecureInt(CHARGE_OPTIMIZATION_MODE, 0)
                 putSecureInt(ADAPTIVE_CHARGING_SETTING, 0)
             }
-
-            else -> {
+            1 -> {
                 putSecureInt(CHARGE_OPTIMIZATION_MODE, 0)
                 putSecureInt(ADAPTIVE_CHARGING_SETTING, 1)
+            }
+            2 -> {
+                putSecureInt(CHARGE_OPTIMIZATION_MODE, 1)
+                putSecureInt(ADAPTIVE_CHARGING_SETTING, 0)
             }
         }
     }

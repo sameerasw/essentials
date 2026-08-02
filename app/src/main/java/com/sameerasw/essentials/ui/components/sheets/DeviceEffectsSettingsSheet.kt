@@ -58,10 +58,9 @@ fun DeviceEffectsSettingsSheet(
     var dimWallpaper by remember { mutableStateOf(initialAction.dimWallpaper) }
     var nightMode by remember { mutableStateOf(initialAction.nightMode) }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         dragHandle = null
     ) {
         Column(

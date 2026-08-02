@@ -121,12 +121,11 @@ fun AddRepoBottomSheet(
     }
 
     if (showReadme && readmeContent != null) {
-        ModalBottomSheet(
+        EssentialsBottomSheet(
             onDismissRequest = {
                 HapticUtil.performUIHaptic(view)
                 showReadme = false
-            },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            }
         ) {
             Column(
                 modifier = Modifier
@@ -155,10 +154,9 @@ fun AddRepoBottomSheet(
         )
     }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

@@ -71,6 +71,17 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" ||
+                componentName.className == "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService"
+            ) {
+                val intent = Intent(this, BatteryDetailsActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+                return
+            }
+
             val feature = when (componentName.className) {
                 "com.sameerasw.essentials.services.tiles.CaffeinateTileService" -> "Caffeinate"
                 "com.sameerasw.essentials.services.tiles.NotificationLightingTileService" -> "Notification lighting"
@@ -86,7 +97,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
                 "com.sameerasw.essentials.services.tiles.UsbDebuggingTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"
-                "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" -> "Battery notification"
                 "com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService" -> "Always on Display"
                 "com.sameerasw.essentials.services.tiles.LocationReachedTileService" -> "Location reached"
                 else -> null

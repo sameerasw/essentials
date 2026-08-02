@@ -5,6 +5,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -100,6 +106,9 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
 
     var selectedMode by remember { mutableStateOf(currentMode) }
     var customHostname by remember { mutableStateOf(currentHostname) }
+    var isCycleMode by remember {
+        mutableStateOf(settingsRepository.getBoolean("private_dns_is_cycle_mode", false))
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -119,80 +128,167 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.router_24px),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-                Text(
-                    text = stringResource(R.string.tile_private_dns),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.router_24px),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.tile_private_dns),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
 
-            // Mode Selection Container
-            RoundedCardContainer {
-                DnsSegmentedItem(
-                    label = stringResource(R.string.tile_private_dns_off),
-                    isSelected = selectedMode == "off",
+                OutlinedButton(
                     onClick = {
-                        selectedMode = "off"
-                        HapticUtil.performUIHaptic(view)
-                    }
-                )
-                DnsSegmentedItem(
-                    label = stringResource(R.string.tile_private_dns_auto),
-                    isSelected = selectedMode == "opportunistic",
-                    onClick = {
-                        selectedMode = "opportunistic"
-                        HapticUtil.performUIHaptic(view)
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = cycleAuto,
-                            onCheckedChange = { checked ->
-                                cycleAuto = checked
-                                HapticUtil.performUIHaptic(view)
+                        try {
+                            if (!isCycleMode) {
+                                Settings.Global.putString(
+                                    context.contentResolver,
+                                    PRIVATE_DNS_MODE,
+                                    selectedMode
+                                )
+                                if (selectedMode == "hostname") {
+                                    Settings.Global.putString(
+                                        context.contentResolver,
+                                        PRIVATE_DNS_SPECIFIER,
+                                        customHostname
+                                    )
+                                }
                             }
-                        )
-                    }
-                )
-                DnsSegmentedItem(
-                    label = stringResource(R.string.private_dns_custom_title),
-                    isSelected = selectedMode == "hostname",
-                    onClick = {
-                        selectedMode = "hostname"
-                        HapticUtil.performUIHaptic(view)
-                    }
+                            settingsRepository.putBoolean("private_dns_cycle_auto", cycleAuto)
+                            settingsRepository.putBoolean("private_dns_is_cycle_mode", isCycleMode)
+                            HapticUtil.performHeavyHaptic(view)
+                            onDismiss()
+                        } catch (e: Exception) {
+                            // Handle permission error if any
+                        }
+                    },
+                    modifier = Modifier.height(36.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                        horizontal = 12.dp,
+                        vertical = 0.dp
+                    ),
+                    shape = RoundedCornerShape(18.dp),
+                    border = androidx.compose.foundation.BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_check_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(R.string.action_save),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            Text(
+                text = stringResource(R.string.private_dns_mode_label),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            RoundedCardContainer {
+                com.sameerasw.essentials.ui.components.pickers.SegmentedPicker(
+                    items = listOf(false, true),
+                    selectedItem = isCycleMode,
+                    onItemSelected = { isCycleMode = it },
+                    labelProvider = { cycle ->
+                        if (cycle) context.getString(R.string.private_dns_mode_cycle)
+                        else context.getString(R.string.private_dns_mode_toggle)
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
-            if (selectedMode == "hostname") {
+            AnimatedVisibility(
+                visible = !isCycleMode,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                // Mode Selection Container
+                RoundedCardContainer {
+                    DnsSegmentedItem(
+                        label = stringResource(R.string.tile_private_dns_off),
+                        isSelected = selectedMode == "off",
+                        onClick = {
+                            selectedMode = "off"
+                            HapticUtil.performUIHaptic(view)
+                        }
+                    )
+                    DnsSegmentedItem(
+                        label = stringResource(R.string.tile_private_dns_auto),
+                        isSelected = selectedMode == "opportunistic",
+                        onClick = {
+                            selectedMode = "opportunistic"
+                            HapticUtil.performUIHaptic(view)
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = cycleAuto,
+                                onCheckedChange = { checked ->
+                                    cycleAuto = checked
+                                    HapticUtil.performUIHaptic(view)
+                                }
+                            )
+                        }
+                    )
+                    DnsSegmentedItem(
+                        label = stringResource(R.string.private_dns_custom_title),
+                        isSelected = selectedMode == "hostname",
+                        onClick = {
+                            selectedMode = "hostname"
+                            HapticUtil.performUIHaptic(view)
+                        }
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = isCycleMode || selectedMode == "hostname",
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(24.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceBright
-                        )
-                    ) {
-                        OutlinedTextField(
-                            value = customHostname,
-                            onValueChange = { customHostname = it },
-                            label = { Text(stringResource(R.string.private_dns_hostname_label)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            singleLine = true,
-                            shape = RoundedCornerShape(16.dp)
-                        )
+                    if (!isCycleMode) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(24.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceBright
+                            )
+                        ) {
+                            OutlinedTextField(
+                                value = customHostname,
+                                onValueChange = { customHostname = it },
+                                label = { Text(stringResource(R.string.private_dns_hostname_label)) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                singleLine = true,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                        }
                     }
 
                     Row(
@@ -273,10 +369,12 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                             DnsPresetItem(
                                 name = preset.name,
                                 hostname = preset.hostname,
-                                isSelected = customHostname == preset.hostname,
+                                isSelected = !isCycleMode && customHostname == preset.hostname,
                                 onClick = {
-                                    customHostname = preset.hostname
-                                    HapticUtil.performUIHaptic(view)
+                                    if (!isCycleMode) {
+                                        customHostname = preset.hostname
+                                        HapticUtil.performUIHaptic(view)
+                                    }
                                 },
                                 onDelete = {
                                     viewModel.removeDnsPreset(
@@ -290,52 +388,6 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp, top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = onDismiss,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(24.dp)
-                ) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-
-                Button(
-                    onClick = {
-                        try {
-                            Settings.Global.putString(
-                                context.contentResolver,
-                                PRIVATE_DNS_MODE,
-                                selectedMode
-                            )
-                            if (selectedMode == "hostname") {
-                                Settings.Global.putString(
-                                    context.contentResolver,
-                                    PRIVATE_DNS_SPECIFIER,
-                                    customHostname
-                                )
-                            }
-                            settingsRepository.putBoolean("private_dns_cycle_auto", cycleAuto)
-                            HapticUtil.performHeavyHaptic(view)
-                            onDismiss()
-                        } catch (e: Exception) {
-                            // Handle permission error if any
-                        }
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(24.dp)
-                ) {
-                    Text(stringResource(R.string.action_save))
-                }
-            }
         }
     }
 }

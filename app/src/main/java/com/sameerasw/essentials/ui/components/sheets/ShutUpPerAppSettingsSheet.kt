@@ -74,10 +74,9 @@ fun ShutUpPerAppSettingsSheet(
         )
     }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier

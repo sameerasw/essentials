@@ -76,9 +76,8 @@ fun BugReportBottomSheet(
         }
     }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier

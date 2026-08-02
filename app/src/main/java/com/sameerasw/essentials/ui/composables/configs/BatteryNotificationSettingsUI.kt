@@ -42,11 +42,11 @@ fun BatteryNotificationSettingsUI(
             )
         }
 
-        Text(
-            text = stringResource(R.string.battery_notification_hint),
+        com.sameerasw.essentials.translation.TranslatableText(
+            stringResId = R.string.battery_notification_hint,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
+

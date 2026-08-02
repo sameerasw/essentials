@@ -1,10 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
 
 
-import org . jetbrains . kotlin . gradle . dsl . JvmTarget
 
         kotlin {
             compilerOptions {
@@ -25,15 +26,25 @@ android {
     namespace = "com.sameerasw.essentials"
     compileSdk = 37
 
+    androidResources {
+        localeFilters += listOf(
+            "en", "ach", "af", "ar", "bn", "bn-rBD", "ca", "cs", "da", "de", "el", "es", "fi", "fil", "fil-rPH",
+            "fr", "he", "hi", "hi-rIN", "hu", "id", "in", "in-rID", "it", "iw", "ja", "ko", "ml", "ml-rIN",
+            "ne", "ne-rNP", "nl", "no", "pl", "pt", "pt-rBR", "pt-rPT", "ro", "ru", "si", "sk", "sk-rSK",
+            "sr", "sv", "ta", "ta-rIN", "tr", "uk", "vi", "zh", "zh-rCN", "zh-rTW"
+        )
+    }
+
     defaultConfig {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 37
-        versionCode = 51
-        versionName = "15.7"
+        versionCode = 57
+        versionName = "16.5"
 
         val whatsNewCounter = 2
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
+        buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "5")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,16 +53,15 @@ android {
 
 //        optimized dev build
 
-//          debug {
-//             isMinifyEnabled = true
-//             isShrinkResources = true
-//             isDebuggable = false
-//
-//             proguardFiles(
-//                 getDefaultProguardFile("proguard-android-optimize.txt"),
-//                 "proguard-rules.pro"
-//             )
-//          }
+        //   debug {
+        //      isMinifyEnabled = true
+        //      isShrinkResources = true
+        //      isDebuggable = false
+        //      proguardFiles(
+        //          getDefaultProguardFile("proguard-android-optimize.txt"),
+        //          "proguard-rules.pro"
+        //      )
+        //   }
 
         // end
 
@@ -88,19 +98,19 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     // Android 12+ SplashScreen API with backward compatibility attributes
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.core.splashscreen)
 
     // Force latest Material3 1.5.0-alpha17 for new MaterialShapes
-    implementation("androidx.compose.material3:material3:1.5.0-alpha19")
+    implementation(libs.androidx.compose.material3.v150alpha24)
 
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.appcompat)
-    implementation("androidx.biometric:biometric:1.2.0-alpha05")
+    implementation(libs.androidx.biometric)
 
-    implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation("io.coil-kt:coil-gif:2.5.0")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.foundation)
@@ -123,15 +133,15 @@ dependencies {
     implementation(libs.hiddenapibypass)
 
     // Gson for JSON serialization
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.palette:palette:1.0.0")
+    implementation(libs.gson.v2140)
+    implementation(libs.androidx.palette)
 
     // Reorderable library
-    implementation("sh.calvin.reorderable:reorderable:3.0.0")
+    implementation(libs.reorderable)
 
     // Volume Long Press
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
-    implementation("dev.rikka.shizuku:api:13.1.5")
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.api.v1315)
 
     // Google Maps & Location
     implementation(libs.play.services.location)
@@ -144,31 +154,34 @@ dependencies {
     implementation(kotlin("reflect"))
 
     // SymSpell for word suggestions
-    implementation("com.darkrockstudios:symspellkt:3.4.0")
+    implementation(libs.symspellkt)
 
-    implementation("androidx.glance:glance-appwidget:1.3.0-alpha01")
-    implementation("androidx.glance:glance-material3:1.3.0-alpha01")
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
 
     // Watermark dependencies
-    implementation("androidx.exifinterface:exifinterface:1.3.7")
-    implementation("androidx.compose.material:material-icons-extended:1.7.0") // Compatible with Compose BOM
+    implementation(libs.androidx.exifinterface)
+    implementation(libs.androidx.compose.material.icons.extended) // Compatible with Compose BOM
 
     // GSMArena Parsing
-    implementation("org.jsoup:jsoup:1.15.3")
+    implementation(libs.jsoup)
     implementation(libs.sentry.android)
     implementation(libs.androidx.graphics.shapes)
+
+    // AutoUpdater
+    implementation(libs.autoupdater)
 
     // Media3 for Live Wallpaper
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.common)
 
     // RemoteIntent support
-    implementation("androidx.wear:wear-remote-interactions:1.1.0-alpha02")
+    implementation(libs.androidx.wear.remote.interactions.v110alpha02)
 
     // tandard wearable library
-    implementation("com.google.android.gms:play-services-wearable:19.0.0")
+    implementation(libs.play.services.wearable.v1900)
 
     // Lottie for animations
-    implementation("com.airbnb.android:lottie-compose:6.4.0")
+    implementation(libs.lottie.compose)
 
 }

@@ -111,6 +111,11 @@ fun HelpAndGuidesContent() {
             description = stringResource(R.string.instruction_section_statusbar_desc)
         ),
         InstructionSection(
+            title = stringResource(R.string.instruction_section_battery_saver_title),
+            iconRes = R.drawable.rounded_battery_charging_60_24,
+            description = stringResource(R.string.instruction_section_battery_saver_desc)
+        ),
+        InstructionSection(
             title = stringResource(R.string.instruction_section_lighting_title),
             iconRes = R.drawable.rounded_blur_linear_24,
             description = stringResource(R.string.instruction_section_lighting_desc)
@@ -124,6 +129,16 @@ fun HelpAndGuidesContent() {
             title = stringResource(R.string.instruction_section_flashlight_title),
             iconRes = R.drawable.rounded_flashlight_on_24,
             description = stringResource(R.string.instruction_section_flashlight_desc)
+        ),
+        InstructionSection(
+            title = stringResource(R.string.instruction_section_notification_snoozing_title),
+            iconRes = R.drawable.rounded_notifications_paused_24,
+            description = stringResource(R.string.instruction_section_notification_snoozing_desc)
+        ),
+        InstructionSection(
+            title = stringResource(R.string.instruction_section_safe_volume_title),
+            iconRes = R.drawable.rounded_sound_detection_loud_sound_24,
+            description = stringResource(R.string.instruction_section_safe_volume_desc)
         ),
         InstructionSection(
             title = stringResource(R.string.instruction_section_about_title),

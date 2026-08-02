@@ -48,6 +48,7 @@ import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
+import com.sameerasw.essentials.services.AppUpdateWorker
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
@@ -320,6 +321,24 @@ class MainViewModel : ViewModel() {
     val isAprilFoolsSheetVisible = mutableStateOf(false)
     val isAprilFoolsShown = mutableStateOf(false)
 
+    // Battery Saver Constants
+    val batterySaverConstants = mutableStateOf<Map<String, String>>(emptyMap())
+
+    // Audio Safe Volume State
+    val isAudioSafeVolumeDisabled = mutableStateOf(false)
+
+    // Battery Saver Low Power Trigger Level
+    val lowPowerTriggerLevel = mutableIntStateOf(0)
+
+    // Notification Snooze
+    val isShowNotificationSnoozeEnabled = mutableStateOf(false)
+    val notificationSnoozeDefault = mutableIntStateOf(60)
+    val notificationSnoozeOptions = mutableStateOf<List<Int>>(listOf(15, 30, 60, 120))
+
+
+
+
+
     private var lastUpdateCheckTime: Long = 0
     lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
@@ -376,6 +395,26 @@ class MainViewModel : ViewModel() {
                     Settings.System.getUriFor("peak_refresh_rate"),
                     Settings.System.getUriFor("min_refresh_rate") -> {
                         appContext?.let { syncRefreshRateState(it) }
+                    }
+
+                    Settings.Global.getUriFor("battery_saver_constants") -> {
+                        appContext?.let { loadBatterySaverConstants(it) }
+                    }
+
+                    Settings.Global.getUriFor("audio_safe_volume_state") -> {
+                        appContext?.let { syncAudioSafeVolumeState(it) }
+                    }
+
+                    Settings.Global.getUriFor("low_power_trigger_level") -> {
+                        appContext?.let { syncLowPowerTriggerLevel(it) }
+                    }
+
+                    Settings.Secure.getUriFor("show_notification_snooze") -> {
+                        appContext?.let { syncShowNotificationSnooze(it) }
+                    }
+
+                    Settings.Global.getUriFor("notification_snooze_options") -> {
+                        appContext?.let { loadNotificationSnoozeOptions(it) }
                     }
                 }
             }
@@ -866,6 +905,10 @@ class MainViewModel : ViewModel() {
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        if (cachedIsUpdateAvailable) {
+            isUpdateAvailable.value = true
+            updateInfo.value = cachedUpdateInfo
+        }
         isAutoAccessibilityEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
         isHideGestureBarEnabled.value =
@@ -944,6 +987,7 @@ class MainViewModel : ViewModel() {
         if (isDailyWallpaperAutoUpdateEnabled.value) {
             schedulePeriodicWallpaperCheck(context)
         }
+        schedulePeriodicAppUpdateCheck(context)
         dailyWallpaperAutoUpdateTime.value = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
         isDailyWallpaperShowLastTime.value = settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME)
 
@@ -1085,6 +1129,62 @@ class MainViewModel : ViewModel() {
             // This might fail on Android 14+ for some system keys
             e.printStackTrace()
         }
+
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor("battery_saver_constants"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor("audio_safe_volume_state"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor("low_power_trigger_level"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Secure.getUriFor("show_notification_snooze"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor("notification_snooze_options"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        loadBatterySaverConstants(context)
+        syncAudioSafeVolumeState(context)
+        syncLowPowerTriggerLevel(context)
+        syncShowNotificationSnooze(context)
+        loadNotificationSnoozeOptions(context)
 
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
@@ -1817,6 +1917,7 @@ class MainViewModel : ViewModel() {
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
         if (isCheckingUpdate.value) return
+        if (isUpdateAvailable.value && !manual) return
 
         if (!manual) {
             if (!isAutoUpdateEnabled.value) return
@@ -1835,11 +1936,15 @@ class MainViewModel : ViewModel() {
                 } ?: "0.0"
 
                 val updateInfoResult =
-                    updateRepository.checkForUpdates(isPreReleaseCheckEnabled.value, currentVersion)
+                    updateRepository.checkForUpdates(context, isPreReleaseCheckEnabled.value, currentVersion)
 
                 if (updateInfoResult != null) {
                     updateInfo.value = updateInfoResult
                     isUpdateAvailable.value = updateInfoResult.isUpdateAvailable
+                    if (updateInfoResult.isUpdateAvailable) {
+                        cachedIsUpdateAvailable = true
+                        cachedUpdateInfo = updateInfoResult
+                    }
 
                     if (updateInfoResult.isUpdateAvailable && updateInfoResult.downloadUrl.isNotEmpty()) {
                         if (isUpdateNotificationEnabled.value) {
@@ -3498,6 +3603,7 @@ class MainViewModel : ViewModel() {
 
     fun requestShizukuPermission() {
         ShizukuUtils.requestPermission()
+        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
     }
 
     fun grantWriteSecureSettingsWithShizuku(context: Context): Boolean {
@@ -3505,6 +3611,7 @@ class MainViewModel : ViewModel() {
         if (success) {
             // Refresh the write secure settings check
             isWriteSecureSettingsEnabled.value = canWriteSecureSettings(context)
+            isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         }
         return success
     }
@@ -4297,7 +4404,7 @@ class MainViewModel : ViewModel() {
     private fun schedulePeriodicWallpaperCheck(context: Context) {
         val workRequest =
             androidx.work.PeriodicWorkRequestBuilder<com.sameerasw.essentials.services.DailyWallpaperWorker>(
-                12, java.util.concurrent.TimeUnit.HOURS
+                24, java.util.concurrent.TimeUnit.HOURS
             ).build()
 
         androidx.work.WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -4307,9 +4414,30 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    private fun schedulePeriodicAppUpdateCheck(context: Context) {
+        val constraints = androidx.work.Constraints.Builder()
+            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+            .build()
+
+        val workRequest =
+            androidx.work.PeriodicWorkRequestBuilder<AppUpdateWorker>(
+                12, java.util.concurrent.TimeUnit.HOURS
+            )
+            .setConstraints(constraints)
+            .build()
+
+        androidx.work.WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "app_update_check_work",
+            androidx.work.ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+    }
+
     private fun cancelPeriodicWallpaperCheck(context: Context) {
         androidx.work.WorkManager.getInstance(context)
             .cancelUniqueWork("daily_wallpaper_check_work")
+        androidx.work.WorkManager.getInstance(context)
+            .cancelUniqueWork("daily_wallpaper_retry_work")
     }
 
     private fun updateDailyWallpaperAutoUpdateTime(enabled: Boolean) {
@@ -4317,10 +4445,150 @@ class MainViewModel : ViewModel() {
             val currentTime = LocalDateTime.now().toString()
             dailyWallpaperAutoUpdateTime.value = currentTime
             settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME, currentTime)
+            settingsRepository.putInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, 0)
         } else {
             dailyWallpaperAutoUpdateTime.value = null
             settingsRepository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+            settingsRepository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT)
         }
     }
 
+
+    fun loadBatterySaverConstants(context: Context) {
+        val constantsStr = Settings.Global.getString(context.contentResolver, "battery_saver_constants") ?: ""
+        val map = mutableMapOf<String, String>()
+        if (constantsStr.isNotEmpty()) {
+            constantsStr.split(",").forEach { pair ->
+                val parts = pair.split("=", limit = 2)
+                if (parts.size == 2) {
+                    map[parts[0].trim()] = parts[1].trim()
+                }
+            }
+        }
+        batterySaverConstants.value = map
+    }
+
+    fun updateBatterySaverConstant(context: Context, key: String, value: String) {
+        val currentMap = batterySaverConstants.value.toMutableMap()
+        currentMap[key] = value
+        saveBatterySaverConstants(context, currentMap)
+    }
+
+    fun removeBatterySaverConstant(context: Context, key: String) {
+        val currentMap = batterySaverConstants.value.toMutableMap()
+        currentMap.remove(key)
+        saveBatterySaverConstants(context, currentMap)
+    }
+
+    fun resetBatterySaverConstants(context: Context) {
+        try {
+            Settings.Global.putString(context.contentResolver, "battery_saver_constants", null)
+            batterySaverConstants.value = emptyMap()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun saveBatterySaverConstants(context: Context, map: Map<String, String>) {
+        val constantsStr = map.map { "${it.key}=${it.value}" }.joinToString(",")
+        try {
+            Settings.Global.putString(context.contentResolver, "battery_saver_constants", constantsStr)
+            batterySaverConstants.value = map
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun syncAudioSafeVolumeState(context: Context) {
+        val rawValue = Settings.Global.getInt(context.contentResolver, "audio_safe_volume_state", 3)
+        // 1 = Disable (toggle is on), 3 = Active (toggle is off)
+        isAudioSafeVolumeDisabled.value = (rawValue == 1)
+    }
+
+    fun setAudioSafeVolumeDisabled(context: Context, disabled: Boolean) {
+        val targetValue = if (disabled) 1 else 3
+        try {
+            Settings.Global.putInt(context.contentResolver, "audio_safe_volume_state", targetValue)
+            isAudioSafeVolumeDisabled.value = disabled
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun syncLowPowerTriggerLevel(context: Context) {
+        val level = Settings.Global.getInt(context.contentResolver, "low_power_trigger_level", 0)
+        lowPowerTriggerLevel.intValue = level
+    }
+
+    fun setLowPowerTriggerLevel(context: Context, level: Int) {
+        try {
+            Settings.Global.putInt(context.contentResolver, "low_power_trigger_level", level)
+            lowPowerTriggerLevel.intValue = level
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun syncShowNotificationSnooze(context: Context) {
+        val enabled = Settings.Secure.getInt(context.contentResolver, "show_notification_snooze", 0) == 1
+        isShowNotificationSnoozeEnabled.value = enabled
+    }
+
+    fun setShowNotificationSnoozeEnabled(context: Context, enabled: Boolean) {
+        try {
+            Settings.Secure.putInt(context.contentResolver, "show_notification_snooze", if (enabled) 1 else 0)
+            isShowNotificationSnoozeEnabled.value = enabled
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun loadNotificationSnoozeOptions(context: Context) {
+        val raw = Settings.Global.getString(context.contentResolver, "notification_snooze_options") ?: ""
+        var def = 60
+        var opts = listOf(15, 30, 60, 120)
+        if (raw.isNotEmpty()) {
+            // Format: default=60,options_array=15:30:60:120
+            raw.split(",").forEach { pair ->
+                val parts = pair.split("=", limit = 2)
+                if (parts.size == 2) {
+                    val key = parts[0].trim()
+                    val value = parts[1].trim()
+                    if (key == "default") {
+                        def = value.toIntOrNull() ?: 60
+                    } else if (key == "options_array") {
+                        opts = value.split(":").mapNotNull { it.trim().toIntOrNull() }
+                    }
+                }
+            }
+        }
+        notificationSnoozeDefault.intValue = def
+        notificationSnoozeOptions.value = opts
+    }
+
+    fun saveNotificationSnoozeOptions(context: Context, def: Int, opts: List<Int>) {
+        val serialized = "default=$def,options_array=${opts.joinToString(":")}"
+        try {
+            Settings.Global.putString(context.contentResolver, "notification_snooze_options", serialized)
+            notificationSnoozeDefault.intValue = def
+            notificationSnoozeOptions.value = opts
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun resetNotificationSnoozeOptions(context: Context) {
+        try {
+            Settings.Global.putString(context.contentResolver, "notification_snooze_options", null)
+            notificationSnoozeDefault.intValue = 60
+            notificationSnoozeOptions.value = listOf(15, 30, 60, 120)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    companion object {
+        var cachedIsUpdateAvailable: Boolean = false
+        var cachedUpdateInfo: UpdateInfo? = null
+    }
 }

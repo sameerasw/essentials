@@ -34,6 +34,8 @@ class LocationReachedService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var trackingJob: Job? = null
     private var isAlarmTriggered = false
+    private var lastSyncTime = 0L
+    private var isInitialCalculationDone = false
 
     private val repository by lazy { LocationReachedRepository(this) }
     private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
@@ -103,7 +105,7 @@ class LocationReachedService : Service() {
                     }
                     break
                 }
-                delay(3000)
+                delay(5000)
             }
         }
     }
@@ -135,7 +137,17 @@ class LocationReachedService : Service() {
     ) {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val editor = prefs.edit()
+
+        var shouldSync = false
+
         if (active && alarm != null) {
+            val wasActive = prefs.getBoolean("travel_active", false)
+            val wasPaused = prefs.getBoolean("travel_is_paused", false)
+            val wasArrived = prefs.getBoolean("travel_arrived", false)
+
+            val isPaused = alarm.isPaused
+            val isArrived = progressPercent >= 100
+
             editor.putBoolean("travel_active", true)
             editor.putString("travel_name", alarm.name)
             editor.putFloat("travel_progress", progressPercent.toFloat() / 100f)
@@ -148,18 +160,38 @@ class LocationReachedService : Service() {
                 distanceText ?: getString(R.string.location_reached_calculating)
             )
             editor.putString("travel_icon_name", alarm.iconResName)
-            editor.putBoolean("travel_is_paused", alarm.isPaused)
-            if (progressPercent >= 100) {
-                editor.putBoolean("travel_arrived", true)
-            } else {
-                editor.putBoolean("travel_arrived", false)
+            editor.putBoolean("travel_is_paused", isPaused)
+            editor.putBoolean("travel_arrived", isArrived)
+
+            // Check if it's start, pause transition, or arrival
+            if (!wasActive || (isPaused != wasPaused) || (isArrived != wasArrived)) {
+                shouldSync = true
+            }
+
+            // Check if initial calculation completes (non-null etaText/distanceText and wasn't done yet)
+            if (!isInitialCalculationDone && etaText != null && distanceText != null) {
+                isInitialCalculationDone = true
+                shouldSync = true
             }
         } else {
+            val wasActive = prefs.getBoolean("travel_active", false)
             editor.putBoolean("travel_active", false)
             editor.putBoolean("travel_arrived", false)
+            if (wasActive) {
+                shouldSync = true // Stop action
+            }
         }
         editor.apply()
-        DeviceInfoSyncManager.forceSync(this)
+
+        // Periodic sync once a minute (60000 ms)
+        val now = System.currentTimeMillis()
+        if (shouldSync || (now - lastSyncTime >= 60000)) {
+            val isSyncEnabled = prefs.getBoolean("watch_sync_location_reached_enabled", true)
+            if (isSyncEnabled) {
+                lastSyncTime = now
+                DeviceInfoSyncManager.forceSync(this)
+            }
+        }
     }
 
     private fun pauseTracking() {
@@ -319,9 +351,7 @@ class LocationReachedService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val mainIntent = Intent(this, MainActivity::class.java).apply {
-            putExtra("feature", "Location reached")
-        }
+        val mainIntent = Intent(this, com.sameerasw.essentials.ui.activities.TravelCompassActivity::class.java)
         val mainPendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -521,6 +551,17 @@ class LocationReachedService : Service() {
     override fun onDestroy() {
         trackingJob?.cancel()
         serviceScope.cancel()
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                @Suppress("DEPRECATION")
+                stopForeground(true)
+            }
+            notificationManager.cancel(NOTIFICATION_ID)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         super.onDestroy()
     }
 }

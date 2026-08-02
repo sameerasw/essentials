@@ -51,11 +51,8 @@ fun LocationReachedBottomSheet(
 
     if (currentAlarm == null && !isProcessing) return
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        dragHandle = { BottomSheetDefaults.DragHandle() }
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier

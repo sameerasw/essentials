@@ -43,6 +43,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
+import kotlinx.coroutines.isActive
+
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -221,20 +223,36 @@ fun WallpaperScreen(
     var dailyWallpaperNextAutoUpdateTime by remember { mutableLongStateOf(0L) }
     var dailyWallpaperLastCheckedFormatted by remember { mutableStateOf("") }
     LaunchedEffect(dailyWallpaperAutoUpdateTime) {
-        if (!dailyWallpaperAutoUpdateTime.isNullOrEmpty()){
-            val prevTime = runCatching { LocalDateTime.parse(dailyWallpaperAutoUpdateTime) }.getOrNull()
-            if (prevTime != null) {
-                val passedTime = Duration.between(
-                    prevTime,
-                    LocalDateTime.now()
-                ).toHours()
-                dailyWallpaperNextAutoUpdateTime = (12L - passedTime).coerceAtLeast(0)
-                dailyWallpaperLastCheckedFormatted = runCatching {
-                    prevTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
-                }.getOrDefault("")
+        while (true) {
+            if (!dailyWallpaperAutoUpdateTime.isNullOrEmpty()) {
+                val prevTime = runCatching { LocalDateTime.parse(dailyWallpaperAutoUpdateTime) }.getOrNull()
+                if (prevTime != null) {
+                    val passedMinutes = Duration.between(prevTime, LocalDateTime.now()).toMinutes()
+                    val retryCount = repository.getInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, 0)
+                    if (passedMinutes >= 0) {
+                        if (retryCount in 1..2) {
+                            val remainingMinutes = (30L - passedMinutes).coerceAtLeast(0L)
+                            dailyWallpaperNextAutoUpdateTime = remainingMinutes / 60L
+                        } else {
+                            val cycleMinutes = passedMinutes % 1440L
+                            val remainingMinutes = if (cycleMinutes == 0L && passedMinutes > 0L) 0L else 1440L - cycleMinutes
+                            dailyWallpaperNextAutoUpdateTime = remainingMinutes / 60L
+                        }
+                    } else {
+                        dailyWallpaperNextAutoUpdateTime = 24L
+                    }
+
+                    dailyWallpaperLastCheckedFormatted = runCatching {
+                        prevTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    }.getOrDefault("")
+                }
             }
+            kotlinx.coroutines.delay(60_000L)
         }
     }
+
+
+
 
     Box(
         modifier = Modifier
