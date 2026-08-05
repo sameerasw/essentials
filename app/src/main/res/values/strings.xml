@@ -1809,7 +1809,7 @@
     <string name="feat_allow_overlays_in_settings_desc">Allow apps to draw overlays over system Settings</string>
     <string name="cat_networks">Networks</string>
     <string name="feat_networks_title">Networks</string>
-    <string name="feat_networks_desc">Network download rate limits and data options</string>
+    <string name="feat_networks_desc">Control radios and networks</string>
     <string name="feat_network_download_rate_limit_title">Network download rate limit</string>
     <string name="feat_network_download_rate_limit_desc">Limit system-wide download speed</string>
     <string name="rate_limit_disabled">Disabled</string>

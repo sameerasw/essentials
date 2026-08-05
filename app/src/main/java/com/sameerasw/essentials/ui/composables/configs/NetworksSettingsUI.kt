@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlin.math.roundToInt
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -127,25 +129,29 @@ fun NetworksSettingsUI(
                 val idx = presetValues.indexOf(currentRateLimit)
                 if (idx != -1) idx else 0
             }
+            var sliderValue by remember(currentIndex) { mutableFloatStateOf(currentIndex.toFloat()) }
 
             ConfigSliderItem(
                 title = stringResource(R.string.feat_network_download_rate_limit_title),
                 description = stringResource(R.string.feat_network_download_rate_limit_desc),
-                value = currentIndex.toFloat(),
+                value = sliderValue,
                 onValueChange = { floatVal ->
-                    val newIndex = floatVal.toInt().coerceIn(0, presetValues.lastIndex)
-                    HapticUtil.performSliderHaptic(view)
-                    if (isHasWritePermission) {
-                        viewModel.setNetworkDownloadRateLimit(presetValues[newIndex], context)
-                    } else {
-                        requestingPermissionFor = NetworkPermissionModule.RATE_LIMIT
+                    sliderValue = floatVal
+                    val newIndex = floatVal.roundToInt().coerceIn(0, presetValues.lastIndex)
+                    if (presetValues[newIndex] != currentRateLimit) {
+                        HapticUtil.performSliderHaptic(view)
+                        if (isHasWritePermission) {
+                            viewModel.setNetworkDownloadRateLimit(presetValues[newIndex], context)
+                        } else {
+                            requestingPermissionFor = NetworkPermissionModule.RATE_LIMIT
+                        }
                     }
                 },
                 valueRange = 0f..5f,
                 steps = 4,
                 increment = 1f,
                 valueFormatter = { floatVal ->
-                    val idx = floatVal.toInt().coerceIn(0, presetLabels.lastIndex)
+                    val idx = floatVal.roundToInt().coerceIn(0, presetLabels.lastIndex)
                     presetLabels[idx]
                 },
                 iconRes = R.drawable.rounded_cell_wifi_24,
