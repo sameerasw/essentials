@@ -41,6 +41,7 @@ enum class PermissionModule {
     PIXEL_SEARCHBAR,
     PREFER_GPU_COMPOSING,
     ALLOW_OVERLAYS_IN_SETTINGS,
+    TRANSPARENT_NAVIGATION_BAR,
     NONE
 }
 
@@ -130,6 +131,7 @@ fun OtherCustomizationsSettingsUI(
             PermissionModule.PIXEL_SEARCHBAR -> listOf(shizukuPermission)
             PermissionModule.PREFER_GPU_COMPOSING -> listOf(shizukuPermission)
             PermissionModule.ALLOW_OVERLAYS_IN_SETTINGS -> listOf(shizukuPermission)
+            PermissionModule.TRANSPARENT_NAVIGATION_BAR -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
@@ -169,6 +171,7 @@ fun OtherCustomizationsSettingsUI(
                         viewModel.setCircleToSearchPreviewEnabled(viewModel.isCircleToSearchGestureEnabled.value)
                         viewModel.refreshPreferGpuComposingState(context)
                         viewModel.refreshAllowOverlaysInSettingsState(context)
+                        viewModel.refreshTransparentNavigationBarState(context)
                     } else if (event == Lifecycle.Event.ON_PAUSE) {
                         viewModel.setCircleToSearchPreviewEnabled(false)
                     }
@@ -283,6 +286,27 @@ fun OtherCustomizationsSettingsUI(
                 },
                 iconRes = R.drawable.rounded_security_24,
                 modifier = Modifier.highlight(highlightSetting == "allow_overlays_in_settings_toggle")
+            )
+
+            IconToggleItem(
+                title = stringResource(R.string.feat_transparent_navigation_bar_title),
+                description = stringResource(R.string.feat_transparent_navigation_bar_desc),
+                isChecked = viewModel.isTransparentNavigationBarEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (isShellGranted) {
+                        viewModel.setTransparentNavigationBarEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = PermissionModule.TRANSPARENT_NAVIGATION_BAR
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isShellGranted) {
+                        requestingPermissionFor = PermissionModule.TRANSPARENT_NAVIGATION_BAR
+                    }
+                },
+                iconRes = R.drawable.rounded_bottom_navigation_24,
+                modifier = Modifier.highlight(highlightSetting == "transparent_navigation_bar_toggle")
             )
 
             AnimatedVisibility(

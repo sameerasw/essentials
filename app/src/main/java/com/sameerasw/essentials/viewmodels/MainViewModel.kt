@@ -159,6 +159,7 @@ class MainViewModel : ViewModel() {
     val networkDownloadRateLimit = mutableIntStateOf(-1)
     val isMobileDataAlwaysOnEnabled = mutableStateOf(false)
     val isWirelessDisplayCertificationEnabled = mutableStateOf(false)
+    val isTransparentNavigationBarEnabled = mutableStateOf(false)
     val isPreferGpuComposingEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
@@ -815,6 +816,17 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
+                    SettingsRepository.KEY_TRANSPARENT_NAVIGATION_BAR -> {
+                        isTransparentNavigationBarEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyTransparentNavigationBar(
+                                it,
+                                isTransparentNavigationBarEnabled.value
+                            )
+                        }
+                    }
+
                     SettingsRepository.KEY_PREFER_GPU_COMPOSING -> {
                         isPreferGpuComposingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -1009,6 +1021,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON, false)
         isWirelessDisplayCertificationEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_WIRELESS_DISPLAY_CERTIFICATION, false)
+        isTransparentNavigationBarEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_TRANSPARENT_NAVIGATION_BAR, false)
         isPreferGpuComposingEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, false)
         isPixelSearchbarEnabled.value =
@@ -2331,6 +2345,36 @@ class MainViewModel : ViewModel() {
             viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                 ShellUtils.runCommand(context, "settings put global $key $value")
             }
+        }
+    }
+
+    fun setTransparentNavigationBarEnabled(enabled: Boolean, context: Context) {
+        isTransparentNavigationBarEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_TRANSPARENT_NAVIGATION_BAR, enabled)
+        applyTransparentNavigationBar(context, enabled)
+    }
+
+    fun refreshTransparentNavigationBarState(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val pkg = "com.android.internal.systemui.navbar.transparent"
+            val output = ShellUtils.runCommandWithOutput(context, "cmd overlay list")
+            if (output != null) {
+                val isEnabled = output.lines().any { line ->
+                    line.contains("[x]") && line.contains(pkg)
+                }
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    isTransparentNavigationBarEnabled.value = isEnabled
+                    settingsRepository.putBoolean(SettingsRepository.KEY_TRANSPARENT_NAVIGATION_BAR, isEnabled)
+                }
+            }
+        }
+    }
+
+    private fun applyTransparentNavigationBar(context: Context, enabled: Boolean) {
+        val pkg = "com.android.internal.systemui.navbar.transparent"
+        val action = if (enabled) "enable" else "disable"
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            ShellUtils.runCommand(context, "cmd overlay $action --user current $pkg")
         }
     }
 

@@ -1817,6 +1817,8 @@
     <string name="feat_mobile_data_always_on_desc">Keep mobile data active even when Wi-Fi is connected</string>
     <string name="feat_wireless_display_certification_title">Wireless display certification</string>
     <string name="feat_wireless_display_certification_desc">Show options for wireless display certification</string>
+    <string name="feat_transparent_navigation_bar_title">Transparent navigation bar</string>
+    <string name="feat_transparent_navigation_bar_desc">Make system navigation bar background transparent</string>
     <string name="section_graphics">Graphics</string>
     <string name="feat_prefer_gpu_composing_title">Prefer GPU for screen composing</string>
     <string name="feat_prefer_gpu_composing_desc">Disable hardware overlays to force GPU screen compositing. Resets on device reboot.</string>
