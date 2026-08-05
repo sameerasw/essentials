@@ -1820,7 +1820,7 @@
     <string name="feat_transparent_navigation_bar_title">Transparent navigation bar</string>
     <string name="feat_transparent_navigation_bar_desc">Make system navigation bar background transparent</string>
     <string name="feat_standby_apps_title">Standby apps</string>
-    <string name="feat_standby_apps_desc">Manage app standby buckets to optimize battery and background activity</string>
+    <string name="feat_standby_apps_desc">Optimize app background activities</string>
     <string name="about_desc_networks">Configure network download speed limits, keep mobile data continuously active even when connected to Wi-Fi, and enable wireless display certification settings.</string>
     <string name="about_desc_standby_apps">Manage Android App Standby Buckets (Active, Working set, Frequent, Rare, Restricted) to control background app execution, network usage, and battery consumption.</string>
     <string name="about_desc_other_customizations">Advanced display and system UI customizations including gesture bar visibility, circle to search height, rotation suggestions, setting overlays, transparent navigation bar, and GPU screen compositing.</string>
