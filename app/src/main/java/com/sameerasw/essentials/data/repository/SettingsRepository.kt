@@ -267,6 +267,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_ALLOW_OVERLAYS_IN_SETTINGS = "allow_overlays_in_settings"
         const val KEY_NETWORK_DOWNLOAD_RATE_LIMIT = "network_download_rate_limit"
         const val KEY_MOBILE_DATA_ALWAYS_ON = "mobile_data_always_on"
+        const val KEY_WIRELESS_DISPLAY_CERTIFICATION = "wireless_display_certification"
         const val KEY_PREFER_GPU_COMPOSING = "prefer_gpu_composing"
         const val KEY_PIXEL_SEARCHBAR = "pixel_searchbar"
         const val KEY_PIXEL_SEARCHBAR_TYPE = "pixel_searchbar_type"

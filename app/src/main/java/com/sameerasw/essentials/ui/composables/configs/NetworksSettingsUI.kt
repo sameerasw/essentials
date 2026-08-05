@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 private enum class NetworkPermissionModule {
     RATE_LIMIT,
     MOBILE_DATA_ALWAYS_ON,
+    WIRELESS_DISPLAY_CERTIFICATION,
     NONE
 }
 
@@ -59,6 +61,10 @@ fun NetworksSettingsUI(
     val isShellGranted = (isShizukuAvailable && isShizukuGranted) || (isRootAvailable && isRootGranted)
     val isHasWritePermission = viewModel.isWriteSecureSettingsEnabled.value || isShellGranted
 
+    LaunchedEffect(Unit) {
+        viewModel.refreshNetworksState(context)
+    }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -79,7 +85,8 @@ fun NetworksSettingsUI(
             description = if (!isShizukuAvailable) R.string.perm_shizuku_desc else R.string.perm_shizuku_grant_desc,
             dependentFeatures = listOf(
                 R.string.feat_network_download_rate_limit_title,
-                R.string.feat_mobile_data_always_on_title
+                R.string.feat_mobile_data_always_on_title,
+                R.string.feat_wireless_display_certification_title
             ),
             actionLabel = if (!isShizukuAvailable) R.string.perm_shizuku_install_action else if (isShellGranted) R.string.perm_action_granted else R.string.perm_action_grant,
             action = {
@@ -165,6 +172,27 @@ fun NetworksSettingsUI(
                 },
                 iconRes = R.drawable.rounded_mobile_24,
                 modifier = Modifier.highlight(highlightSetting == "mobile_data_always_on_toggle")
+            )
+
+            IconToggleItem(
+                title = stringResource(R.string.feat_wireless_display_certification_title),
+                description = stringResource(R.string.feat_wireless_display_certification_desc),
+                isChecked = viewModel.isWirelessDisplayCertificationEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (isHasWritePermission) {
+                        viewModel.setWirelessDisplayCertificationEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = NetworkPermissionModule.WIRELESS_DISPLAY_CERTIFICATION
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isHasWritePermission) {
+                        requestingPermissionFor = NetworkPermissionModule.WIRELESS_DISPLAY_CERTIFICATION
+                    }
+                },
+                iconRes = R.drawable.rounded_cast_24,
+                modifier = Modifier.highlight(highlightSetting == "wireless_display_certification_toggle")
             )
         }
     }

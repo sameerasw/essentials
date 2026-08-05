@@ -158,6 +158,7 @@ class MainViewModel : ViewModel() {
     val isAllowOverlaysInSettingsEnabled = mutableStateOf(false)
     val networkDownloadRateLimit = mutableIntStateOf(-1)
     val isMobileDataAlwaysOnEnabled = mutableStateOf(false)
+    val isWirelessDisplayCertificationEnabled = mutableStateOf(false)
     val isPreferGpuComposingEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
@@ -803,6 +804,17 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
+                    SettingsRepository.KEY_WIRELESS_DISPLAY_CERTIFICATION -> {
+                        isWirelessDisplayCertificationEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyWirelessDisplayCertification(
+                                it,
+                                isWirelessDisplayCertificationEnabled.value
+                            )
+                        }
+                    }
+
                     SettingsRepository.KEY_PREFER_GPU_COMPOSING -> {
                         isPreferGpuComposingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -995,6 +1007,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getInt(SettingsRepository.KEY_NETWORK_DOWNLOAD_RATE_LIMIT, -1)
         isMobileDataAlwaysOnEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON, false)
+        isWirelessDisplayCertificationEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_WIRELESS_DISPLAY_CERTIFICATION, false)
         isPreferGpuComposingEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, false)
         isPixelSearchbarEnabled.value =
@@ -2235,6 +2249,12 @@ class MainViewModel : ViewModel() {
         applyMobileDataAlwaysOn(context, enabled)
     }
 
+    fun setWirelessDisplayCertificationEnabled(enabled: Boolean, context: Context) {
+        isWirelessDisplayCertificationEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_WIRELESS_DISPLAY_CERTIFICATION, enabled)
+        applyWirelessDisplayCertification(context, enabled)
+    }
+
     fun refreshNetworksState(context: Context) {
         try {
             val liveRateLimit = Settings.Global.getInt(context.contentResolver, "ingress_rate_limit_bytes_per_second", -1)
@@ -2248,6 +2268,14 @@ class MainViewModel : ViewModel() {
             val liveMobileData = Settings.Global.getInt(context.contentResolver, "mobile_data_always_on", 0) == 1
             isMobileDataAlwaysOnEnabled.value = liveMobileData
             settingsRepository.putBoolean(SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON, liveMobileData)
+        } catch (e: Exception) {
+            // Permission restricted
+        }
+
+        try {
+            val liveWirelessDisplay = Settings.Global.getInt(context.contentResolver, "wifi_display_certification_on", 0) == 1
+            isWirelessDisplayCertificationEnabled.value = liveWirelessDisplay
+            settingsRepository.putBoolean(SettingsRepository.KEY_WIRELESS_DISPLAY_CERTIFICATION, liveWirelessDisplay)
         } catch (e: Exception) {
             // Permission restricted
         }
@@ -2273,6 +2301,24 @@ class MainViewModel : ViewModel() {
     private fun applyMobileDataAlwaysOn(context: Context, enabled: Boolean) {
         val value = if (enabled) 1 else 0
         val key = "mobile_data_always_on"
+        var success = false
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Global.putInt(context.contentResolver, key, value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        if (!success) {
+            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                ShellUtils.runCommand(context, "settings put global $key $value")
+            }
+        }
+    }
+
+    private fun applyWirelessDisplayCertification(context: Context, enabled: Boolean) {
+        val value = if (enabled) 1 else 0
+        val key = "wifi_display_certification_on"
         var success = false
         if (PermissionUtils.canWriteSecureSettings(context)) {
             try {

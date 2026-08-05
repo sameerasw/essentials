@@ -515,7 +515,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 context,
                                 viewModel.isEnableUnsupportedFeatures.value
                             ).filter { it.parentFeatureId == featureId }
-                            if (children.isNotEmpty()) {
+                            if (children.isNotEmpty() && featureId != "Networks") {
                                 RoundedCardContainer(
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp)

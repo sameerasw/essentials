@@ -34,6 +34,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_networks_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_network_download_rate_limit_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_mobile_data_always_on_title)
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_wireless_display_certification_title)
 
     // Shizuku permission
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)
