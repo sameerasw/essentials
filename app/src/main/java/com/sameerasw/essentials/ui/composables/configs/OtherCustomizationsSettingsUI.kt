@@ -165,6 +165,7 @@ fun OtherCustomizationsSettingsUI(
                 val observer = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
                         viewModel.setCircleToSearchPreviewEnabled(viewModel.isCircleToSearchGestureEnabled.value)
+                        viewModel.refreshPreferGpuComposingState(context)
                     } else if (event == Lifecycle.Event.ON_PAUSE) {
                         viewModel.setCircleToSearchPreviewEnabled(false)
                     }

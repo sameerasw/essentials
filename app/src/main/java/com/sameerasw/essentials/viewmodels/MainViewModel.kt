@@ -2151,6 +2151,19 @@ class MainViewModel : ViewModel() {
         applyPreferGpuComposing(context, enabled)
     }
 
+    fun refreshPreferGpuComposingState(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val isShellGranted = (isShizukuAvailable.value && isShizukuPermissionGranted.value) ||
+                    (isRootAvailable.value && isRootPermissionGranted.value)
+            if (isShellGranted) {
+                val isRoot = isRootAvailable.value && isRootPermissionGranted.value
+                val liveValue = SurfaceFlingerControl.isHwOverlaysDisabled(context, isRoot)
+                isPreferGpuComposingEnabled.value = liveValue
+                settingsRepository.putBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, liveValue)
+            }
+        }
+    }
+
     private fun applyPreferGpuComposing(context: Context, enabled: Boolean) {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             val isRoot = isRootAvailable.value && isRootPermissionGranted.value
