@@ -40,6 +40,7 @@ enum class PermissionModule {
     DISABLE_ROTATION_SUGGESTION,
     PIXEL_SEARCHBAR,
     PREFER_GPU_COMPOSING,
+    ALLOW_OVERLAYS_IN_SETTINGS,
     NONE
 }
 
@@ -128,6 +129,7 @@ fun OtherCustomizationsSettingsUI(
             PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
             PermissionModule.PIXEL_SEARCHBAR -> listOf(shizukuPermission)
             PermissionModule.PREFER_GPU_COMPOSING -> listOf(shizukuPermission)
+            PermissionModule.ALLOW_OVERLAYS_IN_SETTINGS -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
@@ -166,6 +168,7 @@ fun OtherCustomizationsSettingsUI(
                     if (event == Lifecycle.Event.ON_RESUME) {
                         viewModel.setCircleToSearchPreviewEnabled(viewModel.isCircleToSearchGestureEnabled.value)
                         viewModel.refreshPreferGpuComposingState(context)
+                        viewModel.refreshAllowOverlaysInSettingsState(context)
                     } else if (event == Lifecycle.Event.ON_PAUSE) {
                         viewModel.setCircleToSearchPreviewEnabled(false)
                     }
@@ -259,6 +262,27 @@ fun OtherCustomizationsSettingsUI(
                 },
                 iconRes = R.drawable.rounded_mobile_rotate_24,
                 modifier = Modifier.highlight(highlightSetting == "disable_rotation_suggestion_toggle")
+            )
+
+            IconToggleItem(
+                title = stringResource(R.string.feat_allow_overlays_in_settings_title),
+                description = stringResource(R.string.feat_allow_overlays_in_settings_desc),
+                isChecked = viewModel.isAllowOverlaysInSettingsEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuPermissionGranted.value || viewModel.isRootPermissionGranted.value) {
+                        viewModel.setAllowOverlaysInSettingsEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = PermissionModule.ALLOW_OVERLAYS_IN_SETTINGS
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!viewModel.isWriteSecureSettingsEnabled.value && !viewModel.isShizukuPermissionGranted.value && !viewModel.isRootPermissionGranted.value) {
+                        requestingPermissionFor = PermissionModule.ALLOW_OVERLAYS_IN_SETTINGS
+                    }
+                },
+                iconRes = R.drawable.rounded_security_24,
+                modifier = Modifier.highlight(highlightSetting == "allow_overlays_in_settings_toggle")
             )
 
             AnimatedVisibility(

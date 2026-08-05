@@ -1805,6 +1805,8 @@
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="feat_allow_overlays_in_settings_title">Allow overlays in Settings</string>
+    <string name="feat_allow_overlays_in_settings_desc">Allow apps to draw overlays over system Settings</string>
     <string name="section_graphics">Graphics</string>
     <string name="feat_prefer_gpu_composing_title">Prefer GPU for screen composing</string>
     <string name="feat_prefer_gpu_composing_desc">Disable hardware overlays to force GPU screen compositing. Resets on device reboot.</string>

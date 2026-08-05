@@ -155,6 +155,7 @@ class MainViewModel : ViewModel() {
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
+    val isAllowOverlaysInSettingsEnabled = mutableStateOf(false)
     val isPreferGpuComposingEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
@@ -767,6 +768,17 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
+                    SettingsRepository.KEY_ALLOW_OVERLAYS_IN_SETTINGS -> {
+                        isAllowOverlaysInSettingsEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyAllowOverlaysInSettings(
+                                it,
+                                isAllowOverlaysInSettingsEnabled.value
+                            )
+                        }
+                    }
+
                     SettingsRepository.KEY_PREFER_GPU_COMPOSING -> {
                         isPreferGpuComposingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -953,6 +965,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getEdgeLightingSweepSelectedShapes()
         isDisableRotationSuggestionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
+        isAllowOverlaysInSettingsEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_ALLOW_OVERLAYS_IN_SETTINGS, false)
         isPreferGpuComposingEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, false)
         isPixelSearchbarEnabled.value =
@@ -2143,6 +2157,42 @@ class MainViewModel : ViewModel() {
         isDisableRotationSuggestionEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, enabled)
         applyDisableRotationSuggestion(context, enabled)
+    }
+
+    fun setAllowOverlaysInSettingsEnabled(enabled: Boolean, context: Context) {
+        isAllowOverlaysInSettingsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_ALLOW_OVERLAYS_IN_SETTINGS, enabled)
+        applyAllowOverlaysInSettings(context, enabled)
+    }
+
+    fun refreshAllowOverlaysInSettingsState(context: Context) {
+        try {
+            val currentVal = Settings.Secure.getInt(context.contentResolver, "secure_overlay_settings", 0) == 1
+            isAllowOverlaysInSettingsEnabled.value = currentVal
+            settingsRepository.putBoolean(SettingsRepository.KEY_ALLOW_OVERLAYS_IN_SETTINGS, currentVal)
+        } catch (e: Exception) {
+            // Secure setting not accessible without permission
+        }
+    }
+
+    private fun applyAllowOverlaysInSettings(context: Context, enabled: Boolean) {
+        val value = if (enabled) 1 else 0
+        val key = "secure_overlay_settings"
+        var success = false
+
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putInt(context.contentResolver, key, value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                ShellUtils.runCommand(context, "settings put secure $key $value")
+            }
+        }
     }
 
     fun setPreferGpuComposingEnabled(enabled: Boolean, context: Context) {
