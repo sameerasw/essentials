@@ -156,6 +156,8 @@ class MainViewModel : ViewModel() {
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
     val isAllowOverlaysInSettingsEnabled = mutableStateOf(false)
+    val networkDownloadRateLimit = mutableIntStateOf(-1)
+    val isMobileDataAlwaysOnEnabled = mutableStateOf(false)
     val isPreferGpuComposingEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
@@ -779,6 +781,28 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
+                    SettingsRepository.KEY_NETWORK_DOWNLOAD_RATE_LIMIT -> {
+                        networkDownloadRateLimit.intValue =
+                            settingsRepository.getInt(key, -1)
+                        appContext?.let {
+                            applyNetworkDownloadRateLimit(
+                                it,
+                                networkDownloadRateLimit.intValue
+                            )
+                        }
+                    }
+
+                    SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON -> {
+                        isMobileDataAlwaysOnEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyMobileDataAlwaysOn(
+                                it,
+                                isMobileDataAlwaysOnEnabled.value
+                            )
+                        }
+                    }
+
                     SettingsRepository.KEY_PREFER_GPU_COMPOSING -> {
                         isPreferGpuComposingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -967,6 +991,10 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
         isAllowOverlaysInSettingsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_ALLOW_OVERLAYS_IN_SETTINGS, false)
+        networkDownloadRateLimit.intValue =
+            settingsRepository.getInt(SettingsRepository.KEY_NETWORK_DOWNLOAD_RATE_LIMIT, -1)
+        isMobileDataAlwaysOnEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON, false)
         isPreferGpuComposingEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, false)
         isPixelSearchbarEnabled.value =
@@ -2191,6 +2219,71 @@ class MainViewModel : ViewModel() {
         if (!success) {
             viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                 ShellUtils.runCommand(context, "settings put secure $key $value")
+            }
+        }
+    }
+
+    fun setNetworkDownloadRateLimit(limit: Int, context: Context) {
+        networkDownloadRateLimit.intValue = limit
+        settingsRepository.putInt(SettingsRepository.KEY_NETWORK_DOWNLOAD_RATE_LIMIT, limit)
+        applyNetworkDownloadRateLimit(context, limit)
+    }
+
+    fun setMobileDataAlwaysOnEnabled(enabled: Boolean, context: Context) {
+        isMobileDataAlwaysOnEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON, enabled)
+        applyMobileDataAlwaysOn(context, enabled)
+    }
+
+    fun refreshNetworksState(context: Context) {
+        try {
+            val liveRateLimit = Settings.Global.getInt(context.contentResolver, "ingress_rate_limit_bytes_per_second", -1)
+            networkDownloadRateLimit.intValue = liveRateLimit
+            settingsRepository.putInt(SettingsRepository.KEY_NETWORK_DOWNLOAD_RATE_LIMIT, liveRateLimit)
+        } catch (e: Exception) {
+            // Permission restricted
+        }
+
+        try {
+            val liveMobileData = Settings.Global.getInt(context.contentResolver, "mobile_data_always_on", 0) == 1
+            isMobileDataAlwaysOnEnabled.value = liveMobileData
+            settingsRepository.putBoolean(SettingsRepository.KEY_MOBILE_DATA_ALWAYS_ON, liveMobileData)
+        } catch (e: Exception) {
+            // Permission restricted
+        }
+    }
+
+    private fun applyNetworkDownloadRateLimit(context: Context, limit: Int) {
+        val key = "ingress_rate_limit_bytes_per_second"
+        var success = false
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Global.putInt(context.contentResolver, key, limit)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        if (!success) {
+            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                ShellUtils.runCommand(context, "settings put global $key $limit")
+            }
+        }
+    }
+
+    private fun applyMobileDataAlwaysOn(context: Context, enabled: Boolean) {
+        val value = if (enabled) 1 else 0
+        val key = "mobile_data_always_on"
+        var success = false
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Global.putInt(context.contentResolver, key, value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        if (!success) {
+            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                ShellUtils.runCommand(context, "settings put global $key $value")
             }
         }
     }

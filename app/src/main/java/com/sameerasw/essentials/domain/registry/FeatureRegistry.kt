@@ -970,6 +970,47 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Networks",
+            title = R.string.feat_networks_title,
+            iconRes = R.drawable.rounded_cell_wifi_24,
+            category = R.string.cat_connectivity,
+            description = R.string.feat_networks_desc,
+            showToggle = false,
+            hasMoreSettings = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Network download rate limit",
+            title = R.string.feat_network_download_rate_limit_title,
+            iconRes = R.drawable.rounded_cell_wifi_24,
+            category = R.string.cat_connectivity,
+            description = R.string.feat_network_download_rate_limit_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            parentFeatureId = "Networks",
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.networkDownloadRateLimit.intValue != -1
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Mobile data always on",
+            title = R.string.feat_mobile_data_always_on_title,
+            iconRes = R.drawable.rounded_mobile_24,
+            category = R.string.cat_connectivity,
+            description = R.string.feat_mobile_data_always_on_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            parentFeatureId = "Networks"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isMobileDataAlwaysOnEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setMobileDataAlwaysOnEnabled(enabled, context)
+        },
+
+        object : Feature(
             id = "Screen locked security",
             title = R.string.feat_screen_locked_security_title,
             iconRes = R.drawable.rounded_security_24,

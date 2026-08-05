@@ -70,6 +70,7 @@ import com.sameerasw.essentials.ui.composables.configs.LiveWallpaperSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.NetworksSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationSnoozingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
@@ -337,6 +338,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                             "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                             "Power and Battery" -> !isWriteSecureSettingsEnabled
+                            "Networks" -> !isWriteSecureSettingsEnabled && !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -560,6 +562,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                                                 "Power and Battery" -> !isWriteSecureSettingsEnabled
+                                                "Networks" -> !isWriteSecureSettingsEnabled && !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                                                 "Disable safe volume warning" -> !isWriteSecureSettingsEnabled
                                                 "Notification snoozing" -> !isWriteSecureSettingsEnabled
                                                 else -> false
@@ -891,6 +894,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Power and Battery" -> {
                                         PowerAndBatterySettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Networks" -> {
+                                        NetworksSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
