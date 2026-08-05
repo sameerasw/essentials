@@ -666,7 +666,7 @@ object FeatureRegistry {
         object : Feature(
             id = "Standby apps",
             title = R.string.feat_standby_apps_title,
-            iconRes = R.drawable.rounded_mobiledata_arrows_24,
+            iconRes = R.drawable.rounded_app_registration_24,
             category = R.string.cat_interaction,
             description = R.string.feat_standby_apps_desc,
             aboutDescription = R.string.about_desc_standby_apps,
