@@ -50,10 +50,44 @@ fun NetworksSettingsUI(
     val view = LocalView.current
     var requestingPermissionFor by remember { mutableStateOf(NetworkPermissionModule.NONE) }
 
-    val presetValues = remember { intArrayOf(-1, 16000, 32000, 125000, 625000, 1875000) }
+    val presetValues = remember {
+        intArrayOf(
+            -1,         // Disabled
+            16000,      // 128 Kbps
+            32000,      // 256 Kbps
+            64000,      // 512 Kbps
+            125000,     // 1 Mbps
+            250000,     // 2 Mbps
+            625000,     // 5 Mbps
+            1250000,    // 10 Mbps
+            1875000,    // 15 Mbps
+            3125000,    // 25 Mbps
+            6250000,    // 50 Mbps
+            12500000,   // 100 Mbps
+            18750000,   // 150 Mbps
+            25000000,   // 200 Mbps
+            31250000    // 250 Mbps
+        )
+    }
     val disabledLabel = stringResource(R.string.rate_limit_disabled)
     val presetLabels = remember(disabledLabel) {
-        listOf(disabledLabel, "128 Kbps", "256 Kbps", "1 Mbps", "5 Mbps", "15 Mbps")
+        listOf(
+            disabledLabel,
+            "128 Kbps",
+            "256 Kbps",
+            "512 Kbps",
+            "1 Mbps",
+            "2 Mbps",
+            "5 Mbps",
+            "10 Mbps",
+            "15 Mbps",
+            "25 Mbps",
+            "50 Mbps",
+            "100 Mbps",
+            "150 Mbps",
+            "200 Mbps",
+            "250 Mbps"
+        )
     }
 
     val isShizukuAvailable = viewModel.isShizukuAvailable.value
@@ -127,7 +161,8 @@ fun NetworksSettingsUI(
             val currentRateLimit = viewModel.networkDownloadRateLimit.intValue
             val currentIndex = remember(currentRateLimit) {
                 val idx = presetValues.indexOf(currentRateLimit)
-                if (idx != -1) idx else 0
+                if (idx != -1) idx
+                else presetValues.indices.minByOrNull { kotlin.math.abs(presetValues[it] - currentRateLimit) } ?: 0
             }
             var sliderValue by remember(currentIndex) { mutableFloatStateOf(currentIndex.toFloat()) }
 
@@ -147,8 +182,8 @@ fun NetworksSettingsUI(
                         }
                     }
                 },
-                valueRange = 0f..5f,
-                steps = 4,
+                valueRange = 0f..(presetValues.lastIndex.toFloat()),
+                steps = presetValues.size - 2,
                 increment = 1f,
                 valueFormatter = { floatVal ->
                     val idx = floatVal.roundToInt().coerceIn(0, presetLabels.lastIndex)
