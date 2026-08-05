@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +39,7 @@ enum class PermissionModule {
     CIRCLE_TO_SEARCH,
     DISABLE_ROTATION_SUGGESTION,
     PIXEL_SEARCHBAR,
+    PREFER_GPU_COMPOSING,
     NONE
 }
 
@@ -67,7 +70,8 @@ fun OtherCustomizationsSettingsUI(
             dependentFeatures = listOf(
                 R.string.feat_hide_gesture_bar_title,
                 R.string.feat_hide_gesture_bar_on_launcher_title,
-                R.string.feat_circle_to_search_gesture_title
+                R.string.feat_circle_to_search_gesture_title,
+                R.string.feat_prefer_gpu_composing_title
             ),
             actionLabel = if (!isShizukuAvailable) R.string.perm_shizuku_install_action else if (isShellGranted) R.string.perm_action_granted else R.string.perm_action_grant,
             action = {
@@ -123,6 +127,7 @@ fun OtherCustomizationsSettingsUI(
             PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
             PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
             PermissionModule.PIXEL_SEARCHBAR -> listOf(shizukuPermission)
+            PermissionModule.PREFER_GPU_COMPOSING -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
@@ -255,8 +260,6 @@ fun OtherCustomizationsSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "disable_rotation_suggestion_toggle")
             )
 
-
-
             AnimatedVisibility(
                 visible = viewModel.isCircleToSearchGestureEnabled.value,
                 enter = expandVertically(),
@@ -273,6 +276,40 @@ fun OtherCustomizationsSettingsUI(
                     valueFormatter = { "${it.toInt()} dp" }
                 )
             }
+        }
+
+        Text(
+            text = stringResource(R.string.section_graphics),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        RoundedCardContainer(
+            modifier = Modifier,
+            spacing = 2.dp,
+            cornerRadius = 24.dp
+        ) {
+            IconToggleItem(
+                title = stringResource(R.string.feat_prefer_gpu_composing_title),
+                description = stringResource(R.string.feat_prefer_gpu_composing_desc),
+                isChecked = viewModel.isPreferGpuComposingEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (isShellGranted) {
+                        viewModel.setPreferGpuComposingEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = PermissionModule.PREFER_GPU_COMPOSING
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isShellGranted) {
+                        requestingPermissionFor = PermissionModule.PREFER_GPU_COMPOSING
+                    }
+                },
+                iconRes = R.drawable.rounded_memory_alt_24,
+                modifier = Modifier.highlight(highlightSetting == "prefer_gpu_composing_toggle")
+            )
         }
     }
 }

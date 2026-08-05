@@ -58,6 +58,7 @@ import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RefreshRateUtils
+import com.sameerasw.essentials.utils.SurfaceFlingerControl
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -154,6 +155,7 @@ class MainViewModel : ViewModel() {
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
+    val isPreferGpuComposingEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
     val pixelSearchbarDateFormat = mutableStateOf("EEEE, MMMM d")
@@ -765,6 +767,17 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
+                    SettingsRepository.KEY_PREFER_GPU_COMPOSING -> {
+                        isPreferGpuComposingEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyPreferGpuComposing(
+                                it,
+                                isPreferGpuComposingEnabled.value
+                            )
+                        }
+                    }
+
                     SettingsRepository.KEY_PIXEL_SEARCHBAR -> {
                         isPixelSearchbarEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -940,6 +953,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getEdgeLightingSweepSelectedShapes()
         isDisableRotationSuggestionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
+        isPreferGpuComposingEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, false)
         isPixelSearchbarEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, false)
         pixelSearchbarType.value =
@@ -2128,6 +2143,19 @@ class MainViewModel : ViewModel() {
         isDisableRotationSuggestionEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, enabled)
         applyDisableRotationSuggestion(context, enabled)
+    }
+
+    fun setPreferGpuComposingEnabled(enabled: Boolean, context: Context) {
+        isPreferGpuComposingEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_PREFER_GPU_COMPOSING, enabled)
+        applyPreferGpuComposing(context, enabled)
+    }
+
+    private fun applyPreferGpuComposing(context: Context, enabled: Boolean) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val isRoot = isRootAvailable.value && isRootPermissionGranted.value
+            SurfaceFlingerControl.setDisableHwOverlays(enabled, isRoot)
+        }
     }
 
     private fun applyDisableRotationSuggestion(context: Context, enabled: Boolean) {
