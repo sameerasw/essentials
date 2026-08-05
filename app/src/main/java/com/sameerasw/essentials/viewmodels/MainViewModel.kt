@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.admin.DevicePolicyManager
+import android.app.usage.UsageStatsManager
+import com.sameerasw.essentials.domain.model.AppStandbyInfo
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -161,6 +163,8 @@ class MainViewModel : ViewModel() {
     val isWirelessDisplayCertificationEnabled = mutableStateOf(false)
     val isTransparentNavigationBarEnabled = mutableStateOf(false)
     val isPreferGpuComposingEnabled = mutableStateOf(false)
+    val standbyAppsList = mutableStateOf<List<AppStandbyInfo>>(emptyList())
+    val isStandbyAppsLoading = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
     val pixelSearchbarDateFormat = mutableStateOf("EEEE, MMMM d")
@@ -2375,6 +2379,66 @@ class MainViewModel : ViewModel() {
         val action = if (enabled) "enable" else "disable"
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             ShellUtils.runCommand(context, "cmd overlay $action --user current $pkg")
+        }
+    }
+
+    fun loadStandbyApps(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            isStandbyAppsLoading.value = true
+            val pm = context.packageManager
+            val intent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_LAUNCHER) }
+            val apps = pm.queryIntentActivities(intent, 0)
+
+            val appList = apps.mapNotNull { resolveInfo ->
+                val pkg = resolveInfo.activityInfo.packageName
+                if (pkg == context.packageName) return@mapNotNull null
+
+                val label = resolveInfo.loadLabel(pm).toString()
+                val icon = resolveInfo.loadIcon(pm)
+
+                var bucket = 10
+                val output = ShellUtils.runCommandWithOutput(context, "am get-standby-bucket $pkg")
+                if (output != null) {
+                    val text = output.lowercase().trim()
+                    bucket = when {
+                        text.contains("restricted") || text.contains("45") -> 45
+                        text.contains("rare") || text.contains("40") -> 40
+                        text.contains("frequent") || text.contains("30") -> 30
+                        text.contains("working") || text.contains("20") -> 20
+                        text.contains("active") || text.contains("10") -> 10
+                        else -> 10
+                    }
+                }
+
+                AppStandbyInfo(pkg, label, icon, bucket)
+            }.sortedBy { it.label.lowercase() }
+
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                standbyAppsList.value = appList
+                isStandbyAppsLoading.value = false
+            }
+        }
+    }
+
+    fun setAppStandbyBucket(packageName: String, targetBucket: Int, context: Context) {
+        val currentList = standbyAppsList.value
+        val updatedList = currentList.map { app ->
+            if (app.packageName == packageName) {
+                app.copy(bucket = targetBucket)
+            } else app
+        }
+        standbyAppsList.value = updatedList
+
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val bucketName = when (targetBucket) {
+                10 -> "active"
+                20 -> "working_set"
+                30 -> "frequent"
+                40 -> "rare"
+                45 -> "restricted"
+                else -> "active"
+            }
+            ShellUtils.runCommand(context, "am set-standby-bucket $packageName $bucketName")
         }
     }
 

@@ -663,6 +663,21 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Standby apps",
+            title = R.string.feat_standby_apps_title,
+            iconRes = R.drawable.rounded_mobiledata_arrows_24,
+            category = R.string.cat_interaction,
+            description = R.string.feat_standby_apps_desc,
+            permissionKeys = listOf("SHIZUKU"),
+            parentFeatureId = "Input",
+            showToggle = false,
+            hasMoreSettings = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
             id = "Snooze system notifications",
             title = R.string.feat_snooze_notifications_title,
             iconRes = R.drawable.rounded_snooze_24,

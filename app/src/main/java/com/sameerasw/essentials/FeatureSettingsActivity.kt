@@ -84,6 +84,7 @@ import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.StandbyAppsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.WatchControlsSettingsUI
@@ -905,6 +906,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Standby apps" -> {
+                                        StandbyAppsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp)
                                         )
                                     }
                                 }
