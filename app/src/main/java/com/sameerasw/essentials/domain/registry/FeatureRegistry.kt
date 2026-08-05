@@ -295,6 +295,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_cell_wifi_24,
             category = R.string.cat_connectivity,
             description = R.string.feat_networks_desc,
+            aboutDescription = R.string.about_desc_networks,
             showToggle = false,
             hasMoreSettings = true
         ) {
@@ -668,6 +669,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_mobiledata_arrows_24,
             category = R.string.cat_interaction,
             description = R.string.feat_standby_apps_desc,
+            aboutDescription = R.string.about_desc_standby_apps,
             permissionKeys = listOf("SHIZUKU"),
             parentFeatureId = "Input",
             showToggle = false,
@@ -1031,6 +1033,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_home_24,
             category = R.string.cat_display,
             description = R.string.feat_other_customizations_desc,
+            aboutDescription = R.string.about_desc_other_customizations,
             showToggle = false,
             hasMoreSettings = true,
             parentFeatureId = "Display"
