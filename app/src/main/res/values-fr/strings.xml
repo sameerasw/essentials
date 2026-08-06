@@ -1465,4 +1465,6 @@
     <string name="feat_pixel_searchbar_title">Remplacer la barre de recherche</string>
     <string name="feat_pixel_searchbar_desc">Remplacer la barre de recherche par défaut de Pixel Launcher.</string>
     <string name="feat_pocket_mode_title">Mode poche</string>
+    <string name="settings_translate_mode">Mode Traduction</string>
+    <string name="settings_translate_mode_desc">Appuyer longtemps sur n\'importe quel texte pour le traduire et contribuer à la communauté</string>
 </resources>
