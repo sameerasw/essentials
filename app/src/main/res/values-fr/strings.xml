@@ -442,9 +442,9 @@
     <string name="feat_always_on_display_title">Mode Always-on</string>
     <string name="feat_always_on_display_desc">Afficher l\'heure et des infos quand l\'écran est éteint</string>
     <string name="feat_calendar_sync_title">Synchronisation des calendriers</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Lock from Watch</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="feat_calendar_sync_desc">Synchronise ton calendrier de téléphone sur ta montre</string>
+    <string name="feat_lock_from_watch_title">Verrouillage depuis la montre</string>
+    <string name="feat_lock_from_watch_desc">Verrouille ton téléphone à distance</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -1413,8 +1413,8 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_title">Horloge d\'écran de verrouillage</string>
+    <string name="feat_lock_screen_clock_desc">Customise l\'horloge d\'écran de verrouillage sur les Pixels</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1465,4 +1465,11 @@
     <string name="feat_pixel_searchbar_title">Remplacer la barre de recherche</string>
     <string name="feat_pixel_searchbar_desc">Remplacer la barre de recherche par défaut de Pixel Launcher.</string>
     <string name="feat_pocket_mode_title">Mode poche</string>
+    <string name="feat_pocket_mode_desc">Prévient les contacts accidentels dans la poche</string>
+    <string name="feat_watch_controls_title">Customise</string>
+    <string name="feat_watch_controls_desc">Customise le contrôle des applications WearOS</string>
+    <string name="feat_sync_sound_mode_title">Mode de son synchronisé</string>
+    <string name="feat_sync_sound_mode_desc">Synchronise automatiquement avec la montre</string>
+    <string name="feat_watch_wireless_debugging_title">Débogage sans fil</string>
+    <string name="feat_watch_wireless_debugging_desc">Active à distance</string>
 </resources>
