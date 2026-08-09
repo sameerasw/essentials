@@ -83,6 +83,14 @@
     <string name="action_cycle_sound_modes">Cycle sound modes</string>
     <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Like current song</string>
+    <string name="action_toggle_audio_recording">Toggle audio recording</string>
+    <string name="audio_record_notif_channel_name">Audio Recording</string>
+    <string name="audio_record_notif_title">Recording audio…</string>
+    <string name="audio_record_notif_stop">Stop</string>
+    <string name="audio_record_saved_title">Recording saved</string>
+    <string name="audio_record_saved_desc">Tap to open recording</string>
+    <string name="permission_record_audio_title">Record Audio</string>
+    <string name="permission_record_audio_desc">Required to record audio when remapped hardware button is pressed.</string>
     <string name="like_song_settings_title">Like song settings</string>
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
@@ -951,6 +959,10 @@
     <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
     <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_cellular_on">Turn On Cellular Data</string>
+    <string name="diy_action_cellular_off">Turn Off Cellular Data</string>
+    <string name="diy_action_auto_brightness_on">Turn On Auto Brightness</string>
+    <string name="diy_action_auto_brightness_off">Turn Off Auto Brightness</string>
     <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_action_screen_off">Screen Off</string>
     <string name="diy_action_media_play_pause">Media Play/Pause</string>
@@ -965,6 +977,11 @@
     <string name="diy_action_sometimes_essentials">Sometimes Essential</string>
     <string name="diy_action_freeze_tag">Freeze</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
+    <string name="diy_action_freeze_apps">Freeze Apps</string>
+    <string name="diy_action_unfreeze_apps">Unfreeze Apps</string>
+    <string name="diy_freeze_apps_desc">This action requires Shizuku or Root to freeze specific applications.</string>
+    <string name="diy_unfreeze_apps_desc">This action requires Shizuku or Root to unfreeze specific applications.</string>
+
     <string name="diy_select_trigger">Select Trigger</string>
     <string name="diy_create_app_title">App</string>
     <string name="diy_create_app_desc">Automate based on open app</string>
@@ -978,6 +995,22 @@
     <string name="action_delete">Delete</string>
     <string name="action_enable">Enable</string>
     <string name="action_disable">Disable</string>
+    <string name="refresh_rate_section_per_app">Per-App Refresh Rate</string>
+    <string name="refresh_rate_per_app_enable_title">Per-App Refresh Rate</string>
+    <string name="refresh_rate_per_app_enable_desc">Automatically switch the refresh rate when a configured app is opened</string>
+    <string name="refresh_rate_per_app_add_app">Add App</string>
+    <string name="refresh_rate_per_app_add_app_desc">Select an app to customize its refresh rate</string>
+    <string name="refresh_rate_per_app_select_rate">Select Refresh Rate</string>
+    <string name="refresh_rate_per_app_mode_fixed">Fixed</string>
+    <string name="refresh_rate_per_app_mode_dynamic">Dynamic</string>
+    <string name="refresh_rate_per_app_fixed_toggle">Fixed Mode</string>
+    <string name="refresh_rate_per_app_fixed_toggle_desc">Locks the screen to this refresh rate. Turn off to allow the display to scale down and save battery.</string>
+    <string name="refresh_rate_per_app_accessibility_required">Accessibility service is required for Per-App Refresh Rate to detect active apps.</string>
+    <string name="refresh_rate_per_app_usage_access_required">Usage access permission is required for Per-App Refresh Rate to detect active apps.</string>
+    <string name="refresh_rate_per_app_landscape_toggle">Use different rate in landscape</string>
+    <string name="refresh_rate_per_app_landscape_toggle_desc">Configure a specific refresh rate when the app is rotated to landscape mode</string>
+    <string name="refresh_rate_per_app_only_media_toggle">Only when media is playing</string>
+    <string name="refresh_rate_per_app_only_media_toggle_desc">Only apply landscape rate when video or music is playing. Note: Some OTT apps (Netflix, Prime Video, Hotstar, etc.) do not expose media status so do not use this.</string>
 
     <string name="automation_service_channel_name">Automation Service</string>
     <string name="automation_service_running_title">Automations Active</string>
@@ -1912,6 +1945,11 @@
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <string name="shut_up_service_name">Shut-Up! Service</string>
+    <string name="shut_up_service_desc">Monitors launched apps to disable developer settings</string>
+    <string name="shut_up_service_notification_title">Shut-Up! is active</string>
+    <string name="shut_up_service_notification_desc">Monitoring app launch and exit</string>
+    
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Lock screen clock</string>
     <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
