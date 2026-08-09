@@ -64,19 +64,19 @@
     <string name="like_song_settings_desc">Diese Funktion erfordert Zugriff auf Benachrichtigungen, um die aktuell wiedergegebenen Medien zu erkennen und die entsprechende Aktion auszulösen. Bitte aktiviere diese Funktion unten.</string>
     <string name="like_song_toast_enabled">Toast-Nachricht anzeigen</string>
     <string name="like_song_aod_overlay_title">Overlay im AOD anzeigen</string>
-    <string name="feat_essentials_on_display_title">Essenzielle_Funktionen_im_Überblick_Titel</string>
+    <string name="feat_essentials_on_display_title">Essentials auf dem Bildschirm</string>
     <string name="feat_essentials_on_display_desc">Medien und Informationen im AOD auf einen Blick</string>
-    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
-    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Dock-Modus</string>
+    <string name="essentials_on_display_docked_mode_desc">Die Überlagerung bleibt während der Musikwiedergabe im Always-on-Display dauerhaft sichtbar.</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
     <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
     <string name="essentials_on_display_random_shapes_title">Random shapes</string>
     <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
-    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
-    <string name="label_size">Size</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Immer während des Ladevorgangs verwenden</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Erzwingen des Ladevorgangs, wenn das Gerät angeschlossen ist, unabhängig vom ausgewählten Modus</string>
+    <string name="label_size">Größe</string>
     <string name="feat_notification_glance_title">Blick auf die Benachrichtigungen</string>
     <string name="feat_notification_glance_desc">AOD eingeschaltet lassen, solange Benachrichtigungen ausstehen</string>
     <string name="notification_glance_same_as_lighting_title">Dieselben Apps wie beim Benachrichtigungslicht</string>
@@ -346,7 +346,7 @@
     <string name="status_bar_section_advanced">Weitere Einstellungen</string>
     <string name="stb_advanced_flags_title">Fortgeschritten (Benötigt Shizuku/Root)</string>
     <string name="hide_all_system_icons_title">Verstecke alle System Icons</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_all_system_icons_desc">Entferne alle Symbole aus der Statusleiste, die keine Benachrichtigungen sind.</string>
     <string name="hide_system_icons_locked_only_title">Verstecke System Icons, nur wenn gesperrt</string>
     <string name="hide_system_icons_locked_only_desc">Versteckt die Statusleisten Symbole, wenn das Gerät gesperrt ist und zeigt diese nach dem entsperren wieder an</string>
     <string name="hide_clock_title">Verstecke die Uhr</string>
@@ -355,10 +355,10 @@
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
     <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
-    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
-    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Auf dem Launcher anzeigen</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Die Gestenleiste wird nur auf dem Startbildschirm dynamisch angezeigt</string>
+    <string name="feat_circle_to_search_gesture_title">Kreisen zum Suchen-Geste</string>
+    <string name="feat_circle_to_search_gesture_desc">Halten Sie den unteren Bereich gedrückt, um die Kreisen-Suche auszulösen</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
     <string name="feat_other_customizations_title">Übersetze Zeichenfolge</string>
@@ -446,8 +446,8 @@
     <string name="feat_lock_from_watch_title">Sperre von der Uhr aus</string>
     <string name="feat_lock_from_watch_desc">Sperre dein Telefon aus der Ferne</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
-    <string name="remote_lock_mode_screen_off">Screen off</string>
-    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_screen_off">Bildschirm aus</string>
+    <string name="remote_lock_mode_lock">Sperren</string>
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
     <string name="watch_connected_status">Connected</string>
     <string name="watch_unknown_name">Unknown Watch</string>
@@ -694,14 +694,14 @@
     <string name="welcome_back_title">Willkommen zurück zu Essentials</string>
     <string name="action_see_whats_new">Entdecke die Neuheiten</string>
     <string name="label_mode_default">Default</string>
-    <string name="label_mode_glove">Glove mode</string>
+    <string name="label_mode_glove">Handschuhmodus</string>
     <string name="tile_scale_animations">Glove Mode</string>
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
-    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
-    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
-    <string name="label_auto_rotate">Auto rotate</string>
-    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
-    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="label_increase_touch_sensitivity">Erhöhte Berührungsempfindlichkeit</string>
+    <string name="desc_increase_touch_sensitivity">Verbesserte Touchscreen-Reaktionsfähigkeit bei Verwendung von Handschuhen oder Displayschutzfolien</string>
+    <string name="label_auto_rotate">Automatisch gedreht</string>
+    <string name="desc_auto_rotate">Automatische Bildschirmdrehung beim Drehen des Geräts</string>
+    <string name="label_screen_timeout">Bildschirm-Timeout</string>
     <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
     <string name="unit_seconds">%d Sekunden</string>
     <string name="unit_minute">1 minute</string>
@@ -716,7 +716,9 @@
     <string name="action_what_is_this">Was ist das?</string>
     <string name="update_available_title">Aktualisierung verfügbar</string>
     <string name="about_desc_your_android">Sieh dir deine Hardware- und Software-Spezifikationen im Detail an. Diese Informationen werden von GSMArena und den Systemeigenschaften abgerufen, um dir einen umfassenden Überblick über dein Android-Gerät zu geben.</string>
-    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display zeigt ein \"Aktuelle Wiedergabe\"-Overlay auf Ihrem Sperrbildschirm an, wenn Musik abgespielt wird und sich die Wiedergabe ändert.
+
+Wenn Ihr Gerät keine Overlays über Always On Display unterstützt, können Sie alternativ den Ambient-Bildschirmschoner in Ihren Android-Einstellungen während des Ladevorgangs aktivieren</string>
     <string name="about_desc_notification_lighting">Benachrichtigungslich sorgt für einen schönen Randbeleuchtungseffekt, wenn du eine Benachrichtigung erhälst.\n\nDu kannst den Animationsstil, die Farben und das Verhalten individuell anpassen. Die Funktion ist auch bei ausgeschaltetem Bildschirm (abhängig vom Hersteller) oder über der aktuellen App verfügbar. Wähle Apps, Benachrichtigungsprioritäten oder welches Verhalten das Benachrichtigungslich haben soll mit den entsprechen Steuerungselementen aus. Falls dein Hersteller Overlays über dem Always-On-Display nicht unterstützt, nutze die unten aufgeführte Option „Ambient-Display“.</string>
     <string name="about_desc_screen_off_widget">Schalten den Bildschirm ganz einfach mit einem Fingertipp auf ein transparentes, in der Größe anpassbares Widget aus, das deinen Startbildschirm weder mit Symbolen noch mit unnötigen Elementen überfüllt.</string>
     <string name="about_desc_statusbar_icons">Übernehme die volle Kontrolle über die Symbole in deiner Statusleiste.\n\nBlende bestimmte Symbole wie WLAN, Bluetooth oder Mobilfunkdaten aus, um deine Statusleiste übersichtlich zu halten. Außerdem kannst du das Uhrenformat und die Akkuanzeige mit einigen praktischen Einstellungsoptionen anpassen. Dies ist eine Liste der verfügbaren AOSP-Einstellungen; daher unterstützt das Betriebssystem Ihres Geräts möglicherweise nicht alle Optionen.</string>
@@ -725,9 +727,17 @@
     <string name="about_desc_flashlight_pulse">Blitze mit der Taschenlampe, wenn du eine Benachrichtigung bekommst.\n\nBei Geräten mit Hardwareunterstützung für das Dimmen der Taschenlampe wird der Puls sanft animiert.</string>
     <string name="about_desc_snooze_notifications">Schalte lästige, hartnäckige Systembenachrichtigungen stumm, die standardmäßig nicht angepasst werden können. \n\nBitte warten, bis die Benachrichtigung erscheint, und rufe dann diese Funktion auf, in der der Benachrichtigungskanal aufgeführt wird. Wähle diesen aus, um die Benachrichtigung ab dem nächsten Mal stummzuschalten.\n\nAuf alle stummgeschalteten Benachrichtigungen kannst weiterhin über den Benachrichtigungsverlauf in Android zugreifen.</string>
     <string name="about_desc_quick_settings_tiles">Füge den Schnelleinstellungen benutzerdefinierte Kacheln hinzu.\n\nDrücke lange auf eine beliebige Kachel, um zu erfahren, welche Funktion sie hat.</string>
-    <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
+    <string name="about_desc_button_remap">Belegen Sie Ihre Hardwaretasten neu, um verschiedene Aktionen und Tastenkombinationen auszuführen.
+
+Passen Sie an, was passiert, wenn Sie die Lautstärketasten unter bestimmten Bedingungen lange drücken.
+
+Einige Verhaltensweisen, wie z. B. das Ausschalten des Bildschirms oder die Steuerung der Taschenlampe, können von der Implementierung des jeweiligen Herstellers abhängen und funktionieren möglicherweise nicht auf allen Geräten wie erwartet. Einige Szenarien können mithilfe von Shizuku-Berechtigungen umgangen werden, bieten aber aufgrund der Implementierungen möglicherweise nicht dasselbe Benutzererlebnis</string>
     <string name="about_desc_dynamic_night_light">Schalte den Blaulichtfilter deines Bildschirms automatisch je nach der aktuell geöffneten App ein oder aus.</string>
-    <string name="about_desc_screen_locked_security">Enhance security when your device is locked.\n\nRestrict access to some sensitive QS tiles preventing unauthorized network modifications and further preventing them re-attempting to do so by increasing the animation speed to prevent touch spam.\n\nThis feature is not robust and may have flaws such as some tiles which allow toggling directly such as bluetooth or flight mode not being able to be prevented.</string>
+    <string name="about_desc_screen_locked_security">Erhöhen Sie die Sicherheit, wenn Ihr Gerät gesperrt ist.
+
+Beschränken Sie den Zugriff auf einige sensible QS-Kacheln, um unbefugte Netzwerkänderungen zu verhindern und weitere Versuche zu unterbinden, indem die Animationsgeschwindigkeit erhöht wird, um Touch-Spam zu verhindern.
+
+Diese Funktion ist nicht robust und kann Fehler aufweisen, z. B. dass einige Kacheln, die ein direktes Umschalten ermöglichen, wie Bluetooth oder Flugmodus, nicht verhindert werden können</string>
     <string name="about_desc_app_lock">Sichere deine Apps mit einer zusätzlichen Authentifizierungsebene.\n\nDie Authentifizierungsmethode deines Gerätesperrbildschirms wird verwendet, sofern sie den biometrischen Sicherheitsstandards der Klasse 3 gemäß den Android-Richtlinien entspricht.</string>
     <string name="about_desc_location_reached">Lass dich benachrichtigen, wenn du dich deinem Ziel näherst, damit du niemals mehr eine Haltestelle verpasst.\n\nÖffne Google Maps, drücke lange in der Nähe deines Ziels um einen Marker zu setzen und vergewissere dich, dass dort „Gesetzte Markierung“ angezeigt wird (ansonsten ist die Entfernungsberechnung möglicherweise ungenau). Teile den Standort anschließend mit der Essentials-App und starte die Verfolgung.</string>
     <string name="location_reached_add_title">Ziel hinzufügen</string>
@@ -758,12 +768,20 @@
     <string name="about_desc_freeze">Friere Apps ein, um zu verhindern, dass sie im Hintergrund ausgeführt werden.
 
 Verhindere Akku- und Datenverbrauch, indem du Apps vollständig einfrierst, wenn du sie nicht verwendest. Sie werden sofort wieder aktiviert, wenn du sie startest. Die Apps werden nicht in der App-Übersicht angezeigt und sind auch nicht im Play Store für App-Updates verfügbar, solange sie eingefroren sind</string>
-    <string name="about_desc_system_keyboard">A custom input method no-one asked for.\n\nIt is just an experiment. Multiple languages may not get support as it is a very complex and time consuming implementation.</string>
-    <string name="about_desc_batteries">Monitor battery levels of all your connected devices.\n\nSee the battery status of your Bluetooth headphones, watch, and other accessories in one place. Connect with AirSync application to display your mac battery level as well.</string>
+    <string name="about_desc_system_keyboard">Eine benutzerdefinierte Eingabemethode, nach der niemand gefragt hat.
+
+Es ist nur ein Experiment. Mehrere Sprachen werden möglicherweise nicht unterstützt, da es sich um eine sehr komplexe und zeitaufwändige Implementierung handelt</string>
+    <string name="about_desc_batteries">Überwachen Sie den Akkustand all Ihrer verbundenen Geräte.
+
+Sehen Sie den Akkustatus Ihrer Bluetooth-Kopfhörer, Ihrer Uhr und anderer Zubehörteile an einem Ort.
+
+Verbinden Sie sich mit der AirSync-Anwendung, um auch den Akkustand Ihres Macs anzuzeigen</string>
     <string name="about_desc_watermark">Fügen Sie Ihren Fotos eine benutzerdefinierte Bildunterschrift/ein Wasserzeichen mit EXIF-Daten und Geräteinformationen hinzu.
 
 Teilen Sie ein Bild direkt aus einer anderen App mit Essentials, um ganz einfach ein Wasserzeichen hinzuzufügen</string>
-    <string name="about_desc_calendar_sync">Sync all your upcoming calendar schedule not matter the restrictions on Google accounts not letting to be added to wearOS devices due to work or school policies. \n\nMake sure to install the wearOS Essentials companion app to display the schedule in the app as well as in a tile or a complication.</string>
+    <string name="about_desc_calendar_sync">Synchronisieren Sie Ihren gesamten anstehenden Kalender, unabhängig von den Einschränkungen, die Google-Konten aufgrund von Arbeits- oder Schulrichtlinien daran hindern, zu WearOS-Geräten hinzugefügt zu werden.
+
+Stellen Sie sicher, dass Sie die WearOS Essentials-Begleit-App installieren, um den Kalender sowohl in der App als auch in einer Kachel oder Komplikation anzuzeigen</string>
     <string name="about_desc_app_updates">Keep track of updates for your installed apps.\n\nGet notified about available updates, view changelogs and install them easily with a tap.</string>
     <string name="about_desc_call_vibrations">Füge deinen Anrufen haptisches Feedback hinzu.\n\nDas Gerät vibriert, wenn eine Verbindung hergestellt, getrennt oder ein Anruf angenommen wird, sodass Sie eine taktile Rückmeldung erhalten, ohne auf den Bildschirm schauen zu müssen.</string>
     <string name="about_desc_sound_mode_tile">Wechseln Sie schnell zwischen den Modi „Ton“, „Vibration“ und „Lautlos“.
@@ -782,7 +800,9 @@ Das Always-on-Display schnell aktivieren oder deaktivieren, um Informationen auf
     <string name="about_desc_mono_audio">Kombiniere Audiokanäle zu Mono.
 
 Nützlich bei Verwendung eines einzelnen Ohrhörers oder für Barrierefreiheitszwecke</string>
-    <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
+    <string name="about_desc_flashlight_tile">Taschenlampe ein-/ausschalten.
+
+Langes Drücken öffnet die Steuerelemente zur Helligkeitsanpassung, die möglicherweise eine Hardware-Implementierung erfordert, die einigen Geräten fehlt</string>
     <string name="about_desc_stay_awake">Hält den Bildschirm während des Ladevorgangs aktiv.
 
 Verhindert, dass der Bildschirm in den Ruhezustand wechselt, solange das Gerät an eine Stromquelle angeschlossen ist. Dies ist für Entwickler während des Debuggens geeignet</string>
@@ -1337,7 +1357,9 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="label_animator_duration_scale">Animationsdauerfaktor</string>
     <string name="label_transition_animation_scale">Übergangsanimationsfaktor</string>
     <string name="label_window_animation_scale">Fensteranimationsfaktor</string>
-    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
+    <string name="about_desc_text_animations">Systemweite Schriftgröße, -stärke und Animationsgeschwindigkeit anpassen. Beachten Sie, dass einige Einstellungen möglicherweise erweiterte Berechtigungen oder einen Neustart des Geräts erfordern, damit bestimmte Apps die Änderungen übernehmen.
+
+Für Skalierungsanpassungen können zusätzliche Shizuku- oder Root-Berechtigungen erforderlich sein</string>
     <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1416,7 +1438,9 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Halt die Klappe!</string>
     <string name="feat_shut_up_desc">Ich weiß, was ich tue</string>
-    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_description">Halt dir Klappe! umgeht App-Beschränkungen und prüft Entwickleroptionen, Barrierefreiheit und Debugging, indem diese beim Starten sensibler Apps dynamisch ausgeblendet werden.
+
+Verwenden Sie die benutzerdefinierten Tastenkombinationen, um sicherzustellen, dass die Einstellungen vor dem Start der App ausgeblendet werden</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
     <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
     <string name="shut_up_settings_title">Shut-Up! Settings</string>
@@ -1427,7 +1451,7 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
-    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="feat_disable_rotation_suggestion_desc">Die Rotationsschaltfläche nicht anzeigen, wenn die automatische Drehung deaktiviert ist</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
@@ -1453,16 +1477,16 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
     <string name="lock_screen_clock_default">Default</string>
-    <string name="label_weight">Weight</string>
-    <string name="label_width">Width</string>
+    <string name="label_weight">Gewicht</string>
+    <string name="label_width">Breite</string>
     <string name="label_grade">Grade</string>
-    <string name="label_roundness">Roundness</string>
+    <string name="label_roundness">Rundheit</string>
     <string name="label_color_tone">Lightness</string>
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
     <string name="about_title">About</string>
-    <string name="color_default">Default</string>
+    <string name="color_default">Standard</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
     <string name="color_blue">Blue</string>
@@ -1509,4 +1533,90 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="about_desc_restart_systemui_tile">Starten Sie SystemUl einfach direkt über Ihr Schnellzugriffsfeld neu. Hilfreich, um Fehler in der Statusleiste schnell zu beheben oder SystemUl-Änderungen sofort anzuwenden. Erfordert Root- oder Shizuku-Shell-Zugriff</string>
     <string name="label_enable_firewall">Firewall aktivieren</string>
     <string name="perm_write_secure_instructions">permanentes sicheres Schreiben_i</string>
+    <string name="feat_networks_title">Netzwerke</string>
+    <string name="feat_networks_desc">Steuerung von Funkgeräten und Netzwerken</string>
+    <string name="feat_network_download_rate_limit_title">Netzwerk-Downloadratenbegrenzung</string>
+    <string name="feat_network_download_rate_limit_desc">Systemweite Downloadgeschwindigkeit begrenzen</string>
+    <string name="feat_mobile_data_always_on_title">Mobile Daten immer aktiv</string>
+    <string name="feat_mobile_data_always_on_desc">Mobile Daten auch bei bestehender WLAN-Verbindung aktiv halten</string>
+    <string name="feat_wireless_display_certification_title">Zertifizierung für drahtlose Displays</string>
+    <string name="feat_wireless_display_certification_desc">Optionen für die Zertifizierung drahtloser Displays anzeigen</string>
+    <string name="tile_lockdown_mode">Sperre</string>
+    <string name="tile_lockdown_mode_desc">Bildschirm aus QS-Kachel</string>
+    <string name="title_battery_saver_general">Allgemeine Einstellungen</string>
+    <string name="label_low_power_trigger_level">Benutzerdefinierter Auslösewert</string>
+    <string name="desc_low_power_trigger_level">für Energiesparmodus</string>
+    <string name="label_advertise_is_enabled">Informieren aktiviert</string>
+    <string name="desc_advertise_is_enabled">Anwendungen darüber informieren, dass der Energiesparmodus aktiviert ist.</string>
+    <string name="desc_enable_firewall">Netzwerk-Firewall aktivieren, um Hintergrundnetzwerke einzuschränken.</string>
+    <string name="label_force_all_apps_standby">Standby erzwingen</string>
+    <string name="desc_force_all_apps_standby">Alle Apps in den App-Standby-Modus versetzen, wenn sie aktiv sind.</string>
+    <string name="label_force_background_check">Hintergrundprüfung erzwingen</string>
+    <string name="desc_force_background_check">Strenge Einschränkungen für Hintergrunddienste erzwingen.</string>
+    <string name="desc_enable_brightness_adjustment">Verringern der Bildschirmhelligkeitsgrenze zulassen, wenn der Energiesparmodus aktiv ist.</string>
+    <string name="label_adjust_brightness_factor">Helligkeitsanpassungsfaktor</string>
+    <string name="label_disable_animation">Animationen deaktivieren</string>
+    <string name="desc_disable_animation">Fenster- und Systemanimationen deaktivieren</string>
+    <string name="label_disable_aod">Always-on-Display deaktivieren</string>
+    <string name="desc_disable_aod">Umgebungs-/Always-on-Display deaktivieren.</string>
+    <string name="label_enable_night_mode">Dunkelmodus/Nachtmodus erzwingen</string>
+    <string name="desc_enable_night_mode">Dunkles Design erzwingen, wenn der Energiesparmodus aktiviert ist.</string>
+    <string name="desc_disable_launch_boost">Reduzieren Sie die CPU-Last beim App-Start, um Energie zu sparen.</string>
+    <string name="label_enable_quick_doze">Schneller Doze Modus aktivieren</string>
+    <string name="desc_enable_quick_doze">Schneller in den Dozr Modus wechseln, wenn sich der Bildschirm ausschaltet.</string>
+    <string name="label_disable_optional_sensors">Optionale Sensoren deaktivieren</string>
+    <string name="desc_disable_optional_sensors">Deaktivieren Sie energieintensive optionale Sensoren wie Näherungssensor, Gyroskop usw.</string>
+    <string name="desc_enable_datasaver">Aktivieren Sie den Datensparmodus, um die Datennutzung im Hintergrund einzuschränken.</string>
+    <string name="label_defer_full_backup">Vollständige Sicherung verzögern</string>
+    <string name="desc_defer_full_backup">Verschieben Sie vollständige Systemsicherungen, bis der Energiesparmodus deaktiviert ist</string>
+    <string name="label_defer_keyvalue_backup">Schlüsselwertsicherung verzögern</string>
+    <string name="desc_defer_keyvalue_backup">Verschieben Sie Schlüsselwertsicherungen.</string>
+    <string name="label_disable_vibration">Vibration deaktivieren</string>
+    <string name="desc_disable_vibration">Deaktivieren Sie haptisches Feedback und Vibrationen global.</string>
+    <string name="label_soundtrigger_mode">Tonauslöser-Modus</string>
+    <string name="desc_soundtrigger_mode">Beschränken Sie die Erkennung von Assistenten-Hotwords (z. B. \"Hey Google\").</string>
+    <string name="label_location_mode">GPS-/Standortmodus</string>
+    <string name="desc_location_mode">Beschränken Sie Standortanfragen, während der Energiesparmodus aktiviert ist.</string>
+    <string name="feat_standby_apps_title">Standby-Apps</string>
+    <string name="feat_standby_apps_desc">App-Hintergrundaktivitäten optimieren</string>
+    <string name="feat_power_saving_title">Energiesparen</string>
+    <string name="feat_power_saving_desc">Energiesparrichtlinien konfigurieren</string>
+    <string name="feat_smart_pixels_title">Intelligente Pixel</string>
+    <string name="feat_smart_pixels_desc">Schwarze Pixel zur Energieeinsparung</string>
+    <string name="feat_allow_overlays_in_settings_title">Overlays in den Einstellungen zulassen</string>
+    <string name="feat_allow_overlays_in_settings_desc">Apps erlauben, Overlays über den Systemeinstellungen zu zeichnen</string>
+    <string name="feat_prefer_gpu_composing_title">GPU für die Bildschirmkomposition bevorzugen</string>
+    <string name="feat_prefer_gpu_composing_desc">Hardware-Overlays deaktivieren, um die GPU-Bildschirmkomposition zu erzwingen.
+Wird beim Neustart des Geräts zurückgesetzt</string>
+    <string name="about_desc_other_customizations">Erweiterte Anpassungen der Anzeige und der System-UI, einschließlich der Sichtbarkeit der Gestenleiste, der Höhe des Suchkreises, Rotationsvorschläge, Einstellung von Overlays, transparenter Navigationsleiste und GPU-Bildschirmkomposition</string>
+    <string name="about_desc_smart_pixels">Überlagern Sie ein anpassbares Schachbrettmuster aus abgedunkelten Pixeln über den Bildschirm mithilfe des Barrierefreiheitsdienstes, um die Displayleistung auf OLED-Bildschirmen zu reduzieren</string>
+    <string name="search_smart_pixels_enable_title">Intelligente Pixel aktivieren</string>
+    <string name="smart_pixels_intensity_title">Intensität</string>
+    <string name="pocket_mode_use_light_title">Lichtsensor verwenden</string>
+    <string name="pocket_mode_use_light_desc">Umgebungslicht zusätzlich zur Nähe für bessere Genauigkeit verwenden</string>
+    <string name="pocket_mode_trigger_delay_title">Auslöseverzögerung</string>
+    <string name="pocket_mode_lock_screen_only_title">Nur Sperrbildschirm</string>
+    <string name="pocket_mode_lock_screen_only_desc">Taschenmodus nur aktivieren, wenn das Gerät gesperrt ist</string>
+    <string name="feat_transparent_navigation_bar_title">Transparente Navigationsleiste</string>
+    <string name="feat_transparent_navigation_bar_desc">Machen Sie den Hintergrund der Systemnavigationsleiste transparent</string>
+    <string name="label_device_battery">Batterie</string>
+    <string name="label_battery_health">Gesundheit</string>
+    <string name="label_battery_temperature">Trmperatur</string>
+    <string name="label_battery_cycle_count">Ladezyklen</string>
+    <string name="label_battery_section_charging">Laden</string>
+    <string name="label_battery_mode">Modus</string>
+    <string name="label_battery_section_specs">Spezifikationen</string>
+    <string name="label_battery_voltage">Spannung</string>
+    <string name="label_battery_technology">Technologie</string>
+    <string name="label_battery_charge_counter">Aktueller Ladezustand</string>
+    <string name="label_battery_current_now">Aktueller Ladezustand</string>
+    <string name="label_thermal_system_thermals">Systemtemperaturen</string>
+    <string name="label_thermal_cpu">CPU-Temperatur</string>
+    <string name="label_thermal_gpu">GPU-Temperatur</string>
+    <string name="label_thermal_throttling_status">Drosselungsstatus</string>
+    <string name="label_auto_reset_battery_stats_title">Automatisches Zurücksetzen</string>
+    <string name="label_auto_reset_battery_stats_desc">Setzt die Akkustatistik automatisch zurück, wenn das Gerät bei einem Ladestand von über 90 % vom Stromnetz getrennt wird</string>
+    <string name="about_desc_networks">Netzwerk-Downloadgeschwindigkeitsbegrenzungen konfigurieren, mobile Daten auch bei bestehender WLAN-Verbindung kontinuierlich aktiv halten und Einstellungen für die Zertifizierung drahtloser Displays aktivieren</string>
+    <string name="about_desc_power_battery">Die internen Batteriesparrichtlinien von Android feinabstimmen. Verhalten wie Helligkeitsbegrenzung, Standortdrosselung, Vibrationsaktivierung, Verzögerungen der Hintergrundsynchronisierung und Sensorzustände anpassen, wenn der Batteriesparmodus aktiviert ist</string>
+    <string name="about_desc_standby_apps">Verwalten Sie Android-App-Standby-Buckets (Aktiv, Arbeitsset, Häufig, Selten, Eingeschränkt), um die Ausführung von Hintergrund-Apps, die Netzwerknutzung und den Akkuverbrauch zu steuern</string>
 </resources>
