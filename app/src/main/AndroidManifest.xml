@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.NFC" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -411,6 +413,44 @@
             android:exported="false"
             android:label="@string/feat_daily_wallpaper_title"
             android:theme="@style/Theme.Essentials" />
+
+        <activity
+            android:name=".ui.activities.MeDropActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:showOnLockScreen="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <service
+            android:name=".services.MeDropHceService"
+            android:exported="true"
+            android:label="@string/feat_medrop_title"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/medrop_apduservice" />
+        </service>
+
+        <service
+            android:name=".services.tiles.MeDropTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_contacts_product_24"
+            android:label="@string/feat_medrop_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_UTILITIES" />
+        </service>
 
         <service
             android:name=".services.tiles.ScreenOffAccessibilityService"

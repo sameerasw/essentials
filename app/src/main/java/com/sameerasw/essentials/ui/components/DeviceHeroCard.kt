@@ -171,6 +171,15 @@ fun DeviceHeroCard(
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        com.sameerasw.essentials.ui.core.cards.MeDropButtonCard(
+            modifier = Modifier.graphicsLayer {
+                alpha = contentAlpha()
+                translationY = contentOffset().toPx()
+            }
+        )
     }
 
     RoundedCardContainer(

@@ -159,6 +159,11 @@ object QsTileRegistry {
             R.string.tile_essentials_on_display,
             R.drawable.rounded_live_tv_24,
             EssentialsOnDisplayTileService::class.java
+        ),
+        QsTileEntry(
+            R.string.feat_medrop_title,
+            R.drawable.rounded_contacts_product_24,
+            MeDropTileService::class.java
         )
     )
 

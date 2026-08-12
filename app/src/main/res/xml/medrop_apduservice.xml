@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/feat_medrop_title"
+    android:requireDeviceUnlock="false">
+    <aid-group
+        android:category="other"
+        android:description="@string/feat_medrop_title">
+        <aid-filter android:name="D2760000850101" />
+    </aid-group>
+</host-apdu-service>

@@ -119,6 +119,7 @@ class YourAndroidActivity : ComponentActivity() {
 
             val context = androidx.compose.ui.platform.LocalContext.current
             val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
+            val scope = rememberCoroutineScope()
             var showGitHubAuthSheet by remember { mutableStateOf(false) }
             var showAddRepoSheet by remember { mutableStateOf(false) }
             var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }

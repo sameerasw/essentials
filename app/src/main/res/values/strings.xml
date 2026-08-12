@@ -2094,6 +2094,24 @@
     <string name="watch_notif_synced_icons_count">Synced %1$d app icons to watch</string>
     <string name="watch_call_sync_title">Sync calls</string>
     <string name="watch_call_sync_desc">Sync and control calls from your watch</string>
+
+    <!-- MeDrop -->
+    <string name="feat_medrop_title">MeDrop</string>
+    <string name="feat_medrop_set_up">Set Up</string>
+    <string name="feat_medrop_select_contact">Select Contact</string>
+    <string name="feat_medrop_change_contact">Change Contact</string>
+    <string name="feat_medrop_allow_when_locked">Allow when Locked</string>
+    <string name="feat_medrop_allow_when_locked_desc">Open MeDrop from the quick tile even when the screen is locked</string>
+    <string name="feat_medrop_tap_to_share">Tap to share</string>
+    <string name="feat_medrop_no_contact">No contact selected</string>
+    <string name="feat_medrop_no_contact_desc">Tap below to choose a contact to share via NFC</string>
+    <string name="feat_medrop_include_phones">Include phone numbers</string>
+    <string name="feat_medrop_include_emails">Include email addresses</string>
+    <string name="feat_medrop_hold_near">Hold near another device</string>
+    <string name="feat_medrop_broadcasting">Broadcasting contact via NFC…</string>
+    <string name="feat_medrop_nfc_unavailable">NFC is not available on this device</string>
+    <string name="feat_medrop_nfc_disabled">NFC is disabled. Enable it in Settings to share.</string>
+    <string name="about_desc_medrop">Share your contact card with another device using NFC — similar to Apple\'s NameDrop. Your phone acts as a virtual NFC card that any NFC-enabled device can read.</string>
 </resources>
 
 

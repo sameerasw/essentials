@@ -383,6 +383,14 @@ fun QuickSettingsTilesSettingsUI(
             listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             R.string.feat_essentials_on_display_desc,
             R.string.cat_visuals
+        ),
+        QSTileInfo(
+            R.string.feat_medrop_title,
+            R.drawable.rounded_contacts_product_24,
+            com.sameerasw.essentials.services.tiles.MeDropTileService::class.java,
+            emptyList(),
+            R.string.about_desc_medrop,
+            R.string.cat_utils
         )
     )
 

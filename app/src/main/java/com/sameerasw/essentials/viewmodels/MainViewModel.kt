@@ -202,6 +202,10 @@ class MainViewModel : ViewModel() {
     val lockScreenClockSelectedColorId = mutableStateOf("DEFAULT")
     val lockScreenClockSeedColor = mutableIntStateOf(0)
 
+    val meDropContact = mutableStateOf<com.sameerasw.essentials.domain.model.MeDropContact?>(null)
+    val isMeDropAllowWhenLocked = mutableStateOf(false)
+    val showMeDropSheet = mutableStateOf(false)
+
     // Live Wallpaper
     val liveWallpaperSelectedVideo = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_DEFAULT_VIDEO)
     val liveWallpaperPlaybackTrigger =
@@ -1168,6 +1172,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
         isDailyWallpaperShowLastTime.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME)
+        loadMeDropSettings(context)
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
@@ -6794,5 +6799,33 @@ class MainViewModel : ViewModel() {
             !isLockdownModeEnabled.value
         )
         isLockdownModeEnabled.value = !isLockdownModeEnabled.value
+    }
+
+    fun loadMeDropSettings(context: Context) {
+        val repo = SettingsRepository(context)
+        val json = repo.getMeDropContactJson()
+        meDropContact.value = if (json != null) {
+            try {
+                com.google.gson.Gson().fromJson(
+                    json,
+                    com.sameerasw.essentials.domain.model.MeDropContact::class.java
+                )
+            } catch (_: Exception) { null }
+        } else null
+        isMeDropAllowWhenLocked.value = repo.isMeDropAllowWhenLocked()
+    }
+
+    fun setMeDropContact(
+        context: Context,
+        contact: com.sameerasw.essentials.domain.model.MeDropContact?
+    ) {
+        val json = if (contact != null) com.google.gson.Gson().toJson(contact) else null
+        SettingsRepository(context).setMeDropContactJson(json)
+        meDropContact.value = contact
+    }
+
+    fun setMeDropAllowWhenLocked(context: Context, enabled: Boolean) {
+        SettingsRepository(context).setMeDropAllowWhenLocked(enabled)
+        isMeDropAllowWhenLocked.value = enabled
     }
 }
