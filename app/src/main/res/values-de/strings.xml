@@ -355,8 +355,8 @@
     <string name="hide_notification_icons_desc">Alle eingehenden Benachrichtigungssymbole ausblenden</string>
     <string name="feat_hide_gesture_bar_title">Gestenleiste ausblenden</string>
     <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Auf dem Homescreen anzeigen </string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Gestenleiste dynamisch nur auf dem Homebildschirm anzeigen </string>
     <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
@@ -1521,4 +1521,15 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="flashlight_pocket_desc">Schaltet die Taschenlampe aus, wenn sich das Handy in einer Tasche befindet</string>
     <string name="flashlight_overheat_title">Überhitzungsschutz</string>
     <string name="flashlight_overheat_desc">Verringert die Helligkeit bei längerer Nutzung</string>
+    <string name="feat_networks_title">Netzwerk </string>
+    <string name="feat_networks_desc">Steuerung von Funk und Netzwerk </string>
+    <string name="feat_network_download_rate_limit_title">Netzwerk Downloadraten Limit </string>
+    <string name="feat_network_download_rate_limit_desc">System weites Limit für download Geschwindigkeit </string>
+    <string name="feat_mobile_data_always_on_title">Immer aktive Mobile Daten </string>
+    <string name="feat_wireless_display_certification_title">Kabelloses Display Zertifikat </string>
+    <string name="feat_wireless_display_certification_desc">Zeige Optionen für kabellose Display Zertifikate</string>
+    <string name="feat_mobile_data_always_on_desc">Lässt die Mobilen Daten auch bei vorhandener WLAN Verbindung aktiv</string>
+    <string name="feat_smart_pixels_desc">Schwärzt einzelne Pixel um Energie zu sparen </string>
+    <string name="search_smart_pixels_enable_title">Smart Pixel aktivieren</string>
+    <string name="smart_pixels_intensity_title">Intensität </string>
 </resources>
