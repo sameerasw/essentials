@@ -22,7 +22,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
-
+import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
@@ -61,6 +61,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_GENAI_AUTOMATION_ENABLED = "genai_automation_enabled"
         const val KEY_SMART_PIXELS_ENABLED = "smart_pixels_enabled"
         const val KEY_SMART_PIXELS_INTENSITY = "smart_pixels_intensity"
+        const val KEY_SMART_PIXELS_ON_BATTERY_SAVER = "smart_pixels_on_battery_saver"
         const val KEY_DAILY_WALLPAPER_LAST_ID = "daily_wallpaper_last_id"
 
         const val KEY_DAILY_WALLPAPER_LAST_URL_MOBILE = "daily_wallpaper_last_url_mobile"
@@ -178,6 +179,9 @@ class SettingsRepository(private val context: Context) {
 
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
+
+        const val KEY_WIFI_AUTO_OFF_ENABLED = "wifi_auto_off_enabled"
+        const val KEY_WIFI_AUTO_OFF_TIMEOUT = "wifi_auto_off_timeout"
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
@@ -310,6 +314,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST = "pixel_searchbar_music_artist"
         const val KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE = "pixel_searchbar_music_package"
 
+        const val KEY_PER_APP_REFRESH_RATE_ENABLED = "per_app_refresh_rate_enabled"
+        const val KEY_PER_APP_REFRESH_RATE_CONFIGS = "per_app_refresh_rate_configs"
 
         const val KEY_LOCK_SCREEN_CLOCK_WEIGHT = "lock_screen_clock_weight"
         const val KEY_LOCK_SCREEN_CLOCK_WIDTH = "lock_screen_clock_width"
@@ -933,7 +939,37 @@ class SettingsRepository(private val context: Context) {
         updateAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS, packageName, enabled)
 
 
+    fun loadPerAppRefreshRateConfigs(): List<AppRefreshRateConfig> {
+        val json = prefs.getString(KEY_PER_APP_REFRESH_RATE_CONFIGS, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(
+                    json,
+                    Array<AppRefreshRateConfig>::class.java
+                ).toList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
 
+    fun savePerAppRefreshRateConfigs(configs: List<AppRefreshRateConfig>) {
+        val json = gson.toJson(configs)
+        putString(KEY_PER_APP_REFRESH_RATE_CONFIGS, json)
+    }
+
+    fun updatePerAppRefreshRateConfig(config: AppRefreshRateConfig) {
+        val current = loadPerAppRefreshRateConfigs().toMutableList()
+        val index = current.indexOfFirst { it.packageName == config.packageName }
+        if (index != -1) {
+            current[index] = config
+        } else {
+            current.add(config)
+        }
+        savePerAppRefreshRateConfigs(current)
+    }
 
     private fun updateAppSelection(key: String, packageName: String, enabled: Boolean) {
         val current = loadAppSelection(key).toMutableList()

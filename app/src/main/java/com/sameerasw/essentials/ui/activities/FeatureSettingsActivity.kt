@@ -84,6 +84,7 @@ import com.sameerasw.essentials.ui.features.system.NetworksSettingsUI
 import com.sameerasw.essentials.ui.features.system.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.features.system.NotificationSnoozingSettingsUI
 import com.sameerasw.essentials.ui.features.system.OtherCustomizationsSettingsUI
+import com.sameerasw.essentials.ui.features.system.PerAppRefreshRateSettingsUI
 import com.sameerasw.essentials.ui.features.system.PocketModeSettingsUI
 import com.sameerasw.essentials.ui.features.system.PowerAndBatterySettingsUI
 import com.sameerasw.essentials.ui.features.system.QuickSettingsTilesSettingsUI
@@ -993,8 +994,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             highlightSetting = highlightSetting
                                         )
                                     }
-                                      "Shut-Up!" -> {
+                                    "Shut-Up!" -> {
                                         ShutUpSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+                                    "Per app refresh rate" -> {
+                                        PerAppRefreshRateSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
@@ -1039,14 +1047,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             highlightSetting = highlightSetting
                                         )
                                     }
-                                    "Shut-Up!" -> {
-                                        ShutUpSettingsUI(
-                                            viewModel = viewModel,
-                                            modifier = Modifier.padding(top = 16.dp),
-                                            highlightSetting = highlightSetting
-                                        )
-                                    }
-
                                     "Power and Battery" -> {
                                         PowerAndBatterySettingsUI(
                                             viewModel = viewModel,
