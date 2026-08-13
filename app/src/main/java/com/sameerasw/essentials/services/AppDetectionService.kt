@@ -62,7 +62,7 @@ class AppDetectionService : Service() {
     override fun onCreate() {
         super.onCreate()
         isRunning = true
-        appFlowHandler = AppFlowHandler(this)
+        appFlowHandler = AppFlowHandler.getInstance(this)
         createNotificationChannel()
 
         val filter = IntentFilter().apply {

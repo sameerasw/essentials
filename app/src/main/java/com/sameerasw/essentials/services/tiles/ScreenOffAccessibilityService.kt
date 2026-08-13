@@ -224,7 +224,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         flashlightHandler = FlashlightHandler(this, serviceScope)
         notificationLightingHandler = NotificationLightingHandler(this)
         buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler)
-        appFlowHandler = AppFlowHandler(this, this)
+        appFlowHandler = AppFlowHandler.getInstance(this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
         omniGestureOverlayHandler = OmniGestureOverlayHandler(this)
