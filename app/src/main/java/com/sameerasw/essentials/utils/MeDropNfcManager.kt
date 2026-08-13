@@ -26,7 +26,7 @@ object MeDropNfcManager {
 
     fun startBroadcast(activity: Activity, contact: MeDropContact) {
         val context = activity.applicationContext
-        MeDropHceService.prepareVCard(contact)
+        MeDropHceService.prepareVCard(context, contact)
         val pm = context.packageManager
         val component = ComponentName(context, MeDropHceService::class.java)
         pm.setComponentEnabledSetting(
@@ -67,7 +67,7 @@ object MeDropNfcManager {
         if (context is Activity) {
             startBroadcast(context, contact)
         } else {
-            MeDropHceService.prepareVCard(contact)
+            MeDropHceService.prepareVCard(context, contact)
             val pm = context.packageManager
             val component = ComponentName(context, MeDropHceService::class.java)
             pm.setComponentEnabledSetting(

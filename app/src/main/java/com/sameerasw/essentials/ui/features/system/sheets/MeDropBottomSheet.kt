@@ -273,6 +273,17 @@ fun MeDropBottomSheet(
                             modifier = Modifier.padding(start = 8.dp, top = 8.dp)
                         )
                         RoundedCardContainer {
+                            if (!safeContact.photoUri.isNullOrBlank()) {
+                                val id = "photo"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_contacts_product_24,
+                                    title = stringResource(R.string.feat_medrop_include_photo),
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
+                                )
+                            }
                             safeContact.getSafePhones().forEachIndexed { i, phone ->
                                 val id = "phone_$i"
                                 IconToggleItem(

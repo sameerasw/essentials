@@ -38,6 +38,7 @@ data class MeDropContact(
     fun getActiveEntryIds(): Set<String> {
         if (selectedEntryIds != null) return selectedEntryIds
         val all = mutableSetOf<String>()
+        if (!photoUri.isNullOrBlank()) all.add("photo")
         getSafePhones().forEachIndexed { i, _ -> all.add("phone_$i") }
         getSafeEmails().forEachIndexed { i, _ -> all.add("email_$i") }
         if (!organization.isNullOrBlank()) all.add("organization")
@@ -50,13 +51,26 @@ data class MeDropContact(
 
     fun isEntrySelected(id: String): Boolean = getActiveEntryIds().contains(id)
 
-    fun toVCard(): String {
+    fun toVCard(context: android.content.Context? = null): String {
         val active = getActiveEntryIds()
         val sb = StringBuilder()
         sb.appendLine("BEGIN:VCARD")
         sb.appendLine("VERSION:3.0")
         sb.appendLine("FN:$displayName")
         sb.appendLine("N:${buildNField(displayName)}")
+
+        if (active.contains("photo") && !photoUri.isNullOrBlank() && context != null) {
+            try {
+                val uri = android.net.Uri.parse(photoUri)
+                context.contentResolver.openInputStream(uri)?.use { stream ->
+                    val bytes = stream.readBytes()
+                    if (bytes.isNotEmpty()) {
+                        val base64 = android.util.Base64.encodeToString(bytes, android.util.Base64.NO_WRAP)
+                        sb.appendLine("PHOTO;TYPE=JPEG;ENCODING=b:$base64")
+                    }
+                }
+            } catch (_: Exception) {}
+        }
 
         if (active.contains("organization") && !organization.isNullOrBlank()) {
             sb.appendLine("ORG:$organization")

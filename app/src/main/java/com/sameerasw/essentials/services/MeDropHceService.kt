@@ -73,8 +73,13 @@ class MeDropHceService : HostApduService() {
             return nlen + ndefData
         }
 
+        fun prepareVCard(context: android.content.Context, contact: MeDropContact) {
+            val vcardString = contact.toVCard(context)
+            pendingVCardBytes = ndefWrap(vcardString.toByteArray(Charsets.UTF_8))
+        }
+
         fun prepareVCard(contact: MeDropContact) {
-            val vcardString = contact.toVCard()
+            val vcardString = contact.toVCard(null)
             pendingVCardBytes = ndefWrap(vcardString.toByteArray(Charsets.UTF_8))
         }
 
@@ -91,7 +96,7 @@ class MeDropHceService : HostApduService() {
         if (json != null) {
             try {
                 val contact = Gson().fromJson(json, MeDropContact::class.java)
-                prepareVCard(contact)
+                prepareVCard(this, contact)
             } catch (_: Exception) {}
         }
     }
