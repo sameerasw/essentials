@@ -24,10 +24,26 @@ object ShellUtils {
     private var lastAlertTime = 0L
     private const val ALERT_COOLDOWN = 180000L // 3 minutes
 
+    @Volatile
+    private var cachedIsRootEnabled: Boolean? = null
+    @Volatile
+    private var prefListenerRegistered = false
+
     fun isRootEnabled(context: Context): Boolean {
+        cachedIsRootEnabled?.let { return it }
         val prefs =
             context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(SettingsRepository.KEY_USE_ROOT, false)
+        if (!prefListenerRegistered) {
+            prefs.registerOnSharedPreferenceChangeListener { _, key ->
+                if (key == SettingsRepository.KEY_USE_ROOT) {
+                    cachedIsRootEnabled = null
+                }
+            }
+            prefListenerRegistered = true
+        }
+        val enabled = prefs.getBoolean(SettingsRepository.KEY_USE_ROOT, false)
+        cachedIsRootEnabled = enabled
+        return enabled
     }
 
     fun isAvailable(context: Context): Boolean {

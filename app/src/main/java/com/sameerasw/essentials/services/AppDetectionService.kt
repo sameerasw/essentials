@@ -62,7 +62,7 @@ class AppDetectionService : Service() {
     override fun onCreate() {
         super.onCreate()
         isRunning = true
-        appFlowHandler = AppFlowHandler(this)
+        appFlowHandler = AppFlowHandler.getInstance(this)
         createNotificationChannel()
 
         val filter = IntentFilter().apply {
@@ -110,6 +110,24 @@ class AppDetectionService : Service() {
     private fun getForegroundPackage(): String? {
         val usageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
         val time = System.currentTimeMillis()
+
+        try {
+            val events = usageStatsManager.queryEvents(time - 1000 * 15, time)
+            val event = android.app.usage.UsageEvents.Event()
+            var lastResumedPackage: String? = null
+            while (events.hasNextEvent()) {
+                events.getNextEvent(event)
+                if (event.eventType == android.app.usage.UsageEvents.Event.ACTIVITY_RESUMED) {
+                    lastResumedPackage = event.packageName
+                }
+            }
+            if (lastResumedPackage != null) {
+                return lastResumedPackage
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AppDetectionService", "Failed to query usage events", e)
+        }
+
         val stats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
             time - 1000 * 10,
@@ -138,9 +156,16 @@ class AppDetectionService : Service() {
     override fun onDestroy() {
         isRunning = false
         isPolling = false
+        appFlowHandler.destroy()
         handler.removeCallbacksAndMessages(null)
         try {
             unregisterReceiver(authReceiver)
+        } catch (_: Exception) {
+        }
+        try {
+            if (::appFlowHandler.isInitialized) {
+                appFlowHandler.destroy()
+            }
         } catch (_: Exception) {
         }
         super.onDestroy()

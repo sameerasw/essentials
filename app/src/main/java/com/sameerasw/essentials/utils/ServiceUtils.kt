@@ -34,7 +34,7 @@ object ServiceUtils {
      */
     fun startRequiredServices(context: Context) {
         val settingsRepository = SettingsRepository(context)
-
+        startShutUpServiceIfNeeded(context, settingsRepository)
         startAppDetectionServiceIfNeeded(context, settingsRepository)
         startBatteryNotificationServiceIfNeeded(context, settingsRepository)
         schedulePeriodicAppUpdateCheck(context, settingsRepository)
@@ -52,6 +52,12 @@ object ServiceUtils {
             settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED)
         val isUseUsageAccess =
             settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
+        val isPerAppRefreshRateEnabled =
+            settingsRepository.getBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED)
+        val isPocketModeEnabled =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
+        val hasPocketModeExcludedApps = isPocketModeEnabled &&
+                settingsRepository.loadPocketModeExcludedApps().any { it.isEnabled }
 
         val hasAppAutomations = DIYRepository.automations.value.any {
             it.isEnabled && it.type == Automation.Type.APP
@@ -61,7 +67,9 @@ object ServiceUtils {
         val hasShutUpApps = shutUpConfigs.any { it.isEnabled }
 
         val shouldRun =
-            (isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations)) || hasShutUpApps
+            isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled ||
+                    isHideGestureBarOnLauncherEnabled || hasAppAutomations ||
+                    isPerAppRefreshRateEnabled || hasPocketModeExcludedApps) || hasShutUpApps
 
         val intent = Intent(context, AppDetectionService::class.java)
         if (shouldRun) {
@@ -99,6 +107,7 @@ object ServiceUtils {
         }
     }
 
+
     fun schedulePeriodicAppUpdateCheck(
         context: Context,
         settingsRepository: SettingsRepository
@@ -121,6 +130,24 @@ object ServiceUtils {
                 ExistingPeriodicWorkPolicy.KEEP,
                 workRequest
             )
+        }
+    }
+    private fun startShutUpServiceIfNeeded(
+        context: Context,
+        settingsRepository: SettingsRepository
+    ) {
+        val isShutUpEnabled = settingsRepository.isShutUpServiceEnabled()
+        val intent = Intent(context, com.sameerasw.essentials.services.ShutUpForegroundService::class.java)
+        if (isShutUpEnabled) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }
