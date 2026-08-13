@@ -16,7 +16,7 @@
     <string name="flashlight_pulse_tile_label">Impulso della torcia</string>
     <string name="check_pre_releases_label">Controlla le pre-release</string>
     <string name="check_pre_releases_desc">Potrebbe essere instabile</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">Scheda predefinita</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sicurezza</string>
     <string name="app_lock_enable_title">Abilita il blocco dell\'app</string>
@@ -29,7 +29,7 @@
     <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
     <string name="setting_use_usage_access_title">Use usage access</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_desc">Invece di Accessibilità (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
     <string name="button_remap_use_shizuku_title">Usa Shizuku o Root o Root</string>
@@ -1463,4 +1463,8 @@
     <string name="feat_pocket_mode_title">Modalità tasca</string>
     <string name="feat_pocket_mode_desc">Previene tocchi accidentali quando il telefono è in tasca</string>
     <string name="feat_watch_wireless_debugging_desc">Attiva da remoto</string>
+    <string name="setting_enable_unsupported_features_desc">Mostra funzionalità specifiche del produttore o ridondanti nascoste di default.</string>
+    <string name="setting_swipe_tabs_title">Scorri fra le schermate</string>
+    <string name="setting_swipe_tabs_desc">Nella schermata home</string>
+    <string name="settings_translated_texts_desc">%d modifiche salvate — tocca per inviarle o scartarle</string>
 </resources>

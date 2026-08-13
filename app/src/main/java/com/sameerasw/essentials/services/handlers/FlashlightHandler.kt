@@ -39,6 +39,7 @@ import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
@@ -60,6 +61,9 @@ class FlashlightHandler(
     private var primaryCameraId: String? = null
     private var currentIntensityLevel: Int = 1
     private var flashlightJob: Job? = null
+    private var specialModeJob: Job? = null
+    val isSpecialModeActive: Boolean
+        get() = specialModeJob?.isActive == true
     private var overheatPreventionJob: Job? = null
     private var isInternalToggle = false
 
@@ -108,8 +112,10 @@ class FlashlightHandler(
                         updateFlashlightNotification(lastIntensity)
                     }
                 } else if (isInternalToggle) {
-                    // Internal trigger - we already handled the job
-                    isInternalToggle = false
+                    // Internal trigger - reset only if no special mode is running
+                    if (specialModeJob == null) {
+                        isInternalToggle = false
+                    }
                 } else {
                     // Normal mode or no global - sync level
                     currentIntensityLevel = FlashlightUtil.getDefaultLevel(service, cameraId)
@@ -147,9 +153,16 @@ class FlashlightHandler(
         when (intent.action) {
             FlashlightActionReceiver.ACTION_INCREASE -> adjustFlashlightIntensity(true)
             FlashlightActionReceiver.ACTION_DECREASE -> adjustFlashlightIntensity(false)
-            FlashlightActionReceiver.ACTION_OFF -> if (isTorchOn) toggleFlashlight()
-            FlashlightActionReceiver.ACTION_TOGGLE -> toggleFlashlight()
+            FlashlightActionReceiver.ACTION_OFF -> {
+                stopSpecialModes()
+                if (isTorchOn) toggleFlashlight()
+            }
+            FlashlightActionReceiver.ACTION_TOGGLE -> {
+                stopSpecialModes()
+                toggleFlashlight()
+            }
             FlashlightActionReceiver.ACTION_SET_INTENSITY -> {
+                stopSpecialModes()
                 val level = intent.getIntExtra(FlashlightActionReceiver.EXTRA_INTENSITY, 1)
                 currentIntensityLevel = level
                 if (!isTorchOn) {
@@ -169,6 +182,20 @@ class FlashlightHandler(
                         }
                     }
                 }
+            }
+
+            FlashlightActionReceiver.ACTION_START_SOS -> {
+                startSosMode()
+            }
+
+            FlashlightActionReceiver.ACTION_START_STROBE -> {
+                val speed = intent.getFloatExtra(FlashlightActionReceiver.EXTRA_STROBE_SPEED, 5f)
+                val fade = intent.getBooleanExtra(FlashlightActionReceiver.EXTRA_STROBE_FADE, false)
+                startStrobeMode(speed, fade)
+            }
+
+            FlashlightActionReceiver.ACTION_STOP_SPECIAL_MODES -> {
+                stopSpecialModes()
             }
 
             FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> {
@@ -711,5 +738,134 @@ class FlashlightHandler(
     private fun stopOverheatPrevention() {
         overheatPreventionJob?.cancel()
         overheatPreventionJob = null
+    }
+
+    fun stopSpecialModes() {
+        specialModeJob?.cancel()
+        specialModeJob = null
+    }
+
+    private fun startSosMode() {
+        stopSpecialModes()
+        val cameraId = getCameraId() ?: return
+        val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
+        val sosIntensityLevel = (maxLevel * 0.8f).toInt().coerceAtLeast(1)
+
+        specialModeJob = scope.launch {
+            try {
+                isInternalToggle = true
+                val dot = 200L
+                val dash = 600L
+                val gap = 200L
+                val letterGap = 600L
+                val wordGap = 1400L
+
+                fun setLight(on: Boolean) {
+                    try {
+                        isInternalToggle = true
+                        if (on) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                FlashlightUtil.isIntensitySupported(service, cameraId)
+                            ) {
+                                cameraManager.turnOnTorchWithStrengthLevel(cameraId, sosIntensityLevel)
+                            } else {
+                                cameraManager.setTorchMode(cameraId, true)
+                            }
+                        } else {
+                            cameraManager.setTorchMode(cameraId, false)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("FlashlightSOS", "Error setting light state", e)
+                    }
+                }
+
+                while (kotlin.coroutines.coroutineContext[kotlinx.coroutines.Job]?.isActive != false) {
+                    // S (...)
+                    repeat(3) {
+                        setLight(true)
+                        kotlinx.coroutines.delay(dot)
+                        setLight(false)
+                        kotlinx.coroutines.delay(gap)
+                    }
+                    kotlinx.coroutines.delay(letterGap)
+
+                    // O (---)
+                    repeat(3) {
+                        setLight(true)
+                        kotlinx.coroutines.delay(dash)
+                        setLight(false)
+                        kotlinx.coroutines.delay(gap)
+                    }
+                    kotlinx.coroutines.delay(letterGap)
+
+                    // S (...)
+                    repeat(3) {
+                        setLight(true)
+                        kotlinx.coroutines.delay(dot)
+                        setLight(false)
+                        kotlinx.coroutines.delay(gap)
+                    }
+                    kotlinx.coroutines.delay(wordGap)
+                }
+            } finally {
+                isInternalToggle = false
+                try {
+                    cameraManager.setTorchMode(cameraId, false)
+                } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private fun startStrobeMode(speed: Float, fade: Boolean) {
+        stopSpecialModes()
+        val cameraId = getCameraId() ?: return
+        val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
+
+        specialModeJob = scope.launch {
+            try {
+                isInternalToggle = true
+                val strobeIntervalMs = (400L - (speed.coerceIn(1f, 10f) * 25L)).toLong().coerceAtLeast(150L)
+                val fadeDurationMs = (800L - (speed.coerceIn(1f, 10f) * 40L)).toLong().coerceAtLeast(400L)
+
+                while (kotlin.coroutines.coroutineContext[kotlinx.coroutines.Job]?.isActive != false) {
+                    isInternalToggle = true
+                    if (fade && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                        FlashlightUtil.isIntensitySupported(service, cameraId)
+                    ) {
+                        FlashlightUtil.fadeFlashlight(
+                            service,
+                            cameraId,
+                            fromLevel = 1,
+                            toLevel = maxLevel,
+                            durationMs = fadeDurationMs,
+                            steps = 15
+                        )
+                        FlashlightUtil.fadeFlashlight(
+                            service,
+                            cameraId,
+                            fromLevel = maxLevel,
+                            toLevel = 1,
+                            durationMs = fadeDurationMs,
+                            steps = 15
+                        )
+                    } else {
+                        try {
+                            cameraManager.setTorchMode(cameraId, true)
+                        } catch (_: Exception) {}
+                        kotlinx.coroutines.delay(strobeIntervalMs)
+                        try {
+                            isInternalToggle = true
+                            cameraManager.setTorchMode(cameraId, false)
+                        } catch (_: Exception) {}
+                        kotlinx.coroutines.delay(strobeIntervalMs)
+                    }
+                }
+            } finally {
+                isInternalToggle = false
+                try {
+                    cameraManager.setTorchMode(cameraId, false)
+                } catch (_: Exception) {}
+            }
+        }
     }
 }

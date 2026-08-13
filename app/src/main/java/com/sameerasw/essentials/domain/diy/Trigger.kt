@@ -116,4 +116,16 @@ sealed interface Trigger {
         override val permissions: List<String>
             get() = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
     }
+
+    @Keep
+    data object PowerSavingOn : Trigger {
+        override val title: Int = R.string.diy_trigger_power_saving_on
+        override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
+    }
+
+    @Keep
+    data object PowerSavingOff : Trigger {
+        override val title: Int = R.string.diy_trigger_power_saving_off
+        override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
+    }
 }

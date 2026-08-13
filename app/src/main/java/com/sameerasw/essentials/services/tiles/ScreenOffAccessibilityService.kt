@@ -198,6 +198,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == "circle_to_search_gesture_enabled" ||
                 key == "circle_to_search_gesture_height" ||
+                key == "circle_to_search_gesture_width" ||
                 key == "circle_to_search_preview_enabled"
             ) {
                 updateOmniOverlay()
@@ -355,8 +356,13 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         } catch (e: Exception) {
             48f
         }
+        val width = try {
+            prefs.getFloat("circle_to_search_gesture_width", 240f)
+        } catch (e: Exception) {
+            240f
+        }
         val isPreview = prefs.getBoolean("circle_to_search_preview_enabled", false)
-        omniGestureOverlayHandler.updateOverlay(isGestureEnabled, height, isPreview)
+        omniGestureOverlayHandler.updateOverlay(isGestureEnabled, height, width, isPreview)
     }
 
     override fun onDestroy() {
@@ -622,6 +628,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             FlashlightActionReceiver.ACTION_OFF,
             FlashlightActionReceiver.ACTION_TOGGLE,
             FlashlightActionReceiver.ACTION_SET_INTENSITY,
+            FlashlightActionReceiver.ACTION_START_SOS,
+            FlashlightActionReceiver.ACTION_START_STROBE,
+            FlashlightActionReceiver.ACTION_STOP_SPECIAL_MODES,
             FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> flashlightHandler.handleIntent(
                 intent
             )

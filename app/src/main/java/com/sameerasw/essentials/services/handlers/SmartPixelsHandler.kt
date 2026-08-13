@@ -10,11 +10,16 @@
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -25,6 +30,14 @@ class SmartPixelsHandler(private val service: AccessibilityService) {
     private var windowManager: WindowManager? = null
     private var overlayView: SmartPixelsOverlayView? = null
     private var isOverlayAdded = false
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val shiftPatternRunnable = object : Runnable {
+        override fun run() {
+            overlayView?.shiftPattern()
+            handler.postDelayed(this, 30 * 60 * 1000L) // Shift pattern every 30 minutes to prevent burn-in
+        }
+    }
 
     private val prefs by lazy {
         service.getSharedPreferences(
@@ -78,8 +91,19 @@ class SmartPixelsHandler(private val service: AccessibilityService) {
             }
 
             try {
+                overlayView?.alpha = 0f
                 windowManager?.addView(overlayView, params)
                 isOverlayAdded = true
+
+                // Fade in animation
+                ObjectAnimator.ofFloat(overlayView, "alpha", 0f, 1f).apply {
+                    duration = 300
+                    start()
+                }
+
+                // Schedule burn-in prevention pattern shifting
+                handler.removeCallbacks(shiftPatternRunnable)
+                handler.postDelayed(shiftPatternRunnable, 30 * 60 * 1000L)
             } catch (e: Exception) {
                 Log.e("SmartPixelsHandler", "Failed to add Smart Pixels accessibility overlay", e)
             }
@@ -90,20 +114,30 @@ class SmartPixelsHandler(private val service: AccessibilityService) {
 
     private fun hideOverlay() {
         if (isOverlayAdded && windowManager != null && overlayView != null) {
-            try {
-                windowManager?.removeView(overlayView)
-            } catch (e: Exception) {
-                Log.e(
-                    "SmartPixelsHandler",
-                    "Failed to remove Smart Pixels accessibility overlay",
-                    e
-                )
+            handler.removeCallbacks(shiftPatternRunnable)
+            val currentView = overlayView
+            // Fade out animation before removing
+            ObjectAnimator.ofFloat(currentView, "alpha", currentView?.alpha ?: 1f, 0f).apply {
+                duration = 300
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        try {
+                            if (isOverlayAdded && currentView != null) {
+                                windowManager?.removeView(currentView)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("SmartPixelsHandler", "Failed to remove Smart Pixels accessibility overlay", e)
+                        }
+                        isOverlayAdded = false
+                    }
+                })
+                start()
             }
-            isOverlayAdded = false
         }
     }
 
     fun destroy() {
+        handler.removeCallbacks(shiftPatternRunnable)
         hideOverlay()
         overlayView = null
     }
@@ -114,6 +148,7 @@ class SmartPixelsHandler(private val service: AccessibilityService) {
         private var lastWidth = 0
         private var lastHeight = 0
         private var currentIntensity = 50f
+        private var patternOffset = 0
 
         init {
             setLayerType(LAYER_TYPE_HARDWARE, null)
@@ -126,6 +161,13 @@ class SmartPixelsHandler(private val service: AccessibilityService) {
                 cachedPatternBitmap = null
                 invalidate()
             }
+        }
+
+        fun shiftPattern() {
+            patternOffset = (patternOffset + 1) % 4
+            cachedPatternBitmap?.recycle()
+            cachedPatternBitmap = null
+            invalidate()
         }
 
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -156,15 +198,18 @@ class SmartPixelsHandler(private val service: AccessibilityService) {
                 else -> 6
             }
 
+            val offsetX = (patternOffset % 2) * step
+            val offsetY = (patternOffset / 2) * step
+
             var y = 0
             while (y < h) {
-                var x = (y / step % 2) * step
+                var x = ((y / step % 2) * step + offsetX) % (step * 2)
                 while (x < w) {
                     canvas.drawRect(
                         x.toFloat(),
-                        y.toFloat(),
+                        (y + offsetY).toFloat(),
                         (x + step).toFloat(),
-                        (y + step).toFloat(),
+                        (y + offsetY + step).toFloat(),
                         p
                     )
                     x += step * 2

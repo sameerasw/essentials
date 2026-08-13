@@ -82,6 +82,7 @@ import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.BluetoothDeviceSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -240,6 +241,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showSoundModeSettings by remember { mutableStateOf(false) }
                 var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
                 var showFreezeTagSettings by remember { mutableStateOf(false) }
+                var showOpenAppSettings by remember { mutableStateOf(false) }
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
@@ -253,11 +255,27 @@ class AutomationEditorActivity : ComponentActivity() {
                     else -> true
                 }
 
+                fun isActionConfigured(action: Action?): Boolean = when (action) {
+                    is Action.OpenApp -> action.packageName.isNotBlank()
+                    else -> true
+                }
+
                 val isValid = when (automationType) {
-                    Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null && isTriggerConfigured
-                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction != null
-                    Automation.Type.STATE -> selectedState != null && (selectedInAction != null || selectedOutAction != null)
-                    Automation.Type.APP -> selectedApps.isNotEmpty() && (selectedInAction != null || selectedOutAction != null)
+                    Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null && isTriggerConfigured && isActionConfigured(
+                        selectedAction
+                    )
+
+                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction != null && isActionConfigured(
+                        selectedAction
+                    )
+
+                    Automation.Type.STATE -> selectedState != null && (selectedInAction != null || selectedOutAction != null) && isActionConfigured(
+                        selectedInAction
+                    ) && isActionConfigured(selectedOutAction)
+
+                    Automation.Type.APP -> selectedApps.isNotEmpty() && (selectedInAction != null || selectedOutAction != null) && isActionConfigured(
+                        selectedInAction
+                    ) && isActionConfigured(selectedOutAction)
                 }
 
                 Scaffold(
@@ -520,6 +538,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         Trigger.DeviceUnlock,
                                                         Trigger.ChargerConnected,
                                                         Trigger.ChargerDisconnected,
+                                                        Trigger.PowerSavingOn,
+                                                        Trigger.PowerSavingOff,
                                                         Trigger.Schedule(
                                                             hour = (selectedTrigger as? Trigger.Schedule)?.hour
                                                                 ?: 0,
@@ -578,6 +598,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     val states = listOf(
                                                         DIYState.Charging,
                                                         DIYState.ScreenOn,
+                                                        DIYState.PowerSaving,
                                                         DIYState.TimePeriod(
                                                             startHour = (selectedState as? DIYState.TimePeriod)?.startHour
                                                                 ?: 0,
@@ -666,7 +687,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.ToggleMediaVolume,
                                                 Action.LikeCurrentSong,
                                                 Action.CircleToSearch,
-                                                Action.PinApp
+                                                Action.PinApp,
+                                                Action.OpenApp(),
+                                                Action.TurnOnHotspot,
+                                                Action.TurnOffHotspot,
+                                                Action.ToggleHotspot
                                             )
                                             // Only show Device Effects on Android 15+ 
                                             actions.add(Action.DeviceEffects())
@@ -754,6 +779,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             showSometimesEssentialsSettings = true
                                                         } else if (resolvedAction is Action.FreezeTag) {
                                                             showFreezeTagSettings = true
+                                                        } else if (resolvedAction is Action.OpenApp) {
+                                                            showOpenAppSettings = true
                                                         }
                                                     }
                                                 )
@@ -952,6 +979,26 @@ class AutomationEditorActivity : ComponentActivity() {
                                 }
                             )
                         }
+                        if (showOpenAppSettings) {
+                            SingleAppSelectionSheet(
+                                onDismissRequest = { showOpenAppSettings = false },
+                                onAppSelected = { app ->
+                                    val newAction = Action.OpenApp(packageName = app.packageName)
+                                    when (automationType) {
+                                        Automation.Type.TRIGGER -> selectedAction = newAction
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction =
+                                            newAction
+
+                                        Automation.Type.STATE, Automation.Type.APP -> {
+                                            if (selectedActionTab == 0) selectedInAction = newAction
+                                            else selectedOutAction = newAction
+                                        }
+                                    }
+                                    configAction = null
+                                }
+                            )
+                        }
+
                         // Bottom Actions
                         Row(
                             modifier = Modifier

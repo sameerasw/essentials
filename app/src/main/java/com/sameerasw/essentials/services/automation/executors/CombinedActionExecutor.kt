@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.camera2.CameraManager
 import android.media.AudioManager
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.view.KeyEvent
 import android.widget.Toast
@@ -339,6 +340,23 @@ object CombinedActionExecutor {
                     com.sameerasw.essentials.utils.OmniTriggerUtil.trigger(context)
                 }
 
+                is Action.OpenApp -> {
+                    try {
+                        val launchIntent =
+                            context.packageManager.getLaunchIntentForPackage(action.packageName)
+                        if (launchIntent != null) {
+                            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(launchIntent)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                is Action.TurnOnHotspot -> setHotspotEnabled(context, true)
+                is Action.TurnOffHotspot -> setHotspotEnabled(context, false)
+                is Action.ToggleHotspot -> setHotspotEnabled(context, !isHotspotEnabled(context))
+
                 is Action.SometimesEssentials -> {
                     val repository =
                         com.sameerasw.essentials.data.repository.SettingsRepository(context)
@@ -628,6 +646,32 @@ object CombinedActionExecutor {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun isHotspotEnabled(context: Context): Boolean {
+        return try {
+            val wifiManager =
+                context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                org.lsposed.hiddenapibypass.HiddenApiBypass.invoke(
+                    WifiManager::class.java,
+                    wifiManager,
+                    "isWifiApEnabled"
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                WifiManager::class.java.getMethod("isWifiApEnabled").invoke(wifiManager)
+            }
+            result as? Boolean ?: false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    private fun setHotspotEnabled(context: Context, enabled: Boolean) {
+        val command = if (enabled) "cmd wifi start-softap" else "cmd wifi stop-softap"
+        com.sameerasw.essentials.utils.ShellUtils.runCommand(context, command)
     }
 
     private fun setLowPowerMode(context: Context, on: Boolean) {

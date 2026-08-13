@@ -697,8 +697,8 @@
     <string name="label_mode_glove">Glove mode</string>
     <string name="tile_scale_animations">Glove Mode</string>
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
-    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
-    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_increase_touch_sensitivity">Aumentar a sensibilidade ao toque</string>
+    <string name="desc_increase_touch_sensitivity">Melhora a capacidade de resposta da tela sensível ao toque ao usar luvas ou películas protetoras.</string>
     <string name="label_auto_rotate">Auto rotate</string>
     <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
     <string name="label_screen_timeout">Screen timeout</string>
@@ -1492,4 +1492,5 @@
     <string name="label_thermal_skin">Temperatura da Superfície</string>
     <string name="label_thermal_gpu">Temperatura da GPU</string>
     <string name="label_thermal_cpu">Temperatura da CPU</string>
+    <string name="feat_networks_title">Redes</string>
 </resources>

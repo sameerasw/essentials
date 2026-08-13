@@ -36,6 +36,12 @@ sealed interface State {
     }
 
     @Keep
+    data object PowerSaving : State {
+        override val title: Int = R.string.diy_state_power_saving
+        override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
+    }
+
+    @Keep
     data class TimePeriod(
         @SerializedName("startHour") val startHour: Int = 0,
         @SerializedName("startMinute") val startMinute: Int = 0,

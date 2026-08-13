@@ -1513,4 +1513,19 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="settings_translated_texts_desc">%d düzenleme beklemede — göndermek veya iptal etmek için dokunun</string>
     <string name="settings_translate_mode">Çeviri Modu</string>
     <string name="settings_translate_mode_desc">Çeviri yapmak ve topluluğa katkıda bulunmak için herhangi bir metne uzun basın</string>
+    <string name="feat_power_saving_title">Enerji tasarrufu</string>
+    <string name="feat_standby_apps_desc">Uygulama arka plan etkinliklerini optimize edin</string>
+    <string name="feat_standby_apps_title">Beklemedeki uygulamalar</string>
+    <string name="feat_power_saving_desc">Enerji tasarrufu politikalarını yapılandırın</string>
+    <string name="about_desc_standby_apps">Android uygulamalarının bekleme modlarını (Aktif, Çalışma kümesi, Sık, Nadir, Kısıtlı) yöneterek arka planda uygulama yürütmesini, ağ kullanımını ve pil tüketimini kontrol edin.</string>
+    <string name="feat_smart_pixels_desc">Güç tasarrufu için pikselleri karartın</string>
+    <string name="feat_smart_pixels_title">Akıllı pikseller</string>
+    <string name="about_desc_smart_pixels">Erişilebilirlik hizmetini kullanarak OLED ekranlarda güç tasarrufu sağlamak için ekran üzerine özelleştirilebilir, karartılmış piksellerden oluşan kareli bir desen yerleştirin.</string>
+    <string name="cat_navigation">Gezinme çubuğu</string>
+    <string name="feat_transparent_navigation_bar_desc">Sistem gezinme çubuğunun arka planını şeffaf hale getirin</string>
+    <string name="feat_transparent_navigation_bar_title">Şeffaf gezinme çubuğu</string>
+    <string name="feat_allow_overlays_in_settings_desc">Uygulamaların sistem Ayarları\'nın üzerine katmanlar çizmesine izin verin</string>
+    <string name="feat_allow_overlays_in_settings_title">Ayarlar\'da katmanlara izin ver</string>
+    <string name="feat_prefer_gpu_composing_desc">GPU ekran kompozisyonunu zorlamak için donanım katmanlarını devre dışı bırakın. Cihaz yeniden başlatıldığında ayarlar sıfırlanır.</string>
+    <string name="feat_prefer_gpu_composing_title">Ekran kompozisyonu için GPU\'yu tercih edin</string>
 </resources>

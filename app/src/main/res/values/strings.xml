@@ -277,8 +277,14 @@
     <string name="tile_dynamic_night_light">Dynamic Night Light</string>
     <string name="tile_locked_security">Locked Security</string>
     <string name="tile_app_lock">App Lock</string>
+    <string name="tile_essentials_on_display">Essentials on Display</string>
     <string name="tile_mono_audio">Mono Audio</string>
     <string name="tile_flashlight">Flashlight</string>
+    <string name="flashlight_mode_sos">SOS</string>
+    <string name="flashlight_mode_strobe">Strobe</string>
+    <string name="flashlight_speed_label">Speed</string>
+    <string name="flashlight_fade_label">Fade</string>
+    <string name="feature_flashlight_effects_title">Flashlight Effects</string>
     <string name="tile_app_freezing">App Freezing</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
     <string name="tile_stay_awake">Stay awake</string>
@@ -297,7 +303,7 @@
     <string name="private_dns_mode_label">Mode</string>
     <string name="private_dns_mode_toggle">Toggle</string>
     <string name="private_dns_mode_cycle">Cycle</string>
-    <string name="tile_usb_debugging">USB Debugging</string>
+    <string name="tile_usb_debugging">Debugging</string>
     <string name="tile_color_picker">Color Picker</string>
     <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
@@ -435,6 +441,8 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_circle_to_search_gesture_width_title">Gesture zone width</string>
+    <string name="feat_circle_to_search_gesture_width_desc">Adjust the width of the touch area at the bottom</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
     <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
@@ -926,6 +934,8 @@
     <string name="diy_trigger_bluetooth_disconnected">Bluetooth Device Disconnected</string>
     <string name="diy_trigger_wifi_connected">Wi-Fi Network Connected</string>
     <string name="diy_trigger_wifi_disconnected">Wi-Fi Network Disconnected</string>
+    <string name="diy_trigger_power_saving_on">Power Saving On</string>
+    <string name="diy_trigger_power_saving_off">Power Saving Off</string>
     <string name="diy_select_bluetooth_device_title">Select Bluetooth Device</string>
     <string name="diy_bluetooth_permission_required">Bluetooth permission is required to list paired devices.</string>
     <string name="diy_no_paired_bluetooth_devices">No paired Bluetooth devices found. Pair a device first in system settings.</string>
@@ -942,6 +952,7 @@
 
     <string name="diy_state_charging">Charging</string>
     <string name="diy_state_screen_on">Screen On</string>
+    <string name="diy_state_power_saving">Power Saving</string>
 
     <string name="diy_action_haptic">Vibrate</string>
     <string name="diy_action_notification">Show Notification</string>
@@ -964,6 +975,10 @@
     <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_action_sometimes_essentials">Sometimes Essential</string>
     <string name="diy_action_freeze_tag">Freeze</string>
+    <string name="diy_action_open_app">Open App</string>
+    <string name="diy_action_hotspot_on">Turn On Hotspot</string>
+    <string name="diy_action_hotspot_off">Turn Off Hotspot</string>
+    <string name="diy_action_hotspot_toggle">Toggle Hotspot</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Select Trigger</string>
     <string name="diy_create_app_title">App</string>
@@ -978,6 +993,7 @@
     <string name="action_delete">Delete</string>
     <string name="action_enable">Enable</string>
     <string name="action_disable">Disable</string>
+    <string name="action_test">Test action</string>
 
     <string name="automation_service_channel_name">Automation Service</string>
     <string name="automation_service_running_title">Automations Active</string>

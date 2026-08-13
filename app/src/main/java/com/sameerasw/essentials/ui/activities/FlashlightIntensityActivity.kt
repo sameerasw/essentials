@@ -4,7 +4,7 @@
  *
  * Feature Module: Application Activities
  * File: FlashlightIntensityActivity.kt
- * Description: Activity component for FlashlightIntensityActivity.kt.
+ * Description: Activity component for FlashlightIntensityActivity.kt dialog overlay.
  */
 
 package com.sameerasw.essentials.ui.activities
@@ -16,6 +16,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,22 +29,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedToggleButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,6 +60,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
@@ -98,6 +111,11 @@ class FlashlightIntensityActivity : ComponentActivity() {
     }
 }
 
+enum class FlashlightSpecialMode {
+    NONE, SOS, STROBE, FADE
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
     val context = LocalContext.current
@@ -126,6 +144,9 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
     }
     var lastSentLevel by remember { mutableIntStateOf(intensity.toInt()) }
 
+    var isSpecialModesVisible by remember { mutableStateOf(false) }
+    var selectedSpecialMode by remember { mutableStateOf(FlashlightSpecialMode.NONE) }
+
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(100)
         // Automatically turn on or update intensity on open
@@ -134,6 +155,41 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
             putExtra(FlashlightActionReceiver.EXTRA_INTENSITY, intensity.toInt())
         }
         context.sendBroadcast(intent)
+    }
+
+    fun updateSpecialMode(mode: FlashlightSpecialMode) {
+        selectedSpecialMode = mode
+        when (mode) {
+            FlashlightSpecialMode.SOS -> {
+                val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
+                    action = FlashlightActionReceiver.ACTION_START_SOS
+                }
+                context.sendBroadcast(intent)
+            }
+            FlashlightSpecialMode.STROBE -> {
+                val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
+                    action = FlashlightActionReceiver.ACTION_START_STROBE
+                    putExtra(FlashlightActionReceiver.EXTRA_STROBE_SPEED, 10f)
+                    putExtra(FlashlightActionReceiver.EXTRA_STROBE_FADE, false)
+                }
+                context.sendBroadcast(intent)
+            }
+            FlashlightSpecialMode.FADE -> {
+                val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
+                    action = FlashlightActionReceiver.ACTION_START_STROBE
+                    putExtra(FlashlightActionReceiver.EXTRA_STROBE_SPEED, 10f)
+                    putExtra(FlashlightActionReceiver.EXTRA_STROBE_FADE, true)
+                }
+                context.sendBroadcast(intent)
+            }
+            FlashlightSpecialMode.NONE -> {
+                val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
+                    action = FlashlightActionReceiver.ACTION_SET_INTENSITY
+                    putExtra(FlashlightActionReceiver.EXTRA_INTENSITY, intensity.toInt())
+                }
+                context.sendBroadcast(intent)
+            }
+        }
     }
 
     Box(
@@ -173,43 +229,132 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                 )
 
                 Text(
-                    text = stringResource(R.string.feature_flashlight_brightness_title),
+                    text = stringResource(if (isSpecialModesVisible) R.string.feature_flashlight_effects_title else R.string.feature_flashlight_brightness_title),
                     style = MaterialTheme.typography.titleLarge
                 )
 
-                Slider(
-                    value = intensity,
-                    onValueChange = { newVal ->
-                        intensity = newVal
-                        val level = newVal.toInt().coerceIn(1, maxLevel)
+                AnimatedContent(
+                    targetState = isSpecialModesVisible,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    label = "FlashlightControlSwap"
+                ) { showModes ->
+                    if (!showModes) {
+                        Slider(
+                            value = intensity,
+                            onValueChange = { newVal ->
+                                intensity = newVal
+                                val level = newVal.toInt().coerceIn(1, maxLevel)
 
-                        if (level != lastSentLevel) {
-                            lastSentLevel = level
-                            // Send broadcast to update intensity
-                            val intent =
-                                Intent(context, FlashlightActionReceiver::class.java).apply {
-                                    action = FlashlightActionReceiver.ACTION_SET_INTENSITY
-                                    putExtra(FlashlightActionReceiver.EXTRA_INTENSITY, level)
+                                if (level != lastSentLevel) {
+                                    lastSentLevel = level
+                                    val intent =
+                                        Intent(context, FlashlightActionReceiver::class.java).apply {
+                                            action = FlashlightActionReceiver.ACTION_SET_INTENSITY
+                                            putExtra(FlashlightActionReceiver.EXTRA_INTENSITY, level)
+                                        }
+                                    context.sendBroadcast(intent)
+                                    prefs.edit().putInt("flashlight_last_intensity", level).apply()
+                                    HapticUtil.performSliderHaptic(view)
                                 }
-                            context.sendBroadcast(intent)
+                            },
+                            valueRange = 1f..maxLevel.toFloat(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                                .padding(6.dp),
+                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+                        ) {
+                            // SOS
+                            ToggleButton(
+                                checked = selectedSpecialMode == FlashlightSpecialMode.SOS,
+                                onCheckedChange = {
+                                    HapticUtil.performUIHaptic(view)
+                                    val nextMode = if (selectedSpecialMode == FlashlightSpecialMode.SOS) FlashlightSpecialMode.NONE else FlashlightSpecialMode.SOS
+                                    updateSpecialMode(nextMode)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp)
+                                    .semantics { role = Role.RadioButton },
+                                shapes = ButtonGroupDefaults.connectedLeadingButtonShapes()
+                            ) {
+                                Text(stringResource(R.string.flashlight_mode_sos))
+                            }
 
-                            // Persist
-                            prefs.edit().putInt("flashlight_last_intensity", level).apply()
+                            // Strobe
+                            ToggleButton(
+                                checked = selectedSpecialMode == FlashlightSpecialMode.STROBE,
+                                onCheckedChange = {
+                                    HapticUtil.performUIHaptic(view)
+                                    val nextMode = if (selectedSpecialMode == FlashlightSpecialMode.STROBE) FlashlightSpecialMode.NONE else FlashlightSpecialMode.STROBE
+                                    updateSpecialMode(nextMode)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp)
+                                    .semantics { role = Role.RadioButton },
+                                shapes = ButtonGroupDefaults.connectedMiddleButtonShapes()
+                            ) {
+                                Text(stringResource(R.string.flashlight_mode_strobe))
+                            }
 
-                            HapticUtil.performSliderHaptic(view)
+                            // Fade
+                            ToggleButton(
+                                checked = selectedSpecialMode == FlashlightSpecialMode.FADE,
+                                onCheckedChange = {
+                                    HapticUtil.performUIHaptic(view)
+                                    val nextMode = if (selectedSpecialMode == FlashlightSpecialMode.FADE) FlashlightSpecialMode.NONE else FlashlightSpecialMode.FADE
+                                    updateSpecialMode(nextMode)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp)
+                                    .semantics { role = Role.RadioButton },
+                                shapes = ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            ) {
+                                Text(stringResource(R.string.flashlight_fade_label))
+                            }
                         }
-                    },
-                    valueRange = 1f..maxLevel.toFloat()
-                )
+                    }
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    OutlinedToggleButton(
+                        checked = isSpecialModesVisible,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performUIHaptic(view)
+                            isSpecialModesVisible = checked
+                            if (!checked && selectedSpecialMode != FlashlightSpecialMode.NONE) {
+                                updateSpecialMode(FlashlightSpecialMode.NONE)
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_award_star_24),
+                            contentDescription = "Toggle special modes",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
 
                     OutlinedButton(
                         onClick = onDismiss,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp),
                         shape = RoundedCornerShape(16.dp)
                     ) {
                         Text(stringResource(R.string.action_done))
@@ -224,7 +369,9 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                             context.sendBroadcast(intent)
                             onDismiss()
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp),
                         shape = RoundedCornerShape(16.dp)
                     ) {
                         Text(stringResource(R.string.action_turn_off))

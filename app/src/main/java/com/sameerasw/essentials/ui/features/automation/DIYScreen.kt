@@ -139,6 +139,9 @@ fun DIYScreen(
                                         },
                                         onToggle = {
                                             viewModel.toggleAutomation(automation.id)
+                                        },
+                                        onTest = {
+                                            viewModel.testAutomation(automation)
                                         }
                                     )
                                 }
@@ -173,6 +176,9 @@ fun DIYScreen(
                                         },
                                         onToggle = {
                                             viewModel.toggleAutomation(automation.id)
+                                        },
+                                        onTest = {
+                                            viewModel.testAutomation(automation)
                                         }
                                     )
                                 }

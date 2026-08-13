@@ -444,7 +444,7 @@
     <string name="feat_calendar_sync_title">Naptár szinkronizálás</string>
     <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
     <string name="feat_lock_from_watch_title">Zárolás óráról</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="feat_lock_from_watch_desc">Zárold a telefonod távolról</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -1458,4 +1458,12 @@
     <string name="feat_flashlight_title">Zseblámpa</string>
     <string name="feat_power_battery_title">Energia és akkumulátor </string>
     <string name="feat_watch_wireless_debugging_title">Vezeték nélküli hibakeresés</string>
+    <string name="label_device_battery">Akkumulátor</string>
+    <string name="feat_power_saving_title">Energiatakarékosság</string>
+    <string name="feat_power_saving_desc">Konfiguráld az energiatakarékossági szabályokat</string>
+    <string name="feat_networks_title">Hálózatok</string>
+    <string name="feat_mobile_data_always_on_title">Mobiladat mindig be</string>
+    <string name="feat_mobile_data_always_on_desc">Tartsd bekapcsolva a mobiladatot Wi-Fi mellett</string>
+    <string name="feat_sync_location_reached_title">ott vagyunk már Státusz szinkronizálása</string>
+    <string name="feat_watch_controls_title">Testreszabás</string>
 </resources>

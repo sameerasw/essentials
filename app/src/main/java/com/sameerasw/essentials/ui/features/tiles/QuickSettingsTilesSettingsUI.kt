@@ -66,6 +66,7 @@ import com.sameerasw.essentials.services.tiles.CaffeinateTileService
 import com.sameerasw.essentials.services.tiles.ChargeQuickTileService
 import com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService
 import com.sameerasw.essentials.services.tiles.DynamicNightLightTileService
+import com.sameerasw.essentials.services.tiles.EssentialsOnDisplayTileService
 import com.sameerasw.essentials.services.tiles.FlashlightPulseTileService
 import com.sameerasw.essentials.services.tiles.FlashlightTileService
 import com.sameerasw.essentials.services.tiles.LockdownTileService
@@ -79,6 +80,7 @@ import com.sameerasw.essentials.services.tiles.RefreshRateTileService
 import com.sameerasw.essentials.services.tiles.RestartSystemUiTileService
 import com.sameerasw.essentials.services.tiles.ScaleAnimationsTileService
 import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
+import com.sameerasw.essentials.services.tiles.SmartPixelsTileService
 import com.sameerasw.essentials.services.tiles.SoundModeTileService
 import com.sameerasw.essentials.services.tiles.StayAwakeTileService
 import com.sameerasw.essentials.services.tiles.TapToWakeTileService
@@ -365,6 +367,22 @@ fun QuickSettingsTilesSettingsUI(
             listOf("ACCESSIBILITY", "DEVICE_ADMIN"),
             R.string.tile_lockdown_mode_about_desc,
             R.string.cat_privacy
+        ),
+        QSTileInfo(
+            R.string.feat_smart_pixels_title,
+            R.drawable.rounded_grain_24,
+            SmartPixelsTileService::class.java,
+            listOf("ACCESSIBILITY"),
+            R.string.about_desc_smart_pixels,
+            R.string.cat_visuals
+        ),
+        QSTileInfo(
+            R.string.feat_essentials_on_display_title,
+            R.drawable.rounded_live_tv_24,
+            EssentialsOnDisplayTileService::class.java,
+            listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
+            R.string.feat_essentials_on_display_desc,
+            R.string.cat_visuals
         )
     )
 

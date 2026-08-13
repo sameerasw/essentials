@@ -65,7 +65,7 @@
     <string name="like_song_toast_enabled">Pokaż wiadomość toastową</string>
     <string name="like_song_aod_overlay_title">Pokaż nakładkę na AOD</string>
     <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="feat_essentials_on_display_desc">Rzuć okiem na multimedia i informacje na ekranie AOD (zawsze włączonym).</string>
     <string name="essentials_on_display_docked_mode_title">Docked mode</string>
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
@@ -109,9 +109,9 @@
     <string name="caffeinate_battery_optimization_title">Ignoruj ​​optymalizację baterii</string>
     <string name="caffeinate_abort_screen_off_title">Przerwij przy wyłączonym ekranie</string>
     <string name="caffeinate_skip_countdown_title">Pomiń odliczanie</string>
-    <string name="caffeinate_skip_countdown_desc">Natychmiast zacznij pić kofeinę.</string>
+    <string name="caffeinate_skip_countdown_desc">Natychmiast uruchom Kofeinę</string>
     <string name="caffeinate_timeout_presets_title">Ustawienia limitu czasu</string>
-    <string name="caffeinate_timeout_presets_desc">Wybierz dostępne czasy trwania kafelka QS</string>
+    <string name="caffeinate_timeout_presets_desc">Wybierz dostępne czasy trwania dla kafelka QS</string>
     <string name="caffeinate_timeout_5m">5 m</string>
     <string name="caffeinate_timeout_10m">10 m</string>
     <string name="caffeinate_timeout_30m">30 m</string>
@@ -123,7 +123,7 @@
     <string name="caffeinate_remaining">%1$s pozostały</string>
     <string name="caffeinate_live_channel_desc">Stałe powiadomienie o kofeinie</string>
     <!-- Dynamic Night Light -->
-    <string name="dynamic_night_light_enable_title">Włącz dynamiczne światło nocne</string>
+    <string name="dynamic_night_light_enable_title">Włącz dynamiczne podświetlenie nocne</string>
     <string name="dynamic_night_light_apps_section">Aplikacje wyłączające światło nocne</string>
     <string name="action_select_apps">Wybierz aplikacje</string>
     <!-- App Freezing -->
@@ -345,20 +345,20 @@
     <string name="action_reset_all_icons">Zresetuj wszystkie ikony</string>
     <string name="status_bar_section_advanced">Więcej ustawień</string>
     <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_all_system_icons_title">Ukryj wszystkie ikony systemowe </string>
+    <string name="hide_all_system_icons_desc">Usuń wszystkie ikony niebędące powiadomieniami z paska stanu</string>
     <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
     <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
-    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
-    <string name="hide_notification_icons_title">Hide notifications</string>
-    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
-    <string name="feat_hide_gesture_bar_title">Ukryj przycisk ekranu głównego</string>
-    <string name="feat_hide_gesture_bar_desc">Nawigacja gestami</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
-    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
-    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="hide_clock_title">Ukryj zegar </string>
+    <string name="hide_clock_desc">Usuń całkowicie zegar z paska stanu</string>
+    <string name="hide_notification_icons_title">Ukryj ikony powiadomień</string>
+    <string name="hide_notification_icons_desc">Ukryj wszystkie nadchodzące ikony powiadomień</string>
+    <string name="feat_hide_gesture_bar_title">Ukryj pasek gestów </string>
+    <string name="feat_hide_gesture_bar_desc">W nawigacji gestami </string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Pokaż w launcherze</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamicznie pokazuj pasek gestów tylko na ekranie głównym</string>
+    <string name="feat_circle_to_search_gesture_title">Gest \"Zakreśl, aby wyszukać\" </string>
+    <string name="feat_circle_to_search_gesture_desc">Przytrzymaj dłużej dolny obszar ekranu by aktywować funkcję \"Zakreśl, aby wyszukać\" </string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
     <string name="feat_other_customizations_title">Inne personalizacje</string>
@@ -392,14 +392,14 @@
     <string name="feat_statusbar_icons_title">Ikony paska stanu</string>
     <string name="feat_statusbar_icons_desc">Kontroluj widoczność ikon na pasku stanu</string>
     <string name="feat_caffeinate_title">Kofeina</string>
-    <string name="feat_caffeinate_desc">Utrzymuj ekran w stanie czuwania</string>
+    <string name="feat_caffeinate_desc">Nie wygaszaj ekranu</string>
     <string name="feat_maps_power_saving_title">Mapuje tryb oszczędzania energii</string>
     <string name="feat_maps_power_saving_desc">Na dowolne urządzenie z Androidem</string>
     <string name="feat_notification_lighting_title">Oświetlenie powiadomień</string>
     <string name="feat_notification_lighting_desc">Podświetl powiadomienia</string>
     <string name="feat_flashlight_pulse_desc">Pulsująca latarka przy otrzymaniu powiadomień</string>
     <string name="feat_sound_mode_tile_title">Kafelek trybu dźwiękowego</string>
-    <string name="feat_call_vibrations_title">Wibracje wywoławcze</string>
+    <string name="feat_call_vibrations_title">Wibracje w połączeniach </string>
     <string name="feat_call_vibrations_desc">Wibracje w przypadku wykonywania połączeń</string>
     <string name="show_bluetooth_devices">Pokaż urządzenia Bluetooth</string>
     <string name="show_bluetooth_devices_summary">Wyświetl poziom naładowania baterii podłączonych urządzeń Bluetooth</string>
@@ -418,12 +418,12 @@
     <string name="feat_link_actions_desc">Obsługuj łącza z wieloma aplikacjami</string>
     <string name="feat_snooze_notifications_title">Odłóż powiadomienia systemowe</string>
     <string name="feat_snooze_notifications_desc">Odłóż ciągłe powiadomienia</string>
-    <string name="feat_qs_tiles_title">Płytki szybkich ustawień</string>
+    <string name="feat_qs_tiles_title">Kafelki szybkich ustawień</string>
     <string name="feat_qs_tiles_desc">Zobacz wszystkie</string>
     <string name="feat_button_remap_title">Ponowne mapowanie przycisków</string>
     <string name="feat_button_remap_desc">Zmień mapowanie działań przycisków sprzętowych</string>
-    <string name="feat_dynamic_night_light_title">Dynamiczne światło nocne</string>
-    <string name="feat_dynamic_night_light_desc">Przełącz światło nocne na podstawie aplikacji</string>
+    <string name="feat_dynamic_night_light_title">Dynamiczne podświetlenie nocne</string>
+    <string name="feat_dynamic_night_light_desc">Uruchom podświetlenie nocne (filtr światła niebieskiego) w zależności od aplikacji </string>
     <string name="feat_screen_locked_security_title">Bezpieczeństwo z blokadą ekranu</string>
     <string name="feat_app_lock_title">Blokada aplikacji</string>
     <string name="feat_app_lock_desc">Bezpieczne aplikacje za pomocą danych biometrycznych</string>
@@ -699,8 +699,8 @@
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
     <string name="label_increase_touch_sensitivity">Zwiększa czułość na dotyk</string>
     <string name="desc_increase_touch_sensitivity">Zwiększa czułość na dotyk, gdy korzystasz z rękawiczek, bądź szkła ochronnego</string>
-    <string name="label_auto_rotate">Automatyczna orientacja</string>
-    <string name="desc_auto_rotate">Automatycznie obracają ekran, przy zmianie położenia telefonu</string>
+    <string name="label_auto_rotate">Automatyczny obrót ekranu</string>
+    <string name="desc_auto_rotate">Automatycznie obracaj ekran, przy zmianie położenia telefonu</string>
     <string name="label_screen_timeout">Czas przed wygaszeniem ekranu</string>
     <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
     <string name="unit_seconds">%d seconds</string>
@@ -716,7 +716,9 @@
     <string name="action_what_is_this">Co to jest?</string>
     <string name="update_available_title">Dostępna aktualizacja</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Funkcja Essentials On Display wyświetla nakładkę „Teraz odtwarzane” na ekranie blokady podczas odtwarzania muzyki i zmiany odtwarzania.
+
+Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać alternatywną opcję – wygaszacz ekranu Ambience dodany w ustawieniach Androida podczas ładowania.</string>
     <string name="about_desc_notification_lighting">Funkcja Notification Lighting dodaje piękny efekt podświetlenia krawędzi po otrzymaniu powiadomień.\n\nMożesz dostosować styl animacji, kolory i zachowanie. Działa nawet wtedy, gdy ekran jest wyłączony (w zależności od OEM) lub na bieżącej aplikacji. Wybierz aplikacje, priorytet powiadomień lub zachowanie, które ma wywoływać, z podanych elementów sterujących. Jeśli Twój producent OEM nie obsługuje nakładek powyżej AOD, skorzystaj z opcji wyświetlania otoczenia znajdującej się poniżej.</string>
     <string name="about_desc_screen_off_widget">Z łatwością wyłącz ekran, dotykając przezroczystego widżetu o zmiennym rozmiarze, który nie dodaje ikon ani nie bałagani na ekranie głównym.</string>
     <string name="about_desc_statusbar_icons">Przejmij pełną kontrolę nad ikonami na pasku stanu.\n\nUkryj określone ikony, takie jak Wi-Fi, Bluetooth lub dane komórkowe, aby pasek stanu był czysty. Możesz także dostosować format zegara i wskaźnik baterii za pomocą inteligentnych elementów sterujących. Oto lista dostępnych elementów sterujących AOSP, więc system operacyjny Twojego urządzenia może nie respektować wszystkich elementów sterujących.</string>
@@ -726,7 +728,7 @@
     <string name="about_desc_snooze_notifications">Odłóż irytujące, trwałe powiadomienia systemowe, których domyślnie nie można modyfikować. \n\nPoczekaj, aż nadejdzie powiadomienie, a następnie przejdź do tej funkcji, gdzie zostanie wyświetlony kanał powiadomień\'. Wybierz tę opcję, aby odłożyć drzemkę następnym razem.\n\nDo każdego odłożonego powiadomienia nadal będziesz mieć dostęp w historii powiadomień w systemie Android.</string>
     <string name="about_desc_quick_settings_tiles">Dodaj niestandardowe kafelki do panelu Szybkich ustawień.\n\nNaciśnij i przytrzymaj dowolny z nich, aby dowiedzieć się, co robią.</string>
     <string name="about_desc_button_remap">Zmień przyporządkowanie przycisków sprzętowych, aby wykonywać różne czynności i skróty.\n\nDostosuj działanie po długim naciśnięciu przycisków głośności w określonych warunkach. \n\nNiektóre zachowania, takie jak wyzwalacz wyłączania ekranu lub sterowanie latarką, mogą być zależne od producenta OEM i mogą nie działać na wszystkich urządzeniach zgodnie z oczekiwaniami. Niektóre scenariusze można obejść przy użyciu uprawnień Shizuku, ale mogą nie zapewniać takich samych wrażeń ze względu na implementacje.</string>
-    <string name="about_desc_dynamic_night_light">Automatycznie przełączaj filtr niebieskiego światła na ekranie w oparciu o aplikację na pierwszym planie.</string>
+    <string name="about_desc_dynamic_night_light">Automatycznie przełączaj filtr światła niebieskiego na ekranie w oparciu o aplikację na pierwszym planie.</string>
     <string name="about_desc_screen_locked_security">Zwiększ bezpieczeństwo, gdy Twoje urządzenie jest zablokowane.\n\nOgranicz dostęp do niektórych wrażliwych kafelków QS, aby zapobiec nieautoryzowanym modyfikacjom sieci i jeszcze bardziej uniemożliwić im ponowne próby zrobienia tego, zwiększając prędkość animacji, aby zapobiec spamowi dotykowemu.\n\nTa funkcja nie jest solidna i może mieć wady, takie jak niektóre kafelki umożliwiające bezpośrednie przełączanie, takie jak brak możliwości Bluetooth lub trybu samolotowego zapobiegać.</string>
     <string name="about_desc_app_lock">Zabezpiecz swoje aplikacje dodatkową warstwą uwierzytelniania.\n\nTwoja metoda uwierzytelniania ekranu blokady urządzenia będzie używana, o ile spełnia poziom bezpieczeństwa biometrycznego klasy 3 według standardów Androida.</string>
     <string name="about_desc_location_reached">Otrzymuj powiadomienia, gdy zbliżysz się do celu, aby mieć pewność, że nigdy nie przegapisz przystanku.\n\nPrzejdź do Map Google, naciśnij i przytrzymaj pinezkę w pobliżu miejsca docelowego i upewnij się, że jest napisane „Upuszczona pinezka” (w przeciwnym razie obliczenie odległości może nie być dokładne), a następnie udostępnij lokalizację w aplikacji Essentials i rozpocznij śledzenie.</string>
@@ -1232,7 +1234,7 @@
     <string name="feat_widgets_desc">Rzut oka na ekran główny</string>
     <string name="feat_display_visuals_title">Wyświetlacz</string>
     <string name="feat_display_visuals_desc">Wizualizacje poprawiające wrażenia</string>
-    <string name="feat_watch_title">Oglądać</string>
+    <string name="feat_watch_title">Zegarek </string>
     <string name="feat_watch_desc">Integracje z WearOS</string>
     <string name="watch_no_companion_title">Nie wykryto zegarka</string>
     <string name="watch_no_companion_desc">Wygląda na to, że na zegarku nie masz zainstalowanej aplikacji towarzyszącej Essentials Wear.</string>
@@ -1300,9 +1302,9 @@
     <string name="msg_import_failed">Nie udało się zaimportować repozytoriów</string>
     <string name="label_apps">Aplikacje</string>
     <string name="feat_text_animations_title">Skala i animacje</string>
-    <string name="feat_text_animations_desc">Dostosuj skalę systemu i animacje</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_text_animations_desc">Dostosuj skalę interfejsu systemowego i animacje</string>
+    <string name="feat_screen_refresh_rate_title">Odświeżanie ekranu </string>
+    <string name="feat_screen_refresh_rate_desc">Ustaw stałą częstotliwość odświeżania albo zakres zmiennego odświeżania ekranu</string>
     <string name="settings_section_text">Tekst</string>
     <string name="label_font_scale">Skala czcionki</string>
     <string name="label_font_weight">Waga czcionki</string>
@@ -1312,17 +1314,17 @@
     <string name="msg_shizuku_permission_required">Aby dostosować skalę, wymagane jest pozwolenie Shizuku</string>
     <string name="label_grant_permission">Udziel pozwolenia</string>
     <string name="settings_section_animations">Animacje</string>
-    <string name="label_animator_duration_scale">Skala czasu trwania animatora</string>
+    <string name="label_animator_duration_scale">Skala długości animacji </string>
     <string name="label_transition_animation_scale">Skala animacji przejścia</string>
     <string name="label_window_animation_scale">Skala animacji okna</string>
     <string name="about_desc_text_animations">Dostosuj skalę, wagę i szybkość animacji w całym systemie. Pamiętaj, że niektóre ustawienia mogą wymagać zaawansowanych uprawnień lub ponownego uruchomienia urządzenia w przypadku niektórych aplikacji, aby odzwierciedlić zmiany. \n\nDostosowanie skali może wymagać dodatkowych uprawnień shizuku lub root</string>
-    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="about_desc_screen_refresh_rate">Ustaw niestandardową częstotliwość odświeżania ekranu za pomocą Shizuku. Tryb stały blokuje minimalną i szczytową częstotliwość odświeżania na jednej wartości, natomiast tryb zakresowy pozwala zdefiniować osobne wartości minimalną i szczytową. Reset usuwa niestandardowe nadpisanie i przywraca urządzeniu zachowanie odświeżania zarządzane przez system.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
-    <string name="refresh_rate_mode_fixed">Fixed</string>
-    <string name="refresh_rate_mode_range">Range</string>
-    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_mode_fixed">Stała </string>
+    <string name="refresh_rate_mode_range">Zakres </string>
+    <string name="refresh_rate_fixed_title">Stała częstotliwość odświeżania ekranu </string>
+    <string name="refresh_rate_fixed_desc">Ustaw tę samą wartość dla minimalnej i maksymalnej częstotliwosci ekranu</string>
     <string name="refresh_rate_min_title">Minimum refresh rate</string>
     <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
     <string name="refresh_rate_peak_title">Peak refresh rate</string>
@@ -1404,8 +1406,8 @@
     <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
     <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
-    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
-    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="feat_disable_rotation_suggestion_title">Zablokuj sugestię obrócenia ekranu </string>
+    <string name="feat_disable_rotation_suggestion_desc">Nie pokazuj przycisku obrotu, gdy automatyczne obracanie jest wyłączone</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
@@ -1413,12 +1415,12 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_title">Zegar ekranu blokady </string>
     <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="about_desc_lock_screen_clock">Zmień styl zegara na ekranie blokady w Pixelach. Wybierz jedną z dostępnych tarcz zegara w interfejsie systemowym. Niektóre stare style mogą być niedostępne.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
-    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_flex">Elastyczny </string>
     <string name="lock_screen_clock_growth">Growth</string>
     <string name="lock_screen_clock_handwritten">Handwritten</string>
     <string name="lock_screen_clock_inflate">Inflate</string>
@@ -1431,15 +1433,15 @@
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
     <string name="lock_screen_clock_default">Default</string>
-    <string name="label_weight">Weight</string>
-    <string name="label_width">Width</string>
+    <string name="label_weight">Waga</string>
+    <string name="label_width">Szerokość </string>
     <string name="label_grade">Grade</string>
-    <string name="label_roundness">Roundness</string>
-    <string name="label_color_tone">Lightness</string>
+    <string name="label_roundness">Zaokrąglenie </string>
+    <string name="label_color_tone">Lekkość </string>
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
-    <string name="about_title">About</string>
+    <string name="about_title">O funkcji </string>
     <string name="color_default">Domyślny</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -1467,5 +1469,34 @@
     <string name="feat_notification_snoozing_title">Uśpij powiadomienia</string>
     <string name="feat_notification_snoozing_desc">Odrocz powiadomienia na później </string>
     <string name="feat_safe_volume_title">Wyłącz komunikat o zbyt dużej głośności</string>
-    <string name="feat_safe_volume_desc">Wyłącz komunikat o za dużo głośności</string>
+    <string name="feat_safe_volume_desc">Wyłącz komunikat o za dużej głośności</string>
+    <string name="feat_network_download_rate_limit_desc">Ogranicz systemowo prędkość pobierania danych </string>
+    <string name="feat_network_download_rate_limit_title">Limit prędkości sieci </string>
+    <string name="feat_mobile_data_always_on_title">Dane mobilne zawsze aktywne</string>
+    <string name="feat_mobile_data_always_on_desc">Utrzymuj aktywność danych mobilnych nawet po podłączeniu do sieci Wi-Fi </string>
+    <string name="feat_wireless_display_certification_title">Certyfikacja wyświetlacza bezprzewodowego </string>
+    <string name="feat_wireless_display_certification_desc">Pokazuj opcje dla certyfikacji wyświetlacza bezprzewodowego </string>
+    <string name="about_desc_networks">Skonfiguruj limity prędkości pobierania danych przez sieć, utrzymuj ciągłą aktywność danych mobilnych nawet po połączeniu z siecią Wi-Fi i włącz ustawienia certyfikacji wyświetlacza bezprzewodowego.</string>
+    <string name="feat_smart_pixels_title">Inteligentne piksele</string>
+    <string name="feat_smart_pixels_desc">Wygaś piksele, by oszczędzać energię </string>
+    <string name="search_smart_pixels_enable_title">Włącz inteligentne piksele</string>
+    <string name="smart_pixels_intensity_title">Intensywność </string>
+    <string name="feat_allow_overlays_in_settings_title">Zezwól na nakładki w Ustawieniach </string>
+    <string name="feat_allow_overlays_in_settings_desc">Zezwól aplikacjom na rysowanie nakładek nad Ustawieniami systemowymi</string>
+    <string name="feat_prefer_gpu_composing_title">Używaj GPU do komponowania ekranu</string>
+    <string name="feat_prefer_gpu_composing_desc">Wyłącz nakładki sprzętowe, aby wymusić kompozycję ekranu przez GPU. Resetuje się po ponownym uruchomieniu urządzenia.</string>
+    <string name="about_desc_other_customizations">Zaawansowane dostosowywanie ekranu i interfejsu systemu, w tym widoczność paska gestów, wysokość funkcji „zakreśl, aby wyszukać”, sugestie obrotu ekranu, nakładki ustawień, przezroczysty pasek nawigacyjny oraz kompozycja ekranu przez GPU.</string>
+    <string name="cat_navigation">Nawigacja systemowa </string>
+    <string name="feat_transparent_navigation_bar_title">Przezroczysty panel nawigacji </string>
+    <string name="feat_transparent_navigation_bar_desc">Ustaw przezroczyste tło paska nawigacji systemu</string>
+    <string name="feat_power_battery_title">Moc i bateria </string>
+    <string name="feat_power_battery_desc">Optymalizuj pobór energii </string>
+    <string name="feat_power_saving_title">Oszczędzanie energii </string>
+    <string name="feat_pixel_searchbar_title">Zastąp pasek wyszukiwania </string>
+    <string name="feat_pixel_searchbar_desc">Zastąp domyślny pasem wyszukiwania w Pixel Launcher</string>
+    <string name="about_desc_pixel_searchbar">Zastąp domyślny pasek wyszukiwania Pixel Launcher na ekranie głównym. Możesz dostosować zawartość, aby nic nie wyświetlać (pusty) lub bieżącą datę.
+
+Pamiętaj, że włączenie tej opcji może spowodować awarię widżetów Pixel Launchera \"W Skrócie\" (takich jak widżety sportowe i finansowe).
+
+Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</string>
 </resources>

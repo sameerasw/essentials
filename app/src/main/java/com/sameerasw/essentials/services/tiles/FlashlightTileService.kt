@@ -23,6 +23,13 @@ class FlashlightTileService : BaseTileService() {
 
     private var isTorchOn = false
     private val cameraManager by lazy { getSystemService(CAMERA_SERVICE) as CameraManager }
+
+    private val isSpecialModeActive: Boolean
+        get() = ScreenOffAccessibilityService.instance?.flashlightHandler?.isSpecialModeActive == true
+
+    private val isTileActive: Boolean
+        get() = isTorchOn || isSpecialModeActive
+
     private val torchCallback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
             super.onTorchModeChanged(cameraId, enabled)
@@ -55,23 +62,30 @@ class FlashlightTileService : BaseTileService() {
     }
 
     override fun onTileClick() {
-        val intent = Intent(this, FlashlightActionReceiver::class.java).apply {
-            action = FlashlightActionReceiver.ACTION_TOGGLE
+        if (isSpecialModeActive) {
+            val intent = Intent(this, FlashlightActionReceiver::class.java).apply {
+                action = FlashlightActionReceiver.ACTION_OFF
+            }
+            sendBroadcast(intent)
+        } else {
+            val intent = Intent(this, FlashlightActionReceiver::class.java).apply {
+                action = FlashlightActionReceiver.ACTION_TOGGLE
+            }
+            sendBroadcast(intent)
         }
-        sendBroadcast(intent)
     }
 
     override fun getTileLabel(): String = "Flashlight"
 
-    override fun getTileSubtitle(): String = if (isTorchOn) "On" else "Off"
+    override fun getTileSubtitle(): String = if (isTileActive) "On" else "Off"
 
     override fun hasFeaturePermission(): Boolean = true
 
     override fun getTileIcon(): Icon {
         val resId =
-            if (isTorchOn) R.drawable.round_flashlight_on_24 else R.drawable.rounded_flashlight_on_24
+            if (isTileActive) R.drawable.round_flashlight_on_24 else R.drawable.rounded_flashlight_on_24
         return Icon.createWithResource(this, resId)
     }
 
-    override fun getTileState(): Int = if (isTorchOn) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+    override fun getTileState(): Int = if (isTileActive) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
 }

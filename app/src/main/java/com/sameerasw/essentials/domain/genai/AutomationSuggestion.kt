@@ -33,6 +33,8 @@ data class AutomationSuggestion(
             "DeviceUnlock",
             "ChargerConnected",
             "ChargerDisconnected",
+            "PowerSavingOn",
+            "PowerSavingOff",
             "Schedule",
             "BluetoothConnected",
             "BluetoothDisconnected",
@@ -44,7 +46,7 @@ data class AutomationSuggestion(
 
     @Guide(
         description = "State type if automation is STATE type",
-        enumValues = ["Charging", "ScreenOn", "TimePeriod"]
+        enumValues = ["Charging", "ScreenOn", "PowerSaving", "TimePeriod"]
     )
     val stateType: String? = null,
 

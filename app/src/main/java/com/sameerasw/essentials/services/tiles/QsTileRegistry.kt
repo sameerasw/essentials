@@ -149,6 +149,16 @@ object QsTileRegistry {
             R.string.tile_charge_optimization,
             R.drawable.rounded_battery_android_frame_shield_24,
             ChargeQuickTileService::class.java
+        ),
+        QsTileEntry(
+            R.string.feat_smart_pixels_title,
+            R.drawable.rounded_grain_24,
+            SmartPixelsTileService::class.java
+        ),
+        QsTileEntry(
+            R.string.tile_essentials_on_display,
+            R.drawable.rounded_live_tv_24,
+            EssentialsOnDisplayTileService::class.java
         )
     )
 

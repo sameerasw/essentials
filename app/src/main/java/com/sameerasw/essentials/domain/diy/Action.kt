@@ -235,6 +235,36 @@ sealed interface Action {
     }
 
     @Keep
+    data class OpenApp(
+        @SerializedName("packageName") val packageName: String = ""
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_open_app
+        override val icon: Int get() = R.drawable.rounded_open_in_new_24
+        override val isConfigurable: Boolean = true
+    }
+
+    @Keep
+    data object TurnOnHotspot : Action {
+        override val title: Int = R.string.diy_action_hotspot_on
+        override val icon: Int = R.drawable.rounded_wifi_tethering_24
+        override val permissions: List<String> = listOf("shizuku", "root")
+    }
+
+    @Keep
+    data object TurnOffHotspot : Action {
+        override val title: Int = R.string.diy_action_hotspot_off
+        override val icon: Int = R.drawable.rounded_wifi_tethering_24
+        override val permissions: List<String> = listOf("shizuku", "root")
+    }
+
+    @Keep
+    data object ToggleHotspot : Action {
+        override val title: Int = R.string.diy_action_hotspot_toggle
+        override val icon: Int = R.drawable.rounded_wifi_tethering_24
+        override val permissions: List<String> = listOf("shizuku", "root")
+    }
+
+    @Keep
     data class FreezeTag(
         @SerializedName("mode") val mode: String = "Freeze", // "Freeze", "Unfreeze"
         @SerializedName("tagIds") val tagIds: List<String> = emptyList()

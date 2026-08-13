@@ -81,7 +81,7 @@ object AutomationManager {
             when (automation.type) {
                 Automation.Type.TRIGGER -> {
                     when (automation.trigger) {
-                        is Trigger.ChargerConnected, is Trigger.ChargerDisconnected -> {
+                        is Trigger.ChargerConnected, is Trigger.ChargerDisconnected, is Trigger.PowerSavingOn, is Trigger.PowerSavingOff -> {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }
@@ -112,7 +112,7 @@ object AutomationManager {
 
                 Automation.Type.STATE -> {
                     when (automation.state) {
-                        is DIYState.Charging -> {
+                        is DIYState.Charging, is DIYState.PowerSaving -> {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }

@@ -55,15 +55,15 @@ class OmniGestureOverlayHandler(private val service: AccessibilityService) {
         runCatching { VibrationEffect.createWaveform(timings, amplitudes, -1) }.getOrNull()
     }
 
-    fun updateOverlay(enabled: Boolean, heightDp: Float = 48f, isPreview: Boolean = false) {
+    fun updateOverlay(enabled: Boolean, heightDp: Float = 48f, widthDp: Float = 240f, isPreview: Boolean = false) {
         handler.post {
-            if (enabled) showOverlay(heightDp, isPreview) else removeOverlay()
+            if (enabled) showOverlay(heightDp, widthDp, isPreview) else removeOverlay()
         }
     }
 
-    private fun showOverlay(heightDp: Float, isPreview: Boolean) {
+    private fun showOverlay(heightDp: Float, widthDp: Float, isPreview: Boolean) {
         val params = WindowManager.LayoutParams(
-            dpToPx(WIDTH_DP),
+            dpToPx(widthDp),
             dpToPx(heightDp),
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or

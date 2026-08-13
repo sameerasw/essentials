@@ -65,7 +65,8 @@ fun AutomationItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onDelete: () -> Unit = {},
-    onToggle: () -> Unit = {}
+    onToggle: () -> Unit = {},
+    onTest: () -> Unit = {}
 ) {
 
     val view = LocalView.current
@@ -113,6 +114,19 @@ fun AutomationItem(
                     leadingIcon = {
                         Icon(
                             painter = painterResource(toggleIcon),
+                            contentDescription = null
+                        )
+                    }
+                )
+                SegmentedDropdownMenuItem(
+                    text = { Text(stringResource(R.string.action_test)) },
+                    onClick = {
+                        showMenu = false
+                        onTest()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_play_arrow_24),
                             contentDescription = null
                         )
                     }
@@ -331,14 +345,33 @@ fun ActionItem(
                 tint = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = stringResource(id = action?.title ?: R.string.haptic_none),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Column {
+                Text(
+                    text = stringResource(id = action?.title ?: R.string.haptic_none),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (action is Action.OpenApp && action.packageName.isNotBlank()) {
+                    val appName = remember(action.packageName) {
+                        try {
+                            val pm = context.packageManager
+                            pm.getApplicationInfo(action.packageName, 0).loadLabel(pm).toString()
+                        } catch (e: Exception) {
+                            action.packageName
+                        }
+                    }
+                    Text(
+                        text = appName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
     }
 }

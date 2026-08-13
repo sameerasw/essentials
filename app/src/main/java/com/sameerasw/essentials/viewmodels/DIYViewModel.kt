@@ -73,6 +73,28 @@ class DIYViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
+     * Runs the automation's action(s) immediately, without waiting for its trigger/state.
+     *
+     * @param automation [Automation] Target automation.
+     */
+    fun testAutomation(automation: Automation) {
+        val context = getApplication<Application>().applicationContext
+        val actionsToTest = if (automation.type == Automation.Type.STATE || automation.type == Automation.Type.APP) {
+            listOfNotNull(automation.entryAction)
+        } else {
+            automation.actions
+        }
+        viewModelScope.launch {
+            actionsToTest.forEach { action ->
+                com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor.execute(
+                    context,
+                    action
+                )
+            }
+        }
+    }
+
+    /**
      * Executes the request gen ai suggestion operation.
      *
      * @param description [String] Target description.
@@ -122,6 +144,8 @@ class DIYViewModel(application: Application) : AndroidViewModel(application) {
             "DeviceUnlock" -> Trigger.DeviceUnlock
             "ChargerConnected" -> Trigger.ChargerConnected
             "ChargerDisconnected" -> Trigger.ChargerDisconnected
+            "PowerSavingOn" -> Trigger.PowerSavingOn
+            "PowerSavingOff" -> Trigger.PowerSavingOff
             "Schedule" -> Trigger.Schedule(
                 hour = suggestion.hour ?: 0,
                 minute = suggestion.minute ?: 0
@@ -137,6 +161,7 @@ class DIYViewModel(application: Application) : AndroidViewModel(application) {
         val state = when (suggestion.stateType) {
             "Charging" -> State.Charging
             "ScreenOn" -> State.ScreenOn
+            "PowerSaving" -> State.PowerSaving
             "TimePeriod" -> State.TimePeriod(
                 startHour = suggestion.hour ?: 0,
                 startMinute = suggestion.minute ?: 0,

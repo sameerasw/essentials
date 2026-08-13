@@ -371,6 +371,14 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
+            android:name=".ui.activities.SmartPixelsIntensityActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
             android:name=".ui.activities.PrivateDnsSettingsActivity"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -700,6 +708,32 @@
             android:exported="true"
             android:icon="@drawable/rounded_nightlight_24"
             android:label="Dynamic Night Light"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+        <service
+            android:name=".services.tiles.SmartPixelsTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_grain_24"
+            android:label="@string/feat_smart_pixels_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+        <service
+            android:name=".services.tiles.EssentialsOnDisplayTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_live_tv_24"
+            android:label="@string/tile_essentials_on_display"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

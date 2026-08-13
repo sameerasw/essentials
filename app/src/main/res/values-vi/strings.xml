@@ -236,7 +236,7 @@
     <string name="tile_developer_options">Tùy chọn nhà phát triển</string>
     <string name="about_desc_developer_options">Chuyển đổi tùy chọn nhà phát triển hệ thống từ ô QS một cách dễ dàng. Điều này có thể đặt lại một số cài đặt dành cho nhà phát triển mà bạn đã sửa đổi.</string>
     <string name="tile_refresh_rate">Refresh Rate</string>
-    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="about_desc_refresh_rate_tile">Bạn có thể chuyển đổi giữa tốc độ làm mới mặc định của hệ thống và tốc độ làm mới được thiết lập sẵn trực tiếp từ ô Cài đặt nhanh bằng Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">DNS riêng</string>
     <string name="tile_private_dns_auto">Tự động</string>
@@ -446,8 +446,8 @@
     <string name="feat_lock_from_watch_title">Khoá thiết bị từ Đồng hồ</string>
     <string name="feat_lock_from_watch_desc">Khóa điện thoại từ xa</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
-    <string name="remote_lock_mode_screen_off">Screen off</string>
-    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_screen_off">Tắt màn hình</string>
+    <string name="remote_lock_mode_lock">Khoá</string>
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
     <string name="watch_connected_status">Connected</string>
     <string name="watch_unknown_name">Unknown Watch</string>
@@ -695,8 +695,8 @@
     <string name="action_see_whats_new">See what\'s new</string>
     <string name="label_mode_default">Default</string>
     <string name="label_mode_glove">Chế độ găng tay</string>
-    <string name="tile_scale_animations">Glove Mode</string>
-    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="tile_scale_animations">Chế độ Găng tay</string>
+    <string name="about_desc_scale_animations_tile">Chuyển đổi nhanh chóng giữa cấu hình giao diện người dùng mặc định và chế độ đeo găng tay</string>
     <string name="label_increase_touch_sensitivity">Tăng độ nhạy cảm ứng</string>
     <string name="desc_increase_touch_sensitivity">Cải thiện khả năng phản hồi của màn hình cảm ứng khi sử dụng găng tay hoặc miếng dán bảo vệ màn hình</string>
     <string name="label_auto_rotate">Tự động xoay màn hình</string>
@@ -950,8 +950,8 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="label_keyboard_always_dark">Chủ đề luôn tối</string>
     <string name="label_keyboard_pitch_black">Chủ đề đen tuyền</string>
     <string name="label_keyboard_clipboard_enabled">Lịch sử bảng nhớ tạm</string>
-    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
-    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string name="label_keyboard_long_press_symbols">Nhấn giữ để hiển thị các ký tự</string>
+    <string name="label_keyboard_accented_characters">Các ký tự có dấu</string>
     <string-array name="keywords_selection">
         <item>danh sách</item>
         <item>người nhặt đồ</item>
@@ -1279,7 +1279,7 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="kaomoji_cat_hugging">Hugging</string>
     <string name="kaomoji_cat_indifference">Indifference</string>
     <string name="kaomoji_cat_magic">Magic</string>
-    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_music">Nhạc</string>
     <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
     <string name="kaomoji_cat_pain">Pain</string>
     <string name="kaomoji_cat_pig">Pig</string>
@@ -1347,7 +1347,7 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="label_help_guide">Trợ giúp và hướng dẫn</string>
     <string name="tab_your_android">Android của bạn</string>
     <string name="label_device_storage">Bộ nhớ</string>
-    <string name="label_device_ram">Ký ức</string>
+    <string name="label_device_ram">RAM</string>
     <string name="label_use_blur">Sử dụng làm mờ</string>
     <string name="desc_use_blur">Bật các phần tử làm mờ lũy tiến trên giao diện người dùng</string>
     <string name="msg_blur_compatibility_error">Tính năng Làm mờ bị tắt trên thiết bị này để ngăn lỗi hiển thị đã biết trên các thiết bị Samsung chạy Android 15 trở xuống.</string>
@@ -1543,4 +1543,61 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
 Xin lưu ý rằng việc kích hoạt tính năng này có thể làm lỗi các tiện ích \"At a Glance\" của Pixel Launcher (chẳng hạn như tiện ích thể thao và tài chính).
 
 Ngoài ra, có thể cần áp đặt cài đặt này nhiều lần để thay đổi có hiệu lực.</string>
+    <string name="feat_transparent_navigation_bar_title">Thanh điều hướng trong suốt</string>
+    <string name="feat_transparent_navigation_bar_desc">Làm cho nền thanh điều hướng hệ thống trong suốt</string>
+    <string name="cat_navigation">Điều hướng</string>
+    <string name="feat_smart_pixels_title">Điểm ảnh thông minh</string>
+    <string name="feat_smart_pixels_desc">Làm tối các điểm ảnh để tiết kiệm năng lượng</string>
+    <string name="search_smart_pixels_enable_title">Bật điểm ảnh thông minh</string>
+    <string name="smart_pixels_intensity_title">Cường độ</string>
+    <string name="feat_allow_overlays_in_settings_title">Cho phép hiển thị trên cùng trong Cài đặt</string>
+    <string name="feat_allow_overlays_in_settings_desc">Cho phép ứng dụng hiển thị trên cùng lên trên cài đặt hệ thống</string>
+    <string name="feat_prefer_gpu_composing_title">Ưu tiên sử dụng GPU cho việc ghép ảnh màn hình</string>
+    <string name="feat_prefer_gpu_composing_desc">Tắt các lớp phủ phần cứng để buộc sử dụng GPU để kết hợp hình ảnh màn hình. Thiết lập lại khi khởi động lại thiết bị.</string>
+    <string name="feat_pixel_searchbar_title">Thay thế thanh tìm kiếm</string>
+    <string name="feat_pixel_searchbar_desc">Thay thế thanh tìm kiếm mặc định của Trình khởi chạy Pixel.</string>
+    <string name="feat_power_saving_title">Tiết kiệm pin</string>
+    <string name="feat_power_saving_desc">Cấu hình các chính sách tiết kiệm pin</string>
+    <string name="label_advertise_is_enabled">Đã bật quảng cáo</string>
+    <string name="desc_advertise_is_enabled">Thông báo cho các ứng dụng biết rằng chế độ tiết kiệm pin đã được bật.</string>
+    <string name="label_force_background_check">Kiểm tra nền bắt buộc</string>
+    <string name="desc_force_background_check">Áp dụng các hạn chế nghiêm ngặt đối với dịch vụ chạy ngầm.</string>
+    <string name="tile_lockdown_mode_desc">Tắt màn hình ô QS</string>
+    <string name="feat_networks_desc">Điều khiển radio và mạng</string>
+    <string name="feat_networks_title">Mạng</string>
+    <string name="feat_network_download_rate_limit_title">Giới hạn tốc độ tải xuống từ mạng</string>
+    <string name="feat_network_download_rate_limit_desc">Giới hạn tốc độ tải xuống trên toàn hệ thống</string>
+    <string name="feat_mobile_data_always_on_title">Dữ liệu di động luôn bật</string>
+    <string name="feat_mobile_data_always_on_desc">Giữ cho dữ liệu di động luôn hoạt động ngay cả khi đang kết nối Wi-Fi</string>
+    <string name="feat_wireless_display_certification_title">Chứng nhận màn hình không dây</string>
+    <string name="feat_wireless_display_certification_desc">Hiển thị các tùy chọn để được chứng nhận màn hình không dây</string>
+    <string name="freeze_tag_color_coded_title">Tag được mã hóa màu</string>
+    <string name="freeze_tag_color_coded_desc">Hiển thị màu tag trong lưới ứng dụng</string>
+    <string name="about_desc_notification_snoozing">Kích hoạt nút tạm dừng thông báo trên các thông báo và cấu hình các tùy chọn khoảng thời gian tùy chỉnh cũng như thời lượng mặc định để trì hoãn việc xem thông báo sau.</string>
+    <string name="about_desc_safe_volume">Các quy định của châu Âu yêu cầu điện thoại thông minh phải cảnh báo khi âm lượng vượt quá mức nhất định (85dB). Cảnh báo này phải được hiển thị một lần sau mỗi lần khởi động lại hoặc sau 20 giờ phát nhạc liên tục. Sử dụng nút chuyển đổi này để tắt chức năng đó vĩnh viễn.</string>
+    <string name="about_desc_smart_pixels">Sử dụng dịch vụ hỗ trợ tiếp cận để phủ một lớp mẫu ca rô tùy chỉnh gồm các điểm ảnh bị làm mờ lên màn hình nhằm tiết kiệm điện năng hiển thị trên màn hình OLED.</string>
+    <string name="about_desc_other_customizations">Các tùy chỉnh nâng cao về giao diện người dùng hệ thống và hiển thị bao gồm khả năng hiển thị thanh cử chỉ, chiều cao tìm kiếm theo vòng tròn, gợi ý xoay màn hình, lớp phủ cài đặt, thanh điều hướng trong suốt và ghép ảnh màn hình GPU.</string>
+    <string name="about_desc_restart_systemui_tile">Dễ dàng khởi động lại SystemUI trực tiếp từ bảng Cài đặt nhanh. Hữu ích để nhanh chóng khắc phục sự cố thanh trạng thái hoặc áp dụng các thay đổi giao diện hệ thống ngay lập tức. Yêu cầu quyền root hoặc quyền truy cập shell Shizuku.</string>
+    <string name="tile_lock">Khoá</string>
+    <string name="tile_lockdown_mode_about_desc">Khóa điện thoại hoặc bật chế độ Khóa nếu chế độ này đang được bật.
+
+Chế độ Khóa vô hiệu hóa các phương thức mở khóa yếu như nhận diện khuôn mặt/vân tay và yêu cầu hình vẽ hoặc mã PIN để mở khóa điện thoại một cách an toàn.
+
+Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.</string>
+    <string name="about_desc_networks">Cấu hình giới hạn tốc độ tải xuống mạng, duy trì kết nối dữ liệu di động ngay cả khi đang kết nối Wi-Fi và bật cài đặt chứng nhận màn hình không dây.</string>
+    <string name="label_device_battery">Pin</string>
+    <string name="label_battery_health">Sức khoẻ</string>
+    <string name="label_battery_temperature">Nhiệt độ</string>
+    <string name="label_battery_mode">Chế độ</string>
+    <string name="label_battery_technology">Công nghệ</string>
+    <string name="label_battery_charge_counter">Điện tích hiện tại</string>
+    <string name="label_battery_current_now">Dòng điện trực tiếp</string>
+    <string name="label_battery_current_avg">Dòng điện trung bình</string>
+    <string name="label_thermal_cpu">Nhiệt độ CPU</string>
+    <string name="label_thermal_gpu">Nhiệt độ GPU</string>
+    <string name="label_thermal_throttling_status">Trạng thái điều tiết</string>
+    <string name="label_auto_reset_battery_stats_title">Tự động đặt lại</string>
+    <string name="label_auto_reset_battery_stats_desc">Tự động đặt lại thống kê pin khi thiết bị được rút phích cắm khi dung lượng pin còn trên 90%.</string>
+    <string name="pixel_searchbar_style_empty">Không</string>
+    <string name="pixel_searchbar_style_date">Ngày</string>
 </resources>

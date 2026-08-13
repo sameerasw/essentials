@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.PowerManager
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
@@ -33,6 +34,7 @@ class PowerModule : AutomationModule {
 
     // State tracking
     private var isCharging = false
+    private var isPowerSaving = false
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -41,7 +43,7 @@ class PowerModule : AutomationModule {
                     if (!isCharging) {
                         isCharging = true
                         handleTrigger(context, Trigger.ChargerConnected)
-                        handleStateChange(context, true)
+                        handleChargingStateChange(context, true)
                     }
                 }
 
@@ -49,7 +51,22 @@ class PowerModule : AutomationModule {
                     if (isCharging) {
                         isCharging = false
                         handleTrigger(context, Trigger.ChargerDisconnected)
-                        handleStateChange(context, false)
+                        handleChargingStateChange(context, false)
+                    }
+                }
+
+                PowerManager.ACTION_POWER_SAVE_MODE_CHANGED -> {
+                    val powerManager = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+                    val currentPowerSave = powerManager?.isPowerSaveMode == true
+                    if (currentPowerSave != isPowerSaving) {
+                        isPowerSaving = currentPowerSave
+                        if (isPowerSaving) {
+                            handleTrigger(context, Trigger.PowerSavingOn)
+                            handlePowerSavingStateChange(context, true)
+                        } else {
+                            handleTrigger(context, Trigger.PowerSavingOff)
+                            handlePowerSavingStateChange(context, false)
+                        }
                     }
                 }
             }
@@ -60,10 +77,11 @@ class PowerModule : AutomationModule {
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_POWER_CONNECTED)
             addAction(Intent.ACTION_POWER_DISCONNECTED)
+            addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
         }
         context.registerReceiver(receiver, filter)
 
-        // Initial check
+        // Initial check for charging
         val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
             context.registerReceiver(null, ifilter)
         }
@@ -72,7 +90,14 @@ class PowerModule : AutomationModule {
                 status == BatteryManager.BATTERY_STATUS_FULL
 
         if (isCharging) {
-            handleStateChange(context, true)
+            handleChargingStateChange(context, true)
+        }
+
+        // Initial check for power saving
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+        isPowerSaving = powerManager?.isPowerSaveMode == true
+        if (isPowerSaving) {
+            handlePowerSavingStateChange(context, true)
         }
     }
 
@@ -99,11 +124,38 @@ class PowerModule : AutomationModule {
         }
     }
 
-    private fun handleStateChange(context: Context, isActive: Boolean) {
+    private fun handleChargingStateChange(context: Context, isActive: Boolean) {
         scope.launch {
             automations.filter { it.type == Automation.Type.STATE }
                 .forEach { automation ->
                     if (automation.state is DIYState.Charging) {
+                        if (isActive) {
+                            // Entry
+                            automation.entryAction?.let {
+                                CombinedActionExecutor.execute(
+                                    context,
+                                    it
+                                )
+                            }
+                        } else {
+                            // Exit
+                            automation.exitAction?.let {
+                                CombinedActionExecutor.execute(
+                                    context,
+                                    it
+                                )
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun handlePowerSavingStateChange(context: Context, isActive: Boolean) {
+        scope.launch {
+            automations.filter { it.type == Automation.Type.STATE }
+                .forEach { automation ->
+                    if (automation.state is DIYState.PowerSaving) {
                         if (isActive) {
                             // Entry
                             automation.entryAction?.let {

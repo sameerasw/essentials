@@ -270,6 +270,23 @@ fun NavigationSettingsUI(
                     valueFormatter = { "${it.toInt()} dp" }
                 )
             }
+
+            AnimatedVisibility(
+                visible = viewModel.isCircleToSearchGestureEnabled.value,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_circle_to_search_gesture_width_title),
+                    value = viewModel.circleToSearchGestureWidth.floatValue,
+                    onValueChange = { viewModel.setCircleToSearchGestureWidth(it) },
+                    valueRange = 80f..280f,
+                    increment = 4f,
+                    iconRes = R.drawable.rounded_border_bottom_24,
+                    description = stringResource(R.string.feat_circle_to_search_gesture_width_desc),
+                    valueFormatter = { "${it.toInt()} dp" }
+                )
+            }
         }
     }
 }

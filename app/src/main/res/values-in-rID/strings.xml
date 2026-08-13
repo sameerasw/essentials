@@ -20,7 +20,7 @@
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
     <string name="check_pre_releases_label">Cek Pra-rilis</string>
     <string name="check_pre_releases_desc">Mungkin tidak stabil</string>
-    <string name="label_default_tab">Tab default</string>
+    <string name="label_default_tab">Tab bawaan</string>
     <!-- App Lock -->
     <string name="settings_section_security">Keamanan</string>
     <string name="app_lock_enable_title">Hidupkan kunci aplikasi</string>
@@ -33,7 +33,7 @@
     <string name="app_lock_warning">Perlu diingat bahwa ini bukanlah solusi yang andal karena ini hanya aplikasi pihak ke3. Jika Anda membutuhkan keamanan yang kuat, pertimbangkan untuk menggunakan Ruang Pribadi atau fitur serupa lainnya.</string>
     <string name="app_lock_biometric_note">Pengingat, permintaan otentikasi biometrik hanya memungkinkan Anda menggunakan metode kelas keamanan KUAT. Metode keamanan buka kunci wajah dalam kelas LEMAH pada perangkat seperti Pixel 7 hanya akan dapat menggunakan metode otentikasi KUAT lainnya yang tersedia seperti sidik jari atau PIN.</string>
     <string name="setting_use_usage_access_title">Gunakan akses penggunaan</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_desc">Daripada aksesibilitas (Bekukan, Kunci App, Cahaya Malam Dinamis)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Hidupkan Remap tombol</string>
     <string name="button_remap_use_shizuku_title">Gunakan Shizuku atau Root</string>
@@ -68,12 +68,12 @@
     <string name="like_song_settings_desc">Fitur ini memerlukan akses notifikasi untuk mendeteksi media yang sedang diputar dan memicu tindakan suka. Harap aktifkan di bawah ini.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
     <string name="like_song_aod_overlay_title">Tampilkan overlay di AOD</string>
-    <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
-    <string name="essentials_on_display_docked_mode_title">Mode Didock</string>
+    <string name="feat_essentials_on_display_title">Essentials Dalam Tampilan</string>
+    <string name="feat_essentials_on_display_desc">Sekilas media dan info pada AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Mode Dok</string>
     <string name="essentials_on_display_docked_mode_desc">Tak ada batas</string>
-    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
-    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_respect_notifications_title">Hormati notifikasi baru</string>
+    <string name="essentials_on_display_respect_notifications_desc">Secara singkat matikan untuk pemberitahuan baru</string>
     <string name="essentials_on_display_random_shapes_title">Bentuk acak</string>
     <string name="essentials_on_display_random_shapes_desc">Gunakan bentuk Material You secara acak</string>
     <string name="essentials_on_display_album_art_title">Sampul album</string>
@@ -108,7 +108,7 @@
     <string name="content_desc_settings">Pengaturan</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Tampilkan notifikasi</string>
-    <string name="permission_post_notifications_title">Post Notifications</string>
+    <string name="permission_post_notifications_title">Pos Pemberitahuan</string>
     <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
     <string name="permission_grant_action">Grant Permission</string>
     <string name="caffeinate_notification_title">Kafein aktif</string>
@@ -205,7 +205,7 @@
     <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
     <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
     <string name="notification_lighting_sweep_pos_left">Kiri</string>
-    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_center">Tengah</string>
     <string name="notification_lighting_sweep_pos_right">Kanan</string>
     <string name="notification_lighting_sweep_select_shapes_title">Select Shapes</string>
     <string name="notification_lighting_sweep_select_shapes_desc">Choose which shapes are used in the sweep animation</string>
@@ -317,10 +317,10 @@
     <string name="icon_hotspot">Hotspot</string>
     <string name="icon_cast">Cast</string>
     <string name="icon_mobile_data">Data Seluler</string>
-    <string name="icon_phone_signal">Phone Signal</string>
+    <string name="icon_phone_signal">Sinyal Telpon</string>
     <string name="icon_volte">VoLTE / VoNR</string>
-    <string name="icon_wifi_calling">WiFi Calling / VoWiFi</string>
-    <string name="icon_call_status">Call Status / Sync</string>
+    <string name="icon_wifi_calling">Panggilan WiFi / VoWiFi</string>
+    <string name="icon_call_status">Status Panggilan / Sinkronisasi</string>
     <string name="icon_tty">TTY</string>
     <string name="icon_volume">Volume</string>
     <string name="icon_headset">Headset</string>
@@ -330,15 +330,15 @@
     <string name="icon_ime">Metode masukan (IME)</string>
     <string name="icon_alarm">Alarm</string>
     <string name="icon_battery">Baterai</string>
-    <string name="icon_power_saving">Power Saving</string>
-    <string name="icon_data_saver">Penghemat data</string>
-    <string name="icon_rotation_lock">Rotation Lock</string>
+    <string name="icon_power_saving">Hemat Daya</string>
+    <string name="icon_data_saver">Penghemat Data</string>
+    <string name="icon_rotation_lock">Kunci Rotasi</string>
     <string name="icon_location">Lokasi / GPS</string>
     <string name="icon_sync">Sinkronisasi</string>
-    <string name="icon_managed_profile">Managed Profile</string>
+    <string name="icon_managed_profile">Manajemen Profil</string>
     <string name="icon_dnd">Jangan ganggu</string>
-    <string name="icon_privacy">Privacy &amp; Secure Folder</string>
-    <string name="icon_security_status">Security Status (SU)</string>
+    <string name="icon_privacy">Privasi &amp; Folder Aman</string>
+    <string name="icon_security_status">Status Keamanan (SU)</string>
     <string name="icon_otg">OTG Mouse / Papan ketik</string>
     <string name="icon_samsung_smart">Fitur Samsung Pintar</string>
     <string name="icon_samsung_services">Layanan Samsung</string>
@@ -349,9 +349,9 @@
     <string name="stb_battery_percentage_always">Selalu</string>
     <string name="stb_battery_percentage_charging">Mengisi daya</string>
     <string name="stb_battery_percentage_never">Tidak pernah</string>
-    <string name="stb_privacy_chip">Camera and Microphone use chips</string>
+    <string name="stb_privacy_chip">Kamera dan Mikrofon gunakan chip</string>
     <string name="smart_data_title">Smart Data</string>
-    <string name="permission_read_phone_state_title">Read Phone State</string>
+    <string name="permission_read_phone_state_title">Baca Status Telepon</string>
     <string name="permission_read_phone_state_desc">Required to detect network type for Smart Data feature</string>
     <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
     <string name="settings_section_smart_visibility">Smart Visibility</string>
@@ -362,8 +362,8 @@
     <string name="status_bar_section_advanced">More Settings</string>
     <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
     <string name="hide_all_system_icons_title">Sembunyikan semua icon sistem</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
-    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_all_system_icons_desc">Hapus semua ikon selain-pemberitahuan dari bar status</string>
+    <string name="hide_system_icons_locked_only_title">Hanya sembunyikan ikon sistem saat dikunci</string>
     <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
     <string name="hide_clock_title">Sembunyikan Jam</string>
     <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
@@ -402,8 +402,8 @@
     <string name="search_no_results">Tidak ditemukan untuk \"%1$s\"</string>
     <string name="search_results_title">Hasil pencarian</string>
     <string name="requires_following_permissions">%1$s requires following permissions</string>
-    <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
-    <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
+    <string name="setting_enable_unsupported_features_title">Aktifkan fitur tidak didukung</string>
+    <string name="setting_enable_unsupported_features_desc">Tampilkan spesifik-OEM atau fitur ditinggalkan yang disembunyikan secara bawaan.</string>
     <string name="unsupported_features_warning_title">Enable unsupported features?</string>
     <string name="unsupported_features_warning_desc">These features may not work on every device and could require extra permissions or root access.</string>
     <string name="unsupported_features_confirm">Enable anyway</string>
@@ -419,7 +419,7 @@
     <string name="require_double_tap_title">Memerlukan ketuk ganda</string>
     <string name="require_double_tap_desc">To screen off</string>
     <string name="feat_statusbar_icons_title">Statusbar icons</string>
-    <string name="feat_statusbar_icons_desc">Control statusbar icons visibility</string>
+    <string name="feat_statusbar_icons_desc">Kontrol kenampakan ikon bar status</string>
     <string name="feat_caffeinate_title">Caffeinate</string>
     <string name="feat_caffeinate_desc">Keep the screen awake</string>
     <string name="feat_maps_power_saving_title">Maps mode daya rendah</string>
@@ -448,7 +448,7 @@
     <string name="diy_editor_new_title">New Automation</string>
     <string name="diy_editor_edit_title">Edit Automation</string>
     <string name="feat_link_actions_title">Aksi tautan</string>
-    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
+    <string name="feat_link_actions_desc">Menangani tautan dengan berbagai aplikasi</string>
     <string name="feat_flashlight_title">Lampu kilat</string>
     <string name="feat_flashlight_desc">Improve flashlight behavior</string>
     <string name="label_restore_mode">Restore mode</string>
@@ -485,8 +485,8 @@
     <string name="label_wallpaper_auto_update">Auto-update</string>
     <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
     <string name="label_clear_custom_videos">Clear custom videos</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
+    <string name="feat_always_on_display_title">Selalu Menampilkan</string>
+    <string name="feat_always_on_display_desc">Tampilkan waktu dan info saat layar mati</string>
     <string name="feat_calendar_sync_title">Sinkronisasi kalender</string>
     <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
     <string name="feat_lock_from_watch_title">Lock from Watch</string>
@@ -497,7 +497,7 @@
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
     <string name="watch_connected_status">Connected</string>
     <string name="watch_unknown_name">Unknown Watch</string>
-    <string name="watermark_style_overlay">Overlay</string>
+    <string name="watermark_style_overlay">Hamparan</string>
     <string name="watermark_style_frame">Frame</string>
     <string name="watermark_show_brand">Device Brand</string>
     <string name="watermark_show_exif">EXIF Data</string>
@@ -545,10 +545,10 @@
     <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic feedback</string>
     <string name="search_haptic_desc">Pick haptic feedback for widget taps</string>
-    <string name="search_smart_wifi_title">Wifi pintar</string>
-    <string name="search_smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="search_smart_data_title">Smart Data</string>
-    <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
+    <string name="search_smart_wifi_title">WiFi Pintar</string>
+    <string name="search_smart_wifi_desc">Sembunyikan data seluler saat tersambung WiFi</string>
+    <string name="search_smart_data_title">Data Pintar</string>
+    <string name="search_smart_data_desc">Sembunyikan data seluler pada mode tertentu</string>
     <string name="search_reset_icons_title">Reset All Icons</string>
     <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
     <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
@@ -630,14 +630,14 @@
     <string name="req_shizuku">Requires Shizuku or Root</string>
     <string name="perm_root_title">Root Access</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
-    <string name="perm_notif_listener_title">Notification Listener</string>
+    <string name="perm_notif_listener_title">Pendengar Pemberitahuan</string>
     <string name="perm_notif_listener_desc_maps">Requires notification listener access to monitor Google Maps navigation status and enable power saving when not navigatiing.</string>
     <string name="perm_notif_listener_desc_lighting">Requires notification listener access to detect new notifications and trigger edge lighting.</string>
     <string name="perm_notif_listener_desc_snooze">Requires notification listener access to monitor and snooze unwanted system notifications.</string>
     <string name="perm_accessibility_title">Accessibility Service</string>
     <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
     <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
-    <string name="perm_default_browser_title">Default Browser</string>
+    <string name="perm_default_browser_title">Penjelajah Bawaan</string>
     <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_install_packages_title">Install Unknown Apps</string>
     <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
@@ -647,10 +647,10 @@
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
-    <string name="perm_write_secure_title">Write Secure Settings</string>
+    <string name="perm_write_secure_title">Pengaturan Tulis Aman</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
     <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
-    <string name="perm_write_settings_title">Modify System Settings</string>
+    <string name="perm_write_settings_title">Merubah Pengaturan Sistem</string>
     <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
     <string name="perm_overlay_title">Overlay Permission</string>
     <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
@@ -670,7 +670,7 @@
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
+    <string name="tab_freeze_title">Bekukan</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Disabled apps</string>
@@ -720,9 +720,9 @@
     <string name="label_settings">Settings</string>
     <string name="action_report_bug">Report a Bug</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_report_mode_title">Pelaporan kesalahan</string>
+    <string name="sentry_mode_off">Mati</string>
+    <string name="sentry_mode_auto">Otomatis</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
     <string name="welcome_title">Selamat datang di Essentials</string>
@@ -741,7 +741,7 @@
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
     <string name="label_app_language">Bahasa</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_haptic_feedback">Umpan balik Getaran</string>
     <string name="label_updates">Pembaruan</string>
     <string name="label_auto_check_updates">Periksa otomatis untuk pembaruan</string>
     <string name="desc_auto_check_updates">Periksa pembaruan saat aplikasi dimulai</string>
@@ -1196,7 +1196,7 @@
     <string name="location_reached_radius_title">Alert Radius: %d m</string>
     <string name="perm_location_title">Location</string>
     <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
+    <string name="perm_bg_location_title">Lokasi Latar Belakang</string>
     <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
     <string name="location_reached_notification_title">Destination Reached!</string>
     <string name="location_reached_notification_desc">You have arrived at your destination.</string>
@@ -1412,7 +1412,7 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Display</string>
     <string name="cat_protection">Protection</string>
-    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_accessibility">Aksesibilitas</string>
     <string name="cat_connectivity">Connectivity</string>
     <string name="cat_privacy">Privacy</string>
     <string name="cat_utils">Utilities</string>
@@ -1469,7 +1469,7 @@
     <string name="feat_text_animations_title">Skala dan animasi</string>
     <string name="feat_text_animations_desc">Atur skala sistem dan animasi</string>
     <string name="feat_screen_refresh_rate_title">Rasio penyegaran layar</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_screen_refresh_rate_desc">Setel baku atau kisaran rasio penyegaran layar</string>
     <string name="settings_section_text">Teks</string>
     <string name="label_font_scale">Font Scale</string>
     <string name="label_font_weight">Font Weight</string>
@@ -1517,8 +1517,8 @@
     <string name="label_use_blur">Gunakan blur</string>
     <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
-    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
-    <string name="setting_swipe_tabs_desc">In home screen</string>
+    <string name="setting_swipe_tabs_title">Geser antar tab</string>
+    <string name="setting_swipe_tabs_desc">Di layar beranda</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
     <string name="action_get_started">Get Started</string>
@@ -1586,7 +1586,7 @@
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Jam layar kunci</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_desc">Sesuaikan jam layar kunci pada Pixel</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1660,7 +1660,7 @@
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
     <!-- Pocket Mode -->
-    <string name="feat_pocket_mode_title">Pocket mode</string>
+    <string name="feat_pocket_mode_title">Mode saku</string>
     <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
     <string name="pocket_mode_use_light_title">Use light sensor</string>
     <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
@@ -1709,4 +1709,8 @@
     <string name="translation_warning_point3_title">GitHub Pull Request</string>
     <string name="translation_warning_point3_desc">Submissions automatically create or update a dedicated pull request on GitHub under your account.</string>
     <string name="translation_warning_do_not_show">Do not show again</string>
+    <string name="icon_no_sim">Tanpa Kartu</string>
+    <string name="icon_network_speed">Kecepatan Jaringan</string>
+    <string name="icon_glove_mode">Mode Sarung Tangan</string>
+    <string name="icon_frame_rate">Rasio Penyegaran / Kisaran Bingkai</string>
 </resources>
