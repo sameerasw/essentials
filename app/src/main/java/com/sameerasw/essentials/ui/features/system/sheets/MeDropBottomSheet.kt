@@ -46,6 +46,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -96,55 +100,254 @@ fun MeDropBottomSheet(
             }
 
             if (contact != null) {
-                // NFC Animation & Status
-                NfcBroadcastIndicator()
+                val safeContact = contact!!
+                if (!showSettings) {
+                    // NFC Animation & Broadcast Preview Card (only shown when broadcasting/overlay)
+                    NfcBroadcastIndicator()
 
-                // Contact Card
-                RoundedCardContainer {
-                    Column(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.surfaceBright)
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = contact!!.displayName,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                    RoundedCardContainer {
+                        Column(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surfaceBright)
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                if (!safeContact.photoUri.isNullOrBlank()) {
+                                    AsyncImage(
+                                        model = safeContact.photoUri,
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(56.dp)
+                                            .clip(CircleShape)
+                                    )
+                                } else {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(56.dp)
+                                            .clip(CircleShape)
+                                            .background(MaterialTheme.colorScheme.primaryContainer),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = safeContact.displayName.take(1).uppercase(),
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
 
-                        contact!!.phones.forEach { phone ->
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_call_log_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = phone,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                Column {
+                                    Text(
+                                        text = safeContact.displayName,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    val showOrg = safeContact.isEntrySelected("organization") && !safeContact.organization.isNullOrBlank()
+                                    val showTitle = safeContact.isEntrySelected("jobTitle") && !safeContact.jobTitle.isNullOrBlank()
+                                    if (showOrg || showTitle) {
+                                        val titlePart = if (showTitle) safeContact.jobTitle else null
+                                        val orgPart = if (showOrg) safeContact.organization else null
+                                        val orgText = listOfNotNull(titlePart, orgPart)
+                                            .filter { it.isNotBlank() }
+                                            .joinToString(" • ")
+                                        Text(
+                                            text = orgText,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                safeContact.getSafePhones().forEachIndexed { i, phone ->
+                                    if (safeContact.isEntrySelected("phone_$i")) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_call_log_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = phone,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+
+                                safeContact.getSafeEmails().forEachIndexed { i, email ->
+                                    if (safeContact.isEntrySelected("email_$i")) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_mail_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = email,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+
+                                safeContact.getSafeAddresses().forEachIndexed { i, addr ->
+                                    if (safeContact.isEntrySelected("address_$i")) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_location_on_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = addr.replace("\n", ", "),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+
+                                safeContact.getSafeUrls().forEachIndexed { i, url ->
+                                    if (safeContact.isEntrySelected("url_$i")) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_globe_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = url,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+
+                                if (safeContact.isEntrySelected("note") && !safeContact.note.isNullOrBlank()) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.rounded_info_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = safeContact.note,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
                             }
                         }
-
-                        contact!!.emails.forEach { email ->
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_mail_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                } else {
+                    // Settings/Edit Mode: show itemized field toggling UI directly
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.feat_medrop_share_fields_title),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+                        )
+                        RoundedCardContainer {
+                            safeContact.getSafePhones().forEachIndexed { i, phone ->
+                                val id = "phone_$i"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_call_log_24,
+                                    title = phone,
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = email,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                            safeContact.getSafeEmails().forEachIndexed { i, email ->
+                                val id = "email_$i"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_mail_24,
+                                    title = email,
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
+                                )
+                            }
+                            if (!safeContact.organization.isNullOrBlank()) {
+                                val id = "organization"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_work_24,
+                                    title = safeContact.organization,
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
+                                )
+                            }
+                            if (!safeContact.jobTitle.isNullOrBlank()) {
+                                val id = "jobTitle"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_work_24,
+                                    title = safeContact.jobTitle,
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
+                                )
+                            }
+                            safeContact.getSafeAddresses().forEachIndexed { i, addr ->
+                                val id = "address_$i"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_location_on_24,
+                                    title = addr.replace("\n", ", "),
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
+                                )
+                            }
+                            safeContact.getSafeUrls().forEachIndexed { i, url ->
+                                val id = "url_$i"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_globe_24,
+                                    title = url,
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
+                                )
+                            }
+                            if (!safeContact.note.isNullOrBlank()) {
+                                val id = "note"
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_info_24,
+                                    title = safeContact.note,
+                                    isChecked = safeContact.isEntrySelected(id),
+                                    onCheckedChange = {
+                                        viewModel.toggleMeDropContactEntry(context, id, it)
+                                    }
                                 )
                             }
                         }

@@ -2107,6 +2107,11 @@
     <string name="feat_medrop_no_contact_desc">Tap below to choose a contact to share via NFC</string>
     <string name="feat_medrop_include_phones">Include phone numbers</string>
     <string name="feat_medrop_include_emails">Include email addresses</string>
+    <string name="feat_medrop_include_organization">Include company &amp; job title</string>
+    <string name="feat_medrop_include_addresses">Include postal addresses</string>
+    <string name="feat_medrop_include_urls">Include websites &amp; links</string>
+    <string name="feat_medrop_include_note">Include note</string>
+    <string name="feat_medrop_share_fields_title">What to share</string>
     <string name="feat_medrop_hold_near">Hold near another device</string>
     <string name="feat_medrop_broadcasting">Broadcasting contact via NFC…</string>
     <string name="feat_medrop_nfc_unavailable">NFC is not available on this device</string>
