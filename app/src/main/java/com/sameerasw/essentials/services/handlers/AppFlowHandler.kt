@@ -196,6 +196,10 @@ class AppFlowHandler private constructor(
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
         }
+
+        // Accessibility events are the fastest automatic launch signal. The manager serializes
+        // this with the foreground-service fallback and periodic enforcement.
+        checkShutUp(packageName)
     }
 
     fun onAuthenticated(packageName: String) {
@@ -207,6 +211,26 @@ class AppFlowHandler private constructor(
 
     fun clearAuthenticated() {
         authenticatedPackages.clear()
+    }
+
+    private fun checkShutUp(packageName: String) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val serviceEnabled = prefs.getBoolean("shutup_service_enabled", false)
+        if (!serviceEnabled) return
+
+        val json = prefs.getString("shut_up_selected_apps", null) ?: return
+        val configs: List<ShutUpAppConfig> = try {
+            Gson().fromJson(json, Array<ShutUpAppConfig>::class.java).toList()
+        } catch (_: Exception) {
+            return
+        }
+
+        val config = configs.find { it.packageName == packageName && it.isEnabled } ?: return
+
+        scope.launch(Dispatchers.IO) {
+            Log.d("AppFlowHandler", "checkShutUp: Immediately applying ShutUp settings for $packageName via accessibility event")
+            ShutUpManager.applyShutUpSettings(context, config, settingsRepository)
+        }
     }
 
     private fun checkAppLock(packageName: String) {
