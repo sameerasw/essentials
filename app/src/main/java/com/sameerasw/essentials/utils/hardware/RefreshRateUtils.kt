@@ -83,18 +83,20 @@ object RefreshRateUtils {
     fun applyFixedRefreshRate(context: Context, value: Float): Boolean {
         if (!ShellUtils.hasPermission(context)) return false
 
-        val clamped = normalizeRate(value)
+        val clamped = normalizeRate(context, value)
         val formatted = formatRate(clamped)
         ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE $formatted")
         ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put global $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put global $KEY_MIN_REFRESH_RATE $formatted")
         return true
     }
 
     fun applyRangeRefreshRate(context: Context, minValue: Float, peakValue: Float): Boolean {
         if (!ShellUtils.hasPermission(context)) return false
 
-        val safeMin = normalizeRate(minValue)
-        val safePeak = normalizeRate(maxOf(minValue, peakValue))
+        val safeMin = normalizeRate(context, minValue)
+        val safePeak = normalizeRate(context, maxOf(minValue, peakValue))
         ShellUtils.runCommand(
             context,
             "settings put system $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}"
@@ -102,6 +104,14 @@ object RefreshRateUtils {
         ShellUtils.runCommand(
             context,
             "settings put system $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}"
+        )
+        ShellUtils.runCommand(
+            context,
+            "settings put global $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}"
+        )
+        ShellUtils.runCommand(
+            context,
+            "settings put global $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}"
         )
         return true
     }
@@ -130,9 +140,15 @@ object RefreshRateUtils {
         }
     }
 
-    fun normalizeRate(value: Float): Float {
+    fun normalizeRate(value: Float, maxRate: Float = 120f): Float {
         val rounded = value.roundToInt()
-        return rounded.coerceIn(10, 120).toFloat()
+        val upperLimit = maxOf(120f, maxRate).roundToInt()
+        return rounded.coerceIn(10, upperLimit).toFloat()
+    }
+
+    fun normalizeRate(context: Context, value: Float): Float {
+        val maxRate = getHighestSupportedRefreshRate(context)
+        return normalizeRate(value, maxRate)
     }
 
     fun getCurrentState(context: Context): RefreshRateState {
@@ -219,6 +235,34 @@ object RefreshRateUtils {
         } catch (_: Exception) {
             DEFAULT_SYSTEM_REFRESH_RATE
         }
+    }
+
+    fun getSupportedRefreshRates(context: Context): List<Float> {
+        return try {
+            val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+            val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+            val rates = display?.supportedModes
+                ?.map { it.refreshRate.roundToInt().toFloat() }
+                ?.distinct()
+                ?.sorted()
+                ?.filter { it >= 30f }
+                ?: emptyList()
+            if (rates.isEmpty()) listOf(60f, 120f) else rates
+        } catch (_: Exception) {
+            listOf(60f, 120f)
+        }
+    }
+
+    fun applyDynamicRefreshRate(context: Context, value: Float): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
+
+        val clamped = normalizeRate(context, value)
+        val formatted = formatRate(clamped)
+        ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE 0")
+        ShellUtils.runCommand(context, "settings put global $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put global $KEY_MIN_REFRESH_RATE 0")
+        return true
     }
 
     private fun formatRate(value: Float): String {

@@ -13,6 +13,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.app.usage.UsageEvents
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.BroadcastReceiver
@@ -62,7 +63,7 @@ class AppDetectionService : Service() {
     override fun onCreate() {
         super.onCreate()
         isRunning = true
-        appFlowHandler = AppFlowHandler(this)
+        appFlowHandler = AppFlowHandler.getInstance(this)
         createNotificationChannel()
 
         val filter = IntentFilter().apply {
@@ -110,6 +111,26 @@ class AppDetectionService : Service() {
     private fun getForegroundPackage(): String? {
         val usageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
         val time = System.currentTimeMillis()
+
+        // 1. Try to find the last resumed activity using queryEvents (real-time & accurate)
+        try {
+            val events = usageStatsManager.queryEvents(time - 1000 * 15, time)
+            val event = UsageEvents.Event()
+            var lastResumedPackage: String? = null
+            while (events.hasNextEvent()) {
+                events.getNextEvent(event)
+                if (event.eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+                    lastResumedPackage = event.packageName
+                }
+            }
+            if (lastResumedPackage != null) {
+                return lastResumedPackage
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AppDetectionService", "Failed to query usage events", e)
+        }
+
+        // 2. Fallback to queryUsageStats if no events found in the window
         val stats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
             time - 1000 * 10,
@@ -141,6 +162,12 @@ class AppDetectionService : Service() {
         handler.removeCallbacksAndMessages(null)
         try {
             unregisterReceiver(authReceiver)
+        } catch (_: Exception) {
+        }
+        try {
+            if (::appFlowHandler.isInitialized) {
+                appFlowHandler.destroy()
+            }
         } catch (_: Exception) {
         }
         super.onDestroy()

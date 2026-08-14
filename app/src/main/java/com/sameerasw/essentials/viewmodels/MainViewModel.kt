@@ -48,6 +48,8 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
+import com.sameerasw.essentials.domain.model.ShutUpAppConfig
+import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -116,6 +118,7 @@ class MainViewModel : ViewModel() {
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
+    val isSmartPixelsOnBatterySaverEnabled = mutableStateOf(false)
     val smartPixelsIntensity = mutableFloatStateOf(50f)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -141,6 +144,9 @@ class MainViewModel : ViewModel() {
     val isBluetoothPermissionGranted = mutableStateOf(false)
     val isUsageStatsPermissionGranted = mutableStateOf(false)
     val appLanguage = mutableStateOf("en")
+    val isShutUpServiceEnabled = mutableStateOf(false)
+    val isWifiAutoOffEnabled = mutableStateOf(false)
+    val wifiAutoOffTimeout = mutableFloatStateOf(60f) // seconds
 
     val isBluetoothDevicesEnabled = mutableStateOf(false)
     val isCallVibrationsEnabled = mutableStateOf(false)
@@ -211,11 +217,14 @@ class MainViewModel : ViewModel() {
     val shutUpConfigs =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
     val isShutUpLoading = mutableStateOf(false)
-    val isShutUpAttemptShizukuRestart = mutableStateOf(true)
     val shutUpRestoreDelay = mutableIntStateOf(10)
     val shutUpRestoreMode = mutableStateOf("Auto")
+    val isShutUpAttemptShizukuRestart = mutableStateOf(true)
     val shizukuAuthToken = mutableStateOf("")
     val edgeLightingSweepSelectedShapes = mutableStateOf<Set<String>>(emptySet())
+
+    val isPerAppRefreshRateEnabled = mutableStateOf(false)
+    val perAppRefreshRateConfigs = mutableStateOf<List<AppRefreshRateConfig>>(emptyList())
 
 
     data class CalendarAccount(
@@ -469,6 +478,9 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_SMART_PIXELS_INTENSITY -> smartPixelsIntensity.floatValue =
                         settingsRepository.getFloat(key, 50f)
 
+                    SettingsRepository.KEY_SMART_PIXELS_ON_BATTERY_SAVER -> isSmartPixelsOnBatterySaverEnabled.value =
+                        settingsRepository.getBoolean(key)
+
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED -> isScreenLockedSecurityEnabled.value =
                         settingsRepository.getBoolean(key)
 
@@ -620,6 +632,12 @@ class MainViewModel : ViewModel() {
                         isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(key)
                     }
 
+                    SettingsRepository.KEY_WIFI_AUTO_OFF_ENABLED -> isWifiAutoOffEnabled.value =
+                        settingsRepository.getBoolean(key, false)
+
+                    SettingsRepository.KEY_WIFI_AUTO_OFF_TIMEOUT -> wifiAutoOffTimeout.floatValue =
+                        settingsRepository.getFloat(key, 60f)
+
                     SettingsRepository.KEY_PINNED_FEATURES -> {
                         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
                     }
@@ -754,6 +772,15 @@ class MainViewModel : ViewModel() {
                         appContext?.let { updateAppDetectionService(it) }
                     }
 
+                    SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED -> {
+                        isPerAppRefreshRateEnabled.value = settingsRepository.getBoolean(key)
+                        appContext?.let { updateAppDetectionService(it) }
+                    }
+
+                    SettingsRepository.KEY_PER_APP_REFRESH_RATE_CONFIGS -> {
+                        loadPerAppRefreshRateConfigs()
+                    }
+
                     SettingsRepository.KEY_LIVE_WALLPAPER_SELECTED_VIDEO -> {
                         liveWallpaperSelectedVideo.value =
                             settingsRepository.getLiveWallpaperSelectedVideo()
@@ -769,10 +796,7 @@ class MainViewModel : ViewModel() {
                         liveWallpaperCustomVideos.addAll(settingsRepository.getLiveWallpaperCustomVideos())
                     }
 
-                    SettingsRepository.KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART -> {
-                        isShutUpAttemptShizukuRestart.value =
-                            settingsRepository.isShutUpAttemptShizukuRestartEnabled()
-                    }
+
 
                     SettingsRepository.KEY_SHUT_UP_RESTORE_DELAY -> {
                         shutUpRestoreDelay.intValue =
@@ -917,11 +941,33 @@ class MainViewModel : ViewModel() {
     /**
      * Updates ducking or mute configuration for a specific target package.
      *
-     * @param config [com.sameerasw.essentials.domain.model.ShutUpAppConfig] The updated ShutUpAppConfig object to store.
+     * @param config [ShutUpAppConfig] The updated ShutUpAppConfig object to store.
      */
-    fun updateShutUpConfig(config: com.sameerasw.essentials.domain.model.ShutUpAppConfig) {
+    fun updateShutUpConfig(config: ShutUpAppConfig) {
         settingsRepository.updateShutUpConfig(config)
         loadShutUpConfigs()
+    }
+
+    fun loadPerAppRefreshRateConfigs() {
+        perAppRefreshRateConfigs.value = settingsRepository.loadPerAppRefreshRateConfigs()
+    }
+
+    fun updatePerAppRefreshRateConfig(config: AppRefreshRateConfig) {
+        settingsRepository.updatePerAppRefreshRateConfig(config)
+        loadPerAppRefreshRateConfigs()
+    }
+
+    fun removePerAppRefreshRateConfig(packageName: String) {
+        val current = perAppRefreshRateConfigs.value.toMutableList()
+        current.removeAll { it.packageName == packageName }
+        settingsRepository.savePerAppRefreshRateConfigs(current)
+        loadPerAppRefreshRateConfigs()
+    }
+
+    fun setPerAppRefreshRateEnabled(enabled: Boolean, context: Context) {
+        isPerAppRefreshRateEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED, enabled)
+        updateAppDetectionService(context)
     }
 
     /**
@@ -985,7 +1031,7 @@ class MainViewModel : ViewModel() {
     fun saveShutUpSelectedApps(context: Context, apps: List<AppSelection>) {
         val currentConfigs = settingsRepository.loadShutUpConfigs().associateBy { it.packageName }
         val newConfigs = apps.filter { it.isEnabled }.map {
-            currentConfigs[it.packageName] ?: com.sameerasw.essentials.domain.model.ShutUpAppConfig(
+            currentConfigs[it.packageName] ?: ShutUpAppConfig(
                 it.packageName
             )
         }
@@ -993,45 +1039,58 @@ class MainViewModel : ViewModel() {
         loadShutUpConfigs()
     }
 
-    fun createShutUpShortcut(
-        context: Context,
-        config: com.sameerasw.essentials.domain.model.ShutUpAppConfig
-    ) {
-        val appName = try {
-            val appInfo = context.packageManager.getApplicationInfo(config.packageName, 0)
-            context.packageManager.getApplicationLabel(appInfo).toString()
+    fun setShutUpServiceEnabled(enabled: Boolean, context: Context) {
+        isShutUpServiceEnabled.value = enabled
+        settingsRepository.setShutUpServiceEnabled(enabled)
+        val intent = Intent(context, com.sameerasw.essentials.services.ShutUpForegroundService::class.java)
+        if (enabled) {
+            androidx.core.content.ContextCompat.startForegroundService(context, intent)
+        } else {
+            context.stopService(intent)
+        }
+    }
+
+    fun createShutUpShortcut(context: Context, config: ShutUpAppConfig) {
+        if (!androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+            Toast.makeText(context, "Shortcut pinning not supported by launcher", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val pm = context.packageManager
+        val appLabel = try {
+            val appInfo = pm.getApplicationInfo(config.packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
         } catch (e: Exception) {
             config.packageName
         }
+        val shortLabel = "Shut-Up $appLabel"
+        val longLabel = "Launch $appLabel with Shut-Up"
 
-        val intent =
-            Intent(context, com.sameerasw.essentials.ShutUpShortcutActivity::class.java).apply {
-                action = Intent.ACTION_MAIN
-                putExtra("package_name", config.packageName)
-                data = Uri.parse("shutup://${config.packageName}")
-            }
-
-        if (androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-            val appIcon = AppUtil.getShortcutIcon(context, config.packageName)
-
-            val pinShortcutInfo =
-                androidx.core.content.pm.ShortcutInfoCompat.Builder(context, config.packageName)
-                    .setShortLabel(appName)
-                    .setIcon(androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon))
-                    .setIntent(intent)
-                    .build()
-
-            androidx.core.content.pm.ShortcutManagerCompat.requestPinShortcut(
-                context,
-                pinShortcutInfo,
-                null
-            )
-            Toast.makeText(
-                context,
-                context.getString(R.string.shut_up_shortcut_created, appName),
-                Toast.LENGTH_SHORT
-            ).show()
+        val iconCompat = try {
+            val bitmap = com.sameerasw.essentials.utils.AppUtil.getShortcutIcon(context, config.packageName)
+            androidx.core.graphics.drawable.IconCompat.createWithBitmap(bitmap)
+        } catch (e: Exception) {
+            null
         }
+
+        val shortcutIntent = Intent(context, com.sameerasw.essentials.ShutUpShortcutActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            putExtra("package_name", config.packageName)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val shortcutInfo = androidx.core.content.pm.ShortcutInfoCompat.Builder(context, "shutup_${config.packageName}")
+            .setShortLabel(shortLabel)
+            .setLongLabel(longLabel)
+            .setIntent(shortcutIntent)
+            .apply {
+                if (iconCompat != null) {
+                    setIcon(iconCompat)
+                }
+            }
+            .build()
+
+        androidx.core.content.pm.ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)
     }
 
     /**
@@ -1091,8 +1150,7 @@ class MainViewModel : ViewModel() {
         notificationLightingSystemMode.intValue =
             settingsRepository.getNotificationLightingSystemMode()
 
-        isShutUpAttemptShizukuRestart.value =
-            settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+
         shutUpRestoreDelay.intValue =
             settingsRepository.getShutUpRestoreDelay()
         shutUpRestoreMode.value =
@@ -1155,7 +1213,12 @@ class MainViewModel : ViewModel() {
         lockScreenClockSelectedColorId.value =
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
+        isShutUpServiceEnabled.value = settingsRepository.isShutUpServiceEnabled()
+        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
         loadShutUpConfigs()
+        isPerAppRefreshRateEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED, false)
+        loadPerAppRefreshRateConfigs()
         recentSearches.value = settingsRepository.getRecentSearches()
         loadCachedWallpaper()
         isDailyWallpaperAutoUpdateEnabled.value =
@@ -1565,6 +1628,12 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_SMART_PIXELS_ENABLED)
         smartPixelsIntensity.floatValue =
             settingsRepository.getFloat(SettingsRepository.KEY_SMART_PIXELS_INTENSITY, 50f)
+        isSmartPixelsOnBatterySaverEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_SMART_PIXELS_ON_BATTERY_SAVER)
+        isWifiAutoOffEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_WIFI_AUTO_OFF_ENABLED, false)
+        wifiAutoOffTimeout.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_WIFI_AUTO_OFF_TIMEOUT, 60f)
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -3616,6 +3685,21 @@ class MainViewModel : ViewModel() {
     fun setSmartPixelsIntensity(context: Context, intensity: Float) {
         smartPixelsIntensity.floatValue = intensity
         settingsRepository.putFloat(SettingsRepository.KEY_SMART_PIXELS_INTENSITY, intensity)
+    }
+
+    fun setSmartPixelsOnBatterySaverEnabled(context: Context, enabled: Boolean) {
+        isSmartPixelsOnBatterySaverEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_SMART_PIXELS_ON_BATTERY_SAVER, enabled)
+    }
+
+    fun setWifiAutoOffEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_WIFI_AUTO_OFF_ENABLED, enabled)
+        isWifiAutoOffEnabled.value = enabled
+    }
+
+    fun setWifiAutoOffTimeout(seconds: Float) {
+        wifiAutoOffTimeout.floatValue = seconds
+        settingsRepository.putFloat(SettingsRepository.KEY_WIFI_AUTO_OFF_TIMEOUT, seconds)
     }
 
     /**
@@ -6143,10 +6227,12 @@ class MainViewModel : ViewModel() {
      * Executes the set pocket mode enabled operation.
      *
      * @param enabled [Boolean] Target enabled.
+     * @param context [Context] Target context.
      */
-    fun setPocketModeEnabled(enabled: Boolean) {
+    fun setPocketModeEnabled(enabled: Boolean, context: Context) {
         settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED, enabled)
         isPocketModeEnabled.value = enabled
+        updateAppDetectionService(context)
     }
 
     /**
@@ -6238,6 +6324,7 @@ class MainViewModel : ViewModel() {
      */
     fun savePocketModeExcludedApps(context: Context, apps: List<AppSelection>) {
         settingsRepository.savePocketModeExcludedApps(apps)
+        updateAppDetectionService(context)
     }
 
     fun updatePocketModeExcludedAppEnabled(
@@ -6246,6 +6333,7 @@ class MainViewModel : ViewModel() {
         enabled: Boolean
     ) {
         settingsRepository.updatePocketModeExcludedAppSelection(packageName, enabled)
+        updateAppDetectionService(context)
     }
 
     override fun onCleared() {

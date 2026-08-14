@@ -268,6 +268,30 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
         object : Feature(
+            id = "Per app refresh rate",
+            title = R.string.refresh_rate_per_app_enable_title,
+            iconRes = R.drawable.ic_per_app_refresh_rate,
+            category = R.string.cat_interface,
+            description = R.string.refresh_rate_per_app_enable_desc,
+            aboutDescription = R.string.refresh_rate_per_app_enable_desc,
+            showToggle = false,
+            parentFeatureId = "Display",
+        ) {
+            override val permissionKeys: List<String>
+                get() = (if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
+                    listOf("USAGE_STATS") else listOf("ACCESSIBILITY")) + listOf("SHIZUKU")
+
+            override fun isEnabled(viewModel: MainViewModel): Boolean = viewModel.isPerAppRefreshRateEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context): Boolean =
+                (if (viewModel.isUseUsageAccess.value) viewModel.isUsageStatsPermissionGranted.value else viewModel.isAccessibilityEnabled.value) && viewModel.isShizukuPermissionGranted.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                viewModel.setPerAppRefreshRateEnabled(enabled, context)
+            }
+        },
+        object : Feature(
             id = "Screen refresh rate",
             title = R.string.feat_screen_refresh_rate_title,
             iconRes = R.drawable.rounded_shutter_speed_24,
@@ -966,10 +990,6 @@ object FeatureRegistry {
             category = R.string.cat_interaction,
             description = R.string.feat_button_remap_desc,
             aboutDescription = R.string.about_desc_button_remap,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
-                "ACCESSIBILITY",
-                "ROOT"
-            ) else listOf("ACCESSIBILITY", "SHIZUKU"),
             showToggle = true,
             searchableSettings = listOf(
                 SearchSetting(
@@ -1000,6 +1020,20 @@ object FeatureRegistry {
             parentFeatureId = "Input",
             animationRes = R.raw.button_animation
         ) {
+            override val permissionKeys: List<String>
+                get() {
+                    val baseKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                        "ACCESSIBILITY",
+                        "ROOT"
+                    ) else listOf("ACCESSIBILITY", "SHIZUKU")
+                    val repository = com.sameerasw.essentials.data.repository.SettingsRepository(EssentialsApp.context)
+                    val needsRecordAudio = repository.getString("button_remap_vol_up_action_off", "None") == "Toggle audio recording" ||
+                            repository.getString("button_remap_vol_down_action_off", "None") == "Toggle audio recording" ||
+                            repository.getString("button_remap_vol_up_action_on", "None") == "Toggle audio recording" ||
+                            repository.getString("button_remap_vol_down_action_on", "None") == "Toggle audio recording"
+                    return if (needsRecordAudio) baseKeys + "RECORD_AUDIO" else baseKeys
+                }
+
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isButtonRemapEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isAccessibilityEnabled.value
@@ -1182,22 +1216,35 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setAppLockEnabled(enabled, context)
         },
+
         object : Feature(
             id = "Shut-Up!",
             title = R.string.feat_shut_up_title,
-            iconRes = R.drawable.rounded_domino_mask_24,
-            category = R.string.cat_system,
+            iconRes = R.drawable.rounded_shield_lock_24,
+            category = R.string.cat_protection,
             description = R.string.feat_shut_up_desc,
             aboutDescription = R.string.shut_up_description,
-            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "WRITE_SETTINGS", "USAGE_STATS", "POST_NOTIFICATIONS"),
             showToggle = false,
             hasMoreSettings = true,
             parentFeatureId = "Security",
             animationRes = R.raw.shutup_animation
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = true
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override val requiresAuth: Boolean = false
+
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isShutUpServiceEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value &&
+                        viewModel.isWriteSettingsEnabled.value &&
+                        viewModel.isUsageStatsPermissionGranted.value &&
+                        viewModel.isPostNotificationsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setShutUpServiceEnabled(enabled, context)
         },
+
 
         object : Feature(
             id = "Pocket mode",
@@ -1213,7 +1260,7 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isPocketModeEnabled.value
 
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
-                viewModel.setPocketModeEnabled(enabled)
+                viewModel.setPocketModeEnabled(enabled, context)
 
             override fun isDeviceSupported(context: Context) = !DeviceUtils.isGoogleDevice()
         },

@@ -84,7 +84,7 @@ class FlashlightHandler(
 
             val screenOffService =
                 service as? com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
-            screenOffService?.updateFlashlightProximityRegistration(enabled)
+            screenOffService?.updateFlashlightProximityRegistration()
 
             val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             val isGlobalEnabled = prefs.getBoolean("flashlight_global_enabled", false)

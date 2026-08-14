@@ -172,6 +172,23 @@ class PocketModeHandler(private val service: AccessibilityService) {
         isBypassed = false
     }
 
+    /** Cancels a pending (not-yet-shown) overlay scheduled for this sensor tick.
+     *  Does NOT remove an already-visible overlay and does NOT reset [isBypassed]. */
+    fun cancelPending() {
+        handler.removeCallbacks(showOverlayRunnable)
+        isPending = false
+    }
+
+    /** Called when the user switches into a bypassed/excluded app.
+     *  Removes any pending timer and the active overlay, but preserves [isBypassed]
+     *  so a user-initiated volume-key bypass is not cleared. */
+    fun dismissForAppSwitch() {
+        handler.removeCallbacks(showOverlayRunnable)
+        handler.removeCallbacks(screenOffRunnable)
+        isPending = false
+        removeOverlay()
+    }
+
     private class OverlayLifecycleOwner : LifecycleOwner, SavedStateRegistryOwner,
         ViewModelStoreOwner {
         private val lifecycleRegistry = LifecycleRegistry(this)
