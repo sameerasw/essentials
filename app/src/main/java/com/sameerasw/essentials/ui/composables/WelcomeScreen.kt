@@ -374,12 +374,12 @@ fun WelcomeStepContent(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(8.dp)
                     .clickable {
                         val websiteUrl = "https://sameerasw.com"
                         val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
                         context.startActivity(intent)
-                    },
+                    }
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
