@@ -17,6 +17,7 @@ import android.media.AudioManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
 import com.sameerasw.essentials.domain.HapticFeedbackType
@@ -652,6 +653,15 @@ object CombinedActionExecutor {
                         com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(context, pkg)
                     }
                 }
+
+                is Action.Keyboard -> {
+                    try {
+                        Settings.Secure.putString(context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD, action.packageName)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Keyboard Switching Failed: ${e.message ?: ""}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
                 is Action.CustomSettings -> {
                     val resolver = context.contentResolver
                     for (entry in action.entries) {

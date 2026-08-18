@@ -105,5 +105,8 @@ data class AutomationSuggestion(
     val smartPixelsEnabled: Boolean? = null,
 
     @Guide(description = "Dim wallpaper amount (0.0 to 1.0) for DimWallpaper action")
-    val dimWallpaperAmount: Float? = null
+    val dimWallpaperAmount: Float? = null,
+
+    @Guide(description = "Select keyboard from the list to switch")
+    val keyboard: String? = null,
 )

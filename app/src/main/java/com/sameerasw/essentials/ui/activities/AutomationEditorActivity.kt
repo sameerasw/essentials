@@ -12,6 +12,7 @@ package com.sameerasw.essentials.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -102,6 +103,7 @@ import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
+import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -266,6 +268,8 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
+                var showSetKeyboardSheet by remember { mutableStateOf(false) }
+                var selectedIme by remember { mutableStateOf<String?>(null) }
                 var showCustomSettingsSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
@@ -905,7 +909,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.FreezeApps(),
                                                 Action.UnfreezeApps(),
                                                 Action.FreezeTag(),
-                                                Action.PinApp
+                                                Action.PinApp,
+                                                Action.Keyboard()
                                             )
                                             val systemActions = listOf(
                                                 Action.TurnOnFlashlight,
@@ -999,6 +1004,10 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                 is Action.UnfreezeApps -> {
                                                                     temporarySelectedAppsForAction = resolvedAction.packageNames
                                                                     showFreezeAppsSettings = true
+                                                                }
+                                                                is Action.Keyboard -> {
+                                                                    showSetKeyboardSheet = true
+                                                                    selectedIme = resolvedAction.packageName
                                                                 }
                                                                 is Action.CustomSettings -> showCustomSettingsSettings = true
                                                                 else -> {}
@@ -1284,6 +1293,26 @@ class AutomationEditorActivity : ComponentActivity() {
                                 excludePackages = if (automationType == Automation.Type.APP) selectedApps else emptyList()
                             )
                         }
+
+                            if (showSetKeyboardSheet && configAction is Action.Keyboard) {
+                                KeyboardSelectionSheet(
+                                    onDismissRequest = { newIme ->
+                                        showSetKeyboardSheet = false
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER -> selectedAction = Action.Keyboard(newIme)
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction =
+                                                Action.Keyboard(newIme)
+
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) selectedInAction = Action.Keyboard(newIme)
+                                                else selectedOutAction = Action.Keyboard(newIme)
+                                            }
+                                        }
+                                        configAction = null
+                                    },
+                                    selectedIme
+                                )
+                            }
 
                         if (showCustomSettingsSettings && configAction is Action.CustomSettings) {
                             CustomSettingsSheet(
