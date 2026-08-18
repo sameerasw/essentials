@@ -24,6 +24,7 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.DeviceLockUtils
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.performHapticFeedback
 import rikka.shizuku.ShizukuBinderWrapper
@@ -656,7 +657,11 @@ object CombinedActionExecutor {
 
                 is Action.Keyboard -> {
                     try {
-                        Settings.Secure.putString(context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD, action.packageName)
+                        if (PermissionUtils.canWriteSecureSettings(context)) {
+                            Settings.Secure.putString(context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD, action.packageName)
+                            return@withContext
+                        }
+                        Toast.makeText(context, "give me Write Secure Settings permission to change your keyboard.", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         Toast.makeText(context, "Keyboard Switching Failed: ${e.message ?: ""}", Toast.LENGTH_SHORT).show()
                     }

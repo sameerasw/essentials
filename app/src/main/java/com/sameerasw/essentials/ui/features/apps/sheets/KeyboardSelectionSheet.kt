@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.features.apps.sheets
 
 import android.content.Context
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.inputmethod.InputMethodInfo
@@ -24,7 +25,6 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,31 +51,34 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun KeyboardSelectionSheet(
-    onDismissRequest: (ime: String) -> Unit,
+    onDismissRequest: (ime: String?) -> Unit,
     selectedIme: String?,
     context: Context = LocalContext.current
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isLoadingKeyboards by remember { mutableStateOf(true) }
-    var defaultInputMethod by remember { mutableStateOf("") }
+    var defaultInputMethod by remember { mutableStateOf<String?>(null) }
     var imesList by remember { mutableStateOf<List<InputMethodInfo>>(emptyList()) }
     val view = LocalView.current
+    val isDeprecated = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 
     LaunchedEffect(Unit) {
         isLoadingKeyboards = true
         try {
             val list = withContext(Dispatchers.IO) {
-                val defaultIme = Settings.Secure.getString(
-                    context.contentResolver,
-                    Settings.Secure.DEFAULT_INPUT_METHOD
-                )
-
                 val imes =
                     context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                defaultIme to imes.inputMethodList
+                val defaultIme =
+                    if (isDeprecated)
+                        imes.currentInputMethodInfo?.id
+                    else
+                        Settings.Secure.getString(
+                            context.contentResolver,
+                            Settings.Secure.DEFAULT_INPUT_METHOD
+                        )
+                defaultIme to imes
             }
-            defaultInputMethod = selectedIme ?: list.first
-            imesList = list.second
+            defaultInputMethod = selectedIme ?: (list.first ?: "")
+            imesList = list.second.inputMethodList
         } catch (e: Exception) {
             Log.e(
                 "KeyboardSelectionSheet", "Error loading keyboards list: ${e.message ?: ""}"
@@ -86,7 +89,7 @@ fun KeyboardSelectionSheet(
     }
 
     EssentialsBottomSheet(
-        onDismissRequest = { onDismissRequest(defaultInputMethod) }, sheetState = sheetState
+        onDismissRequest = { onDismissRequest(defaultInputMethod) },
     ) {
         Column(
             modifier = Modifier
