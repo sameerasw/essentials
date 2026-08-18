@@ -343,7 +343,7 @@ sealed interface Action {
     ) : Action {
         override val title: Int = R.string.feat_system_keyboard_title
         override val icon: Int = R.drawable.rounded_keyboard_24
-        override val permissions: List<String> = listOf("WRITE_SETTINGS")
+        override val permissions: List<String> = listOf("WRITE_SECURE_SETTINGS")
         override val isConfigurable: Boolean = true
     }
 
