@@ -1302,25 +1302,25 @@ class AutomationEditorActivity : ComponentActivity() {
                             )
                         }
 
-                            if (showSetKeyboardSheet && configAction is Action.Keyboard) {
-                                KeyboardSelectionSheet(
-                                    onDismissRequest = { newIme ->
-                                        showSetKeyboardSheet = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = Action.Keyboard(newIme)
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction =
-                                                Action.Keyboard(newIme)
+                        if (showSetKeyboardSheet && configAction is Action.Keyboard) {
+                            KeyboardSelectionSheet(
+                                onDismissRequest = { newIme ->
+                                    showSetKeyboardSheet = false
+                                    when (automationType) {
+                                        Automation.Type.TRIGGER -> selectedAction = Action.Keyboard(newIme)
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction =
+                                            Action.Keyboard(newIme)
 
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) selectedInAction = Action.Keyboard(newIme)
-                                                else selectedOutAction = Action.Keyboard(newIme)
-                                            }
+                                        Automation.Type.STATE, Automation.Type.APP -> {
+                                            if (selectedActionTab == 0) selectedInAction = Action.Keyboard(newIme)
+                                            else selectedOutAction = Action.Keyboard(newIme)
                                         }
-                                        configAction = null
-                                    },
-                                    selectedIme
-                                )
-                            }
+                                    }
+                                    configAction = null
+                                },
+                                selectedIme = (configAction as? Action.Keyboard)?.inputMethodId
+                            )
+                        }
 
                         if (showCustomSettingsSettings && configAction is Action.CustomSettings) {
                             CustomSettingsSheet(
