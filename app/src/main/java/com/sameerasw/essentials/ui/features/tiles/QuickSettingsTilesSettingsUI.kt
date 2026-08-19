@@ -387,7 +387,7 @@ fun QuickSettingsTilesSettingsUI(
         ),
         QSTileInfo(
             R.string.tile_wifi_adb_title,
-            R.drawable.rounded_android_24,
+            R.drawable.wireless_debugging_24,
             WirelessDebugging::class.java,
             listOf("WRITE_SECURE_SETTINGS"),
             R.string.tile_wifi_adb_desc,

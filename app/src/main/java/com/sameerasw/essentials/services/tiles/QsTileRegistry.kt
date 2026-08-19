@@ -167,7 +167,7 @@ object QsTileRegistry {
         ),
         QsTileEntry(
             R.string.tile_wifi_adb_title_short,
-            R.drawable.rounded_android_24,
+            R.drawable.wireless_debugging_24,
             WirelessDebugging::class.java
         ),
     )

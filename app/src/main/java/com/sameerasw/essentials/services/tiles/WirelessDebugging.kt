@@ -44,7 +44,7 @@ class WirelessDebugging : BaseTileService() {
     override fun hasFeaturePermission() = PermissionUtils.canWriteSecureSettings(this)
 
     override fun getTileIcon(): Icon {
-        return Icon.createWithResource(this, R.drawable.rounded_android_24)
+        return Icon.createWithResource(this, R.drawable.wireless_debugging_24)
     }
 
     override fun getTileState(): Int {

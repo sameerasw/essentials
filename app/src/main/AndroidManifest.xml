@@ -1234,7 +1234,7 @@
         <service
             android:name=".services.tiles.WirelessDebugging"
             android:exported="true"
-            android:icon="@drawable/rounded_android_24"
+            android:icon="@drawable/wireless_debugging_24"
             android:label="@string/tile_wifi_adb_title_short"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
