@@ -302,6 +302,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 fun isActionConfigured(action: Action?): Boolean = when (action) {
                     is Action.OpenApp -> action.packageName.isNotBlank()
                     is Action.CustomSettings -> action.entries.isNotEmpty()
+                    is Action.Keyboard -> !action.inputMethodId.isNullOrEmpty()
                     else -> true
                 }
 
