@@ -1057,6 +1057,7 @@
     <string name="diy_set_keyboard_title">Set Keyboard</string>
     <string name="diy_set_keyboard_sheet_title">Select Keyboard</string>
     <string name="diy_set_keyboard_input_method_disabled">Enable input method in settings</string>
+    <string name="diy_set_keyboard_permission_required">Grant permission to change your keyboard.</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>

@@ -17,9 +17,9 @@ import android.media.AudioManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
@@ -661,7 +661,7 @@ object CombinedActionExecutor {
                             Settings.Secure.putString(context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD, action.inputMethodId)
                             return@withContext
                         }
-                        Toast.makeText(context, "give me Write Secure Settings permission to change your keyboard.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.diy_set_keyboard_permission_required, Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         Toast.makeText(context, "Keyboard Switching Failed: ${e.message ?: ""}", Toast.LENGTH_SHORT).show()
                     }
