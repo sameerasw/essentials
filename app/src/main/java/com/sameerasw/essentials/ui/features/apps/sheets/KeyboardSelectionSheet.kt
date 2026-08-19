@@ -8,19 +8,17 @@ import android.view.inputmethod.InputMethodInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -38,7 +36,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,7 +43,6 @@ import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.PermissionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -94,13 +90,11 @@ fun KeyboardSelectionSheet(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -108,14 +102,6 @@ fun KeyboardSelectionSheet(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold
                 )
-
-                if (PermissionUtils.canWriteSecureSettings(context)) {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_shield_lock_24),
-                        contentDescription = "Permission",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
             }
 
             if (isLoadingKeyboards) {
@@ -130,64 +116,71 @@ fun KeyboardSelectionSheet(
             } else {
                 LazyColumn(
                     modifier = Modifier
-                        .weight(1f)
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
                         .clip(RoundedCornerShape(24.dp)),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    itemsIndexed(imesList, key = { _, ime -> ime.id }) { index, ime ->
+                    items(imesList, key = { it.id }) { ime ->
                         val isEnabled = ime.serviceInfo.enabled
                         val isSelected = defaultInputMethod == ime.id
 
-                        // remove it later and replace with official method.
-                        val currentIndex =
-                            if (imesList.size == 1) -2 else if (index == (imesList.size - 1)) -1 else index
-                        val shape = when (currentIndex) {
-                            -2 -> RoundedCornerShape(24.dp)
-                            -1 -> RoundedCornerShape(4.dp, 4.dp, 24.dp, 24.dp)
-                            0 -> RoundedCornerShape(24.dp, 24.dp, 4.dp, 4.dp)
-                            else -> RoundedCornerShape(4.dp)
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(shape)
-                                .clickable {
-                                    HapticUtil.performUIHaptic(view)
-                                    if (isEnabled) {
-                                        defaultInputMethod = ime.id
-                                        return@clickable
-                                    }
+                        ListItem(
+                            checked = isSelected,
+                            onCheckedChange = {
+                                if (isEnabled) {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    defaultInputMethod = ime.id
+                                } else {
+                                    HapticUtil.performVirtualKeyHaptic(view)
                                     Toast.makeText(
                                         context,
                                         R.string.diy_set_keyboard_input_method_disabled,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                                .background(MaterialTheme.colorScheme.surfaceBright)
-                                .padding(16.dp),
+                            },
+                            onLongClick = null,
+                            enabled = isEnabled,
+                            modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Image(
-                                bitmap = ime.loadIcon(context.packageManager).toBitmap()
-                                    .asImageBitmap(),
-                                contentDescription = ime.serviceInfo.name,
-                                modifier = Modifier.size(24.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                            Text(
-                                text = ime.loadLabel(context.packageManager).toString(),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = { defaultInputMethod = ime.id },
-                                enabled = isEnabled
-                            )
-                        }
+                            leadingContent = {
+                                Image(
+                                    bitmap = ime.loadIcon(context.packageManager).toBitmap()
+                                        .asImageBitmap(),
+                                    contentDescription = ime.serviceInfo.name,
+                                    modifier = Modifier.size(24.dp),
+                                    contentScale = ContentScale.Fit
+                                )
+                            },
+                            supportingContent = null,
+                            trailingContent = {
+                                RadioButton(
+                                    selected = if (isEnabled) isSelected else false,
+                                    onClick = null,
+                                    enabled = isEnabled
+                                )
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceBright
+                            ),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                                horizontal = 16.dp,
+                                vertical = 16.dp
+                            ),
+                            content = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = ime.loadLabel(context.packageManager).toString(),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        )
                     }
                 }
             }
