@@ -1231,6 +1231,24 @@
                 android:value="android.service.quicksettings.CATEGORY_UTILITIES" />
         </service>
 
+        <service
+            android:name=".services.tiles.WirelessDebugging"
+            android:exported="true"
+            android:icon="@drawable/rounded_android_24"
+            android:label="@string/tile_wifi_adb_title_short"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.ACTION_QS_TILE_PREFERENCES"
+                android:value="com.sameerasw.essentials.ui.activities.QSPreferencesActivity" />
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_UTILITIES" />
+        </service>
+
         <provider
             android:name=".external.ExternalControlProvider"
             android:authorities="${applicationId}.external"

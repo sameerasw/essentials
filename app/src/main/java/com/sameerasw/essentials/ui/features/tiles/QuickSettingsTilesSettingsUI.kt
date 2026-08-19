@@ -86,6 +86,7 @@ import com.sameerasw.essentials.services.tiles.StayAwakeTileService
 import com.sameerasw.essentials.services.tiles.TapToWakeTileService
 import com.sameerasw.essentials.services.tiles.UiBlurTileService
 import com.sameerasw.essentials.services.tiles.UsbDebuggingTileService
+import com.sameerasw.essentials.services.tiles.WirelessDebugging
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.DeviceUtils
@@ -383,6 +384,14 @@ fun QuickSettingsTilesSettingsUI(
             listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             R.string.feat_essentials_on_display_desc,
             R.string.cat_visuals
+        ),
+        QSTileInfo(
+            R.string.tile_wifi_adb_title,
+            R.drawable.rounded_android_24,
+            WirelessDebugging::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.tile_wifi_adb_desc,
+            R.string.cat_utils
         )
     )
 

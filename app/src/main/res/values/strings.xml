@@ -337,7 +337,9 @@
     <string name="tile_lockdown_mode">Lockdown</string>
     <string name="tile_lockdown_mode_desc">Screen off QS tile</string>
     <string name="tile_lockdown_mode_about_desc">Lock your phone or Lockdown if lockdown mode is turned on.\n\nLockdown mode disables weak unlock methods like face/fingerprint and require pattern or pin securely to unlock your phone.\n\nRequires device admin permission if using lockdown.</string>
-
+    <string name="tile_wifi_adb_title">Wireless Debugging</string>
+    <string name="tile_wifi_adb_title_short">Wifi Adb</string>
+    <string name="tile_wifi_adb_desc">Toggle Wireless Debugging (Wifi Adb) from a QS Tile and from favourite features too.</string>
 
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Disable QS tiles when the device is locked</string>

@@ -165,6 +165,11 @@ object QsTileRegistry {
             R.drawable.rounded_shield_lock_24,
             LockdownTileService::class.java
         ),
+        QsTileEntry(
+            R.string.tile_wifi_adb_title_short,
+            R.drawable.rounded_android_24,
+            WirelessDebugging::class.java
+        ),
     )
 
     private val tilesMapByClassName: Map<String, QsTileEntry> by lazy {
