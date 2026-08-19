@@ -159,7 +159,12 @@ object QsTileRegistry {
             R.string.tile_essentials_on_display,
             R.drawable.rounded_live_tv_24,
             EssentialsOnDisplayTileService::class.java
-        )
+        ),
+        QsTileEntry(
+            R.string.tile_lockdown_mode,
+            R.drawable.rounded_shield_lock_24,
+            LockdownTileService::class.java
+        ),
     )
 
     private val tilesMapByClassName: Map<String, QsTileEntry> by lazy {
