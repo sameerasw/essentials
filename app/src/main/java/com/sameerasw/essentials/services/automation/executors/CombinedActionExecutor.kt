@@ -658,7 +658,7 @@ object CombinedActionExecutor {
                 is Action.Keyboard -> {
                     try {
                         if (PermissionUtils.canWriteSecureSettings(context)) {
-                            Settings.Secure.putString(context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD, action.packageName)
+                            Settings.Secure.putString(context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD, action.inputMethodId)
                             return@withContext
                         }
                         Toast.makeText(context, "give me Write Secure Settings permission to change your keyboard.", Toast.LENGTH_SHORT).show()

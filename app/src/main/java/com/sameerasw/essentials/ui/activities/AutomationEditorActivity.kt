@@ -1014,7 +1014,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                 }
                                                                 is Action.Keyboard -> {
                                                                     showSetKeyboardSheet = true
-                                                                    selectedIme = resolvedAction.packageName
+                                                                    selectedIme = resolvedAction.inputMethodId
                                                                 }
                                                                 is Action.CustomSettings -> showCustomSettingsSettings = true
                                                                 else -> {}

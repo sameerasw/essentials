@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -81,7 +82,7 @@ fun KeyboardSelectionSheet(
             imesList = list.second.inputMethodList
         } catch (e: Exception) {
             Log.e(
-                "KeyboardSelectionSheet", "Error loading keyboards list: ${e.message ?: ""}"
+                "KeyboardSelectionSheet", "Error loading input methods list: ${e.message ?: ""}"
             )
         } finally {
             isLoadingKeyboards = false
@@ -103,7 +104,7 @@ fun KeyboardSelectionSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Select Keyboard",
+                    text = stringResource(R.string.diy_set_keyboard_sheet_title),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -137,6 +138,7 @@ fun KeyboardSelectionSheet(
                         val isEnabled = ime.serviceInfo.enabled
                         val isSelected = defaultInputMethod == ime.id
 
+                        // remove it later and replace with official method.
                         val currentIndex =
                             if (imesList.size == 1) -2 else if (index == (imesList.size - 1)) -1 else index
                         val shape = when (currentIndex) {
@@ -158,7 +160,7 @@ fun KeyboardSelectionSheet(
                                     }
                                     Toast.makeText(
                                         context,
-                                        "Enable in settings",
+                                        R.string.diy_set_keyboard_input_method_disabled,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -170,7 +172,7 @@ fun KeyboardSelectionSheet(
                             Image(
                                 bitmap = ime.loadIcon(context.packageManager).toBitmap()
                                     .asImageBitmap(),
-                                contentDescription = "IME Logo",
+                                contentDescription = ime.serviceInfo.name,
                                 modifier = Modifier.size(24.dp),
                                 contentScale = ContentScale.Fit
                             )

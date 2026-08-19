@@ -1054,6 +1054,10 @@
     <string name="diy_custom_settings_key_label">Setting Key</string>
     <string name="diy_custom_settings_value_label">Value</string>
 
+    <string name="diy_set_keyboard_title">Set Keyboard</string>
+    <string name="diy_set_keyboard_sheet_title">Select Keyboard</string>
+    <string name="diy_set_keyboard_input_method_disabled">Enable input method in settings</string>
+
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>

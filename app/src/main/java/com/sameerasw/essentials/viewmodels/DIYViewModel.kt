@@ -226,9 +226,7 @@ class DIYViewModel(application: Application) : AndroidViewModel(application) {
                     tagIds = suggestion.freezeTagIds
                 )
 
-                "Keyboard" -> Action.Keyboard(
-                    packageName = suggestion.keyboard
-                )
+                "Keyboard" -> Action.Keyboard(suggestion.keyboard)
 
                 else -> null
             }
