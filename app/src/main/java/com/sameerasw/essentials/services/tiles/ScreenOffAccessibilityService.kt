@@ -152,6 +152,14 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         }
     }
 
+    private var isWifiConnected = false
+    private var networkCallback: android.net.ConnectivityManager.NetworkCallback? = null
+    private val wifiAutoOffHandler = Handler(Looper.getMainLooper())
+    private val wifiAutoOffRunnable = Runnable {
+        android.util.Log.d("ScreenOffService", "Executing Wifi auto turn off")
+        com.sameerasw.essentials.utils.ShellUtils.runCommand(this, "svc wifi disable")
+    }
+
     private fun schedulePocketFlashlightTurnOff() {
         pocketFlashlightHandler.removeCallbacks(pocketFlashlightRunnable)
         pocketFlashlightHandler.postDelayed(pocketFlashlightRunnable, 1500L)
@@ -216,6 +224,13 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 key == SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST
             ) {
                 smartPixelsHandler.updateState()
+            } else if (key == "wifi_auto_off_enabled" || key == "wifi_auto_off_timeout") {
+                val isAutoOffEnabled = prefs.getBoolean("wifi_auto_off_enabled", false)
+                if (!isAutoOffEnabled) {
+                    wifiAutoOffHandler.removeCallbacks(wifiAutoOffRunnable)
+                } else if (!isWifiConnected) {
+                    checkAndScheduleWifiAutoOff()
+                }
             }
         }
 
@@ -238,6 +253,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         flashlightHandler.register()
         statusBarIconHandler.register()
         smartPixelsHandler.init()
+        registerWifiNetworkCallback()
 
         // Screen Receiver
         screenReceiver = object : BroadcastReceiver() {
@@ -401,7 +417,81 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         instance = null
+        unregisterWifiNetworkCallback()
         super.onDestroy()
+    }
+
+    private fun registerWifiNetworkCallback() {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as? android.net.ConnectivityManager ?: return
+
+        isWifiConnected = isWifiCurrentlyConnected(connectivityManager)
+
+        val networkRequest = android.net.NetworkRequest.Builder()
+            .addTransportType(android.net.NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+
+        val callback = object : android.net.ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: android.net.Network) {
+                super.onAvailable(network)
+                isWifiConnected = true
+                wifiAutoOffHandler.removeCallbacks(wifiAutoOffRunnable)
+                android.util.Log.d("ScreenOffService", "Wi-Fi Connected - Cancelled auto off timer")
+            }
+
+            override fun onLost(network: android.net.Network) {
+                super.onLost(network)
+                isWifiConnected = false
+                checkAndScheduleWifiAutoOff()
+            }
+        }
+
+        networkCallback = callback
+        try {
+            connectivityManager.registerNetworkCallback(networkRequest, callback)
+        } catch (e: Exception) {
+            android.util.Log.e("ScreenOffService", "Failed to register network callback", e)
+        }
+    }
+
+    private fun unregisterWifiNetworkCallback() {
+        wifiAutoOffHandler.removeCallbacks(wifiAutoOffRunnable)
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as? android.net.ConnectivityManager
+        networkCallback?.let {
+            try {
+                connectivityManager?.unregisterNetworkCallback(it)
+            } catch (e: Exception) {
+                // Ignore
+            }
+        }
+        networkCallback = null
+    }
+
+    private fun isWifiCurrentlyConnected(connectivityManager: android.net.ConnectivityManager): Boolean {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            val activeNetwork = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+            return capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI)
+        } else {
+            @Suppress("DEPRECATION")
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            @Suppress("DEPRECATION")
+            return activeNetworkInfo != null && activeNetworkInfo.type == android.net.ConnectivityManager.TYPE_WIFI && activeNetworkInfo.isConnected
+        }
+    }
+
+    private fun checkAndScheduleWifiAutoOff() {
+        val isAutoOffEnabled = prefs.getBoolean("wifi_auto_off_enabled", false)
+        if (!isAutoOffEnabled) return
+
+        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as? android.net.wifi.WifiManager
+        if (wifiManager?.isWifiEnabled != true) return
+
+        val timeoutSeconds = prefs.getFloat("wifi_auto_off_timeout", 60f)
+        val delayMs = (timeoutSeconds * 1000).toLong()
+
+        wifiAutoOffHandler.removeCallbacks(wifiAutoOffRunnable)
+        wifiAutoOffHandler.postDelayed(wifiAutoOffRunnable, delayMs)
+        android.util.Log.d("ScreenOffService", "Scheduled Wi-Fi auto turn off in $timeoutSeconds seconds")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

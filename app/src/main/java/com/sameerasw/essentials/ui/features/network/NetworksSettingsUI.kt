@@ -248,6 +248,33 @@ fun NetworksSettingsUI(
                 iconRes = R.drawable.rounded_cast_24,
                 modifier = Modifier.highlight(highlightSetting == "wireless_display_certification_toggle")
             )
+
+            IconToggleItem(
+                title = stringResource(R.string.wifi_auto_off_title),
+                description = stringResource(R.string.wifi_auto_off_desc),
+                isChecked = viewModel.isWifiAutoOffEnabled.value,
+                onCheckedChange = { enabled ->
+                    viewModel.setWifiAutoOffEnabled(enabled)
+                },
+                enabled = true,
+                iconRes = R.drawable.rounded_power_settings_new_24,
+                modifier = Modifier.highlight(highlightSetting == "wifi_auto_off_toggle")
+            )
+
+            ConfigSliderItem(
+                title = stringResource(R.string.wifi_auto_off_timeout_title),
+                value = viewModel.wifiAutoOffTimeout.floatValue,
+                onValueChange = { seconds ->
+                    viewModel.setWifiAutoOffTimeout(seconds)
+                },
+                valueRange = 10f..300f,
+                steps = 29,
+                increment = 10f,
+                valueFormatter = { "${it.toInt()}s" },
+                enabled = viewModel.isWifiAutoOffEnabled.value,
+                iconRes = R.drawable.rounded_timer_24,
+                modifier = Modifier.highlight(highlightSetting == "wifi_auto_off_timeout_slider")
+            )
         }
     }
 }

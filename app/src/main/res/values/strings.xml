@@ -422,6 +422,15 @@
     <string name="smart_wifi_title">Smart WiFi</string>
     <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
     <string name="smart_data_desc">Hide mobile data in certain modes</string>
+
+    <string name="wifi_auto_off_title">Auto Turn Off Wi-Fi</string>
+    <string name="wifi_auto_off_desc">Automatically turn off Wi-Fi when disconnected from any network</string>
+    <string name="wifi_auto_off_timeout_title">Auto Turn Off Timeout</string>
+    <string name="wifi_auto_off_timeout_desc">Delay before Wi-Fi turns off: %1$d seconds</string>
+    <string name="search_wifi_auto_off_title">Auto Turn Off Wi-Fi</string>
+    <string name="search_wifi_auto_off_desc">Automatically turn off Wi-Fi when disconnected from network</string>
+    <string name="search_wifi_auto_off_timeout_title">Wi-Fi auto turn off timeout</string>
+    <string name="search_wifi_auto_off_timeout_desc">Adjust delay before Wi-Fi is automatically disabled</string>
     <string name="action_reset_all_icons">Reset All Icons</string>
     <string name="status_bar_section_advanced">More Settings</string>
     <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>

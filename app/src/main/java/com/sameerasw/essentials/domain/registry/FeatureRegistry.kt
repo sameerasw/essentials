@@ -385,6 +385,37 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Auto turn off Wi-Fi",
+            title = R.string.wifi_auto_off_title,
+            iconRes = R.drawable.rounded_power_settings_new_24,
+            category = R.string.cat_connectivity,
+            description = R.string.wifi_auto_off_desc,
+            permissionKeys = listOf("ACCESSIBILITY"),
+            searchableSettings = listOf(
+                SearchSetting(
+                    R.string.search_wifi_auto_off_title,
+                    R.string.search_wifi_auto_off_desc,
+                    "wifi_auto_off_toggle"
+                ),
+                SearchSetting(
+                    R.string.search_wifi_auto_off_timeout_title,
+                    R.string.search_wifi_auto_off_timeout_desc,
+                    "wifi_auto_off_timeout_slider"
+                )
+            ),
+            parentFeatureId = "Networks"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isWifiAutoOffEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isAccessibilityEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setWifiAutoOffEnabled(enabled)
+        },
+
+        object : Feature(
             id = "Watch",
             title = R.string.feat_watch_title,
             iconRes = R.drawable.rounded_watch_24,
