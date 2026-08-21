@@ -128,10 +128,12 @@ fun FeatureCard(
                 onClick()
             }
         },
-        onLongClick = {
-            HapticUtil.performVirtualKeyHaptic(view)
-            showMenu = true
-        },
+        onLongClick = if (onPinToggle != null || onHelpClick != null || additionalMenuItems != null) {
+            {
+                HapticUtil.performVirtualKeyHaptic(view)
+                showMenu = true
+            }
+        } else null,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .alpha(alpha)

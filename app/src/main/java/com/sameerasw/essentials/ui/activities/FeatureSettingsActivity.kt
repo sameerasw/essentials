@@ -234,6 +234,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
                     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
                     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
+                    val isWriteSettingsEnabled by viewModel.isWriteSettingsEnabled
+                    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
+                    val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
 
                     var watchAdbWifiEnabled by remember {
                         mutableStateOf(prefs.getBoolean("watch_adb_wifi_enabled", false))
@@ -311,7 +314,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         isNotificationLightingAccessibilityEnabled,
                         isNotificationListenerEnabled,
                         isReadPhoneStateEnabled,
-                        isShizukuPermissionGranted
+                        isShizukuPermissionGranted,
+                        isWriteSettingsEnabled,
+                        isUsageStatsPermissionGranted,
+                        isPostNotificationsEnabled
                     ) {
                         val hasMissingPermissions = when (featureId) {
                             "Screen off widget" -> !isAccessibilityEnabled
@@ -332,6 +338,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Screen refresh rate" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context
                             )
+                            "Shut-Up!" -> !isWriteSecureSettingsEnabled || !isWriteSettingsEnabled || !isUsageStatsPermissionGranted || !isPostNotificationsEnabled
+                            "Per app refresh rate" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isShizukuPermissionGranted
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
                             "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
@@ -348,7 +356,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 context
                             )
 
-                            "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                             "Power and Battery" -> !isWriteSecureSettingsEnabled
                             "Networks" -> !isWriteSecureSettingsEnabled && !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context
@@ -525,7 +532,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
-
                             val children = FeatureRegistry.getFilteredFeatures(
                                 context,
                                 viewModel.isEnableUnsupportedFeatures.value
@@ -545,6 +551,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             listOf(
                                                 "Text and animations",
                                                 "Screen refresh rate",
+                                                "Per app refresh rate",
                                                 "Navigation"
                                             ),
                                             listOf(
@@ -688,7 +695,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             context
                                                         )
 
-                                                        "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
+                                                        "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isWriteSettingsEnabled.value || !viewModel.isUsageStatsPermissionGranted.value || !viewModel.isPostNotificationsEnabled.value
+                                                        "Per app refresh rate" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !viewModel.isShizukuPermissionGranted.value
                                                         "Power and Battery" -> !isWriteSecureSettingsEnabled
                                                         "Networks" -> !isWriteSecureSettingsEnabled && !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                             context
@@ -1004,7 +1012,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             highlightSetting = highlightSetting
                                         )
                                     }
-
+                                      "Shut-Up!" -> {
+                                        ShutUpSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
                                     "Always on Display" -> {
                                         AlwaysOnDisplaySettingsUI(
                                             viewModel = viewModel,
@@ -1044,12 +1058,11 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             highlightSetting = highlightSetting
                                         )
                                     }
-
                                     "Shut-Up!" -> {
                                         ShutUpSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
-                                            highlightKey = highlightSetting
+                                            highlightSetting = highlightSetting
                                         )
                                     }
 

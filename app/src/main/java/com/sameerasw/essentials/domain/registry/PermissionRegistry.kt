@@ -126,10 +126,12 @@ fun initPermissionRegistry() {
     // Default browser permission
     PermissionRegistry.register("DEFAULT_BROWSER", R.string.feat_link_actions_title)
 
-    // Shut-Up! feature
+    // Shut-Up! permissions
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_shut_up_title)
     PermissionRegistry.register("WRITE_SETTINGS", R.string.feat_shut_up_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_shut_up_title)
+    PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_shut_up_title)
+    PermissionRegistry.register("RECORD_AUDIO", R.string.feat_button_remap_title)
 
     // Power and Battery feature
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_power_battery_title)
