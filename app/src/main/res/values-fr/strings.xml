@@ -1472,4 +1472,12 @@
     <string name="feat_standby_apps_desc">Optimiser les activités en arrière-plan des applications </string>
     <string name="feat_mobile_data_always_on_title">Données mobiles toujours activées</string>
     <string name="feat_mobile_data_always_on_desc">Gardez les données mobiles actives même lorsque le Wi-Fi est connecté.</string>
+    <string name="feat_networks_title">Réseaux</string>
+    <string name="feat_networks_desc">Controller les radios et réseaux</string>
+    <string name="feat_wireless_display_certification_title">Certification d\'affichage sans fil</string>
+    <string name="feat_wireless_display_certification_desc">Afficher les options de certification d\'affichage sans fil</string>
+    <string name="feat_sim_names_title">Noms des cartes SIM</string>
+    <string name="feat_sim_names_desc">Renommer le nom d\'affichage de l\'opérateur pour les cartes SIM actives</string>
+    <string name="feat_network_download_rate_limit_title">Limitation du débit de téléchargement réseau</string>
+    <string name="feat_network_download_rate_limit_desc">Limiter la vitesse de téléchargement à l\'échelle du système</string>
 </resources>
