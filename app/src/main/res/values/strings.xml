@@ -36,8 +36,14 @@
     <string name="check_pre_releases_label">Check for pre-releases</string>
     <string name="check_pre_releases_desc">Might be unstable</string>
     <string name="label_default_tab">Default tab</string>
-    <string name="label_open_with">Open With</string>
-    <string name="label_share_with">Share With</string>
+    <string name="label_open_with">Open</string>
+    <string name="label_share_with">Share</string>
+    <string name="label_tools">Tools</string>
+    <string name="preview_web_title">Preview Web</string>
+    <string name="preview_web_desc">Open link in private floating web preview</string>
+    <string name="qr_code_title">QR Code</string>
+    <string name="qr_code_desc">Scan to open on PC, Mac, or tablet</string>
+
 
     <!-- App Lock -->
     <string name="settings_section_security">Security</string>

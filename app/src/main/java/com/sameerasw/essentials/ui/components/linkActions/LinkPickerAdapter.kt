@@ -223,6 +223,10 @@ fun LinkPickerScreen(
                 .filter { searchQuery.isEmpty() || it.label.contains(searchQuery, ignoreCase = true) }
                 .sortedWith(compareBy { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
         }
+    val isToolsSupported = remember { com.sameerasw.essentials.utils.WindowingUtils.isFloatingModeSupported(context) }
+    val tabItems = remember(isToolsSupported) {
+        if (isToolsSupported) listOf(0, 1, 2) else listOf(0, 1)
+    }
 
     // Toggle pin
     val togglePin: (String) -> Unit = { packageName ->
@@ -357,7 +361,7 @@ fun LinkPickerScreen(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 SegmentedPicker(
-                    items = listOf(0, 1),
+                    items = tabItems,
                     selectedItem = selectedTab,
                     onItemSelected = {
                         selectedTab = it
@@ -366,7 +370,8 @@ fun LinkPickerScreen(
                     labelProvider = {
                         when (it) {
                             0 -> context.getString(R.string.label_open_with)
-                            else -> context.getString(R.string.label_share_with)
+                            1 -> context.getString(R.string.label_share_with)
+                            else -> context.getString(R.string.label_tools)
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -515,24 +520,26 @@ fun LinkPickerScreen(
                 }
             }
 
-            // Search Bar
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search apps") },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_search_24),
-                        contentDescription = "Search",
-                    )
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(16.dp),
-            )
+            // Search Bar (Only shown for Open and Share tabs)
+            if (selectedTab != 2) {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Search apps") },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_search_24),
+                            contentDescription = "Search",
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(16.dp),
+                )
+            }
 
-            // Apps List
-            if (isLoadingApps) {
+            // Apps / Actions List
+            if (isLoadingApps && selectedTab != 2) {
                 Box(
                     modifier =
                         Modifier
@@ -543,26 +550,49 @@ fun LinkPickerScreen(
                     LoadingIndicator()
                 }
             } else {
-                if (selectedTab == 0) {
-                    OpenWithContent(
-                        resolveInfos = openWithApps,
-                        uri = currentUri,
-                        onFinish = onFinish,
-                        modifier = Modifier.fillMaxWidth(),
-                        togglePin = togglePin,
-                        pinnedPackages = pinnedPackages.value,
-                        demo = demo,
-                    )
-                } else {
-                    ShareWithContent(
-                        resolveInfos = shareWithApps,
-                        uri = currentUri,
-                        onFinish = onFinish,
-                        modifier = Modifier.fillMaxWidth(),
-                        togglePin = togglePin,
-                        pinnedPackages = pinnedPackages.value,
-                        demo = demo,
-                    )
+                when (selectedTab) {
+                    0 -> {
+                        OpenWithContent(
+                            resolveInfos = openWithApps,
+                            uri = currentUri,
+                            onFinish = onFinish,
+                            modifier = Modifier.fillMaxWidth(),
+                            togglePin = togglePin,
+                            pinnedPackages = pinnedPackages.value,
+                            demo = demo,
+                        )
+                    }
+                    1 -> {
+                        ShareWithContent(
+                            resolveInfos = shareWithApps,
+                            uri = currentUri,
+                            onFinish = onFinish,
+                            modifier = Modifier.fillMaxWidth(),
+                            togglePin = togglePin,
+                            pinnedPackages = pinnedPackages.value,
+                            demo = demo,
+                        )
+                    }
+                    else -> {
+                        if (isToolsSupported) {
+                            FloatingWithContent(
+                                uri = currentUri,
+                                onSelectTab = { selectedTab = it },
+                                onFinish = onFinish,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        } else {
+                            OpenWithContent(
+                                resolveInfos = openWithApps,
+                                uri = currentUri,
+                                onFinish = onFinish,
+                                modifier = Modifier.fillMaxWidth(),
+                                togglePin = togglePin,
+                                pinnedPackages = pinnedPackages.value,
+                                demo = demo,
+                            )
+                        }
+                    }
                 }
             }
         }

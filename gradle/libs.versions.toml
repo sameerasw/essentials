@@ -48,6 +48,7 @@ media3 = "1.10.1"
 wearRemoteInteractions = "1.2.0"
 genaiSchema = "1.0.0-alpha1"
 appfunctions = "1.0.0-alpha10"
+zxing = "3.5.3"
 
 [libraries]
 androidx-appfunctions = { module = "androidx.appfunctions:appfunctions", version.ref = "appfunctions" }
@@ -110,6 +111,7 @@ androidx-media3-common = { group = "androidx.media3", name = "media3-common", ve
 androidx-wear-remote-interactions = { group = "androidx.wear", name = "wear-remote-interactions", version.ref = "wearRemoteInteractions" }
 symspellkt = { module = "com.darkrockstudios:symspellkt", version.ref = "symspellkt" }
 genai-schema = { group = "com.google.mlkit", name = "genai-schema", version.ref = "genaiSchema" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 
 
 [plugins]

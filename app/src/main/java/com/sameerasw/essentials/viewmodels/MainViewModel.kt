@@ -6661,9 +6661,9 @@ class MainViewModel : ViewModel() {
     }
 
     data class FreezeBackupData(
-        val apps: List<AppSelection>,
-        val tags: List<com.sameerasw.essentials.domain.model.AppTag> = emptyList(),
-        val appTagMap: Map<String, List<String>> = emptyMap(),
+        val apps: List<AppSelection>? = null,
+        val tags: List<com.sameerasw.essentials.domain.model.AppTag>? = null,
+        val appTagMap: Map<String, List<String>>? = null,
     )
 
     /**

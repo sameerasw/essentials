@@ -1131,8 +1131,8 @@
     <string name="location_reached_fsi_title">Permissão de alarme em tela cheia</string>
     <string name="location_reached_fsi_desc">Necessário para ativar seu dispositivo na chegada. Toque para conceder.</string>
     <string name="location_reached_dist_m">%1$d eu</string>
-    <string name="location_reached_dist_km">%1$,1f km</string>
-    <string name="location_reached_service_title">Travel alarm active</string>
+    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_service_title">Travel alarm active %1$s</string>
     <string name="location_reached_service_remaining">%1$s restante (%2$d%%)</string>
     <string name="location_reached_channel_name">Progresso da viagem</string>
     <string name="location_reached_channel_desc">Mostra a distância em tempo real até o destino</string>
