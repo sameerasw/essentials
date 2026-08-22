@@ -1632,4 +1632,8 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watch_call_sync_desc">Anrufe von Ihrer Uhr synchronisieren und steuern</string>
     <string name="watch_notif_sync_choose_apps">Apps auswählen</string>
     <string name="watch_notif_sync_choose_apps_desc">Nur ausgewählte Apps werden mit der Smartwatch synchronisiert</string>
+    <string name="feat_sim_names_title">SIM-Namen</string>
+    <string name="feat_sim_names_desc">Anzeigenamen des Mobilfunkanbieters für aktive SIM-Karten anpassen </string>
+    <string name="setting_location_reached_full_screen_alarm_title">Vollbild-Alarm</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Bei Ankunft den Alarmklingelton abspielen und eine Vollbild-Warnmeldung anzeigen</string>
 </resources>
