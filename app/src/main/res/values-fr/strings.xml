@@ -1472,4 +1472,6 @@
     <string name="feat_standby_apps_desc">Optimiser les activités en arrière-plan des applications </string>
     <string name="feat_mobile_data_always_on_title">Données mobiles toujours activées</string>
     <string name="feat_mobile_data_always_on_desc">Gardez les données mobiles actives même lorsque le Wi-Fi est connecté.</string>
+    <string name="feat_safe_volume_title">Désactiver l\'avertissement de volume de sécurité</string>
+    <string name="feat_safe_volume_desc">Supprimer les dialogues à volume élevé</string>
 </resources>
