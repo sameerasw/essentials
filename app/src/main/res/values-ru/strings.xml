@@ -614,7 +614,7 @@
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Заморозка</string>
-    <string name="tab_freeze_title">Заморожено</string>
+    <string name="tab_freeze_title">Заморозка</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_apps">Приложения</string>
     <string name="tab_freeze_subtitle">Отключенные приложения</string>
@@ -1562,4 +1562,6 @@
     <string name="watch_call_sync_desc">Синхронизируйте и управляйте звонками через часы</string>
     <string name="watch_notif_sync_choose_apps">Вы берете приложения</string>
     <string name="watch_notif_sync_choose_apps_desc">Только выбранные приложения будут синхронизированы с часами</string>
+    <string name="setting_location_reached_full_screen_alarm_title">Будильник на весь экран</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Проигрывать мелодию будильника и показывать на весь экран по прибытии</string>
 </resources>
