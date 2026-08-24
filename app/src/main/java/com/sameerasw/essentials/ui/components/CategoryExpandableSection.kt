@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -60,7 +61,6 @@ fun CategoryExpandableSection(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
             modifier =
@@ -70,7 +70,8 @@ fun CategoryExpandableSection(
                     .clickable {
                         HapticUtil.performUIHaptic(view)
                         onToggleExpand()
-                    }.padding(horizontal = 12.dp, vertical = 8.dp),
+                    }
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -115,8 +116,9 @@ fun CategoryExpandableSection(
             visible = isExpanded,
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
+            modifier = Modifier.clip(RoundedCornerShape(24.dp))
         ) {
-            RoundedCardContainer(spacing = 2.dp) {
+            RoundedCardContainer(modifier = Modifier.padding(top = 8.dp)) {
                 content()
             }
         }
