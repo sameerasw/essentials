@@ -33,6 +33,7 @@ import com.sameerasw.essentials.ui.core.pickers.AlbumArtModePicker
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,10 +64,7 @@ fun EssentialsOnDisplaySettingsUI(
                         dependentFeatures = listOf(R.string.feat_essentials_on_display_title),
                         actionLabel = R.string.perm_action_enable,
                         action = {
-                            val intent =
-                                android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-                            context.startActivity(intent)
+                            PermissionUtils.openAccessibilitySettings(context)
                         },
                         isGranted = isAccessibilityEnabled,
                     ),

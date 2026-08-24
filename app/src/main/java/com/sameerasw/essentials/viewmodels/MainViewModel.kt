@@ -251,6 +251,14 @@ class MainViewModel : ViewModel() {
     val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
     val appLockAutoLockDelayIndex = mutableIntStateOf(0)
+    val isConsciousGateEnabled = mutableStateOf(false)
+    val consciousGateDelaySeconds = mutableIntStateOf(5)
+    val consciousGateReappearMinutes = mutableIntStateOf(0)
+    val consciousGateIconName = mutableStateOf("rounded_pause_24")
+    val consciousGateTitle = mutableStateOf("")
+    val consciousGateMessage = mutableStateOf("")
+    val consciousGateCountdownStyle =
+        mutableStateOf(com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle.CIRCULAR_WAVY)
     val isUseUsageAccess = mutableStateOf(false)
     val isFreezeWhenLockedEnabled = mutableStateOf(false)
     val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
@@ -1780,6 +1788,14 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED)
         appLockAutoLockDelayIndex.intValue =
             settingsRepository.getInt(SettingsRepository.KEY_APP_LOCK_AUTO_LOCK_DELAY_INDEX, 0)
+        isConsciousGateEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_CONSCIOUS_GATE_ENABLED)
+        consciousGateDelaySeconds.intValue = settingsRepository.getConsciousGateDelaySeconds()
+        consciousGateReappearMinutes.intValue = settingsRepository.getConsciousGateReappearMinutes()
+        consciousGateIconName.value = settingsRepository.getConsciousGateIconName()
+        consciousGateTitle.value = settingsRepository.getConsciousGateTitle(context)
+        consciousGateMessage.value = settingsRepository.getConsciousGateMessage(context)
+        consciousGateCountdownStyle.value = settingsRepository.getConsciousGateCountdownStyle()
         isFreezeWhenLockedEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED)
         isFreezeDontFreezeActiveAppsEnabled.value =
@@ -4075,6 +4091,51 @@ class MainViewModel : ViewModel() {
     }
 
     /**
+     * Executes the set conscious gate enabled operation.
+     *
+     * @param enabled [Boolean] Target enabled.
+     * @param context [Context] Target context.
+     */
+    fun setConsciousGateEnabled(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        isConsciousGateEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_CONSCIOUS_GATE_ENABLED, enabled)
+        updateAppDetectionService(context)
+    }
+
+    fun setConsciousGateDelaySeconds(seconds: Int) {
+        consciousGateDelaySeconds.intValue = seconds
+        settingsRepository.setConsciousGateDelaySeconds(seconds)
+    }
+
+    fun setConsciousGateReappearMinutes(minutes: Int) {
+        consciousGateReappearMinutes.intValue = minutes
+        settingsRepository.setConsciousGateReappearMinutes(minutes)
+    }
+
+    fun setConsciousGateIconName(iconName: String) {
+        consciousGateIconName.value = iconName
+        settingsRepository.setConsciousGateIconName(iconName)
+    }
+
+    fun setConsciousGateTitle(title: String) {
+        consciousGateTitle.value = title
+        settingsRepository.setConsciousGateTitle(title)
+    }
+
+    fun setConsciousGateMessage(message: String) {
+        consciousGateMessage.value = message
+        settingsRepository.setConsciousGateMessage(message)
+    }
+
+    fun setConsciousGateCountdownStyle(style: com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle) {
+        consciousGateCountdownStyle.value = style
+        settingsRepository.setConsciousGateCountdownStyle(style)
+    }
+
+    /**
      * Executes the set use usage access operation.
      *
      * @param enabled [Boolean] Target enabled.
@@ -5916,6 +5977,24 @@ class MainViewModel : ViewModel() {
         enabled: Boolean,
     ) {
         settingsRepository.updateAppLockAppSelection(packageName, enabled)
+    }
+
+    // Conscious Gate App Selection Methods
+    fun saveConsciousGateSelectedApps(
+        context: Context,
+        apps: List<AppSelection>,
+    ) {
+        settingsRepository.saveConsciousGateSelectedApps(apps)
+    }
+
+    fun loadConsciousGateSelectedApps(context: Context): List<AppSelection> = settingsRepository.loadConsciousGateSelectedApps()
+
+    fun updateConsciousGateAppEnabled(
+        context: Context,
+        packageName: String,
+        enabled: Boolean,
+    ) {
+        settingsRepository.updateConsciousGateAppSelection(packageName, enabled)
     }
 
     // Freeze App Selection Methods

@@ -113,6 +113,12 @@ class AppFlowHandler(
         private set
     private var currentUsageStatsPackage: String? = null
 
+    // Conscious Gate State
+    private var gatingPackage: String? = null
+    private var lastGateRequestTime: Long = 0
+    private val confirmedGatePackages = mutableMapOf<String, Long>()
+    private val pendingReappearRunnables = mutableMapOf<String, Runnable>()
+
     // App Automation State
     private val activeAppAutomationIds = mutableSetOf<String>()
 
@@ -142,11 +148,17 @@ class AppFlowHandler(
             if (oldPackage != null && oldPackage != packageName) {
                 lastLeaveTimes[oldPackage] = System.currentTimeMillis()
                 checkShutUpRestore(oldPackage, packageName)
+                confirmedGatePackages.remove(oldPackage)
+                pendingReappearRunnables.remove(oldPackage)?.let { handler.removeCallbacks(it) }
             }
             if (packageName != context.packageName && packageName != lockingPackage) {
                 lockingPackage = null
             }
+            if (packageName != context.packageName && packageName != gatingPackage) {
+                gatingPackage = null
+            }
             checkAppLock(packageName)
+            checkConsciousGate(packageName)
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
@@ -232,6 +244,91 @@ class AppFlowHandler(
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 }
             context.startActivity(intent)
+        }
+    }
+
+    private fun checkConsciousGate(packageName: String) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("conscious_gate_enabled", false)
+        if (!isEnabled) return
+
+        if (packageName == context.packageName) {
+            return
+        }
+
+        val json = prefs.getString("conscious_gate_selected_apps", null)
+        val selectedApps: List<AppSelection> =
+            if (json != null) {
+                try {
+                    Gson().fromJson(json, Array<AppSelection>::class.java).toList()
+                } catch (_: Exception) {
+                    emptyList()
+                }
+            } else {
+                emptyList()
+            }
+
+        val isGated = selectedApps.find { it.packageName == packageName }?.isEnabled ?: false
+        if (!isGated) return
+
+        if (confirmedGatePackages.containsKey(packageName)) {
+            // Already confirmed for this continuous session; the reappear timer (if any)
+            // is scheduled separately from onConsciousGateConfirmed.
+            return
+        }
+
+        val now = System.currentTimeMillis()
+        if (packageName == gatingPackage && now - lastGateRequestTime < 1500) {
+            return
+        }
+
+        gatingPackage = packageName
+        lastGateRequestTime = now
+
+        val delaySeconds = prefs.getInt("conscious_gate_delay_seconds", 5)
+        val iconName = prefs.getString("conscious_gate_icon_name", null) ?: "rounded_pause_24"
+        val title = prefs.getString("conscious_gate_title", null)
+        val message = prefs.getString("conscious_gate_message", null)
+        val countdownStyle = prefs.getString("conscious_gate_countdown_style", null) ?: "CIRCULAR_WAVY"
+
+        Log.d("ConsciousGate", "App $packageName is gated and not confirmed. Showing pause screen.")
+        val intent =
+            Intent().apply {
+                component = ComponentName(context, "com.sameerasw.essentials.ui.activities.ConsciousGateActivity")
+                putExtra("package_to_gate", packageName)
+                putExtra("delay_seconds", delaySeconds)
+                putExtra("icon_name", iconName)
+                title?.let { putExtra("title", it) }
+                message?.let { putExtra("message", it) }
+                putExtra("countdown_style", countdownStyle)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            }
+        context.startActivity(intent)
+    }
+
+    fun onConsciousGateConfirmed(packageName: String) {
+        confirmedGatePackages[packageName] = System.currentTimeMillis()
+        if (packageName == gatingPackage) {
+            gatingPackage = null
+        }
+
+        pendingReappearRunnables.remove(packageName)?.let { handler.removeCallbacks(it) }
+
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val reappearMinutes = prefs.getInt("conscious_gate_reappear_minutes", 0)
+        if (reappearMinutes > 0) {
+            val runnable =
+                Runnable {
+                    pendingReappearRunnables.remove(packageName)
+                    if (currentPackage == packageName) {
+                        confirmedGatePackages.remove(packageName)
+                        checkConsciousGate(packageName)
+                    } else {
+                        confirmedGatePackages.remove(packageName)
+                    }
+                }
+            pendingReappearRunnables[packageName] = runnable
+            handler.postDelayed(runnable, reappearMinutes * 60 * 1000L)
         }
     }
 

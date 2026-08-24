@@ -151,6 +151,21 @@ object PermissionUtils {
      * @param context [Context] Target context.
      */
     fun openAccessibilitySettings(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                // ACTION_ACCESSIBILITY_DETAILS_SETTINGS / EXTRA_ACCESSIBILITY_COMPONENT_NAME are
+                // hidden from the public SDK stub (no compile-time constants), but the platform
+                // still honors these literal action/extra strings from third-party callers on API 31+.
+                val componentName = ComponentName(context, ScreenOffAccessibilityService::class.java)
+                val intent = Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS")
+                intent.putExtra("android.provider.extra.ACCESSIBILITY_COMPONENT_NAME", componentName.flattenToString())
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                return
+            } catch (e: Exception) {
+                // Fall through to the generic accessibility list below.
+            }
+        }
         try {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

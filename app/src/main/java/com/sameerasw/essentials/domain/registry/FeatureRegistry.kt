@@ -1455,6 +1455,65 @@ object FeatureRegistry {
                 ) = viewModel.setAppLockEnabled(enabled, context)
             },
             object : Feature(
+                id = "Conscious gate",
+                title = R.string.feat_conscious_gate_title,
+                iconRes = R.drawable.rounded_pause_24,
+                category = R.string.cat_utils,
+                description = R.string.feat_conscious_gate_desc,
+                aboutDescription = R.string.about_desc_conscious_gate,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_conscious_gate_enable_title,
+                            R.string.search_conscious_gate_enable_desc,
+                            "conscious_gate_enabled",
+                            R.array.keywords_privacy,
+                        ),
+                        SearchSetting(
+                            R.string.search_conscious_gate_pick_title,
+                            R.string.search_conscious_gate_pick_desc,
+                            "conscious_gate_selected_apps",
+                            R.array.keywords_selection,
+                        ),
+                        SearchSetting(
+                            R.string.search_conscious_gate_delay_title,
+                            R.string.search_conscious_gate_delay_desc,
+                            "conscious_gate_delay_seconds",
+                        ),
+                    ),
+            ) {
+                override val permissionKeys: List<String>
+                    get() =
+                        if (com.sameerasw.essentials.data.repository
+                                .SettingsRepository(
+                                    EssentialsApp.context,
+                                ).getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
+                        ) {
+                            listOf("USAGE_STATS", "ACCESSIBILITY")
+                        } else {
+                            listOf("ACCESSIBILITY")
+                        }
+
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isConsciousGateEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = (
+                    if (viewModel.isUseUsageAccess.value) {
+                        viewModel.isUsageStatsPermissionGranted.value
+                    } else {
+                        viewModel.isAccessibilityEnabled.value
+                    }
+                )
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setConsciousGateEnabled(enabled, context)
+            },
+            object : Feature(
                 id = "Shut-Up!",
                 title = R.string.feat_shut_up_title,
                 iconRes = R.drawable.rounded_domino_mask_24,

@@ -18,6 +18,7 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppTag
+import com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
@@ -222,6 +223,15 @@ class SettingsRepository(
         const val KEY_APP_LOCK_ENABLED = "app_lock_enabled"
         const val KEY_APP_LOCK_SELECTED_APPS = "app_lock_selected_apps"
         const val KEY_APP_LOCK_AUTO_LOCK_DELAY_INDEX = "app_lock_auto_lock_delay_index"
+
+        const val KEY_CONSCIOUS_GATE_ENABLED = "conscious_gate_enabled"
+        const val KEY_CONSCIOUS_GATE_SELECTED_APPS = "conscious_gate_selected_apps"
+        const val KEY_CONSCIOUS_GATE_DELAY_SECONDS = "conscious_gate_delay_seconds"
+        const val KEY_CONSCIOUS_GATE_REAPPEAR_MINUTES = "conscious_gate_reappear_minutes"
+        const val KEY_CONSCIOUS_GATE_ICON_NAME = "conscious_gate_icon_name"
+        const val KEY_CONSCIOUS_GATE_TITLE = "conscious_gate_title"
+        const val KEY_CONSCIOUS_GATE_MESSAGE = "conscious_gate_message"
+        const val KEY_CONSCIOUS_GATE_COUNTDOWN_STYLE = "conscious_gate_countdown_style"
         const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
@@ -939,6 +949,63 @@ class SettingsRepository(
         packageName: String,
         enabled: Boolean,
     ) = updateAppSelection(KEY_APP_LOCK_SELECTED_APPS, packageName, enabled)
+
+    /**
+     * Executes the load conscious gate selected apps operation.
+     */
+    fun loadConsciousGateSelectedApps() = loadAppSelection(KEY_CONSCIOUS_GATE_SELECTED_APPS)
+
+    /**
+     * Executes the save conscious gate selected apps operation.
+     *
+     * @param apps [List<AppSelection>] Target apps.
+     */
+    fun saveConsciousGateSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_CONSCIOUS_GATE_SELECTED_APPS, apps)
+
+    /**
+     * Executes the update conscious gate app selection operation.
+     *
+     * @param packageName [String] Target package name.
+     * @param enabled [Boolean] Target enabled.
+     */
+    fun updateConsciousGateAppSelection(
+        packageName: String,
+        enabled: Boolean,
+    ) = updateAppSelection(KEY_CONSCIOUS_GATE_SELECTED_APPS, packageName, enabled)
+
+    fun getConsciousGateDelaySeconds(): Int = prefs.getInt(KEY_CONSCIOUS_GATE_DELAY_SECONDS, 5)
+
+    fun setConsciousGateDelaySeconds(seconds: Int) = putInt(KEY_CONSCIOUS_GATE_DELAY_SECONDS, seconds)
+
+    fun getConsciousGateReappearMinutes(): Int = prefs.getInt(KEY_CONSCIOUS_GATE_REAPPEAR_MINUTES, 0)
+
+    fun setConsciousGateReappearMinutes(minutes: Int) = putInt(KEY_CONSCIOUS_GATE_REAPPEAR_MINUTES, minutes)
+
+    fun getConsciousGateIconName(): String = prefs.getString(KEY_CONSCIOUS_GATE_ICON_NAME, "rounded_pause_24") ?: "rounded_pause_24"
+
+    fun setConsciousGateIconName(iconName: String) = putString(KEY_CONSCIOUS_GATE_ICON_NAME, iconName)
+
+    fun getConsciousGateTitle(context: Context = this.context): String =
+        prefs.getString(KEY_CONSCIOUS_GATE_TITLE, null) ?: context.getString(com.sameerasw.essentials.R.string.conscious_gate_default_title)
+
+    fun setConsciousGateTitle(title: String) = putString(KEY_CONSCIOUS_GATE_TITLE, title)
+
+    fun getConsciousGateMessage(context: Context = this.context): String =
+        prefs.getString(KEY_CONSCIOUS_GATE_MESSAGE, null) ?: context.getString(com.sameerasw.essentials.R.string.conscious_gate_default_message)
+
+    fun setConsciousGateMessage(message: String) = putString(KEY_CONSCIOUS_GATE_MESSAGE, message)
+
+    fun getConsciousGateCountdownStyle(): ConsciousGateCountdownStyle {
+        val styleName =
+            prefs.getString(KEY_CONSCIOUS_GATE_COUNTDOWN_STYLE, ConsciousGateCountdownStyle.CIRCULAR_WAVY.name)
+        return try {
+            ConsciousGateCountdownStyle.valueOf(styleName ?: ConsciousGateCountdownStyle.CIRCULAR_WAVY.name)
+        } catch (e: Exception) {
+            ConsciousGateCountdownStyle.CIRCULAR_WAVY
+        }
+    }
+
+    fun setConsciousGateCountdownStyle(style: ConsciousGateCountdownStyle) = putString(KEY_CONSCIOUS_GATE_COUNTDOWN_STYLE, style.name)
 
     /**
      * Executes the load freeze selected apps operation.

@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 object PermissionUIHelper {
@@ -39,9 +40,7 @@ object PermissionUIHelper {
                     dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                     actionLabel = if (viewModel.isAccessibilityEnabled.value) R.string.label_enabled else R.string.perm_action_enable,
                     action = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        context.startActivity(intent)
+                        PermissionUtils.openAccessibilitySettings(context)
                     },
                     isGranted = viewModel.isAccessibilityEnabled.value,
                 )
