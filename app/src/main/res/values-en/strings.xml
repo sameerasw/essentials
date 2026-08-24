@@ -1461,4 +1461,7 @@
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+    <string name="action_preview_web">Preview</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_send_to_mac">AirSync</string>
 </resources>

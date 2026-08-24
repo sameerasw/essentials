@@ -38,6 +38,8 @@
     <string name="label_default_tab">Default tab</string>
     <string name="label_open_with">Open</string>
     <string name="label_share_with">Share</string>
+    <string name="label_view_list">List</string>
+    <string name="label_view_grid">Grid</string>
     <string name="label_tools">Tools</string>
     <string name="preview_web_title">Preview Web</string>
     <string name="preview_web_desc">Open link in private floating web preview</string>
@@ -2244,4 +2246,7 @@
     <string name="watch_notif_synced_icons_count">Synced %1$d app icons to watch</string>
     <string name="watch_call_sync_title">Sync calls</string>
     <string name="watch_call_sync_desc">Sync and control calls from your watch</string>
+    <string name="action_preview_web">Preview</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_send_to_mac">AirSync</string>
 </resources>

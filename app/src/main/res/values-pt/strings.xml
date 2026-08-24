@@ -687,7 +687,7 @@
     <string name="label_app_language">Linguagem</string>
     <string name="label_haptic_feedback">Feedback tátil</string>
     <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Procurar por atualizações automaticamente</string>
+    <string name="label_auto_check_updates">Procurar por atualizações </string>
     <string name="desc_auto_check_updates">Procurar por atualização no início do aplicativo</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>

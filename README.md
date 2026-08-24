@@ -137,6 +137,7 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 - [chalda-pnuzig/emojis.json](https://github.com/chalda-pnuzig/emojis.json) - Keyboard emojis
 - [xav-ie/generate-kaomoji](https://github.com/xav-ie/generate-kaomoji) - Keyboard kaomojis
 - [TebbeUbben/ChargeQuickTile](https://github.com/TebbeUbben/ChargeQuickTile) - Pixel charging QS
+- Link shortener by [@Balajitechlabs](https://github.com/Balajitechlabs)
 
 # Stars <3
 

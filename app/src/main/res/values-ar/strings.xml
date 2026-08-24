@@ -554,7 +554,7 @@
     <string name="label_wallpaper_auto_update">تحديث تلقائي</string>
     <string name="label_wallpaper_auto_update_desc">يتحقق مرتين يومياً من خلفية جديدة في جدول خلفي</string>
     <string name="label_clear_custom_videos">مسح الفيديوهات المخصصة</string>
-    <string name="feat_always_on_display_title">Always On Display</string>
+    <string name="feat_always_on_display_title">عرض الشاشة الدائم</string>
     <string name="feat_always_on_display_desc">إظهار الوقت والمعلومات أثناء إيقاف تشغيل الشاشة</string>
     <string name="feat_calendar_sync_title">مزامنة التقويم</string>
     <string name="feat_calendar_sync_desc">مزامنة تقويم هاتفك مع ساعتك</string>
@@ -816,7 +816,7 @@
     <string name="preferences_desc">قم بضبط بعض الإعدادات الأساسية للبدء.</string>
     <string name="label_app_settings">إعدادات التطبيق</string>
     <string name="label_app_language">اللغة</string>
-    <string name="label_haptic_feedback">الاهتزاز</string>
+    <string name="label_haptic_feedback">اهتزاز ردود الفعل</string>
     <string name="label_updates">التحديثات</string>
     <string name="label_auto_check_updates">التحقق التلقائي من التحديثات</string>
     <string name="desc_auto_check_updates">التحقق من التحديثات عند فتح التطبيق</string>
@@ -2085,4 +2085,10 @@
     <string name="watch_notif_synced_icons_count">تمت مزامنة %1$d أيقونة تطبيق مع الساعة</string>
     <string name="watch_call_sync_title">مزامنة المكالمات</string>
     <string name="watch_call_sync_desc">مزامنة حالة المكالمات مع ساعتك</string>
+    <string name="smart_pixels_disable_on_cast_title">تعطيل البكسلات الذكية أثناء البث</string>
+    <string name="smart_pixels_disable_on_cast_desc">إيقاف عرض شبكة البكسل تلقائيًا أثناء عرض الشاشة أو تسجيلها</string>
+    <string name="feat_sim_names_desc">إعادة تسمية اسم عرض شركة الاتصالات لشريحة الSIM</string>
+    <string name="feat_sim_names_title">اسم الSIM</string>
+    <string name="setting_location_reached_full_screen_alarm_title">منبه ملء الشاشة</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">تشغيل نغمة رنين المنبه وعرض تنبيه ملء الشاشة عند الوصول</string>
 </resources>

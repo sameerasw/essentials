@@ -167,7 +167,7 @@
     <string name="perm_notif_listener_desc_freeze">정지를 방지하기 위해 재생 중인 미디어 및 활성 알림을 감지하는 데 필요합니다.</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">앱 동결</string>
-    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_suspend">앱 정지</string>
     <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">화면이 꺼진 경우에만 표시</string>
@@ -451,8 +451,8 @@
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
     <string name="watch_connected_status">Connected</string>
     <string name="watch_unknown_name">Unknown Watch</string>
-    <string name="watermark_style_overlay">씌우다</string>
-    <string name="watermark_style_frame">액자</string>
+    <string name="watermark_style_overlay">오버레이</string>
+    <string name="watermark_style_frame">프레임</string>
     <string name="watermark_show_brand">장치 브랜드</string>
     <string name="watermark_show_exif">EXIF 데이터</string>
     <string name="watermark_pick_image">이미지 선택</string>
@@ -688,7 +688,7 @@
     <string name="label_haptic_feedback">햅틱 피드백</string>
     <string name="label_updates">Updates</string>
     <string name="label_auto_check_updates">업데이트 자동 확인</string>
-    <string name="desc_auto_check_updates">앱 시작 시 업데이트 확인</string>
+    <string name="desc_auto_check_updates">앱 실행 시 업데이트 확인</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
@@ -1557,4 +1557,5 @@
     <string name="feat_wireless_display_certification_desc">무선 디스플레이 인증 옵션 표시</string>
     <string name="freeze_tag_color_coded_title">태그 색 코드</string>
     <string name="freeze_tag_color_coded_desc">앱 목록에서 태그 컬러 표시</string>
+    <string name="setting_enable_unsupported_features_desc">기본적으로 비활성화된 기기에 따라 다른 설정 보이기</string>
 </resources>

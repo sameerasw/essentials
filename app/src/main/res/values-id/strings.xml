@@ -17,7 +17,7 @@ Sebuah ikon praktis untuk mengubah mode dering tanpa menggunakan tombol volume a
     <string name="about_desc_notification_lighting">Notification Lighting menambahkan efek pencahayaan tepi yang indah saat Anda menerima notifikasi.
 
 Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungsi bahkan saat layar mati (tergantung OEM) atau berada di atas aplikasi yang sedang Anda gunakan. Pilih aplikasi, prioritas notifikasi, atau perilaku apa yang seharusnya dipicu dari kontrol yang tersedia. Jika OEM Anda tidak mendukung overlay di atas AOD, gunakan opsi Tampilan Ambient yang terdapat di bawah ini.</string>
-    <string name="feat_safe_volume_title">Nonaktifkan peringatan volume aman</string>
+    <string name="feat_safe_volume_title">Matikan peringatan volume aman</string>
     <string name="feat_safe_volume_desc">Redam dialog dengan volume keras.</string>
     <string name="feat_screen_locked_security_title">Keamanan layar terkunci</string>
     <string name="screen_locked_security_desc">Nonaktifkan ubin pengaturan cepat saat perangkat terkunci.</string>
@@ -28,10 +28,10 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="feat_notification_lighting_desc">Lampu indikator menyala untuk notifikasi.</string>
     <string name="flashlight_pulse_title">Denyut cahaya senter</string>
     <string name="feat_flashlight_pulse_desc">Nyalakan senter sebentar untuk menerima notifikasi.</string>
-    <string name="feat_snooze_notifications_title">Tunda notifikasi sistem</string>
+    <string name="feat_snooze_notifications_title">Tunda notifikasi sistem </string>
     <string name="feat_snooze_notifications_desc">Tunda notifikasi tetap</string>
     <string name="perm_notif_listener_title">Pendengar Notifikasi</string>
-    <string name="feat_notification_snoozing_title">Penunda notifikasi </string>
+    <string name="feat_notification_snoozing_title">Penundaan notifikasi </string>
     <string name="feat_notification_snoozing_desc">Jadwalkan ulang notifikasi </string>
     <string name="feat_battery_notification_title">Pemberitahuan baterai</string>
     <string name="feat_battery_notification_desc">Notifikasi status baterai yang terus-menerus</string>
@@ -53,4 +53,44 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="cat_accessibility">Aksesibilitas</string>
     <string name="feat_auto_accessibility_title">Aksesibilitas otomatis </string>
     <string name="feat_auto_accessibility_desc">Secara otomatis memberikan izin aksesibilitas saat aplikasi diluncurkan jika izin tersebut hilang menggunakan WRITE_SECURE_SETTINGS.</string>
+    <string name="label_device_battery">Baterai </string>
+    <string name="label_device_ram">RAM</string>
+    <string name="feat_networks_title">Jaringan</string>
+    <string name="feat_networks_desc">Kontrol radio dan jaringan </string>
+    <string name="feat_network_download_rate_limit_title">Batas kecepatan unduhan jaringan</string>
+    <string name="feat_network_download_rate_limit_desc">Batasi kecepatan unduhan di seluruh sistem.</string>
+    <string name="feat_mobile_data_always_on_title">Selalu hidupkan data seluler </string>
+    <string name="feat_mobile_data_always_on_desc">Biarkan data seluler tetap aktif meskipun Wi-Fi terhubung.</string>
+    <string name="feat_wireless_display_certification_title">Sertifikasi tampilan nirkabel</string>
+    <string name="feat_wireless_display_certification_desc">Tampilkan opsi untuk sertifikasi tampilan nirkabel</string>
+    <string name="feat_sim_names_title">Nama SIM</string>
+    <string name="feat_sim_names_desc">Ubah nama tampilan operator untuk kartu SIM aktif.</string>
+    <string name="feat_statusbar_icons_title">Ikon statusbar</string>
+    <string name="feat_always_on_display_title">Always on Display </string>
+    <string name="cat_navigation">Navigasi</string>
+    <string name="feat_caffeinate_desc">Biarkan layar tetap terbangun</string>
+    <string name="feat_smart_pixels_title">Pixel pintar </string>
+    <string name="feat_smart_pixels_desc">Matikan piksel untuk menghemat daya.</string>
+    <string name="feat_pocket_mode_desc">Cegah sentuhan yang tidak disengaja saat berada di dalam saku.</string>
+    <string name="caffeinate_battery_optimization_title">Abaikan pengoptimalan baterai</string>
+    <string name="caffeinate_abort_screen_off_title">Batalkan dengan layar mati</string>
+    <string name="caffeinate_skip_countdown_desc">Mulai Caffeinate segera</string>
+    <string name="about_desc_lock_screen_clock">Ubah gaya jam layar kunci di Pixel. Pilih dari tampilan jam yang tersedia yang disediakan oleh UI Sistem. Beberapa gaya lama mungkin tidak tersedia.</string>
+    <string name="icon_cast">Proyeksi</string>
+    <string name="search_smart_wifi_title">WiFi pintar</string>
+    <string name="stb_privacy_chip">Penggunaan chip kamera dan mikrofon</string>
+    <string name="hide_clock_desc">Hapus sepenuhnya jam dari bilah status.</string>
+    <string name="hide_notification_icons_desc">Sembunyikan semua ikon notifikasi masuk</string>
+    <string name="notification_lighting_h_pos_title">Posisi horizontal </string>
+    <string name="notification_lighting_v_pos_title">Posisi vertikal</string>
+    <string name="notification_lighting_scale_title">Skala</string>
+    <string name="notification_lighting_duration_title">Durasi</string>
+    <string name="ambient_display_desc">Bangunkan layar dan munculkan cahaya</string>
+    <string name="ambient_show_lock_screen_desc">Bukan layar hitam</string>
+    <string name="feat_screen_off_widget_title">Widget layar mati</string>
+    <string name="feat_screen_off_widget_desc">Widget tak terlihat untuk mematikan layar</string>
+    <string name="feat_pixel_searchbar_desc">Atur Essentials sebagai penyedia pencarian default untuk bilah pencarian layar beranda di Pixel Launcher.</string>
+    <string name="show_bluetooth_devices">Perlihatkan perangkat bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Menampilkan level baterai perangkat Bluetooth yang terhubung.</string>
+    <string name="widget_background_summary">Tampilkan latar belakang widget</string>
 </resources>
