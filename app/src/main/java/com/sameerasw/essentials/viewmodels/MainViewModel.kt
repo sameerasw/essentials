@@ -379,6 +379,8 @@ class MainViewModel : ViewModel() {
     private var workflowPollingJob: kotlinx.coroutines.Job? = null
     val gitHubUser = mutableStateOf<com.sameerasw.essentials.domain.model.github.GitHubUser?>(null)
 
+    val disableLinkPreview = mutableStateOf(false)
+
     private val contentObserver =
         object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(
@@ -1106,6 +1108,15 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun toggleDisableLinkPreview() {
+        val status = !disableLinkPreview.value
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_DISABLE_LINK_PREVIEW,
+            status
+        )
+        disableLinkPreview.value = status
+    }
+
     /**
      * Executes the check operation.
      *
@@ -1116,6 +1127,8 @@ class MainViewModel : ViewModel() {
         settingsRepository = SettingsRepository(context)
         updateRepository = UpdateRepository()
         gitHubUser.value = settingsRepository.getGitHubUser()
+
+        disableLinkPreview.value = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_LINK_PREVIEW)
 
         // Sync with system per-app language settings
         val currentLocales = AppCompatDelegate.getApplicationLocales()

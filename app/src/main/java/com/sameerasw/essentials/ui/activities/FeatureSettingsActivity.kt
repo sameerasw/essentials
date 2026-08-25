@@ -62,6 +62,7 @@ import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.features.apps.LinkActionsSettingsUI
 import com.sameerasw.essentials.ui.features.battery.BatteriesSettingsUI
 import com.sameerasw.essentials.ui.features.security.AppLockSettingsUI
 import com.sameerasw.essentials.ui.features.system.AlwaysOnDisplaySettingsUI
@@ -142,8 +143,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
         val featureObj = FeatureRegistry.ALL_FEATURES.find { it.id == featureId }
         val highlightSetting = intent.getStringExtra("highlight_setting")
 
-        if (featureId == "Link actions" || featureId == "URL Shortener") {
-            val isShortenerDirect = featureId == "URL Shortener"
+        if (featureId == "URL Shortener") {
             setContent {
                 val viewModel: MainViewModel = viewModel()
                 val context = LocalContext.current
@@ -157,8 +157,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         onFinish = { finish() },
                         modifier = Modifier.fillMaxSize(),
                         demo = false,
-                        initialTab = if (isShortenerDirect) 2 else 0,
-                        initialOpenShorten = isShortenerDirect,
+                        initialTab = 2,
+                        initialOpenShorten = true,
                     )
                 }
             }
@@ -1209,6 +1209,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             onSelectionChange = { standbyAppsSelectedPackages = it },
                                             showMoveSheet = isStandbyMoveSheetVisible,
                                             onShowMoveSheetChange = { isStandbyMoveSheetVisible = it },
+                                        )
+                                    }
+
+                                    "Link actions" -> {
+                                        LinkActionsSettingsUI(
+                                            viewModel = viewModel
                                         )
                                     }
                                 }

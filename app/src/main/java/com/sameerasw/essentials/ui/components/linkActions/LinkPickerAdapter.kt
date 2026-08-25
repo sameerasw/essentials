@@ -20,7 +20,6 @@ import android.net.Uri
 import android.text.Html
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -32,20 +31,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,15 +51,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -87,12 +77,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -102,14 +90,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -120,8 +103,6 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
-import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -129,7 +110,6 @@ import com.sameerasw.essentials.utils.WindowingUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -201,6 +181,7 @@ private fun cleanTrackingParams(uri: Uri): Uri {
 @Composable
 fun LinkPickerScreen(
     uri: Uri,
+    disableLinkPreview: Boolean = false,
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
     demo: Boolean = false,
@@ -223,7 +204,7 @@ fun LinkPickerScreen(
 
     // Preview data state
     var linkPreviewData by remember { mutableStateOf<LinkPreviewData?>(null) }
-    var isLoadingPreview by remember { mutableStateOf(true) }
+    var isLoadingPreview by remember { mutableStateOf(!disableLinkPreview) }
 
     // App lists
     var baseOpenWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
@@ -234,7 +215,7 @@ fun LinkPickerScreen(
 
     LaunchedEffect(currentUri) {
         isLoadingApps = true
-        isLoadingPreview = true
+        isLoadingPreview = !disableLinkPreview
         linkPreviewData = null
 
         withContext(Dispatchers.IO) {
@@ -252,7 +233,7 @@ fun LinkPickerScreen(
             }
 
             // Fetch preview data asynchronously and smoothly update when ready
-            val preview = fetchLinkPreviewData(currentUri)
+            val preview = if (!disableLinkPreview) fetchLinkPreviewData(currentUri) else null
             withContext(Dispatchers.Main) {
                 linkPreviewData = preview
                 isLoadingPreview = false
@@ -451,66 +432,88 @@ fun LinkPickerScreen(
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .size(40.dp)
-                                        .background(
-                                            MaterialTheme.colorScheme.primaryContainer,
-                                            RoundedCornerShape(12.dp),
-                                        ),
-                                contentAlignment = Alignment.Center,
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Crossfade(
-                                    targetState = if (isLoadingPreview) "loading" else (linkPreviewData?.faviconUrl ?: "icon"),
-                                    label = "FaviconCrossfade",
-                                ) { state ->
-                                    if (state == "loading") {
-                                        LoadingIndicator(
-                                            modifier = Modifier.size(20.dp),
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        )
-                                    } else if (state != "icon" && !linkPreviewData?.faviconUrl.isNullOrBlank()) {
-                                        AsyncImage(
-                                            model =
-                                                ImageRequest.Builder(context)
-                                                    .data(linkPreviewData?.faviconUrl)
-                                                    .crossfade(true)
-                                                    .build(),
-                                            contentDescription = "Website Icon",
-                                            modifier =
-                                                Modifier
-                                                    .size(24.dp)
-                                                    .clip(RoundedCornerShape(6.dp)),
-                                        )
-                                    } else {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.rounded_link_24),
-                                            contentDescription = "Link Icon",
-                                            modifier = Modifier.size(22.dp),
-                                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        )
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .size(40.dp)
+                                            .background(
+                                                MaterialTheme.colorScheme.primaryContainer,
+                                                RoundedCornerShape(12.dp),
+                                            ),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Crossfade(
+                                        targetState = if (isLoadingPreview) "loading" else (linkPreviewData?.faviconUrl ?: "icon"),
+                                        label = "FaviconCrossfade",
+                                    ) { state ->
+                                        if (state == "loading") {
+                                            LoadingIndicator(
+                                                modifier = Modifier.size(20.dp),
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            )
+                                        } else if (state != "icon" && !linkPreviewData?.faviconUrl.isNullOrBlank()) {
+                                            AsyncImage(
+                                                model =
+                                                    ImageRequest.Builder(context)
+                                                        .data(linkPreviewData?.faviconUrl)
+                                                        .crossfade(true)
+                                                        .build(),
+                                                contentDescription = "Website Icon",
+                                                modifier =
+                                                    Modifier
+                                                        .size(24.dp)
+                                                        .clip(RoundedCornerShape(6.dp)),
+                                            )
+                                        } else {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_link_24),
+                                                contentDescription = "Link Icon",
+                                                modifier = Modifier.size(22.dp),
+                                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            )
+                                        }
                                     }
+                                }
+
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = domain,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                    Text(
+                                        text = currentUri.toString(),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
                                 }
                             }
 
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = domain,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                                Text(
-                                    text = currentUri.toString(),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis,
+                            // Save it for later
+                            IconButton(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_bookmark_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                 )
                             }
                         }
@@ -636,10 +639,14 @@ fun LinkPickerScreen(
                                 },
                                 shape = RoundedCornerShape(16.dp),
                                 color = MaterialTheme.colorScheme.surfaceBright,
-                                modifier = Modifier.fillMaxSize().maskClip(RoundedCornerShape(16.dp)),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .maskClip(RoundedCornerShape(16.dp)),
                             ) {
                                 Row(
-                                    modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 10.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center,
                                 ) {
@@ -828,7 +835,8 @@ fun LinkPickerScreen(
                             height = topBlurHeightPx,
                             direction = BlurDirection.TOP,
                             showGradientOverlay = false,
-                        ).progressiveBlur(
+                        )
+                        .progressiveBlur(
                             blurRadius = 40f,
                             height = bottomBlurHeightPx,
                             direction = BlurDirection.BOTTOM,

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 
@@ -75,6 +76,7 @@ class LinkPickerActivity : AppCompatActivity() {
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 LinkPickerScreen(
                     uri = uri,
+                    disableLinkPreview = SettingsRepository(context).getBoolean(SettingsRepository.KEY_DISABLE_LINK_PREVIEW), // something is wrong with viewmodel and maybe just loading one setting is better than loading whole viewmodel state...
                     onFinish = { finish() },
                     modifier = Modifier.fillMaxSize(),
                 )
