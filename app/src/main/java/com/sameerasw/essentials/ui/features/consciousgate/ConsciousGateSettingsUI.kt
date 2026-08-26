@@ -50,6 +50,7 @@ import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.viewmodels.PermissionViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -59,6 +60,9 @@ const val CONSCIOUS_GATE_FEATURE_ID = "Conscious gate"
 @Composable
 fun ConsciousGateSettingsUI(
     viewModel: MainViewModel,
+    permissionViewModel: PermissionViewModel =
+        androidx.lifecycle.viewmodel.compose
+            .viewModel(),
     modifier: Modifier = Modifier,
     highlightKey: String? = null,
 ) {
@@ -70,6 +74,11 @@ fun ConsciousGateSettingsUI(
     var isPreviewOpen by remember { mutableStateOf(false) }
 
     val isConsciousGateEnabled by viewModel.isConsciousGateEnabled
+    val isUseUsageAccess by viewModel.isUseUsageAccess
+    val isAccessibilityEnabled by permissionViewModel.isAccessibilityEnabled
+    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
+    val canEnableConsciousGate =
+        if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
     val delaySeconds by viewModel.consciousGateDelaySeconds
     val reappearMinutes by viewModel.consciousGateReappearMinutes
     val iconName by viewModel.consciousGateIconName
@@ -154,6 +163,8 @@ fun ConsciousGateSettingsUI(
                 title = stringResource(R.string.conscious_gate_enable_title),
                 isChecked = isConsciousGateEnabled,
                 onCheckedChange = { enabled -> viewModel.setConsciousGateEnabled(enabled, context) },
+                enabled = canEnableConsciousGate,
+                onDisabledClick = {},
                 modifier = Modifier.highlight(highlightKey == "conscious_gate_enabled"),
             )
 

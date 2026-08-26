@@ -135,13 +135,10 @@
     <string name="conscious_gate_reappear_5min">5 minutes</string>
     <string name="conscious_gate_reappear_10min">10 minutes</string>
     <string name="conscious_gate_reappear_15min">15 minutes</string>
-    <string name="conscious_gate_reappear_30min">30 minutes</string>
-    <string name="conscious_gate_reappear_60min">1 hour</string>
     <string name="conscious_gate_delay_custom_label">Custom seconds</string>
     <string name="conscious_gate_reappear_custom_label">Custom minutes (0 = off)</string>
     <string name="conscious_gate_reappear_minutes_value">%1$d minutes</string>
     <string name="conscious_gate_selected_apps_more_suffix">+%1$d more</string>
-    <string name="conscious_gate_preview_title">Preview</string>
     <string name="conscious_gate_preview_button">Preview conscious gate screen</string>
     <string name="conscious_gate_preview_placeholder_app">a gated app</string>
     <string name="conscious_gate_custom_option_label">Custom</string>
