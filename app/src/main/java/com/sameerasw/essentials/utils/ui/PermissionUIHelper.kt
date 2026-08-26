@@ -272,7 +272,10 @@ object PermissionUIHelper {
                         if (activity != null) {
                             ActivityCompat.requestPermissions(
                                 activity,
-                                arrayOf(android.Manifest.permission.READ_CALENDAR),
+                                arrayOf(
+                                    android.Manifest.permission.READ_CALENDAR,
+                                    android.Manifest.permission.WRITE_CALENDAR,
+                                ),
                                 104,
                             )
                         }

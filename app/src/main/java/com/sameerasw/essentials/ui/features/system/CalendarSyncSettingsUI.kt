@@ -133,7 +133,7 @@ fun CalendarSyncSettingsUI(
                         CalendarSelectionItem(
                             calendar = calendar,
                             isEnabled = isEnabled,
-                            onToggle = { viewModel.toggleCalendarSelection(calendar.id) },
+                            onToggle = { viewModel.toggleCalendarSelection(calendar.id, context) },
                         )
                     }
                 }
@@ -149,39 +149,14 @@ fun CalendarSelectionItem(
     onToggle: () -> Unit,
 ) {
     val view = LocalView.current
-    Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceBright)
-                .clickable(enabled = isEnabled) {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onToggle()
-                }.padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Checkbox(
-            checked = calendar.isSelected,
-            onCheckedChange = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                onToggle()
-            },
-            enabled = isEnabled,
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(
-                text = calendar.name,
-                style = MaterialTheme.typography.bodyLarge,
-                color =
-                    if (isEnabled) {
-                        MaterialTheme.colorScheme.onSurface
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                            alpha = 0.38f,
-                        )
-                    },
-            )
-        }
-    }
+    IconToggleItem(
+        title = calendar.name,
+        iconRes = R.drawable.rounded_calendar_today_24,
+        isChecked = calendar.isSelected,
+        onCheckedChange = {
+            HapticUtil.performVirtualKeyHaptic(view)
+            onToggle()
+        },
+        enabled = isEnabled,
+    )
 }

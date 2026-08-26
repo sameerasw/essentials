@@ -330,16 +330,22 @@ object PermissionUtils {
     }
 
     /**
-     * Executes the has read calendar permission operation.
+     * Executes the has calendar permission check operation.
      *
      * @param context [Context] Target context.
      * @return The resulting Boolean data.
      */
-    fun hasReadCalendarPermission(context: Context): Boolean =
-        androidx.core.content.ContextCompat.checkSelfPermission(
+    fun hasReadCalendarPermission(context: Context): Boolean {
+        val hasRead = androidx.core.content.ContextCompat.checkSelfPermission(
             context,
             android.Manifest.permission.READ_CALENDAR,
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val hasWrite = androidx.core.content.ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.WRITE_CALENDAR,
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        return hasRead && hasWrite
+    }
 
     /**
      * Executes the open notification policy settings operation.

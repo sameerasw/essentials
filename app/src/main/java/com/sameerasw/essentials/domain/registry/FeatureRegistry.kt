@@ -1803,6 +1803,25 @@ object FeatureRegistry {
                 ) {}
             },
             object : Feature(
+                id = "Watchface",
+                title = R.string.watch_watchface_title,
+                iconRes = R.drawable.rounded_watch_24,
+                category = R.string.cat_tools,
+                description = R.string.watch_watchface_desc,
+                aboutDescription = R.string.watch_watchface_desc,
+                parentFeatureId = "Watch",
+                hasMoreSettings = true,
+                showToggle = false,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
                 id = "Notification Sync",
                 title = R.string.watch_notif_sync_title,
                 iconRes = R.drawable.rounded_notification_settings_24,

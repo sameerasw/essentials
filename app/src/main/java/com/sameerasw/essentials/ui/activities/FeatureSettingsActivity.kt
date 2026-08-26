@@ -100,6 +100,7 @@ import com.sameerasw.essentials.ui.features.system.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.features.system.WatchControlsSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchSettingsUI
+import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -672,6 +673,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Watch" ->
                                                     listOf(
                                                         listOf(
+                                                            "Watchface",
+                                                        ),
+                                                        listOf(
                                                             "Notification Sync",
                                                             "Call Sync",
                                                             "Watch Controls",
@@ -763,10 +767,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                                     !isNotificationListenerEnabled
                                                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
                                                             "Calendar Sync" ->
-                                                                androidx.core.content.ContextCompat.checkSelfPermission(
-                                                                    context,
+                                                                arrayOf(
                                                                     android.Manifest.permission.READ_CALENDAR,
-                                                                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                                                                    android.Manifest.permission.WRITE_CALENDAR,
+                                                                ).any {
+                                                                    androidx.core.content.ContextCompat.checkSelfPermission(
+                                                                        context,
+                                                                        it,
+                                                                    ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                                                                }
 
                                                             "Batteries" -> (
                                                                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
@@ -1078,6 +1087,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting,
+                                        )
+                                    }
+
+                                    "Watchface" -> {
+                                        WatchfaceSettingsUI(
+                                            modifier = Modifier.padding(top = 16.dp),
                                         )
                                     }
 
