@@ -8,12 +8,11 @@
  * pause screen.
  */
 
-package com.sameerasw.essentials.ui.features.consciousgate
+package com.sameerasw.essentials.ui.features.consciousgate.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,6 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,32 +42,14 @@ fun ConsciousGateIconPicker(
     onIconSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val icons =
-        listOf(
-            "rounded_favorite_24",
-            "rounded_heart_smile_24",
-            "rounded_ecg_heart_24",
-            "rounded_volunteer_activism_24",
-            "rounded_self_improvement_24",
-            "rounded_health_and_safety_24",
-            "rounded_shield_24",
-            "rounded_wb_sunny_24",
-            "rounded_nightlight_24",
-            "rounded_sentiment_satisfied_24",
-            "rounded_sentiment_very_satisfied_24",
-            "rounded_spa_24",
-            "rounded_eco_24",
-            "rounded_potted_plant_24",
-            "rounded_pause_24",
-            "rounded_timer_24",
-            "rounded_lock_clock_24",
-        )
-
+    val icons = ConsciousGateIcons.OPTIONS
     val carouselState = rememberCarouselState { icons.size }
-    val context = LocalContext.current
     val view = LocalView.current
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    SettingsRowSurface(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+    ) {
         Text(
             text = stringResource(R.string.conscious_gate_icon_picker_label),
             style = MaterialTheme.typography.labelMedium,
@@ -89,10 +69,8 @@ fun ConsciousGateIconPicker(
                     .fillMaxWidth()
                     .height(64.dp),
         ) { index ->
-            val iconName = icons[index]
+            val (iconName, iconResId) = icons[index]
             val isSelected = iconName == selectedIconName
-            val iconResId =
-                context.resources.getIdentifier(iconName, "drawable", context.packageName)
 
             Box(
                 modifier =
@@ -112,7 +90,7 @@ fun ConsciousGateIconPicker(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.rounded_pause_24),
+                    painter = painterResource(id = iconResId),
                     contentDescription = null,
                     tint =
                         if (isSelected) {

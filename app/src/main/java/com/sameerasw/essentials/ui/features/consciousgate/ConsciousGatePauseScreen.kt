@@ -40,12 +40,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle
+import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateCountdown
+import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateHeroAnimation
+import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -250,8 +254,12 @@ private fun ContinueButton(
     isContinueEnabled: Boolean,
     onContinue: () -> Unit,
 ) {
+    val view = LocalView.current
     OutlinedButton(
-        onClick = onContinue,
+        onClick = {
+            HapticUtil.performUIHaptic(view)
+            onContinue()
+        },
         enabled = isContinueEnabled,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.outlinedButtonColors(),
@@ -262,8 +270,12 @@ private fun ContinueButton(
 
 @Composable
 private fun CloseButton(onClose: () -> Unit) {
+    val view = LocalView.current
     Button(
-        onClick = onClose,
+        onClick = {
+            HapticUtil.performUIHaptic(view)
+            onClose()
+        },
         modifier = Modifier.fillMaxWidth(),
     ) {
         Text(stringResource(R.string.conscious_gate_close_button))

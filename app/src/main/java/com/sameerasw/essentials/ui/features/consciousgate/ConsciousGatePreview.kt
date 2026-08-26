@@ -22,9 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle
+import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateIcons
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 
 @Composable
@@ -38,13 +37,7 @@ fun ConsciousGatePreview(
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val iconResId =
-        remember(iconName) {
-            context.resources
-                .getIdentifier(iconName, "drawable", context.packageName)
-                .takeIf { it != 0 } ?: R.drawable.rounded_pause_24
-        }
+    val iconResId = remember(iconName) { ConsciousGateIcons.resolve(iconName) }
 
     val loopSeconds = delaySeconds.coerceIn(1, 30)
     val infiniteTransition = rememberInfiniteTransition(label = "ConsciousGatePreviewProgress")

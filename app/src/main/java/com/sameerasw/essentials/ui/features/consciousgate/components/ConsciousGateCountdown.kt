@@ -8,7 +8,7 @@
  * "Continue" button while the user-configured pause delay elapses.
  */
 
-package com.sameerasw.essentials.ui.features.consciousgate
+package com.sameerasw.essentials.ui.features.consciousgate.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

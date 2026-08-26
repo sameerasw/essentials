@@ -18,6 +18,7 @@ import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
+import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -1455,12 +1456,13 @@ object FeatureRegistry {
                 ) = viewModel.setAppLockEnabled(enabled, context)
             },
             object : Feature(
-                id = "Conscious gate",
+                id = CONSCIOUS_GATE_FEATURE_ID,
                 title = R.string.feat_conscious_gate_title,
                 iconRes = R.drawable.rounded_pause_24,
-                category = R.string.cat_utils,
+                category = R.string.cat_interaction,
                 description = R.string.feat_conscious_gate_desc,
                 aboutDescription = R.string.about_desc_conscious_gate,
+                parentFeatureId = "Input",
                 searchableSettings =
                     listOf(
                         SearchSetting(

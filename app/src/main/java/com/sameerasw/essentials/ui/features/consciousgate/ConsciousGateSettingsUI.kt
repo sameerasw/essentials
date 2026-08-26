@@ -11,15 +11,15 @@
 
 package com.sameerasw.essentials.ui.features.consciousgate
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -43,11 +43,17 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateCountdownStylePicker
+import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateIconPicker
+import com.sameerasw.essentials.ui.features.consciousgate.components.SettingsRowSurface
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
+const val CONSCIOUS_GATE_FEATURE_ID = "Conscious gate"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +63,7 @@ fun ConsciousGateSettingsUI(
     highlightKey: String? = null,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
     var appsReloadTrigger by remember { mutableStateOf(0) }
     var selectedAppLabels by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -174,6 +181,7 @@ fun ConsciousGateSettingsUI(
                     SegmentedDropdownMenuItem(
                         text = { Text(stringResource(R.string.conscious_gate_delay_seconds_value, seconds)) },
                         onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
                             isDelayCustom = false
                             viewModel.setConsciousGateDelaySeconds(seconds)
                         },
@@ -181,12 +189,15 @@ fun ConsciousGateSettingsUI(
                 }
                 SegmentedDropdownMenuItem(
                     text = { Text(customOptionLabel) },
-                    onClick = { isDelayCustom = true },
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        isDelayCustom = true
+                    },
                 )
             }
 
             if (isDelayCustom) {
-                OutlinedTextField(
+                ConsciousGateTextFieldRow(
                     value = customDelayText,
                     onValueChange = { newValue ->
                         val filtered = newValue.filter { it.isDigit() }.take(3)
@@ -195,15 +206,10 @@ fun ConsciousGateSettingsUI(
                             if (seconds in 1..999) viewModel.setConsciousGateDelaySeconds(seconds)
                         }
                     },
-                    label = { Text(stringResource(R.string.conscious_gate_delay_custom_label)) },
+                    label = stringResource(R.string.conscious_gate_delay_custom_label),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     enabled = isConsciousGateEnabled,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                    shape = MaterialTheme.shapes.large,
                 )
             }
 
@@ -219,6 +225,7 @@ fun ConsciousGateSettingsUI(
                     SegmentedDropdownMenuItem(
                         text = { Text(reappearPresetLabels[index]) },
                         onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
                             isReappearCustom = false
                             viewModel.setConsciousGateReappearMinutes(minutes)
                         },
@@ -226,12 +233,15 @@ fun ConsciousGateSettingsUI(
                 }
                 SegmentedDropdownMenuItem(
                     text = { Text(customOptionLabel) },
-                    onClick = { isReappearCustom = true },
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        isReappearCustom = true
+                    },
                 )
             }
 
             if (isReappearCustom) {
-                OutlinedTextField(
+                ConsciousGateTextFieldRow(
                     value = customReappearText,
                     onValueChange = { newValue ->
                         val filtered = newValue.filter { it.isDigit() }.take(4)
@@ -240,15 +250,10 @@ fun ConsciousGateSettingsUI(
                             if (minutes in 0..1440) viewModel.setConsciousGateReappearMinutes(minutes)
                         }
                     },
-                    label = { Text(stringResource(R.string.conscious_gate_reappear_custom_label)) },
+                    label = stringResource(R.string.conscious_gate_reappear_custom_label),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     enabled = isConsciousGateEnabled,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                    shape = MaterialTheme.shapes.large,
                 )
             }
         }
@@ -261,62 +266,54 @@ fun ConsciousGateSettingsUI(
         )
 
         RoundedCardContainer(modifier = Modifier) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+            SettingsRowSurface(
+                modifier = Modifier.highlight(highlightKey == "conscious_gate_countdown_style"),
             ) {
                 Text(
                     text = stringResource(R.string.conscious_gate_countdown_style_title),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
                 )
 
                 ConsciousGateCountdownStylePicker(
                     selectedStyle = countdownStyle,
                     onStyleSelected = { viewModel.setConsciousGateCountdownStyle(it) },
-                    modifier = Modifier.highlight(highlightKey == "conscious_gate_countdown_style"),
-                )
-
-                ConsciousGateIconPicker(
-                    selectedIconName = iconName,
-                    onIconSelected = { viewModel.setConsciousGateIconName(it) },
-                )
-
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { viewModel.setConsciousGateTitle(it) },
-                    label = { Text(stringResource(R.string.conscious_gate_title_label)) },
-                    placeholder = { Text(stringResource(R.string.conscious_gate_default_title)) },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    shape = MaterialTheme.shapes.large,
-                )
-
-                OutlinedTextField(
-                    value = message,
-                    onValueChange = { viewModel.setConsciousGateMessage(it) },
-                    label = { Text(stringResource(R.string.conscious_gate_message_label)) },
-                    placeholder = { Text(stringResource(R.string.conscious_gate_default_message)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.large,
                 )
             }
-        }
 
-        OutlinedButton(
-            onClick = { isPreviewOpen = true },
-            enabled = isConsciousGateEnabled,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.round_play_arrow_24),
-                contentDescription = null,
-                modifier = Modifier.padding(end = 8.dp),
+            ConsciousGateIconPicker(
+                selectedIconName = iconName,
+                onIconSelected = { viewModel.setConsciousGateIconName(it) },
+                modifier = Modifier.fillMaxWidth(),
             )
-            Text(stringResource(R.string.conscious_gate_preview_button))
+
+            ConsciousGateTextFieldRow(
+                value = title,
+                onValueChange = { viewModel.setConsciousGateTitle(it) },
+                label = stringResource(R.string.conscious_gate_title_label),
+                placeholder = stringResource(R.string.conscious_gate_default_title),
+                singleLine = true,
+            )
+
+            ConsciousGateTextFieldRow(
+                value = message,
+                onValueChange = { viewModel.setConsciousGateMessage(it) },
+                label = stringResource(R.string.conscious_gate_message_label),
+                placeholder = stringResource(R.string.conscious_gate_default_message),
+            )
+
+            FeatureCard(
+                title = stringResource(R.string.conscious_gate_preview_button),
+                description = null,
+                iconRes = R.drawable.round_play_arrow_24,
+                isEnabled = isConsciousGateEnabled,
+                showToggle = false,
+                hasMoreSettings = true,
+                onToggle = {},
+                onClick = { isPreviewOpen = true },
+            )
         }
 
         Text(
@@ -361,4 +358,34 @@ fun ConsciousGateSettingsUI(
             )
         }
     }
+}
+
+@Composable
+private fun ConsciousGateTextFieldRow(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    placeholder: String? = null,
+    enabled: Boolean = true,
+    singleLine: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        placeholder = placeholder?.let { { Text(it) } },
+        singleLine = singleLine,
+        enabled = enabled,
+        keyboardOptions = keyboardOptions,
+        shape = MaterialTheme.shapes.large,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceBright,
+                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                ).padding(4.dp),
+    )
 }
