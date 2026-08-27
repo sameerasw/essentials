@@ -1620,4 +1620,20 @@
     <string name="freeze_tag_never_auto_freeze_desc">このタグのアプリは自動フリーズからロックされます</string>
     <string name="freeze_tag_color_coded_title">タグの色をコード化</string>
     <string name="freeze_tag_color_coded_desc">アプリドロワーでタグの色を表示します</string>
+    <string name="feat_sim_names_title">SIMの名前</string>
+    <string name="feat_sim_names_desc">有効なSIMカードの通信事業者表示名を変更する</string>
+    <string name="setting_location_reached_full_screen_alarm_title">フルスクリーンアラー厶</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">到着時にアラーム音を鳴らし、フルスクリーンアラー厶を表示する</string>
+    <string name="watch_watchface_title">ウォッチフェイス</string>
+    <string name="watch_watchface_desc">ウォッチフェイスをカスタマイズする</string>
+    <string name="watch_notif_sync_title">通知を同期</string>
+    <string name="watch_notif_sync_desc">Essentialsランチャーへ</string>
+    <string name="watch_call_sync_title">通話を同期</string>
+    <string name="setting_app_icon_title">アプリアイコン</string>
+    <string name="setting_app_icon_desc">ホーム画面のランチャーアイコンをカスタマイズする</string>
+    <string name="app_icon_legacy">古い</string>
+    <string name="app_icon_default">デフォルト</string>
+    <string name="app_icon_black">ダイナミック</string>
+    <string name="app_icon_gta">代理</string>
+    <string name="app_icon_google">スペクトラム</string>
 </resources>
