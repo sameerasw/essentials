@@ -1636,4 +1636,6 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="feat_sim_names_desc">Anzeigenamen des Mobilfunkanbieters für aktive SIM-Karten anpassen </string>
     <string name="setting_location_reached_full_screen_alarm_title">Vollbild-Alarm</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Bei Ankunft den Alarmklingelton abspielen und eine Vollbild-Warnmeldung anzeigen</string>
+    <string name="smart_pixels_disable_on_cast_title">Während Bildschirmübertragung deaktivieren</string>
+    <string name="smart_pixels_disable_on_cast_desc">Pixel-Overlay während Bildschirmübertragung oder -Aufnahme automatisch pausieren</string>
 </resources>
