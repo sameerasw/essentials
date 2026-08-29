@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.features.watch
 
 import android.content.Context
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,19 +19,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.DeviceInfoSyncManager
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import java.util.Calendar
 
 @Composable
 fun WatchfaceSettingsUI(
@@ -50,6 +61,9 @@ fun WatchfaceSettingsUI(
     var showComplications by remember {
         mutableStateOf(prefs.getBoolean("watchface_show_complications", true))
     }
+    var complicationsOnAod by remember {
+        mutableStateOf(prefs.getBoolean("watchface_complications_on_aod", true))
+    }
     var complicationOutline by remember {
         mutableStateOf(prefs.getBoolean("watchface_complication_outline", true))
     }
@@ -65,6 +79,9 @@ fun WatchfaceSettingsUI(
     var glanceBatteryAlerts by remember {
         mutableStateOf(prefs.getBoolean("watchface_glance_battery_alerts", true))
     }
+    var glanceFlashlight by remember {
+        mutableStateOf(prefs.getBoolean("watchface_glance_flashlight", true))
+    }
     var glanceTravel by remember {
         mutableStateOf(prefs.getBoolean("watchface_glance_travel", true))
     }
@@ -79,6 +96,39 @@ fun WatchfaceSettingsUI(
     }
     var showGlanceComplicationsSheet by remember {
         mutableStateOf(false)
+    }
+
+    var clockFont by remember {
+        mutableStateOf(prefs.getString("watchface_clock_font", "FLEX") ?: "FLEX")
+    }
+    var clockFontSize by remember {
+        mutableIntStateOf(prefs.getInt("watchface_clock_font_size", 100))
+    }
+    var clockDualTone by remember {
+        mutableStateOf(prefs.getBoolean("watchface_clock_dual_tone", false))
+    }
+    var clockOutline by remember {
+        mutableStateOf(prefs.getBoolean("watchface_clock_outline", false))
+    }
+    var clockOutlineThickness by remember {
+        mutableIntStateOf(prefs.getInt("watchface_clock_outline_thickness", 2))
+    }
+
+    val clockFontOptions = listOf("FLEX", "GROWTH", "INFLATE", "ROTATION")
+    val calendar = remember { Calendar.getInstance() }
+    val is24Hour = DateFormat.is24HourFormat(context)
+    val rawHour = calendar.get(Calendar.HOUR)
+    val hour = if (is24Hour) calendar.get(Calendar.HOUR_OF_DAY) else if (rawHour == 0) 12 else rawHour
+    val minute = calendar.get(Calendar.MINUTE)
+    val timePreview = String.format("%02d:%02d", hour, minute)
+
+    val fontFamilyMap = remember {
+        mapOf(
+            "FLEX" to FontFamily(Font(R.font.google_sans_flex)),
+            "GROWTH" to FontFamily(Font(R.font.growth)),
+            "INFLATE" to FontFamily(Font(R.font.inflate_vf)),
+            "ROTATION" to FontFamily(Font(R.font.rotation_gx)),
+        )
     }
 
     val complicationOptions = listOf(
@@ -144,6 +194,17 @@ fun WatchfaceSettingsUI(
                         },
                     )
                     IconToggleItem(
+                        iconRes = R.drawable.rounded_flashlight_on_24,
+                        title = stringResource(R.string.watchface_glance_comp_flashlight_title),
+                        description = stringResource(R.string.watchface_glance_comp_flashlight_desc),
+                        isChecked = glanceFlashlight,
+                        onCheckedChange = {
+                            glanceFlashlight = it
+                            prefs.edit().putBoolean("watchface_glance_flashlight", it).apply()
+                            DeviceInfoSyncManager.forceSync(context)
+                        },
+                    )
+                    IconToggleItem(
                         iconRes = R.drawable.rounded_distance_24,
                         title = stringResource(R.string.watchface_glance_comp_travel_title),
                         description = stringResource(R.string.watchface_glance_comp_travel_desc),
@@ -187,6 +248,95 @@ fun WatchfaceSettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        // Section 0: Clock
+        Text(
+            text = stringResource(R.string.watchface_category_clock),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(start = 8.dp),
+        )
+        RoundedCardContainer(
+            modifier = Modifier.fillMaxWidth(),
+            cornerRadius = 24.dp,
+        ) {
+            SegmentedPicker(
+                items = clockFontOptions,
+                selectedItem = clockFont,
+                onItemSelected = { font ->
+                    clockFont = font
+                    prefs.edit().putString("watchface_clock_font", font).apply()
+                    DeviceInfoSyncManager.forceSync(context)
+                },
+                labelProvider = { font ->
+                    timePreview
+                },
+                iconProvider = null,
+                textStyleProvider = { font ->
+                    TextStyle(
+                        fontFamily = fontFamilyMap[font],
+                        fontWeight = FontWeight.W400,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            ConfigSliderItem(
+                title = stringResource(R.string.watchface_clock_font_size),
+                value = clockFontSize.toFloat(),
+                onValueChange = {
+                    clockFontSize = it.toInt()
+                    prefs.edit().putInt("watchface_clock_font_size", it.toInt()).apply()
+                },
+                onValueChangeFinished = {
+                    DeviceInfoSyncManager.forceSync(context)
+                },
+                valueRange = 70f..130f,
+                increment = 5f,
+                iconRes = R.drawable.rounded_draw_24,
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_palette_24,
+                title = stringResource(R.string.watchface_clock_dual_tone_title),
+                description = stringResource(R.string.watchface_clock_dual_tone_desc),
+                isChecked = clockDualTone,
+                onCheckedChange = {
+                    clockDualTone = it
+                    prefs.edit().putBoolean("watchface_clock_dual_tone", it).apply()
+                    DeviceInfoSyncManager.forceSync(context)
+                },
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_circles_24,
+                title = stringResource(R.string.watchface_clock_outline_title),
+                description = stringResource(R.string.watchface_clock_outline_desc),
+                isChecked = clockOutline,
+                onCheckedChange = {
+                    clockOutline = it
+                    prefs.edit().putBoolean("watchface_clock_outline", it).apply()
+                    DeviceInfoSyncManager.forceSync(context)
+                },
+            )
+
+            if (clockOutline) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.watchface_clock_outline_thickness),
+                    value = clockOutlineThickness.toFloat(),
+                    onValueChange = {
+                        clockOutlineThickness = it.toInt()
+                        prefs.edit().putInt("watchface_clock_outline_thickness", it.toInt()).apply()
+                    },
+                    onValueChangeFinished = {
+                        DeviceInfoSyncManager.forceSync(context)
+                    },
+                    valueRange = 1f..10f,
+                    increment = 1f,
+                    iconRes = R.drawable.rounded_line_weight_24,
+                )
+            }
+        }
+
         // Section 1: Battery & Icons
         Text(
             text = stringResource(R.string.watchface_category_battery),
@@ -245,6 +395,17 @@ fun WatchfaceSettingsUI(
                 },
             )
             if (showComplications) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_dark_mode_24,
+                    title = stringResource(R.string.watchface_complications_on_aod_title),
+                    description = stringResource(R.string.watchface_complications_on_aod_desc),
+                    isChecked = complicationsOnAod,
+                    onCheckedChange = {
+                        complicationsOnAod = it
+                        prefs.edit().putBoolean("watchface_complications_on_aod", it).apply()
+                        DeviceInfoSyncManager.forceSync(context)
+                    },
+                )
                 IconToggleItem(
                     iconRes = R.drawable.rounded_circles_24,
                     title = stringResource(R.string.watchface_complication_outline_title),

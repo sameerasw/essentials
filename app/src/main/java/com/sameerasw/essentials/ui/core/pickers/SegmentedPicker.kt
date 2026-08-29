@@ -60,6 +60,7 @@ fun <T> SegmentedPicker(
     onItemSelected: (T) -> Unit,
     labelProvider: (T) -> String,
     iconProvider: (@Composable (T) -> Unit)? = null,
+    textStyleProvider: ((T) -> androidx.compose.ui.text.TextStyle)? = null,
     modifier: Modifier = Modifier,
     cornerShape: CornerSize = MaterialTheme.shapes.extraSmall.bottomEnd,
     containerColor: Color = MaterialTheme.colorScheme.surfaceBright,
@@ -142,9 +143,11 @@ fun <T> SegmentedPicker(
                             if (iconProvider != null) {
                                 Spacer(Modifier.padding(end = 8.dp))
                             }
+                            val customStyle = textStyleProvider?.invoke(item) ?: androidx.compose.ui.text.TextStyle.Default
                             Text(
                                 label,
                                 fontSize = dimensionResource(R.dimen.font_small).value.sp,
+                                style = customStyle,
                                 modifier = Modifier.basicMarquee(),
                                 maxLines = 1,
                             )

@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
+import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
@@ -238,6 +239,7 @@ class SettingsRepository(
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
+        const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
         const val KEY_ENABLE_UNSUPPORTED_FEATURES = "enable_unsupported_features"
@@ -315,6 +317,7 @@ class SettingsRepository(
         const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
+        const val KEY_USE_RIPPLE = "use_ripple"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
@@ -540,6 +543,11 @@ class SettingsRepository(
         key: String,
         value: Boolean,
     ) = prefs.edit().putBoolean(key, value).apply()
+
+    fun putBooleanSync(
+        key: String,
+        value: Boolean,
+    ) = prefs.edit().putBoolean(key, value).commit()
 
     /**
      * Asynchronously stores a string preference value.
@@ -809,6 +817,15 @@ class SettingsRepository(
      */
     fun saveDIYTab(tab: com.sameerasw.essentials.domain.DIYTabs) {
         putString(KEY_DEFAULT_TAB, tab.name)
+    }
+
+    fun getAppIcon(): AppIcon {
+        val key = prefs.getString(KEY_APP_ICON, AppIcon.DEFAULT.key)
+        return AppIcon.fromKey(key)
+    }
+
+    fun setAppIcon(appIcon: AppIcon) {
+        putString(KEY_APP_ICON, appIcon.key)
     }
 
     /**

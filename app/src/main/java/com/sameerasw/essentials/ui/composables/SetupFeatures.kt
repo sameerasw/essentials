@@ -95,6 +95,10 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
@@ -126,6 +130,7 @@ fun SetupFeatures(
     viewModel.isDynamicNightLightEnabled.value
 
     viewModel.isScreenLockedSecurityEnabled.value
+    val isRippleEnabled by viewModel.isRippleEnabled
     val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
     val context = LocalContext.current
 
@@ -884,6 +889,9 @@ fun SetupFeatures(
         }
     }
 
+    var rippleTrigger by remember { mutableStateOf(0) }
+    var textCenterOffset by remember { mutableStateOf(Offset.Zero) }
+
     var lastHapticBucket by remember { mutableStateOf(0) }
     LaunchedEffect(pullRefreshState.distanceFraction) {
         val fraction = pullRefreshState.distanceFraction
@@ -891,6 +899,7 @@ fun SetupFeatures(
 
         if (fraction >= 1f && lastHapticBucket < 10) {
             HapticUtil.performUIHaptic(view)
+            rippleTrigger++
             lastHapticBucket = 10
         } else if (fraction < 1f && currentBucket != lastHapticBucket) {
             if (currentBucket > lastHapticBucket) {
@@ -909,7 +918,18 @@ fun SetupFeatures(
         onRefresh = { isRefreshing = true },
         state = pullRefreshState,
         indicator = { },
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .liquidRipple(
+                trigger = rippleTrigger,
+                origin = textCenterOffset,
+                enabled = isRippleEnabled,
+                durationMillis = 2800,
+                amplitudeDp = 34f,
+                frequency = 12f,
+                decay = 4.5f,
+                speedDp = 1400f,
+            ),
     ) {
         val deviceInfo = DeviceUtils.getDeviceInfo(context)
         val displayFraction = if (isRefreshing) 1f else pullRefreshState.distanceFraction
@@ -1072,10 +1092,19 @@ fun SetupFeatures(
                                             fontFamily = fontFamily,
                                         ),
                                     modifier =
-                                        Modifier.graphicsLayer {
-                                            scaleX = textScale
-                                            scaleY = textScale
-                                        },
+                                        Modifier
+                                            .onGloballyPositioned { coords ->
+                                                val pos = coords.positionInRoot()
+                                                val size = coords.size
+                                                textCenterOffset = Offset(
+                                                    x = pos.x + (size.width / 2f),
+                                                    y = pos.y + (size.height / 2f)
+                                                )
+                                            }
+                                            .graphicsLayer {
+                                                scaleX = textScale
+                                                scaleY = textScale
+                                            },
                                     color = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
                                 )
                             }
