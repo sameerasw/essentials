@@ -443,88 +443,66 @@ fun LinkPickerScreen(
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .size(40.dp)
+                                        .background(
+                                            MaterialTheme.colorScheme.primaryContainer,
+                                            RoundedCornerShape(12.dp),
+                                        ),
+                                contentAlignment = Alignment.Center,
                             ) {
-                                Box(
-                                    modifier =
-                                        Modifier
-                                            .size(40.dp)
-                                            .background(
-                                                MaterialTheme.colorScheme.primaryContainer,
-                                                RoundedCornerShape(12.dp),
-                                            ),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Crossfade(
-                                        targetState = if (isLoadingPreview) "loading" else (linkPreviewData?.faviconUrl ?: "icon"),
-                                        label = "FaviconCrossfade",
-                                    ) { state ->
-                                        if (state == "loading") {
-                                            LoadingIndicator(
-                                                modifier = Modifier.size(20.dp),
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            )
-                                        } else if (state != "icon" && !linkPreviewData?.faviconUrl.isNullOrBlank()) {
-                                            AsyncImage(
-                                                model =
-                                                    ImageRequest.Builder(context)
-                                                        .data(linkPreviewData?.faviconUrl)
-                                                        .crossfade(true)
-                                                        .build(),
-                                                contentDescription = "Website Icon",
-                                                modifier =
-                                                    Modifier
-                                                        .size(24.dp)
-                                                        .clip(RoundedCornerShape(6.dp)),
-                                            )
-                                        } else {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_link_24),
-                                                contentDescription = "Link Icon",
-                                                modifier = Modifier.size(22.dp),
-                                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            )
-                                        }
+                                Crossfade(
+                                    targetState = if (isLoadingPreview) "loading" else (linkPreviewData?.faviconUrl ?: "icon"),
+                                    label = "FaviconCrossfade",
+                                ) { state ->
+                                    if (state == "loading") {
+                                        LoadingIndicator(
+                                            modifier = Modifier.size(20.dp),
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        )
+                                    } else if (state != "icon" && !linkPreviewData?.faviconUrl.isNullOrBlank()) {
+                                        AsyncImage(
+                                            model =
+                                                ImageRequest.Builder(context)
+                                                    .data(linkPreviewData?.faviconUrl)
+                                                    .crossfade(true)
+                                                    .build(),
+                                            contentDescription = "Website Icon",
+                                            modifier =
+                                                Modifier
+                                                    .size(24.dp)
+                                                    .clip(RoundedCornerShape(6.dp)),
+                                        )
+                                    } else {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_link_24),
+                                            contentDescription = "Link Icon",
+                                            modifier = Modifier.size(22.dp),
+                                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        )
                                     }
-                                }
-
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = domain,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                    Text(
-                                        text = currentUri.toString(),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
                                 }
                             }
 
-                            // Save it for later
-                            IconButton(
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_bookmark_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp),
-                                    tint = MaterialTheme.colorScheme.onSurface,
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = domain,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Text(
+                                    text = currentUri.toString(),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                             }
                         }
