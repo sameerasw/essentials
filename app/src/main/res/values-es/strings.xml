@@ -1538,4 +1538,8 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="watch_notif_sync_now">Sincroniza todas las notificaciones ahora</string>
     <string name="watch_notif_sync_icons">Sincroniza los iconos de las apps</string>
     <string name="watch_notif_sync_icons_desc">Sincroniza los iconos de las apps al lanzador del reloj para el apartado de notificaciones</string>
+    <string name="label_ripple_animation">Animación \"Ripple\"</string>
+    <string name="desc_ripple_animation">Activar animaciones \"liquid ripple\" por toda la interfaz</string>
+    <string name="setting_app_icon_title">Ícono de la app</string>
+    <string name="setting_app_icon_desc">Personaliza el icono en el el lanzador</string>
 </resources>
