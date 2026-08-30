@@ -1521,4 +1521,21 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="label_battery_voltage">Voltaje</string>
     <string name="label_battery_technology">Tecnología</string>
     <string name="label_battery_charge_counter">Carga actual</string>
+    <string name="watch_watchface_title">Esfera Essentials</string>
+    <string name="watch_watchface_desc">Personaliza la Essentials Watchface</string>
+    <string name="watch_notif_sync_title">Sincronización de notificaciones</string>
+    <string name="watch_notif_sync_desc">para el lanzador Essentials</string>
+    <string name="watch_notif_sync_choose_apps">Selecciona las apps</string>
+    <string name="watch_notif_sync_choose_apps_desc">Las notificaciones de las aplicaciones elegidas se sincronizarán al reloj</string>
+    <string name="watch_notif_sync_silent_title">Mostrar notificaciones silenciosas</string>
+    <string name="watch_notif_sync_silent_desc">Sincroniza notificaciones silenciosas y de baja prioridad al reloj</string>
+    <string name="watch_notif_sync_media_title">Sincroniza los controles multimedia</string>
+    <string name="watch_notif_sync_media_desc">Sincroniza los controles multitudinaria y sus notificaciones al reloj</string>
+    <string name="watch_notif_sound_title">Sonido de notificaciones</string>
+    <string name="watch_notif_sound_desc">Cambia el sonido de notificaciones reproducido en el reloj</string>
+    <string name="app_icon_default">Por Defecto </string>
+    <string name="watch_notif_sync_now_desc">Sincroniza forzadamente todas las notificaciones del teléfono al reloj</string>
+    <string name="watch_notif_sync_now">Sincroniza todas las notificaciones ahora</string>
+    <string name="watch_notif_sync_icons">Sincroniza los iconos de las apps</string>
+    <string name="watch_notif_sync_icons_desc">Sincroniza los iconos de las apps al lanzador del reloj para el apartado de notificaciones</string>
 </resources>
