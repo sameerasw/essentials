@@ -1542,4 +1542,15 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="desc_ripple_animation">Activar animaciones \"liquid ripple\" por toda la interfaz</string>
     <string name="setting_app_icon_title">Ícono de la app</string>
     <string name="setting_app_icon_desc">Personaliza el icono en el el lanzador</string>
+    <string name="watch_call_sync_title">Sincroniza llamadas</string>
+    <string name="watch_call_sync_desc">Sincroniza y controla llamadas desde el reloj</string>
+    <string name="label_battery_section_health">Salud</string>
+    <string name="label_battery_section_charging">Estado de carga</string>
+    <string name="label_battery_section_specs">Especificaciones</string>
+    <string name="label_battery_current_now">Corriente actual</string>
+    <string name="label_battery_current_avg">Corriente promedia</string>
+    <string name="label_battery_avg_remaining">Restante Promedio</string>
+    <string name="label_thermal_gpu">Temperatura de la GPU</string>
+    <string name="label_thermal_skin">Temperatura del chasis</string>
+    <string name="label_thermal_system_thermals">Temperaturas del sistema</string>
 </resources>
