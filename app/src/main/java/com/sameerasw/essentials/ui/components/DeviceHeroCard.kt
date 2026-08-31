@@ -27,8 +27,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SplitButtonDefaults
+import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -176,6 +180,81 @@ fun DeviceHeroCard(
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        val isMeDropInstalled = remember(context) {
+            try {
+                context.packageManager.getPackageInfo("com.sameerasw.medrop", 0)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+
+        if (isMeDropInstalled) {
+            Spacer(modifier = Modifier.height(16.dp))
+            SplitButtonLayout(
+                leadingButton = {
+                    SplitButtonDefaults.LeadingButton(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val intent = Intent("com.sameerasw.medrop.action.SHARE").apply {
+                                setPackage("com.sameerasw.medrop")
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            try {
+                                context.startActivity(intent)
+                            } catch (_: Exception) {
+                                launchIntent("com.sameerasw.medrop", "com.sameerasw.medrop.ui.activities.MeDropActivity")
+                            }
+                        },
+                        modifier = Modifier.height(56.dp),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.medrop_logo),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = stringResource(R.string.app_medrop),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+                    }
+                },
+                trailingButton = {
+                    SplitButtonDefaults.TrailingButton(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val launchAppIntent = context.packageManager.getLaunchIntentForPackage("com.sameerasw.medrop")
+                            if (launchAppIntent != null) {
+                                context.startActivity(launchAppIntent)
+                            } else {
+                                launchIntent("com.sameerasw.medrop", "com.sameerasw.medrop.MainActivity")
+                            }
+                        },
+                        modifier = Modifier.height(56.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_settings_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .graphicsLayer {
+                        alpha = contentAlpha()
+                        translationY = contentOffset().toPx()
+                    },
+            )
+        }
     }
 
     RoundedCardContainer(

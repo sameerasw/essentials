@@ -1981,6 +1981,8 @@
     <string name="label_no_data">No data</string>
     <string name="label_use_blur">Use blur</string>
     <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
+    <string name="label_ripple_animation">Ripple animation</string>
+    <string name="desc_ripple_animation">Enable liquid ripple animations across the UI</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <string name="setting_swipe_tabs_title">Swipe between tabs</string>
     <string name="setting_swipe_tabs_desc">In home screen</string>
@@ -2314,4 +2316,8 @@
     <string name="watchface_clock_outline_title">Outline only</string>
     <string name="watchface_clock_outline_desc">Show only font outlines instead of filled text</string>
     <string name="watchface_clock_outline_thickness">Outline thickness</string>
+    <string name="app_medrop">MeDrop</string>
+    <string name="action_licenses_and_credits">Licenses and Credits</string>
+    <string name="licenses_credits_title">Licenses &amp; Credits</string>
+    <string name="licenses_credits_subtitle">Open source projects and contributors powering Essentials</string>
 </resources>

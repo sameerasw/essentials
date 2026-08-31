@@ -41,6 +41,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,6 +62,7 @@ fun AppIconPicker(
     onIconSelected: (AppIcon) -> Unit,
     modifier: Modifier = Modifier,
     options: List<AppIcon> = AppIcon.entries,
+    onIconSelectedWithPosition: ((AppIcon, Offset) -> Unit)? = null,
 ) {
     val view = LocalView.current
     val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
@@ -162,6 +166,8 @@ fun AppIconPicker(
                         Color.White
                     }
 
+                var iconCenterOffset by remember { mutableStateOf(Offset.Zero) }
+
                 Box(
                     modifier =
                         Modifier
@@ -172,6 +178,14 @@ fun AppIconPicker(
                         modifier =
                             Modifier
                                 .size(56.dp)
+                                .onGloballyPositioned { coords ->
+                                    val pos = coords.positionInRoot()
+                                    val size = coords.size
+                                    iconCenterOffset = Offset(
+                                        x = pos.x + (size.width / 2f),
+                                        y = pos.y + (size.height / 2f)
+                                    )
+                                }
                                 .then(
                                     if (isSelected) {
                                         Modifier.border(
@@ -191,6 +205,7 @@ fun AppIconPicker(
                                 ) {
                                     HapticUtil.performUIHaptic(view)
                                     onIconSelected(iconItem)
+                                    onIconSelectedWithPosition?.invoke(iconItem, iconCenterOffset)
                                 },
                         contentAlignment = Alignment.Center,
                     ) {

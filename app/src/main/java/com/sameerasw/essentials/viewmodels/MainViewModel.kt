@@ -293,6 +293,8 @@ class MainViewModel : ViewModel() {
     val isEnableUnsupportedFeatures = mutableStateOf(false)
     val isBlurEnabled = mutableStateOf(true)
     val isBlurSettingEnabled = mutableStateOf(true)
+    val isRippleEnabled = mutableStateOf(true)
+    val isRippleSettingEnabled = mutableStateOf(true)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
     val isPowerSaveModeEnabled = mutableStateOf(false)
@@ -768,6 +770,10 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_USE_BLUR -> {
                         appContext?.let { updateBlurState(it) }
+                    }
+
+                    SettingsRepository.KEY_USE_RIPPLE -> {
+                        appContext?.let { updateRippleState(it) }
                     }
 
                     SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
@@ -1452,6 +1458,7 @@ class MainViewModel : ViewModel() {
 
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
+        updateRippleState(context)
         updateAddedQSTiles(context)
 
         if (powerSaveReceiver == null) {
@@ -1465,6 +1472,7 @@ class MainViewModel : ViewModel() {
                             context?.let {
                                 isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(it)
                                 updateBlurState(it)
+                                updateRippleState(it)
                             }
                         }
                     }
@@ -1895,6 +1903,7 @@ class MainViewModel : ViewModel() {
         screenTimeout.value = settingsRepository.getScreenTimeout()
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
+        updateRippleState(context)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -2431,6 +2440,20 @@ class MainViewModel : ViewModel() {
     }
 
     /**
+     * Executes the set ripple animation enabled operation.
+     *
+     * @param enabled [Boolean] Target enabled.
+     * @param context [Context] Target context.
+     */
+    fun setRippleEnabled(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_RIPPLE, enabled)
+        updateRippleState(context)
+    }
+
+    /**
      * Executes the set swipe tabs enabled operation.
      *
      * @param enabled [Boolean] Target enabled.
@@ -2447,6 +2470,14 @@ class MainViewModel : ViewModel() {
 
         isBlurSettingEnabled.value = useBlurSetting
         isBlurEnabled.value = useBlurSetting && !isProblematic && !isPowerSave
+    }
+
+    private fun updateRippleState(context: Context) {
+        val useRippleSetting = settingsRepository.getBoolean(SettingsRepository.KEY_USE_RIPPLE, true)
+        val isPowerSave = DeviceUtils.isPowerSaveMode(context)
+
+        isRippleSettingEnabled.value = useRippleSetting
+        isRippleEnabled.value = useRippleSetting && !isPowerSave
     }
 
     /**

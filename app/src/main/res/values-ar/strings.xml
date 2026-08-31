@@ -143,7 +143,7 @@
     <string name="caffeinate_timeout_30m">30 د</string>
     <string name="perm_notif_policy_title">الوصول لعدم الإزعاج</string>
     <string name="perm_notif_policy_desc">مطلوب للتنقل بين أوضاع الصوت والاهتزاز وكتم الصوت</string>
-    <string name="caffeinate_timeout_1h">ساعة</string>
+    <string name="caffeinate_timeout_1h">1س</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">البدء خلال %1$d ثانية…</string>
     <string name="caffeinate_remaining">متبقي %1$s</string>

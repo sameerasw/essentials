@@ -31,6 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -56,6 +59,7 @@ fun IconToggleItem(
     subtitle: String? = null,
     icon: Int? = null,
     checked: Boolean? = null,
+    onCheckedChangeWithPosition: ((Boolean, Offset) -> Unit)? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -186,12 +190,15 @@ fun IconToggleItem(
                 },
             )
         } else {
+            var switchCenterOffset by remember { mutableStateOf(Offset.Zero) }
+
             ListItem(
                 checked = finalIsChecked && enabled,
                 onCheckedChange = { c ->
                     if (enabled) {
                         HapticUtil.performVirtualKeyHaptic(view)
                         onCheckedChange(c)
+                        onCheckedChangeWithPosition?.invoke(c, switchCenterOffset)
                     } else if (onDisabledClick != null) {
                         HapticUtil.performVirtualKeyHaptic(view)
                         onDisabledClick()
@@ -231,6 +238,14 @@ fun IconToggleItem(
                         checked = if (enabled) finalIsChecked else false,
                         onCheckedChange = null,
                         enabled = enabled,
+                        modifier = Modifier.onGloballyPositioned { coords ->
+                            val pos = coords.positionInRoot()
+                            val size = coords.size
+                            switchCenterOffset = Offset(
+                                x = pos.x + (size.width / 2f),
+                                y = pos.y + (size.height / 2f)
+                            )
+                        },
                     )
                 },
                 colors =
