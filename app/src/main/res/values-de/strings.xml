@@ -1249,7 +1249,7 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="feat_sound_haptics_title">Ton und Haptik</string>
     <string name="feat_sound_haptics_desc">Lautstärke und haptische Funktionen</string>
     <string name="feat_security_privacy_title">Sicherheit und Privatsphäre</string>
-    <string name="feat_security_privacy_desc">Schütze und sicher dein Gerät</string>
+    <string name="feat_security_privacy_desc">Schütze und sichere dein Gerät</string>
     <string name="feat_notifications_alerts_title">Benachrichtigungen und Warnungen</string>
     <string name="feat_notifications_alerts_desc">Verpasse nie deine Prioritäten</string>
     <string name="feat_input_actions_title">Eingaben und Aktionen</string>
@@ -1606,7 +1606,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="tile_restart_systemui">SystemUI neu starten</string>
     <string name="tile_lock">Sperren</string>
     <string name="feat_networks_title">Netzwerke</string>
-    <string name="feat_networks_desc">Funkgeräte und Netzwerke steuern</string>
+    <string name="feat_networks_desc">Antennen und Netzwerke steuern</string>
     <string name="feat_network_download_rate_limit_title">Begrenzung der Netzwerk-Download-Rate</string>
     <string name="feat_network_download_rate_limit_desc">Systemweite Download-Geschwindigkeit begrenzen</string>
     <string name="feat_mobile_data_always_on_title">Mobile Daten immer eingeschaltet</string>
@@ -1638,4 +1638,10 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="setting_location_reached_full_screen_alarm_desc">Bei Ankunft den Alarmklingelton abspielen und eine Vollbild-Warnmeldung anzeigen</string>
     <string name="smart_pixels_disable_on_cast_title">Während Bildschirmübertragung deaktivieren</string>
     <string name="smart_pixels_disable_on_cast_desc">Pixel-Overlay während Bildschirmübertragung oder -Aufnahme automatisch pausieren</string>
+    <string name="setting_app_icon_title">App Symbol</string>
+    <string name="setting_app_icon_desc">Passe das Home screen symbol an</string>
+    <string name="app_icon_default">Standard</string>
+    <string name="app_icon_legacy">altes Icon</string>
+    <string name="app_icon_black">Dynamisch</string>
+    <string name="app_icon_google">Spektrum</string>
 </resources>

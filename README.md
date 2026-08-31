@@ -36,6 +36,9 @@ Essential tools, mods and workarounds for Pixels and other Androids
 </a>
   <a href="https://sameerasw.com/essentials"><img src="https://img.shields.io/badge/Website-orange?style=for-the-badge&logo=googlechrome&logoColor=%23000&labelColor=%233AFFB8&color=%233AFFB8" alt="Website" /></a>
 </p>
+<p align="center">
+  <a href="https://trendshift.io/repositories/19802?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-19802" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/19802" alt="sameerasw%2Fessentials | Trendshift" width="250" height="55"/></a>
+</p>
 
 ---
 

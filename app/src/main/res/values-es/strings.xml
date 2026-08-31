@@ -1521,4 +1521,23 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="label_battery_voltage">Voltaje</string>
     <string name="label_battery_technology">Tecnología</string>
     <string name="label_battery_charge_counter">Carga actual</string>
+    <string name="feat_standby_apps_title">Aplicaciones en espera</string>
+    <string name="feat_standby_apps_desc">Optimiza las actividades de fondo</string>
+    <string name="feat_power_saving_title">Ahorro de bateria</string>
+    <string name="feat_power_saving_desc">Configura las politicas del ahorro de bateria</string>
+    <string name="watch_notif_sync_title">Sincronizacion de notificaciones</string>
+    <string name="watch_notif_sync_desc">Para el launcher de Essentials</string>
+    <string name="watch_call_sync_title">Sincronizacion de llamadas</string>
+    <string name="watch_call_sync_desc">Sincroniza y controla las llamadas desde tu reloj</string>
+    <string name="feat_sim_names_title">Nombres de tarjeta SIM</string>
+    <string name="feat_sim_names_desc">Renombra el operador mostrado para las tarjetas SIM activas</string>
+    <string name="setting_location_reached_full_screen_alarm_title">Alarma en pantalla completa</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Reproduce el tono de alarma y muestra una alerta de pantalla completa</string>
+    <string name="label_battery_section_health">Salud</string>
+    <string name="label_battery_section_charging">Carga</string>
+    <string name="setting_app_icon_title">Icono de app</string>
+    <string name="setting_app_icon_desc">Personaliza el icono que se muestra en la pantalla de inicio</string>
+    <string name="app_icon_default">Predeterminado</string>
+    <string name="app_icon_legacy">Heredado</string>
+    <string name="app_icon_black">Dinamico</string>
 </resources>
