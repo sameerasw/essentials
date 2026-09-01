@@ -720,12 +720,16 @@
 
 Falls Ihr Gerät keine Overlays über dem Always-On-Display (AOD) unterstützt, können Sie alternativ den in den Android-Einstellungen verfügbaren Bildschirmschoner „Ambiente“ verwenden, während das Gerät geladen wird.</string>
     <string name="about_desc_notification_lighting">Benachrichtigungslich sorgt für einen schönen Randbeleuchtungseffekt, wenn du eine Benachrichtigung erhälst.\n\nDu kannst den Animationsstil, die Farben und das Verhalten individuell anpassen. Die Funktion ist auch bei ausgeschaltetem Bildschirm (abhängig vom Hersteller) oder über der aktuellen App verfügbar. Wähle Apps, Benachrichtigungsprioritäten oder welches Verhalten das Benachrichtigungslich haben soll mit den entsprechen Steuerungselementen aus. Falls dein Hersteller Overlays über dem Always-On-Display nicht unterstützt, nutze die unten aufgeführte Option „Ambient-Display“.</string>
-    <string name="about_desc_screen_off_widget">Schalten den Bildschirm ganz einfach mit einem Fingertipp auf ein transparentes, in der Größe anpassbares Widget aus, das deinen Startbildschirm weder mit Symbolen noch mit unnötigen Elementen überfüllt.</string>
+    <string name="about_desc_screen_off_widget">Schalte den Bildschirm ganz einfach mit einem Fingertipp auf ein transparentes, in der Größe anpassbares Widget aus, das deinen Startbildschirm weder mit Symbolen noch mit unnötigen Elementen überfüllt.</string>
     <string name="about_desc_statusbar_icons">Übernehme die volle Kontrolle über die Symbole in deiner Statusleiste.\n\nBlende bestimmte Symbole wie WLAN, Bluetooth oder Mobilfunkdaten aus, um deine Statusleiste übersichtlich zu halten. Außerdem kannst du das Uhrenformat und die Akkuanzeige mit einigen praktischen Einstellungsoptionen anpassen. Dies ist eine Liste der verfügbaren AOSP-Einstellungen; daher unterstützt das Betriebssystem Ihres Geräts möglicherweise nicht alle Optionen.</string>
     <string name="about_desc_caffeinate">Mit „Koffein“ verhinderst du, dass sich der Bildschirm automatisch ausschaltet.\n\nHalten deinen Bildschirm für eine bestimmte Zeit oder auf unbestimmte Zeit aktiv. Dies ist nützlich, wenn du z. B. lange Artikel liest oder ein Rezept nachschlägst.</string>
     <string name="about_desc_maps_power_saving">Hole dir den exklusiven Energiesparmodus von Google Maps aus der Pixel 10-Serie mit dem minimalistischen, tiefschwarzen Hintergrund, der auf Ihrem Sperrbildschirm angezeigt wird auf jedes Android-Gerät. Starte eine Navigation, dann schalte den Bildschirm aus und wieder ein. </string>
     <string name="about_desc_flashlight_pulse">Blitze mit der Taschenlampe, wenn du eine Benachrichtigung bekommst.\n\nBei Geräten mit Hardwareunterstützung für das Dimmen der Taschenlampe wird der Puls sanft animiert.</string>
-    <string name="about_desc_snooze_notifications">Schalte lästige, hartnäckige Systembenachrichtigungen stumm, die standardmäßig nicht angepasst werden können. \n\nBitte warten, bis die Benachrichtigung erscheint, und rufe dann diese Funktion auf, in der der Benachrichtigungskanal aufgeführt wird. Wähle diesen aus, um die Benachrichtigung ab dem nächsten Mal stummzuschalten.\n\nAuf alle stummgeschalteten Benachrichtigungen kannst weiterhin über den Benachrichtigungsverlauf in Android zugreifen.</string>
+    <string name="about_desc_snooze_notifications">Schalte lästige, hartnäckige Systembenachrichtigungen stumm, die standardmäßig nicht angepasst werden können. 
+
+Warte bis die Benachrichtigung erscheint, und rufe dann diese Funktion auf, in der der Benachrichtigungskanal aufgeführt wird. Wähle diesen aus, um die Benachrichtigung ab dem nächsten Mal stummzuschalten.
+
+Auf alle stummgeschalteten Benachrichtigungen kannst weiterhin über den Benachrichtigungsverlauf in Android zugreifen.</string>
     <string name="about_desc_quick_settings_tiles">Füge den Schnelleinstellungen benutzerdefinierte Kacheln hinzu.\n\nDrücke lange auf eine beliebige Kachel, um zu erfahren, welche Funktion sie hat.</string>
     <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
     <string name="about_desc_dynamic_night_light">Schalte den Blaulichtfilter deines Bildschirms automatisch je nach der aktuell geöffneten App ein oder aus.</string>
@@ -1249,7 +1253,7 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="feat_sound_haptics_title">Ton und Haptik</string>
     <string name="feat_sound_haptics_desc">Lautstärke und haptische Funktionen</string>
     <string name="feat_security_privacy_title">Sicherheit und Privatsphäre</string>
-    <string name="feat_security_privacy_desc">Schütze und sicher dein Gerät</string>
+    <string name="feat_security_privacy_desc">Schütze und sichere dein Gerät</string>
     <string name="feat_notifications_alerts_title">Benachrichtigungen und Warnungen</string>
     <string name="feat_notifications_alerts_desc">Verpasse nie deine Prioritäten</string>
     <string name="feat_input_actions_title">Eingaben und Aktionen</string>
@@ -1504,7 +1508,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="feat_pixel_searchbar_desc">Ersetzt die Standard-Suchleiste vom Pixel Launcher.</string>
     <string name="feat_pixel_searchbar_title">Suchtleiste ersetzen</string>
     <string name="settings_translated_texts">Übersetzt </string>
-    <string name="settings_translated_texts_desc">%d Änderung(en) ausstehend— tippen zum Absenden oder löschen</string>
+    <string name="settings_translated_texts_desc">%d Änderung(en) ausstehend tippen zum Absenden oder löschen</string>
     <string name="setting_swipe_tabs_title">Zwischen Taps wischen</string>
     <string name="setting_swipe_tabs_desc">Auf dem Startbildschirm </string>
     <string name="setting_enable_unsupported_features_title">Nicht unterstützte Funktionen aktivieren</string>
@@ -1517,7 +1521,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="perm_write_secure_instructions">permanentes sicheres Schreiben_i</string>
     <string name="shut_up_restore_delay_title">Wiederherstellungsverzögerung</string>
     <string name="flashlight_pulse_disable_on_dnd_title">Nicht auslösen bei Nicht stören</string>
-    <string name="about_desc_notification_snoozing">Aktivieren Sie die Schlummertaste für Benachrichtigungen und konfigurieren Sie  die benutzerdefinierten Intervalloptionen und die Standarddauer, um Benachrichtigungen später anzuzeigen.</string>
+    <string name="about_desc_notification_snoozing">Aktiviere die Schlummertaste für Benachrichtigungen und konfiguriere die benutzerdefinierten Intervalloptionen und die Standarddauer, um Benachrichtigungen später anzuzeigen.</string>
     <string name="label_snooze_default">Standard-Schlummerzeit</string>
     <string name="label_enable_brightness_adjustment">Helligkeitsreduzierung aktivieren</string>
     <string name="label_disable_launch_boost">Startboost deaktivieren</string>
@@ -1606,7 +1610,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="tile_restart_systemui">SystemUI neu starten</string>
     <string name="tile_lock">Sperren</string>
     <string name="feat_networks_title">Netzwerke</string>
-    <string name="feat_networks_desc">Funkgeräte und Netzwerke steuern</string>
+    <string name="feat_networks_desc">Antennen und Netzwerke steuern</string>
     <string name="feat_network_download_rate_limit_title">Begrenzung der Netzwerk-Download-Rate</string>
     <string name="feat_network_download_rate_limit_desc">Systemweite Download-Geschwindigkeit begrenzen</string>
     <string name="feat_mobile_data_always_on_title">Mobile Daten immer eingeschaltet</string>
@@ -1636,4 +1640,39 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="feat_sim_names_desc">Anzeigenamen des Mobilfunkanbieters für aktive SIM-Karten anpassen </string>
     <string name="setting_location_reached_full_screen_alarm_title">Vollbild-Alarm</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Bei Ankunft den Alarmklingelton abspielen und eine Vollbild-Warnmeldung anzeigen</string>
+    <string name="label_ripple_animation">Ripple Animation</string>
+    <string name="desc_ripple_animation">Aktiviere Ripplranimationen in der Benutzeroberfläche</string>
+    <string name="tile_lockdown_mode_desc">Bildschirm aus QS-tile</string>
+    <string name="watch_watchface_title">Zifferblatt</string>
+    <string name="watch_watchface_desc">Das Zifferblatt anpassen</string>
+    <string name="watchface_clock_font_size">Schriftgröße</string>
+    <string name="watchface_clock_dual_tone_title">Zweifarbig</string>
+    <string name="watchface_clock_dual_tone_desc">Stunden in Weiß, Minuten in Akzentfarbe</string>
+    <string name="watchface_clock_outline_title">Nur Gliederung</string>
+    <string name="watchface_clock_outline_desc">Nur Schriftkonturen anstatt gefüllten Textes anzeigen</string>
+    <string name="watchface_hide_battery_title">Batterie ausblenden</string>
+    <string name="watchface_hide_device_icons_title">Gerätesymbole ausblenden</string>
+    <string name="watchface_complications_on_aod_title">Auf dem AOD anzeigen</string>
+    <string name="setting_app_icon_title">App-Icon</string>
+    <string name="setting_app_icon_desc">Das App-Symbol auf dem Startbildschirm anpassen</string>
+    <string name="feat_medrop_profile_professional">Professionel</string>
+    <string name="feat_medrop_allow_when_locked">Im gesperrten Zustand zulassen</string>
+    <string name="feat_medrop_allow_when_locked_desc">Öffne MeDrop über die Schnellkachel, auch wenn der Bildschirm gesperrt ist</string>
+    <string name="feat_medrop_include_photo">Profilfoto miteinbeziehen</string>
+    <string name="feat_medrop_use_photo_for_all">Für alle Profile verwenden</string>
+    <string name="feat_medrop_use_photo_for_all_desc">Verwendet das Kontaktfoto für alle Profile</string>
+    <string name="feat_medrop_choose_custom_photo">Eigenes Foto auswählen</string>
+    <string name="feat_medrop_profile_enabled">Dieses Profil aktivieren</string>
+    <string name="feat_medrop_profile_enabled_desc">Dieses Profil beim Teilen per NFC verfügbar machen</string>
+    <string name="pixel_searchbar_background_pill_title">Hintergrund-Pille</string>
+    <string name="pixel_searchbar_background_pill_desc">Zeigt das Datum in einem Container</string>
+    <string name="pixel_searchbar_widget_padding_h">Horizontaler Abstand</string>
+    <string name="pixel_searchbar_widget_padding_v">Vertikaler Abstand</string>
+    <string name="diy_volume_channel_music">Musik</string>
+    <string name="smart_pixels_disable_on_cast_title">Während der Bildschirmübertragung deaktivieren</string>
+    <string name="smart_pixels_disable_on_cast_desc">Pixelraster-Overlay beim Übertragen oder Aufnehmen des Bildschirms automatisch pausieren</string>
+    <string name="app_icon_default">Standard</string>
+    <string name="app_icon_legacy">altes Icon</string>
+    <string name="app_icon_black">Dynamisch</string>
+    <string name="app_icon_google">Spektrum</string>
 </resources>

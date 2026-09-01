@@ -89,6 +89,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.state.LocalMenuStateManager
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.FreezeManager
@@ -227,11 +228,13 @@ fun FreezeGridUI(
             }
         } else {
             val scrollState = androidx.compose.foundation.rememberScrollState()
+            val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
 
             Column(
                 modifier =
                     Modifier
                         .fillMaxSize()
+                        .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
                         .verticalScroll(scrollState)
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = { focusManager.clearFocus() })

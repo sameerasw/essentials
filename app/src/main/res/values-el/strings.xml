@@ -28,8 +28,8 @@
     <string name="app_lock_description">Ασφαλίστε τις εφαρμογές σας με βιομετρικό έλεγχο ταυτότητας. Οι κλειδωμένες εφαρμογές θα απαιτούν έλεγχο ταυτότητας κατά την εκκίνηση. Παραμένει ξεκλείδωτη μέχρι να απενεργοποιηθεί η οθόνη.</string>
     <string name="app_lock_warning">Προσέξτε ότι αυτή δεν είναι μια ισχυρή λύση, καθώς πρόκειται μόνο για μια εφαρμογή τρίτου κατασκευαστή. Εάν χρειάζεστε ισχυρή ασφάλεια, σκεφτείτε να χρησιμοποιήσετε τον ιδιωτικό χώρο ή άλλες τέτοιες λειτουργίες.</string>
     <string name="app_lock_biometric_note">Μια άλλη σημείωση, η προτροπή βιομετρικού ελέγχου ταυτότητας σάς επιτρέπει να χρησιμοποιείτε μόνο μεθόδους STRONG ασφαλούς κλάσης. Οι μέθοδοι ασφαλείας με το Face Unlock στην κατηγορία WEAK σε συσκευές όπως το Pixel 7 θα μπορούν να χρησιμοποιούν μόνο τις διαθέσιμες άλλες μεθόδους STRONG auth, όπως το δακτυλικό αποτύπωμα ή η καρφίτσα.</string>
-    <string name="setting_use_usage_access_title">Use usage access</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_title">Χρήση δεδομένων χρήσης εφαρμογών</string>
+    <string name="setting_use_usage_access_desc">Αντί για προσβασιμότητα (</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Ενεργοποίηση επαναχάρτωσης κουμπιών</string>
     <string name="button_remap_use_shizuku_title">Χρησιμοποιήστε Shizuku ή Root ή Root</string>
@@ -614,7 +614,7 @@
     <!-- Tabs -->
     <string name="tab_essentials">Βασικά</string>
     <string name="tab_freeze">Πάγωμα</string>
-    <string name="tab_freeze_title">Παγωμένος</string>
+    <string name="tab_freeze_title">Πάγωμα εφαρμογών</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_apps">Εφαρμογές</string>
     <string name="tab_freeze_subtitle">Απενεργοποιημένες εφαρμογές</string>
@@ -664,9 +664,9 @@
     <string name="label_settings">Ρυθμίσεις</string>
     <string name="action_report_bug">Αναφορά σφάλματος</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_report_mode_title">Αναφορά σφαλμάτων </string>
+    <string name="sentry_mode_off">Κλειστό </string>
+    <string name="sentry_mode_auto">Αυτόματο </string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
     <string name="welcome_title">Welcome to Essentials</string>
@@ -684,8 +684,8 @@
     <string name="preferences_title">Preferences</string>
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
-    <string name="label_app_language">Language</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_app_language">Γλώσσα </string>
+    <string name="label_haptic_feedback">Δονήσεις </string>
     <string name="label_updates">Updates</string>
     <string name="label_auto_check_updates">Auto check for updates</string>
     <string name="desc_auto_check_updates">Check for updates at app launch</string>
@@ -1228,7 +1228,7 @@
     <string name="feat_notifications_alerts_desc">Μην χάνετε ποτέ τις προτεραιότητές σας</string>
     <string name="feat_input_actions_title">Εισαγωγή και Ενέργειες</string>
     <string name="feat_input_actions_desc">Ελέγξτε τη συσκευή σας με ευκολία</string>
-    <string name="feat_widgets_title">Widgets</string>
+    <string name="feat_widgets_title">Γραφικά στοιχεία </string>
     <string name="feat_widgets_desc">Με μια ματιά στην αρχική σας οθόνη</string>
     <string name="feat_display_visuals_title">Επίδειξη</string>
     <string name="feat_display_visuals_desc">Οπτικά για να βελτιώσετε την εμπειρία σας</string>
@@ -1454,4 +1454,12 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="feat_power_battery_title">Μπαταρία</string>
+    <string name="feat_networks_title">Δίκτυα </string>
+    <string name="feat_networks_desc">Διαχείριση ράδιο και δικτύων </string>
+    <string name="feat_daily_wallpaper_title">Ταπετσαρία </string>
+    <string name="feat_daily_wallpaper_desc">Καθημερινή ανανέωση ταπετσαρίας </string>
+    <string name="feat_power_battery_desc">Βελτιστοποίηση της μπαταρίας </string>
+    <string name="setting_enable_unsupported_features_title">Ενεργοποίηση μη υποστηριζόμενων λειτουργιών </string>
+    <string name="settings_translate_mode">Λειτουργία μεταγλώττισης </string>
 </resources>

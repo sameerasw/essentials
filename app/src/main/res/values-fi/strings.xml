@@ -42,7 +42,7 @@
     <string name="flashlight_options_title">Taskulamppuvaihtoehdot</string>
     <string name="flashlight_options_desc">Säädä häivytystä ja muita asetuksia</string>
     <string name="setting_pitch_black_theme_title">Pisimusta teema</string>
-    <string name="setting_pitch_black_theme_desc">Käytä puhdasta mustaa taustaa pimeässä tilassa</string>
+    <string name="setting_pitch_black_theme_desc">Käytä täysin mustaa taustaa pimeässä tilassa</string>
     <string name="settings_section_haptic">Haptinen palaute</string>
     <string name="button_remap_section_long_press">Remap Pitkä painallus</string>
     <string name="screen_off">Näyttö pois päältä</string>
@@ -614,7 +614,7 @@
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Jäädyttää</string>
-    <string name="tab_freeze_title">Jäätynyt</string>
+    <string name="tab_freeze_title">Jäädytetyt</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_apps">Sovellukset</string>
     <string name="tab_freeze_subtitle">Poistetut sovellukset</string>
@@ -946,7 +946,7 @@
         <item>aikakatkaisu</item>
     </string-array>
     <string name="label_keyboard_always_dark">Aina tumma teema</string>
-    <string name="label_keyboard_pitch_black">Pisimusta teema</string>
+    <string name="label_keyboard_pitch_black">Täysin musta teema</string>
     <string name="label_keyboard_clipboard_enabled">Leikepöydän historia</string>
     <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
     <string name="label_keyboard_accented_characters">Accented characters</string>

@@ -4,16 +4,16 @@
     <string name="label_beta">測試版</string>
     <string name="shut_up_attempt_shizuku_restart">嘗試重新啟動 Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_title">警告！ Shizuku 將重新啟動</string>
-    <string name="shut_up_shizuku_restart_warning_message">由於已開啟無線除錯模式，Shizuku 服務可能未自動啟動，造成凍結無法運作。建議也一併開啟「嘗試重啟 Shizuku」選項</string>
+    <string name="shut_up_shizuku_restart_warning_message">由於已開啟無線除錯模式，Shizuku 服務可能未自動啟動，造成凍結無法運作。建議也一併開啟「嘗試重新啟動 Shizuku」選項</string>
     <string name="shut_up_restore_delay_title">還原倒數時間</string>
     <string name="shut_up_restore_delay_desc">退出被設定成 Shut-Up! 的應用程式後，恢復原本設定所需的等待時間</string>
     <string name="accessibility_service_description"><b>Essentials 無障礙功能服務</b>\n\n以下的進階功能都需要此服務：\n\n<b>• 實體按鈕重新映射：</b>\n即使螢幕關閉時，也能偵測音量按鈕的按壓，以觸發「手電筒開關」等動作。\n\n<b>• 個別應用程式設定：</b>\n監控當前活躍的應用程式，以套用「動態夜燈」、「通知燈光顏色」及「應用程式鎖」的特定設定檔。\n\n<b>• 螢幕控制：</b>\n允許應用程式鎖定螢幕（例如透過雙擊或小工具），並偵測螢幕狀態變更。\n\n<b>• 安全性：</b>\n裝置鎖定時偵測視窗內容，防止未經授權的變更。\n\n<small>本應用程式不會收集或傳輸任何被輸入的文字或敏感的使用者資料。</small></string>
     <string name="freeze_activity_title">凍結應用程式</string>
     <string name="freeze_activity_subtitle">封存少用的應用程式</string>
-    <string name="freeze_shortcut_short_label">已凍結的應用程式</string>
+    <string name="freeze_shortcut_short_label">凍結應用程式</string>
     <string name="freeze_shortcut_long_label">開啟凍結</string>
-    <string name="action_shortcut_short_label">Action</string>
-    <string name="action_shortcut_long_label">Launch action shortcut</string>
+    <string name="action_shortcut_short_label">行動</string>
+    <string name="action_shortcut_long_label">啟動行動捷徑</string>
     <string name="frozen_app_shortcut_label">凍結應用程式</string>
     <string name="screen_off_widget_label">空白的關閉螢幕小工具</string>
     <string name="app_freezing_tile_label">凍結中的應用程式</string>
@@ -38,13 +38,13 @@
     <string name="button_remap_enable_title">啟用實體按鍵映射</string>
     <string name="button_remap_use_shizuku_title">使用 Shizuku 或 Root 權限</string>
     <string name="button_remap_use_shizuku_desc">在螢幕關閉時可用（推薦）</string>
-    <string name="shizuku_not_running_toast">Shizuku 沒在運行</string>
+    <string name="shizuku_not_running_toast">Shizuku 沒在執行</string>
     <string name="shizuku_detected_prefix">偵測到 %1$s</string>
     <string name="shizuku_status_prefix">%1$s狀態： %1$s</string>
-    <string name="shizuku_open_button">打開 Shizuku</string>
+    <string name="shizuku_open_button">開啟 Shizuku</string>
     <string name="settings_section_flashlight">手電筒</string>
     <string name="flashlight_options_title">手電筒設定</string>
-    <string name="flashlight_options_desc">調整漸變與其他設定</string>
+    <string name="flashlight_options_desc">調整漸層與其他設定</string>
     <string name="setting_pitch_black_theme_title">純黑主題</string>
     <string name="setting_pitch_black_theme_desc">開啟深色主題時使用純黑色背景</string>
     <string name="settings_section_haptic">觸覺回饋</string>
@@ -91,7 +91,7 @@
     <string name="button_remap_screen_on_hint">當螢幕開啟時，長按選定的按鈕即可觸發其對應的操作。</string>
     <string name="flashlight_intensity_title">手電筒亮度</string>
     <string name="flashlight_fade_title">淡入/淡出</string>
-    <string name="flashlight_fade_desc">漸變開關手電筒</string>
+    <string name="flashlight_fade_desc">漸層開關手電筒</string>
     <string name="flashlight_global_title">全域控制</string>
     <string name="flashlight_global_desc">全域漸亮手電筒</string>
     <string name="flashlight_adjust_intensity_title">調整亮度</string>
@@ -114,11 +114,11 @@
     <string name="caffeinate_notification_title">開啟咖啡因模式</string>
     <string name="caffeinate_active">開啟</string>
     <string name="caffeinate_notification_desc">螢幕保持喚醒狀態</string>
-    <string name="caffeinate_battery_optimization_title">忽略電池優化設定</string>
+    <string name="caffeinate_battery_optimization_title">忽略電池最佳化設定</string>
     <string name="caffeinate_abort_screen_off_title">螢幕關閉後中止</string>
     <string name="caffeinate_skip_countdown_title">跳過倒數</string>
     <string name="caffeinate_skip_countdown_desc">立刻開啟咖啡因模式。</string>
-    <string name="caffeinate_timeout_presets_title">預設倒數時間</string>
+    <string name="caffeinate_timeout_presets_title">設定檔倒數時間</string>
     <string name="caffeinate_timeout_presets_desc">選擇快速設定方塊中的可選時長</string>
     <string name="caffeinate_timeout_5m">5 分</string>
     <string name="caffeinate_timeout_10m">10 分</string>
@@ -145,8 +145,8 @@
     <string name="freeze_mode_description_freeze_body">凍結應用程式時，會停用該應用程式的啟動行為，並 將其從應用程式清單中移除並停止更新。雖然凍結應用程式可以節省資源，但這將阻止該應用程式啟動，直到從此處解凍為止，或手動重新啟用該應用程式。</string>
     <string name="freeze_mode_description_freeze_warning">不要凍結通訊應用程式</string>
     <string name="freeze_mode_description_suspend_title">什麼是暫停？</string>
-    <string name="freeze_mode_description_suspend_body">暫停應用程式過去用於中斷應用程式的運作並阻止背景執行；但随着近年 Android 的變化，現在暫停只會阻止通知顯示。由於這些應用程式還是會顯示成灰階的暫停圖示，你還是可以從桌面上的應用程式清單中將它們取消暫停。</string>
-    <string name="freeze_mode_description_suspend_footer">運作原理應該跟原生應用的暫停/專注模式一樣。</string>
+    <string name="freeze_mode_description_suspend_body">暫停應用程式過去用於中斷應用程式的運作並阻止背景執行；但隨著近年 Android 的變化，現在暫停只會阻止通知顯示。由於這些應用程式還是會顯示成灰階的暫停圖示，你還是可以從桌面上的應用程式清單中將它們取消暫停。</string>
+    <string name="freeze_mode_description_suspend_footer">運作原理應該跟原生應用程式的暫停/專注模式一樣。</string>
     <string name="content_desc_more_options">更多設定</string>
     <string name="action_freeze_all">凍結所有應用程式</string>
     <string name="action_unfreeze_all">解凍所有應用程式</string>
@@ -213,62 +213,62 @@
     <string name="notification_lighting_pulse_count_title">閃爍次數</string>
     <string name="notification_lighting_pulse_duration_title">閃爍時長</string>
     <string name="settings_section_color_mode">顏色模式</string>
-    <string name="settings_section_ambient_display">环境显示</string>
-    <string name="ambient_display_title">环境显示</string>
+    <string name="settings_section_ambient_display">環境顯示</string>
+    <string name="ambient_display_title">環境顯示</string>
     <string name="ambient_display_hint">適合不想使用螢幕長亮模式的你。</string>
-    <string name="ambient_display_desc">唤醒屏幕并显示光效</string>
-    <string name="ambient_show_lock_screen_title">显示锁屏</string>
-    <string name="ambient_show_lock_screen_desc">无全黑遮盖层</string>
+    <string name="ambient_display_desc">喚醒螢幕並顯示光效</string>
+    <string name="ambient_show_lock_screen_title">顯示鎖定畫面</string>
+    <string name="ambient_show_lock_screen_desc">無全黑遮蓋層</string>
     <!-- Tiles -->
-    <string name="action_add">添加</string>
+    <string name="action_add">新增</string>
     <string name="action_added">Added</string>
-    <string name="qs_tile_already_added">已添加</string>
+    <string name="qs_tile_already_added">已新增</string>
     <string name="qs_tile_requires_android_13">需要Android 13以上</string>
     <string name="tile_ui_blur">界面模糊</string>
-    <string name="tile_bubbles">气泡</string>
-    <string name="tile_sensitive_content">敏感内容</string>
-    <string name="tile_tap_to_wake">点按即唤醒</string>
+    <string name="tile_bubbles">氣泡</string>
+    <string name="tile_sensitive_content">敏感內容</string>
+    <string name="tile_tap_to_wake">點按即喚醒</string>
     <string name="tile_aod">螢幕長亮模式</string>
-    <string name="tile_caffeinate">Caffeinate（屏幕保持唤醒）</string>
-    <string name="tile_sound_mode">响铃模式</string>
+    <string name="tile_caffeinate">Caffeinate（螢幕保持喚醒）</string>
+    <string name="tile_sound_mode">響鈴模式</string>
     <string name="tile_notification_lighting">通知光效</string>
-    <string name="tile_dynamic_night_light">动态夜间光效</string>
-    <string name="tile_locked_security">锁定安全</string>
-    <string name="tile_app_lock">应用锁</string>
-    <string name="tile_mono_audio">单声道音频</string>
-    <string name="tile_flashlight">手电筒</string>
-    <string name="tile_app_freezing">应用冻结</string>
+    <string name="tile_dynamic_night_light">動態夜間光效</string>
+    <string name="tile_locked_security">鎖定安全</string>
+    <string name="tile_app_lock">應用程式鎖</string>
+    <string name="tile_mono_audio">單聲道音訊</string>
+    <string name="tile_flashlight">手電筒</string>
+    <string name="tile_app_freezing">應用程式凍結</string>
     <string name="tile_flashlight_pulse">閃爍閃光燈</string>
-    <string name="tile_stay_awake">保持唤醒</string>
-    <string name="input_method_label">Essentials 键盘</string>
-    <string name="subtype_en_us">英语（美国）</string>
-    <string name="tile_active">启用</string>
+    <string name="tile_stay_awake">保持喚醒</string>
+    <string name="input_method_label">Essentials 鍵盤</string>
+    <string name="subtype_en_us">英語（美國）</string>
+    <string name="tile_active">啟用</string>
     <string name="tile_inactive">停用</string>
-    <string name="tile_developer_options">开发者选项</string>
-    <string name="about_desc_developer_options">从快速设置磁贴轻松切换系统开发者选项。这可能会重置您修改过的一些开发者设置。</string>
+    <string name="tile_developer_options">開發者選項</string>
+    <string name="about_desc_developer_options">從快速設定磁貼輕鬆切換系統開發者選項。這可能會重置您修改過的一些開發者設定。</string>
     <string name="tile_refresh_rate">Refresh Rate</string>
-    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="about_desc_refresh_rate_tile">利用 Shizuku，可以直接從 Quick Settings tile 切換系統預設更新率和預設刷新率。</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">私有DNS</string>
-    <string name="tile_private_dns_auto">自动</string>
-    <string name="tile_private_dns_off">关闭</string>
+    <string name="tile_private_dns_auto">自動</string>
+    <string name="tile_private_dns_off">關閉</string>
     <string name="private_dns_mode_label">Mode</string>
     <string name="private_dns_mode_toggle">Toggle</string>
     <string name="private_dns_mode_cycle">Cycle</string>
-    <string name="tile_usb_debugging">USB调试</string>
+    <string name="tile_usb_debugging">USB除錯</string>
     <string name="tile_color_picker">拾色器</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">你真的確定你在安卓 17 上？(╯°_°）╯</string>
     <string name="subtitle_eye_dropper">取色器</string>
-    <string name="on">开启</string>
-    <string name="off">关闭</string>
-    <string name="private_dns_custom_title">自定义私有DNS</string>
-    <string name="private_dns_presets_title">DNS预设</string>
-    <string name="dns_preset_add_title">添加DNS预设</string>
-    <string name="dns_preset_name_label">预设名称</string>
+    <string name="on">開啟</string>
+    <string name="off">關閉</string>
+    <string name="private_dns_custom_title">自訂私有DNS</string>
+    <string name="private_dns_presets_title">DNS預設</string>
+    <string name="dns_preset_add_title">新增DNS預設</string>
+    <string name="dns_preset_name_label">預設名稱</string>
     <string name="dns_preset_reset_action">重置</string>
-    <string name="dns_preset_delete_content_description">删除预设</string>
-    <string name="dns_preset_reset_confirm">确定要将所有DNS预设重置为默认值吗？这将删除您所有的自定义预设。</string>
-    <string name="private_dns_hostname_label">供应商主机名</string>
+    <string name="dns_preset_delete_content_description">刪除預設</string>
+    <string name="dns_preset_reset_confirm">確定要將所有DNS預設重置為預設值嗎？這將刪除您所有的自訂預設。</string>
+    <string name="private_dns_hostname_label">供應商主機名</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
     <string name="dns_preset_google">Google 公共 DNS</string>
@@ -279,129 +279,129 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
-    <string name="tile_charge_optimization">充电优化</string>
+    <string name="tile_charge_optimization">充電最佳化</string>
     <string name="limit_to_80">限制到80%</string>
-    <string name="adaptive_charging">自适应</string>
-    <string name="deactivated">未优化</string>
-    <string name="charge_opt_long_press_title">Toggle Options</string>
-    <string name="charge_opt_long_press_desc">Choose which charging modes to switch between when tapping the Quick Settings tile.</string>
-    <string name="permission_missing">缺少权限</string>
+    <string name="adaptive_charging">動態</string>
+    <string name="deactivated">未最佳化</string>
+    <string name="charge_opt_long_press_title">充電模式選項</string>
+    <string name="charge_opt_long_press_desc">選擇點擊 Quick Settings 循環的充電模式</string>
+    <string name="permission_missing">缺少權限</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">锁屏安全</string>
-    <string name="screen_locked_security_dialog_title">锁屏安全</string>
+    <string name="screen_locked_security_title">鎖定畫面安全</string>
+    <string name="screen_locked_security_dialog_title">鎖定畫面安全</string>
     <string name="warning_title">⚠️ 警告</string>
-    <string name="screen_locked_security_auth_enable">认证身份以启用锁屏安全</string>
-    <string name="screen_locked_security_auth_disable">认证身份以禁用锁屏安全</string>
+    <string name="screen_locked_security_auth_enable">認證身分以啟用鎖定畫面安全</string>
+    <string name="screen_locked_security_auth_disable">認證身分以禁用鎖定畫面安全</string>
     <string name="screen_locked_security_desc">螢幕鎖定時停用快速設定方塊</string>
     <string name="search_disable_qs_locked_title">快速設定方塊鎖</string>
     <string name="search_disable_qs_locked_desc">螢幕鎖定時禁止展開快速設定方塊列表</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">重新排序模式</string>
-    <string name="sound_mode_long_press_hint">长按切换</string>
-    <string name="content_desc_drag_reorder">拖动以重新排序</string>
-    <string name="sound_mode_sound">声音</string>
-    <string name="sound_mode_vibrate">振动</string>
-    <string name="sound_mode_silent">静音</string>
+    <string name="sound_mode_long_press_hint">長按切換</string>
+    <string name="content_desc_drag_reorder">拖動以重新排序</string>
+    <string name="sound_mode_sound">聲音</string>
+    <string name="sound_mode_vibrate">振動</string>
+    <string name="sound_mode_silent">靜音</string>
     <!-- Status Bar Categories -->
-    <string name="status_bar_category_connectivity">连接</string>
-    <string name="status_bar_category_phone_network">电话与网络</string>
-    <string name="status_bar_category_audio_media">音频与媒体</string>
-    <string name="status_bar_category_system_status">系统状态</string>
+    <string name="status_bar_category_connectivity">連接</string>
+    <string name="status_bar_category_phone_network">電話與網路</string>
+    <string name="status_bar_category_audio_media">音訊與媒體</string>
+    <string name="status_bar_category_system_status">系統狀態</string>
     <string name="status_bar_category_oem_specific">OEM特定</string>
     <!-- Status Bar Icons -->
     <string name="icon_wifi">WiFi</string>
-    <string name="icon_bluetooth">蓝牙</string>
+    <string name="icon_bluetooth">藍牙</string>
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
-    <string name="icon_airplane_mode">飞行模式</string>
-    <string name="icon_hotspot">热点</string>
+    <string name="icon_airplane_mode">飛航模式</string>
+    <string name="icon_hotspot">熱點</string>
     <string name="icon_cast">投屏</string>
-    <string name="icon_mobile_data">移动数据</string>
-    <string name="icon_phone_signal">手机信号</string>
+    <string name="icon_mobile_data">行動資料</string>
+    <string name="icon_phone_signal">手機訊號</string>
     <string name="icon_volte">VoLTE / VoNR</string>
-    <string name="icon_wifi_calling">WiFi通话 / VoWiFi</string>
-    <string name="icon_call_status">通话状态 / 同步</string>
+    <string name="icon_wifi_calling">WiFi通話 / VoWiFi</string>
+    <string name="icon_call_status">通話狀態 / 同步</string>
     <string name="icon_tty">TTY</string>
     <string name="icon_volume">音量</string>
-    <string name="icon_headset">听筒</string>
-    <string name="icon_speakerphone">扬声器</string>
+    <string name="icon_headset">聽筒</string>
+    <string name="icon_speakerphone">揚聲器</string>
     <string name="icon_dmb">DMB</string>
-    <string name="icon_clock">时钟</string>
-    <string name="icon_ime">输入法（IME）</string>
-    <string name="icon_alarm">闹钟</string>
-    <string name="icon_battery">电池</string>
-    <string name="icon_power_saving">省电模式</string>
-    <string name="icon_data_saver">数据节省</string>
-    <string name="icon_rotation_lock">旋转锁定</string>
+    <string name="icon_clock">時鐘</string>
+    <string name="icon_ime">輸入法（IME）</string>
+    <string name="icon_alarm">鬧鐘</string>
+    <string name="icon_battery">電池</string>
+    <string name="icon_power_saving">省電模式</string>
+    <string name="icon_data_saver">資料節省</string>
+    <string name="icon_rotation_lock">旋轉鎖定</string>
     <string name="icon_location">位置 / GPS</string>
     <string name="icon_sync">同步</string>
-    <string name="icon_managed_profile">受管配置文件</string>
-    <string name="icon_dnd">勿扰模式</string>
-    <string name="icon_privacy">隐私与安全文件夹</string>
-    <string name="icon_security_status">安全状态（SU）</string>
-    <string name="icon_otg">OTG鼠标/键盘</string>
-    <string name="icon_samsung_smart">三星智能功能</string>
-    <string name="icon_samsung_services">三星服务</string>
-    <string name="icon_ethernet">以太网</string>
+    <string name="icon_managed_profile">受管組態檔</string>
+    <string name="icon_dnd">勿擾模式</string>
+    <string name="icon_privacy">隱私與安全資料夾</string>
+    <string name="icon_security_status">安全狀態（SU）</string>
+    <string name="icon_otg">OTG鼠標/鍵盤</string>
+    <string name="icon_samsung_smart">三星智慧功能</string>
+    <string name="icon_samsung_services">三星服務</string>
+    <string name="icon_ethernet">乙太網</string>
     <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">在时钟里显示秒</string>
-    <string name="stb_battery_percentage">电量百分比</string>
-    <string name="stb_battery_percentage_always">总是开启</string>
-    <string name="stb_battery_percentage_charging">当充电时开启</string>
-    <string name="stb_battery_percentage_never">永不开启</string>
-    <string name="stb_privacy_chip">摄像头和麦克风使用芯片</string>
-    <string name="smart_data_title">智能移动网络</string>
-    <string name="permission_read_phone_state_title">读取电话状态</string>
-    <string name="permission_read_phone_state_desc">需要检测智能数据功能的网络类型</string>
-    <string name="permission_read_phone_state_desc_call_vibrations">需要检测通话状态变化以触发触觉反馈。</string>
-    <string name="settings_section_smart_visibility">智能可见度</string>
-    <string name="smart_wifi_title">智能WiFi</string>
-    <string name="smart_wifi_desc">连接 WiFi 时隐藏移动数据</string>
-    <string name="smart_data_desc">在某些模式下隐藏移动数据</string>
-    <string name="action_reset_all_icons">重置所有图标</string>
-    <string name="status_bar_section_advanced">更多设置</string>
+    <string name="stb_clock_seconds">在時鐘裡顯示秒</string>
+    <string name="stb_battery_percentage">電量百分比</string>
+    <string name="stb_battery_percentage_always">總是開啟</string>
+    <string name="stb_battery_percentage_charging">當充電時開啟</string>
+    <string name="stb_battery_percentage_never">永不開啟</string>
+    <string name="stb_privacy_chip">監視器和麥克風使用晶片</string>
+    <string name="smart_data_title">智慧行動網路</string>
+    <string name="permission_read_phone_state_title">讀取電話狀態</string>
+    <string name="permission_read_phone_state_desc">需要檢測智慧資料功能的網路類型</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">需要檢測通話狀態變化以觸發觸覺回饋。</string>
+    <string name="settings_section_smart_visibility">智慧可見度</string>
+    <string name="smart_wifi_title">智慧WiFi</string>
+    <string name="smart_wifi_desc">連接 WiFi 時隱藏行動資料</string>
+    <string name="smart_data_desc">在某些模式下隱藏行動資料</string>
+    <string name="action_reset_all_icons">重置所有圖示</string>
+    <string name="status_bar_section_advanced">更多設定</string>
     <string name="stb_advanced_flags_title">詳細設定 (需要 Shizuku/Root)</string>
     <string name="hide_all_system_icons_title">隱藏所有系統圖示</string>
     <string name="hide_all_system_icons_desc">清除狀態列的所有非通知圖示</string>
     <string name="hide_system_icons_locked_only_title">僅在鎖定時隱藏系統圖示</string>
     <string name="hide_system_icons_locked_only_desc">在裝置鎖定時隱藏狀態列系統圖示，並於解鎖後恢復顯示</string>
-    <string name="hide_clock_title">Hide clock</string>
-    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
-    <string name="hide_notification_icons_title">Hide notifications</string>
-    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
-    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
-    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
-    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
-    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
-    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="hide_clock_title">隱藏時間</string>
+    <string name="hide_clock_desc">從狀態欄隱藏時間</string>
+    <string name="hide_notification_icons_title">隱藏通知</string>
+    <string name="hide_notification_icons_desc">隱藏狀態欄上的所有通知圖示</string>
+    <string name="feat_hide_gesture_bar_title">隱藏手勢欄</string>
+    <string name="feat_hide_gesture_bar_desc">在手勢導覽</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">在啟動器顯示</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">僅在主畫面時顯示狀態欄</string>
+    <string name="feat_circle_to_search_gesture_title">圓圈搜尋手勢</string>
+    <string name="feat_circle_to_search_gesture_desc">長按底部區域觸發圓圈搜尋</string>
+    <string name="feat_circle_to_search_gesture_height_title">手勢區域高度</string>
+    <string name="feat_circle_to_search_gesture_height_desc">調整底部觸控區域的高度</string>
+    <string name="feat_other_customizations_title">其他自訂設定</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="status_bar_icons_disclaimer">请注意，这些选项的实现可能取决于设备制造商OEM，某些选项可能根本无法使用。</string>
+    <string name="status_bar_icons_disclaimer">請注意，這些選項的實現可能取決於設備製造商OEM，某些選項可能根本無法使用。</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">其他</string>
     <!-- Search -->
-    <string name="search_clock_seconds_title">时钟秒数</string>
-    <string name="search_clock_seconds_desc">在状态栏时钟中显示秒</string>
-    <string name="search_battery_percentage_title">电池百分比</string>
-    <string name="search_battery_percentage_desc">配置电池百分比的可见性</string>
-    <string name="search_privacy_chip_title">隐私芯片</string>
-    <string name="search_privacy_chip_desc">当摄像头或麦克风使用时显示指示器</string>
-    <string name="search_desc_toggle_visibility">切换 %1$s 的可见性</string>
+    <string name="search_clock_seconds_title">時鐘秒數</string>
+    <string name="search_clock_seconds_desc">在狀態欄時鐘中顯示秒</string>
+    <string name="search_battery_percentage_title">電池百分比</string>
+    <string name="search_battery_percentage_desc">設定電池百分比的可見性</string>
+    <string name="search_privacy_chip_title">隱私晶片</string>
+    <string name="search_privacy_chip_desc">當監視器或麥克風使用時顯示指示器</string>
+    <string name="search_desc_toggle_visibility">切換 %1$s 的可見性</string>
     <string name="action_pin">固定到收藏</string>
-    <string name="action_unpin">从收藏中取消固定</string>
+    <string name="action_unpin">從收藏中取消固定</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
     <string name="cat_tools">工具</string>
-    <string name="cat_visuals">视觉效果</string>
-    <string name="cat_system">系统</string>
+    <string name="cat_visuals">視覺效果</string>
+    <string name="cat_system">系統</string>
     <!-- UI Elements -->
     <string name="search_placeholder">Search Essentials</string>
-    <string name="search_no_results">没有找到 \"%1$s\" 的结果</string>
-    <string name="search_results_title">搜索结果</string>
-    <string name="requires_following_permissions">%1$s 需要以下权限</string>
+    <string name="search_no_results">沒有找到 \"%1$s\" 的結果</string>
+    <string name="search_results_title">搜尋結果</string>
+    <string name="requires_following_permissions">%1$s 需要以下權限</string>
     <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
     <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
     <string name="unsupported_features_warning_title">Enable unsupported features?</string>
@@ -410,59 +410,59 @@
     <string name="unsupported_features_cancel">Cancel</string>
     <string name="disabled_on_this_device">Disabled on this device</string>
     <!-- Features -->
-    <string name="feat_screen_off_widget_title">熄屏小组件</string>
-    <string name="feat_screen_off_widget_desc">用于关闭屏幕的隐形小组件</string>
+    <string name="feat_screen_off_widget_title">熄屏小組件</string>
+    <string name="feat_screen_off_widget_desc">用於關閉螢幕的隱形小組件</string>
     <string name="screen_off_method_title">Screen Off Method</string>
     <string name="screen_off_method_accessibility">Accessibility</string>
     <string name="screen_off_method_input">Input</string>
     <string name="screen_off_widget_input_permission_id">Screen off widget - Input</string>
     <string name="require_double_tap_title">Require double tap</string>
     <string name="require_double_tap_desc">To screen off</string>
-    <string name="feat_statusbar_icons_title">状态栏图标</string>
-    <string name="feat_statusbar_icons_desc">控制状态栏图标的可见性</string>
-    <string name="feat_caffeinate_title">保持唤醒</string>
-    <string name="feat_caffeinate_desc">保持屏幕常亮</string>
-    <string name="feat_maps_power_saving_title">地图省电模式</string>
-    <string name="feat_maps_power_saving_desc">适用于任何 Android 设备</string>
+    <string name="feat_statusbar_icons_title">狀態欄圖示</string>
+    <string name="feat_statusbar_icons_desc">控制狀態欄圖示的可見性</string>
+    <string name="feat_caffeinate_title">保持喚醒</string>
+    <string name="feat_caffeinate_desc">保持螢幕常亮</string>
+    <string name="feat_maps_power_saving_title">地圖省電模式</string>
+    <string name="feat_maps_power_saving_desc">適用於任何 Android 設備</string>
     <string name="feat_notification_lighting_title">通知光效</string>
-    <string name="feat_notification_lighting_desc">收到通知时亮起</string>
+    <string name="feat_notification_lighting_desc">收到通知時亮起</string>
     <string name="feat_flashlight_pulse_desc">收到通知時閃爍閃光燈</string>
-    <string name="feat_sound_mode_tile_title">声音模式磁贴</string>
-    <string name="feat_call_vibrations_title">通话振动</string>
-    <string name="feat_call_vibrations_desc">通话操作时振动</string>
-    <string name="show_bluetooth_devices">显示蓝牙设备</string>
-    <string name="show_bluetooth_devices_summary">显示已连接蓝牙设备的电池电量</string>
-    <string name="limit_max_devices">限制最大设备数</string>
-    <string name="limit_max_devices_summary">调整小组件中显示的最大设备数量</string>
-    <string name="widget_background_title">小组件背景</string>
-    <string name="widget_background_summary">显示小组件背景</string>
+    <string name="feat_sound_mode_tile_title">聲音模式磁貼</string>
+    <string name="feat_call_vibrations_title">通話振動</string>
+    <string name="feat_call_vibrations_desc">通話操作時振動</string>
+    <string name="show_bluetooth_devices">顯示藍牙設備</string>
+    <string name="show_bluetooth_devices_summary">顯示已連接藍牙設備的電池電量</string>
+    <string name="limit_max_devices">限制最大設備數</string>
+    <string name="limit_max_devices_summary">調整小組件中顯示的最大設備數量</string>
+    <string name="widget_background_title">小組件背景</string>
+    <string name="widget_background_summary">顯示小組件背景</string>
     <!-- DIY Automation -->
-    <string name="diy_create_trigger_title">触发自动化</string>
-    <string name="diy_create_trigger_desc">安排一个动作在观察到事件时触发</string>
-    <string name="diy_create_state_title">状态自动化</string>
-    <string name="diy_create_state_desc">根据条件的进入/退出状态安排动作执行</string>
+    <string name="diy_create_trigger_title">觸發自動化</string>
+    <string name="diy_create_trigger_desc">安排一個動作在觀察到事件時觸發</string>
+    <string name="diy_create_state_title">狀態自動化</string>
+    <string name="diy_create_state_desc">根據條件的進入/退出狀態安排動作執行</string>
     <string name="diy_create_action_shortcut_title">Action Shortcut</string>
     <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_create_pixel_searchbar_title">Pixel searchbar</string>
     <string name="diy_create_pixel_searchbar_desc">Tap action for Pixel searchbar replacement</string>
-    <string name="diy_editor_new_title">新建自动化</string>
-    <string name="diy_editor_edit_title">编辑自动化</string>
-    <string name="feat_link_actions_title">链接操作</string>
-    <string name="feat_link_actions_desc">使用多个应用处理链接</string>
+    <string name="diy_editor_new_title">新增自動化</string>
+    <string name="diy_editor_edit_title">編輯自動化</string>
+    <string name="feat_link_actions_title">連結操作</string>
+    <string name="feat_link_actions_desc">使用多個應用程式處理連結</string>
     <string name="feat_flashlight_title">Flashlight</string>
     <string name="feat_flashlight_desc">Improve flashlight behavior</string>
     <string name="label_restore_mode">Restore mode</string>
-    <string name="feat_snooze_notifications_title">延迟系统通知</string>
+    <string name="feat_snooze_notifications_title">延遲系統通知</string>
     <string name="feat_snooze_notifications_desc">暫時關閉常駐通知</string>
-    <string name="feat_qs_tiles_title">快速设置磁贴</string>
+    <string name="feat_qs_tiles_title">快速設定磁貼</string>
     <string name="feat_qs_tiles_desc">查看全部</string>
-    <string name="feat_button_remap_title">按键重映射</string>
-    <string name="feat_button_remap_desc">重映射硬件按钮操作</string>
-    <string name="feat_dynamic_night_light_title">动态夜间模式</string>
-    <string name="feat_dynamic_night_light_desc">基于应用切换夜间模式</string>
-    <string name="feat_screen_locked_security_title">锁屏安全</string>
-    <string name="feat_app_lock_title">应用锁</string>
-    <string name="feat_app_lock_desc">使用生物识别保护应用</string>
+    <string name="feat_button_remap_title">按鍵重映射</string>
+    <string name="feat_button_remap_desc">重映射硬體按鈕操作</string>
+    <string name="feat_dynamic_night_light_title">動態夜間模式</string>
+    <string name="feat_dynamic_night_light_desc">基於應用程式切換夜間模式</string>
+    <string name="feat_screen_locked_security_title">鎖定畫面安全</string>
+    <string name="feat_app_lock_title">應用程式鎖</string>
+    <string name="feat_app_lock_desc">使用生物識別保護應用程式</string>
     <string name="app_lock_auto_lock_delay_title">自動上鎖倒數</string>
     <string name="app_lock_auto_lock_delay_desc">在離開應用程式後</string>
     <string name="app_lock_auto_lock_delay_none">馬上</string>
@@ -471,284 +471,284 @@
     <string name="app_lock_auto_lock_delay_10min">10 分鐘</string>
     <string name="app_lock_auto_lock_delay_20min">20 分鐘</string>
     <string name="app_lock_auto_lock_delay_30min">30 分鐘</string>
-    <string name="feat_freeze_title">冻结</string>
-    <string name="feat_freeze_desc">禁用不常用的应用</string>
+    <string name="feat_freeze_title">凍結</string>
+    <string name="feat_freeze_desc">禁用不常用的應用程式</string>
     <string name="feat_watermark_title">水印</string>
-    <string name="feat_watermark_desc">向照片添加 EXIF 数据和徽标</string>
-    <string name="feat_daily_wallpaper_title">Wallpaper</string>
-    <string name="feat_daily_wallpaper_desc">Daily curated handpicked wallpaper</string>
-    <string name="label_wallpaper_apply">Apply Wallpaper</string>
-    <string name="label_wallpaper_by">Photo by</string>
-    <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
-    <string name="label_wallpaper_apply_failed">Failed to apply wallpaper</string>
-    <string name="label_wallpaper_applying">Applying new wallpaper</string>
-    <string name="label_wallpaper_auto_update">Auto-update</string>
-    <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
-    <string name="label_clear_custom_videos">Clear custom videos</string>
-    <string name="feat_always_on_display_title">螢幕長亮模式</string>
-    <string name="feat_always_on_display_desc">螢幕關閉時仍顯示時間與資訊</string>
-    <string name="feat_calendar_sync_title">日历同步</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Lock from Watch</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
-    <string name="remote_lock_mode_title">Lock Mode</string>
-    <string name="remote_lock_mode_screen_off">Screen off</string>
-    <string name="remote_lock_mode_lock">Lock</string>
-    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
-    <string name="watch_connected_status">Connected</string>
-    <string name="watch_unknown_name">Unknown Watch</string>
-    <string name="watermark_style_overlay">叠加</string>
-    <string name="watermark_style_frame">边框</string>
-    <string name="watermark_show_brand">设备品牌</string>
-    <string name="watermark_show_exif">EXIF数据</string>
-    <string name="watermark_pick_image">选择图片</string>
-    <string name="watermark_save_success">图片已保存到相册</string>
+    <string name="feat_watermark_desc">向照片新增 EXIF 資料和徽標</string>
+    <string name="feat_daily_wallpaper_title">桌布</string>
+    <string name="feat_daily_wallpaper_desc">每日精選桌布</string>
+    <string name="label_wallpaper_apply">應用桌布</string>
+    <string name="label_wallpaper_by">照片由</string>拍攝
+    <string name="label_wallpaper_applied">桌布應用成功</string>
+    <string name="label_wallpaper_apply_failed">桌布應用失敗</string>
+    <string name="label_wallpaper_applying">正在應用新桌布</string>
+    <string name="label_wallpaper_auto_update">自動更新</string>
+    <string name="label_wallpaper_auto_update_desc">每天兩次檢查新桌布，並設定背景更新計畫</string>
+    <string name="label_clear_custom_videos">清除自訂影片</string>
+    <string name="feat_always_on_display_title">螢幕常亮模式</string>
+    <string name="feat_always_on_display_desc">螢幕關閉時間仍顯示時間與資訊</string>
+    <string name="feat_calendar_sync_title">行事曆同步</string>
+    <string name="feat_calendar_sync_desc">將手機行事曆同步到手錶</string>
+    <string name="feat_lock_from_watch_title">透過手錶鎖定</string>
+    <string name="feat_lock_from_watch_desc">遠端鎖定手機</string>
+    <string name="remote_lock_mode_title">鎖定模式</string>
+    <string name="remote_lock_mode_screen_off">螢幕關閉</string>
+    <string name="remote_lock_mode_lock">鎖定</string>
+    <string name="remote_lock_mode_admin_note">使用裝置管理員鎖定將停用生物辨識資訊</string>
+    <string name="watch_connected_status">已連線</string>
+    <string name="watch_unknown_name">未知手錶</string>
+    <string name="watermark_style_overlay">疊加</string>
+    <string name="watermark_style_frame">邊框</string>
+    <string name="watermark_show_brand">設備品牌</string>
+    <string name="watermark_show_exif">EXIF資料</string>
+    <string name="watermark_pick_image">選擇圖片</string>
+    <string name="watermark_save_success">圖片已儲存到相簿</string>
     <string name="action_share">分享</string>
-    <string name="watermark_exif_settings">EXIF设置</string>
+    <string name="watermark_exif_settings">EXIF設定</string>
     <string name="watermark_exif_focal_length">焦距</string>
     <string name="watermark_exif_aperture">光圈</string>
     <string name="watermark_exif_iso">ISO</string>
-    <string name="watermark_exif_shutter_speed">快门速度</string>
-    <string name="watermark_exif_date">日期和时间</string>
-    <string name="watermark_move_to_top">移到顶部</string>
-    <string name="watermark_left_align">左对齐</string>
+    <string name="watermark_exif_shutter_speed">快門速度</string>
+    <string name="watermark_exif_date">日期和時間</string>
+    <string name="watermark_move_to_top">移到頂部</string>
+    <string name="watermark_left_align">左對齊</string>
     <string name="watermark_text_size_brand">品牌大小</string>
-    <string name="watermark_text_size_data">数据大小</string>
+    <string name="watermark_text_size_data">資料大小</string>
     <string name="watermark_text_size_custom">文字大小</string>
-    <string name="watermark_font_options">字体大小</string>
-    <string name="watermark_custom_text">自定义文本</string>
-    <string name="watermark_custom_text_hint">输入您的文本...</string>
-    <string name="watermark_spacing">间距</string>
-    <string name="watermark_border_width">边框宽度</string>
-    <string name="watermark_border_corners">圆角</string>
-    <string name="watermark_color_section">颜色</string>
-    <string name="watermark_logo_section">图标</string>
-    <string name="watermark_logo_show">显示Logo</string>
+    <string name="watermark_font_options">字體大小</string>
+    <string name="watermark_custom_text">自訂文字</string>
+    <string name="watermark_custom_text_hint">輸入您的文字...</string>
+    <string name="watermark_spacing">間距</string>
+    <string name="watermark_border_width">邊框寬度</string>
+    <string name="watermark_border_corners">圓角</string>
+    <string name="watermark_color_section">顏色</string>
+    <string name="watermark_logo_section">圖示</string>
+    <string name="watermark_logo_show">顯示Logo</string>
     <string name="watermark_logo_size">Logo大小</string>
-    <string name="watermark_edit_texts">编辑水印文本</string>
-    <string name="watermark_device_brand">设备品牌</string>
-    <string name="watermark_date_time">日期和时间</string>
-    <string name="watermark_no_date">没有日期信息</string>
-    <string name="watermark_rotate_left">向左旋转</string>
-    <string name="watermark_rotate_right">向右旋转</string>
+    <string name="watermark_edit_texts">編輯水印文字</string>
+    <string name="watermark_device_brand">設備品牌</string>
+    <string name="watermark_date_time">日期和時間</string>
+    <string name="watermark_no_date">沒有日期資訊</string>
+    <string name="watermark_rotate_left">向左旋轉</string>
+    <string name="watermark_rotate_right">向右旋轉</string>
     <string name="action_next">下一步</string>
-    <string name="action_ok">确定</string>
-    <string name="action_save_changes">保存更改</string>
-    <string name="calendar_sync_settings_title">日历同步设置</string>
-    <string name="calendar_sync_select_calendars">同步特定日历</string>
+    <string name="action_ok">確定</string>
+    <string name="action_save_changes">儲存變更</string>
+    <string name="calendar_sync_settings_title">日曆同步設定</string>
+    <string name="calendar_sync_select_calendars">同步特定日曆</string>
     <string name="calendar_sync_periodic_title">定期同步</string>
-    <string name="calendar_sync_periodic_desc">如果发现更改，每15分钟同步一次</string>
+    <string name="calendar_sync_periodic_desc">如果發現變更，每15分鐘同步一次</string>
     <string name="calendar_sync_sync_now">立即同步</string>
-    <string name="calendar_sync_manual_sync_desc">触发立即同步到手表</string>
-    <string name="calendar_sync_no_calendars">未找到本地日历</string>
-    <string name="calendar_sync_sync_started">日历同步已开始</string>
+    <string name="calendar_sync_manual_sync_desc">觸發立即同步到手錶</string>
+    <string name="calendar_sync_no_calendars">未找到本地日曆</string>
+    <string name="calendar_sync_sync_started">日曆同步已開始</string>
     <!-- Search Settings -->
-    <string name="search_haptic_title">小组件触觉反馈</string>
-    <string name="search_haptic_desc">选择小组件点击的触觉反馈</string>
-    <string name="search_smart_wifi_title">智能WiFi</string>
-    <string name="search_smart_wifi_desc">WiFi连接时隐藏移动数据</string>
-    <string name="search_smart_data_title">智能数据</string>
-    <string name="search_smart_data_desc">在某些模式下隐藏移动数据</string>
-    <string name="search_reset_icons_title">重置所有图标</string>
-    <string name="search_reset_icons_desc">将状态栏图标可见性重置为默认值</string>
-    <string name="search_caffeinate_abort_screen_off_title">屏幕关闭时中止保持唤醒</string>
-    <string name="search_caffeinate_abort_screen_off_desc">手动锁定时自动关闭保持唤醒</string>
-    <string name="search_lighting_style_title">光效样式</string>
-    <string name="search_lighting_style_desc">在描边、发光、旋转等之间选择</string>
-    <string name="search_corner_radius_title">圆角半径</string>
-    <string name="search_corner_radius_desc">调整通知光效的圆角半径</string>
-    <string name="search_skip_silent_title">跳过静音通知</string>
-    <string name="search_skip_silent_desc">不为静音通知显示光效</string>
+    <string name="search_haptic_title">小組件觸覺回饋</string>
+    <string name="search_haptic_desc">選擇小組件點擊的觸覺回饋</string>
+    <string name="search_smart_wifi_title">智慧WiFi</string>
+    <string name="search_smart_wifi_desc">WiFi連接時隱藏行動資料</string>
+    <string name="search_smart_data_title">智慧資料</string>
+    <string name="search_smart_data_desc">在某些模式下隱藏行動資料</string>
+    <string name="search_reset_icons_title">重置所有圖示</string>
+    <string name="search_reset_icons_desc">將狀態欄圖示可見性重置為預設值</string>
+    <string name="search_caffeinate_abort_screen_off_title">螢幕關閉時中止保持喚醒</string>
+    <string name="search_caffeinate_abort_screen_off_desc">手動鎖定時自動關閉保持喚醒</string>
+    <string name="search_lighting_style_title">光效樣式</string>
+    <string name="search_lighting_style_desc">在描邊、發光、旋轉等之間選擇</string>
+    <string name="search_corner_radius_title">圓角半徑</string>
+    <string name="search_corner_radius_desc">調整通知光效的圓角半徑</string>
+    <string name="search_skip_silent_title">跳過靜音通知</string>
+    <string name="search_skip_silent_desc">不為靜音通知顯示光效</string>
     <string name="search_flashlight_pulse_title">閃爍閃光燈</string>
     <string name="search_flashlight_pulse_desc">新通知進來時慢慢閃爍閃光燈</string>
-    <string name="search_only_facing_down_title">仅当屏幕朝下时</string>
+    <string name="search_only_facing_down_title">僅當螢幕朝下時</string>
     <string name="search_only_facing_down_desc">只在螢幕朝下時閃爍閃光燈</string>
-    <string name="snooze_no_channels_discovered">尚未发现系统通知通道。检测到后会在此处显示。</string>
+    <string name="snooze_no_channels_discovered">尚未發現系統通知通道。檢測到後會在此處顯示。</string>
     <string name="search_qs_blur_title">界面模糊</string>
-    <string name="search_qs_blur_desc">切换系统级界面模糊</string>
-    <string name="search_qs_bubbles_title">气泡</string>
-    <string name="search_qs_bubbles_desc">启用浮动窗口气泡</string>
-    <string name="search_qs_sensitive_title">敏感内容</string>
-    <string name="search_qs_sensitive_desc">在锁屏上隐藏通知详情</string>
-    <string name="search_qs_wake_title">点按唤醒</string>
-    <string name="search_qs_wake_desc">双击唤醒控制</string>
+    <string name="search_qs_blur_desc">切換系統級界面模糊</string>
+    <string name="search_qs_bubbles_title">氣泡</string>
+    <string name="search_qs_bubbles_desc">啟用浮動視窗氣泡</string>
+    <string name="search_qs_sensitive_title">敏感內容</string>
+    <string name="search_qs_sensitive_desc">在鎖定畫面上隱藏通知詳情</string>
+    <string name="search_qs_wake_title">點按喚醒</string>
+    <string name="search_qs_wake_desc">雙擊喚醒控制</string>
     <string name="search_qs_aod_title">螢幕長亮模式</string>
     <string name="search_qs_aod_desc">螢幕長亮模式開關</string>
-    <string name="search_qs_caffeinate_title">Caffeinate（屏幕保持唤醒）</string>
-    <string name="search_qs_caffeinate_desc">保持屏幕唤醒切换</string>
-    <string name="search_qs_sound_title">声音模式</string>
-    <string name="search_qs_sound_desc">循环切换声音模式（响铃/振动/静音）</string>
+    <string name="search_qs_caffeinate_title">Caffeinate（螢幕保持喚醒）</string>
+    <string name="search_qs_caffeinate_desc">保持螢幕喚醒切換</string>
+    <string name="search_qs_sound_title">聲音模式</string>
+    <string name="search_qs_sound_desc">循環切換聲音模式（響鈴/振動/靜音）</string>
     <string name="search_qs_lighting_title">通知光效</string>
-    <string name="search_qs_lighting_desc">切换通知光效服务</string>
-    <string name="search_qs_night_light_title">动态夜间模式</string>
-    <string name="search_qs_night_light_desc">夜间模式自动化切换</string>
-    <string name="search_qs_locked_sec_title">锁屏安全</string>
-    <string name="search_qs_locked_sec_desc">锁屏网络安全性切换</string>
-    <string name="search_qs_mono_title">单声道音频</string>
-    <string name="search_qs_mono_desc">强制单声道音频输出切换</string>
-    <string name="search_qs_flashlight_title">手电筒</string>
-    <string name="search_qs_flashlight_desc">专用手电筒切换</string>
-    <string name="search_qs_freeze_title">应用冻结</string>
-    <string name="search_qs_freeze_desc">启动应用冻结网格</string>
+    <string name="search_qs_lighting_desc">切換通知光效服務</string>
+    <string name="search_qs_night_light_title">動態夜間模式</string>
+    <string name="search_qs_night_light_desc">夜間模式自動化切換</string>
+    <string name="search_qs_locked_sec_title">鎖定畫面安全</string>
+    <string name="search_qs_locked_sec_desc">鎖定畫面網路安全性切換</string>
+    <string name="search_qs_mono_title">單聲道音訊</string>
+    <string name="search_qs_mono_desc">強制單聲道音訊輸出切換</string>
+    <string name="search_qs_flashlight_title">手電筒</string>
+    <string name="search_qs_flashlight_desc">專用手電筒切換</string>
+    <string name="search_qs_freeze_title">應用程式凍結</string>
+    <string name="search_qs_freeze_desc">啟動應用程式凍結網格</string>
     <string name="search_qs_pulse_title">閃爍閃光燈</string>
     <string name="search_qs_pulse_desc">通知閃爍開關</string>
-    <string name="search_qs_stay_awake_desc">切换保持唤醒开发者选项</string>
+    <string name="search_qs_stay_awake_desc">切換保持喚醒開發者選項</string>
     <string name="search_qs_private_dns_title">私有DNS</string>
-    <string name="search_qs_private_dns_desc">循环切换私有DNS模式（关闭/自动/主机名）</string>
-    <string name="search_qs_usb_debugging_title">USB调试</string>
-    <string name="search_qs_usb_debugging_desc">切换USB调试开发者选项</string>
+    <string name="search_qs_private_dns_desc">循環切換私有DNS模式（關閉/自動/主機名）</string>
+    <string name="search_qs_usb_debugging_title">USB除錯</string>
+    <string name="search_qs_usb_debugging_desc">切換USB除錯開發者選項</string>
     <string name="search_qs_refresh_rate_title">Refresh Rate</string>
     <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
-    <string name="search_remap_enable_title">启用按键重映射</string>
-    <string name="search_remap_enable_desc">音量键重映射的总开关</string>
-    <string name="search_remap_haptic_title">重映射触觉反馈</string>
-    <string name="search_remap_haptic_desc">按下重映射按钮时的振动反馈</string>
-    <string name="search_remap_flashlight_title">手电筒开关</string>
-    <string name="search_remap_flashlight_desc">使用音量键切换手电筒</string>
+    <string name="search_remap_enable_title">啟用按鍵重映射</string>
+    <string name="search_remap_enable_desc">音量鍵重映射的總開關</string>
+    <string name="search_remap_haptic_title">重映射觸覺回饋</string>
+    <string name="search_remap_haptic_desc">按下重映射按鈕時的振動回饋</string>
+    <string name="search_remap_flashlight_title">手電筒開關</string>
+    <string name="search_remap_flashlight_desc">使用音量鍵切換手電筒</string>
     <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
     <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
-    <string name="search_night_light_enable_title">启用动态夜间模式</string>
-    <string name="search_night_light_enable_desc">动态夜间模式总开关</string>
-    <string name="search_app_lock_enable_title">启用应用锁</string>
-    <string name="search_app_lock_enable_desc">应用锁总开关</string>
-    <string name="search_app_lock_pick_title">选择锁定的应用</string>
-    <string name="search_app_lock_pick_desc">选择哪些应用需要认证</string>
-    <string name="search_freeze_pick_title">选择要冻结的应用</string>
-    <string name="search_freeze_pick_desc">选择哪些应用可以被冻结</string>
-    <string name="search_freeze_all_title">冻结所有应用</string>
-    <string name="search_freeze_all_desc">立即冻结所有已选择的应用</string>
-    <string name="search_freeze_locked_title">锁定时冻结</string>
-    <string name="search_freeze_locked_desc">设备锁定时冻结所选应用</string>
+    <string name="search_night_light_enable_title">啟用動態夜間模式</string>
+    <string name="search_night_light_enable_desc">動態夜間模式總開關</string>
+    <string name="search_app_lock_enable_title">啟用應用程式鎖</string>
+    <string name="search_app_lock_enable_desc">應用程式鎖總開關</string>
+    <string name="search_app_lock_pick_title">選擇鎖定的應用程式</string>
+    <string name="search_app_lock_pick_desc">選擇哪些應用程式需要認證</string>
+    <string name="search_freeze_pick_title">選擇要凍結的應用程式</string>
+    <string name="search_freeze_pick_desc">選擇哪些應用程式可以被凍結</string>
+    <string name="search_freeze_all_title">凍結所有應用程式</string>
+    <string name="search_freeze_all_desc">立即凍結所有已選擇的應用程式</string>
+    <string name="search_freeze_locked_title">鎖定時凍結</string>
+    <string name="search_freeze_locked_desc">設備鎖定時凍結所選應用程式</string>
     <string name="search_freeze_delay_title">凍結延遲時間</string>
     <string name="search_freeze_delay_desc">上鎖後的凍結延遲時間</string>
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">需要高级命令。从Play商店安装Shizuku。</string>
-    <string name="perm_shizuku_install_action">安装Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku权限</string>
-    <string name="perm_shizuku_grant_desc">在地图导航时需要运行省电命令。</string>
+    <string name="perm_shizuku_desc">需要高級命令。從Play商店安裝Shizuku。</string>
+    <string name="perm_shizuku_install_action">安裝Shizuku</string>
+    <string name="perm_shizuku_grant_title">Shizuku權限</string>
+    <string name="perm_shizuku_grant_desc">在地圖導航時需要執行省電命令。</string>
     <string name="req_shizuku">需要Shizuku或Root</string>
-    <string name="perm_root_title">Root权限</string>
-    <string name="perm_root_desc">使用Root权限进行系统操作所需的权限。</string>
-    <string name="perm_notif_listener_title">通知监听器</string>
-    <string name="perm_notif_listener_desc_maps">需要检测地图何时在导航。</string>
-    <string name="perm_notif_listener_desc_lighting">需要检测新通知</string>
-    <string name="perm_notif_listener_desc_snooze">需要检测和延迟通知</string>
-    <string name="perm_accessibility_title">无障碍服务</string>
-    <string name="perm_accessibility_desc_common">应用锁、熄屏小组件和其他功能检测交互所需</string>
-    <string name="perm_accessibility_desc_lighting">需要在新通知上触发通知光效</string>
-    <string name="perm_default_browser_title">默认浏览器</string>
-    <string name="perm_default_browser_desc">需要高效处理链接</string>
+    <string name="perm_root_title">Root權限</string>
+    <string name="perm_root_desc">使用Root權限進行系統操作所需的權限。</string>
+    <string name="perm_notif_listener_title">通知監聽器</string>
+    <string name="perm_notif_listener_desc_maps">需要檢測地圖何時在導航。</string>
+    <string name="perm_notif_listener_desc_lighting">需要檢測新通知</string>
+    <string name="perm_notif_listener_desc_snooze">需要檢測和延遲通知</string>
+    <string name="perm_accessibility_title">無障礙服務</string>
+    <string name="perm_accessibility_desc_common">應用程式鎖、熄屏小組件和其他功能檢測交互所需</string>
+    <string name="perm_accessibility_desc_lighting">需要在新通知上觸發通知光效</string>
+    <string name="perm_default_browser_title">預設瀏覽器</string>
+    <string name="perm_default_browser_desc">需要高效處理連結</string>
     <string name="perm_install_packages_title">Install Unknown Apps</string>
     <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
     <string name="action_install_update">Install Update</string>
     <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
     <string name="update_download_failed">Download failed</string>
-    <string name="perm_accessibility_desc_remap">需要拦截硬件按钮事件</string>
+    <string name="perm_accessibility_desc_remap">需要攔截硬體按鈕事件</string>
     <string name="perm_accessibility_desc_essentials_on_display">必須在螢幕關閉時攔截音量鍵事件，以觸發簡約一覽覆蓋層。</string>
-    <string name="perm_accessibility_desc_night_light">需要监控前台应用。</string>
-    <string name="perm_write_secure_title">写入安全设置</string>
-    <string name="perm_write_secure_desc_common">状态栏图标和锁屏安全所需</string>
-    <string name="perm_write_secure_desc_night_light">需要切换夜间模式。通过ADB或root授予。</string>
-    <string name="perm_write_settings_title">修改系统设置</string>
-    <string name="perm_write_settings_desc">需要切换自适应亮度和其他系统设置</string>
-    <string name="perm_overlay_title">悬浮窗权限</string>
-    <string name="perm_overlay_desc">需要在屏幕上显示通知光效叠加层</string>
-    <string name="perm_device_admin_title">设备管理员</string>
-    <string name="perm_device_admin_desc">需要在未经授权的访问尝试时硬锁定设备（禁用生物识别）</string>
-    <string name="perm_action_grant">授予权限</string>
-    <string name="perm_action_copy_adb">复制ADB命令</string>
-    <string name="perm_action_check">检查</string>
-    <string name="perm_action_enable">在设置中启用</string>
+    <string name="perm_accessibility_desc_night_light">需要監控前台應用程式。</string>
+    <string name="perm_write_secure_title">寫入安全設定</string>
+    <string name="perm_write_secure_desc_common">狀態欄圖示和鎖定畫面安全所需</string>
+    <string name="perm_write_secure_desc_night_light">需要切換夜間模式。通過ADB或root授予。</string>
+    <string name="perm_write_settings_title">修改系統設定</string>
+    <string name="perm_write_settings_desc">需要切換動態亮度和其他系統設定</string>
+    <string name="perm_overlay_title">懸浮窗權限</string>
+    <string name="perm_overlay_desc">需要在螢幕上顯示通知光效疊加層</string>
+    <string name="perm_device_admin_title">設備管理員</string>
+    <string name="perm_device_admin_desc">需要在未經授權的存取嘗試時硬鎖定設備（禁用生物識別）</string>
+    <string name="perm_action_grant">授予權限</string>
+    <string name="perm_action_copy_adb">複製ADB命令</string>
+    <string name="perm_action_check">檢查</string>
+    <string name="perm_action_enable">在設定中啟用</string>
     <string name="perm_action_how_to">如何授予</string>
     <string name="perm_action_granted">Granted</string>
     <string name="perm_action_grant_shizuku">Grant using Shizuku</string>
     <string name="perm_action_grant_root">Grant using Root</string>
     <string name="perm_write_secure_instructions">This permission can be granted either via a PC using ADB. Copy the ADB command and run on the shell.\n\nOr you can easily grant it using Shizuku from the below button.\n\nThis permission only needs to be granted once.</string>
-    <string name="perm_battery_optimization_title">电池优化</string>
-    <string name="perm_battery_optimization_desc">确保服务不会被系统为了省电而终止。</string>
+    <string name="perm_battery_optimization_title">電池最佳化</string>
+    <string name="perm_battery_optimization_desc">確保服務不會被系統為了省電而終止。</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
-    <string name="tab_freeze">冻结</string>
-    <string name="tab_freeze_title">已冻结</string>
+    <string name="tab_freeze">凍結</string>
+    <string name="tab_freeze_title">已凍結</string>
     <string name="tab_diy">DIY</string>
-    <string name="tab_apps">应用</string>
-    <string name="tab_freeze_subtitle">已禁用的应用</string>
-    <string name="tab_diy_subtitle">自己动手</string>
-    <string name="tab_apps_subtitle">查找和管理应用</string>
-    <string name="feat_app_updates_title">应用更新</string>
-    <string name="tab_app_updates_title">应用更新</string>
-    <string name="action_add_repo">添加仓库</string>
-    <string name="action_edit_repo">编辑仓库</string>
-    <string name="prompt_enter_repo_url">输入GitHub仓库URL或owner/repo</string>
-    <string name="action_track">跟踪</string>
+    <string name="tab_apps">應用程式</string>
+    <string name="tab_freeze_subtitle">已禁用的應用程式</string>
+    <string name="tab_diy_subtitle">自己動手</string>
+    <string name="tab_apps_subtitle">查找和管理應用程式</string>
+    <string name="feat_app_updates_title">應用程式更新</string>
+    <string name="tab_app_updates_title">應用程式更新</string>
+    <string name="action_add_repo">新增倉庫</string>
+    <string name="action_edit_repo">編輯倉庫</string>
+    <string name="prompt_enter_repo_url">輸入GitHub來源URL或owner/repo</string>
+    <string name="action_track">跟蹤</string>
     <string name="error_no_apk_found">最新版本中未找到APK</string>
-    <string name="error_repo_not_found">仓库未找到</string>
+    <string name="error_repo_not_found">倉庫未找到</string>
     <string name="label_latest_release">最新版本</string>
     <string name="action_view_readme">查看README</string>
     <string name="label_stars">%d 星</string>
-    <string name="label_installed_app">已安装的应用</string>
-    <string name="label_not_installed">未安装</string>
-    <string name="action_pick_app">选择应用</string>
-    <string name="action_select_app">选择应用</string>
-    <string name="action_untrack">取消跟踪</string>
+    <string name="label_installed_app">已安裝的應用程式</string>
+    <string name="label_not_installed">未安裝</string>
+    <string name="action_pick_app">選擇應用程式</string>
+    <string name="action_select_app">選擇應用程式</string>
+    <string name="action_untrack">取消跟蹤</string>
     <string name="label_pending">等待中</string>
     <string name="label_up_to_date">已是最新</string>
-    <string name="feat_app_updates_desc">直接从GitHub跟踪和下载您最喜爱的应用的最新版本。</string>
-    <string name="error_invalid_repo_format">格式无效。请使用owner/repo或GitHub URL</string>
-    <string name="error_generic_search">搜索时发生错误</string>
-    <string name="label_auto">自动</string>
-    <string name="label_options">选项</string>
-    <string name="option_allow_prereleases">检查预发布版</string>
+    <string name="feat_app_updates_desc">直接從GitHub跟蹤和下載您最喜愛的應用程式的最新版本。</string>
+    <string name="error_invalid_repo_format">格式無效。請使用owner/repo或GitHub URL</string>
+    <string name="error_generic_search">搜尋時發生錯誤</string>
+    <string name="label_auto">自動</string>
+    <string name="label_options">選項</string>
+    <string name="option_allow_prereleases">檢查預發佈版</string>
     <string name="option_notifications">通知</string>
-    <string name="error_rate_limited">超出GitHub速率限制。请稍后重试。</string>
+    <string name="error_rate_limited">超出GitHub速率限制。請稍後重試。</string>
     <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">键盘设置</string>
-    <string name="btn_enable_keyboard">在设置中启用</string>
-    <string name="btn_select_keyboard">切换到Essentials</string>
-    <string name="label_enabled">已启用</string>
+    <string name="label_keyboard_setup">鍵盤設定</string>
+    <string name="btn_enable_keyboard">在設定中啟用</string>
+    <string name="btn_select_keyboard">切換到Essentials</string>
+    <string name="label_enabled">已啟用</string>
     <string name="label_disabled">已禁用</string>
-    <string name="tile_adaptive_brightness">自适应亮度</string>
-    <string name="tile_maps_power_saving">地图省电模式</string>
-    <string name="action_search">搜索</string>
+    <string name="tile_adaptive_brightness">動態亮度</string>
+    <string name="tile_maps_power_saving">地圖省電模式</string>
+    <string name="action_search">搜尋</string>
     <string name="action_stop">停止</string>
-    <string name="label_search">搜索</string>
-    <string name="search_frozen_apps_placeholder">搜索已冻结的应用</string>
+    <string name="label_search">搜尋</string>
+    <string name="search_frozen_apps_placeholder">搜尋已凍結的應用程式</string>
     <!-- UI Components General -->
     <string name="action_back">返回</string>
     <string name="content_desc_back">返回</string>
-    <string name="label_settings">设置</string>
-    <string name="action_report_bug">报告Bug</string>
+    <string name="label_settings">設定</string>
+    <string name="action_report_bug">報告Bug</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">崩溃报告</string>
-    <string name="sentry_mode_off">关闭</string>
-    <string name="sentry_mode_auto">自动</string>
-    <string name="sentry_crash_toast">Essentials崩溃，已发送报告</string>
-    <string name="simulate_crash">模拟崩溃</string>
-    <string name="welcome_title">欢迎使用Essentials</string>
-    <string name="welcome_subtitle">面向Android极客的工具箱</string>
+    <string name="sentry_report_mode_title">崩潰報告</string>
+    <string name="sentry_mode_off">關閉</string>
+    <string name="sentry_mode_auto">自動</string>
+    <string name="sentry_crash_toast">Essentials崩潰，已發送報告</string>
+    <string name="simulate_crash">模擬崩潰</string>
+    <string name="welcome_title">歡迎使用Essentials</string>
+    <string name="welcome_subtitle">面向Android極客的工具箱</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
-    <string name="action_lets_begin">开始吧</string>
-    <string name="acknowledgement_title">致谢</string>
-    <string name="acknowledgement_desc">本应用是一系列能够深度交互设备系统的工具集合。使用某些功能可能会以意想不到的方式修改系统设置或行为。\n\n您只需要为您使用的选定功能授予必要的权限，从而完全控制应用的行为。\n\n此外，本应用不会跟踪或存储您的任何个人数据，我不需要它们…请保护好自己。您可以参考源代码获取更多信息。\n\n本应用完全开源，并且现在和将来都永远免费使用。请勿付费或从未知来源安装。</string>
-    <string name="acknowledgement_warning">警告：请谨慎操作。开发者对使用本应用可能导致的任何系统不稳定、数据丢失或其他问题概不负责。继续操作即表示您承认这些风险。</string>
-    <string name="acknowledgement_footer">我知道您甚至没有仔细阅读，但如果您需要任何帮助，请随时联系开发者或社区。</string>
+    <string name="action_lets_begin">開始吧</string>
+    <string name="acknowledgement_title">致謝</string>
+    <string name="acknowledgement_desc">本應用程式是一系列能夠深度交互設備系統的工具集合。使用某些功能可能會以意想不到的方式修改系統設定或行為。\n\n您只需要為您使用的選定功能授予必要的權限，從而完全控制應用程式的行為。\n\n此外，本應用程式不會跟蹤或儲存您的任何個人資料，我不需要它們…請保護好自己。您可以參考原始碼取得更多資訊。\n\n本應用程式完全開源，並且現在和將來都永遠免費使用。請勿付費或從未知來源安裝。</string>
+    <string name="acknowledgement_warning">警告：請謹慎操作。開發者對使用本應用程式可能導致的任何系統不穩定、資料丟失或其他問題概不負責。繼續操作即表示您承認這些風險。</string>
+    <string name="acknowledgement_footer">我知道您甚至沒有仔細閱讀，但如果您需要任何幫助，請隨時聯絡開發者或社群。</string>
     <string name="action_i_understand">我理解</string>
-    <string name="feature_intro_desc">任何时候您对某个功能或快速设置磁贴的作用以及可能需要哪些权限感到困惑，只需长按它并选择“这是什么？”即可了解更多。</string>
-    <string name="feature_intro_footer">您可以随时在应用设置中报告错误或查找有用的指南。</string>
-    <string name="action_let_me_in">让我进去</string>
-    <string name="preferences_title">偏好设置</string>
-    <string name="preferences_desc">配置一些基本设置以开始使用。</string>
-    <string name="label_app_settings">应用设置</string>
-    <string name="label_app_language">语言</string>
-    <string name="label_haptic_feedback">触觉反馈</string>
+    <string name="feature_intro_desc">任何時候您對某個功能或快速設定磁貼的作用以及可能需要哪些權限感到困惑，只需長按它並選擇「這是什麼？」即可瞭解更多。</string>
+    <string name="feature_intro_footer">您可以隨時在應用程式設定中報告錯誤或查找有用的指南。</string>
+    <string name="action_let_me_in">讓我進去</string>
+    <string name="preferences_title">偏好設定</string>
+    <string name="preferences_desc">設定一些基本設定以開始使用。</string>
+    <string name="label_app_settings">應用程式設定</string>
+    <string name="label_app_language">語言</string>
+    <string name="label_haptic_feedback">觸覺回饋</string>
     <string name="label_updates">更新</string>
-    <string name="label_auto_check_updates">自动检查更新</string>
-    <string name="desc_auto_check_updates">应用启动时检查更新</string>
-    <string name="action_all_set">全部就绪</string>
+    <string name="label_auto_check_updates">自動檢查更新</string>
+    <string name="desc_auto_check_updates">應用程式啟動時檢查更新</string>
+    <string name="action_all_set">全部就緒</string>
     <string name="action_check_whats_new">查看新功能？</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
-    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="action_see_whats_new">See what「s new</string>
     <string name="label_mode_default">Default</string>
     <string name="label_mode_glove">Glove mode</string>
     <string name="tile_scale_animations">Glove Mode</string>
@@ -767,206 +767,206 @@
     <string name="tile_restart_systemui">SystemUI Restart</string>
     <string name="tile_restart_systemui_subtitle_restart">Now</string>
     <string name="about_desc_restart_systemui_tile">Easily restart SystemUI directly from your Quick Settings panel. Helpful to quickly resolve status bar glitches or apply system UI modifications immediately. Requires root or Shizuku shell access.</string>
-    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="msg_error_load_release_notes">Couldn「t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">完成</string>
-    <string name="action_preview">预览</string>
-    <string name="action_help_guide">帮助指南</string>
-    <string name="action_what_is_this">这是什么？</string>
+    <string name="action_preview">預覽</string>
+    <string name="action_help_guide">幫助指南</string>
+    <string name="action_what_is_this">這是什麼？</string>
     <string name="update_available_title">有可用更新</string>
     <string name="about_desc_your_android">一覽您裝置的硬體與軟體規格。這些資訊取自 GSMArena 及系統內容，提供關於您的 Android 裝置的全面概覽。</string>
     <string name="about_desc_essentials_on_display">簡約一覽會在您播放音樂時，以及播放狀態發生變化時，於鎖定畫面顯示「正在播放」的視窗。\n\n若您的裝置不支援在 AOD 上疊加覆蓋視窗，您可以在充電時，改為使用 Android 設定中新增的「氛圍」螢幕保護程式作為替代方案。</string>
     <string name="about_desc_notification_lighting">「通知燈效」功能會在您收到通知時，增添精美的邊框燈光效果。\n\n您可以自訂動畫風格、顏色及行為模式。即使螢幕關閉（視原廠而定）或疊加在當前應用程式上方時，此功能仍可運作。請透過提供的控制項，選擇應用程式、通知優先級，或設定應觸發此效果的條件。若您的原廠不支援在 AOD 上方疊加顯示，請使用下方提供的「環境顯示」選項。</string>
-    <string name="about_desc_screen_off_widget">通过点击一个透明的、可调整大小的小组件轻松关闭屏幕，该小组件不会在主屏幕上添加图标或任何杂乱。</string>
-    <string name="about_desc_statusbar_icons">完全控制您的状态栏图标。\n\n隐藏特定图标如WiFi、蓝牙或蜂窝数据，保持状态栏整洁。您还可以使用一些智能控制自定义时钟格式和电池指示器。这些是可用的AOSP控件列表，因此您的设备操作系统可能不会尊重所有控件。</string>
-    <string name="about_desc_caffeinate">保持唤醒可防止屏幕自动关闭。\n\n在特定时长或无限期内保持屏幕唤醒。适用于阅读长文章或参考食谱时。</string>
-    <string name="about_desc_maps_power_saving">在任何Android设备上获取Pixel 10系列独有的Google Maps省电模式，在锁屏上显示极简纯黑背景。开始导航会话，关闭屏幕再重新打开即可。</string>
-    <string name="about_desc_flashlight_pulse">收到通知時讓閃光燈呼吸閃爍。\n\n如果裝置硬體支援手電筒亮度調節，閃爍效果將呈現平滑的漸變動畫。</string>
-    <string name="about_desc_snooze_notifications">暫時關閉那些原廠無法更改的煩人常駐通知。\n\n當常駐通知出現時，這個功能頁面會列出其通知頻道。點選後，那個常駐通知就會被暫時關閉。\n\n你仍然可以在 Android 的通知紀錄中找到任何暫時被關閉的常駐通知。</string>
-    <string name="about_desc_quick_settings_tiles">向快速设置面板添加自定义磁贴。\n\n长按其中任何一个以了解它们的作用。</string>
-    <string name="about_desc_button_remap">重映射硬件按钮以执行不同的操作和快捷方式。\n\n自定义在特定条件下长按音量键时发生的情况。\n\n某些行为，如屏幕关闭触发或手电筒控制，可能取决于OEM的实现方式，并非在所有设备上都能按预期工作。某些场景可以使用Shizuku权限解决，但由于实现方式不同，可能无法提供相同的体验。</string>
-    <string name="about_desc_dynamic_night_light">根据前台应用自动切换屏幕蓝光滤除模式。</string>
-    <string name="about_desc_screen_locked_security">增强设备锁定时的安全性。\n\n限制访问某些敏感的快速设置磁贴，防止未经授权的网络修改，并通过增加动画速度防止触摸重试来阻止再次尝试。\n\n此功能并不健壮，可能存在缺陷，例如某些允许直接切换的磁贴（如蓝牙或飞行模式）无法被阻止。</string>
-    <string name="about_desc_app_lock">使用第二层认证保护您的应用。\n\n只要您的设备锁屏认证方法符合Android标准的3级生物识别安全级别，就会被使用。</string>
-    <string name="about_desc_location_reached">当您接近目的地时收到通知，确保您不会错过站点。\n\n前往Google Maps，长按目的地附近的图钉，确保显示“已落下的图钉”（否则距离计算可能不准确），然后将位置分享给Essentials应用并开始跟踪。</string>
-    <string name="location_reached_add_title">添加目的地</string>
-    <string name="location_reached_edit_title">编辑目的地</string>
-    <string name="location_reached_name_placeholder">家、办公室等</string>
-    <string name="location_reached_name_label">名称</string>
-    <string name="location_reached_save_btn">保存</string>
+    <string name="about_desc_screen_off_widget">通過點擊一個透明的、可調整大小的小組件輕鬆關閉螢幕，該小組件不會在主畫面上新增圖示或任何雜亂。</string>
+    <string name="about_desc_statusbar_icons">完全控制您的狀態欄圖示。\n\n隱藏特定圖示如WiFi、藍牙或蜂窩資料，保持狀態欄整潔。您還可以使用一些智慧控制自訂時鐘格式和電池指示器。這些是可用的AOSP控件列表，因此您的設備作業系統可能不會尊重所有控件。</string>
+    <string name="about_desc_caffeinate">保持喚醒可防止螢幕自動關閉。\n\n在特定時長或無限期內保持螢幕喚醒。適用於閱讀長文章或參考食譜時。</string>
+    <string name="about_desc_maps_power_saving">在任何Android設備上取得Pixel 10系列獨有的Google Maps省電模式，在鎖定畫面上顯示極簡純黑背景。開始導航會話，關閉螢幕再重新開啟即可。</string>
+    <string name="about_desc_flashlight_pulse">收到通知時讓閃光燈呼吸閃爍。\n\n如果裝置硬體支援手電筒亮度調節，閃爍效果將呈現平滑的漸層動畫。</string>
+    <string name="about_desc_snooze_notifications">暫時關閉那些原廠無法變更的煩人常駐通知。\n\n當常駐通知出現時，這個功能頁面會列出其通知頻道。點選後，那個常駐通知就會被暫時關閉。\n\n你仍然可以在 Android 的通知紀錄中找到任何暫時被關閉的常駐通知。</string>
+    <string name="about_desc_quick_settings_tiles">向快速設定面板新增自訂磁貼。\n\n長按其中任何一個以瞭解它們的作用。</string>
+    <string name="about_desc_button_remap">重映射硬體按鈕以執行不同的操作和快捷方式。\n\n自訂在特定條件下長按音量鍵時發生的情況。\n\n某些行為，如螢幕關閉觸發或手電筒控制，可能取決於OEM的實現方式，並非在所有設備上都能按預期工作。某些場景可以使用Shizuku權限解決，但由於實現方式不同，可能無法提供相同的體驗。</string>
+    <string name="about_desc_dynamic_night_light">根據前台應用程式自動切換螢幕藍光濾除模式。</string>
+    <string name="about_desc_screen_locked_security">增強設備鎖定時的安全性。\n\n限制存取某些敏感的快速設定磁貼，防止未經授權的網路修改，並通過增加動畫速度防止觸摸重試來阻止再次嘗試。\n\n此功能並不健壯，可能存在缺陷，例如某些允許直接切換的磁貼（如藍牙或飛航模式）無法被阻止。</string>
+    <string name="about_desc_app_lock">使用第二層認證保護您的應用程式。\n\n只要您的設備鎖定畫面認證方法符合Android標準的3級生物識別安全級別，就會被使用。</string>
+    <string name="about_desc_location_reached">當您接近目的地時收到通知，確保您不會錯過站點。\n\n前往Google Maps，長按目的地附近的圖釘，確保顯示「已落下的圖釘」（否則距離計算可能不準確），然後將位置分享給Essentials應用程式並開始跟蹤。</string>
+    <string name="location_reached_add_title">新增目的地</string>
+    <string name="location_reached_edit_title">編輯目的地</string>
+    <string name="location_reached_name_placeholder">家、辦公室等</string>
+    <string name="location_reached_name_label">名稱</string>
+    <string name="location_reached_save_btn">儲存</string>
     <string name="location_reached_cancel_btn">取消</string>
     <string name="location_reached_resolving">正在解析位置…</string>
     <string name="location_reached_last_trip">上次行程</string>
-    <string name="location_reached_saved_destinations">已保存的目的地</string>
-    <string name="location_reached_no_saved_dest">尚未保存任何目的地。</string>
-    <string name="location_reached_delete">删除目的地</string>
-    <string name="location_reached_tracking_now">正在跟踪</string>
-    <string name="location_reached_restart_btn">重新开始</string>
-    <string name="location_reached_instructional_desc">从Google Maps分享坐标（已落下的图钉）到Essentials以保存为目的地。\n\n显示的距离是到目的地的直线距离，而非道路距离。\n\n请对时间和距离的所有计算持保留态度，因为它们并不总是准确的。</string>
-    <string name="tile_location_reached">我们到了吗？</string>
+    <string name="location_reached_saved_destinations">已儲存的目的地</string>
+    <string name="location_reached_no_saved_dest">尚未儲存任何目的地。</string>
+    <string name="location_reached_delete">刪除目的地</string>
+    <string name="location_reached_tracking_now">正在跟蹤</string>
+    <string name="location_reached_restart_btn">重新開始</string>
+    <string name="location_reached_instructional_desc">從Google Maps分享座標（已落下的圖釘）到Essentials以儲存為目的地。\n\n顯示的距離是到目的地的直線距離，而非道路距離。\n\n請對時間和距離的所有計算持保留態度，因為它們並不總是準確的。</string>
+    <string name="tile_location_reached">我們到了嗎？</string>
     <string name="location_reached_pause">Pause</string>
     <string name="location_reached_resume">Resume</string>
-    <string name="location_reached_radius_label">半径：%1$d 米</string>
-    <string name="location_reached_distance_label">到目标距离：%1$s</string>
+    <string name="location_reached_radius_label">半徑：%1$d 米</string>
+    <string name="location_reached_distance_label">到目標距離：%1$s</string>
     <string name="location_reached_last_travelled">上次：%1$s</string>
-    <string name="location_reached_never">从未</string>
-    <string name="location_reached_to_go">剩余</string>
-    <string name="location_reached_eta_min">%1$d 分钟</string>
-    <string name="location_reached_eta_hr_min">%1$d 小时 %2$d 分钟</string>
-    <string name="location_reached_service_remaining_with_eta">%1$s（%2$d%%） • 剩余 %3$s</string>
-    <string name="about_desc_freeze">冻结应用以阻止它们在后台运行。\n\n当您不使用应用时，通过完全冻结它们来防止电池耗尽和数据使用。当您启动它们时，它们会立即解冻。冻结时，应用不会显示在应用抽屉中，也不会在Play Store中显示应用更新。</string>
-    <string name="about_desc_system_keyboard">没人要求的自定义输入法。\n\n这只是一个实验。可能不支持多种语言，因为实现起来非常复杂且耗时。</string>
-    <string name="about_desc_batteries">监控所有已连接设备的电池电量。\n\n在一个地方查看蓝牙耳机、手表和其他配件的电池状态。连接AirSync应用以同时显示您的Mac电池电量。</string>
-    <string name="about_desc_watermark">使用EXIF数据和设备信息向照片添加自定义标题/水印。\n\n直接从其他应用分享图片到Essentials，轻松添加水印。</string>
-    <string name="about_desc_calendar_sync">同步您即将到来的所有日历日程，无论因工作或学校政策而无法添加到wearOS设备的Google帐户限制如何。\n\n请确保安装wearOS Essentials配套应用，以便在应用以及磁贴或复杂功能中显示日程。</string>
-    <string name="about_desc_app_updates">跟踪已安装应用的更新。\n\n收到可用更新通知，查看更新日志，并轻松点击安装。</string>
-    <string name="about_desc_call_vibrations">为通话添加触觉反馈。\n\n当通话接通、挂断或接听时振动，无需查看屏幕即可获得触觉确认。</string>
-    <string name="about_desc_sound_mode_tile">快速在声音、振动和静音模式之间切换。\n\n一个方便的磁贴，无需使用音量键或设置即可更改铃声模式。您可以重新排序模式或禁用不需要的模式，以自定义磁贴的循环行为。</string>
-    <string name="about_desc_ui_blur">轻松切换系统级模糊深度效果。</string>
-    <string name="about_desc_bubbles">启用或禁用浮动通知气泡。\n\n快速切换会话气泡的系统级设置。</string>
-    <string name="about_desc_sensitive_content">在锁屏上隐藏敏感内容。\n\n切换设备锁定时是否显示或隐藏通知内容。</string>
-    <string name="about_desc_tap_to_wake">切换点按唤醒功能。\n\n启用或禁用通过点按唤醒屏幕的功能。</string>
+    <string name="location_reached_never">從未</string>
+    <string name="location_reached_to_go">剩餘</string>
+    <string name="location_reached_eta_min">%1$d 分鐘</string>
+    <string name="location_reached_eta_hr_min">%1$d 小時 %2$d 分鐘</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s（%2$d%%） • 剩餘 %3$s</string>
+    <string name="about_desc_freeze">凍結應用程式以阻止它們在後台執行。\n\n當您不使用應用程式時，通過完全凍結它們來防止電池耗盡和資料使用。當您啟動它們時，它們會立即解凍。凍結時，應用程式不會顯示在應用程式抽屜中，也不會在Play Store中顯示應用程式更新。</string>
+    <string name="about_desc_system_keyboard">沒人要求的自訂輸入法。\n\n這只是一個實驗。可能不支援多種語言，因為實現起來非常複雜且耗時。</string>
+    <string name="about_desc_batteries">監控所有已連接設備的電池電量。\n\n在一個地方查看藍牙耳機、手錶和其他配件的電池狀態。連接AirSync應用程式以同時顯示您的Mac電池電量。</string>
+    <string name="about_desc_watermark">使用EXIF資料和設備資訊向照片新增自訂標題/水印。\n\n直接從其他應用程式分享圖片到Essentials，輕鬆新增水印。</string>
+    <string name="about_desc_calendar_sync">同步您即將到來的所有日曆日程，無論因工作或學校政策而無法新增到wearOS設備的Google帳戶限制如何。\n\n請確保全裝wearOS Essentials配套應用程式，以便在應用程式以及磁貼或複雜功能中顯示日程。</string>
+    <string name="about_desc_app_updates">跟蹤已安裝應用程式的更新。\n\n收到可用更新通知，查看更新日誌，並輕鬆點擊安裝。</string>
+    <string name="about_desc_call_vibrations">為通話新增觸覺回饋。\n\n當通話接通、掛斷或接聽時振動，無需查看螢幕即可獲得觸覺確認。</string>
+    <string name="about_desc_sound_mode_tile">快速在聲音、振動和靜音模式之間切換。\n\n一個方便的磁貼，無需使用音量鍵或設定即可變更鈴聲模式。您可以重新排序模式或禁用不需要的模式，以自訂磁貼的循環行為。</string>
+    <string name="about_desc_ui_blur">輕鬆切換系統級模糊深度效果。</string>
+    <string name="about_desc_bubbles">啟用或禁用浮動通知氣泡。\n\n快速切換會話氣泡的系統級設定。</string>
+    <string name="about_desc_sensitive_content">在鎖定畫面上隱藏敏感內容。\n\n切換設備鎖定時是否顯示或隱藏通知內容。</string>
+    <string name="about_desc_tap_to_wake">切換點按喚醒功能。\n\n啟用或禁用通過點按喚醒螢幕的功能。</string>
     <string name="about_desc_aod">開關螢幕長亮模式\n\n快速開啟或關閉螢幕長亮模式以快速查看訊息。</string>
     <string name="about_desc_notification_glance">根據您的通知自動控制螢幕長亮模式。當您從選定的應用程式收到訊息或提醒時，螢幕長亮模式將保持開啟狀態，直到您關閉該通知為止，確保您不會錯過重要資訊，同時在沒有通知時也不會浪費電量。</string>
-    <string name="about_desc_mono_audio">将音频通道合并为单声道。\n\n使用单个耳塞或出于无障碍目的时很有用。</string>
-    <string name="about_desc_flashlight_tile">切换手电筒。\n\n长按打开亮度调节控件，这可能需要某些设备缺乏的硬件实现。</string>
-    <string name="about_desc_stay_awake">充电时保持屏幕唤醒。\n\n只要设备连接到电源，屏幕就不会休眠，适合开发者在调试期间使用。</string>
-    <string name="about_desc_nfc">切换NFC。\n\n快速启用或禁用近场通信以进行支付和配对。</string>
-    <string name="about_desc_adaptive_brightness">切换自适应亮度。\n\n根据环境光线启用或禁用自动屏幕亮度调整。</string>
-    <string name="about_desc_private_dns">切换私有DNS。\n\n在关闭、自动和私有DNS提供者模式之间循环。</string>
-    <string name="about_desc_usb_debugging">切换USB调试。\n\n直接从快速设置启用或禁用ADB调试访问。</string>
-    <string name="about_desc_color_picker">启动取色器工具以拾取Android 17 BETA 2中引入的颜色</string>
-    <string name="about_desc_charge_optimization">通过限制最大充电量或使用自适应充电来优化电池寿命。专为Pixel设备设计，以确保长寿命和健康的充电周期。\n\n致谢：TebbeUbben/ChargeQuickTile</string>
-    <string name="action_download">下载</string>
+    <string name="about_desc_mono_audio">將音訊通道合併為單聲道。\n\n使用單個耳塞或出於無障礙目的時很有用。</string>
+    <string name="about_desc_flashlight_tile">切換手電筒。\n\n長按開啟亮度調節控件，這可能需要某些設備缺乏的硬體實現。</string>
+    <string name="about_desc_stay_awake">充電時保持螢幕喚醒。\n\n只要設備連接到電源，螢幕就不會休眠，適合開發者在除錯期間使用。</string>
+    <string name="about_desc_nfc">切換NFC。\n\n快速啟用或禁用近場通訊以進行支付和配對。</string>
+    <string name="about_desc_adaptive_brightness">切換動態亮度。\n\n根據環境光線啟用或禁用自動螢幕亮度調整。</string>
+    <string name="about_desc_private_dns">切換私有DNS。\n\n在關閉、自動和私有DNS提供者模式之間循環。</string>
+    <string name="about_desc_usb_debugging">切換USB除錯。\n\n直接從快速設定啟用或禁用ADB除錯存取。</string>
+    <string name="about_desc_color_picker">啟動取色器工具以拾取Android 17 BETA 2中引入的顏色</string>
+    <string name="about_desc_charge_optimization">通過限制最大充電量或使用動態充電來最佳化電池壽命。專為Pixel設備設計，以確保長壽命和健康的充電週期。\n\n致謝：TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">下載</string>
     <!-- DIY Section -->
-    <string name="diy_trigger_screen_off">屏幕关闭</string>
-    <string name="diy_trigger_screen_on">屏幕开启</string>
-    <string name="diy_trigger_device_unlock">设备解锁</string>
-    <string name="diy_trigger_charger_connected">充电器连接</string>
-    <string name="diy_trigger_charger_disconnected">充电器断开</string>
-    <string name="diy_trigger_schedule">定时</string>
-    <string name="diy_state_time_period">时间段</string>
-    <string name="diy_time_selection_title">选择时间</string>
-    <string name="diy_time_range_selection_title">选择时间范围</string>
-    <string name="diy_start_time_label">开始时间</string>
-    <string name="diy_end_time_label">结束时间</string>
-    <string name="diy_repeat_days_label">重复于</string>
-    <string name="diy_state_charging">充电中</string>
-    <string name="diy_state_screen_on">屏幕开启</string>
-    <string name="diy_action_haptic">振动</string>
-    <string name="diy_action_notification">显示通知</string>
+    <string name="diy_trigger_screen_off">螢幕關閉</string>
+    <string name="diy_trigger_screen_on">螢幕開啟</string>
+    <string name="diy_trigger_device_unlock">設備解鎖</string>
+    <string name="diy_trigger_charger_connected">充電器連接</string>
+    <string name="diy_trigger_charger_disconnected">充電器斷開</string>
+    <string name="diy_trigger_schedule">定時</string>
+    <string name="diy_state_time_period">時間段</string>
+    <string name="diy_time_selection_title">選擇時間</string>
+    <string name="diy_time_range_selection_title">選擇時間範圍</string>
+    <string name="diy_start_time_label">開始時間</string>
+    <string name="diy_end_time_label">結束時間</string>
+    <string name="diy_repeat_days_label">重複於</string>
+    <string name="diy_state_charging">充電中</string>
+    <string name="diy_state_screen_on">螢幕開啟</string>
+    <string name="diy_action_haptic">振動</string>
+    <string name="diy_action_notification">顯示通知</string>
     <string name="diy_action_remove_notification">移除通知</string>
-    <string name="diy_action_flashlight_on">打开手电筒</string>
-    <string name="diy_action_flashlight_off">关闭手电筒</string>
-    <string name="diy_action_flashlight_toggle">切换手电筒</string>
-    <string name="diy_action_low_power_on">开启低电量模式</string>
-    <string name="diy_action_low_power_off">关闭低电量模式</string>
-    <string name="diy_action_dim_wallpaper">调暗壁纸</string>
-    <string name="diy_action_screen_off">Screen Off</string>
-    <string name="diy_action_media_play_pause">Media Play/Pause</string>
-    <string name="diy_action_media_next">Media Next</string>
-    <string name="diy_action_media_previous">Media Previous</string>
-    <string name="diy_action_ai_assistant">AI Assistant</string>
-    <string name="diy_action_take_screenshot">Take Screenshot</string>
-    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
-    <string name="diy_action_like_current_song">Like Current Song</string>
-    <string name="diy_action_circle_to_search">Circle to Search</string>
-    <string name="diy_action_pin_app">Pin Foreground App</string>
-    <string name="diy_dim_wallpaper_desc">此操作需要Shizuku或Root权限来调整系统壁纸调暗。</string>
-    <string name="diy_select_trigger">选择触发器</string>
-    <string name="diy_create_app_title">应用</string>
-    <string name="diy_create_app_desc">基于打开的应用自动化</string>
-    <string name="diy_select_state">选择状态</string>
-    <string name="diy_select_action">选择动作</string>
-    <string name="diy_in_action_label">进入动作</string>
-    <string name="diy_out_action_label">退出动作</string>
+    <string name="diy_action_flashlight_on">開啟手電筒</string>
+    <string name="diy_action_flashlight_off">關閉手電筒</string>
+    <string name="diy_action_flashlight_toggle">切換手電筒</string>
+    <string name="diy_action_low_power_on">開啟低電量模式</string>
+    <string name="diy_action_low_power_off">關閉低電量模式</string>
+    <string name="diy_action_dim_wallpaper">調暗桌布</string>
+    <string name="diy_action_screen_off">關閉螢幕</string>
+    <string name="diy_action_media_play_pause">媒體播放/暫停</string>
+    <string name="diy_action_media_next">媒體下一曲</string>
+    <string name="diy_action_media_previous">媒體上一曲</string>
+    <string name="diy_action_ai_assistant">AI 助理</string>
+    <string name="diy_action_take_screenshot">截圖</string>
+    <string name="diy_action_toggle_media_volume">切換媒體音量</string>
+    <string name="diy_action_like_current_song">喜歡當前歌曲</string>
+    <string name="diy_action_circle_to_search">圈選搜尋</string>
+    <string name="diy_action_pin_app">固定前台應用程式</string>
+    <string name="diy_dim_wallpaper_desc">此操作需要Shizuku或Root權限來調整系統桌布調暗。</string>
+    <string name="diy_select_trigger">選擇觸發器</string>
+    <string name="diy_create_app_title">應用程式</string>
+    <string name="diy_create_app_desc">基於開啟的應用程式自動化</string>
+    <string name="diy_select_state">選擇狀態</string>
+    <string name="diy_select_action">選擇動作</string>
+    <string name="diy_in_action_label">進入動作</string>
+    <string name="diy_out_action_label">退出動作</string>
     <string name="action_cancel">取消</string>
-    <string name="action_save">保存</string>
-    <string name="action_edit">编辑</string>
-    <string name="action_delete">删除</string>
-    <string name="action_enable">启用</string>
+    <string name="action_save">儲存</string>
+    <string name="action_edit">編輯</string>
+    <string name="action_delete">刪除</string>
+    <string name="action_enable">啟用</string>
     <string name="action_disable">禁用</string>
-    <string name="automation_service_channel_name">自动化服务</string>
-    <string name="automation_service_running_title">自动化已激活</string>
-    <string name="automation_service_running_desc">正在监控系统事件以执行您的自动化</string>
+    <string name="automation_service_channel_name">自動化服務</string>
+    <string name="automation_service_running_title">自動化已啟動</string>
+    <string name="automation_service_running_desc">正在監控系統事件以執行您的自動化</string>
     <string name="app_detection_service_channel_name">App Detection Service</string>
     <string name="app_detection_service_running_title">App Detection Active</string>
     <string name="app_detection_service_running_desc">Monitoring app activity</string>
-    <string name="diy_action_device_effects">设备效果</string>
-    <string name="diy_device_effects_desc">控制系统级效果，如灰度、AOD抑制、壁纸调暗和夜间模式。</string>
+    <string name="diy_action_device_effects">設備效果</string>
+    <string name="diy_device_effects_desc">控制系統級效果，如灰度、AOD抑制、桌布調暗和夜間模式。</string>
     <string name="diy_effect_grayscale">灰度</string>
-    <string name="diy_effect_suppress_ambient">抑制环境显示</string>
-    <string name="diy_effect_dim_wallpaper">调暗壁纸</string>
-    <string name="diy_effect_night_mode">夜间模式</string>
+    <string name="diy_effect_suppress_ambient">抑制環境顯示</string>
+    <string name="diy_effect_dim_wallpaper">調暗桌布</string>
+    <string name="diy_effect_night_mode">夜間模式</string>
     <string name="diy_device_effects_android_15_warning">此功能需要Android 15或更高版本。</string>
-    <string name="diy_device_effects_enabled">已启用</string>
+    <string name="diy_device_effects_enabled">已啟用</string>
     <string name="diy_device_effects_disabled">已禁用</string>
-    <string name="diy_action_sound_mode">声音模式</string>
-    <string name="diy_sound_mode_desc">此操作允许根据触发器在声音、振动和静音模式之间切换。需要勿扰权限。</string>
+    <string name="diy_action_sound_mode">聲音模式</string>
+    <string name="diy_sound_mode_desc">此操作允許根據觸發器在聲音、振動和靜音模式之間切換。需要勿擾權限。</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">适用于Pixel和Android设备的一体化工具箱</string>
+    <string name="app_description">適用於Pixel和Android設備的一體化工具箱</string>
     <!-- Edge Lighting -->
-    <string name="color_mode_system">系统</string>
-    <string name="color_mode_custom">自定义</string>
-    <string name="color_mode_app_specific">应用特定</string>
+    <string name="color_mode_system">系統</string>
+    <string name="color_mode_custom">自訂</string>
+    <string name="color_mode_app_specific">應用程式特定</string>
     <!-- Biometric & Security -->
-    <string name="error_auth_failed">认证失败</string>
-    <string name="shortcut_creation_hint_toast">长按网格中的应用以添加快捷方式</string>
-    <string name="error_app_uninstalled">应用未找到或已卸载</string>
+    <string name="error_auth_failed">認證失敗</string>
+    <string name="shortcut_creation_hint_toast">長按網格中的應用程式以新增快捷方式</string>
+    <string name="error_app_uninstalled">應用程式未找到或已卸載</string>
     <!-- Notifications -->
-    <string name="update_channel_name">应用更新</string>
-    <string name="update_channel_desc">新应用更新的通知</string>
+    <string name="update_channel_name">應用程式更新</string>
+    <string name="update_channel_desc">新應用程式更新的通知</string>
     <string name="notification_update_available">有可用更新</string>
-    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
-    <string name="action_update_to_version">Update to Essentials v%1$s</string>
-    <string name="action_check_for_updates">Check for updates</string>
-    <string name="battery_notification_no_devices">未连接设备</string>
+    <string name="notification_update_subtext">查看在 v%1$s 的新東西</string>
+    <string name="action_update_to_version">更新至 Essentials v%1$s</string>
+    <string name="action_check_for_updates">檢查更新</string>
+    <string name="battery_notification_no_devices">未連接設備</string>
     <string name="label_unknown">未知</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">搜索</string>
+    <string name="label_search_content_description">搜尋</string>
     <string name="label_recent_searches">Recent Searches</string>
     <string name="label_no_recent_searches">No recent searches</string>
     <string name="label_clear_all">Clear all</string>
-    <string name="perm_device_admin_explanation">需要在锁屏上尝试未经授权的网络更改时硬锁定设备。</string>
-    <string name="biometric_subtitle_access_settings">认证以访问设置</string>
-    <string name="biometric_title_settings_format">%1$s 设置</string>
+    <string name="perm_device_admin_explanation">需要在鎖定畫面上嘗試未經授權的網路變更時硬鎖定設備。</string>
+    <string name="biometric_subtitle_access_settings">認證以存取設定</string>
+    <string name="biometric_title_settings_format">%1$s 設定</string>
     <string name="keyword_feature">功能</string>
-    <string name="keyword_settings">设置</string>
-    <string name="keyword_hide">隐藏</string>
-    <string name="keyword_show">显示</string>
-    <string name="keyword_visibility">可见性</string>
-    <string name="error_loading_apps">加载应用时出错：%1$s</string>
+    <string name="keyword_settings">設定</string>
+    <string name="keyword_hide">隱藏</string>
+    <string name="keyword_show">顯示</string>
+    <string name="keyword_visibility">可見性</string>
+    <string name="error_loading_apps">載入應用程式時出錯：%1$s</string>
     <string-array name="keywords_haptic">
-        <item>振动</item>
-        <item>触摸</item>
-        <item>感觉</item>
+        <item>振動</item>
+        <item>觸摸</item>
+        <item>感覺</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>网络</item>
-        <item>可见性</item>
-        <item>自动</item>
-        <item>隐藏</item>
+        <item>網路</item>
+        <item>可見性</item>
+        <item>自動</item>
+        <item>隱藏</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>恢复</item>
-        <item>默认</item>
-        <item>图标</item>
+        <item>恢復</item>
+        <item>預設</item>
+        <item>圖示</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>键盘</item>
+        <item>鍵盤</item>
         <item>高度</item>
-        <item>内边距</item>
-        <item>触觉</item>
-        <item>输入</item>
+        <item>內邊距</item>
+        <item>觸覺</item>
+        <item>輸入</item>
     </string-array>
     <string-array name="keywords_flashlight">
         <item>光</item>
-        <item>手电筒</item>
+        <item>手電筒</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
         <item>光</item>
@@ -975,738 +975,521 @@
         <item>通知</item>
     </string-array>
     <string-array name="keywords_pocket_detection">
-        <item>pocket</item>
-        <item>proximity</item>
-        <item>sensor</item>
-        <item>torch</item>
-        <item>auto</item>
+        <item>口袋</item>
+        <item>近距離感應器</item>
+        <item>感測器</item>
+        <item>手電筒</item>
+        <item>自動感應器</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>唤醒</item>
-        <item>开发者</item>
-        <item>电源</item>
-        <item>充电</item>
+        <item>喚醒</item>
+        <item>開發者</item>
+        <item>電源</item>
+        <item>充電</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>发光</item>
+        <item>發光</item>
         <item>通知</item>
         <item>LED</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>圆角</item>
-        <item>形状</item>
-        <item>边缘</item>
+        <item>圓角</item>
+        <item>形狀</item>
+        <item>邊緣</item>
     </string-array>
     <string-array name="keywords_privacy">
         <item>安全</item>
-        <item>隐私</item>
-        <item>生物识别</item>
+        <item>隱私</item>
+        <item>生物識別</item>
         <item>面部</item>
-        <item>指纹</item>
+        <item>指紋</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>声音</item>
-        <item>无障碍</item>
-        <item>听觉</item>
+        <item>聲音</item>
+        <item>無障礙</item>
+        <item>聽覺</item>
     </string-array>
     <string-array name="keywords_timeout">
         <item>保持</item>
-        <item>开启</item>
-        <item>超时</item>
+        <item>開啟</item>
+        <item>超時</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>触摸</item>
-        <item>唤醒</item>
-        <item>显示</item>
+        <item>觸摸</item>
+        <item>喚醒</item>
+        <item>顯示</item>
     </string-array>
     <string-array name="keywords_timer">
-        <item>计时器</item>
+        <item>計時器</item>
         <item>等待</item>
-        <item>超时</item>
+        <item>超時</item>
     </string-array>
-    <string name="label_keyboard_always_dark">始终深色主题</string>
-    <string name="label_keyboard_pitch_black">纯黑主题</string>
-    <string name="label_keyboard_clipboard_enabled">剪贴板历史</string>
-    <string name="label_keyboard_long_press_symbols">长按显示符号</string>
-    <string name="label_keyboard_accented_characters">带重音字符</string>
+    <string name="label_keyboard_always_dark">始終深色主題</string>
+    <string name="label_keyboard_pitch_black">純黑主題</string>
+    <string name="label_keyboard_clipboard_enabled">剪貼簿歷史</string>
+    <string name="label_keyboard_long_press_symbols">長按顯示符號</string>
+    <string name="label_keyboard_accented_characters">帶重音字符</string>
     <string-array name="keywords_selection">
         <item>列表</item>
-        <item>选择器</item>
-        <item>选择</item>
+        <item>選擇器</item>
+        <item>選擇</item>
     </string-array>
     <string-array name="keywords_visual_style">
-        <item>动画</item>
-        <item>视觉</item>
-        <item>外观</item>
+        <item>動畫</item>
+        <item>視覺</item>
+        <item>外觀</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>安静</item>
+        <item>安靜</item>
         <item>忽略</item>
-        <item>过滤</item>
+        <item>過濾</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>自动化</item>
-        <item>自动</item>
-        <item>锁定</item>
+        <item>自動化</item>
+        <item>自動</item>
+        <item>鎖定</item>
     </string-array>
     <string-array name="keywords_adb_debug">
         <item>adb</item>
         <item>usb</item>
-        <item>调试</item>
+        <item>除錯</item>
     </string-array>
     <string-array name="keywords_blur_glass">
         <item>模糊</item>
         <item>玻璃</item>
-        <item>渐晕</item>
+        <item>漸暈</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>浮动</item>
-        <item>窗口</item>
-        <item>叠加</item>
+        <item>浮動</item>
+        <item>視窗</item>
+        <item>疊加</item>
     </string-array>
     <string-array name="keywords_always_display">
-        <item>始终</item>
-        <item>显示</item>
-        <item>时钟</item>
+        <item>始終</item>
+        <item>顯示</item>
+        <item>時鐘</item>
     </string-array>
     <string-array name="keywords_audio_mute">
-        <item>音频</item>
-        <item>静音</item>
+        <item>音訊</item>
+        <item>靜音</item>
         <item>音量</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>蓝光</item>
-        <item>滤除</item>
-        <item>自动</item>
+        <item>藍光</item>
+        <item>濾除</item>
+        <item>自動</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>冻结</item>
+        <item>凍結</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>手动</item>
+        <item>手動</item>
         <item>立即</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
         <item>接近</item>
-        <item>传感器</item>
+        <item>傳感器</item>
         <item>面部</item>
         <item>朝下</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>开关</item>
-        <item>总开关</item>
+        <item>開關</item>
+        <item>總開關</item>
     </string-array>
     <string-array name="keywords_vibration">
-        <item>振动</item>
-        <item>感觉</item>
+        <item>振動</item>
+        <item>感覺</item>
     </string-array>
     <string-array name="keywords_battery">
-        <item>电池</item>
-        <item>充电</item>
-        <item>优化</item>
+        <item>電池</item>
+        <item>充電</item>
+        <item>最佳化</item>
         <item>pixel</item>
     </string-array>
     <!-- App Selection Extra -->
-    <string name="action_invert_selection">反选</string>
-    <string name="toggle_show_system_apps">显示系统应用</string>
+    <string name="action_invert_selection">反選</string>
+    <string name="toggle_show_system_apps">顯示系統應用程式</string>
     <!-- Updates -->
     <string name="status_up_to_date">您已是最新版本</string>
-    <string name="warning_pre_release">这是一个预发布版本，可能不稳定。</string>
-    <string name="release_notes_format">发布说明 v%1$s</string>
+    <string name="warning_pre_release">這是一個預發佈版本，可能不穩定。</string>
+    <string name="release_notes_format">發佈說明 v%1$s</string>
     <string name="action_view_on_github">在GitHub上查看</string>
-    <string name="action_download_apk">下载APK</string>
+    <string name="action_download_apk">下載APK</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">无</string>
-    <string name="haptic_subtle">轻微</string>
-    <string name="haptic_double">双重</string>
-    <string name="haptic_click">点击</string>
+    <string name="haptic_none">無</string>
+    <string name="haptic_subtle">輕微</string>
+    <string name="haptic_double">雙重</string>
+    <string name="haptic_click">點擊</string>
     <string name="haptic_tick">滴答</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">关闭</string>
-    <string name="feature_flashlight_brightness_title">手电筒亮度</string>
+    <string name="action_turn_off">關閉</string>
+    <string name="feature_flashlight_brightness_title">手電筒亮度</string>
     <!-- QS / Activities -->
     <!-- About Section -->
-    <string name="developed_by_format">由 %1$s 开发\n带着 ❤\uFE0F 来自 \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">网站</string>
-    <string name="action_contact">联系</string>
+    <string name="developed_by_format">由 %1$s 開發\n帶著 ❤\uFE0F 來自 \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">網站</string>
+    <string name="action_contact">聯絡</string>
     <string name="action_telegram">Telegram</string>
-    <string name="action_support">支持</string>
-    <string name="label_other_apps">其他应用</string>
+    <string name="action_support">支援</string>
+    <string name="label_other_apps">其他應用程式</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Tasks</string>
     <string name="app_zero">Zero</string>
     <!-- Help & Guides -->
-    <string name="help_guides_title">帮助与指南</string>
-    <string name="need_more_support_reach_out">需要更多支持？请联系，</string>
-    <string name="action_collapse">折叠</string>
-    <string name="action_expand">展开</string>
-    <string name="support_group_label">支持群组</string>
-    <string name="email_label">电子邮件</string>
-    <string name="send_email_chooser_title">发送邮件</string>
-    <string name="error_no_email_app">没有可用的邮件应用</string>
-    <string name="instruction_step_image_description">步骤 %1$d 图片</string>
+    <string name="help_guides_title">幫助與指南</string>
+    <string name="need_more_support_reach_out">需要更多支援？請聯絡，</string>
+    <string name="action_collapse">摺疊</string>
+    <string name="action_expand">展開</string>
+    <string name="support_group_label">支援群組</string>
+    <string name="email_label">電子郵件</string>
+    <string name="send_email_chooser_title">發送郵件</string>
+    <string name="error_no_email_app">沒有可用的郵件應用程式</string>
+    <string name="instruction_step_image_description">步驟 %1$d 圖片</string>
     <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">无障碍、通知和悬浮窗权限</string>
-    <string name="instruction_step_perms_1">如果您尝试授予敏感权限（如无障碍、通知监听器或悬浮窗权限），可能会收到此访问被拒绝的消息。要授予它，请查看以下步骤。</string>
-    <string name="instruction_step_perms_2">1. 前往Essentials的应用信息页面。</string>
-    <string name="instruction_step_perms_3">2. 打开三点菜单并选择“允许受限设置”。您可能需要通过生物识别认证。完成后，再次尝试授予权限。</string>
+    <string name="instruction_section_perms_title">無障礙、通知和懸浮窗權限</string>
+    <string name="instruction_step_perms_1">如果您嘗試授予敏感權限（如無障礙、通知監聽器或懸浮窗權限），可能會收到此存取被拒絕的訊息。要授予它，請查看以下步驟。</string>
+    <string name="instruction_step_perms_2">1. 前往Essentials的應用程式資訊頁面。</string>
+    <string name="instruction_step_perms_3">2. 開啟三點選單並選擇「允許受限設定」。您可能需要通過生物識別認證。完成後，再次嘗試授予權限。</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
-    <string name="instruction_section_shizuku_desc">Shizuku是一个强大的工具，允许应用通过ADB或root权限直接使用系统API。地图最小模式、应用冻结等功能需要它。它还将协助授予某些权限，例如WRITE_SECURE_SETTINGS。\n\n但Play Store版本的Shizuku可能已过时，在较新的Android版本上可能无法使用，因此在这种情况下，请从github或最新的分支获取最新版本。</string>
-    <string name="instruction_section_maps_title">地图省电模式</string>
+    <string name="instruction_section_shizuku_desc">Shizuku是一個強大的工具，允許應用程式通過ADB或root權限直接使用系統API。地圖最小模式、應用程式凍結等功能需要它。它還將協助授予某些權限，例如WRITE_SECURE_SETTINGS。\n\n但Play Store版本的Shizuku可能已過時，在較新的Android版本上可能無法使用，因此在這種情況下，請從github或最新的分支取得最新版本。</string>
+    <string name="instruction_section_maps_title">地圖省電模式</string>
     <string name="instruction_section_maps_desc">此功能會自動觸發 Google 地圖的省電模式，該功能目前僅限 Pixel 10 系列專屬。有位社群成員發現，只要以 root 權限啟動地圖的 minMode 活動，任何 Android 裝置仍可使用此功能。\n\n之後，我利用 Tasker 將其自動化，使其在導航過程中螢幕關閉時自動觸發，並成功僅透過 Shizuku 的執行時權限就達到了相同效果。\n\n此功能原本是設計用來疊加在 Pixel 10 系列的 AOD（始終顯示）上，因此您可能會偶爾看到螢幕上彈出「不支援橫向模式」的訊息。這是應用程式無法避免的情況，您可以忽略此提示。</string>
-    <string name="instruction_section_silent_title">静音声音模式</string>
-    <string name="instruction_section_silent_desc">您可能已经注意到静音模式也会触发勿扰模式。\n\n这是由于Android实现的方式，即使我们使用相同的API切换到振动模式，由于某些原因，它也会在静音模式下同时打开勿扰模式，目前这是无法避免的。:(</string>
-    <string name="instruction_section_freeze_title">什么是冻结？</string>
-    <string name="instruction_section_freeze_desc">暂停并远离应用干扰，同时通过阻止应用在后台运行来节省一点电量。适用于不常用的应用。\n\n不建议用于任何通讯服务，因为除非您解冻它们，否则它们在紧急情况下不会通知您。\n\n强烈建议不要冻结系统应用，因为它们可能导致系统不稳定。请谨慎操作，您已被警告。\n\n灵感来自Hail &lt;3</string>
-    <string name="instruction_section_security_title">应用锁和锁屏安全真的安全吗？</string>
-    <string name="instruction_section_security_desc">绝对不安全。\n\n任何第三方应用都无法100%干预常规设备交互，即使应用锁也只是在选定应用上方的一个覆盖层，以防止与它们交互。存在解决方法，并非万无一失。\n\n锁屏安全功能也是如此，它检测到有人试图与网络磁贴交互（由于某些原因，在Pixel上这些磁贴对任何人都可访问）。因此，如果他们足够努力，仍然可能更改它们，特别是如果您添加了飞行模式QS磁贴，此应用无法阻止与其交互。\n\n这些功能只是作为轻量级使用的实验而制作，绝不推荐作为强大的安全和隐私解决方案。\n\n安全的替代方案：\n- 应用锁：Pixel和三星上的私人空间和安全文件夹\n- 防止移动网络访问：确保您的防盗保护和离线/关机查找设备设置已开启。您也可以考虑Graphene OS。</string>
-    <string name="instruction_section_statusbar_title">状态栏图标</string>
-    <string name="instruction_section_statusbar_desc">您可能会注意到，即使重置了状态栏图标，某些图标如设备旋转、有线耳机图标可能仍然可见。这是由于Android中状态栏黑名单的实现方式以及您的OEM可能对它们进行了自定义。\n您可能需要进一步调整。\n\n另外，并非所有图标可见性选项都能正常工作，因为它们取决于OEM的实现和可用性。</string>
-    <string name="instruction_section_battery_saver_title">How does Power and Battery settings work?</string>
-    <string name="instruction_section_battery_saver_desc">These settings directly override Android\'s internal Battery Saver policy constants (specifically the global settings table property: battery_saver_constants).\n\nWhen Android activates battery saver mode, it reads these keys to determine which system features should be restricted (such as lowering screen brightness, disabling AOD, restricting GPS location access, or putting applications to sleep).\n\nIf you modify these values, your custom battery saver policy will take effect the next time Battery Saver is turned on. You can reset to defaults at any time using the button at the bottom of the screen. WRITE_SECURE_SETTINGS permission is required to write these system configurations.</string>
-    <string name="about_desc_power_battery">Fine-tune Android\'s internal Battery Saver constants policy. Customize behavior such as brightness limit, location throttling, vibration toggle, background sync deferrals, and sensor states when battery saver is turned on.</string>
+    <string name="instruction_section_silent_title">靜音聲音模式</string>
+    <string name="instruction_section_silent_desc">您可能已經注意到靜音模式也會觸發勿擾模式。\n\n這是由於Android實現的方式，即使我們使用相同的API切換到振動模式，由於某些原因，它也會在靜音模式下同時開啟勿擾模式，目前這是無法避免的。:(</string>
+    <string name="instruction_section_freeze_title">什麼是凍結？</string>
+    <string name="instruction_section_freeze_desc">暫停並遠離應用程式干擾，同時通過阻止應用程式在後台執行來節省一點電量。適用於不常用的應用程式。\n\n不建議用於任何通訊服務，因為除非您解凍它們，否則它們在緊急情況下不會通知您。\n\n強烈建議不要凍結系統應用程式，因為它們可能導致系統不穩定。請謹慎操作，您已被警告。\n\n靈感來自Hail &lt;3</string>
+    <string name="instruction_section_security_title">應用程式鎖和鎖定畫面安全真的安全嗎？</string>
+    <string name="instruction_section_security_desc">絕對不安全。\n\n任何第三方應用程式都無法100%干預常規設備交互，即使應用程式鎖也只是在選定應用程式上方的一個覆蓋層，以防止與它們交互。存在解決方法，並非萬無一失。\n\n鎖定畫面安全功能也是如此，它檢測到有人試圖與網路磁貼交互（由於某些原因，在Pixel上這些磁貼對任何人都可存取）。因此，如果他們足夠努力，仍然可能變更它們，特別是如果您新增了飛航模式QS磁貼，此應用程式無法阻止與其交互。\n\n這些功能只是作為輕量級使用的實驗而製作，絕不推薦作為強大的安全和隱私解決方案。\n\n安全的替代方案：\n- 應用程式鎖：Pixel和三星上的私人空間和安全資料夾\n- 防止行動網路存取：確保您的防盜保護和離線/關機查找設備設定已開啟。您也可以考慮Graphene OS。</string>
+    <string name="instruction_section_statusbar_title">狀態欄圖示</string>
+    <string name="instruction_section_statusbar_desc">您可能會注意到，即使重置了狀態欄圖示，某些圖示如設備旋轉、有線耳機圖示可能仍然可見。這是由於Android中狀態欄黑名單的實現方式以及您的OEM可能對它們進行了自訂。\n您可能需要進一步調整。\n\n另外，並非所有圖示可見性選項都能正常工作，因為它們取決於OEM的實現和可用性。</string>
+    <string name="instruction_section_battery_saver_title">電源和電池設定如何運作？ </string>
+    <string name="instruction_section_battery_saver_desc">這些設定會直接覆寫 Android 內部的省電模式策略常數（具體來說是全域設定表屬性：battery_saver_constants）。 \n\n當 Android 啟動省電模式時，它會讀取這些鍵值來確定應該限制哪些系統功能（例如降低螢幕亮度、停用 AOD、限制 GPS 位置存取或使應用程式進入睡眠狀態）。 \n\n如果您修改這些值，您的自訂省電策略將在下次啟用省電模式時生效。您可以隨時使用螢幕底部的按鈕將其重設為預設值。寫入這些系統配置需要 WRITE_SECURE_SETTINGS 權限。 </string>
+    <string name="about_desc_power_battery">Fine-tune Android「s internal Battery Saver constants policy. Customize behavior such as brightness limit, location throttling, vibration toggle, background sync deferrals, and sensor states when battery saver is turned on.</string>
     <string name="instruction_section_lighting_title">通知光效不起作用</string>
     <string name="instruction_section_lighting_desc">這取決於原廠。有些介面（像 OneUI）似乎不允許在 AOD 上方新增疊加層，導致燈光效果無法顯示。若遇到這種情況，請嘗試使用環境顯示作為替代方案。</string>
-    <string name="instruction_section_button_title">按键重映射在屏幕关闭时不起作用</string>
+    <string name="instruction_section_button_title">按鍵重映射在螢幕關閉時不起作用</string>
     <string name="instruction_section_button_desc">部分製造商會限制螢幕關閉後的無障礙功能服務回報，但當開啟螢幕長亮模式時，這些服務可能仍在運作。\n在這情況下，您可以在開啟螢幕長亮模式時使用按鍵重新映射功能，關閉時則無法使用。\n\n你可以使用 Shizuku 權限作為解決方案，並在按鍵重新映射設定中開啟「使用 Shizuku 或 Root」開關，這功能可以識別並監聽硬體輸入事件。\n此方法無法保證在所有裝置上皆能正常運作，需自行測試。\n\n此外，即使開啟，Shizuku 也只會在必要時被使用。其他時候系統將回去使用無障礙功能。無障礙功能同時負責在長按按鈕時阻擋實際輸入。</string>
-    <string name="instruction_section_flashlight_title">手电筒亮度不起作用</string>
-    <string name="instruction_section_flashlight_desc">只有有限数量的设备在硬件和软件上支持调节手电筒强度。\n\n“最低Android版本为13（SDK33）。\n手电筒亮度控制仅支持HAL版本3.8及更高版本，因此在支持的设备中，最新的设备（例如Pixel 6/7、Samsung S23等）可以。”\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">这到底是什么应用？</string>
-    <string name="instruction_section_about_desc">好问题，\n\n我一直想从我的设备中榨取最多功能，因为我自从拥有第一个Project Treble设备以来就一直是root用户。我一直很喜欢Tasker应用，它在自动化和利用Android的每一个可能的API和内部功能方面就像神一样。\n\n现在我未root并回到了原生Android beta体验，并希望在给定权限下尽可能多地实现可能的功能。不妨分享出来。因此，凭借我在Kotlin Jetpack方面的初级知识以及许多研究、辅助工具和优秀社区的支持，我构建了一个一体化应用，包含了我希望在Android中拥有的所有功能，并给予相应权限。这就是它。\n\n欢迎提出功能请求，我会考虑并看看是否可以在现有权限和我的技能范围内实现。如今有什么是不可能的呢。:)\n\n为什么不在Play Store上？\n我不想因为应用中使用了高度敏感和内部的权限及API而冒被封禁开发者帐户的风险。但随着Android侧载的发展，让我们看看我们必须做什么。我理解侧载应用可能是恶意的担忧。\n\n顺便说一下，如果您是mac + Android用户，请查看我的另一个应用AirSync。*无耻的广告*\n\n享受，继续构建！(っ◕‿◕)っ</string>
+    <string name="instruction_section_flashlight_title">手電筒亮度不起作用</string>
+    <string name="instruction_section_flashlight_desc">只有有限數量的設備在硬體和軟體上支援調節手電筒強度。\n\n「最低Android版本為13（SDK33）。\n手電筒亮度控制僅支援HAL版本3.8及更高版本，因此在支援的設備中，最新的設備（例如Pixel 6/7、Samsung S23等）可以。」\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">這到底是什麼應用程式？</string>
+    <string name="instruction_section_about_desc">好問題，\n\n我一直想從我的設備中榨取最多功能，因為我自從擁有第一個Project Treble設備以來就一直是root使用者。我一直很喜歡Tasker應用程式，它在自動化和利用Android的每一個可能的API和內部功能方面就像神一樣。\n\n現在我未root並回到了原生Android beta體驗，並希望在給定權限下儘可能多地實現可能的功能。不妨分享出來。因此，憑藉我在Kotlin Jetpack方面的初級知識以及許多研究、輔助工具和優秀社群的支援，我建構了一個一體化應用程式，包含了我希望在Android中擁有的所有功能，並給予相應權限。這就是它。\n\n歡迎提出功能請求，我會考慮並看看是否可以在現有權限和我的技能範圍內實現。如今有什麼是不可能的呢。:)\n\n為什麼不在Play Store上？\n我不想因為應用程式中使用了高度敏感和內部的權限及API而冒被封禁開發者帳戶的風險。但隨著Android側載的發展，讓我們看看我們必須做什麼。我理解側載應用程式可能是惡意的擔憂。\n\n順便說一下，如果您是mac + Android使用者，請查看我的另一個應用程式AirSync。*無恥的廣告*\n\n享受，繼續建構！(っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="toast_bug_report_copied">Bug报告已复制到剪贴板</string>
-    <string name="bug_report_title">Bug报告</string>
-    <string name="bug_report_option_share_logs">分享日志</string>
-    <string name="bug_report_option_share_logs_desc">包含日志和详细信息</string>
-    <string name="bug_report_device_info">设备信息</string>
-    <string name="bug_report_raw_json">原始报告</string>
-    <string name="action_report_github">在GitHub上打开问题</string>
-    <string name="action_report_email">邮件报告</string>
-    <string name="action_copy_clipboard">复制到剪贴板</string>
-    <string name="bug_report_email_subject">Essentials Bug报告</string>
-    <string name="bug_report_send_via">通过以下方式发送</string>
+    <string name="toast_bug_report_copied">Bug報告已複製到剪貼簿</string>
+    <string name="bug_report_title">Bug報告</string>
+    <string name="bug_report_option_share_logs">分享日誌</string>
+    <string name="bug_report_option_share_logs_desc">包含日誌和詳細資訊</string>
+    <string name="bug_report_device_info">設備資訊</string>
+    <string name="bug_report_raw_json">原始報告</string>
+    <string name="action_report_github">在GitHub上開啟問題</string>
+    <string name="action_report_email">郵件報告</string>
+    <string name="action_copy_clipboard">複製到剪貼簿</string>
+    <string name="bug_report_email_subject">Essentials Bug報告</string>
+    <string name="bug_report_send_via">通過以下方式發送</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">我们到了吗？</string>
-    <string name="feat_location_reached_desc">为您的目的地做好准备。</string>
-    <string name="location_reached_how_to">打开您的地图应用，选择一个位置，然后分享到Essentials。</string>
-    <string name="location_reached_radius_title">半径：%d 米</string>
+    <string name="feat_location_reached_title">我們到了嗎？</string>
+    <string name="feat_location_reached_desc">為您的目的地做好準備。</string>
+    <string name="location_reached_how_to">開啟您的地圖應用程式，選擇一個位置，然後分享到Essentials。</string>
+    <string name="location_reached_radius_title">半徑：%d 米</string>
     <string name="perm_location_title">位置</string>
-    <string name="perm_location_desc">用于检测到达目的地。</string>
-    <string name="perm_bg_location_title">后台位置</string>
-    <string name="perm_bg_location_desc">需要在应用关闭或屏幕关闭时监控您的到达情况。</string>
-    <string name="location_reached_notification_title">已到达目的地！</string>
-    <string name="location_reached_notification_desc">您已到达目的地。</string>
-    <string name="location_reached_processing">正在处理位置…</string>
-    <string name="location_reached_dist_remaining">剩余距离</string>
-    <string name="location_reached_calculating">计算中…</string>
+    <string name="perm_location_desc">用於檢測到達目的地。</string>
+    <string name="perm_bg_location_title">後台位置</string>
+    <string name="perm_bg_location_desc">需要在應用程式關閉或螢幕關閉時監控您的到達情況。</string>
+    <string name="location_reached_notification_title">已到達目的地！</string>
+    <string name="location_reached_notification_desc">您已到達目的地。</string>
+    <string name="location_reached_processing">正在處理位置…</string>
+    <string name="location_reached_dist_remaining">剩餘距離</string>
+    <string name="location_reached_calculating">計算中…</string>
     <string name="location_reached_stop_tracking">Stop Tracking</string>
-    <string name="location_reached_dest_ready">目的地就绪</string>
-    <string name="location_reached_start_tracking">开始跟踪</string>
-    <string name="location_reached_view_map">查看地图</string>
+    <string name="location_reached_dest_ready">目的地就緒</string>
+    <string name="location_reached_start_tracking">開始跟蹤</string>
+    <string name="location_reached_view_map">查看地圖</string>
     <string name="location_reached_clear">清除</string>
-    <string name="location_reached_no_dest">无目的地</string>
-    <string name="location_reached_open_maps">打开地图</string>
-    <string name="location_reached_fsi_title">全屏闹钟权限</string>
-    <string name="location_reached_fsi_desc">需要在到达时唤醒您的设备。点击授予。</string>
+    <string name="location_reached_no_dest">無目的地</string>
+    <string name="location_reached_open_maps">開啟地圖</string>
+    <string name="location_reached_fsi_title">全螢幕鬧鐘權限</string>
+    <string name="location_reached_fsi_desc">需要在到達時喚醒您的設備。點擊授予。</string>
     <string name="location_reached_dist_m">%1$d 米</string>
     <string name="location_reached_dist_km">%1$.1f 公里</string>
-    <string name="location_reached_service_title">旅行闹钟活跃</string>
-    <string name="location_reached_service_remaining">剩余 %1$s</string>
-    <string name="location_reached_channel_name">行程进度</string>
-    <string name="location_reached_channel_desc">显示到目的地的实时距离</string>
-    <string name="location_reached_alarm_title">目的地临近</string>
-    <string name="location_reached_alarm_subtitle">准备下车</string>
-    <string name="location_reached_dismiss">关闭</string>
-    <string name="location_reached_toast_set">目的地已设置：%1$.4f，%2$.4f</string>
+    <string name="location_reached_service_title">旅行鬧鐘活躍</string>
+    <string name="location_reached_service_remaining">剩餘 %1$s</string>
+    <string name="location_reached_channel_name">行程進度</string>
+    <string name="location_reached_channel_desc">顯示到目的地的實時距離</string>
+    <string name="location_reached_alarm_title">目的地臨近</string>
+    <string name="location_reached_alarm_subtitle">準備下車</string>
+    <string name="location_reached_dismiss">關閉</string>
+    <string name="location_reached_toast_set">目的地已設定：%1$.4f，%2$.4f</string>
     <string name="setting_use_root_title">使用Root</string>
     <string name="setting_use_root_desc">替代Shizuku</string>
-    <string name="root_not_available_toast">Root权限不可用。请检查您的root管理器。</string>
+    <string name="root_not_available_toast">Root權限不可用。請檢查您的root管理器。</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">键盘</string>
-    <string name="feat_system_keys">按键</string>
-    <string name="feat_system_keyboard_desc">自定义布局和行为</string>
-    <string name="search_keyboard_height_title">键盘高度</string>
-    <string name="search_keyboard_height_desc">调整键盘的总体垂直大小</string>
-    <string name="search_keyboard_padding_title">底部内边距</string>
-    <string name="search_keyboard_padding_desc">在键盘下方添加空间</string>
-    <string name="search_keyboard_haptics_title">触觉反馈</string>
-    <string name="search_keyboard_haptics_desc">按键时振动</string>
-    <string name="test_keyboard_hint">测试键盘</string>
-    <string name="label_keyboard_height">键盘高度</string>
-    <string name="label_keyboard_bottom_padding">底部内边距</string>
-    <string name="label_keyboard_haptics">触觉反馈</string>
-    <string name="label_keyboard_roundness">按键圆度</string>
-    <string name="label_keyboard_functions_bottom">将功能键移到底部</string>
-    <string name="label_keyboard_functions_padding">功能键侧边距</string>
-    <string name="label_keyboard_haptic_strength">触觉反馈强度</string>
-    <string name="label_keyboard_shape">键盘形状</string>
-    <string name="shape_round">圆形</string>
+    <string name="feat_system_keyboard_title">鍵盤</string>
+    <string name="feat_system_keys">按鍵</string>
+    <string name="feat_system_keyboard_desc">自訂佈局和行為</string>
+    <string name="search_keyboard_height_title">鍵盤高度</string>
+    <string name="search_keyboard_height_desc">調整鍵盤的總體垂直大小</string>
+    <string name="search_keyboard_padding_title">底部內邊距</string>
+    <string name="search_keyboard_padding_desc">在鍵盤下方新增空間</string>
+    <string name="search_keyboard_haptics_title">觸覺回饋</string>
+    <string name="search_keyboard_haptics_desc">按鍵時振動</string>
+    <string name="test_keyboard_hint">測試鍵盤</string>
+    <string name="label_keyboard_height">鍵盤高度</string>
+    <string name="label_keyboard_bottom_padding">底部內邊距</string>
+    <string name="label_keyboard_haptics">觸覺回饋</string>
+    <string name="label_keyboard_roundness">按鍵圓度</string>
+    <string name="label_keyboard_functions_bottom">將功能鍵移到底部</string>
+    <string name="label_keyboard_functions_padding">功能鍵側邊距</string>
+    <string name="label_keyboard_haptic_strength">觸覺回饋強度</string>
+    <string name="label_keyboard_shape">鍵盤形狀</string>
+    <string name="shape_round">圓形</string>
     <string name="shape_flat">扁平</string>
     <string name="shape_inverse">倒置</string>
-    <string name="feat_batteries_title">电池</string>
-    <string name="feat_batteries_desc">监控您的设备电池电量</string>
-    <string name="batteries_widget_label">电池状态</string>
-    <string name="connect_to_airsync">连接到AirSync</string>
-    <string name="connect_to_airsync_summary">显示AirSync中连接的Mac设备的电池电量</string>
-    <string name="download_airsync">下载AirSync应用</string>
-    <string name="download_airsync_summary">Mac电池同步所需</string>
-    <string name="feat_battery_notification_title">电池通知</string>
+    <string name="feat_batteries_title">電池</string>
+    <string name="feat_batteries_desc">監控您的設備電池電量</string>
+    <string name="batteries_widget_label">電池狀態</string>
+    <string name="connect_to_airsync">連接到AirSync</string>
+    <string name="connect_to_airsync_summary">顯示AirSync中連接的Mac設備的電池電量</string>
+    <string name="download_airsync">下載AirSync應用程式</string>
+    <string name="download_airsync_summary">Mac電池同步所需</string>
+    <string name="feat_battery_notification_title">電池通知</string>
     <string name="feat_battery_notification_desc">電池狀態常駐通知</string>
-    <string name="battery_notification_hint">此通知显示已连接的Mac和蓝牙设备的电池电量。您可以在电池小组件设置中配置要显示哪些设备。</string>
+    <string name="battery_notification_hint">此通知顯示已連接的Mac和藍牙設備的電池電量。您可以在電池小組件設定中設定要顯示哪些設備。</string>
     <string name="about_desc_battery_notification">在通知中中重現電池小工具的體驗。透過單一常駐通知即時更新所有已連線裝置的電量，包含您的 Mac（透過 AirSync）及藍牙配件。</string>
-    <string name="battery_notification_channel_name">电池状态通知</string>
+    <string name="battery_notification_channel_name">電池狀態通知</string>
     <string name="battery_notification_channel_desc">顯示已連線設備電量的常駐通知</string>
-    <string name="perm_nearby_devices_title">附近设备</string>
-    <string name="perm_nearby_devices_desc">需要检测和检索蓝牙配件的电池信息</string>
+    <string name="perm_nearby_devices_title">附近設備</string>
+    <string name="perm_nearby_devices_desc">需要檢測和檢索藍牙配件的電池資訊</string>
     <!-- GitHub Auth -->
-    <string name="auth_copy_code">复制代码</string>
-    <string name="auth_open_login_page">打开登录页面</string>
-    <string name="auth_sign_in_rationale">登录以扩展API调用限制</string>
-    <string name="auth_waiting_for_authorization">等待授权...</string>
-    <string name="action_sign_in_github">使用GitHub登录</string>
+    <string name="auth_copy_code">複製程式碼</string>
+    <string name="auth_open_login_page">開啟登入頁面</string>
+    <string name="auth_sign_in_rationale">登入以擴充功能API調用限制</string>
+    <string name="auth_waiting_for_authorization">等待授權...</string>
+    <string name="action_sign_in_github">使用GitHub登入</string>
     <string name="action_sign_out">登出</string>
-    <string name="action_profile">个人资料</string>
+    <string name="action_profile">個人資料</string>
     <!-- App Updates / Repos -->
-    <string name="label_release_notes">发布说明</string>
-    <string name="msg_no_repos_tracked">尚未跟踪任何仓库</string>
-    <string name="label_no_app_linked">未关联应用</string>
-    <string name="format_updated_relative">更新于 %1$s</string>
+    <string name="label_release_notes">發佈說明</string>
+    <string name="msg_no_repos_tracked">尚未跟蹤任何倉庫</string>
+    <string name="label_no_app_linked">未關聯應用程式</string>
+    <string name="format_updated_relative">更新於 %1$s</string>
     <!-- Relative Time -->
-    <string name="time_just_now">刚刚</string>
+    <string name="time_just_now">剛剛</string>
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
-    <string name="time_min_ago">%1$d分钟前</string>
-    <string name="time_hour_ago">%1$d小时前</string>
+    <string name="time_min_ago">%1$d分鐘前</string>
+    <string name="time_hour_ago">%1$d小時前</string>
     <string name="time_day_ago">%1$d天前</string>
     <string name="time_days_ago">%1$d天前</string>
     <string name="time_weeks_ago">%1$d周前</string>
-    <string name="time_month_ago">%1$d个月前</string>
-    <string name="time_months_ago">%1$d个月前</string>
+    <string name="time_month_ago">%1$d個月前</string>
+    <string name="time_months_ago">%1$d個月前</string>
     <string name="time_year_ago">%1$d年前</string>
-    <string name="action_retry">重试</string>
-    <string name="action_start_sign_in">开始登录</string>
-    <string name="auth_requesting_code">正在请求设备代码...</string>
-    <string name="auth_copy_code_instruction">1. 复制您的代码：</string>
-    <string name="auth_paste_code_instruction">2. 在GitHub上粘贴代码：</string>
+    <string name="action_retry">重試</string>
+    <string name="action_start_sign_in">開始登入</string>
+    <string name="auth_requesting_code">正在請求設備程式碼...</string>
+    <string name="auth_copy_code_instruction">1. 複製您的程式碼：</string>
+    <string name="auth_paste_code_instruction">2. 在GitHub上貼上程式碼：</string>
     <string name="label_found_apks">找到APK</string>
     <string name="label_readme">README</string>
     <string name="action_refresh">刷新</string>
     <!-- Added Missing Group Strings -->
-    <string name="feat_sound_modes_title">声音模式磁贴</string>
-    <string name="feat_sound_modes_desc">用于切换声音模式的QS磁贴</string>
-    <string name="search_sound_mode_show_slider_title">显示滑块</string>
-    <string name="search_sound_mode_show_slider_desc">在磁贴中显示音量滑块</string>
-    <string name="search_sound_mode_behavior_title">循环行为</string>
-    <string name="search_sound_mode_behavior_desc">选择要循环的模式</string>
-    <string name="feat_sound_haptics_title">声音和触觉</string>
-    <string name="feat_sound_haptics_desc">音量和触觉功能</string>
-    <string name="feat_security_privacy_title">安全和隐私</string>
-    <string name="feat_security_privacy_desc">保护您的设备</string>
+    <string name="feat_sound_modes_title">聲音模式磁貼</string>
+    <string name="feat_sound_modes_desc">用於切換聲音模式的QS磁貼</string>
+    <string name="search_sound_mode_show_slider_title">顯示滑塊</string>
+    <string name="search_sound_mode_show_slider_desc">在磁貼中顯示音量滑塊</string>
+    <string name="search_sound_mode_behavior_title">循環行為</string>
+    <string name="search_sound_mode_behavior_desc">選擇要循環的模式</string>
+    <string name="feat_sound_haptics_title">聲音和觸覺</string>
+    <string name="feat_sound_haptics_desc">音量和觸覺功能</string>
+    <string name="feat_security_privacy_title">安全和隱私</string>
+    <string name="feat_security_privacy_desc">保護您的設備</string>
     <string name="feat_notifications_alerts_title">通知和提醒</string>
-    <string name="feat_notifications_alerts_desc">不错过您的重要事项</string>
-    <string name="feat_input_actions_title">输入和操作</string>
-    <string name="feat_input_actions_desc">轻松控制您的设备</string>
-    <string name="feat_widgets_title">小组件</string>
-    <string name="feat_widgets_desc">桌面主頁上的資訊一覽</string>
-    <string name="feat_display_visuals_title">显示</string>
-    <string name="feat_display_visuals_desc">增强体验的视觉效果</string>
-    <string name="feat_watch_title">手表</string>
-    <string name="feat_watch_desc">与WearOS的集成</string>
-    <string name="watch_no_companion_title">未检测到手表</string>
-    <string name="watch_no_companion_desc">看起来您的手表上未安装Essentials Wear配套应用。</string>
-    <string name="watch_install_companion_action">安装配套应用</string>
-    <string name="action_download_from_github">Download from GitHub</string>
-    <string name="watch_help_title">Install on Watch</string>
-    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
-    <string name="watch_help_open_play_store">Open on Watch</string>
-    <string name="feat_watch_controls_title">Customize</string>
-    <string name="feat_watch_controls_desc">Customize WearOS app controls</string>
-    <string name="watch_controls_long_press_hint">Long press to enable or disable buttons</string>
-    <string name="watch_controls_reorder_title">Reorder watch controls</string>
-    <string name="feat_watch_wireless_debugging_title">Wireless Debugging</string>
-    <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
-    <string name="feat_sync_sound_mode_title">Sync sound mode</string>
-    <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
-    <string name="feat_sync_location_reached_title">Sync Are we there yet status</string>
-    <string name="feat_sync_location_reached_desc">To be shown in device tile</string>
-    <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
-    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
-    <string name="feat_power_battery_title">Power and battery</string>
-    <string name="feat_power_battery_desc">Configure the power saving policies</string>
-    <string name="label_low_power_trigger_level">Custom trigger level</string>
-    <string name="desc_low_power_trigger_level">for power saving</string>
-    <string name="title_battery_saver_general">General Settings</string>
-    <string name="title_battery_saver_display">Display &amp; Brightness</string>
-    <string name="title_battery_saver_power">Power &amp; Performance</string>
-    <string name="title_battery_saver_network">Network &amp; Sync</string>
-    <string name="title_battery_saver_sound_sensors">Sound &amp; Sensors</string>
-    <string name="title_battery_saver_location">Location &amp; GPS</string>
-    <string name="action_reset_battery_saver">Reset to Defaults</string>
-    <string name="msg_battery_saver_reset_success">Battery saver constants reset successfully</string>
-    <string name="label_advertise_is_enabled">Advertise Enabled</string>
-    <string name="desc_advertise_is_enabled">Report to applications that battery saver is enabled.</string>
-    <string name="label_enable_datasaver">Data Saver</string>
-    <string name="desc_enable_datasaver">Enable Data Saver to restrict background data usage.</string>
-    <string name="label_enable_night_mode">Force Dark/Night Mode</string>
-    <string name="desc_enable_night_mode">Force dark theme when battery saver is activated.</string>
-    <string name="label_disable_launch_boost">Disable Launch Boost</string>
-    <string name="desc_disable_launch_boost">Reduce CPU boosting during app startup to save power.</string>
-    <string name="label_disable_vibration">Disable Vibration</string>
-    <string name="desc_disable_vibration">Disable haptic feedback and vibrations globally.</string>
-    <string name="label_disable_animation">Disable Animations</string>
-    <string name="desc_disable_animation">Turn off window and system animations.</string>
-    <string name="label_defer_full_backup">Defer Full Backup</string>
-    <string name="desc_defer_full_backup">Postpone full system backups until battery saver is turned off.</string>
-    <string name="label_defer_keyvalue_backup">Defer Key-Value Backup</string>
-    <string name="desc_defer_keyvalue_backup">Postpone key-value backups.</string>
-    <string name="label_enable_firewall">Enable Firewall</string>
-    <string name="desc_enable_firewall">Enable net firewall to restrict background networking.</string>
-    <string name="label_enable_brightness_adjustment">Enable Brightness Reduction</string>
-    <string name="desc_enable_brightness_adjustment">Allow lowering the display brightness limit when saver is active.</string>
-    <string name="label_adjust_brightness_factor">Brightness Adjustment Factor</string>
-    <string name="label_force_all_apps_standby">Force Standby</string>
-    <string name="desc_force_all_apps_standby">Put all apps into App Standby bucket when active.</string>
-    <string name="label_force_background_check">Force Background Check</string>
-    <string name="desc_force_background_check">Enforce strict background service restrictions.</string>
-    <string name="label_disable_optional_sensors">Disable Optional Sensors</string>
-    <string name="desc_disable_optional_sensors">Disable power-hungry optional sensors like proximity, gyro, etc.</string>
-    <string name="label_disable_aod">Disable Always-on Display</string>
-    <string name="desc_disable_aod">Turn off Ambient / Always-on display.</string>
-    <string name="label_enable_quick_doze">Enable Quick Doze</string>
-    <string name="desc_enable_quick_doze">Enter Doze sleep mode faster when the screen turns off.</string>
-    <string name="label_location_mode">GPS / Location Mode</string>
-    <string name="desc_location_mode">Restrict location requests while battery saver is on.</string>
-    <string name="location_mode_no_change">No Change</string>
-    <string name="location_mode_gps_disabled">GPS Disabled</string>
-    <string name="location_mode_all_disabled_when_screen_off">All Disabled (Screen Off)</string>
-    <string name="location_mode_foreground_only">Foreground Only</string>
-    <string name="location_mode_throttle">Throttled</string>
-    <string name="label_soundtrigger_mode">Sound Trigger Mode</string>
-    <string name="desc_soundtrigger_mode">Restrict assistant hotword detection (e.g. \"Hey Google\").</string>
-    <string name="soundtrigger_mode_allow">Allow</string>
-    <string name="soundtrigger_mode_restrict">Restrict</string>
-    <string name="soundtrigger_mode_critical">Critical Only</string>
-    <string name="feat_safe_volume_title">Disable safe volume warning</string>
-    <string name="feat_safe_volume_desc">Suppress loud volume dialog</string>
-    <string name="about_desc_safe_volume">European regulations require smartphones to warn when going above certain volume levels (85dB). This warning must be shown once after every reboot or after 20 hours of continuous music playback. Use this toggle to disable it permanently.</string>
-    <string name="instruction_section_safe_volume_title">Why disable safe volume warnings?</string>
-    <string name="instruction_section_safe_volume_desc">To protect hearing, EU regulations mandate a popup warning when volume exceeds 85dB. Since this popup triggers once after every boot or after 20 cumulative hours of audio output, it can disrupt media playback. Enabling this bypasses the restriction permanently by writing to the audio_safe_volume_state Global setting.</string>
-    <string name="feat_notification_snoozing_title">Notification snoozing</string>
-    <string name="feat_notification_snoozing_desc">Reschedule notifications</string>
-    <string name="about_desc_notification_snoozing">Enable the notification snooze button on the notifications, and configure the custom interval options and default duration to defer notifications for later viewing.</string>
-    <string name="instruction_section_notification_snoozing_title">How to use Notification Snoozing?</string>
-    <string name="instruction_section_notification_snoozing_desc">Once enabled, swipe down or slightly pull a notification to expose the snooze (clock) icon/ or long press or tap the snooze button if already visible. Tap it to reschedule. The available durations and the default snooze time can be customized inside the settings menu. Writes to secure settings and global settings properties.</string>
-    <string name="title_snooze_durations">Snooze Durations</string>
-    <string name="label_snooze_default">Default snooze time</string>
-    <string name="label_snooze_option_1">Option 1</string>
-    <string name="label_snooze_option_2">Option 2</string>
-    <string name="label_snooze_option_3">Option 3</string>
-    <string name="label_snooze_option_4">Option 4</string>
-    <string name="action_reset_snooze">Reset Snooze Options</string>
-    <string name="msg_snooze_reset_success">Notification snooze options reset successfully</string>
-    <string name="cat_interaction">交互</string>
-    <string name="cat_interface">界面</string>
-    <string name="cat_display">显示</string>
-    <string name="cat_protection">保护</string>
-    <string name="cat_accessibility">Accessibility</string>
-    <string name="cat_connectivity">Connectivity</string>
-    <string name="cat_privacy">Privacy</string>
-    <string name="cat_utils">Utilities</string>
-    <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">\?#/</string>
-    <string name="label_kaomoji">颜文字</string>
-    <string name="kaomoji_cat_joy">喜悦</string>
-    <string name="kaomoji_cat_love">爱意</string>
-    <string name="kaomoji_cat_embarassment">尴尬</string>
-    <string name="kaomoji_cat_sympathy">同情</string>
-    <string name="kaomoji_cat_dissatisfaction">不满</string>
-    <string name="kaomoji_cat_anger">愤怒</string>
-    <string name="kaomoji_cat_apologizing">道歉</string>
-    <string name="kaomoji_cat_bear">熊</string>
-    <string name="kaomoji_cat_bird">鸟</string>
-    <string name="kaomoji_cat_cat">猫</string>
-    <string name="kaomoji_cat_confusion">困惑</string>
-    <string name="kaomoji_cat_dog">狗</string>
-    <string name="kaomoji_cat_doubt">怀疑</string>
-    <string name="kaomoji_cat_enemies">敌人</string>
-    <string name="kaomoji_cat_faces">面孔</string>
-    <string name="kaomoji_cat_fear">恐惧</string>
-    <string name="kaomoji_cat_fish">鱼</string>
-    <string name="kaomoji_cat_food">食物</string>
-    <string name="kaomoji_cat_friends">朋友</string>
-    <string name="kaomoji_cat_games">游戏</string>
-    <string name="kaomoji_cat_greeting">问候</string>
-    <string name="kaomoji_cat_hiding">隐藏</string>
-    <string name="kaomoji_cat_hugging">拥抱</string>
-    <string name="kaomoji_cat_indifference">冷漠</string>
-    <string name="kaomoji_cat_magic">魔法</string>
-    <string name="kaomoji_cat_music">音乐</string>
-    <string name="kaomoji_cat_nosebleeding">流鼻血</string>
-    <string name="kaomoji_cat_pain">痛苦</string>
-    <string name="kaomoji_cat_pig">猪</string>
-    <string name="kaomoji_cat_rabbit">兔子</string>
-    <string name="kaomoji_cat_running">奔跑</string>
-    <string name="kaomoji_cat_sadness">悲伤</string>
-    <string name="kaomoji_cat_sleeping">睡觉</string>
-    <string name="kaomoji_cat_special">特殊</string>
-    <string name="kaomoji_cat_spider">蜘蛛</string>
-    <string name="kaomoji_cat_surprise">惊讶</string>
-    <string name="kaomoji_cat_weapons">武器</string>
-    <string name="kaomoji_cat_winking">眨眼</string>
-    <string name="kaomoji_cat_writing">写作</string>
-    <string name="msg_restrict_own_app_repo">喂！您可以在应用设置中检查更新，无需在此添加 XD</string>
-    <string name="action_export">导出</string>
-    <string name="action_import">导入</string>
-    <string name="msg_export_success">仓库导出成功</string>
-    <string name="msg_export_failed">导出仓库失败</string>
-    <string name="msg_import_success">仓库导入成功</string>
-    <string name="msg_import_failed">导入仓库失败</string>
-    <string name="label_apps">应用</string>
-    <string name="feat_text_animations_title">缩放和动画</string>
-    <string name="feat_text_animations_desc">调整系统缩放和动画</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
-    <string name="settings_section_text">文本</string>
-    <string name="label_font_scale">字体缩放</string>
-    <string name="label_font_weight">字体粗细</string>
-    <string name="label_reset_default">重置</string>
-    <string name="settings_section_scale">缩放</string>
-    <string name="label_smallest_width">最小宽度</string>
-    <string name="msg_shizuku_permission_required">需要Shizuku权限来调整缩放</string>
-    <string name="label_grant_permission">授予权限</string>
-    <string name="settings_section_animations">动画</string>
-    <string name="label_animator_duration_scale">动画时长缩放</string>
-    <string name="label_transition_animation_scale">过渡动画缩放</string>
-    <string name="label_window_animation_scale">窗口动画缩放</string>
-    <string name="about_desc_text_animations">调整系统范围的字体缩放、粗细和动画速度。请注意，某些设置可能需要高级权限或设备重启才能让某些应用反映更改。\n\n缩放调整可能需要额外的shizuku或root权限</string>
-    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
-    <string name="refresh_rate_section_mode">Mode</string>
-    <string name="refresh_rate_section_values">Refresh Rate</string>
-    <string name="refresh_rate_mode_fixed">Fixed</string>
-    <string name="refresh_rate_mode_range">Range</string>
-    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
-    <string name="refresh_rate_min_title">Minimum refresh rate</string>
-    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
-    <string name="refresh_rate_peak_title">Peak refresh rate</string>
-    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
-    <string name="refresh_rate_system_default">System</string>
-    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
-    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
-    <string name="msg_refresh_rate_root_permission_required">Root permission required to adjust refresh rate</string>
-    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
-    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
-    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
-    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
-    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
-    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
-    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
-    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
-    <string name="feat_aod_force_turn_off_title">強制關閉螢幕長亮模式</string>
-    <string name="feat_aod_force_turn_off_desc">在沒有通知時強制關閉螢幕長亮模式，需要無障礙功能權限。</string>
-    <string name="feat_auto_accessibility_title">自动无障碍</string>
-    <string name="feat_auto_accessibility_desc">在应用启动时如果缺少无障碍权限，使用WRITE_SECURE_SETTINGS自动授予。</string>
-    <string name="label_help_guide">帮助和指南</string>
-    <string name="tab_your_android">您的Android</string>
-    <string name="label_device_storage">存储</string>
-    <string name="label_device_ram">内存</string>
-    <string name="label_use_blur">使用模糊</string>
-    <string name="desc_use_blur">启用界面中的渐进模糊元素</string>
-    <string name="msg_blur_compatibility_error">此设备上已禁用模糊，以防止在Android 15或更低版本的三星设备上出现已知的显示错误。</string>
-    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
-    <string name="setting_swipe_tabs_desc">In home screen</string>
-    <!-- Empty State Actions -->
-    <string name="msg_no_apps_frozen">未选择要冻结的应用。</string>
-    <string name="action_get_started">开始使用</string>
-    <string name="action_new_automation">新建自动化</string>
-    <string name="action_add_repository">添加仓库</string>
-    <!-- Bug Report Enhancement -->
-    <string name="bug_report_feedback_placeholder">描述问题或提供反馈…</string>
-    <string name="bug_report_contact_email_label">联系邮箱</string>
-    <string name="action_send_feedback">发送反馈</string>
-    <string name="msg_feedback_sent">反馈已成功发送！感谢您帮助我们改进应用。</string>
-    <string name="label_alternatively">或者</string>
-    <!-- Pixel Diagnostics -->
-    <string name="label_diagnostics">诊断</string>
-    <string name="label_device_check">设备检查</string>
-    <string name="msg_flashbang">准备好被闪光弹闪瞎吧！</string>
-    <string name="action_abort">中止</string>
-    <string name="action_continue">继续</string>
-    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
-    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
-    <string name="prank_button_premium">What\'s in Premium?</string>
-    <string name="prank_reveal_title">April Fools!</string>
-    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
-    <string name="notification_lighting_style_system">System</string>
-    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
-    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
-    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
-    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
-    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
-    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <string name="feat_notifications_alerts_desc">不錯過您的重要事項</string>
+    <string name="feat_input_actions_title">輸入和操作</string>
+    <string name="feat_input_actions_desc">輕鬆控制您的設備</string>
+    <string name="feat_widgets_title">小組件</string>
+    <string name="feat_widgets_desc">桌面首頁上的資訊一覽</string>
+    <string name="feat_display_visuals_title">顯示</string>
+    <string name="feat_display_visuals_desc">增強體驗的視覺效果</string>
+    <string name="feat_watch_title">手錶</string>
+    <string name="feat_watch_desc">與WearOS的整合</string>
+    <string name="watch_no_companion_title">未檢測到手錶</string>
+    <string name="watch_no_companion_desc">看起來您的手錶上未安裝Essentials Wear配套應用程式。</string>
+    <string name="watch_install_companion_action">安裝配套應用程式</string>
+    <string name="prank_trial_expired_title">您的 Essentials 試用已過期</string>
+    <string name="prank_trial_expired_desc">您的 Essentials 免費試用期已結束。透過 Premium 解鎖進階功能，如按鍵重新映射、應用程式凍結和 DIY 自動化。</string>
+    <string name="prank_button_premium">Premium 有什麼？</string>
+    <string name="prank_reveal_title">愚人節快樂！</string>
+    <string name="prank_reveal_desc">開玩笑的啦，Essentials 現在和未來都會是免費且開源的。請盡情享用！(っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">系統</string>
+    <string name="notification_lighting_system_mode_title">漣漪動畫</string>
+    <string name="notification_lighting_system_mode_charging_ripple">底部</string>
+    <string name="notification_lighting_system_mode_auth_ripple">中央</string>
+    <string name="notification_lighting_system_mode_custom_ripple">自訂</string>
+    <string name="msg_shizuku_root_required_system_lighting">系統燈光效果需要 Shizuku 或 Root 權限</string>
+    <string name="notification_lighting_system_disclaimer">專為 Google Pixel 設計，其他裝置可能無法使用。</string>
     <!-- Live Wallpaper -->
-    <string name="feat_live_wallpaper_title">Live wallpaper</string>
-    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
-    <string name="live_wallpaper_label">Live Wallpaper</string>
-    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
-    <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
-    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
-    <string name="live_wallpaper_video_title">Video</string>
-    <string name="btn_apply">Apply</string>
-    <string name="add_video">Add video</string>
-    <string name="custom_video">Custom video</string>
-    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <string name="feat_live_wallpaper_title">動態桌布</string>
+    <string name="feat_live_wallpaper_desc">設定自訂影片作為動態桌布</string>
+    <string name="live_wallpaper_label">動態桌布</string>
+    <string name="live_wallpaper_description">解鎖時播放的影片動態桌布。</string>
+    <string name="live_wallpaper_playback_trigger_title">播放時機</string>
+    <string name="live_wallpaper_trigger_unlock">解鎖時</string>
+    <string name="live_wallpaper_trigger_screen_on">螢幕開啟時</string>
+    <string name="live_wallpaper_video_title">影片</string>
+    <string name="btn_apply">套用</string>
+    <string name="add_video">新增影片</string>
+    <string name="custom_video">自訂影片</string>
+    <string name="about_desc_live_wallpaper">將您喜愛的影片設定為主螢幕桌布。您可以選擇在解鎖時或螢幕開啟時觸發動畫，打造動態體驗。</string>
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
-    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
-    <string name="shut_up_select_apps_title">Select Apps</string>
-    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
-    <string name="shut_up_settings_title">Shut-Up! Settings</string>
-    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
-    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
-    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
-    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
-    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
-    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
-    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
-    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
-    <string name="feat_pixel_searchbar_title">Pixel searchbar</string>
-    <string name="feat_pixel_searchbar_desc">Set Essentials as the default search provider for the home screen search bar in Pixel Launcher.</string>
-    <string name="shut_up_toast_active">App got shut up</string>
-    <string name="shut_up_toast_restored">Shut up features returned</string>
-    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
-    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
-    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
-    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <string name="feat_shut_up_desc">我知道我在做什麼</string>
+    <string name="shut_up_description">Shut-Up! 會在您啟動敏感應用程式時，動態隱藏開發人員選項、無障礙服務和偵錯設定，藉此繞過應用程式的限制與檢查。\n\n使用自訂捷徑，確保設定在應用程式啟動前已被隱藏。</string>
+    <string name="shut_up_select_apps_title">選擇應用程式</string>
+    <string name="shut_up_select_apps_desc">選擇要套用 Shut-Up! 邏輯的應用程式</string>
+    <string name="shut_up_settings_title">Shut-Up! 設定</string>
+    <string name="shut_up_per_app_settings">Shut-Up! 功能</string>
+    <string name="shut_up_disable_dev_options">停用開發人員選項</string>
+    <string name="shut_up_disable_usb_debugging">停用 USB 偵錯</string>
+    <string name="shut_up_disable_wireless_debugging">停用無線偵錯</string>
+    <string name="shut_up_disable_accessibility">停用無障礙服務</string>
+    <string name="shut_up_shortcut_created">已為 %s 建立捷徑</string>
+    <string name="feat_disable_rotation_suggestion_title">停用旋轉建議</string>
+    <string name="feat_disable_rotation_suggestion_desc">自動旋轉關閉時不顯示旋轉按鈕</string>
+    <string name="feat_pixel_searchbar_title">Pixel 搜尋列</string>
+    <string name="feat_pixel_searchbar_desc">將 Essentials 設為 Pixel 啟動器主螢幕搜尋列的預設搜尋供應商。</string>
+    <string name="shut_up_toast_active">應用程式已被靜音</string>
+    <string name="shut_up_toast_restored">Shut-Up! 功能已恢復</string>
+    <string name="shut_up_auto_archive_notif_title">自動凍結</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s 將在 %2$d 秒後被封存</string>
+    <string name="shut_up_auto_archive_action_freeze">立即凍結</string>
+    <string name="shut_up_auto_archive_action_abort">取消</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
-    <string name="lock_screen_clock_bignum">Big Number</string>
-    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="feat_lock_screen_clock_title">鎖定螢幕時鐘</string>
+    <string name="feat_lock_screen_clock_desc">在 Pixel 上自訂鎖定螢幕時鐘</string>
+    <string name="about_desc_lock_screen_clock">更改 Pixel 上的鎖定螢幕時鐘樣式。從系統 UI 提供的可用時鐘面板中選擇。部分舊樣式可能無法使用。</string>
+    <string name="lock_screen_clock_bignum">大數字</string>
+    <string name="lock_screen_clock_calligraphy">書法</string>
     <string name="lock_screen_clock_flex">Flex</string>
-    <string name="lock_screen_clock_growth">Growth</string>
-    <string name="lock_screen_clock_handwritten">Handwritten</string>
-    <string name="lock_screen_clock_inflate">Inflate</string>
-    <string name="lock_screen_clock_metro">Metro</string>
-    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
-    <string name="lock_screen_clock_select_label">Select Clock Style</string>
-    <string name="lock_screen_clock_current_label">Current</string>
-    <string name="lock_screen_clock_apply_label">Apply</string>
-    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
-    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
-    <string name="lock_screen_clock_default">Default</string>
-    <string name="label_weight">Weight</string>
-    <string name="label_width">Width</string>
-    <string name="label_grade">Grade</string>
-    <string name="label_roundness">Roundness</string>
-    <string name="label_color_tone">Lightness</string>
-    <string name="label_variation">Variation</string>
-    <string name="label_color">Color</string>
-    <string name="label_style_font">Style &amp; Font</string>
-    <string name="about_title">About</string>
-    <string name="color_default">Default</string>
-    <string name="color_red">Red</string>
-    <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
-    <string name="color_yellow">Yellow</string>
-    <string name="color_orange">Orange</string>
-    <string name="color_purple">Purple</string>
-    <string name="color_pink">Pink</string>
-    <string name="color_teal">Teal</string>
+    <string name="lock_screen_clock_growth">成長</string>
+    <string name="lock_screen_clock_handwritten">手寫</string>
+    <string name="lock_screen_clock_inflate">膨脹</string>
+    <string name="lock_screen_clock_metro">都會</string>
+    <string name="lock_screen_clock_numoverlap">數字重疊</string>
+    <string name="lock_screen_clock_weather">天氣</string>
+    <string name="lock_screen_clock_select_label">選擇時鐘樣式</string>
+    <string name="lock_screen_clock_current_label">目前</string>
+    <string name="lock_screen_clock_apply_label">套用</string>
+    <string name="lock_screen_clock_applied_toast">時鐘樣式已套用</string>
+    <string name="lock_screen_clock_permission_required">需要 WRITE_SECURE_SETTINGS 權限</string>
+    <string name="lock_screen_clock_default">預設</string>
+    <string name="label_weight">粗細</string>
+    <string name="label_width">寬度</string>
+    <string name="label_grade">等級</string>
+    <string name="label_roundness">圓角</string>
+    <string name="label_color_tone">明度</string>
+    <string name="label_variation">變化</string>
+    <string name="label_color">顏色</string>
+    <string name="label_style_font">樣式與字型</string>
+    <string name="about_title">關於</string>
+    <string name="color_default">預設</string>
+    <string name="color_red">紅色</string>
+    <string name="color_green">綠色</string>
+    <string name="color_blue">藍色</string>
+    <string name="color_yellow">黃色</string>
+    <string name="color_orange">橘色</string>
+    <string name="color_purple">紫色</string>
+    <string name="color_pink">粉紅色</string>
+    <string name="color_teal">藍綠色</string>
     <!-- What's New -->
-    <string name="whats_new_specs_title">Device Specs Retired</string>
-    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
-    <string name="whats_new_apps_title">App Updates Migrated</string>
-    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
-    <string name="favorites_widget_name">Favorite Features</string>
+    <string name="whats_new_specs_title">裝置規格已移除</string>
+    <string name="whats_new_specs_desc">不準確的 GSMArena 規格資料已被移除，以確保裝置資訊簡潔、快速且完全可靠。</string>
+    <string name="whats_new_apps_title">應用程式更新已遷移</string>
+    <string name="whats_new_apps_desc">「應用程式」分頁現已完全整合至「Your Android」功能中，讓您更輕鬆地在統一的中心管理所有應用程式更新。</string>
+    <string name="favorites_widget_name">最愛功能</string>
     <string name="favorites_widget_description">一目瞭然地查看並啟動您喜愛的功能。</string>
-    <string name="favorites_widget_empty_state">No favorite features pinned yet. Long press a feature to pin!!</string>
+    <string name="favorites_widget_empty_state">尚未釘選任何最愛功能。長按功能即可釘選！</string>
     <!-- External Control Permission -->
-    <string name="perm_external_control_label">control Essentials features</string>
-    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
-    <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
-    <string name="pixel_searchbar_style_empty">Empty (Default)</string>
-    <string name="pixel_searchbar_style_date">Date</string>
-    <string name="pixel_searchbar_background_pill_title">Background pill</string>
-    <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>
-    <string name="about_desc_pixel_searchbar">Replace the default Pixel Launcher search bar on your home screen. You can customize the content to show either nothing (Empty) or the current date. \n\nPlease note that enabling this may break Pixel Launcher At a Glance widgets (such as sports and finance widgets). \n\nAnd the setting may need to be applied multiple times to take effect.</string>
-    <string name="label_replace_with">Replace with</string>
-    <string name="pixel_searchbar_tap_action_title">Configure tap action</string>
-    <string name="pixel_searchbar_tap_action_desc">Set up actions to trigger in DIY automations when tapped</string>
-    <string name="pixel_searchbar_style_widget">Widget</string>
-    <string name="pixel_searchbar_widget_picker_title">Pick a widget</string>
-    <string name="pixel_searchbar_widget_picker_desc">Select a widget to display its content in the searchbar</string>
-    <string name="pixel_searchbar_widget_selected">Widget selected</string>
-    <string name="pixel_searchbar_widget_none">No widget selected</string>
-    <string name="pixel_searchbar_widget_change">Change widget</string>
-    <string name="pixel_searchbar_widget_remove">Remove widget</string>
-    <string name="pixel_searchbar_bind_permission_title">Widget host permission required</string>
-    <string name="pixel_searchbar_bind_permission_desc">Essentials needs permission to host widgets. Tap to grant.</string>
-    <string name="pixel_searchbar_scraped_line1">Scraped title</string>
-    <string name="pixel_searchbar_scraped_line2">Scraped subtitle</string>
-    <string name="pixel_searchbar_widget_padding_h">Horizontal padding</string>
-    <string name="pixel_searchbar_widget_padding_v">Vertical padding</string>
-    <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
-    <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
-    <string name="pixel_searchbar_style_music">Music</string>
-    <string name="action_restart_shizuku">Restart Shizuku</string>
-    <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+    <string name="perm_external_control_label">控制 Essentials 功能</string>
+    <string name="perm_external_control_desc">讀取、更新和控制 Essentials 的功能與設定</string>
+    <string name="pixel_searchbar_settings_title">Pixel 搜尋列自訂</string>
+    <string name="pixel_searchbar_style_empty">空白（預設）</string>
+    <string name="pixel_searchbar_style_date">日期</string>
+    <string name="pixel_searchbar_background_pill_title">背景膠囊</string>
+    <string name="pixel_searchbar_background_pill_desc">在容器內顯示日期</string>
+    <string name="about_desc_pixel_searchbar">取代預設的 Pixel 啟動器主螢幕搜尋列。您可以自訂內容，顯示空白（Empty）或目前日期。\n\n請注意，啟用此功能可能會影響 Pixel 啟動器的「速覽」小工具（如體育和財經小工具）。\n\n此設定可能需要多次套用才會生效。</string>
+    <string name="label_replace_with">替換為</string>
+    <string name="pixel_searchbar_tap_action_title">設定點擊動作</string>
+    <string name="pixel_searchbar_tap_action_desc">設定點擊時在 DIY 自動化中觸發的動作</string>
+    <string name="pixel_searchbar_style_widget">小工具</string>
+    <string name="pixel_searchbar_widget_picker_title">選擇小工具</string>
+    <string name="pixel_searchbar_widget_picker_desc">選擇要在搜尋列中顯示內容的小工具</string>
+    <string name="pixel_searchbar_widget_selected">已選擇小工具</string>
+    <string name="pixel_searchbar_widget_none">未選擇小工具</string>
+    <string name="pixel_searchbar_widget_change">變更小工具</string>
+    <string name="pixel_searchbar_widget_remove">移除小工具</string>
+    <string name="pixel_searchbar_bind_permission_title">需要小工具託管權限</string>
+    <string name="pixel_searchbar_bind_permission_desc">Essentials 需要託管小工具的權限。點擊以授予。</string>
+    <string name="pixel_searchbar_scraped_line1">擷取的標題</string>
+    <string name="pixel_searchbar_scraped_line2">擷取的副標題</string>
+    <string name="pixel_searchbar_widget_padding_h">水平內距</string>
+    <string name="pixel_searchbar_widget_padding_v">垂直內距</string>
+    <string name="pixel_searchbar_tap_action_enabled">自訂點擊動作</string>
+    <string name="pixel_searchbar_tap_action_enabled_desc">使用 DIY 點擊動作取代小工具本身的動作</string>
+    <string name="pixel_searchbar_style_music">音樂</string>
+    <string name="action_restart_shizuku">重新啟動 Shizuku</string>
+    <string name="toast_enter_shizuku_token">請先在設定中輸入 Shizuku 驗證權杖</string>
     <!-- Pocket Mode -->
-    <string name="feat_pocket_mode_title">Pocket mode</string>
-    <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
-    <string name="pocket_mode_use_light_title">Use light sensor</string>
-    <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
-    <string name="pocket_mode_active">Pocket mode active</string>
-    <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
-    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain</string>
-    <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
-    <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
-    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
-    <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
-    <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
+    <string name="feat_pocket_mode_title">口袋模式</string>
+    <string name="feat_pocket_mode_desc">防止在口袋中誤觸</string>
+    <string name="pocket_mode_use_light_title">使用光線感應器</string>
+    <string name="pocket_mode_use_light_desc">除了距離感應器外，同時使用環境光線等級以提高準確度</string>
+    <string name="pocket_mode_active">口袋模式已啟用</string>
+    <string name="pocket_mode_dismiss_hint">按任意音量鍵即可關閉</string>
+    <string name="pocket_mode_warning">警告：在缺少感應器的裝置上，啟用口袋模式可能會影響深度睡眠並導致較高的電池消耗</string>
+    <string name="pocket_mode_exclude_apps_title">排除的應用程式</string>
+    <string name="pocket_mode_exclude_apps_desc">選擇不觸發口袋模式的應用程式。在串流播放或遊戲時，口袋模式預設不會運作</string>
+    <string name="pocket_mode_trigger_delay_title">觸發延遲</string>
+    <string name="pocket_mode_lock_screen_only_title">僅限鎖定螢幕</string>
+    <string name="pocket_mode_lock_screen_only_desc">僅在裝置鎖定時觸發口袋模式</string>
     <!-- Developer Settings & Wallpaper Check -->
-    <string name="import_config_sheet_title">Restore Configuration</string>
-    <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
-    <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
-    <string name="action_override">Override</string>
-    <string name="action_merge">Merge</string>
-    <string name="label_wallpaper_last_checked">Last checked at %1$s</string>
-    <string name="label_wallpaper_next_check">Next check in %1$s</string>
-    <string name="label_wallpaper_hours">%1$d hours</string>
-    <string name="label_wallpaper_a_few_minutes">a few minutes</string>
+    <string name="import_config_sheet_title">還原設定</string>
+    <string name="import_config_sheet_desc">選擇您要如何還原設定。</string>
+    <string name="import_config_merge_warning">合併可能會導致資料損毀。請謹慎操作！</string>
+    <string name="action_override">覆蓋</string>
+    <string name="action_merge">合併</string>
+    <string name="label_wallpaper_last_checked">上次檢查於 %1$s</string>
+    <string name="label_wallpaper_next_check">下次檢查在 %1$s 後</string>
+    <string name="label_wallpaper_hours">%1$d 小時</string>
+    <string name="label_wallpaper_a_few_minutes">幾分鐘</string>
     <!-- In-App Translation Mode -->
-    <string name="settings_translations_section">Translations</string>
-    <string name="settings_translate_mode">Translation Mode</string>
-    <string name="settings_translate_mode_desc">Long press any text to translate and contribute to the community</string>
-    <string name="settings_translated_texts">Translated</string>
-    <string name="settings_translated_texts_desc">%d edit(s) pending — tap to submit or discard</string>
-    <string name="translation_submit">Submit</string>
-    <string name="translation_discard">Discard</string>
-    <string name="translation_menu_translate">Translate</string>
-    <string name="translation_menu_view">View All</string>
-    <string name="translation_menu_dismiss">Dismiss</string>
-    <string name="translation_source_label">Source (English)</string>
-    <string name="translation_login_required">GitHub login required to submit translations</string>
-    <string name="translation_submitting">Submitting…</string>
-    <string name="translation_submitted">Submitted! Thank you (‘∀’●)♡</string>
-    <string name="translation_submit_error">Submission failed. Check your connection.</string>
-    <string name="translation_key_label">String key</string>
-    <string name="translation_saved_toast">Translation edit saved! Tap Submit to publish</string>
-    <string name="translation_warning_title">Enable Translation Mode</string>
-    <string name="translation_warning_desc">Please ensure all contributed translations are accurate and responsible. Note that not all submitted changes may be merged due to potential conflicts or review criteria.</string>
-    <string name="translation_warning_point1_title">Accuracy &amp; Responsibility</string>
-    <string name="translation_warning_point1_desc">Ensure all contributed translations are accurate, respectful, and appropriate for all users.</string>
-    <string name="translation_warning_point2_title">Conflicts &amp; Merging</string>
-    <string name="translation_warning_point2_desc">Not all submitted changes are guaranteed to be merged due to potential conflicts or review criteria.</string>
+    <string name="settings_translations_section">翻譯</string>
+    <string name="settings_translate_mode">翻譯模式</string>
+    <string name="settings_translate_mode_desc">長按任何文字即可翻譯並貢獻給社群</string>
+    <string name="settings_translated_texts">已翻譯</string>
+    <string name="settings_translated_texts_desc">%d 筆編輯待處理 — 點擊以提交或捨棄</string>
+    <string name="translation_submit">提交</string>
+    <string name="translation_discard">捨棄</string>
+    <string name="translation_menu_translate">翻譯</string>
+    <string name="translation_menu_view">檢視全部</string>
+    <string name="translation_menu_dismiss">關閉</string>
+    <string name="translation_source_label">原文（英文）</string>
+    <string name="translation_login_required">提交翻譯需要登入 GitHub</string>
+    <string name="translation_submitting">提交中…</string>
+    <string name="translation_submitted">已提交！感謝您 (\'∀\'●)♡</string>
+    <string name="translation_submit_error">提交失敗。請檢查您的網路連線。</string>
+    <string name="translation_key_label">字串鍵值</string>
+    <string name="translation_saved_toast">翻譯編輯已儲存！點擊提交以發布</string>
+    <string name="translation_warning_title">啟用翻譯模式</string>
+    <string name="translation_warning_desc">請確保所有貢獻的翻譯都是準確且負責任的。請注意，並非所有提交的變更都會被合併，可能因潛在衝突或審核標準而有所不同。</string>
+    <string name="translation_warning_point1_title">準確性與責任</string>
+    <string name="translation_warning_point1_desc">確保所有貢獻的翻譯準確、尊重且適合所有使用者。</string>
+    <string name="translation_warning_point2_title">衝突與合併</string>
+    <string name="translation_warning_point2_desc">並非所有提交的變更都保證會被合併，可能因潛在衝突或審核標準而有所不同。</string>
     <string name="translation_warning_point3_title">GitHub Pull Request</string>
-    <string name="translation_warning_point3_desc">Submissions automatically create or update a dedicated pull request on GitHub under your account.</string>
-    <string name="translation_warning_do_not_show">Do not show again</string>
+    <string name="translation_warning_point3_desc">提交後會自動在您的 GitHub 帳號下建立或更新專屬的 Pull Request。</string>
+    <string name="translation_warning_do_not_show">不再顯示</string>
 </resources>

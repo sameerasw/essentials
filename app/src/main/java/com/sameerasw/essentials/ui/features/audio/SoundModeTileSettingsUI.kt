@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlin.math.min
@@ -150,10 +151,13 @@ fun SoundModeTileSettingsUI(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 
+    val isConsoleModeEnabled = prefs.getBoolean("console_mode", false)
+
     LazyColumn(
         modifier =
             modifier
                 .fillMaxSize()
+                .scrollMotionBlur(lazyListState, enabled = isConsoleModeEnabled)
                 .padding(horizontal = 16.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(4.dp),

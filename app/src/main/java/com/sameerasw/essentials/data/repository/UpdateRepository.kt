@@ -25,32 +25,34 @@ class UpdateRepository {
         currentVersion: String,
     ): UpdateInfo? =
         withContext(Dispatchers.IO) {
-            try {
-                val autoUpdateHelper = AutoUpdateManagerHelper(context)
-                val updateFeatures =
-                    autoUpdateHelper.checkForUpdate("https://sameerasw.com/essentials-update.json")
+            if (!isPreReleaseCheckEnabled) {
+                try {
+                    val autoUpdateHelper = AutoUpdateManagerHelper(context)
+                    val updateFeatures =
+                        autoUpdateHelper.checkForUpdate("https://sameerasw.com/essentials-update.json")
 
-                if (updateFeatures != null && updateFeatures.latestversion.isNotEmpty()) {
-                    val latestVersion = updateFeatures.latestversion
-                    val hasUpdate = isNewerVersion(currentVersion, latestVersion)
-                    return@withContext UpdateInfo(
-                        versionName = latestVersion,
-                        releaseNotes = updateFeatures.changelog,
-                        downloadUrl = updateFeatures.apk_url,
-                        releaseUrl =
-                            if (updateFeatures.changelog.startsWith(
-                                    "http",
-                                )
-                            ) {
-                                updateFeatures.changelog
-                            } else {
-                                "https://github.com/sameerasw/essentials/releases"
-                            },
-                        isUpdateAvailable = hasUpdate,
-                    )
+                    if (updateFeatures != null && updateFeatures.latestversion.isNotEmpty()) {
+                        val latestVersion = updateFeatures.latestversion
+                        val hasUpdate = isNewerVersion(currentVersion, latestVersion)
+                        return@withContext UpdateInfo(
+                            versionName = latestVersion,
+                            releaseNotes = updateFeatures.changelog,
+                            downloadUrl = updateFeatures.apk_url,
+                            releaseUrl =
+                                if (updateFeatures.changelog.startsWith(
+                                        "http",
+                                    )
+                                ) {
+                                    updateFeatures.changelog
+                                } else {
+                                    "https://github.com/sameerasw/essentials/releases"
+                                },
+                            isUpdateAvailable = hasUpdate,
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
 
             checkForUpdatesFromGitHub(isPreReleaseCheckEnabled, currentVersion)

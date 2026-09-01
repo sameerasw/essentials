@@ -82,6 +82,7 @@ import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceInfo
@@ -518,7 +519,9 @@ fun YourAndroidContent(
                             }
                         }
                     }
-                }.verticalScroll(scrollState)
+                }
+                .scrollMotionBlur(scrollState, enabled = mainViewModel.isConsoleModeEnabled.value)
+                .verticalScroll(scrollState)
                 .padding(
                     top =
                         contentPadding.calculateTopPadding() +

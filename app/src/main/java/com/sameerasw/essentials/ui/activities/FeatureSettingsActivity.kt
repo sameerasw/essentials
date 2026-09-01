@@ -105,6 +105,7 @@ import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.HapticUtil
@@ -526,6 +527,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val statusBarHeight =
                         WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
+                    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+                    val scrollState = rememberScrollState()
+
                     Box(
                         modifier =
                             Modifier
@@ -553,8 +557,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     ).then(
                                         if (hasScroll) {
                                             Modifier
+                                                .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
                                                 .nestedScroll(nestedScrollConnection)
-                                                .verticalScroll(rememberScrollState())
+                                                .verticalScroll(scrollState)
                                         } else {
                                             Modifier
                                         },

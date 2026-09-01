@@ -90,11 +90,11 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 61
-        versionName = "17.2"
+        versionName = "17.3-beta.3"
 
         val whatsNewCounter = 2
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
-        buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "6")
+        buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "7")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

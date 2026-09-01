@@ -99,16 +99,21 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.core.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.core.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.core.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.core.sheets.ImportConfigConfirmationSheet
 import com.sameerasw.essentials.ui.core.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PreReleaseConfirmationSheet
 import com.sameerasw.essentials.ui.core.sheets.UnsupportedFeaturesConfirmationSheet
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
+import androidx.compose.ui.geometry.Offset
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
+import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
@@ -176,12 +181,25 @@ class SettingsActivity : AppCompatActivity() {
                     WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
                 val isBlurEnabled by viewModel.isBlurEnabled
+                val isRippleEnabled by viewModel.isRippleEnabled
+                var iconRippleTrigger by remember { mutableStateOf(0) }
+                var iconRippleOrigin by remember { mutableStateOf(Offset.Zero) }
 
                 Box(
                     modifier =
                         Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.surfaceContainer)
+                            .liquidRipple(
+                                trigger = iconRippleTrigger,
+                                origin = iconRippleOrigin,
+                                enabled = isRippleEnabled,
+                                durationMillis = 2800,
+                                amplitudeDp = 34f,
+                                frequency = 12f,
+                                decay = 4.5f,
+                                speedDp = 1400f,
+                            )
                             .progressiveBlur(
                                 blurRadius = if (isBlurEnabled) 40f else 0f,
                                 height = statusBarHeightPx * 1.15f,
@@ -199,6 +217,18 @@ class SettingsActivity : AppCompatActivity() {
                     SettingsContent(
                         viewModel = viewModel,
                         contentPadding = contentPadding,
+                        onAppIconSelectedWithPosition = { _, pos ->
+                            iconRippleOrigin = pos
+                            iconRippleTrigger++
+                        },
+                        onAvatarLongClickWithPosition = { pos ->
+                            iconRippleOrigin = pos
+                            iconRippleTrigger++
+                        },
+                        onRippleToggleEnabledWithPosition = { pos ->
+                            iconRippleOrigin = pos
+                            iconRippleTrigger++
+                        },
                         modifier =
                             Modifier
                                 .progressiveBlur(
@@ -253,6 +283,9 @@ fun SettingsContent(
     viewModel: MainViewModel,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    onAppIconSelectedWithPosition: ((com.sameerasw.essentials.domain.model.AppIcon, Offset) -> Unit)? = null,
+    onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
+    onRippleToggleEnabledWithPosition: ((Offset) -> Unit)? = null,
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -294,6 +327,8 @@ fun SettingsContent(
     var showInstructionsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
+    var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
+    var pendingPreReleaseState by remember { mutableStateOf(false) }
     var showImportConfirmSheet by remember { mutableStateOf(false) }
     var selectedImportUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -420,6 +455,24 @@ fun SettingsContent(
         )
     }
 
+    if (showPreReleaseConfirmSheet) {
+        PreReleaseConfirmationSheet(
+            isEnabling = pendingPreReleaseState,
+            onDismissRequest = { showPreReleaseConfirmSheet = false },
+            onConfirmRestart = {
+                showPreReleaseConfirmSheet = false
+                viewModel.setPreReleaseCheckEnabled(pendingPreReleaseState, context)
+                val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                }
+                if (intent != null) {
+                    context.startActivity(intent)
+                    Runtime.getRuntime().exit(0)
+                }
+            },
+        )
+    }
+
     if (showImportConfirmSheet) {
         ImportConfigConfirmationSheet(
             onDismissRequest = {
@@ -472,12 +525,15 @@ fun SettingsContent(
     }
 
     val sentryMode by viewModel.sentryReportMode
+    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+    val scrollState = rememberScrollState()
 
     Column(
         modifier =
             modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
+                .verticalScroll(scrollState)
                 .padding(contentPadding),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.Start,
@@ -522,7 +578,10 @@ fun SettingsContent(
                 title = context.getString(R.string.check_pre_releases_label),
                 description = context.getString(R.string.check_pre_releases_desc),
                 isChecked = isPreReleaseCheckEnabled,
-                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) },
+                onCheckedChange = { targetState ->
+                    pendingPreReleaseState = targetState
+                    showPreReleaseConfirmSheet = true
+                },
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
@@ -624,13 +683,33 @@ fun SettingsContent(
                 title = stringResource(R.string.label_use_blur),
                 description =
                     if (isBlurProblematic) {
-                        stringResource(R.string.msg_blur_compatibility_error)
+                         stringResource(R.string.msg_blur_compatibility_error)
                     } else {
                         stringResource(R.string.desc_use_blur)
                     },
                 isChecked = viewModel.isBlurSettingEnabled.value,
                 onCheckedChange = { viewModel.setBlurEnabled(it, context) },
                 enabled = !isBlurProblematic,
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_blur_linear_24,
+                title = stringResource(R.string.label_ripple_animation),
+                description = stringResource(R.string.desc_ripple_animation),
+                isChecked = viewModel.isRippleSettingEnabled.value,
+                onCheckedChange = { viewModel.setRippleEnabled(it, context) },
+                onCheckedChangeWithPosition = { isChecked, pos ->
+                    if (isChecked) {
+                        onRippleToggleEnabledWithPosition?.invoke(pos)
+                    }
+                },
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_settings_motion_mode_24,
+                title = stringResource(R.string.label_motion_blur),
+                isChecked = viewModel.isConsoleModeSettingEnabled.value,
+                onCheckedChange = { viewModel.setConsoleModeEnabled(it, context) },
             )
 
             CrashReportingPicker(
@@ -645,6 +724,13 @@ fun SettingsContent(
                 selectedTab = defaultTab,
                 onTabSelected = { viewModel.setDefaultTab(it, context) },
                 options = availableTabs,
+            )
+
+            val selectedAppIcon by viewModel.selectedAppIcon
+            AppIconPicker(
+                selectedIcon = selectedAppIcon,
+                onIconSelected = { viewModel.setAppIcon(it, context) },
+                onIconSelectedWithPosition = onAppIconSelectedWithPosition,
             )
 
             IconToggleItem(
@@ -1233,6 +1319,7 @@ fun SettingsContent(
                             Toast.LENGTH_SHORT,
                         ).show()
                 },
+                onAvatarLongClickWithPosition = onAvatarLongClickWithPosition,
             )
         }
 

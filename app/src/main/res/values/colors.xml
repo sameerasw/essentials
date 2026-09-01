@@ -2,4 +2,6 @@
 <resources>
     <color name="purple_500">#FF6200EE</color>
     <color name="black">#FF000000</color>
+    <color name="ic_launcher_dynamic_background">#FF1C1B1F</color>
+    <color name="ic_launcher_dynamic_accent">#FFD0BCFF</color>
 </resources>

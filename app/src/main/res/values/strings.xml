@@ -35,7 +35,20 @@
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
     <string name="check_pre_releases_label">Check for pre-releases</string>
     <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="pre_release_enable_sheet_title">Enable pre-releases?</string>
+    <string name="pre_release_enable_sheet_desc">Pre-release builds contain experimental features and might be unstable or introduce bugs.\n\nIt is recommended to take a config backup after the app restarts, from developer options.</string>
+    <string name="pre_release_disable_sheet_title">Disable pre-releases?</string>
+    <string name="pre_release_disable_sheet_desc">Switch back to receiving only verified stable updates.</string>
+    <string name="pre_release_restart_notice">The app must restart to apply this update channel change cleanly.</string>
+    <string name="action_restart_app">Restart app</string>
     <string name="label_default_tab">Default tab</string>
+    <string name="setting_app_icon_title">App icon</string>
+    <string name="setting_app_icon_desc">Customize the home screen launcher icon</string>
+    <string name="app_icon_default">Default</string>
+    <string name="app_icon_legacy">Legacy</string>
+    <string name="app_icon_black">Dynamic</string>
+    <string name="app_icon_gta">Vice</string>
+    <string name="app_icon_google">Spectrum</string>
     <string name="label_open_with">Open</string>
     <string name="label_share_with">Share</string>
     <string name="label_view_list">List</string>
@@ -2008,6 +2021,9 @@
     <string name="label_no_data">No data</string>
     <string name="label_use_blur">Use blur</string>
     <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
+    <string name="label_ripple_animation">Ripple animation</string>
+    <string name="desc_ripple_animation">Enable liquid ripple animations across the UI</string>
+    <string name="label_motion_blur">Motion blur</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <string name="setting_swipe_tabs_title">Swipe between tabs</string>
     <string name="setting_swipe_tabs_desc">In home screen</string>
@@ -2341,4 +2357,8 @@
     <string name="watchface_clock_outline_title">Outline only</string>
     <string name="watchface_clock_outline_desc">Show only font outlines instead of filled text</string>
     <string name="watchface_clock_outline_thickness">Outline thickness</string>
+    <string name="app_medrop">MeDrop</string>
+    <string name="action_licenses_and_credits">Licenses and Credits</string>
+    <string name="licenses_credits_title">Licenses &amp; Credits</string>
+    <string name="licenses_credits_subtitle">Open source projects and contributors powering Essentials</string>
 </resources>

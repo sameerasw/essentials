@@ -47,6 +47,7 @@ import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
 import com.sameerasw.essentials.domain.model.DnsPreset
@@ -65,6 +66,7 @@ import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -103,6 +105,7 @@ class MainViewModel : ViewModel() {
     val isNotificationLightingAccessibilityEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val defaultTab = mutableStateOf(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS)
+    val selectedAppIcon = mutableStateOf(AppIcon.DEFAULT)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
     val isAmbientDisplayEnabled = mutableStateOf(false)
@@ -298,6 +301,10 @@ class MainViewModel : ViewModel() {
     val isEnableUnsupportedFeatures = mutableStateOf(false)
     val isBlurEnabled = mutableStateOf(true)
     val isBlurSettingEnabled = mutableStateOf(true)
+    val isRippleEnabled = mutableStateOf(true)
+    val isRippleSettingEnabled = mutableStateOf(true)
+    val isConsoleModeEnabled = mutableStateOf(false)
+    val isConsoleModeSettingEnabled = mutableStateOf(false)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
     val isPowerSaveModeEnabled = mutableStateOf(false)
@@ -773,6 +780,14 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_USE_BLUR -> {
                         appContext?.let { updateBlurState(it) }
+                    }
+
+                    SettingsRepository.KEY_USE_RIPPLE -> {
+                        appContext?.let { updateRippleState(it) }
+                    }
+
+                    SettingsRepository.KEY_CONSOLE_MODE -> {
+                        appContext?.let { updateConsoleModeState(it) }
                     }
 
                     SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
@@ -1457,6 +1472,8 @@ class MainViewModel : ViewModel() {
 
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
+        updateRippleState(context)
+        updateConsoleModeState(context)
         updateAddedQSTiles(context)
 
         if (powerSaveReceiver == null) {
@@ -1470,6 +1487,8 @@ class MainViewModel : ViewModel() {
                             context?.let {
                                 isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(it)
                                 updateBlurState(it)
+                                updateRippleState(it)
+                                updateConsoleModeState(it)
                             }
                         }
                     }
@@ -1584,6 +1603,7 @@ class MainViewModel : ViewModel() {
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
         defaultTab.value = settingsRepository.getDIYTab()
+        selectedAppIcon.value = settingsRepository.getAppIcon()
         isSwipeTabsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SWIPE_TABS, true)
         sentryReportMode.value =
@@ -1907,6 +1927,8 @@ class MainViewModel : ViewModel() {
         screenTimeout.value = settingsRepository.getScreenTimeout()
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
+        updateRippleState(context)
+        updateConsoleModeState(context)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -2134,7 +2156,10 @@ class MainViewModel : ViewModel() {
         context: Context,
     ) {
         isPreReleaseCheckEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED, enabled)
+        settingsRepository.putBooleanSync(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED, enabled)
+        // Enabling pre-releases automatically enables Developer Mode; disabling turns it off
+        isDeveloperModeEnabled.value = enabled
+        settingsRepository.putBooleanSync(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
     }
 
     /**
@@ -2440,6 +2465,28 @@ class MainViewModel : ViewModel() {
     }
 
     /**
+     * Executes the set ripple animation enabled operation.
+     *
+     * @param enabled [Boolean] Target enabled.
+     * @param context [Context] Target context.
+     */
+    fun setRippleEnabled(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_RIPPLE, enabled)
+        updateRippleState(context)
+    }
+
+    fun setConsoleModeEnabled(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_CONSOLE_MODE, enabled)
+        updateConsoleModeState(context)
+    }
+
+    /**
      * Executes the set swipe tabs enabled operation.
      *
      * @param enabled [Boolean] Target enabled.
@@ -2456,6 +2503,23 @@ class MainViewModel : ViewModel() {
 
         isBlurSettingEnabled.value = useBlurSetting
         isBlurEnabled.value = useBlurSetting && !isProblematic && !isPowerSave
+    }
+
+    private fun updateRippleState(context: Context) {
+        val useRippleSetting = settingsRepository.getBoolean(SettingsRepository.KEY_USE_RIPPLE, true)
+        val isPowerSave = DeviceUtils.isPowerSaveMode(context)
+
+        isRippleSettingEnabled.value = useRippleSetting
+        isRippleEnabled.value = useRippleSetting && !isPowerSave
+    }
+
+    private fun updateConsoleModeState(context: Context) {
+        val useConsoleModeSetting = settingsRepository.getBoolean(SettingsRepository.KEY_CONSOLE_MODE, false)
+        val isProblematic = DeviceUtils.isBlurProblematicDevice()
+        val isPowerSave = DeviceUtils.isPowerSaveMode(context)
+
+        isConsoleModeSettingEnabled.value = useConsoleModeSetting
+        isConsoleModeEnabled.value = useConsoleModeSetting && !isProblematic && !isPowerSave
     }
 
     /**
@@ -5371,7 +5435,15 @@ class MainViewModel : ViewModel() {
     ) {
         defaultTab.value = tab
         settingsRepository.saveDIYTab(tab)
-        settingsRepository.saveDIYTab(tab)
+    }
+
+    fun setAppIcon(
+        appIcon: AppIcon,
+        context: Context,
+    ) {
+        selectedAppIcon.value = appIcon
+        settingsRepository.setAppIcon(appIcon)
+        AppIconUtil.setAppIcon(context, appIcon)
     }
 
     /**

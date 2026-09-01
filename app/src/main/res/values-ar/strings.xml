@@ -143,7 +143,7 @@
     <string name="caffeinate_timeout_30m">30 د</string>
     <string name="perm_notif_policy_title">الوصول لعدم الإزعاج</string>
     <string name="perm_notif_policy_desc">مطلوب للتنقل بين أوضاع الصوت والاهتزاز وكتم الصوت</string>
-    <string name="caffeinate_timeout_1h">ساعة</string>
+    <string name="caffeinate_timeout_1h">1س</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">البدء خلال %1$d ثانية…</string>
     <string name="caffeinate_remaining">متبقي %1$s</string>
@@ -1905,7 +1905,7 @@
     <string name="about_desc_lock_screen_clock">اختر نمط الساعة لعرضه على شاشة القفل وعلى شاشة العرض الدائم AOD. يمكنك تطبيق نفس النمط على الشاشة الرئيسية أيضاً. إذا لم تظهر التغييرات على شاشة القفل، فتأكد من أن خدمة لوحة المفاتيح Essentials مفعلة وأن شاشة القفل تسمح بتخصيص النظام.</string>
     <string name="lock_screen_clock_bignum">BigNum</string>
     <string name="lock_screen_clock_calligraphy">خط الخطاط</string>
-    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_flex">مَرن</string>
     <string name="lock_screen_clock_growth">Growth</string>
     <string name="lock_screen_clock_handwritten">خط يد</string>
     <string name="lock_screen_clock_inflate">Inflate</string>
@@ -1931,7 +1931,7 @@
     <string name="about_title">حول</string>
 
     <!-- Colors -->
-    <string name="color_default">الافتراضي</string>
+    <string name="color_default">الإفتراضي</string>
     <string name="color_red">أحمر</string>
     <string name="color_green">أخضر</string>
     <string name="color_blue">أزرق</string>
@@ -2087,8 +2087,8 @@
     <string name="watch_call_sync_desc">مزامنة حالة المكالمات مع ساعتك</string>
     <string name="smart_pixels_disable_on_cast_title">تعطيل البكسلات الذكية أثناء البث</string>
     <string name="smart_pixels_disable_on_cast_desc">إيقاف عرض شبكة البكسل تلقائيًا أثناء عرض الشاشة أو تسجيلها</string>
-    <string name="feat_sim_names_desc">إعادة تسمية اسم عرض شركة الاتصالات لشريحة الSIM</string>
-    <string name="feat_sim_names_title">اسم الSIM</string>
-    <string name="setting_location_reached_full_screen_alarm_title">منبه ملء الشاشة</string>
-    <string name="setting_location_reached_full_screen_alarm_desc">تشغيل نغمة رنين المنبه وعرض تنبيه ملء الشاشة عند الوصول</string>
+    <string name="feat_sim_names_desc">إعادة تسمية اسم مزود الخدمة لبطاقات SIM النشطة</string>
+    <string name="feat_sim_names_title">أسماء SIM</string>
+    <string name="setting_location_reached_full_screen_alarm_title">منبه في وضع ملء الشاشة</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">شغل نغمة رنين المنبه وعرض تنبيه في ملء الشاشة عند الوصول</string>
 </resources>

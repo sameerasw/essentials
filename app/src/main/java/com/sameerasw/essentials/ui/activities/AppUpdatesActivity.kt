@@ -62,6 +62,7 @@ import com.sameerasw.essentials.ui.core.cards.TrackedRepoCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
@@ -350,8 +351,15 @@ class AppUpdatesActivity : AppCompatActivity() {
                             )
                         }
                     } else {
+                        val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
+                        val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+
                         LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
+                            state = lazyListState,
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .scrollMotionBlur(lazyListState, enabled = isConsoleModeEnabled),
                             contentPadding =
                                 androidx.compose.foundation.layout.PaddingValues(
                                     top = innerPadding.calculateTopPadding() + 16.dp,

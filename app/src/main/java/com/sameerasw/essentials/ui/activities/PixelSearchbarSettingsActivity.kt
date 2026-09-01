@@ -76,6 +76,7 @@ import com.sameerasw.essentials.ui.core.sheets.FeatureHelpBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -135,6 +136,9 @@ class PixelSearchbarSettingsActivity : ComponentActivity() {
                                 .toPx()
                         }
 
+                    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+                    val scrollState = rememberScrollState()
+
                     Box(
                         modifier =
                             Modifier
@@ -153,7 +157,9 @@ class PixelSearchbarSettingsActivity : ComponentActivity() {
                                         blurRadius = if (isBlurEnabled) 40f else 0f,
                                         height = with(density) { 150.dp.toPx() },
                                         direction = BlurDirection.BOTTOM,
-                                    ).verticalScroll(rememberScrollState()),
+                                    )
+                                    .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
+                                    .verticalScroll(scrollState),
                         ) {
                             Spacer(
                                 modifier =

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,17 +34,27 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.core.sheets.LicensesBottomSheet
+import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
@@ -53,7 +64,10 @@ fun AboutSection(
     developerName: String = stringResource(R.string.app_developer_name),
     description: String = stringResource(R.string.app_description),
     onAvatarLongClick: () -> Unit = {},
+    onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
 ) {
+    val view = LocalView.current
+    var showLicensesSheet by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val versionName =
         try {
@@ -81,6 +95,8 @@ fun AboutSection(
                 textAlign = TextAlign.Center,
             )
 
+            var avatarCenterOffset by remember { mutableStateOf(Offset.Zero) }
+
             Image(
                 painter = painterResource(id = R.drawable.avatar),
                 contentDescription = "Developer Avatar",
@@ -88,12 +104,21 @@ fun AboutSection(
                 modifier =
                     Modifier
                         .size(120.dp)
+                        .onGloballyPositioned { coords ->
+                            val pos = coords.positionInRoot()
+                            val size = coords.size
+                            avatarCenterOffset = Offset(
+                                x = pos.x + (size.width / 2f),
+                                y = pos.y + (size.height / 2f)
+                            )
+                        }
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.primary)
                         .combinedClickable(
                             onClick = {},
                             onLongClick = {
                                 onAvatarLongClick()
+                                onAvatarLongClickWithPosition?.invoke(avatarCenterOffset)
                             },
                         ),
             )
@@ -310,6 +335,33 @@ fun AboutSection(
                     Text(stringResource(R.string.app_zero))
                 }
             }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedButton(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    showLicensesSheet = true
+                },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_code_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.action_licenses_and_credits))
+            }
         }
+    }
+
+    if (showLicensesSheet) {
+        LicensesBottomSheet(
+            onDismissRequest = { showLicensesSheet = false },
+        )
     }
 }
