@@ -1655,15 +1655,6 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watchface_complications_on_aod_title">Auf dem AOD anzeigen</string>
     <string name="setting_app_icon_title">App-Icon</string>
     <string name="setting_app_icon_desc">Das App-Symbol auf dem Startbildschirm anpassen</string>
-    <string name="feat_medrop_profile_professional">Professionel</string>
-    <string name="feat_medrop_allow_when_locked">Im gesperrten Zustand zulassen</string>
-    <string name="feat_medrop_allow_when_locked_desc">Öffne MeDrop über die Schnellkachel, auch wenn der Bildschirm gesperrt ist</string>
-    <string name="feat_medrop_include_photo">Profilfoto miteinbeziehen</string>
-    <string name="feat_medrop_use_photo_for_all">Für alle Profile verwenden</string>
-    <string name="feat_medrop_use_photo_for_all_desc">Verwendet das Kontaktfoto für alle Profile</string>
-    <string name="feat_medrop_choose_custom_photo">Eigenes Foto auswählen</string>
-    <string name="feat_medrop_profile_enabled">Dieses Profil aktivieren</string>
-    <string name="feat_medrop_profile_enabled_desc">Dieses Profil beim Teilen per NFC verfügbar machen</string>
     <string name="pixel_searchbar_background_pill_title">Hintergrund-Pille</string>
     <string name="pixel_searchbar_background_pill_desc">Zeigt das Datum in einem Container</string>
     <string name="pixel_searchbar_widget_padding_h">Horizontaler Abstand</string>
