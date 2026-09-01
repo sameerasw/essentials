@@ -157,13 +157,13 @@ fun WatchControlsSettingsUI(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 
-    val isConsoleModeEnabled = prefs.getBoolean("console_mode", false)
+    val isMotionBlurEnabled = prefs.getBoolean("motion_blur", false)
 
     LazyColumn(
         modifier =
             modifier
                 .fillMaxSize()
-                .scrollMotionBlur(lazyListState, enabled = isConsoleModeEnabled)
+                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled)
                 .padding(horizontal = 16.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(4.dp),

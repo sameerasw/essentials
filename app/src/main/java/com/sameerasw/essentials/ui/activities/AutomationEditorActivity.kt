@@ -103,6 +103,7 @@ import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -176,6 +177,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 viewModel.check(context)
             }
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val view = LocalView.current
                 val coroutineScope = rememberCoroutineScope()
@@ -676,18 +678,21 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         LoadingIndicator()
                                                     }
                                                 } else {
+                                                    val appsLazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
                                                     LazyColumn(
+                                                        state = appsLazyListState,
                                                         modifier =
                                                             Modifier
                                                                 .weight(1f)
-                                                                .clip(RoundedCornerShape(24.dp)),
+                                                                .clip(RoundedCornerShape(24.dp))
+                                                                .scrollMotionBlur(appsLazyListState, enabled = isMotionBlurEnabled),
                                                         verticalArrangement = Arrangement.spacedBy(2.dp),
                                                         contentPadding =
                                                             PaddingValues(
                                                                 bottom =
                                                                     WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
                                                                         80.dp,
-                                                            ),
+                                                             ),
                                                     ) {
                                                         items(
                                                             filteredApps,
@@ -716,14 +721,17 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     }
                                                 }
                                             }
-                                        } else if (automationType == Automation.Type.ACTION_SHORTCUT ||
+                                        } else if (
+                                            automationType == Automation.Type.ACTION_SHORTCUT ||
                                             automationType == Automation.Type.PIXEL_SEARCHBAR
                                         ) {
+                                            val triggerScrollState = rememberScrollState()
                                             Column(
                                                 modifier =
                                                     Modifier
                                                         .fillMaxSize()
-                                                        .verticalScroll(rememberScrollState())
+                                                        .scrollMotionBlur(triggerScrollState, enabled = isMotionBlurEnabled)
+                                                        .verticalScroll(triggerScrollState)
                                                         .padding(16.dp),
                                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                             ) {
@@ -765,11 +773,13 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 )
                                             }
                                         } else {
+                                            val triggerStateScrollState = rememberScrollState()
                                             Column(
                                                 modifier =
                                                     Modifier
                                                         .fillMaxSize()
-                                                        .verticalScroll(rememberScrollState())
+                                                        .scrollMotionBlur(triggerStateScrollState, enabled = isMotionBlurEnabled)
+                                                        .verticalScroll(triggerStateScrollState)
                                                         .padding(16.dp),
                                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                             ) {
@@ -985,11 +995,13 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                     } else {
                                         // PAGE 1: Action Picker
+                                        val actionScrollState = rememberScrollState()
                                         Column(
                                             modifier =
                                                 Modifier
                                                     .fillMaxSize()
-                                                    .verticalScroll(rememberScrollState())
+                                                    .scrollMotionBlur(actionScrollState, enabled = isMotionBlurEnabled)
+                                                    .verticalScroll(actionScrollState)
                                                     .padding(16.dp),
                                             verticalArrangement = Arrangement.spacedBy(16.dp),
                                         ) {

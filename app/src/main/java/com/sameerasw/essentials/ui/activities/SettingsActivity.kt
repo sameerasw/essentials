@@ -525,14 +525,14 @@ fun SettingsContent(
     }
 
     val sentryMode by viewModel.sentryReportMode
-    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
     val scrollState = rememberScrollState()
 
     Column(
         modifier =
             modifier
                 .fillMaxSize()
-                .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
+                .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                 .verticalScroll(scrollState)
                 .padding(contentPadding),
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -708,8 +708,8 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_settings_motion_mode_24,
                 title = stringResource(R.string.label_motion_blur),
-                isChecked = viewModel.isConsoleModeSettingEnabled.value,
-                onCheckedChange = { viewModel.setConsoleModeEnabled(it, context) },
+                isChecked = viewModel.isMotionBlurSettingEnabled.value,
+                onCheckedChange = { viewModel.setMotionBlurEnabled(it, context) },
             )
 
             CrashReportingPicker(

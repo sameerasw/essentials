@@ -116,6 +116,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -401,6 +402,8 @@ fun WallpaperScreen(
                 }
             }
 
+            val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+
             HorizontalPager(
                 state = pagerState,
                 modifier =
@@ -410,7 +413,8 @@ fun WallpaperScreen(
                             blurRadius = if (isBlurEnabled) 40f else 0f,
                             height = bottomBlurHeightPx,
                             direction = BlurDirection.BOTTOM,
-                        ),
+                        )
+                        .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
             ) { page ->
                 if (page == 0) {
                     Box(modifier = Modifier.fillMaxSize()) {
@@ -562,6 +566,7 @@ fun WallpaperScreen(
                         }
                     }
                 } else {
+                    val gridState = androidx.compose.foundation.lazy.grid.rememberLazyGridState()
                     Box(
                         modifier =
                             Modifier
@@ -569,6 +574,7 @@ fun WallpaperScreen(
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
                     ) {
                         LazyVerticalGrid(
+                            state = gridState,
                             columns = GridCells.Fixed(3),
                             contentPadding =
                                 PaddingValues(
@@ -579,7 +585,10 @@ fun WallpaperScreen(
                                 ),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.fillMaxSize(),
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .scrollMotionBlur(gridState, enabled = isMotionBlurEnabled),
                         ) {
                             item {
                                 AddVideoItem(onClick = {

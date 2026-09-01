@@ -136,7 +136,7 @@ class PixelSearchbarSettingsActivity : ComponentActivity() {
                                 .toPx()
                         }
 
-                    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+                    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
                     val scrollState = rememberScrollState()
 
                     Box(
@@ -158,7 +158,7 @@ class PixelSearchbarSettingsActivity : ComponentActivity() {
                                         height = with(density) { 150.dp.toPx() },
                                         direction = BlurDirection.BOTTOM,
                                     )
-                                    .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
+                                    .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                                     .verticalScroll(scrollState),
                         ) {
                             Spacer(

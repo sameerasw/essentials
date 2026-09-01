@@ -35,11 +35,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.content.Context
+import androidx.compose.foundation.lazy.rememberLazyListState
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
 import com.sameerasw.essentials.ui.components.diy.AutomationItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.NewAutomationSheet
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.DIYViewModel
 
@@ -100,9 +103,19 @@ fun DIYScreen(
                     remember(automations) {
                         automations.partition { it.isEnabled }
                     }
+                val isMotionBlurEnabled =
+                    remember(context) {
+                        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                            .getBoolean("motion_blur", false)
+                    }
+                val lazyListState = rememberLazyListState()
 
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    state = lazyListState,
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding =
                         PaddingValues(

@@ -520,7 +520,7 @@ fun YourAndroidContent(
                         }
                     }
                 }
-                .scrollMotionBlur(scrollState, enabled = mainViewModel.isConsoleModeEnabled.value)
+                .scrollMotionBlur(scrollState, enabled = mainViewModel.isMotionBlurEnabled.value)
                 .verticalScroll(scrollState)
                 .padding(
                     top =

@@ -523,7 +523,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val statusBarHeight =
                         WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
-                    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+                    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
                     val scrollState = rememberScrollState()
 
                     Box(
@@ -553,7 +553,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     ).then(
                                         if (hasScroll) {
                                             Modifier
-                                                .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
+                                                .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                                                 .nestedScroll(nestedScrollConnection)
                                                 .verticalScroll(scrollState)
                                         } else {
