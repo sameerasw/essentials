@@ -32,6 +32,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -679,16 +680,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         listOf(
                                                             "Watchface",
                                                             "Complications",
-                                                        ),
-                                                        listOf(
-                                                            "Notification Sync",
-                                                            "Call Sync",
                                                             "Watch Controls",
                                                             "Lock from Watch",
                                                         ),
                                                         listOf(
                                                             "Calendar Sync",
                                                             "Sync sound mode",
+                                                            "Notification Sync",
+                                                            "Call Sync",
                                                             "Sync location reached status",
                                                         ),
                                                         listOf(
@@ -730,11 +729,19 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                 sectionChildLists.forEach { sectionChildren ->
+                                    if (featureId == "Watch" && sectionChildren.any { it.id == "Calendar Sync" }) {
+                                        Text(
+                                            text = stringResource(R.string.cat_sync),
+                                            style = MaterialTheme.typography.titleMedium,
+                                            modifier = Modifier.padding(start = 32.dp, top = 24.dp, bottom = 4.dp),
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
                                     RoundedCardContainer(
                                         modifier =
                                             Modifier
                                                 .padding(horizontal = 16.dp)
-                                                .padding(top = 16.dp),
+                                                .padding(top = if (featureId == "Watch" && sectionChildren.any { it.id == "Calendar Sync" }) 0.dp else 16.dp),
                                     ) {
                                         sectionChildren.forEach { child ->
                                             val permissionAwareToggle: (Boolean) -> Unit =

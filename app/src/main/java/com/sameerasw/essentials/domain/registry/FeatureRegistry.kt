@@ -1691,7 +1691,7 @@ object FeatureRegistry {
             object : Feature(
                 id = "Calendar Sync",
                 title = R.string.feat_calendar_sync_title,
-                iconRes = R.drawable.rounded_sync_24, // Use sync icon
+                iconRes = R.drawable.rounded_calendar_today_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_calendar_sync_desc,
                 aboutDescription = R.string.about_desc_calendar_sync,
