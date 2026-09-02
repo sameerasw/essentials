@@ -1396,7 +1396,9 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Shut-Up!</string>
     <string name="feat_shut_up_desc">Tôi biết tôi đang làm cái gì</string>
-    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_description">Shut-Up! bỏ qua các hạn chế của ứng dụng và kiểm tra các tùy chọn nhà phát triển, khả năng truy cập và gỡ lỗi bằng cách tự động ẩn chúng khi bạn khởi chạy các ứng dụng nhạy cảm.
+
+Sử dụng các phím tắt tùy chỉnh để đảm bảo các cài đặt được ẩn trước khi ứng dụng khởi chạy.</string>
     <string name="shut_up_select_apps_title">Chọn ứng dụng</string>
     <string name="shut_up_select_apps_desc">Chọn ứng dụng để áp dụng logic Shut-Up!</string>
     <string name="shut_up_settings_title">Shut-Up! Settings</string>
@@ -1611,4 +1613,14 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="feat_circle_to_search_gesture_width_desc">Điều chỉnh độ rộng của vùng cảm ứng ở phía dưới</string>
     <string name="flashlight_pulse_disable_on_dnd_title">Không kích hoạt chế độ Không làm phiền (DND)</string>
     <string name="diy_category_apps">Ứng dụng</string>
+    <string name="feat_safe_volume_desc">Giảm âm lượng hội thoại lớn</string>
+    <string name="smart_pixels_disable_on_cast_title">Vô hiệu hóa trong khi chiếu màn hình</string>
+    <string name="smart_pixels_disable_on_cast_desc">Tự động tạm dừng lớp phủ lưới pixel trong khi phát hoặc ghi màn hình</string>
+    <string name="diy_volume_channel_music">Nhạc</string>
+    <string name="label_share_with">Chia sẻ Với</string>
+    <string name="label_open_with">Mở Với</string>
+    <string name="feat_sim_names_title">Tên SIM</string>
+    <string name="feat_sim_names_desc">Đổi tên hiển thị của nhà mạng cho các thẻ SIM đang hoạt động</string>
+    <string name="setting_location_reached_full_screen_alarm_title">Báo thức toàn màn hình</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Phát nhạc chuông báo thức và hiển thị thông báo toàn màn hình khi có cuộc gọi đến</string>
 </resources>
