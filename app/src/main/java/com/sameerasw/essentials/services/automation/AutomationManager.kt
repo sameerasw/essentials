@@ -73,11 +73,22 @@ object AutomationManager {
         }
     }
 
-    fun triggerAccessibilityShortcut(context: Context) {
+    fun triggerAccessibilityShortcut(context: Context, slot: Int = 1) {
         scope.launch(Dispatchers.IO) {
             val automations = DIYRepository.automations.value
+            val targetType = when (slot) {
+                1 -> Automation.Type.ACCESSIBILITY_SHORTCUT_1
+                2 -> Automation.Type.ACCESSIBILITY_SHORTCUT_2
+                3 -> Automation.Type.ACCESSIBILITY_SHORTCUT_3
+                else -> Automation.Type.ACCESSIBILITY_SHORTCUT_1
+            }
             automations
-                .filter { it.isEnabled && it.type == Automation.Type.ACCESSIBILITY_SHORTCUT }
+                .filter {
+                    it.isEnabled && (
+                        it.type == targetType ||
+                        (slot == 1 && it.type == Automation.Type.ACCESSIBILITY_SHORTCUT)
+                    )
+                }
                 .forEach { automation ->
                     automation.actions.forEach { action ->
                         CombinedActionExecutor.execute(context, action)
@@ -162,7 +173,12 @@ object AutomationManager {
                     // Handled by AppFlowHandler
                 }
 
-                Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> {
+                Automation.Type.ACTION_SHORTCUT,
+                Automation.Type.ACCESSIBILITY_SHORTCUT,
+                Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                Automation.Type.PIXEL_SEARCHBAR -> {
                     // Triggered manually on tap/click or via accessibility shortcut
                 }
             }

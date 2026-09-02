@@ -17,7 +17,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
-import com.sameerasw.essentials.services.AccessibilityShortcutService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
@@ -45,13 +44,19 @@ object PermissionUtils {
      * @param context [Context] Target context.
      * @return The resulting Boolean data.
      */
-    fun isAccessibilityShortcutServiceEnabled(context: Context): Boolean {
+    fun isAccessibilityShortcutServiceEnabled(context: Context, slot: Int = 1): Boolean {
         val enabledServices =
             Settings.Secure.getString(
                 context.contentResolver,
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
             )
-        val serviceName = "${context.packageName}/${AccessibilityShortcutService::class.java.name}"
+        val className = when (slot) {
+            1 -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java.name
+            2 -> com.sameerasw.essentials.services.AccessibilityShortcutService2::class.java.name
+            3 -> com.sameerasw.essentials.services.AccessibilityShortcutService3::class.java.name
+            else -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java.name
+        }
+        val serviceName = "${context.packageName}/$className"
         return enabledServices?.contains(serviceName) == true
     }
 

@@ -560,9 +560,35 @@
         </service>
 
         <service
-            android:name=".services.AccessibilityShortcutService"
+            android:name=".services.AccessibilityShortcutService1"
             android:exported="true"
-            android:label="@string/accessibility_shortcut_service_name"
+            android:label="@string/accessibility_shortcut_service_1_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_shortcut_service_config" />
+        </service>
+
+        <service
+            android:name=".services.AccessibilityShortcutService2"
+            android:exported="true"
+            android:label="@string/accessibility_shortcut_service_2_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_shortcut_service_config" />
+        </service>
+
+        <service
+            android:name=".services.AccessibilityShortcutService3"
+            android:exported="true"
+            android:label="@string/accessibility_shortcut_service_3_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />

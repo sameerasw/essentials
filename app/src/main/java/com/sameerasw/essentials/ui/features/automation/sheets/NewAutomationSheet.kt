@@ -9,9 +9,6 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
-import android.content.Intent
-import android.provider.Settings
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,7 +45,6 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.PermissionUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,12 +87,27 @@ fun NewAutomationSheet(
             }
         }
 
-    val hasAccessibilityShortcut =
+    val existingAccessibilityShortcuts =
         remember {
-            DIYRepository.automations.value.any {
-                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT
+            DIYRepository.automations.value.filter {
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_1 ||
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_2 ||
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_3
             }
         }
+
+    val hasAllAccessibilityShortcuts = remember(existingAccessibilityShortcuts) {
+        val usedSlots = existingAccessibilityShortcuts.map {
+            when (it.type) {
+                Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT_1 -> 1
+                Automation.Type.ACCESSIBILITY_SHORTCUT_2 -> 2
+                Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> 3
+                else -> 1
+            }
+        }.toSet()
+        usedSlots.contains(1) && usedSlots.contains(2) && usedSlots.contains(3)
+    }
 
     val hasPixelSearchbar =
         remember {
@@ -201,22 +212,9 @@ fun NewAutomationSheet(
                     title = stringResource(R.string.diy_create_accessibility_shortcut_title),
                     description = stringResource(R.string.diy_create_accessibility_shortcut_desc),
                     iconRes = R.drawable.rounded_accessibility_new_24,
-                    enabled = !hasAccessibilityShortcut,
+                    enabled = !hasAllAccessibilityShortcuts,
                     onClick = {
-                        if (PermissionUtils.isAccessibilityShortcutServiceEnabled(context)) {
-                            onOptionSelected(Automation.Type.ACCESSIBILITY_SHORTCUT)
-                        } else {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.diy_enable_accessibility_shortcut_prompt),
-                                Toast.LENGTH_LONG,
-                            ).show()
-                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-                            context.startActivity(intent)
-                            onDismiss()
-                        }
+                        onOptionSelected(Automation.Type.ACCESSIBILITY_SHORTCUT)
                     },
                 )
 
