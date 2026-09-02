@@ -39,6 +39,28 @@ object PermissionUtils {
     }
 
     /**
+     * Executes the is accessibility shortcut service enabled operation.
+     *
+     * @param context [Context] Target context.
+     * @return The resulting Boolean data.
+     */
+    fun isAccessibilityShortcutServiceEnabled(context: Context, slot: Int = 1): Boolean {
+        val enabledServices =
+            Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+            )
+        val className = when (slot) {
+            1 -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java.name
+            2 -> com.sameerasw.essentials.services.AccessibilityShortcutService2::class.java.name
+            3 -> com.sameerasw.essentials.services.AccessibilityShortcutService3::class.java.name
+            else -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java.name
+        }
+        val serviceName = "${context.packageName}/$className"
+        return enabledServices?.contains(serviceName) == true
+    }
+
+    /**
      * Executes the can write secure settings operation.
      *
      * @param context [Context] Target context.

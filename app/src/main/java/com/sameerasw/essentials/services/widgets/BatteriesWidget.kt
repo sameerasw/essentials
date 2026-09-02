@@ -9,7 +9,9 @@
 
 package com.sameerasw.essentials.services.widgets
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.BatteryManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
@@ -18,6 +20,8 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
@@ -36,6 +40,7 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.activities.BatteryDetailsActivity
 
 class BatteriesWidget : GlanceAppWidget() {
     override val sizeMode = androidx.glance.appwidget.SizeMode.Exact
@@ -244,14 +249,20 @@ class BatteriesWidget : GlanceAppWidget() {
                             rowItems.forEachIndexed { colIndex, item ->
                                 val itemResolution = if (isSingleItem) 512 else 340
                                 Box(
-                                    modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
+                                    modifier =
+                                        GlanceModifier
+                                            .defaultWeight()
+                                            .fillMaxHeight(),
                                     contentAlignment = Alignment.Center,
                                 ) {
                                     BatteryItemBox(
                                         item = item,
                                         itemSize = boxSize,
                                         sizePx = itemResolution,
-                                        modifier = GlanceModifier.size(boxSize),
+                                        modifier =
+                                            GlanceModifier
+                                                .size(boxSize)
+                                                .clickable(actionStartActivity<BatteryDetailsActivity>()),
                                     )
                                 }
                                 if (colIndex < rowItems.size - 1 || rowItems.size < columns) {

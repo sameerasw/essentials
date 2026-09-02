@@ -73,12 +73,13 @@ fun WatermarkControls(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val scrollState = rememberScrollState()
 
     Column(
         modifier =
             modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {

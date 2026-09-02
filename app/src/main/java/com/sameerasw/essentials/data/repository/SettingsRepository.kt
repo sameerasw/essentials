@@ -318,6 +318,7 @@ class SettingsRepository(
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
+        const val KEY_MOTION_BLUR = "motion_blur"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
