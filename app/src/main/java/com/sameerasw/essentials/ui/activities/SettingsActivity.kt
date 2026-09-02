@@ -586,7 +586,6 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = "Notify for new updates",
-                description = "Show a notification when an update is found",
                 isChecked = isUpdateNotificationEnabled,
                 onCheckedChange = { viewModel.setUpdateNotificationEnabled(it, context) },
             )
@@ -672,7 +671,6 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
                 title = stringResource(R.string.setting_pitch_black_theme_title),
-                description = stringResource(R.string.setting_pitch_black_theme_desc),
                 isChecked = viewModel.isPitchBlackThemeEnabled.value,
                 onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) },
             )
@@ -683,9 +681,9 @@ fun SettingsContent(
                 title = stringResource(R.string.label_use_blur),
                 description =
                     if (isBlurProblematic) {
-                         stringResource(R.string.msg_blur_compatibility_error)
+                        stringResource(R.string.msg_blur_compatibility_error)
                     } else {
-                        stringResource(R.string.desc_use_blur)
+                        null
                     },
                 isChecked = viewModel.isBlurSettingEnabled.value,
                 onCheckedChange = { viewModel.setBlurEnabled(it, context) },
@@ -695,7 +693,6 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_linear_24,
                 title = stringResource(R.string.label_ripple_animation),
-                description = stringResource(R.string.desc_ripple_animation),
                 isChecked = viewModel.isRippleSettingEnabled.value,
                 onCheckedChange = { viewModel.setRippleEnabled(it, context) },
                 onCheckedChangeWithPosition = { isChecked, pos ->
@@ -736,7 +733,6 @@ fun SettingsContent(
             IconToggleItem(
                 iconRes = R.drawable.rounded_touch_app_24,
                 title = stringResource(R.string.setting_swipe_tabs_title),
-                description = stringResource(R.string.setting_swipe_tabs_desc),
                 isChecked = viewModel.isSwipeTabsEnabled.value,
                 onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
             )
