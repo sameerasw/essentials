@@ -47,7 +47,6 @@ import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
-import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic
 import com.sameerasw.essentials.utils.HapticUtil.performUIHaptic
 
@@ -74,18 +73,12 @@ fun WatermarkControls(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val isMotionBlurEnabled =
-        remember(context) {
-            context.getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE)
-                .getBoolean("motion_blur", false)
-        }
     val scrollState = rememberScrollState()
 
     Column(
         modifier =
             modifier
                 .fillMaxSize()
-                .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                 .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
