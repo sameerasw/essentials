@@ -361,7 +361,7 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_title">Λοιπές προσαρμογές</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
     <string name="status_bar_icons_disclaimer">Λάβετε υπόψη ότι η υλοποίηση αυτών των επιλογών μπορεί να εξαρτάται από τον OEM και ορισμένες μπορεί να μην είναι καθόλου λειτουργικές.</string>
     <!-- Network Type Picker -->
@@ -1301,8 +1301,8 @@
     <string name="label_apps">Εφαρμογές</string>
     <string name="feat_text_animations_title">Κλίμακα και κινούμενα σχέδια</string>
     <string name="feat_text_animations_desc">Προσαρμόστε την κλίμακα συστήματος και τα κινούμενα σχέδια</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_screen_refresh_rate_title">Ρυθμός ανανέωσης οθόνης</string>
+    <string name="feat_screen_refresh_rate_desc"> Όρισε μια σταθερή τιμή ή ένα εύρος τιμών για τον ρυθμό ανανέωσης της οθόνης </string>
     <string name="settings_section_text">Κείμενο</string>
     <string name="label_font_scale">Κλίμακα γραμματοσειράς</string>
     <string name="label_font_weight">Βάρος γραμματοσειράς</string>
@@ -1413,8 +1413,8 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_title">Ρολόι οθόνης κλειδώματος</string>
+    <string name="feat_lock_screen_clock_desc">Προσαρμογή ρολογιού κλειδώματος οθόνης σε συσκευές Pixels</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1462,4 +1462,7 @@
     <string name="feat_power_battery_desc">Βελτιστοποίηση της μπαταρίας </string>
     <string name="setting_enable_unsupported_features_title">Ενεργοποίηση μη υποστηριζόμενων λειτουργιών </string>
     <string name="settings_translate_mode">Λειτουργία μεταγλώττισης </string>
+    <string name="feat_pocket_mode_title">Λειτουργία τσέπης</string>
+    <string name="feat_pocket_mode_desc">Αποτροπή τυχαίων αγγιγμάτων ενώ το τηλέφωνό σας βρίσκεται στην τσέπη</string>
+    <string name="feat_smart_pixels_desc">Μαύρισμα pixel για εξοικονόμηση ενέργειας</string>
 </resources>
