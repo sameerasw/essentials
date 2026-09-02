@@ -46,9 +46,6 @@ fun ComplicationsSettingsUI(
     var glanceBatteryAlerts by remember {
         mutableStateOf(prefs.getBoolean("watchface_glance_battery_alerts", true))
     }
-    var glanceFlashlight by remember {
-        mutableStateOf(prefs.getBoolean("watchface_glance_flashlight", true))
-    }
     var glanceTravel by remember {
         mutableStateOf(prefs.getBoolean("watchface_glance_travel", true))
     }
@@ -97,17 +94,6 @@ fun ComplicationsSettingsUI(
                         onCheckedChange = {
                             glanceBatteryAlerts = it
                             prefs.edit().putBoolean("watchface_glance_battery_alerts", it).apply()
-                            DeviceInfoSyncManager.forceSync(context)
-                        },
-                    )
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_flashlight_on_24,
-                        title = stringResource(R.string.watchface_glance_comp_flashlight_title),
-                        description = stringResource(R.string.watchface_glance_comp_flashlight_desc),
-                        isChecked = glanceFlashlight,
-                        onCheckedChange = {
-                            glanceFlashlight = it
-                            prefs.edit().putBoolean("watchface_glance_flashlight", it).apply()
                             DeviceInfoSyncManager.forceSync(context)
                         },
                     )
