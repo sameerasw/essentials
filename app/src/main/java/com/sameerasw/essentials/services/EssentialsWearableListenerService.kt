@@ -184,16 +184,37 @@ class EssentialsWearableListenerService : WearableListenerService() {
 
             "/watch_status_update" -> {
                 val data = messageEvent.data
-                if (data != null && data.size >= 2) {
-                    val adbWifiEnabled = data[0].toInt() == 1
-                    val secureSettingsGranted = data[1].toInt() == 1
-                    val version = if (data.size >= 3) data[2].toInt() else 0
+                if (data != null && data.isNotEmpty()) {
                     val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                    prefs.edit(commit = true) {
-                        putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
-                        putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
-                        if (version > 0) {
-                            putInt("watch_version_code", version)
+                    try {
+                        val jsonStr = String(data, Charsets.UTF_8)
+                        val jsonObj = org.json.JSONObject(jsonStr)
+                        val adbWifiEnabled = jsonObj.optBoolean("adb_wifi_enabled", false)
+                        val secureSettingsGranted = jsonObj.optBoolean("write_secure_settings_granted", false)
+                        val version = jsonObj.optInt("version_code", 0)
+                        val ipAddress = jsonObj.optString("ip_address", "")
+                        val adbPort = jsonObj.optInt("adb_port", -1)
+                        prefs.edit(commit = true) {
+                            putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
+                            putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
+                            if (version > 0) {
+                                putInt("watch_version_code", version)
+                            }
+                            putString("watch_adb_wifi_ip", ipAddress)
+                            putInt("watch_adb_wifi_port", adbPort)
+                        }
+                    } catch (_: Exception) {
+                        if (data.size >= 2) {
+                            val adbWifiEnabled = data[0].toInt() == 1
+                            val secureSettingsGranted = data[1].toInt() == 1
+                            val version = if (data.size >= 3) data[2].toInt() else 0
+                            prefs.edit(commit = true) {
+                                putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
+                                putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
+                                if (version > 0) {
+                                    putInt("watch_version_code", version)
+                                }
+                            }
                         }
                     }
                 }

@@ -97,10 +97,11 @@ import com.sameerasw.essentials.ui.features.system.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.features.system.StandbyAppsSettingsUI
 import com.sameerasw.essentials.ui.features.system.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.features.system.TextAnimationsSettingsUI
-import com.sameerasw.essentials.ui.features.system.WatchControlsSettingsUI
 import com.sameerasw.essentials.ui.features.watch.ComplicationsSettingsUI
+import com.sameerasw.essentials.ui.features.watch.WatchControlsSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchSettingsUI
+import com.sameerasw.essentials.ui.features.watch.WatchWirelessDebuggingSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -1115,6 +1116,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             watchViewModel = watchViewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Watch Wireless Debugging" -> {
+                                        WatchWirelessDebuggingSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
                                         )
                                     }
 

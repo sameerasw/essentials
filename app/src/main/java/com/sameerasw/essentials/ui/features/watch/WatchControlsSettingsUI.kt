@@ -7,7 +7,7 @@
  * Description: UI component and settings composable for Watch feature domain.
  */
 
-package com.sameerasw.essentials.ui.features.system
+package com.sameerasw.essentials.ui.features.watch
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement

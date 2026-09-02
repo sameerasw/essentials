@@ -1839,7 +1839,7 @@ object FeatureRegistry {
                 category = R.string.cat_tools,
                 description = R.string.feat_watch_wireless_debugging_desc,
                 parentFeatureId = "Watch",
-                hasMoreSettings = false,
+                hasMoreSettings = true,
                 showToggle = true,
             ) {
                 override fun isEnabled(viewModel: MainViewModel): Boolean {

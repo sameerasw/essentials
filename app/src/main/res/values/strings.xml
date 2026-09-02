@@ -2324,4 +2324,12 @@
     <string name="watch_complications_title">Complications</string>
     <string name="watch_complications_desc">Customize complication widgets</string>
     <string name="glance_complication_label">At a Glance</string>
+    <string name="watch_wireless_debugging_info_title">Watch Connection Info</string>
+    <string name="watch_wireless_debugging_info_desc">IP address and available ADB port for wireless debugging</string>
+    <string name="watch_wireless_debugging_ip_title">IP Address</string>
+    <string name="watch_wireless_debugging_port_title">ADB Port</string>
+    <string name="watch_wireless_debugging_command_title">Connect Command</string>
+    <string name="watch_wireless_debugging_unavailable">Unavailable</string>
+    <string name="watch_wireless_debugging_copied">Copied to clipboard</string>
+    <string name="watch_wireless_debugging_refresh">Refresh Info</string>
 </resources>
