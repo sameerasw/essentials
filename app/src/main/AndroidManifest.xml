@@ -562,6 +562,7 @@
         <service
             android:name=".services.AccessibilityShortcutService1"
             android:exported="true"
+            android:icon="@drawable/rounded_circle_24"
             android:label="@string/accessibility_shortcut_service_1_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -575,6 +576,7 @@
         <service
             android:name=".services.AccessibilityShortcutService2"
             android:exported="true"
+            android:icon="@drawable/rounded_pentagon_24"
             android:label="@string/accessibility_shortcut_service_2_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -588,6 +590,7 @@
         <service
             android:name=".services.AccessibilityShortcutService3"
             android:exported="true"
+            android:icon="@drawable/rounded_square_24"
             android:label="@string/accessibility_shortcut_service_3_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

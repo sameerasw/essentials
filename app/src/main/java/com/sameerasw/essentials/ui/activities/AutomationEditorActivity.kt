@@ -835,12 +835,18 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             3 -> stringResource(R.string.diy_create_accessibility_shortcut_3_title)
                                                             else -> ""
                                                         }
+                                                        val slotIcon = when (slot) {
+                                                            1 -> R.drawable.rounded_circle_24
+                                                            2 -> R.drawable.rounded_pentagon_24
+                                                            3 -> R.drawable.rounded_square_24
+                                                            else -> R.drawable.rounded_circle_24
+                                                        }
                                                         val isSelected = selectedAccessibilitySlot == slot
                                                         val isEnabled = slot !in usedAccessibilitySlots
 
                                                         EditorActionItem(
                                                             title = title,
-                                                            iconRes = R.drawable.rounded_accessibility_new_24,
+                                                            iconRes = slotIcon,
                                                             isSelected = isSelected,
                                                             enabled = isEnabled,
                                                             isConfigurable = false,
@@ -1852,13 +1858,13 @@ fun EditorActionItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clickable(enabled = enabled) {
-                    HapticUtil.performUIHaptic(view)
-                    onClick()
-                }.background(
+                .background(
                     color = MaterialTheme.colorScheme.surfaceBright,
                     shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
-                ).padding(12.dp),
+                ).clickable {
+                    HapticUtil.performUIHaptic(view)
+                    onClick()
+                }.padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

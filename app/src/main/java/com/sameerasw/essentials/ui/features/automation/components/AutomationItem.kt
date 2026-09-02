@@ -183,9 +183,9 @@ fun AutomationItem(
                             Automation.Type.TRIGGER -> automation.trigger?.icon
                             Automation.Type.ACTION_SHORTCUT -> R.drawable.rounded_rocket_launch_24
                             Automation.Type.ACCESSIBILITY_SHORTCUT,
-                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                            Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> R.drawable.rounded_accessibility_new_24
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_1 -> R.drawable.rounded_circle_24
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_2 -> R.drawable.rounded_pentagon_24
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> R.drawable.rounded_square_24
                             Automation.Type.PIXEL_SEARCHBAR -> R.drawable.rounded_search_24
                             Automation.Type.STATE -> automation.state?.icon
                             Automation.Type.APP -> R.drawable.rounded_apps_24
