@@ -1475,4 +1475,5 @@
     <string name="label_motion_blur">Θόλωση κίνησης</string>
     <string name="setting_app_icon_desc">Προσαρμόστε το εικονιδίο εκκίνησης αρχικής οθόνης</string>
     <string name="settings_translate_mode_desc">Αγγίξτε παρατεταμένα οποιοδήποτε κείμενο για να το μεταφράσετε και να συνεισφέρετε στην κοινότητα</string>
+    <string name="setting_enable_unsupported_features_desc">Εμφάνιση λειτουργιών που αφορούν συγκεκριμένα τον OEM ή περιττών λειτουργιών που είναι κρυφές από προεπιλογή.</string>
 </resources>
