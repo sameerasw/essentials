@@ -1465,4 +1465,10 @@
     <string name="feat_pocket_mode_title">Λειτουργία τσέπης</string>
     <string name="feat_pocket_mode_desc">Αποτροπή τυχαίων αγγιγμάτων ενώ το τηλέφωνό σας βρίσκεται στην τσέπη</string>
     <string name="feat_smart_pixels_desc">Μαύρισμα pixel για εξοικονόμηση ενέργειας</string>
+    <string name="setting_app_icon_title">Εικονίδιο εφαρμογής</string>
+    <string name="watch_call_sync_title">Κλήσεις</string>
+    <string name="watch_notif_sync_title">Ειδοποιήσεις</string>
+    <string name="feat_watch_wireless_debugging_title">Ασύρματος εντοπισμός σφαλμάτων</string>
+    <string name="feat_watch_wireless_debugging_desc">Ενεργοποιήστε εξ αποστάσεως</string>
+    <string name="label_device_battery">Μπαταρία</string>
 </resources>
