@@ -610,6 +610,9 @@
     <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
     <string name="diy_create_action_shortcut_title">Action Shortcut</string>
     <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
+    <string name="diy_create_accessibility_shortcut_title">Accessibility Shortcut</string>
+    <string name="diy_create_accessibility_shortcut_desc">Trigger action via volume keys or screen gesture</string>
+    <string name="diy_enable_accessibility_shortcut_prompt">Please enable Essentials Shortcut in Accessibility settings first</string>
     <string name="diy_create_pixel_searchbar_title">Pixel searchbar</string>
     <string name="diy_create_pixel_searchbar_desc">Tap action for Pixel searchbar replacement</string>
     <string name="diy_editor_new_title">New Automation</string>
@@ -1031,6 +1034,9 @@
     <string name="diy_trigger_wifi_disconnected">Wi-Fi Network Disconnected</string>
     <string name="diy_trigger_power_saving_on">Power Saving On</string>
     <string name="diy_trigger_power_saving_off">Power Saving Off</string>
+    <string name="diy_trigger_accessibility_button">Accessibility Shortcut</string>
+    <string name="accessibility_shortcut_service_name">Essentials Shortcut</string>
+    <string name="accessibility_shortcut_service_desc">Trigger DIY automations via system accessibility button or volume key shortcut</string>
     <string name="diy_select_bluetooth_device_title">Select Bluetooth Device</string>
     <string name="diy_bluetooth_permission_required">Bluetooth permission is required to list paired devices.</string>
     <string name="diy_no_paired_bluetooth_devices">No paired Bluetooth devices found. Pair a device first in system settings.</string>

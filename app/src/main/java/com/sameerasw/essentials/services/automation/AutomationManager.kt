@@ -14,6 +14,7 @@ import android.content.Intent
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
 import com.sameerasw.essentials.services.automation.modules.BluetoothModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
@@ -56,6 +57,32 @@ object AutomationManager {
         if (service == serviceInstance) {
             service = null
             stopAllModules()
+        }
+    }
+
+    fun trigger(context: Context, trigger: Trigger) {
+        scope.launch(Dispatchers.IO) {
+            val automations = DIYRepository.automations.value
+            automations
+                .filter { it.isEnabled && it.type == Automation.Type.TRIGGER && it.trigger == trigger }
+                .forEach { automation ->
+                    automation.actions.forEach { action ->
+                        CombinedActionExecutor.execute(context, action)
+                    }
+                }
+        }
+    }
+
+    fun triggerAccessibilityShortcut(context: Context) {
+        scope.launch(Dispatchers.IO) {
+            val automations = DIYRepository.automations.value
+            automations
+                .filter { it.isEnabled && it.type == Automation.Type.ACCESSIBILITY_SHORTCUT }
+                .forEach { automation ->
+                    automation.actions.forEach { action ->
+                        CombinedActionExecutor.execute(context, action)
+                    }
+                }
         }
     }
 
@@ -135,8 +162,8 @@ object AutomationManager {
                     // Handled by AppFlowHandler
                 }
 
-                Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> {
-                    // Triggered manually on tap/click
+                Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> {
+                    // Triggered manually on tap/click or via accessibility shortcut
                 }
             }
         }

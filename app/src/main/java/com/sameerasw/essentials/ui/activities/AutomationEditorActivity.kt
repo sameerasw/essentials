@@ -163,6 +163,7 @@ class AutomationEditorActivity : ComponentActivity() {
             when (automationType) {
                 Automation.Type.TRIGGER -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.ACTION_SHORTCUT -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
+                Automation.Type.ACCESSIBILITY_SHORTCUT -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.PIXEL_SEARCHBAR -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.STATE -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.APP -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_create_app_title
@@ -338,7 +339,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     selectedAction,
                                 )
 
-                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                        Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                             selectedAction != null &&
                                 isActionConfigured(
                                     selectedAction,
@@ -437,7 +438,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 val performSave = {
                     val actionsToCheck =
                         when (automationType) {
-                            Automation.Type.TRIGGER, Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                            Automation.Type.TRIGGER, Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                 listOfNotNull(
                                     selectedAction,
                                 )
@@ -465,7 +466,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                     actions = listOfNotNull(selectedAction),
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
-                        } else if (automationType == Automation.Type.ACTION_SHORTCUT || automationType == Automation.Type.PIXEL_SEARCHBAR) {
+                        } else if (
+                            automationType == Automation.Type.ACTION_SHORTCUT ||
+                            automationType == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+                            automationType == Automation.Type.PIXEL_SEARCHBAR
+                        ) {
                             val newAutomation =
                                 Automation(
                                     id =
@@ -723,6 +728,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                             }
                                         } else if (
                                             automationType == Automation.Type.ACTION_SHORTCUT ||
+                                            automationType == Automation.Type.ACCESSIBILITY_SHORTCUT ||
                                             automationType == Automation.Type.PIXEL_SEARCHBAR
                                         ) {
                                             val triggerScrollState = rememberScrollState()
@@ -746,16 +752,16 @@ class AutomationEditorActivity : ComponentActivity() {
 
                                                 RoundedCardContainer(spacing = 2.dp) {
                                                     val editorTitle =
-                                                        if (automationType == Automation.Type.PIXEL_SEARCHBAR) {
-                                                            stringResource(R.string.diy_create_pixel_searchbar_title)
-                                                        } else {
-                                                            stringResource(R.string.diy_create_action_shortcut_title)
+                                                        when (automationType) {
+                                                            Automation.Type.PIXEL_SEARCHBAR -> stringResource(R.string.diy_create_pixel_searchbar_title)
+                                                            Automation.Type.ACCESSIBILITY_SHORTCUT -> stringResource(R.string.diy_create_accessibility_shortcut_title)
+                                                            else -> stringResource(R.string.diy_create_action_shortcut_title)
                                                         }
                                                     val editorIcon =
-                                                        if (automationType == Automation.Type.PIXEL_SEARCHBAR) {
-                                                            R.drawable.rounded_search_24
-                                                        } else {
-                                                            R.drawable.rounded_rocket_launch_24
+                                                        when (automationType) {
+                                                            Automation.Type.PIXEL_SEARCHBAR -> R.drawable.rounded_search_24
+                                                            Automation.Type.ACCESSIBILITY_SHORTCUT -> R.drawable.rounded_accessibility_new_24
+                                                            else -> R.drawable.rounded_rocket_launch_24
                                                         }
                                                     EditorActionItem(
                                                         title = editorTitle,
@@ -1037,7 +1043,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                             val currentSelection =
                                                 when (automationType) {
                                                     Automation.Type.TRIGGER -> selectedAction
-                                                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction
+                                                    Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction
                                                     Automation.Type.STATE ->
                                                         if (selectedActionTab ==
                                                             0
@@ -1065,7 +1071,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     onClick = {
                                                         when (automationType) {
                                                             Automation.Type.TRIGGER -> selectedAction = null
-                                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                                 selectedAction =
                                                                     null
                                                             Automation.Type.STATE, Automation.Type.APP -> {
@@ -1130,7 +1136,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             onClick = {
                                                                 when (automationType) {
                                                                     Automation.Type.TRIGGER -> selectedAction = resolvedAction
-                                                                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                                                    Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                                         selectedAction =
                                                                             resolvedAction
                                                                     Automation.Type.STATE, Automation.Type.APP -> {
@@ -1291,7 +1297,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         // Update the selection with configured action
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1316,7 +1322,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showScreenOffSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1341,7 +1347,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showDeviceEffectsSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1366,7 +1372,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSoundModeSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1390,7 +1396,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSetVolumeSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1415,7 +1421,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSometimesEssentialsSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1447,7 +1453,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showFreezeTagSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1471,7 +1477,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         val newAction = Action.OpenApp(packageName = app.packageName)
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1500,7 +1506,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         if (finalAction != null) {
                                             when (automationType) {
                                                 Automation.Type.TRIGGER -> selectedAction = finalAction
-                                                Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                                Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                     selectedAction =
                                                         finalAction
                                                 Automation.Type.STATE, Automation.Type.APP -> {
@@ -1531,7 +1537,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSetKeyboardSheet = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = Action.Keyboard(newIme)
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     Action.Keyboard(newIme)
 
@@ -1557,7 +1563,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showCustomSettingsSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 

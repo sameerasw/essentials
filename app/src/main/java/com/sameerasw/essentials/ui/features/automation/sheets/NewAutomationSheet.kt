@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import android.content.Intent
+import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +48,7 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,6 +88,13 @@ fun NewAutomationSheet(
         remember {
             DIYRepository.automations.value.any {
                 it.type == Automation.Type.ACTION_SHORTCUT
+            }
+        }
+
+    val hasAccessibilityShortcut =
+        remember {
+            DIYRepository.automations.value.any {
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT
             }
         }
 
@@ -183,6 +194,30 @@ fun NewAutomationSheet(
                     iconRes = R.drawable.rounded_rocket_launch_24,
                     enabled = !hasActionShortcut,
                     onClick = { onOptionSelected(Automation.Type.ACTION_SHORTCUT) },
+                )
+
+                // Accessibility Shortcut Option
+                AutomationTypeOption(
+                    title = stringResource(R.string.diy_create_accessibility_shortcut_title),
+                    description = stringResource(R.string.diy_create_accessibility_shortcut_desc),
+                    iconRes = R.drawable.rounded_accessibility_new_24,
+                    enabled = !hasAccessibilityShortcut,
+                    onClick = {
+                        if (PermissionUtils.isAccessibilityShortcutServiceEnabled(context)) {
+                            onOptionSelected(Automation.Type.ACCESSIBILITY_SHORTCUT)
+                        } else {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.diy_enable_accessibility_shortcut_prompt),
+                                Toast.LENGTH_LONG,
+                            ).show()
+                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            context.startActivity(intent)
+                            onDismiss()
+                        }
+                    },
                 )
 
                 // Pixel Searchbar Tap Option

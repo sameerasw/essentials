@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import com.sameerasw.essentials.services.AccessibilityShortcutService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
@@ -35,6 +36,22 @@ object PermissionUtils {
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
             )
         val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
+        return enabledServices?.contains(serviceName) == true
+    }
+
+    /**
+     * Executes the is accessibility shortcut service enabled operation.
+     *
+     * @param context [Context] Target context.
+     * @return The resulting Boolean data.
+     */
+    fun isAccessibilityShortcutServiceEnabled(context: Context): Boolean {
+        val enabledServices =
+            Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+            )
+        val serviceName = "${context.packageName}/${AccessibilityShortcutService::class.java.name}"
         return enabledServices?.contains(serviceName) == true
     }
 
