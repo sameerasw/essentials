@@ -1292,6 +1292,7 @@ object FeatureRegistry {
                 category = R.string.cat_display,
                 description = R.string.feat_smart_pixels_desc,
                 aboutDescription = R.string.about_desc_smart_pixels,
+                animationRes = R.raw.smart_pixel_motion,
                 permissionKeys = listOf("ACCESSIBILITY"),
                 searchableSettings =
                     listOf(
