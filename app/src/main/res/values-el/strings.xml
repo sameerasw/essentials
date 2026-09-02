@@ -1472,4 +1472,6 @@
     <string name="feat_watch_wireless_debugging_desc">Ενεργοποιήστε εξ αποστάσεως</string>
     <string name="label_device_battery">Μπαταρία</string>
     <string name="feat_power_saving_title">Εξοικονόμηση ενέργειας</string>
+    <string name="label_motion_blur">Θόλωση κίνησης</string>
+    <string name="setting_app_icon_desc">Προσαρμόστε το εικονιδίο εκκίνησης αρχικής οθόνης</string>
 </resources>
