@@ -1474,4 +1474,5 @@
     <string name="feat_power_saving_title">Εξοικονόμηση ενέργειας</string>
     <string name="label_motion_blur">Θόλωση κίνησης</string>
     <string name="setting_app_icon_desc">Προσαρμόστε το εικονιδίο εκκίνησης αρχικής οθόνης</string>
+    <string name="settings_translate_mode_desc">Αγγίξτε παρατεταμένα οποιοδήποτε κείμενο για να το μεταφράσετε και να συνεισφέρετε στην κοινότητα</string>
 </resources>
