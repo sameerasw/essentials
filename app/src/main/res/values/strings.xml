@@ -2321,4 +2321,7 @@
     <string name="action_licenses_and_credits">Licenses and Credits</string>
     <string name="licenses_credits_title">Licenses &amp; Credits</string>
     <string name="licenses_credits_subtitle">Open source projects and contributors powering Essentials</string>
+    <string name="watch_complications_title">Complications</string>
+    <string name="watch_complications_desc">Customize complication widgets</string>
+    <string name="glance_complication_label">At a Glance</string>
 </resources>

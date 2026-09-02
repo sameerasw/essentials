@@ -98,6 +98,7 @@ import com.sameerasw.essentials.ui.features.system.StandbyAppsSettingsUI
 import com.sameerasw.essentials.ui.features.system.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.features.system.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.features.system.WatchControlsSettingsUI
+import com.sameerasw.essentials.ui.features.watch.ComplicationsSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
@@ -676,6 +677,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                     listOf(
                                                         listOf(
                                                             "Watchface",
+                                                            "Complications",
                                                         ),
                                                         listOf(
                                                             "Notification Sync",
@@ -1084,6 +1086,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Watchface" -> {
                                         WatchfaceSettingsUI(
+                                            modifier = Modifier.padding(top = 16.dp),
+                                        )
+                                    }
+
+                                    "Complications" -> {
+                                        ComplicationsSettingsUI(
                                             modifier = Modifier.padding(top = 16.dp),
                                         )
                                     }
