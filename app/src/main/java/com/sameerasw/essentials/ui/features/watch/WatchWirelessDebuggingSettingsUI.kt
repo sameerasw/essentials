@@ -13,10 +13,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,8 +23,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,9 +32,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -65,6 +59,9 @@ fun WatchWirelessDebuggingSettingsUI(
     var isAdbWifiEnabled by remember {
         mutableStateOf(prefs.getBoolean("watch_adb_wifi_enabled", false))
     }
+    var watchSsid by remember {
+        mutableStateOf(prefs.getString("watch_wifi_ssid", "") ?: "")
+    }
     var watchIp by remember {
         mutableStateOf(prefs.getString("watch_adb_wifi_ip", "") ?: "")
     }
@@ -76,6 +73,7 @@ fun WatchWirelessDebuggingSettingsUI(
         val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
             when (key) {
                 "watch_adb_wifi_enabled" -> isAdbWifiEnabled = p.getBoolean(key, false)
+                "watch_wifi_ssid" -> watchSsid = p.getString(key, "") ?: ""
                 "watch_adb_wifi_ip" -> watchIp = p.getString(key, "") ?: ""
                 "watch_adb_wifi_port" -> watchPort = p.getInt(key, -1)
             }
@@ -106,6 +104,7 @@ fun WatchWirelessDebuggingSettingsUI(
         }
     }
 
+    val isSsidAvailable = watchSsid.isNotBlank()
     val isIpAvailable = watchIp.isNotBlank()
     val isPortAvailable = watchPort > 0
     val adbConnectCommand = if (isIpAvailable && isPortAvailable) "adb connect $watchIp:$watchPort" else ""
@@ -143,139 +142,37 @@ fun WatchWirelessDebuggingSettingsUI(
         )
 
         RoundedCardContainer {
-            // IP Address Card
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (isIpAvailable) 1f else 0.45f)
-                    .clickable(enabled = isIpAvailable) {
-                        copyToClipboard(watchIp)
-                    },
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_android_wifi_4_bar_plus_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                headlineContent = {
-                    Text(
-                        text = stringResource(R.string.watch_wireless_debugging_ip_title),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                },
-                supportingContent = {
-                    Text(
-                        text = if (isIpAvailable) watchIp else stringResource(R.string.watch_wireless_debugging_unavailable),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                },
-                trailingContent = if (isIpAvailable) {
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_content_copy_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else null,
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright
-                )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_android_wifi_4_bar_plus_24,
+                title = stringResource(R.string.watch_wireless_debugging_wifi_title),
+                description = if (isSsidAvailable) watchSsid else stringResource(R.string.watch_wireless_debugging_unavailable),
+                enabled = isSsidAvailable,
+                showToggle = false,
+                onClick = { copyToClipboard(watchSsid) }
             )
-
-            // Port Card
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (isPortAvailable) 1f else 0.45f)
-                    .clickable(enabled = isPortAvailable) {
-                        copyToClipboard(watchPort.toString())
-                    },
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(R.drawable.router_24px),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                headlineContent = {
-                    Text(
-                        text = stringResource(R.string.watch_wireless_debugging_port_title),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                },
-                supportingContent = {
-                    Text(
-                        text = if (isPortAvailable) watchPort.toString() else stringResource(R.string.watch_wireless_debugging_unavailable),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                },
-                trailingContent = if (isPortAvailable) {
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_content_copy_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else null,
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright
-                )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_android_wifi_4_bar_plus_24,
+                title = stringResource(R.string.watch_wireless_debugging_ip_title),
+                description = if (isIpAvailable) watchIp else stringResource(R.string.watch_wireless_debugging_unavailable),
+                enabled = isIpAvailable,
+                showToggle = false,
+                onClick = { copyToClipboard(watchIp) }
             )
-
-            // Connect Command Card
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (adbConnectCommand.isNotBlank()) 1f else 0.45f)
-                    .clickable(enabled = adbConnectCommand.isNotBlank()) {
-                        copyToClipboard(adbConnectCommand)
-                    },
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_code_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                headlineContent = {
-                    Text(
-                        text = stringResource(R.string.watch_wireless_debugging_command_title),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                },
-                supportingContent = {
-                    Text(
-                        text = if (adbConnectCommand.isNotBlank()) adbConnectCommand else stringResource(R.string.watch_wireless_debugging_unavailable),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                },
-                trailingContent = if (adbConnectCommand.isNotBlank()) {
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_content_copy_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else null,
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceBright
-                )
+            IconToggleItem(
+                iconRes = R.drawable.router_24px,
+                title = stringResource(R.string.watch_wireless_debugging_port_title),
+                description = if (isPortAvailable) watchPort.toString() else stringResource(R.string.watch_wireless_debugging_unavailable),
+                enabled = isPortAvailable,
+                showToggle = false,
+                onClick = { copyToClipboard(watchPort.toString()) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_code_24,
+                title = stringResource(R.string.watch_wireless_debugging_command_title),
+                description = if (adbConnectCommand.isNotBlank()) adbConnectCommand else stringResource(R.string.watch_wireless_debugging_unavailable),
+                enabled = adbConnectCommand.isNotBlank(),
+                showToggle = false,
+                onClick = { copyToClipboard(adbConnectCommand) }
             )
         }
 

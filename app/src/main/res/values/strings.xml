@@ -2326,6 +2326,7 @@
     <string name="glance_complication_label">At a Glance</string>
     <string name="watch_wireless_debugging_info_title">Watch Connection Info</string>
     <string name="watch_wireless_debugging_info_desc">IP address and available ADB port for wireless debugging</string>
+    <string name="watch_wireless_debugging_wifi_title">Wi-Fi Network</string>
     <string name="watch_wireless_debugging_ip_title">IP Address</string>
     <string name="watch_wireless_debugging_port_title">ADB Port</string>
     <string name="watch_wireless_debugging_command_title">Connect Command</string>

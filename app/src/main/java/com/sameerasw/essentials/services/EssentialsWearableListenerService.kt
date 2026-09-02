@@ -194,6 +194,7 @@ class EssentialsWearableListenerService : WearableListenerService() {
                         val version = jsonObj.optInt("version_code", 0)
                         val ipAddress = jsonObj.optString("ip_address", "")
                         val adbPort = jsonObj.optInt("adb_port", -1)
+                        val wifiSsid = jsonObj.optString("wifi_ssid", "")
                         prefs.edit(commit = true) {
                             putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
                             putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
@@ -202,6 +203,7 @@ class EssentialsWearableListenerService : WearableListenerService() {
                             }
                             putString("watch_adb_wifi_ip", ipAddress)
                             putInt("watch_adb_wifi_port", adbPort)
+                            putString("watch_wifi_ssid", wifiSsid)
                         }
                     } catch (_: Exception) {
                         if (data.size >= 2) {
