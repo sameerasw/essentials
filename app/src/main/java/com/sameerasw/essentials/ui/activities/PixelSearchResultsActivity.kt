@@ -142,14 +142,17 @@ class PixelSearchResultsActivity : ComponentActivity() {
             window.isNavigationBarContrastEnforced = false
         }
 
+        val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val dimAmount = if (isSystemDark) 0.2f else 0.08f
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
             window.attributes.blurBehindRadius = 60
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            window.setDimAmount(0.2f)
+            window.setDimAmount(dimAmount)
         } else {
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            window.setDimAmount(0.4f)
+            window.setDimAmount(if (isSystemDark) 0.35f else 0.15f)
         }
 
         val initialQuery = intent.getStringExtra(SearchManager.QUERY)
@@ -511,10 +514,12 @@ fun PixelSearchResultsScreen(
         }
     }
 
+    val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.55f)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(scrimColor)
             .progressiveBlur(
                 blurRadius = 40f,
                 height = statusBarHeightPx * 1.2f,

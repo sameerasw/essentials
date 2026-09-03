@@ -404,6 +404,7 @@ class SettingsRepository(
         const val KEY_TRANSLATION_MODE_DO_NOT_SHOW_WARNING = "translation_mode_do_not_show_warning"
 
         const val KEY_LOCKDOWN_MODE = "lockdown_mode"
+        const val KEY_BUBBLE_WEB_FULLSCREEN = "bubble_web_fullscreen"
     }
 
     /**
@@ -2994,4 +2995,7 @@ class SettingsRepository(
 
     fun getPixelSearchEngine(): String = getString(KEY_PIXEL_SEARCH_ENGINE, "Google") ?: "Google"
     fun setPixelSearchEngine(engine: String) = putString(KEY_PIXEL_SEARCH_ENGINE, engine)
+
+    fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)
+    fun setBubbleWebFullscreen(fullscreen: Boolean) = putBoolean(KEY_BUBBLE_WEB_FULLSCREEN, fullscreen)
 }
