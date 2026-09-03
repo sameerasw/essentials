@@ -59,6 +59,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -342,6 +343,7 @@ fun PixelSearchResultsScreen(
     var systemSettingResults by remember { mutableStateOf<List<PixelSearchResultItem.SystemSettingItem>>(emptyList()) }
     var settingResults by remember { mutableStateOf<List<PixelSearchResultItem.SettingItem>>(emptyList()) }
     var shortcutResults by remember { mutableStateOf<List<PixelSearchResultItem.ShortcutItem>>(emptyList()) }
+    var isSearching by remember { mutableStateOf(false) }
 
     val isAppsEnabled = remember { repository.isPixelSearchResultAppsEnabled() }
     val isContactsEnabled = remember { repository.isPixelSearchResultContactsEnabled() }
@@ -357,9 +359,11 @@ fun PixelSearchResultsScreen(
             systemSettingResults = emptyList()
             settingResults = emptyList()
             shortcutResults = emptyList()
+            isSearching = false
             return
         }
 
+        isSearching = true
         scope.launch(Dispatchers.IO) {
             if (isAppsEnabled) {
                 val installed = AppUtil.getInstalledApps(context)
@@ -410,6 +414,10 @@ fun PixelSearchResultsScreen(
                 withContext(Dispatchers.Main) {
                     shortcutResults = shortcuts
                 }
+            }
+
+            withContext(Dispatchers.Main) {
+                isSearching = false
             }
         }
     }
@@ -814,21 +822,10 @@ fun PixelSearchResultsScreen(
                             overflow = TextOverflow.Ellipsis,
                         )
                     },
-                    leadingIcon = {
-                        IconButton(onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onFinish()
-                        }) {
-                            Icon(
-                                painter = painterResource(R.drawable.rounded_arrow_back_24),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-                    },
                     trailingIcon = {
-                        if (query.isNotEmpty()) {
-                            IconButton(onClick = {
+                        when {
+                            isSearching -> LoadingIndicator()
+                            query.isNotEmpty() -> IconButton(onClick = {
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 query = ""
                             }) {

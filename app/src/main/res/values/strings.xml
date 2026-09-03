@@ -2382,7 +2382,7 @@
     <string name="pixel_search_results_web_title">Web search</string>
     <string name="pixel_search_results_web_desc">Show options to search on Google or default browser</string>
     <string name="pixel_search_web_search_action">Search web for \"%1$s\"</string>
-    <string name="pixel_search_input_hint">Search apps, contacts, settings…</string>
+    <string name="pixel_search_input_hint">Search anything…</string>
     <string name="pixel_search_no_results">No matching results found</string>
     <string name="pixel_search_section_apps">Apps</string>
     <string name="pixel_search_section_contacts">Contacts</string>
