@@ -250,6 +250,60 @@ fun PixelSearchResultsScreen(
     val statusBarHeightPx = with(LocalDensity.current) { statusBarHeight.toPx() }
     val bottomBlurHeightPx = with(LocalDensity.current) { 140.dp.toPx() }
 
+    // Identify which section is topmost
+    val hasApps = isAppsEnabled && appResults.isNotEmpty()
+    val hasContacts = !hasApps && isContactsEnabled && contactResults.isNotEmpty()
+    val hasSystemSettings = !hasApps && !hasContacts && isSettingsEnabled && systemSettingResults.isNotEmpty()
+    val hasEssentials = !hasApps && !hasContacts && !hasSystemSettings && isSettingsEnabled && settingResults.isNotEmpty()
+    val hasShortcuts = !hasApps && !hasContacts && !hasSystemSettings && !hasEssentials && isShortcutsEnabled && shortcutResults.isNotEmpty()
+
+    val highlightColor = MaterialTheme.colorScheme.secondaryContainer
+    val normalCardColor = MaterialTheme.colorScheme.surfaceBright
+
+    fun launchTopmostOrWeb() {
+        when {
+            hasApps -> {
+                launchApp(context, appResults.first().packageName)
+                onFinish()
+            }
+            isContactsEnabled && contactResults.isNotEmpty() -> {
+                contactResults.first().phoneNumber?.let {
+                    val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))
+                    context.startActivity(dialIntent)
+                    onFinish()
+                } ?: run {
+                    if (query.isNotBlank()) launchWebSearch(context, query)
+                    onFinish()
+                }
+            }
+            isSettingsEnabled && systemSettingResults.isNotEmpty() -> {
+                context.startActivity(systemSettingResults.first().intent)
+                onFinish()
+            }
+            isSettingsEnabled && settingResults.isNotEmpty() -> {
+                val setting = settingResults.first().searchableItem
+                val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", setting.featureKey)
+                    setting.targetSettingHighlightKey?.let {
+                        putExtra("highlight_setting", it)
+                    }
+                }
+                context.startActivity(intent)
+                onFinish()
+            }
+            isShortcutsEnabled && shortcutResults.isNotEmpty() -> {
+                context.startActivity(shortcutResults.first().intent)
+                onFinish()
+            }
+            else -> {
+                if (query.isNotBlank()) {
+                    launchWebSearch(context, query)
+                }
+                onFinish()
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -287,7 +341,8 @@ fun PixelSearchResultsScreen(
                     }
                     item {
                         RoundedCardContainer {
-                            appResults.forEach { app ->
+                            appResults.forEachIndexed { index, app ->
+                                val isTopmost = index == 0 && hasApps
                                 FeatureCard(
                                     title = app.appName,
                                     isEnabled = true,
@@ -297,6 +352,7 @@ fun PixelSearchResultsScreen(
                                         launchApp(context, app.packageName)
                                         onFinish()
                                     },
+                                    containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     showToggle = false,
                                     hasMoreSettings = false,
                                     customTrailingContent = null,
@@ -304,6 +360,8 @@ fun PixelSearchResultsScreen(
                                         androidx.compose.ui.graphics.painter.BitmapPainter(app.icon)
                                     } else null,
                                     iconRes = if (app.icon == null) R.drawable.rounded_apps_24 else null,
+                                    iconSize = 36.dp,
+                                    hasIconBackground = app.icon == null,
                                 )
                             }
                         }
@@ -317,7 +375,8 @@ fun PixelSearchResultsScreen(
                     }
                     item {
                         RoundedCardContainer {
-                            contactResults.forEach { contact ->
+                            contactResults.forEachIndexed { index, contact ->
+                                val isTopmost = index == 0 && hasContacts
                                 ListItem(
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
@@ -396,7 +455,7 @@ fun PixelSearchResultsScreen(
                                         }
                                     },
                                     colors = ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
+                                        containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     ),
                                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
                                 ) {
@@ -420,7 +479,8 @@ fun PixelSearchResultsScreen(
                     }
                     item {
                         RoundedCardContainer {
-                            systemSettingResults.forEach { setting ->
+                            systemSettingResults.forEachIndexed { index, setting ->
+                                val isTopmost = index == 0 && hasSystemSettings
                                 FeatureCard(
                                     title = setting.title,
                                     isEnabled = true,
@@ -430,6 +490,7 @@ fun PixelSearchResultsScreen(
                                         context.startActivity(setting.intent)
                                         onFinish()
                                     },
+                                    containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     iconRes = setting.iconRes,
                                     showToggle = false,
                                     hasMoreSettings = false,
@@ -447,7 +508,8 @@ fun PixelSearchResultsScreen(
                     }
                     item {
                         RoundedCardContainer {
-                            settingResults.forEach { item ->
+                            settingResults.forEachIndexed { index, item ->
+                                val isTopmost = index == 0 && hasEssentials
                                 val setting = item.searchableItem
                                 FeatureCard(
                                     title = setting.title,
@@ -464,6 +526,7 @@ fun PixelSearchResultsScreen(
                                         context.startActivity(intent)
                                         onFinish()
                                     },
+                                    containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     iconRes = setting.icon ?: R.drawable.rounded_settings_24,
                                     showToggle = false,
                                     hasMoreSettings = true,
@@ -482,7 +545,8 @@ fun PixelSearchResultsScreen(
                     }
                     item {
                         RoundedCardContainer {
-                            shortcutResults.forEach { shortcut ->
+                            shortcutResults.forEachIndexed { index, shortcut ->
+                                val isTopmost = index == 0 && hasShortcuts
                                 FeatureCard(
                                     title = shortcut.label,
                                     isEnabled = true,
@@ -492,6 +556,7 @@ fun PixelSearchResultsScreen(
                                         context.startActivity(shortcut.intent)
                                         onFinish()
                                     },
+                                    containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     iconRes = shortcut.iconRes,
                                     showToggle = false,
                                     hasMoreSettings = false,
@@ -504,6 +569,7 @@ fun PixelSearchResultsScreen(
 
                 // WEB SEARCH
                 if (isWebEnabled && query.isNotBlank()) {
+                    val isTopmost = !hasApps && !hasContacts && !hasSystemSettings && !hasEssentials && !hasShortcuts
                     item {
                         SearchSectionHeader(stringResource(R.string.pixel_search_section_web))
                     }
@@ -518,6 +584,7 @@ fun PixelSearchResultsScreen(
                                     launchWebSearch(context, query)
                                     onFinish()
                                 },
+                                containerColor = if (isTopmost) highlightColor else normalCardColor,
                                 iconRes = R.drawable.rounded_web_24,
                                 showToggle = false,
                                 hasMoreSettings = false,
@@ -605,10 +672,7 @@ fun PixelSearchResultsScreen(
                         onSearch = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             keyboardController?.hide()
-                            if (query.isNotBlank()) {
-                                launchWebSearch(context, query)
-                                onFinish()
-                            }
+                            launchTopmostOrWeb()
                         }
                     ),
                 )
