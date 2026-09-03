@@ -79,10 +79,14 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.changedToDownIgnoreConsumed
 import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.changedToUpIgnoreConsumed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.painterResource
@@ -100,6 +104,14 @@ import androidx.compose.ui.zIndex
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ime.Suggestion
 import com.sameerasw.essentials.ime.SuggestionType
+import com.sameerasw.essentials.ui.ime.touch.KeyAction
+import com.sameerasw.essentials.ui.ime.touch.KeyDef
+import com.sameerasw.essentials.ui.ime.touch.KeyGeometry
+import com.sameerasw.essentials.ui.ime.touch.KeyboardLayout
+import com.sameerasw.essentials.ui.ime.touch.KeyboardLayoutBuilder
+import com.sameerasw.essentials.ui.ime.touch.KeyboardTouchState
+import com.sameerasw.essentials.ui.ime.touch.PointerMode
+import com.sameerasw.essentials.ui.ime.touch.RowDef
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -212,14 +224,19 @@ class LiquidShape(
     }
 }
 
-private fun Modifier.bounceClick(interactionSource: MutableInteractionSource): Modifier =
+private fun Modifier.bounceClick(isPressed: Boolean): Modifier =
     composed {
-        val isPressed by interactionSource.collectIsPressedAsState()
         val scale by animateFloatAsState(targetValue = if (isPressed) 0.9f else 1f, label = "scale")
         this.graphicsLayer {
             scaleX = scale
             scaleY = scale
         }
+    }
+
+private fun Modifier.bounceClick(interactionSource: MutableInteractionSource): Modifier =
+    composed {
+        val isPressed by interactionSource.collectIsPressedAsState()
+        this.bounceClick(isPressed)
     }
 
 @Composable
@@ -235,9 +252,11 @@ fun KeyButton(
     contentColor: androidx.compose.ui.graphics.Color,
     onRepeat: (() -> Unit)? = null,
     canRepeat: (() -> Boolean)? = null,
+    isExternallyPressed: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val isPressed by interactionSource.collectIsPressedAsState()
+    val interactionPressed by interactionSource.collectIsPressedAsState()
+    val isPressed = interactionPressed || isExternallyPressed
     val animatedContainerColor by animateColorAsState(
         targetValue = if (isPressed) MaterialTheme.colorScheme.primaryContainer else containerColor,
         label = "ButtonContainerColor",
@@ -254,7 +273,7 @@ fun KeyButton(
     Box(
         modifier =
             modifier
-                .bounceClick(interactionSource)
+                .bounceClick(isPressed)
                 .clip(shape)
                 .background(animatedContainerColor)
                 .pointerInput(onClick, onLongClick, onPress) {
@@ -542,7 +561,63 @@ fun KeyboardInputView(
     val currentRow2 = if (isSymbols) row2Symbols else row2Letters
     val currentRow3 = if (isSymbols) row3Symbols else row3Letters
 
+    var activePressedKeyId by remember { mutableStateOf<String?>(null) }
+    var keyboardPanelSize by remember { mutableStateOf(IntSize.Zero) }
+
     val density = LocalDensity.current
+
+    val keyboardLayout =
+        remember(currentRow1, currentRow2, currentRow3, isSymbols, keyboardPanelSize) {
+            if (keyboardPanelSize.width <= 0 || keyboardPanelSize.height <= 0) {
+                KeyboardLayout(emptyList(), 0f, 0f, 0f, 0f, 0)
+            } else {
+                val rows = mutableListOf<RowDef>()
+                rows.add(
+                    RowDef(
+                        keys = numberRow.map { KeyDef("num_$it", it, it) },
+                        expandEdges = true,
+                    ),
+                )
+                rows.add(
+                    RowDef(
+                        keys = currentRow1.map { KeyDef("r1_$it", it, it) },
+                        expandEdges = true,
+                    ),
+                )
+                rows.add(
+                    RowDef(
+                        keys = currentRow2.map { KeyDef("r2_$it", it, it) },
+                        startSpacerWeight = if (!isSymbols) 0.5f else 0f,
+                        endSpacerWeight = if (!isSymbols) 0.5f else 0f,
+                        expandEdges = isSymbols,
+                    ),
+                )
+                val r3Keys = mutableListOf<KeyDef>()
+                r3Keys.add(KeyDef("shift", "shift", "", KeyAction.SHIFT, weight = 1.5f))
+                r3Keys.addAll(currentRow3.map { KeyDef("r3_$it", it, it, KeyAction.CHAR, weight = 1f) })
+                r3Keys.add(KeyDef("del", "del", "", KeyAction.DELETE, weight = 1.5f))
+                rows.add(RowDef(keys = r3Keys, expandEdges = true))
+
+                val r4Keys = listOf(
+                    KeyDef("sym", if (isSymbols) "ABC" else "?123", "", KeyAction.SYMBOLS, weight = 1.2f),
+                    KeyDef("comma", ",", ",", KeyAction.COMMA, weight = 0.7f),
+                    KeyDef("space", " ", " ", KeyAction.SPACE, weight = 3.3f),
+                    KeyDef("dot", ".", ".", KeyAction.DOT, weight = 0.7f),
+                    KeyDef("return", "enter", "\n", KeyAction.ENTER, weight = 1.2f),
+                )
+                rows.add(RowDef(keys = r4Keys, expandEdges = true))
+
+                with(density) {
+                    KeyboardLayoutBuilder.place(
+                        rows = rows,
+                        width = keyboardPanelSize.width.toFloat(),
+                        totalHeight = keyboardPanelSize.height.toFloat(),
+                        insetH = 2.dp.toPx(),
+                        insetV = 2.dp.toPx(),
+                    )
+                }
+            }
+        }
     val containerShape =
         remember(keyboardShape, keyRoundness) {
             when (keyboardShape) {
@@ -1080,11 +1155,97 @@ fun KeyboardInputView(
                     }
 
                     else -> {
+                        val touchCoordinator = remember { KeyboardTouchState() }
+
                         Column(
                             modifier =
                                 Modifier
                                     .fillMaxSize()
-                                    .blur(animatedBlurRadius),
+                                    .blur(animatedBlurRadius)
+                                    .onGloballyPositioned { coordinates ->
+                                        if (keyboardPanelSize != coordinates.size) {
+                                            keyboardPanelSize = coordinates.size
+                                        }
+                                    }
+                                    .pointerInput(keyboardLayout) {
+                                        if (keyboardLayout.keys.isEmpty()) return@pointerInput
+                                        awaitPointerEventScope {
+                                            while (true) {
+                                                val event = awaitPointerEvent(PointerEventPass.Initial)
+                                                val change = event.changes.firstOrNull() ?: continue
+
+                                                if (change.changedToDownIgnoreConsumed()) {
+                                                    val key = touchCoordinator.onDown(
+                                                        change.position.x,
+                                                        change.position.y,
+                                                        keyboardLayout,
+                                                    )
+                                                    activePressedKeyId = key?.id
+                                                    if (key != null && !key.visual.contains(change.position.x, change.position.y)) {
+                                                        performLightHaptic()
+                                                    }
+                                                } else if (change.pressed) {
+                                                    val key = touchCoordinator.onMove(
+                                                        change.position.x,
+                                                        change.position.y,
+                                                        keyboardLayout,
+                                                    )
+                                                    if (touchCoordinator.mode == PointerMode.PRESSED) {
+                                                        activePressedKeyId = key?.id
+                                                    }
+                                                } else if (change.changedToUpIgnoreConsumed()) {
+                                                    val downKey = touchCoordinator.pressedKey
+                                                    val downInsideVisual = downKey?.visual?.contains(touchCoordinator.downX, touchCoordinator.downY) == true
+                                                    val finalKey = touchCoordinator.onUp()
+                                                    activePressedKeyId = null
+
+                                                    if (finalKey != null && !downInsideVisual && finalKey.id == downKey?.id) {
+                                                        when (finalKey.action) {
+                                                            KeyAction.CHAR -> {
+                                                                val textToType = if (shiftState != ShiftState.OFF && !isSymbols) {
+                                                                    finalKey.label.uppercase()
+                                                                } else {
+                                                                    finalKey.label
+                                                                }
+                                                                handleType(textToType)
+                                                                if (shiftState == ShiftState.ON) {
+                                                                    shiftState = ShiftState.OFF
+                                                                }
+                                                            }
+                                                            KeyAction.DELETE -> {
+                                                                if (canDelete()) {
+                                                                    handleKeyPress(KeyEvent.KEYCODE_DEL)
+                                                                }
+                                                            }
+                                                            KeyAction.SPACE -> {
+                                                                handleType(" ")
+                                                            }
+                                                            KeyAction.ENTER -> {
+                                                                handleKeyPress(KeyEvent.KEYCODE_ENTER)
+                                                            }
+                                                            KeyAction.SHIFT -> {
+                                                                shiftState = when (shiftState) {
+                                                                    ShiftState.OFF -> ShiftState.ON
+                                                                    ShiftState.ON -> ShiftState.LOCKED
+                                                                    ShiftState.LOCKED -> ShiftState.OFF
+                                                                }
+                                                            }
+                                                            KeyAction.SYMBOLS -> {
+                                                                isSymbols = !isSymbols
+                                                            }
+                                                            KeyAction.COMMA -> {
+                                                                handleType(",")
+                                                            }
+                                                            KeyAction.DOT -> {
+                                                                handleType(".")
+                                                            }
+                                                            else -> {}
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             // Dedicated Number Row
@@ -1106,6 +1267,7 @@ fun KeyboardInputView(
                                                         onClick = { handleType(char) },
                                                         onPress = { performLightHaptic() },
                                                         interactionSource = numInteraction,
+                                                        isExternallyPressed = activePressedKeyId == "num_$char",
                                                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                                         contentColor = MaterialTheme.colorScheme.onSurface,
                                                         shape = RoundedCornerShape(keyRoundness),
@@ -1233,6 +1395,7 @@ fun KeyboardInputView(
                                                         },
                                                         secondaryText = secondary,
                                                         interactionSource = row1Interaction,
+                                                        isExternallyPressed = activePressedKeyId == "r1_$char",
                                                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                                         contentColor = MaterialTheme.colorScheme.onSurface,
                                                         shape = RoundedCornerShape(animatedRadius),
@@ -1373,6 +1536,7 @@ fun KeyboardInputView(
                                                             },
                                                             secondaryText = secondary,
                                                             interactionSource = row2Interaction,
+                                                            isExternallyPressed = activePressedKeyId == "r2_$char",
                                                             containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                                             contentColor = MaterialTheme.colorScheme.onSurface,
                                                             shape =
@@ -1478,6 +1642,7 @@ fun KeyboardInputView(
                                                     }
                                                 },
                                                 interactionSource = shiftInteraction,
+                                                isExternallyPressed = activePressedKeyId == "shift",
                                                 containerColor =
                                                     if (isSymbols) {
                                                         MaterialTheme.colorScheme.surfaceContainerHighest.copy(
@@ -1617,6 +1782,7 @@ fun KeyboardInputView(
                                                         },
                                                         secondaryText = secondary,
                                                         interactionSource = row3Interaction,
+                                                        isExternallyPressed = activePressedKeyId == "r3_$char",
                                                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                                         contentColor = MaterialTheme.colorScheme.onSurface,
                                                         shape = RoundedCornerShape(animatedRadius),
@@ -1644,7 +1810,8 @@ fun KeyboardInputView(
                                         buttonGroupContent = {
                                             val backspaceInteraction =
                                                 remember { MutableInteractionSource() }
-                                            val isPressedDel by backspaceInteraction.collectIsPressedAsState()
+                                            val backspaceInteractionPressed by backspaceInteraction.collectIsPressedAsState()
+                                            val isPressedDel = backspaceInteractionPressed || (activePressedKeyId == "del")
                                             val animatedRadiusDel by animateDpAsState(
                                                 targetValue = if (isPressedDel) 4.dp else keyRoundness,
                                                 label = "cornerRadius",
@@ -1667,7 +1834,7 @@ fun KeyboardInputView(
                                                     Modifier
                                                         .weight(1.5f)
                                                         .fillMaxHeight()
-                                                        .bounceClick(backspaceInteraction)
+                                                        .bounceClick(isPressedDel)
                                                         .clip(RoundedCornerShape(animatedRadiusDel))
                                                         .pointerInput(Unit) {
                                                             detectHorizontalDragGestures(
@@ -1835,6 +2002,7 @@ fun KeyboardInputView(
                                                     }
                                                 },
                                                 interactionSource = symInteraction,
+                                                isExternallyPressed = activePressedKeyId == "sym",
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 shape = RoundedCornerShape(animatedRadiusSym),
@@ -1871,6 +2039,7 @@ fun KeyboardInputView(
                                                 onClick = { handleType(",") },
                                                 onPress = { performLightHaptic() },
                                                 interactionSource = commaInteraction,
+                                                isExternallyPressed = activePressedKeyId == "comma",
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 shape = RoundedCornerShape(animatedRadiusComma),
@@ -1895,7 +2064,8 @@ fun KeyboardInputView(
                                         buttonGroupContent = {
                                             val spaceInteraction =
                                                 remember { MutableInteractionSource() }
-                                            val isPressedSpace by spaceInteraction.collectIsPressedAsState()
+                                            val spaceInteractionPressed by spaceInteraction.collectIsPressedAsState()
+                                            val isPressedSpace = spaceInteractionPressed || (activePressedKeyId == "space")
                                             val animatedRadiusSpace by animateDpAsState(
                                                 targetValue = if (isPressedSpace) 4.dp else keyRoundness,
                                                 label = "cornerRadius",
@@ -1910,9 +2080,9 @@ fun KeyboardInputView(
                                             Box(
                                                 modifier =
                                                     Modifier
-                                                        .weight(3f)
+                                                        .weight(3.3f)
                                                         .fillMaxHeight()
-                                                        .bounceClick(spaceInteraction)
+                                                        .bounceClick(isPressedSpace)
                                                         .clip(RoundedCornerShape(animatedRadiusSpace))
                                                         .pointerInput(Unit) {
                                                             val viewConfig = viewConfiguration
@@ -2061,6 +2231,7 @@ fun KeyboardInputView(
                                                 onClick = { handleType(".") },
                                                 onPress = { performLightHaptic() },
                                                 interactionSource = dotInteraction,
+                                                isExternallyPressed = activePressedKeyId == "dot",
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 shape = RoundedCornerShape(animatedRadiusDot),
@@ -2094,12 +2265,13 @@ fun KeyboardInputView(
                                                 onClick = { handleKeyPress(KeyEvent.KEYCODE_ENTER) },
                                                 onPress = { performLightHaptic() },
                                                 interactionSource = returnInteraction,
+                                                isExternallyPressed = activePressedKeyId == "return",
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 shape = RoundedCornerShape(animatedRadiusReturn),
                                                 modifier =
                                                     Modifier
-                                                        .weight(1.5f)
+                                                        .weight(1.2f)
                                                         .fillMaxHeight(),
                                             ) {
                                                 Icon(

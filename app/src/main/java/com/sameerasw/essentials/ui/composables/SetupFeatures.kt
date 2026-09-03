@@ -99,6 +99,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import com.sameerasw.essentials.ui.modifiers.liquidRipple
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
@@ -1024,11 +1025,16 @@ fun SetupFeatures(
         val isSearchingViewModel = viewModel.isSearching.value
         val recentSearches by viewModel.recentSearches
 
-        LazyColumn(
-            state = lazyListState,
-            modifier = modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding() + 64.dp),
-        ) {
+    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+
+    LazyColumn(
+        state = lazyListState,
+        modifier =
+            modifier
+                .fillMaxSize()
+                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
+        contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding() + 64.dp),
+    ) {
             item {
                 // My Android Hero Card
                 OutlinedCard(

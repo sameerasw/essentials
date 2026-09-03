@@ -87,6 +87,28 @@ fun NewAutomationSheet(
             }
         }
 
+    val existingAccessibilityShortcuts =
+        remember {
+            DIYRepository.automations.value.filter {
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_1 ||
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_2 ||
+                it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_3
+            }
+        }
+
+    val hasAllAccessibilityShortcuts = remember(existingAccessibilityShortcuts) {
+        val usedSlots = existingAccessibilityShortcuts.map {
+            when (it.type) {
+                Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT_1 -> 1
+                Automation.Type.ACCESSIBILITY_SHORTCUT_2 -> 2
+                Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> 3
+                else -> 1
+            }
+        }.toSet()
+        usedSlots.contains(1) && usedSlots.contains(2) && usedSlots.contains(3)
+    }
+
     val hasPixelSearchbar =
         remember {
             DIYRepository.automations.value.any {
@@ -183,6 +205,17 @@ fun NewAutomationSheet(
                     iconRes = R.drawable.rounded_rocket_launch_24,
                     enabled = !hasActionShortcut,
                     onClick = { onOptionSelected(Automation.Type.ACTION_SHORTCUT) },
+                )
+
+                // Accessibility Shortcut Option
+                AutomationTypeOption(
+                    title = stringResource(R.string.diy_create_accessibility_shortcut_title),
+                    description = stringResource(R.string.diy_create_accessibility_shortcut_desc),
+                    iconRes = R.drawable.rounded_accessibility_new_24,
+                    enabled = !hasAllAccessibilityShortcuts,
+                    onClick = {
+                        onOptionSelected(Automation.Type.ACCESSIBILITY_SHORTCUT)
+                    },
                 )
 
                 // Pixel Searchbar Tap Option

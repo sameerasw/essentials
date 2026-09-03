@@ -7,7 +7,7 @@
  * Description: UI component and settings composable for Watch feature domain.
  */
 
-package com.sameerasw.essentials.ui.features.system
+package com.sameerasw.essentials.ui.features.watch
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.DeviceInfoSyncManager
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlin.math.min
@@ -156,10 +157,13 @@ fun WatchControlsSettingsUI(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 
+    val isMotionBlurEnabled = prefs.getBoolean("motion_blur", false)
+
     LazyColumn(
         modifier =
             modifier
                 .fillMaxSize()
+                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled)
                 .padding(horizontal = 16.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(4.dp),

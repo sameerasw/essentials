@@ -73,31 +73,6 @@ fun WatchfaceSettingsUI(
     var rightComplication by remember {
         mutableStateOf(prefs.getString("watchface_right_complication", "STEPS") ?: "STEPS")
     }
-    var showUpcomingEvents by remember {
-        mutableStateOf(prefs.getBoolean("watchface_show_glance", prefs.getBoolean("watchface_show_upcoming_events", true)))
-    }
-    var glanceBatteryAlerts by remember {
-        mutableStateOf(prefs.getBoolean("watchface_glance_battery_alerts", true))
-    }
-    var glanceFlashlight by remember {
-        mutableStateOf(prefs.getBoolean("watchface_glance_flashlight", true))
-    }
-    var glanceTravel by remember {
-        mutableStateOf(prefs.getBoolean("watchface_glance_travel", true))
-    }
-    var glanceEvents by remember {
-        mutableStateOf(prefs.getBoolean("watchface_glance_events", true))
-    }
-    var glanceAlarm by remember {
-        mutableStateOf(prefs.getBoolean("watchface_glance_alarm", true))
-    }
-    var showGlow by remember {
-        mutableStateOf(prefs.getBoolean("watchface_show_glow", true))
-    }
-    var showGlanceComplicationsSheet by remember {
-        mutableStateOf(false)
-    }
-
     var clockFont by remember {
         mutableStateOf(prefs.getString("watchface_clock_font", "FLEX") ?: "FLEX")
     }
@@ -157,90 +132,6 @@ fun WatchfaceSettingsUI(
         "PHONE_BATTERY" to stringResource(R.string.watchface_comp_phone_battery),
         "NONE" to stringResource(R.string.watchface_comp_none),
     )
-
-    if (showGlanceComplicationsSheet) {
-        androidx.compose.material3.ModalBottomSheet(
-            onDismissRequest = { showGlanceComplicationsSheet = false },
-            sheetState = androidx.compose.material3.rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 32.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.watchface_glance_complications_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(start = 8.dp),
-                )
-                RoundedCardContainer(
-                    modifier = Modifier.fillMaxWidth(),
-                    cornerRadius = 24.dp,
-                ) {
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_battery_alert_24,
-                        title = stringResource(R.string.watchface_glance_comp_battery_alerts_title),
-                        description = stringResource(R.string.watchface_glance_comp_battery_alerts_desc),
-                        isChecked = glanceBatteryAlerts,
-                        onCheckedChange = {
-                            glanceBatteryAlerts = it
-                            prefs.edit().putBoolean("watchface_glance_battery_alerts", it).apply()
-                            DeviceInfoSyncManager.forceSync(context)
-                        },
-                    )
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_flashlight_on_24,
-                        title = stringResource(R.string.watchface_glance_comp_flashlight_title),
-                        description = stringResource(R.string.watchface_glance_comp_flashlight_desc),
-                        isChecked = glanceFlashlight,
-                        onCheckedChange = {
-                            glanceFlashlight = it
-                            prefs.edit().putBoolean("watchface_glance_flashlight", it).apply()
-                            DeviceInfoSyncManager.forceSync(context)
-                        },
-                    )
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_distance_24,
-                        title = stringResource(R.string.watchface_glance_comp_travel_title),
-                        description = stringResource(R.string.watchface_glance_comp_travel_desc),
-                        isChecked = glanceTravel,
-                        onCheckedChange = {
-                            glanceTravel = it
-                            prefs.edit().putBoolean("watchface_glance_travel", it).apply()
-                            DeviceInfoSyncManager.forceSync(context)
-                        },
-                    )
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_calendar_today_24,
-                        title = stringResource(R.string.watchface_glance_comp_events_title),
-                        description = stringResource(R.string.watchface_glance_comp_events_desc),
-                        isChecked = glanceEvents,
-                        onCheckedChange = {
-                            glanceEvents = it
-                            prefs.edit().putBoolean("watchface_glance_events", it).apply()
-                            DeviceInfoSyncManager.forceSync(context)
-                        },
-                    )
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_alarm_24,
-                        title = stringResource(R.string.watchface_glance_comp_alarm_title),
-                        description = stringResource(R.string.watchface_glance_comp_alarm_desc),
-                        isChecked = glanceAlarm,
-                        onCheckedChange = {
-                            glanceAlarm = it
-                            prefs.edit().putBoolean("watchface_glance_alarm", it).apply()
-                            DeviceInfoSyncManager.forceSync(context)
-                        },
-                    )
-                }
-            }
-        }
-    }
 
     Column(
         modifier = modifier
@@ -478,53 +369,5 @@ fun WatchfaceSettingsUI(
             }
         }
 
-        // Section 3: At a Glance & Glow
-        Text(
-            text = stringResource(R.string.watchface_category_glance),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(start = 8.dp),
-        )
-        RoundedCardContainer(
-            modifier = Modifier.fillMaxWidth(),
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_upcoming_24,
-                title = stringResource(R.string.watchface_show_glance_title),
-                description = stringResource(R.string.watchface_show_glance_desc),
-                isChecked = showUpcomingEvents,
-                onCheckedChange = {
-                    showUpcomingEvents = it
-                    prefs.edit()
-                        .putBoolean("watchface_show_upcoming_events", it)
-                        .putBoolean("watchface_show_glance", it)
-                        .apply()
-                    DeviceInfoSyncManager.forceSync(context)
-                },
-            )
-            if (showUpcomingEvents) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_widgets_24,
-                    title = stringResource(R.string.watchface_glance_complications_title),
-                    description = stringResource(R.string.watchface_glance_complications_desc),
-                    showToggle = false,
-                    onClick = {
-                        showGlanceComplicationsSheet = true
-                    },
-                )
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_blur_on_24,
-                    title = stringResource(R.string.watchface_show_glow_title),
-                    description = stringResource(R.string.watchface_show_glow_desc),
-                    isChecked = showGlow,
-                    onCheckedChange = {
-                        showGlow = it
-                        prefs.edit().putBoolean("watchface_show_glow", it).apply()
-                        DeviceInfoSyncManager.forceSync(context)
-                    },
-                )
-            }
-        }
     }
 }

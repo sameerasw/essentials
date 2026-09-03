@@ -429,6 +429,19 @@ object PermissionUIHelper {
                 )
             }
 
+            "STORAGE", "READ_MEDIA_IMAGES", "READ_EXTERNAL_STORAGE", "MANAGE_EXTERNAL_STORAGE" ->
+                PermissionItem(
+                    iconRes = R.drawable.rounded_image_24,
+                    title = R.string.perm_storage_title,
+                    description = R.string.perm_storage_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures("STORAGE"),
+                    actionLabel = if (PermissionUtils.hasStoragePermission(context)) R.string.perm_action_granted else R.string.perm_action_grant,
+                    action = {
+                        PermissionUtils.openManageExternalStorageSettings(context)
+                    },
+                    isGranted = PermissionUtils.hasStoragePermission(context),
+                )
+
             else -> null
         }
 

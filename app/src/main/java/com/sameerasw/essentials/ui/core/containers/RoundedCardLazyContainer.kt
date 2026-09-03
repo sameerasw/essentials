@@ -9,14 +9,17 @@
 
 package com.sameerasw.essentials.ui.core.containers
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.components.linkActions.AppPickerItem
 import com.sameerasw.essentials.ui.components.linkActions.ResolvedAppInfo
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 
 @Composable
 fun RoundedCardLazyContainer(
@@ -39,12 +43,20 @@ fun RoundedCardLazyContainer(
     demo: Boolean = false,
 ) {
     val context = LocalContext.current
+    val isMotionBlurEnabled =
+        remember(context) {
+            context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                .getBoolean("motion_blur", false)
+        }
+    val lazyListState = rememberLazyListState()
 
     LazyColumn(
+        state = lazyListState,
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(cornerRadius)),
+                .clip(RoundedCornerShape(cornerRadius))
+                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         items(resolveInfos) { info ->

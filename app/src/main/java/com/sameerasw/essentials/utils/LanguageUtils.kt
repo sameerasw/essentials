@@ -53,7 +53,8 @@ object LanguageUtils {
             Language("tr", "Turkish", "Türkçe"),
             Language("uk", "Ukrainian", "Українська"),
             Language("vi", "Vietnamese", "Tiếng Việt"),
-            Language("zh", "Chinese", "中文"),
+            Language("zh-CN", "Chinese", "简体中文"),
+            Language("zh-TW", "Chinese", "繁體中文"),
         )
 
     data class Language(

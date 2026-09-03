@@ -97,6 +97,7 @@ import com.sameerasw.essentials.ui.core.sheets.PrankBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
@@ -817,6 +818,8 @@ class MainActivity : AppCompatActivity() {
                                     },
                                 )
 
+                                val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+
                                 HorizontalPager(
                                     state = pagerState,
                                     modifier =
@@ -827,7 +830,8 @@ class MainActivity : AppCompatActivity() {
                                                 blurRadius = if (isBlurEnabled) 40f else 0f,
                                                 height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
                                                 direction = BlurDirection.BOTTOM,
-                                            ),
+                                            )
+                                            .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
                                     userScrollEnabled = isSwipeTabsEnabled,
                                 ) { targetPage ->
                                     val statusBarHeight =

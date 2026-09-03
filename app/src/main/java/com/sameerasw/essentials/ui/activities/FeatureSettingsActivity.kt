@@ -32,6 +32,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -98,13 +99,16 @@ import com.sameerasw.essentials.ui.features.system.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.features.system.StandbyAppsSettingsUI
 import com.sameerasw.essentials.ui.features.system.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.features.system.TextAnimationsSettingsUI
-import com.sameerasw.essentials.ui.features.system.WatchControlsSettingsUI
+import com.sameerasw.essentials.ui.features.watch.ComplicationsSettingsUI
+import com.sameerasw.essentials.ui.features.watch.WatchControlsSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchSettingsUI
+import com.sameerasw.essentials.ui.features.watch.WatchWirelessDebuggingSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.HapticUtil
@@ -522,6 +526,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val statusBarHeight =
                         WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
+                    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+                    val scrollState = rememberScrollState()
+
                     Box(
                         modifier =
                             Modifier
@@ -549,8 +556,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     ).then(
                                         if (hasScroll) {
                                             Modifier
+                                                .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                                                 .nestedScroll(nestedScrollConnection)
-                                                .verticalScroll(rememberScrollState())
+                                                .verticalScroll(scrollState)
                                         } else {
                                             Modifier
                                         },
@@ -671,16 +679,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                     listOf(
                                                         listOf(
                                                             "Watchface",
-                                                        ),
-                                                        listOf(
-                                                            "Notification Sync",
-                                                            "Call Sync",
+                                                            "Complications",
                                                             "Watch Controls",
                                                             "Lock from Watch",
                                                         ),
                                                         listOf(
                                                             "Calendar Sync",
                                                             "Sync sound mode",
+                                                            "Notification Sync",
+                                                            "Call Sync",
                                                             "Sync location reached status",
                                                         ),
                                                         listOf(
@@ -722,11 +729,19 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                 sectionChildLists.forEach { sectionChildren ->
+                                    if (featureId == "Watch" && sectionChildren.any { it.id == "Calendar Sync" }) {
+                                        Text(
+                                            text = stringResource(R.string.cat_sync),
+                                            style = MaterialTheme.typography.titleMedium,
+                                            modifier = Modifier.padding(start = 32.dp, top = 24.dp, bottom = 4.dp),
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
                                     RoundedCardContainer(
                                         modifier =
                                             Modifier
                                                 .padding(horizontal = 16.dp)
-                                                .padding(top = 16.dp),
+                                                .padding(top = if (featureId == "Watch" && sectionChildren.any { it.id == "Calendar Sync" }) 0.dp else 16.dp),
                                     ) {
                                         sectionChildren.forEach { child ->
                                             val permissionAwareToggle: (Boolean) -> Unit =
@@ -1083,6 +1098,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    "Complications" -> {
+                                        ComplicationsSettingsUI(
+                                            modifier = Modifier.padding(top = 16.dp),
+                                        )
+                                    }
+
                                     "Notification Sync" -> {
                                         WatchNotificationSettingsUI(
                                             modifier = Modifier.padding(top = 16.dp),
@@ -1102,6 +1123,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             watchViewModel = watchViewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Watch Wireless Debugging" -> {
+                                        WatchWirelessDebuggingSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
                                         )
                                     }
 

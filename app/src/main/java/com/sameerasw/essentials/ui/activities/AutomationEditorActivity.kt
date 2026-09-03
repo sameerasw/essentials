@@ -12,6 +12,8 @@ package com.sameerasw.essentials.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -103,9 +105,11 @@ import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -162,6 +166,10 @@ class AutomationEditorActivity : ComponentActivity() {
             when (automationType) {
                 Automation.Type.TRIGGER -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.ACTION_SHORTCUT -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
+                Automation.Type.ACCESSIBILITY_SHORTCUT,
+                Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.PIXEL_SEARCHBAR -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.STATE -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.APP -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_create_app_title
@@ -176,6 +184,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 viewModel.check(context)
             }
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val view = LocalView.current
                 val coroutineScope = rememberCoroutineScope()
@@ -202,6 +211,49 @@ class AutomationEditorActivity : ComponentActivity() {
                     mutableStateOf<List<String>>(
                         existingAutomation?.selectedApps ?: emptyList(),
                     )
+                }
+
+                val isAccessibilityShortcutType = remember(automationType) {
+                    automationType == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+                    automationType == Automation.Type.ACCESSIBILITY_SHORTCUT_1 ||
+                    automationType == Automation.Type.ACCESSIBILITY_SHORTCUT_2 ||
+                    automationType == Automation.Type.ACCESSIBILITY_SHORTCUT_3
+                }
+
+                val existingAccessibilityAutomations = remember {
+                    DIYRepository.automations.value.filter {
+                        (it.id != existingAutomation?.id) && (
+                            it.type == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+                            it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_1 ||
+                            it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_2 ||
+                            it.type == Automation.Type.ACCESSIBILITY_SHORTCUT_3
+                        )
+                    }
+                }
+
+                val usedAccessibilitySlots = remember(existingAccessibilityAutomations) {
+                    existingAccessibilityAutomations.map {
+                        when (it.type) {
+                            Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT_1 -> 1
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_2 -> 2
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> 3
+                            else -> 1
+                        }
+                    }.toSet()
+                }
+
+                var selectedAccessibilitySlot by remember {
+                    val initialSlot = if (isEditMode) {
+                        when (existingAutomation.type) {
+                            Automation.Type.ACCESSIBILITY_SHORTCUT, Automation.Type.ACCESSIBILITY_SHORTCUT_1 -> 1
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_2 -> 2
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_3 -> 3
+                            else -> 1
+                        }
+                    } else {
+                        (1..3).firstOrNull { it !in usedAccessibilitySlots } ?: 1
+                    }
+                    mutableStateOf(initialSlot)
                 }
 
                 // App Picker State
@@ -336,7 +388,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                     selectedAction,
                                 )
 
-                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                        Automation.Type.ACTION_SHORTCUT,
+                        Automation.Type.ACCESSIBILITY_SHORTCUT,
+                        Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                        Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                        Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                        Automation.Type.PIXEL_SEARCHBAR ->
                             selectedAction != null &&
                                 isActionConfigured(
                                     selectedAction,
@@ -435,7 +492,13 @@ class AutomationEditorActivity : ComponentActivity() {
                 val performSave = {
                     val actionsToCheck =
                         when (automationType) {
-                            Automation.Type.TRIGGER, Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                            Automation.Type.TRIGGER,
+                            Automation.Type.ACTION_SHORTCUT,
+                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                            Automation.Type.PIXEL_SEARCHBAR ->
                                 listOfNotNull(
                                     selectedAction,
                                 )
@@ -463,7 +526,31 @@ class AutomationEditorActivity : ComponentActivity() {
                                     actions = listOfNotNull(selectedAction),
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
-                        } else if (automationType == Automation.Type.ACTION_SHORTCUT || automationType == Automation.Type.PIXEL_SEARCHBAR) {
+                        } else if (isAccessibilityShortcutType) {
+                            val savedType = when (selectedAccessibilitySlot) {
+                                1 -> Automation.Type.ACCESSIBILITY_SHORTCUT_1
+                                2 -> Automation.Type.ACCESSIBILITY_SHORTCUT_2
+                                3 -> Automation.Type.ACCESSIBILITY_SHORTCUT_3
+                                else -> Automation.Type.ACCESSIBILITY_SHORTCUT_1
+                            }
+                            val newAutomation =
+                                Automation(
+                                    id =
+                                        if (isEditMode) {
+                                            existingAutomation.id
+                                        } else {
+                                            java.util.UUID
+                                                .randomUUID()
+                                                .toString()
+                                        },
+                                    type = savedType,
+                                    actions = listOfNotNull(selectedAction),
+                                )
+                            if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
+                        } else if (
+                            automationType == Automation.Type.ACTION_SHORTCUT ||
+                            automationType == Automation.Type.PIXEL_SEARCHBAR
+                        ) {
                             val newAutomation =
                                 Automation(
                                     id =
@@ -676,18 +763,21 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         LoadingIndicator()
                                                     }
                                                 } else {
+                                                    val appsLazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
                                                     LazyColumn(
+                                                        state = appsLazyListState,
                                                         modifier =
                                                             Modifier
                                                                 .weight(1f)
-                                                                .clip(RoundedCornerShape(24.dp)),
+                                                                .clip(RoundedCornerShape(24.dp))
+                                                                .scrollMotionBlur(appsLazyListState, enabled = isMotionBlurEnabled),
                                                         verticalArrangement = Arrangement.spacedBy(2.dp),
                                                         contentPadding =
                                                             PaddingValues(
                                                                 bottom =
                                                                     WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
                                                                         80.dp,
-                                                            ),
+                                                             ),
                                                     ) {
                                                         items(
                                                             filteredApps,
@@ -716,14 +806,87 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     }
                                                 }
                                             }
-                                        } else if (automationType == Automation.Type.ACTION_SHORTCUT ||
-                                            automationType == Automation.Type.PIXEL_SEARCHBAR
-                                        ) {
+                                        } else if (isAccessibilityShortcutType) {
+                                            val triggerScrollState = rememberScrollState()
                                             Column(
                                                 modifier =
                                                     Modifier
                                                         .fillMaxSize()
-                                                        .verticalScroll(rememberScrollState())
+                                                        .scrollMotionBlur(triggerScrollState, enabled = isMotionBlurEnabled)
+                                                        .verticalScroll(triggerScrollState)
+                                                        .padding(16.dp),
+                                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                            ) {
+                                                Spacer(modifier = Modifier.height(statusBarHeight + 4.dp))
+                                                Text(
+                                                    text = stringResource(R.string.diy_select_trigger),
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = MaterialTheme.colorScheme.onSurface,
+                                                    modifier = Modifier.padding(horizontal = 12.dp),
+                                                )
+
+                                                RoundedCardContainer(spacing = 2.dp) {
+                                                    val slots = listOf(1, 2, 3)
+                                                    slots.forEach { slot ->
+                                                        val title = when (slot) {
+                                                            1 -> stringResource(R.string.diy_create_accessibility_shortcut_1_title)
+                                                            2 -> stringResource(R.string.diy_create_accessibility_shortcut_2_title)
+                                                            3 -> stringResource(R.string.diy_create_accessibility_shortcut_3_title)
+                                                            else -> ""
+                                                        }
+                                                        val slotIcon = when (slot) {
+                                                            1 -> R.drawable.rounded_circle_24
+                                                            2 -> R.drawable.rounded_pentagon_24
+                                                            3 -> R.drawable.rounded_square_24
+                                                            else -> R.drawable.rounded_circle_24
+                                                        }
+                                                        val isSelected = selectedAccessibilitySlot == slot
+                                                        val isEnabled = slot !in usedAccessibilitySlots
+
+                                                        EditorActionItem(
+                                                            title = title,
+                                                            iconRes = slotIcon,
+                                                            isSelected = isSelected,
+                                                            enabled = isEnabled,
+                                                            isConfigurable = false,
+                                                            onClick = {
+                                                                if (!PermissionUtils.isAccessibilityShortcutServiceEnabled(context, slot)) {
+                                                                    val promptRes = when (slot) {
+                                                                        1 -> R.string.diy_enable_accessibility_shortcut_1_prompt
+                                                                        2 -> R.string.diy_enable_accessibility_shortcut_2_prompt
+                                                                        3 -> R.string.diy_enable_accessibility_shortcut_3_prompt
+                                                                        else -> R.string.diy_enable_accessibility_shortcut_1_prompt
+                                                                    }
+                                                                    Toast.makeText(context, context.getString(promptRes), Toast.LENGTH_LONG).show()
+                                                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                                                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                                    }
+                                                                    context.startActivity(intent)
+                                                                }
+                                                                selectedAccessibilitySlot = slot
+                                                            },
+                                                        )
+                                                    }
+                                                }
+                                                Spacer(
+                                                    modifier =
+                                                        Modifier.height(
+                                                            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 80.dp,
+                                                        ),
+                                                )
+                                            }
+                                        } else if (
+                                            automationType == Automation.Type.ACTION_SHORTCUT ||
+                                            automationType == Automation.Type.PIXEL_SEARCHBAR
+                                        ) {
+                                            val triggerScrollState = rememberScrollState()
+                                            Column(
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .scrollMotionBlur(triggerScrollState, enabled = isMotionBlurEnabled)
+                                                        .verticalScroll(triggerScrollState)
                                                         .padding(16.dp),
                                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                             ) {
@@ -738,16 +901,14 @@ class AutomationEditorActivity : ComponentActivity() {
 
                                                 RoundedCardContainer(spacing = 2.dp) {
                                                     val editorTitle =
-                                                        if (automationType == Automation.Type.PIXEL_SEARCHBAR) {
-                                                            stringResource(R.string.diy_create_pixel_searchbar_title)
-                                                        } else {
-                                                            stringResource(R.string.diy_create_action_shortcut_title)
+                                                        when (automationType) {
+                                                            Automation.Type.PIXEL_SEARCHBAR -> stringResource(R.string.diy_create_pixel_searchbar_title)
+                                                            else -> stringResource(R.string.diy_create_action_shortcut_title)
                                                         }
                                                     val editorIcon =
-                                                        if (automationType == Automation.Type.PIXEL_SEARCHBAR) {
-                                                            R.drawable.rounded_search_24
-                                                        } else {
-                                                            R.drawable.rounded_rocket_launch_24
+                                                        when (automationType) {
+                                                            Automation.Type.PIXEL_SEARCHBAR -> R.drawable.rounded_search_24
+                                                            else -> R.drawable.rounded_rocket_launch_24
                                                         }
                                                     EditorActionItem(
                                                         title = editorTitle,
@@ -765,11 +926,13 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 )
                                             }
                                         } else {
+                                            val triggerStateScrollState = rememberScrollState()
                                             Column(
                                                 modifier =
                                                     Modifier
                                                         .fillMaxSize()
-                                                        .verticalScroll(rememberScrollState())
+                                                        .scrollMotionBlur(triggerStateScrollState, enabled = isMotionBlurEnabled)
+                                                        .verticalScroll(triggerStateScrollState)
                                                         .padding(16.dp),
                                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                             ) {
@@ -985,11 +1148,13 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                     } else {
                                         // PAGE 1: Action Picker
+                                        val actionScrollState = rememberScrollState()
                                         Column(
                                             modifier =
                                                 Modifier
                                                     .fillMaxSize()
-                                                    .verticalScroll(rememberScrollState())
+                                                    .scrollMotionBlur(actionScrollState, enabled = isMotionBlurEnabled)
+                                                    .verticalScroll(actionScrollState)
                                                     .padding(16.dp),
                                             verticalArrangement = Arrangement.spacedBy(16.dp),
                                         ) {
@@ -1025,7 +1190,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                             val currentSelection =
                                                 when (automationType) {
                                                     Automation.Type.TRIGGER -> selectedAction
-                                                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction
+                                                    Automation.Type.ACTION_SHORTCUT,
+                                                    Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                                    Automation.Type.PIXEL_SEARCHBAR -> selectedAction
                                                     Automation.Type.STATE ->
                                                         if (selectedActionTab ==
                                                             0
@@ -1053,7 +1223,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     onClick = {
                                                         when (automationType) {
                                                             Automation.Type.TRIGGER -> selectedAction = null
-                                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                                            Automation.Type.ACTION_SHORTCUT,
+                                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                                 selectedAction =
                                                                     null
                                                             Automation.Type.STATE, Automation.Type.APP -> {
@@ -1118,7 +1293,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             onClick = {
                                                                 when (automationType) {
                                                                     Automation.Type.TRIGGER -> selectedAction = resolvedAction
-                                                                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                                                    Automation.Type.ACTION_SHORTCUT,
+                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                                                    Automation.Type.PIXEL_SEARCHBAR ->
                                                                         selectedAction =
                                                                             resolvedAction
                                                                     Automation.Type.STATE, Automation.Type.APP -> {
@@ -1279,7 +1459,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         // Update the selection with configured action
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1304,7 +1489,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showScreenOffSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1329,7 +1519,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showDeviceEffectsSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1354,7 +1549,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSoundModeSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1378,7 +1578,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSetVolumeSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1403,7 +1608,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSometimesEssentialsSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1435,7 +1645,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showFreezeTagSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1459,7 +1674,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         val newAction = Action.OpenApp(packageName = app.packageName)
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1488,7 +1708,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         if (finalAction != null) {
                                             when (automationType) {
                                                 Automation.Type.TRIGGER -> selectedAction = finalAction
-                                                Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                                Automation.Type.ACTION_SHORTCUT,
+                                                Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                                Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                                Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                                Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                                Automation.Type.PIXEL_SEARCHBAR ->
                                                     selectedAction =
                                                         finalAction
                                                 Automation.Type.STATE, Automation.Type.APP -> {
@@ -1519,7 +1744,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showSetKeyboardSheet = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = Action.Keyboard(newIme)
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     Action.Keyboard(newIme)
 
@@ -1545,7 +1775,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showCustomSettingsSettings = false
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR ->
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
                                                 selectedAction =
                                                     newAction
 
@@ -1613,6 +1848,7 @@ fun EditorActionItem(
     iconRes: Int,
     isSelected: Boolean,
     isConfigurable: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier,
@@ -1622,36 +1858,41 @@ fun EditorActionItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clickable {
-                    HapticUtil.performUIHaptic(view)
-                    onClick()
-                }.background(
+                .background(
                     color = MaterialTheme.colorScheme.surfaceBright,
                     shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
-                ).padding(12.dp),
+                ).clickable {
+                    HapticUtil.performUIHaptic(view)
+                    onClick()
+                }.padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         RadioButton(
             selected = isSelected,
-            onClick = onClick,
+            onClick = if (enabled) onClick else null,
+            enabled = enabled,
         )
 
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = title,
             modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.primary,
+            tint = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
         )
 
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.weight(1f),
-            color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = when {
+                !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                isSelected -> MaterialTheme.colorScheme.onSurface
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
+            },
         )
 
-        if (isSelected && isConfigurable) {
+        if (isSelected && isConfigurable && enabled) {
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_settings_24),

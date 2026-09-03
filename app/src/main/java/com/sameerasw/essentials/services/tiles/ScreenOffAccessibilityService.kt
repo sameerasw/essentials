@@ -33,6 +33,7 @@ import com.sameerasw.essentials.services.InputEventListenerService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
 import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
+import com.sameerasw.essentials.services.handlers.AodWallpaperOverlayHandler
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
@@ -63,6 +64,7 @@ class ScreenOffAccessibilityService :
     private lateinit var appFlowHandler: AppFlowHandler
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
     private lateinit var aodForceTurnOffHandler: AodForceTurnOffHandler
+    private lateinit var aodWallpaperOverlayHandler: AodWallpaperOverlayHandler
     private lateinit var omniGestureOverlayHandler: OmniGestureOverlayHandler
     private lateinit var statusBarIconHandler: StatusBarIconHandler
     private lateinit var pocketModeHandler: PocketModeHandler
@@ -224,6 +226,10 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST
             ) {
                 smartPixelsHandler.updateState()
+            } else if (key == SettingsRepository.KEY_AOD_WALLPAPER_ENABLED ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_OPACITY
+            ) {
+                aodWallpaperOverlayHandler.updateState()
             }
         }
 
@@ -238,6 +244,7 @@ class ScreenOffAccessibilityService :
         appFlowHandler = AppFlowHandler(this, this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
+        aodWallpaperOverlayHandler = AodWallpaperOverlayHandler(this)
         omniGestureOverlayHandler = OmniGestureOverlayHandler(this)
         statusBarIconHandler = StatusBarIconHandler(this)
         pocketModeHandler = PocketModeHandler(this)
@@ -262,6 +269,7 @@ class ScreenOffAccessibilityService :
                             notificationLightingHandler.onScreenOn()
                             ambientGlanceHandler.dismissImmediately()
                             aodForceTurnOffHandler.removeOverlay()
+                            aodWallpaperOverlayHandler.onScreenOn()
                             freezeHandler.removeCallbacks(freezeRunnable)
                             stopInputEventListener()
                             updateOmniOverlay()
@@ -274,12 +282,14 @@ class ScreenOffAccessibilityService :
                             scheduleFreeze()
                             startInputEventListenerIfEnabled()
                             ambientGlanceHandler.checkAndShowOnScreenOff()
+                            aodWallpaperOverlayHandler.onScreenOff()
                             omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
                             pocketModeHandler.onScreenOff()
                             updatePocketModeSensors()
                         }
 
                         Intent.ACTION_USER_PRESENT -> {
+                            aodWallpaperOverlayHandler.onScreenOn()
                             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                             if (prefs.getBoolean("pocket_mode_lock_screen_only", false)) {
                                 pocketModeHandler.onScreenOff() // cancel pending timer + remove overlay
@@ -399,6 +409,7 @@ class ScreenOffAccessibilityService :
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
         aodForceTurnOffHandler.removeOverlay()
+        aodWallpaperOverlayHandler.removeOverlay()
         pocketModeHandler.removeOverlay()
         omniGestureOverlayHandler.removeOverlay()
         smartPixelsHandler.destroy()

@@ -89,6 +89,7 @@ import com.sameerasw.essentials.services.tiles.UrlShortenerTileService
 import com.sameerasw.essentials.services.tiles.UsbDebuggingTileService
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -487,11 +488,15 @@ fun QuickSettingsTilesSettingsUI(
                 if (index != -1) index else Int.MAX_VALUE
             }
 
+    val scrollState = rememberScrollState()
+    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+
     Column(
         modifier =
             modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
+                .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
