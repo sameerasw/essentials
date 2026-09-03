@@ -273,7 +273,7 @@
             android:name=".ui.activities.PixelSearchResultsActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Essentials"
+            android:theme="@style/Theme.Essentials.WallpaperTranslucent"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <activity
