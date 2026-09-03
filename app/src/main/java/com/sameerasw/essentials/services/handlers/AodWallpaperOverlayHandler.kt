@@ -12,6 +12,7 @@ package com.sameerasw.essentials.services.handlers
 import android.accessibilityservice.AccessibilityService
 import android.animation.ObjectAnimator
 import android.app.WallpaperManager
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -71,6 +72,80 @@ class AodWallpaperOverlayHandler(
             SettingsRepository.PREFS_NAME,
             AccessibilityService.MODE_PRIVATE,
         )
+    }
+
+    private val wallpaperChangeReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context?, intent: android.content.Intent?) {
+            invalidateWallpaperCache()
+        }
+    }
+
+    private val wallpaperColorsListener =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            WallpaperManager.OnColorsChangedListener { _, _ ->
+                invalidateWallpaperCache()
+            }
+        } else {
+            null
+        }
+
+    private var isReceiverRegistered = false
+
+    init {
+        registerWallpaperChangeListeners()
+    }
+
+    private fun registerWallpaperChangeListeners() {
+        if (!isReceiverRegistered) {
+            try {
+                val filter = android.content.IntentFilter(Intent.ACTION_WALLPAPER_CHANGED)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    service.registerReceiver(
+                        wallpaperChangeReceiver,
+                        filter,
+                        AccessibilityService.RECEIVER_NOT_EXPORTED,
+                    )
+                } else {
+                    service.registerReceiver(wallpaperChangeReceiver, filter)
+                }
+                isReceiverRegistered = true
+            } catch (e: Exception) {
+                Log.e("AodWallpaperOverlay", "Failed to register wallpaper broadcast receiver", e)
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            wallpaperColorsListener?.let {
+                try {
+                    val wm = WallpaperManager.getInstance(service)
+                    wm.addOnColorsChangedListener(it, handler)
+                } catch (e: Exception) {
+                    Log.e("AodWallpaperOverlay", "Failed to add wallpaper colors changed listener", e)
+                }
+            }
+        }
+    }
+
+    private fun unregisterWallpaperChangeListeners() {
+        if (isReceiverRegistered) {
+            try {
+                service.unregisterReceiver(wallpaperChangeReceiver)
+            } catch (e: Exception) {
+                // Ignore
+            }
+            isReceiverRegistered = false
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            wallpaperColorsListener?.let {
+                try {
+                    val wm = WallpaperManager.getInstance(service)
+                    wm.removeOnColorsChangedListener(it)
+                } catch (e: Exception) {
+                    // Ignore
+                }
+            }
+        }
     }
 
     fun onScreenOff() {
@@ -264,7 +339,20 @@ class AodWallpaperOverlayHandler(
         }
     }
 
+    private var lastWallpaperId = -1
+
     private fun loadAndApplyWallpaper() {
+        val wallpaperManager = WallpaperManager.getInstance(service)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val currentLockId = wallpaperManager.getWallpaperId(WallpaperManager.FLAG_LOCK)
+            val currentSystemId = wallpaperManager.getWallpaperId(WallpaperManager.FLAG_SYSTEM)
+            val effectiveId = if (currentLockId > 0) currentLockId else currentSystemId
+            if (effectiveId > 0 && effectiveId != lastWallpaperId) {
+                cachedWallpaperBitmap = null
+                lastWallpaperId = effectiveId
+            }
+        }
+
         if (cachedWallpaperBitmap != null) {
             wallpaperImageView?.setImageBitmap(cachedWallpaperBitmap)
             return
@@ -316,6 +404,7 @@ class AodWallpaperOverlayHandler(
 
     fun invalidateWallpaperCache() {
         cachedWallpaperBitmap = null
+        lastWallpaperId = -1
     }
 
     private fun hideOverlay() {
@@ -370,6 +459,7 @@ class AodWallpaperOverlayHandler(
     }
 
     fun removeOverlay() {
+        unregisterWallpaperChangeListeners()
         handler.removeCallbacks(burnInShiftRunnable)
         handler.removeCallbacks(timeoutRunnable)
         hideOverlay()
