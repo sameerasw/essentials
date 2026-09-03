@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
@@ -66,8 +67,8 @@ fun LinkActionsSettingsUI(
         RoundedCardContainer(spacing = 2.dp) {
             FeatureCard(
                 modifier = Modifier.highlight(highlightSetting == "Link action"),
-                title = "Link action",
-                description = "Open link actions sheet",
+                title = R.string.link_action_title_open,
+                description = R.string.link_action_desc_open,
                 iconRes = R.drawable.rounded_link_24,
                 isEnabled = true,
                 isToggleEnabled = false,
@@ -81,8 +82,8 @@ fun LinkActionsSettingsUI(
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_window_open_24,
-                title = "Disable link previews",
-                description = "It helps protect your ip address if you don't want to visit the site.",
+                title = stringResource(R.string.disable_link_preview_title),
+                description = stringResource(R.string.disable_link_preview_desc),
                 isChecked = viewModel.disableLinkPreview.value,
                 onCheckedChange = { viewModel.toggleDisableLinkPreview() },
                 modifier = Modifier.highlight(highlightSetting == "disable_link_preview"),

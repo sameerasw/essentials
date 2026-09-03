@@ -623,8 +623,6 @@
     <string name="diy_create_pixel_searchbar_desc">Tap action for Pixel searchbar replacement</string>
     <string name="diy_editor_new_title">New Automation</string>
     <string name="diy_editor_edit_title">Edit Automation</string>
-    <string name="feat_link_actions_title">Link actions</string>
-    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
     <string name="feat_flashlight_title">Flashlight</string>
     <string name="feat_flashlight_desc">Improve flashlight behavior</string>
     <string name="label_restore_mode">Restore mode</string>
@@ -719,6 +717,13 @@
     <string name="calendar_sync_manual_sync_desc">Trigger immediate sync to watch</string>
     <string name="calendar_sync_no_calendars">No local calendars found</string>
     <string name="calendar_sync_sync_started">Calendar sync started</string>
+
+    <string name="feat_link_actions_title">Link actions</string>
+    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
+    <string name="link_action_title_open">Link action</string>
+    <string name="link_action_desc_open">Open link actions sheet</string>
+    <string name="disable_link_preview_title">Disable link previews</string>
+    <string name="disable_link_preview_desc">URL data will not be loaded (Website info).</string>
 
     <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic feedback</string>
