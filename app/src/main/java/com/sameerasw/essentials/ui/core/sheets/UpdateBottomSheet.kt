@@ -227,18 +227,13 @@ fun UpdateBottomSheet(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             RoundedCardContainer {
-                                Surface(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    color = MaterialTheme.colorScheme.surfaceContainer,
-                                ) {
-                                    SimpleMarkdown(
-                                        content = notesToDisplay,
-                                        modifier =
-                                            Modifier
-                                                .fillMaxWidth()
-                                                .padding(16.dp),
-                                    )
-                                }
+                                SimpleMarkdown(
+                                    content = notesToDisplay,
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                )
                             }
                         }
                     }
