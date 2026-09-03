@@ -270,6 +270,13 @@
         </activity>
 
         <activity
+            android:name=".ui.activities.PixelSearchResultsActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Essentials"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <activity
             android:name=".ui.activities.PixelSearchbarSettingsActivity"
             android:exported="true"
             android:label="@string/pixel_searchbar_settings_title" />

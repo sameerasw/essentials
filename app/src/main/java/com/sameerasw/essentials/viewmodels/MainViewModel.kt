@@ -1921,6 +1921,11 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperVignette()
         hasAodWallpaperCustomImage.value =
             settingsRepository.hasAodWallpaperCustomImage()
+        pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
+        pixelSearchResultContacts.value = settingsRepository.isPixelSearchResultContactsEnabled()
+        pixelSearchResultSettings.value = settingsRepository.isPixelSearchResultSettingsEnabled()
+        pixelSearchResultShortcuts.value = settingsRepository.isPixelSearchResultShortcutsEnabled()
+        pixelSearchResultWeb.value = settingsRepository.isPixelSearchResultWebEnabled()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -3543,6 +3548,37 @@ class MainViewModel : ViewModel() {
         pixelSearchbarWidgetPaddingV.intValue = value
         settingsRepository.setPixelSearchbarWidgetPaddingV(value)
         updatePixelSearchbarWidget(context)
+    }
+
+    val pixelSearchResultApps = mutableStateOf(true)
+    val pixelSearchResultContacts = mutableStateOf(true)
+    val pixelSearchResultSettings = mutableStateOf(true)
+    val pixelSearchResultShortcuts = mutableStateOf(true)
+    val pixelSearchResultWeb = mutableStateOf(true)
+
+    fun setPixelSearchResultAppsEnabled(enabled: Boolean) {
+        pixelSearchResultApps.value = enabled
+        settingsRepository.setPixelSearchResultAppsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultContactsEnabled(enabled: Boolean) {
+        pixelSearchResultContacts.value = enabled
+        settingsRepository.setPixelSearchResultContactsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultSettingsEnabled(enabled: Boolean) {
+        pixelSearchResultSettings.value = enabled
+        settingsRepository.setPixelSearchResultSettingsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultShortcutsEnabled(enabled: Boolean) {
+        pixelSearchResultShortcuts.value = enabled
+        settingsRepository.setPixelSearchResultShortcutsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultWebEnabled(enabled: Boolean) {
+        pixelSearchResultWeb.value = enabled
+        settingsRepository.setPixelSearchResultWebEnabled(enabled)
     }
 
     /**

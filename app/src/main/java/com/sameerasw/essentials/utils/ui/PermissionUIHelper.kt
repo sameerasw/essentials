@@ -377,7 +377,51 @@ object PermissionUIHelper {
                 )
             }
 
-            "READ_PHONE_STATE", "ANSWER_PHONE_CALLS", "READ_CONTACTS", "READ_CALL_LOG" -> {
+            "READ_CONTACTS" -> {
+                val isGranted =
+                    androidx.core.content.ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.READ_CONTACTS,
+                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+                var targetActivity: Activity? = activity
+                if (targetActivity == null) {
+                    var ctx: Context? = context
+                    while (ctx is android.content.ContextWrapper) {
+                        if (ctx is Activity) {
+                            targetActivity = ctx
+                            break
+                        }
+                        ctx = ctx.baseContext
+                    }
+                }
+
+                PermissionItem(
+                    iconRes = R.drawable.rounded_call_24,
+                    title = R.string.perm_contacts_title,
+                    description = R.string.perm_contacts_desc,
+                    dependentFeatures = listOf(R.string.pixel_search_results_contacts_title),
+                    actionLabel = if (isGranted) R.string.perm_action_granted else R.string.perm_action_grant,
+                    action = {
+                        if (targetActivity != null) {
+                            ActivityCompat.requestPermissions(
+                                targetActivity,
+                                arrayOf(android.Manifest.permission.READ_CONTACTS),
+                                110,
+                            )
+                        } else {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = android.net.Uri.fromParts("package", context.packageName, null)
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            context.startActivity(intent)
+                        }
+                    },
+                    isGranted = isGranted,
+                )
+            }
+
+            "READ_PHONE_STATE", "ANSWER_PHONE_CALLS", "READ_CALL_LOG" -> {
                 val hasReadPhoneState =
                     androidx.core.content.ContextCompat
                         .checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) ==

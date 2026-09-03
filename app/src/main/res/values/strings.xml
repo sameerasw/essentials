@@ -2367,4 +2367,28 @@
     <string name="feat_aod_wallpaper_remove_custom_image">Remove custom image</string>
     <string name="perm_storage_title">All files access</string>
     <string name="perm_storage_desc">To read your current wallpaper which is not accessible with regular privileges, Essentials needs external storage permissions.</string>
+
+    <!-- Pixel Search Results -->
+    <string name="pixel_search_results_title">Search results</string>
+    <string name="pixel_search_results_desc">Configure which content appears when searching from the Pixel Launcher search bar.</string>
+    <string name="pixel_search_results_apps_title">Apps</string>
+    <string name="pixel_search_results_apps_desc">Search and launch installed applications</string>
+    <string name="pixel_search_results_contacts_title">Contacts</string>
+    <string name="pixel_search_results_contacts_desc">Find contacts with quick call and message actions</string>
+    <string name="pixel_search_results_settings_title">Essentials settings</string>
+    <string name="pixel_search_results_settings_desc">Search features and deep-link directly to their settings</string>
+    <string name="pixel_search_results_shortcuts_title">Shortcuts</string>
+    <string name="pixel_search_results_shortcuts_desc">Search quick actions and launcher shortcuts</string>
+    <string name="pixel_search_results_web_title">Web search</string>
+    <string name="pixel_search_results_web_desc">Show options to search on Google or default browser</string>
+    <string name="pixel_search_web_search_action">Search web for \"%1$s\"</string>
+    <string name="pixel_search_input_hint">Search apps, contacts, settings…</string>
+    <string name="pixel_search_no_results">No matching results found</string>
+    <string name="pixel_search_section_apps">Apps</string>
+    <string name="pixel_search_section_contacts">Contacts</string>
+    <string name="pixel_search_section_settings">Settings</string>
+    <string name="pixel_search_section_shortcuts">Shortcuts</string>
+    <string name="pixel_search_section_web">Web</string>
+    <string name="perm_contacts_title">Contacts permission</string>
+    <string name="perm_contacts_desc">To show contacts in Pixel Search results, Essentials needs permission to read your contacts.</string>
 </resources>
