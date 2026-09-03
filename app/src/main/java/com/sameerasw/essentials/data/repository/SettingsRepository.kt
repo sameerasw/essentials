@@ -320,6 +320,7 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_TIMEOUT = "aod_wallpaper_timeout"
         const val KEY_AOD_WALLPAPER_BLUR = "aod_wallpaper_blur"
         const val KEY_AOD_WALLPAPER_VIGNETTE = "aod_wallpaper_vignette"
+        const val KEY_AOD_WALLPAPER_CUSTOM_IMAGE = "aod_wallpaper_custom_image"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
@@ -2961,4 +2962,8 @@ class SettingsRepository(
     fun getAodWallpaperVignette(): Float = getFloat(KEY_AOD_WALLPAPER_VIGNETTE, 0f)
 
     fun setAodWallpaperVignette(value: Float) = putFloat(KEY_AOD_WALLPAPER_VIGNETTE, value)
+
+    fun hasAodWallpaperCustomImage(): Boolean = getBoolean(KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)
+
+    fun setAodWallpaperCustomImage(hasCustomImage: Boolean) = putBoolean(KEY_AOD_WALLPAPER_CUSTOM_IMAGE, hasCustomImage)
 }

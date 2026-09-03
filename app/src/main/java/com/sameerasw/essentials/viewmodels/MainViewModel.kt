@@ -163,6 +163,7 @@ class MainViewModel : ViewModel() {
     val aodWallpaperTimeout = mutableIntStateOf(3)
     val aodWallpaperBlur = mutableFloatStateOf(0f)
     val aodWallpaperVignette = mutableFloatStateOf(0f)
+    val hasAodWallpaperCustomImage = mutableStateOf(false)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
@@ -1918,6 +1919,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperBlur()
         aodWallpaperVignette.floatValue =
             settingsRepository.getAodWallpaperVignette()
+        hasAodWallpaperCustomImage.value =
+            settingsRepository.hasAodWallpaperCustomImage()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -6963,9 +6966,61 @@ class MainViewModel : ViewModel() {
         aodWallpaperVignette.floatValue = intensity
     }
 
+    fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    java.io.FileOutputStream(file).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                settingsRepository.setAodWallpaperCustomImage(true)
+                val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    hasAodWallpaperCustomImage.value = true
+                    currentWallpaperBitmap.value = bitmap
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainViewModel", "Failed to save custom AOD wallpaper", e)
+            }
+        }
+    }
+
+    fun removeCustomAodWallpaper(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                if (file.exists()) {
+                    file.delete()
+                }
+                settingsRepository.setAodWallpaperCustomImage(false)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    hasAodWallpaperCustomImage.value = false
+                }
+                loadCurrentWallpaperBitmap(context)
+            } catch (e: Exception) {
+                android.util.Log.e("MainViewModel", "Failed to remove custom AOD wallpaper", e)
+            }
+        }
+    }
+
     fun loadCurrentWallpaperBitmap(context: Context) {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             try {
+                if (settingsRepository.hasAodWallpaperCustomImage()) {
+                    val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                    if (file.exists()) {
+                        val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                        if (bitmap != null) {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                currentWallpaperBitmap.value = bitmap
+                            }
+                            return@launch
+                        }
+                    }
+                }
+
                 if (PermissionUtils.hasManageExternalStoragePermission(context)) {
                     val wallpaperManager = android.app.WallpaperManager.getInstance(context)
                     val drawable =

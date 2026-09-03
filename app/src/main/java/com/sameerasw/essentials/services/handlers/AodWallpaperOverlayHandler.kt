@@ -400,6 +400,14 @@ class AodWallpaperOverlayHandler(
 
     private fun extractCurrentWallpaper(): Bitmap? {
         return try {
+            if (prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)) {
+                val file = java.io.File(service.filesDir, "custom_aod_wallpaper.png")
+                if (file.exists()) {
+                    val customBmp = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                    if (customBmp != null) return customBmp
+                }
+            }
+
             val wallpaperManager = WallpaperManager.getInstance(service)
             val drawable: Drawable? =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

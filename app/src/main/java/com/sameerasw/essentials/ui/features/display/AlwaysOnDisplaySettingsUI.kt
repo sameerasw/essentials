@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +52,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -58,10 +60,14 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -260,6 +266,18 @@ fun AlwaysOnDisplaySettingsUI(
             java.text.SimpleDateFormat(pattern, java.util.Locale.getDefault()).format(cal.time)
         }
 
+        var isPreviewMenuExpanded by remember { mutableStateOf(false) }
+        val hasCustomImage = viewModel.hasAodWallpaperCustomImage.value
+
+        val photoPickerLauncher =
+            rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.GetContent(),
+            ) { uri ->
+                uri?.let {
+                    viewModel.setCustomAodWallpaper(context, it)
+                }
+            }
+
         RoundedCardContainer {
             AnimatedVisibility(
                 visible = isWallpaperEnabled,
@@ -270,7 +288,11 @@ fun AlwaysOnDisplaySettingsUI(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .background(Color.Black),
+                        .background(Color.Black)
+                        .clickable {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            isPreviewMenuExpanded = true
+                        },
                     contentAlignment = Alignment.Center,
                 ) {
                     Box(
@@ -338,6 +360,43 @@ fun AlwaysOnDisplaySettingsUI(
                             ),
                             textAlign = TextAlign.Center,
                         )
+                    }
+
+                    SegmentedDropdownMenu(
+                        expanded = isPreviewMenuExpanded,
+                        onDismissRequest = { isPreviewMenuExpanded = false },
+                    ) {
+                        SegmentedDropdownMenuItem(
+                            text = { Text(stringResource(R.string.feat_aod_wallpaper_pick_image)) },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                isPreviewMenuExpanded = false
+                                photoPickerLauncher.launch("image/*")
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_image_24),
+                                    contentDescription = null,
+                                )
+                            },
+                        )
+
+                        if (hasCustomImage) {
+                            SegmentedDropdownMenuItem(
+                                text = { Text(stringResource(R.string.feat_aod_wallpaper_remove_custom_image)) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    isPreviewMenuExpanded = false
+                                    viewModel.removeCustomAodWallpaper(context)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_delete_24),
+                                        contentDescription = null,
+                                    )
+                                },
+                            )
+                        }
                     }
                 }
             }
