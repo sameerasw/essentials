@@ -315,6 +315,7 @@ class SettingsRepository(
         const val KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING = "notification_glance_same_as_lighting"
         const val KEY_NOTIFICATION_GLANCE_SELECTED_APPS = "notification_glance_selected_apps"
         const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
+        const val KEY_AOD_WALLPAPER_ENABLED = "aod_wallpaper_enabled"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
@@ -2472,6 +2473,12 @@ class SettingsRepository(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun isAodWallpaperEnabled(): Boolean = prefs.getBoolean(KEY_AOD_WALLPAPER_ENABLED, false)
+
+    fun setAodWallpaperEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_AOD_WALLPAPER_ENABLED, enabled).apply()
     }
 
     /**

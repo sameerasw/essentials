@@ -144,6 +144,7 @@ class MainViewModel : ViewModel() {
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
     val isBluetoothPermissionGranted = mutableStateOf(false)
+    val isStoragePermissionGranted = mutableStateOf(false)
     val isUsageStatsPermissionGranted = mutableStateOf(false)
     val appLanguage = mutableStateOf("en")
 
@@ -157,6 +158,7 @@ class MainViewModel : ViewModel() {
     val isAodEnabled = mutableStateOf(false)
     val isNotificationGlanceEnabled = mutableStateOf(false)
     val isAodForceTurnOffEnabled = mutableStateOf(false)
+    val isAodWallpaperEnabled = mutableStateOf(false)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
     val pocketModeTriggerDelay = mutableFloatStateOf(3f) // seconds
@@ -748,6 +750,10 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED ->
                         isAodForceTurnOffEnabled.value =
+                            settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_ENABLED ->
+                        isAodWallpaperEnabled.value =
                             settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_POCKET_MODE_ENABLED ->
@@ -1343,6 +1349,7 @@ class MainViewModel : ViewModel() {
         isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
+        isStoragePermissionGranted.value = PermissionUtils.hasStoragePermission(context)
 
         context.contentResolver.registerContentObserver(
             Settings.System.getUriFor(Settings.System.FONT_SCALE),
@@ -1892,6 +1899,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
+        isAodWallpaperEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED)
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -6910,6 +6919,11 @@ class MainViewModel : ViewModel() {
     fun toggleAodForceTurnOffEnabled(enabled: Boolean) {
         settingsRepository.putBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, enabled)
         isAodForceTurnOffEnabled.value = enabled
+    }
+
+    fun toggleAodWallpaperEnabled(enabled: Boolean) {
+        settingsRepository.setAodWallpaperEnabled(enabled)
+        isAodWallpaperEnabled.value = enabled
     }
 
     /**

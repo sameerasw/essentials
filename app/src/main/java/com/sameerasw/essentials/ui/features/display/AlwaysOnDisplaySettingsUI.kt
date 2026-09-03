@@ -29,12 +29,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.LaunchedEffect
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -48,6 +51,27 @@ fun AlwaysOnDisplaySettingsUI(
     val view = LocalView.current
 
     var showAppSelectionSheet by remember { mutableStateOf(false) }
+    var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+
+    val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
+    val isStoragePermissionGranted = viewModel.isStoragePermissionGranted.value
+
+    LaunchedEffect(Unit) {
+        viewModel.check(context)
+    }
+
+    if (requestingPermissionsFor != null) {
+        val (featureTitle, permKeys) = requestingPermissionsFor!!
+        val permissionItems = PermissionUIHelper.getPermissionItems(permKeys, context, viewModel)
+        PermissionsBottomSheet(
+            onDismissRequest = {
+                requestingPermissionsFor = null
+                viewModel.check(context)
+            },
+            featureTitle = featureTitle,
+            permissions = permissionItems,
+        )
+    }
 
     Column(
         modifier =
@@ -103,24 +127,24 @@ fun AlwaysOnDisplaySettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps"),
             )
 
-            viewModel.isAccessibilityEnabled.value
             IconToggleItem(
                 iconRes = R.drawable.rounded_power_settings_new_24,
                 title = stringResource(R.string.feat_aod_force_turn_off_title),
                 isChecked = viewModel.isAodForceTurnOffEnabled.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    // Check latest snapshot inside lambda
-                    val currentlyEnabled =
-                        com.sameerasw.essentials.utils.PermissionUtils.isAccessibilityServiceEnabled(
-                            context,
-                        )
-                    if (checked && !currentlyEnabled) {
-                        com.sameerasw.essentials.utils.PermissionUtils.openAccessibilitySettings(
-                            context,
-                        )
+                    if (checked && !isAccessibilityEnabled) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
                     } else {
                         viewModel.toggleAodForceTurnOffEnabled(checked)
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAccessibilityEnabled) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
                     }
                 },
                 modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off"),
@@ -153,6 +177,53 @@ fun AlwaysOnDisplaySettingsUI(
                 Text(stringResource(R.string.action_select_apps))
             }
         }
+
+        Text(
+            text = stringResource(R.string.feat_aod_wallpaper_section_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_wallpaper_24,
+                title = stringResource(R.string.feat_aod_wallpaper_title),
+                isChecked = viewModel.isAodWallpaperEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked) {
+                        if (!isAccessibilityEnabled || !isStoragePermissionGranted) {
+                            val missing = mutableListOf<String>()
+                            if (!isAccessibilityEnabled) missing.add("ACCESSIBILITY")
+                            if (!isStoragePermissionGranted) missing.add("STORAGE")
+                            requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_title, missing)
+                        } else {
+                            viewModel.toggleAodWallpaperEnabled(true)
+                        }
+                    } else {
+                        viewModel.toggleAodWallpaperEnabled(false)
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAccessibilityEnabled || !isStoragePermissionGranted) {
+                        val missing = mutableListOf<String>()
+                        if (!isAccessibilityEnabled) missing.add("ACCESSIBILITY")
+                        if (!isStoragePermissionGranted) missing.add("STORAGE")
+                        requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_title, missing)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper"),
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.feat_aod_wallpaper_desc),
+            modifier = Modifier.padding(horizontal = 16.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
 
         Spacer(modifier = Modifier.height(80.dp))
 

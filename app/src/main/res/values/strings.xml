@@ -2349,4 +2349,11 @@
     <string name="watch_wireless_debugging_unavailable">Unavailable</string>
     <string name="watch_wireless_debugging_copied">Copied to clipboard</string>
     <string name="watch_wireless_debugging_refresh">Refresh Info</string>
+
+    <!-- AOD Wallpaper -->
+    <string name="feat_aod_wallpaper_section_title">Wallpaper</string>
+    <string name="feat_aod_wallpaper_title">Show wallpaper on AOD</string>
+    <string name="feat_aod_wallpaper_desc">Displays current device wallpaper with 30% opacity on Always on Display.</string>
+    <string name="perm_storage_title">All files access</string>
+    <string name="perm_storage_desc">To read your current wallpaper which is not accessible with regular privileges, Essentials needs external storage permissions.</string>
 </resources>
