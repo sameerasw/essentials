@@ -128,15 +128,19 @@ class AodWallpaperOverlayHandler(
                 isOverlayAdded = true
 
                 ObjectAnimator.ofFloat(container, "alpha", 0f, 1f).apply {
-                    duration = 250
+                    duration = 2000
                     start()
                 }
             } catch (e: Exception) {
                 Log.e("AodWallpaperOverlay", "Failed to add AOD wallpaper overlay", e)
             }
         } else if (isOverlayAdded && overlayContainer != null) {
-            overlayContainer?.visibility = View.VISIBLE
-            overlayContainer?.alpha = 1f
+            val container = overlayContainer ?: return
+            container.visibility = View.VISIBLE
+            ObjectAnimator.ofFloat(container, "alpha", container.alpha, 1f).apply {
+                duration = 2000
+                start()
+            }
         }
     }
 
@@ -197,12 +201,20 @@ class AodWallpaperOverlayHandler(
     private fun hideOverlay() {
         if (isOverlayAdded && overlayContainer != null) {
             val currentView = overlayContainer ?: return
-            currentView.visibility = View.GONE
-            try {
-                windowManager?.removeView(currentView)
-            } catch (_: Exception) {
+            ObjectAnimator.ofFloat(currentView, "alpha", currentView.alpha, 0f).apply {
+                duration = 500
+                addListener(object : android.animation.AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: android.animation.Animator) {
+                        currentView.visibility = View.GONE
+                        try {
+                            windowManager?.removeView(currentView)
+                        } catch (_: Exception) {
+                        }
+                        isOverlayAdded = false
+                    }
+                })
+                start()
             }
-            isOverlayAdded = false
         }
     }
 

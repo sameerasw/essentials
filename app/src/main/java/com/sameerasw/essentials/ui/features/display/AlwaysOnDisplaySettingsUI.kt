@@ -9,6 +9,13 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -203,31 +210,44 @@ fun AlwaysOnDisplaySettingsUI(
             }
         }
 
+        val isWallpaperEnabled = viewModel.isAodWallpaperEnabled.value
+        val animatedPreviewAlpha by animateFloatAsState(
+            targetValue = if (isWallpaperEnabled) opacity else 0f,
+            animationSpec = tween(durationMillis = 300),
+            label = "aodWallpaperPreviewAlpha",
+        )
+
         RoundedCardContainer {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp)
-                    .background(Color.Black),
-                contentAlignment = Alignment.Center,
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
             ) {
-                if (wallpaperBitmap != null) {
-                    Image(
-                        bitmap = wallpaperBitmap.asImageBitmap(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(140.dp)
-                            .alpha(if (viewModel.isAodWallpaperEnabled.value) opacity else 0f),
-                    )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .background(Color.Black),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (wallpaperBitmap != null) {
+                        Image(
+                            bitmap = wallpaperBitmap.asImageBitmap(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(140.dp)
+                                .alpha(animatedPreviewAlpha),
+                        )
+                    }
                 }
             }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_wallpaper_24,
                 title = stringResource(R.string.feat_aod_wallpaper_title),
-                isChecked = viewModel.isAodWallpaperEnabled.value,
+                isChecked = isWallpaperEnabled,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     if (checked) {
@@ -256,14 +276,18 @@ fun AlwaysOnDisplaySettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "aod_wallpaper"),
             )
 
-            if (viewModel.isAodWallpaperEnabled.value) {
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+            ) {
                 ConfigSliderItem(
                     title = stringResource(R.string.feat_aod_wallpaper_opacity),
-                    value = opacity * 100f,
+                    value = (opacity * 100f).coerceIn(10f, 75f),
                     onValueChange = {
                         viewModel.setAodWallpaperOpacity(it / 100f)
                     },
-                    valueRange = 5f..100f,
+                    valueRange = 10f..75f,
                     increment = 5f,
                     valueFormatter = { "${it.toInt()}%" },
                     iconRes = R.drawable.rounded_visibility_24,
