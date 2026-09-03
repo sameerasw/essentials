@@ -160,6 +160,7 @@ class MainViewModel : ViewModel() {
     val isAodForceTurnOffEnabled = mutableStateOf(false)
     val isAodWallpaperEnabled = mutableStateOf(false)
     val aodWallpaperOpacity = mutableFloatStateOf(0.3f)
+    val aodWallpaperTimeout = mutableIntStateOf(3)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
@@ -1909,6 +1910,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED)
         aodWallpaperOpacity.floatValue =
             settingsRepository.getAodWallpaperOpacity()
+        aodWallpaperTimeout.intValue =
+            settingsRepository.getAodWallpaperTimeout()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -6937,6 +6940,11 @@ class MainViewModel : ViewModel() {
     fun setAodWallpaperOpacity(opacity: Float) {
         settingsRepository.setAodWallpaperOpacity(opacity)
         aodWallpaperOpacity.floatValue = opacity
+    }
+
+    fun setAodWallpaperTimeout(minutes: Int) {
+        settingsRepository.setAodWallpaperTimeout(minutes)
+        aodWallpaperTimeout.intValue = minutes
     }
 
     fun loadCurrentWallpaperBitmap(context: Context) {

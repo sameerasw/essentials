@@ -46,7 +46,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -292,6 +294,38 @@ fun AlwaysOnDisplaySettingsUI(
                     valueFormatter = { "${it.toInt()}%" },
                     iconRes = R.drawable.rounded_visibility_24,
                 )
+            }
+
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+            ) {
+                val timeoutOptions = listOf(
+                    0 to stringResource(R.string.feat_aod_wallpaper_timeout_never),
+                    1 to stringResource(R.string.feat_aod_wallpaper_timeout_1m),
+                    3 to stringResource(R.string.feat_aod_wallpaper_timeout_3m),
+                    5 to stringResource(R.string.feat_aod_wallpaper_timeout_5m),
+                    10 to stringResource(R.string.feat_aod_wallpaper_timeout_10m),
+                )
+                val currentTimeout = viewModel.aodWallpaperTimeout.intValue
+                val selectedLabel = timeoutOptions.firstOrNull { it.first == currentTimeout }?.second
+                    ?: stringResource(R.string.feat_aod_wallpaper_timeout_3m)
+                ConfigPickerItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_timeout),
+                    selectedValue = selectedLabel,
+                    iconRes = R.drawable.rounded_timer_24,
+                ) {
+                    timeoutOptions.forEach { (minutes, label) ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text(label) },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setAodWallpaperTimeout(minutes)
+                            },
+                        )
+                    }
+                }
             }
         }
 

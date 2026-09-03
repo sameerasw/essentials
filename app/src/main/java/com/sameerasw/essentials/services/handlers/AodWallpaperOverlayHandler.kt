@@ -58,6 +58,12 @@ class AodWallpaperOverlayHandler(
         }
     }
 
+    private val timeoutRunnable = Runnable {
+        if (isOverlayAdded && isScreenOff) {
+            hideOverlay()
+        }
+    }
+
     private val prefs by lazy {
         service.getSharedPreferences(
             SettingsRepository.PREFS_NAME,
@@ -72,6 +78,7 @@ class AodWallpaperOverlayHandler(
 
     fun onScreenOn() {
         isScreenOff = false
+        handler.removeCallbacks(timeoutRunnable)
         hideOverlay()
     }
 
@@ -178,6 +185,7 @@ class AodWallpaperOverlayHandler(
 
                 handler.removeCallbacks(burnInShiftRunnable)
                 handler.postDelayed(burnInShiftRunnable, BURN_IN_INTERVAL_MS)
+                scheduleTimeout()
             } catch (e: Exception) {
                 Log.e("AodWallpaperOverlay", "Failed to add AOD wallpaper overlay", e)
             }
@@ -190,6 +198,15 @@ class AodWallpaperOverlayHandler(
             }
             handler.removeCallbacks(burnInShiftRunnable)
             handler.postDelayed(burnInShiftRunnable, BURN_IN_INTERVAL_MS)
+            scheduleTimeout()
+        }
+    }
+
+    private fun scheduleTimeout() {
+        handler.removeCallbacks(timeoutRunnable)
+        val timeoutMinutes = prefs.getInt(SettingsRepository.KEY_AOD_WALLPAPER_TIMEOUT, 3)
+        if (timeoutMinutes > 0) {
+            handler.postDelayed(timeoutRunnable, timeoutMinutes * 60_000L)
         }
     }
 
@@ -249,6 +266,7 @@ class AodWallpaperOverlayHandler(
 
     private fun hideOverlay() {
         handler.removeCallbacks(burnInShiftRunnable)
+        handler.removeCallbacks(timeoutRunnable)
         if (isOverlayAdded && overlayContainer != null) {
             val currentView = overlayContainer ?: return
             val imageView = wallpaperImageView
@@ -299,6 +317,7 @@ class AodWallpaperOverlayHandler(
 
     fun removeOverlay() {
         handler.removeCallbacks(burnInShiftRunnable)
+        handler.removeCallbacks(timeoutRunnable)
         hideOverlay()
         overlayContainer = null
         wallpaperImageView = null
