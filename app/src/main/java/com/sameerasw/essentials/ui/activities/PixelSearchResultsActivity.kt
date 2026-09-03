@@ -198,6 +198,42 @@ fun PixelSearchResultsScreen(
             override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
                 if (source == NestedScrollSource.UserInput && available.y > 0f) {
                     dragOffsetY = (dragOffsetY + available.y).coerceAtLeast(0f)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (insetsAnimController == null) {
+                            val rootInsets = view.rootWindowInsets
+                            if (rootInsets != null &&
+                                rootInsets.isVisible(android.view.WindowInsets.Type.ime())
+                            ) {
+                                view.windowInsetsController?.controlWindowInsetsAnimation(
+                                    android.view.WindowInsets.Type.ime(),
+                                    -1L, null, null,
+                                    object : WindowInsetsAnimationControlListener {
+                                        override fun onReady(controller: WindowInsetsAnimationController, types: Int) {
+                                            insetsAnimController = controller
+                                        }
+                                        override fun onFinished(controller: WindowInsetsAnimationController) {
+                                            insetsAnimController = null
+                                        }
+                                        override fun onCancelled(controller: WindowInsetsAnimationController?) {
+                                            insetsAnimController = null
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                        val ctrl = insetsAnimController
+                        if (ctrl != null) {
+                            val shown = ctrl.shownStateInsets.bottom.toFloat()
+                            if (shown > 0f) {
+                                val target = (shown - dragOffsetY).coerceIn(0f, shown)
+                                ctrl.setInsetsAndAlpha(
+                                    android.graphics.Insets.of(0, 0, 0, target.toInt()),
+                                    1f,
+                                    target / shown,
+                                )
+                            }
+                        }
+                    }
                     return Offset(0f, available.y)
                 }
                 return Offset.Zero
