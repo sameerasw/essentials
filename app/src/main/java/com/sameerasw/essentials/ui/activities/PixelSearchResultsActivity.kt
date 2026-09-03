@@ -22,12 +22,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +39,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -72,7 +69,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -95,7 +91,6 @@ import com.sameerasw.essentials.domain.model.PixelSearchResultItem
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
-import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -210,7 +205,6 @@ fun PixelSearchResultsScreen(
                 }
             }
 
-            // Contacts
             if (isContactsEnabled && ContextCompat.checkSelfPermission(
                     context,
                     android.Manifest.permission.READ_CONTACTS,
@@ -234,7 +228,6 @@ fun PixelSearchResultsScreen(
                 }
             }
 
-            // Shortcuts
             if (isShortcutsEnabled) {
                 val shortcuts = loadShortcuts(context, trimmed)
                 withContext(Dispatchers.Main) {
@@ -255,6 +248,7 @@ fun PixelSearchResultsScreen(
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val statusBarHeightPx = with(LocalDensity.current) { statusBarHeight.toPx() }
+    val bottomBlurHeightPx = with(LocalDensity.current) { 140.dp.toPx() }
 
     Box(
         modifier = Modifier
@@ -266,161 +260,66 @@ fun PixelSearchResultsScreen(
                 direction = BlurDirection.TOP,
             ),
     ) {
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(
-                top = statusBarHeight + 16.dp,
-                bottom = navBarHeight + 96.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .imePadding()
+                .progressiveBlur(
+                    blurRadius = 40f,
+                    height = bottomBlurHeightPx,
+                    direction = BlurDirection.BOTTOM,
+                ),
         ) {
-            // APPS
-            if (isAppsEnabled && appResults.isNotEmpty()) {
-                item {
-                    SearchSectionHeader(stringResource(R.string.pixel_search_section_apps))
-                }
-                item {
-                    RoundedCardContainer {
-                        appResults.forEach { app ->
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = app.appName,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                },
-                                leadingContent = {
-                                    if (app.icon != null) {
-                                        Image(
-                                            bitmap = app.icon,
-                                            contentDescription = app.appName,
-                                            modifier = Modifier.size(36.dp),
-                                        )
-                                    } else {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(36.dp)
-                                                .clip(CircleShape)
-                                                .background(MaterialTheme.colorScheme.primaryContainer),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(R.drawable.rounded_apps_24),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(20.dp),
-                                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            )
-                                        }
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(
+                    top = statusBarHeight + 16.dp,
+                    bottom = 120.dp,
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                // APPS
+                if (isAppsEnabled && appResults.isNotEmpty()) {
+                    item {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_apps))
+                    }
+                    item {
+                        RoundedCardContainer {
+                            appResults.forEach { app ->
+                                FeatureCard(
+                                    title = app.appName,
+                                    isEnabled = true,
+                                    onToggle = {},
+                                    onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
                                         launchApp(context, app.packageName)
                                         onFinish()
                                     },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                ),
-                            )
+                                    showToggle = false,
+                                    hasMoreSettings = false,
+                                    customTrailingContent = null,
+                                    iconPainter = if (app.icon != null) {
+                                        androidx.compose.ui.graphics.painter.BitmapPainter(app.icon)
+                                    } else null,
+                                    iconRes = if (app.icon == null) R.drawable.rounded_apps_24 else null,
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            // CONTACTS
-            if (isContactsEnabled && contactResults.isNotEmpty()) {
-                item {
-                    SearchSectionHeader(stringResource(R.string.pixel_search_section_contacts))
-                }
-                item {
-                    RoundedCardContainer {
-                        contactResults.forEach { contact ->
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = contact.name,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        maxLines = 1,
-                                    )
-                                },
-                                supportingContent = {
-                                    contact.phoneNumber?.let {
-                                        Text(
-                                            text = it,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    }
-                                },
-                                leadingContent = {
-                                    if (!contact.photoUri.isNullOrBlank()) {
-                                        AsyncImage(
-                                            model = contact.photoUri,
-                                            contentDescription = contact.name,
-                                            modifier = Modifier
-                                                .size(36.dp)
-                                                .clip(CircleShape),
-                                            contentScale = ContentScale.Crop,
-                                        )
-                                    } else {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(36.dp)
-                                                .clip(CircleShape)
-                                                .background(MaterialTheme.colorScheme.secondaryContainer),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            Text(
-                                                text = contact.name.take(1).uppercase(),
-                                                style = MaterialTheme.typography.titleMedium,
-                                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                            )
-                                        }
-                                    }
-                                },
-                                trailingContent = {
-                                    contact.phoneNumber?.let { num ->
-                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                            IconButton(onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$num"))
-                                                context.startActivity(callIntent)
-                                                onFinish()
-                                            }) {
-                                                Icon(
-                                                    painter = painterResource(R.drawable.rounded_call_24),
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.primary,
-                                                    modifier = Modifier.size(20.dp),
-                                                )
-                                            }
-                                            IconButton(onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                val smsIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$num"))
-                                                context.startActivity(smsIntent)
-                                                onFinish()
-                                            }) {
-                                                Icon(
-                                                    painter = painterResource(R.drawable.rounded_chat_bubble_24),
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.primary,
-                                                    modifier = Modifier.size(20.dp),
-                                                )
-                                            }
-                                        }
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
+                // CONTACTS
+                if (isContactsEnabled && contactResults.isNotEmpty()) {
+                    item {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_contacts))
+                    }
+                    item {
+                        RoundedCardContainer {
+                            contactResults.forEach { contact ->
+                                ListItem(
+                                    onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
                                         contact.phoneNumber?.let {
                                             val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))
@@ -428,121 +327,208 @@ fun PixelSearchResultsScreen(
                                             onFinish()
                                         }
                                     },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                ),
-                            )
+                                    modifier = Modifier.fillMaxWidth(),
+                                    leadingContent = {
+                                        if (!contact.photoUri.isNullOrBlank()) {
+                                            AsyncImage(
+                                                model = contact.photoUri,
+                                                contentDescription = contact.name,
+                                                modifier = Modifier
+                                                    .size(40.dp)
+                                                    .clip(CircleShape),
+                                                contentScale = ContentScale.Crop,
+                                            )
+                                        } else {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(40.dp)
+                                                    .clip(CircleShape)
+                                                    .background(ColorUtil.getPastelColorFor(contact.name)),
+                                                contentAlignment = Alignment.Center,
+                                            ) {
+                                                Text(
+                                                    text = contact.name.take(1).uppercase(),
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    color = ColorUtil.getVibrantColorFor(contact.name),
+                                                )
+                                            }
+                                        }
+                                    },
+                                    supportingContent = {
+                                        contact.phoneNumber?.let {
+                                            Text(
+                                                text = it,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
+                                        }
+                                    },
+                                    trailingContent = {
+                                        contact.phoneNumber?.let { num ->
+                                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                IconButton(onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$num"))
+                                                    context.startActivity(callIntent)
+                                                    onFinish()
+                                                }) {
+                                                    Icon(
+                                                        painter = painterResource(R.drawable.rounded_call_24),
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.primary,
+                                                        modifier = Modifier.size(22.dp),
+                                                    )
+                                                }
+                                                IconButton(onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    val smsIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$num"))
+                                                    context.startActivity(smsIntent)
+                                                    onFinish()
+                                                }) {
+                                                    Icon(
+                                                        painter = painterResource(R.drawable.rounded_chat_bubble_24),
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.primary,
+                                                        modifier = Modifier.size(22.dp),
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    },
+                                    colors = ListItemDefaults.colors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                                ) {
+                                    Text(
+                                        text = contact.name,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            //  SETTINGS
-            if (isSettingsEnabled && systemSettingResults.isNotEmpty()) {
-                item {
-                    SearchSectionHeader(stringResource(R.string.pixel_search_section_system_settings))
-                }
-                item {
-                    RoundedCardContainer {
-                        systemSettingResults.forEach { setting ->
-                            IconToggleItem(
-                                title = setting.title,
-                                description = setting.subtitle,
-                                iconRes = setting.iconRes,
-                                showToggle = false,
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    context.startActivity(setting.intent)
-                                    onFinish()
-                                },
-                            )
+                // SETTINGS (System Settings)
+                if (isSettingsEnabled && systemSettingResults.isNotEmpty()) {
+                    item {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_system_settings))
+                    }
+                    item {
+                        RoundedCardContainer {
+                            systemSettingResults.forEach { setting ->
+                                FeatureCard(
+                                    title = setting.title,
+                                    isEnabled = true,
+                                    onToggle = {},
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        context.startActivity(setting.intent)
+                                        onFinish()
+                                    },
+                                    iconRes = setting.iconRes,
+                                    showToggle = false,
+                                    hasMoreSettings = false,
+                                    description = setting.subtitle,
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            // ESSENTIALS
-            if (isSettingsEnabled && settingResults.isNotEmpty()) {
-                item {
-                    SearchSectionHeader(stringResource(R.string.pixel_search_section_essentials))
+                // ESSENTIALS
+                if (isSettingsEnabled && settingResults.isNotEmpty()) {
+                    item {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_essentials))
+                    }
+                    item {
+                        RoundedCardContainer {
+                            settingResults.forEach { item ->
+                                val setting = item.searchableItem
+                                FeatureCard(
+                                    title = setting.title,
+                                    isEnabled = true,
+                                    onToggle = {},
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
+                                            putExtra("feature", setting.featureKey)
+                                            setting.targetSettingHighlightKey?.let {
+                                                putExtra("highlight_setting", it)
+                                            }
+                                        }
+                                        context.startActivity(intent)
+                                        onFinish()
+                                    },
+                                    iconRes = setting.icon ?: R.drawable.rounded_settings_24,
+                                    showToggle = false,
+                                    hasMoreSettings = true,
+                                    description = setting.description,
+                                    isBeta = setting.isBeta,
+                                )
+                            }
+                        }
+                    }
                 }
-                item {
-                    RoundedCardContainer {
-                        settingResults.forEach { item ->
-                            val setting = item.searchableItem
+
+                // SHORTCUTS
+                if (isShortcutsEnabled && shortcutResults.isNotEmpty()) {
+                    item {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_shortcuts))
+                    }
+                    item {
+                        RoundedCardContainer {
+                            shortcutResults.forEach { shortcut ->
+                                FeatureCard(
+                                    title = shortcut.label,
+                                    isEnabled = true,
+                                    onToggle = {},
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        context.startActivity(shortcut.intent)
+                                        onFinish()
+                                    },
+                                    iconRes = shortcut.iconRes,
+                                    showToggle = false,
+                                    hasMoreSettings = false,
+                                    description = shortcut.subtitle,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // WEB SEARCH
+                if (isWebEnabled && query.isNotBlank()) {
+                    item {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_web))
+                    }
+                    item {
+                        RoundedCardContainer {
                             FeatureCard(
-                                title = setting.title,
+                                title = stringResource(R.string.pixel_search_web_search_action, query),
                                 isEnabled = true,
                                 onToggle = {},
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
-                                        putExtra("feature", setting.featureKey)
-                                        setting.targetSettingHighlightKey?.let {
-                                            putExtra("highlight_setting", it)
-                                        }
-                                    }
-                                    context.startActivity(intent)
+                                    launchWebSearch(context, query)
                                     onFinish()
                                 },
-                                iconRes = setting.icon ?: R.drawable.rounded_settings_24,
+                                iconRes = R.drawable.rounded_web_24,
                                 showToggle = false,
-                                hasMoreSettings = true,
-                                description = setting.description,
-                                isBeta = setting.isBeta,
+                                hasMoreSettings = false,
                             )
                         }
                     }
                 }
-            }
 
-            // SHORTCUTS
-            if (isShortcutsEnabled && shortcutResults.isNotEmpty()) {
                 item {
-                    SearchSectionHeader(stringResource(R.string.pixel_search_section_shortcuts))
+                    Spacer(modifier = Modifier.height(48.dp))
                 }
-                item {
-                    RoundedCardContainer {
-                        shortcutResults.forEach { shortcut ->
-                            IconToggleItem(
-                                title = shortcut.label,
-                                description = shortcut.subtitle,
-                                iconRes = shortcut.iconRes,
-                                showToggle = false,
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    context.startActivity(shortcut.intent)
-                                    onFinish()
-                                },
-                            )
-                        }
-                    }
-                }
-            }
-
-            // WEB SEARCH
-            if (isWebEnabled && query.isNotBlank()) {
-                item {
-                    SearchSectionHeader(stringResource(R.string.pixel_search_section_web))
-                }
-                item {
-                    RoundedCardContainer {
-                        IconToggleItem(
-                            title = stringResource(R.string.pixel_search_web_search_action, query),
-                            iconRes = R.drawable.rounded_web_24,
-                            showToggle = false,
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                launchWebSearch(context, query)
-                                onFinish()
-                            },
-                        )
-                    }
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -550,7 +536,7 @@ fun PixelSearchResultsScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .zIndex(2f)
+                .zIndex(20f)
                 .imePadding()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = navBarHeight.coerceAtLeast(16.dp)),
@@ -787,7 +773,6 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
     val items = mutableListOf<PixelSearchResultItem.ShortcutItem>()
     val q = query.lowercase()
 
-    // Wallpaper Shortcut
     if ("wallpaper".contains(q) || "daily".contains(q) || "background".contains(q)) {
         items.add(
             PixelSearchResultItem.ShortcutItem(
@@ -803,7 +788,6 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
         )
     }
 
-    // App Freezing Shortcut
     if ("freeze".contains(q) || "app".contains(q) || "hibernate".contains(q)) {
         items.add(
             PixelSearchResultItem.ShortcutItem(
