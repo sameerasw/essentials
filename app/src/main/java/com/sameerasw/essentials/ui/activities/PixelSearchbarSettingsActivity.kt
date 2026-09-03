@@ -68,7 +68,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.services.widgets.WidgetScraperService
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -750,6 +752,50 @@ fun PixelSearchbarSettingsUI(
                             viewModel.setPixelSearchResultWebEnabled(checked)
                         },
                     )
+
+                    val bubblesWebEnabled = viewModel.pixelSearchBubblesWeb.value
+                    val searchEngine = viewModel.pixelSearchEngine.value
+                    val searchEngineOptions = remember {
+                        listOf(
+                            "Google",
+                            "DuckDuckGo",
+                            "Brave Search",
+                            "Startpage",
+                            "Kagi",
+                            "Ecosia",
+                            "Bing",
+                        )
+                    }
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_bubble_24,
+                        title = stringResource(R.string.pixel_search_use_bubbles_title),
+                        description = stringResource(R.string.pixel_search_use_bubbles_desc),
+                        isChecked = bubblesWebEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchBubblesWebEnabled(checked)
+                        },
+                    )
+
+                    if (bubblesWebEnabled) {
+                        ConfigPickerItem(
+                            iconRes = R.drawable.rounded_search_24,
+                            title = stringResource(R.string.pixel_search_engine_title),
+                            description = stringResource(R.string.pixel_search_engine_desc),
+                            selectedValue = searchEngine,
+                        ) {
+                            searchEngineOptions.forEach { engine ->
+                                SegmentedDropdownMenuItem(
+                                    text = { Text(engine) },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        viewModel.setPixelSearchEngine(engine)
+                                    },
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -117,6 +117,7 @@ import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.WindowingUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -362,6 +363,8 @@ fun PixelSearchResultsScreen(
     val isSettingsEnabled = remember { repository.isPixelSearchResultSettingsEnabled() }
     val isShortcutsEnabled = remember { repository.isPixelSearchResultShortcutsEnabled() }
     val isWebEnabled = remember { repository.isPixelSearchResultWebEnabled() }
+    val isBubblesWebEnabled = remember { repository.isPixelSearchBubblesWebEnabled() }
+    val searchEngine = remember { repository.getPixelSearchEngine() }
 
     fun performSearch(q: String) {
         val trimmed = q.trim()
@@ -476,7 +479,7 @@ fun PixelSearchResultsScreen(
                     context.startActivity(dialIntent)
                     onFinish()
                 } ?: run {
-                    if (query.isNotBlank()) launchWebSearch(context, query)
+                    if (query.isNotBlank()) launchWebSearch(context, query, isBubblesWebEnabled, searchEngine)
                     onFinish()
                 }
             }
@@ -501,7 +504,7 @@ fun PixelSearchResultsScreen(
             }
             else -> {
                 if (query.isNotBlank()) {
-                    launchWebSearch(context, query)
+                    launchWebSearch(context, query, isBubblesWebEnabled, searchEngine)
                 }
                 onFinish()
             }
@@ -799,19 +802,28 @@ fun PixelSearchResultsScreen(
                             modifier = Modifier.animateItem(),
                         )
                     }
+
                     item(key = "web_cards") {
+                        val isUrl = remember(query) { isLikelyUrl(query.trim()) }
+                        val actionTitle = if (isUrl) {
+                            stringResource(R.string.pixel_search_open_url_action, query)
+                        } else {
+                            stringResource(R.string.pixel_search_web_search_action, query)
+                        }
+                        val webIcon = if (isUrl) R.drawable.rounded_link_24 else R.drawable.rounded_web_24
+
                         RoundedCardContainer(modifier = Modifier.animateItem()) {
                             FeatureCard(
-                                title = stringResource(R.string.pixel_search_web_search_action, query),
+                                title = actionTitle,
                                 isEnabled = true,
                                 onToggle = {},
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    launchWebSearch(context, query)
+                                    launchWebSearch(context, query, isBubblesWebEnabled, searchEngine)
                                     onFinish()
                                 },
                                 containerColor = if (isTopmost) highlightColor else normalCardColor,
-                                iconRes = R.drawable.rounded_web_24,
+                                iconRes = webIcon,
                                 showToggle = false,
                                 hasMoreSettings = false,
                             )
@@ -922,21 +934,64 @@ private fun launchApp(context: Context, packageName: String) {
     }
 }
 
-private fun launchWebSearch(context: Context, query: String) {
-    try {
-        val webIntent = Intent(Intent.ACTION_WEB_SEARCH).apply {
-            putExtra(SearchManager.QUERY, query)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+private fun isLikelyUrl(query: String): Boolean {
+    val lower = query.lowercase()
+    if (lower.startsWith("http://") || lower.startsWith("https://")) return true
+    if (query.contains(" ") || !query.contains(".")) return false
+    val commonTlds = listOf(".com", ".org", ".net", ".io", ".dev", ".app", ".co", ".ai", ".me", ".info", ".edu", ".gov", ".lk", ".uk", ".ca", ".de", ".jp", ".fr", ".au", ".in")
+    return commonTlds.any { lower.contains(it) } || android.util.Patterns.WEB_URL.matcher(query).matches()
+}
+
+private fun buildSearchOrUrl(query: String, searchEngine: String): Uri {
+    val trimmed = query.trim()
+    if (isLikelyUrl(trimmed)) {
+        val target = if (trimmed.startsWith("http://", ignoreCase = true) || trimmed.startsWith("https://", ignoreCase = true)) {
+            trimmed
+        } else {
+            "https://$trimmed"
         }
-        context.startActivity(webIntent)
-    } catch (_: Exception) {
-        val browserIntent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://www.google.com/search?q=${Uri.encode(query)}")
-        ).apply {
+        return Uri.parse(target)
+    }
+
+    val encoded = Uri.encode(trimmed)
+    val url = when (searchEngine.lowercase()) {
+        "duckduckgo" -> "https://duckduckgo.com/?q=$encoded"
+        "brave search", "brave" -> "https://search.brave.com/search?q=$encoded"
+        "startpage" -> "https://www.startpage.com/sp/search?query=$encoded"
+        "kagi" -> "https://kagi.com/search?q=$encoded"
+        "ecosia" -> "https://www.ecosia.org/search?q=$encoded"
+        "bing" -> "https://www.bing.com/search?q=$encoded"
+        else -> "https://www.google.com/search?q=$encoded"
+    }
+    return Uri.parse(url)
+}
+
+private fun launchWebSearch(
+    context: Context,
+    query: String,
+    useBubbles: Boolean = false,
+    searchEngine: String = "Google",
+) {
+    try {
+        val targetUri = buildSearchOrUrl(query, searchEngine)
+        if (useBubbles) {
+            val launched = WindowingUtils.launchOverlayWindow(context, targetUri)
+            if (launched) return
+        }
+
+        val browserIntent = Intent(Intent.ACTION_VIEW, targetUri).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(browserIntent)
+    } catch (_: Exception) {
+        val fallbackIntent = Intent(Intent.ACTION_WEB_SEARCH).apply {
+            putExtra(SearchManager.QUERY, query)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        try {
+            context.startActivity(fallbackIntent)
+        } catch (_: Exception) {
+        }
     }
 }
 

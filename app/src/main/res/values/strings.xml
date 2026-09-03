@@ -2392,4 +2392,9 @@
     <string name="pixel_search_section_web">Web</string>
     <string name="perm_contacts_title">Contacts permission</string>
     <string name="perm_contacts_desc">To show contacts in Pixel Search results, Essentials needs permission to read your contacts.</string>
+    <string name="pixel_search_use_bubbles_title">Use bubbles for web search</string>
+    <string name="pixel_search_use_bubbles_desc">Open search results and links in floating bubble overlays</string>
+    <string name="pixel_search_engine_title">Search engine</string>
+    <string name="pixel_search_engine_desc">Default search provider used when searching the web</string>
+    <string name="pixel_search_open_url_action">Open \"%1$s\"</string>
 </resources>
