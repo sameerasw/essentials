@@ -315,6 +315,11 @@ class SettingsRepository(
         const val KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING = "notification_glance_same_as_lighting"
         const val KEY_NOTIFICATION_GLANCE_SELECTED_APPS = "notification_glance_selected_apps"
         const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
+        const val KEY_AOD_WALLPAPER_ENABLED = "aod_wallpaper_enabled"
+        const val KEY_AOD_WALLPAPER_OPACITY = "aod_wallpaper_opacity"
+        const val KEY_AOD_WALLPAPER_TIMEOUT = "aod_wallpaper_timeout"
+        const val KEY_AOD_WALLPAPER_BLUR = "aod_wallpaper_blur"
+        const val KEY_AOD_WALLPAPER_VIGNETTE = "aod_wallpaper_vignette"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
@@ -2474,6 +2479,12 @@ class SettingsRepository(
         }
     }
 
+    fun isAodWallpaperEnabled(): Boolean = prefs.getBoolean(KEY_AOD_WALLPAPER_ENABLED, false)
+
+    fun setAodWallpaperEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_AOD_WALLPAPER_ENABLED, enabled).apply()
+    }
+
     /**
      * Executes the get private dns presets operation.
      * @return The resulting List<DnsPreset> data.
@@ -2931,4 +2942,23 @@ class SettingsRepository(
     fun getLocationReachedFullScreenAlarmEnabled(): Boolean = getBoolean(KEY_LOCATION_REACHED_FULL_SCREEN_ALARM_ENABLED, true)
 
     fun setLocationReachedFullScreenAlarmEnabled(value: Boolean) = putBoolean(KEY_LOCATION_REACHED_FULL_SCREEN_ALARM_ENABLED, value)
+
+    fun getAodWallpaperOpacity(): Float = getFloat(KEY_AOD_WALLPAPER_OPACITY, 0.3f)
+
+    fun setAodWallpaperOpacity(value: Float) = putFloat(KEY_AOD_WALLPAPER_OPACITY, value)
+
+    // timeout in minutes; 0 = Never, default = 3
+    fun getAodWallpaperTimeout(): Int = getInt(KEY_AOD_WALLPAPER_TIMEOUT, 3)
+
+    fun setAodWallpaperTimeout(value: Int) = putInt(KEY_AOD_WALLPAPER_TIMEOUT, value)
+
+    // blur  0-25
+    fun getAodWallpaperBlur(): Float = getFloat(KEY_AOD_WALLPAPER_BLUR, 0f)
+
+    fun setAodWallpaperBlur(value: Float) = putFloat(KEY_AOD_WALLPAPER_BLUR, value)
+
+    // vignette 0-100
+    fun getAodWallpaperVignette(): Float = getFloat(KEY_AOD_WALLPAPER_VIGNETTE, 0f)
+
+    fun setAodWallpaperVignette(value: Float) = putFloat(KEY_AOD_WALLPAPER_VIGNETTE, value)
 }
