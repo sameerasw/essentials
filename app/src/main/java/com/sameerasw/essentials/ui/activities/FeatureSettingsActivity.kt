@@ -346,6 +346,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 "Dynamic night light" ->
                                     (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
                                         !isWriteSecureSettingsEnabled
+                                "Smart pixels" -> !isAccessibilityEnabled
                                 "Snooze system notifications" -> !isNotificationListenerEnabled
                                 "Screen locked security" ->
                                     !isAccessibilityEnabled ||
@@ -758,6 +759,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Dynamic night light" ->
                                                                 (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
                                                                     !isWriteSecureSettingsEnabled
+                                                            "Smart pixels" -> !isAccessibilityEnabled
                                                             "Snooze system notifications" -> !isNotificationListenerEnabled
                                                             "Screen locked security" ->
                                                                 !isAccessibilityEnabled ||

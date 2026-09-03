@@ -54,6 +54,7 @@ fun SmartPixelsSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setSmartPixelsEnabled(context, checked)
                 },
+                enabled = viewModel.isAccessibilityEnabled.value,
                 modifier = Modifier.highlight(highlightSetting == "smart_pixels_enable_toggle"),
             )
         }
