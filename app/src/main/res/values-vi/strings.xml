@@ -195,9 +195,9 @@
     <string name="notification_lighting_sweep_position_title">Position</string>
     <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
     <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_sweep_pos_left">Left</string>
-    <string name="notification_lighting_sweep_pos_center">Center</string>
-    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="notification_lighting_sweep_pos_left">Trái</string>
+    <string name="notification_lighting_sweep_pos_center">Giữa</string>
+    <string name="notification_lighting_sweep_pos_right">Phải</string>
     <string name="settings_section_animation">Hoạt hình</string>
     <string name="notification_lighting_pulse_count_title">Số xung</string>
     <string name="notification_lighting_pulse_duration_title">Thời lượng xung</string>
@@ -1631,4 +1631,8 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="app_icon_black">Năng động</string>
     <string name="app_icon_gta">Phố</string>
     <string name="app_icon_google">Phổ</string>
+    <string name="icon_no_sim">Không có SIM</string>
+    <string name="icon_network_speed">Tốc độ Mạng</string>
+    <string name="icon_glove_mode">Chế độ Găng tay</string>
+    <string name="icon_frame_rate">Tần số Làm mới / Tần số Khung hình</string>
 </resources>
