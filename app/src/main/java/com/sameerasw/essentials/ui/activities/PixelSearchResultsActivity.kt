@@ -14,9 +14,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
@@ -25,6 +28,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,17 +36,19 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,7 +57,6 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,7 +72,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -76,17 +84,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import coil.compose.AsyncImage
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.PixelSearchResultItem
-import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
+import com.sameerasw.essentials.ui.core.cards.FeatureCard
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.modifiers.BlurDirection
+import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -95,8 +110,22 @@ import kotlinx.coroutines.withContext
 class PixelSearchResultsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT,
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT,
+            ),
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         val initialQuery = intent.getStringExtra(SearchManager.QUERY)
             ?: intent.getStringExtra("query")
@@ -138,6 +167,7 @@ fun PixelSearchResultsScreen(
 
     var appResults by remember { mutableStateOf<List<PixelSearchResultItem.AppItem>>(emptyList()) }
     var contactResults by remember { mutableStateOf<List<PixelSearchResultItem.ContactItem>>(emptyList()) }
+    var systemSettingResults by remember { mutableStateOf<List<PixelSearchResultItem.SystemSettingItem>>(emptyList()) }
     var settingResults by remember { mutableStateOf<List<PixelSearchResultItem.SettingItem>>(emptyList()) }
     var shortcutResults by remember { mutableStateOf<List<PixelSearchResultItem.ShortcutItem>>(emptyList()) }
 
@@ -152,17 +182,20 @@ fun PixelSearchResultsScreen(
         if (trimmed.isEmpty()) {
             appResults = emptyList()
             contactResults = emptyList()
+            systemSettingResults = emptyList()
             settingResults = emptyList()
             shortcutResults = emptyList()
             return
         }
 
         scope.launch(Dispatchers.IO) {
-            // Apps
             if (isAppsEnabled) {
                 val installed = AppUtil.getInstalledApps(context)
                 val filteredApps = installed
-                    .filter { it.appName.contains(trimmed, ignoreCase = true) }
+                    .filter { app ->
+                        app.appName.contains(trimmed, ignoreCase = true) &&
+                            context.packageManager.getLaunchIntentForPackage(app.packageName) != null
+                    }
                     .take(6)
                     .map {
                         PixelSearchResultItem.AppItem(
@@ -189,13 +222,14 @@ fun PixelSearchResultsScreen(
                 }
             }
 
-            // Settings
             if (isSettingsEnabled) {
+                val systemSettings = loadSystemSettings(trimmed)
                 val results = SearchRegistry.search(context, trimmed, repository.isEnableUnsupportedFeatures())
-                val mappedSettings = results.take(5).map {
+                val mappedSettings = results.take(6).map {
                     PixelSearchResultItem.SettingItem(it)
                 }
                 withContext(Dispatchers.Main) {
+                    systemSettingResults = systemSettings
                     settingResults = mappedSettings
                 }
             }
@@ -218,23 +252,316 @@ fun PixelSearchResultsScreen(
         focusRequester.requestFocus()
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-    ) { _ ->
-        val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-        val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val statusBarHeightPx = with(LocalDensity.current) { statusBarHeight.toPx() }
 
-        Column(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .progressiveBlur(
+                blurRadius = 40f,
+                height = statusBarHeightPx * 1.2f,
+                direction = BlurDirection.TOP,
+            ),
+    ) {
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = statusBarHeight, bottom = navBarHeight),
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(
+                top = statusBarHeight + 16.dp,
+                bottom = navBarHeight + 96.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // Search Input Header
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            // APPS
+            if (isAppsEnabled && appResults.isNotEmpty()) {
+                item {
+                    SearchSectionHeader(stringResource(R.string.pixel_search_section_apps))
+                }
+                item {
+                    RoundedCardContainer {
+                        appResults.forEach { app ->
+                            ListItem(
+                                headlineContent = {
+                                    Text(
+                                        text = app.appName,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                },
+                                leadingContent = {
+                                    if (app.icon != null) {
+                                        Image(
+                                            bitmap = app.icon,
+                                            contentDescription = app.appName,
+                                            modifier = Modifier.size(36.dp),
+                                        )
+                                    } else {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(36.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.primaryContainer),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_apps_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(20.dp),
+                                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            )
+                                        }
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        launchApp(context, app.packageName)
+                                        onFinish()
+                                    },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
+                                ),
+                            )
+                        }
+                    }
+                }
+            }
+
+            // CONTACTS
+            if (isContactsEnabled && contactResults.isNotEmpty()) {
+                item {
+                    SearchSectionHeader(stringResource(R.string.pixel_search_section_contacts))
+                }
+                item {
+                    RoundedCardContainer {
+                        contactResults.forEach { contact ->
+                            ListItem(
+                                headlineContent = {
+                                    Text(
+                                        text = contact.name,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                    )
+                                },
+                                supportingContent = {
+                                    contact.phoneNumber?.let {
+                                        Text(
+                                            text = it,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                },
+                                leadingContent = {
+                                    if (!contact.photoUri.isNullOrBlank()) {
+                                        AsyncImage(
+                                            model = contact.photoUri,
+                                            contentDescription = contact.name,
+                                            modifier = Modifier
+                                                .size(36.dp)
+                                                .clip(CircleShape),
+                                            contentScale = ContentScale.Crop,
+                                        )
+                                    } else {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(36.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.secondaryContainer),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Text(
+                                                text = contact.name.take(1).uppercase(),
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                            )
+                                        }
+                                    }
+                                },
+                                trailingContent = {
+                                    contact.phoneNumber?.let { num ->
+                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            IconButton(onClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$num"))
+                                                context.startActivity(callIntent)
+                                                onFinish()
+                                            }) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.rounded_call_24),
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.size(20.dp),
+                                                )
+                                            }
+                                            IconButton(onClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                val smsIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$num"))
+                                                context.startActivity(smsIntent)
+                                                onFinish()
+                                            }) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.rounded_chat_bubble_24),
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.size(20.dp),
+                                                )
+                                            }
+                                        }
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        contact.phoneNumber?.let {
+                                            val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))
+                                            context.startActivity(dialIntent)
+                                            onFinish()
+                                        }
+                                    },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
+                                ),
+                            )
+                        }
+                    }
+                }
+            }
+
+            //  SETTINGS
+            if (isSettingsEnabled && systemSettingResults.isNotEmpty()) {
+                item {
+                    SearchSectionHeader(stringResource(R.string.pixel_search_section_system_settings))
+                }
+                item {
+                    RoundedCardContainer {
+                        systemSettingResults.forEach { setting ->
+                            IconToggleItem(
+                                title = setting.title,
+                                description = setting.subtitle,
+                                iconRes = setting.iconRes,
+                                showToggle = false,
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    context.startActivity(setting.intent)
+                                    onFinish()
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+
+            // ESSENTIALS
+            if (isSettingsEnabled && settingResults.isNotEmpty()) {
+                item {
+                    SearchSectionHeader(stringResource(R.string.pixel_search_section_essentials))
+                }
+                item {
+                    RoundedCardContainer {
+                        settingResults.forEach { item ->
+                            val setting = item.searchableItem
+                            FeatureCard(
+                                title = setting.title,
+                                isEnabled = true,
+                                onToggle = {},
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
+                                        putExtra("feature", setting.featureKey)
+                                        setting.targetSettingHighlightKey?.let {
+                                            putExtra("highlight_setting", it)
+                                        }
+                                    }
+                                    context.startActivity(intent)
+                                    onFinish()
+                                },
+                                iconRes = setting.icon ?: R.drawable.rounded_settings_24,
+                                showToggle = false,
+                                hasMoreSettings = true,
+                                description = setting.description,
+                                isBeta = setting.isBeta,
+                            )
+                        }
+                    }
+                }
+            }
+
+            // SHORTCUTS
+            if (isShortcutsEnabled && shortcutResults.isNotEmpty()) {
+                item {
+                    SearchSectionHeader(stringResource(R.string.pixel_search_section_shortcuts))
+                }
+                item {
+                    RoundedCardContainer {
+                        shortcutResults.forEach { shortcut ->
+                            IconToggleItem(
+                                title = shortcut.label,
+                                description = shortcut.subtitle,
+                                iconRes = shortcut.iconRes,
+                                showToggle = false,
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    context.startActivity(shortcut.intent)
+                                    onFinish()
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+
+            // WEB SEARCH
+            if (isWebEnabled && query.isNotBlank()) {
+                item {
+                    SearchSectionHeader(stringResource(R.string.pixel_search_section_web))
+                }
+                item {
+                    RoundedCardContainer {
+                        IconToggleItem(
+                            title = stringResource(R.string.pixel_search_web_search_action, query),
+                            iconRes = R.drawable.rounded_web_24,
+                            showToggle = false,
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                launchWebSearch(context, query)
+                                onFinish()
+                            },
+                        )
+                    }
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .zIndex(2f)
+                .imePadding()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = navBarHeight.coerceAtLeast(16.dp)),
+        ) {
+            Card(
+                shape = RoundedCornerShape(28.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ),
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 OutlinedTextField(
                     value = query,
@@ -280,8 +607,8 @@ fun PixelSearchResultsScreen(
                     singleLine = true,
                     shape = RoundedCornerShape(28.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
                     ),
@@ -300,352 +627,6 @@ fun PixelSearchResultsScreen(
                     ),
                 )
             }
-
-            // Results List
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-
-                // 1. APPS SECTION (Top Priority)
-                if (isAppsEnabled && appResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_apps))
-                    }
-                    item {
-                        RoundedCardContainer {
-                            appResults.forEach { app ->
-                                ListItem(
-                                    headlineContent = {
-                                        Text(
-                                            text = app.appName,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    },
-                                    supportingContent = {
-                                        Text(
-                                            text = app.packageName,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    },
-                                    leadingContent = {
-                                        if (app.icon != null) {
-                                            Image(
-                                                bitmap = app.icon,
-                                                contentDescription = app.appName,
-                                                modifier = Modifier.size(36.dp),
-                                            )
-                                        } else {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(36.dp)
-                                                    .clip(CircleShape)
-                                                    .background(MaterialTheme.colorScheme.primaryContainer),
-                                                contentAlignment = Alignment.Center,
-                                            ) {
-                                                Icon(
-                                                    painter = painterResource(R.drawable.rounded_apps_24),
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(20.dp),
-                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                )
-                                            }
-                                        }
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            launchApp(context, app.packageName)
-                                            onFinish()
-                                        },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                    ),
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // 2. CONTACTS SECTION
-                if (isContactsEnabled && contactResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_contacts))
-                    }
-                    item {
-                        RoundedCardContainer {
-                            contactResults.forEach { contact ->
-                                ListItem(
-                                    headlineContent = {
-                                        Text(
-                                            text = contact.name,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            maxLines = 1,
-                                        )
-                                    },
-                                    supportingContent = {
-                                        contact.phoneNumber?.let {
-                                            Text(
-                                                text = it,
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            )
-                                        }
-                                    },
-                                    leadingContent = {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(36.dp)
-                                                .clip(CircleShape)
-                                                .background(MaterialTheme.colorScheme.secondaryContainer),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            Text(
-                                                text = contact.name.take(1).uppercase(),
-                                                style = MaterialTheme.typography.titleMedium,
-                                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                            )
-                                        }
-                                    },
-                                    trailingContent = {
-                                        contact.phoneNumber?.let { num ->
-                                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                                IconButton(onClick = {
-                                                    HapticUtil.performVirtualKeyHaptic(view)
-                                                    val callIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$num"))
-                                                    context.startActivity(callIntent)
-                                                    onFinish()
-                                                }) {
-                                                    Icon(
-                                                        painter = painterResource(R.drawable.rounded_call_24),
-                                                        contentDescription = null,
-                                                        tint = MaterialTheme.colorScheme.primary,
-                                                        modifier = Modifier.size(20.dp),
-                                                    )
-                                                }
-                                                IconButton(onClick = {
-                                                    HapticUtil.performVirtualKeyHaptic(view)
-                                                    val smsIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$num"))
-                                                    context.startActivity(smsIntent)
-                                                    onFinish()
-                                                }) {
-                                                    Icon(
-                                                        painter = painterResource(R.drawable.rounded_send_24),
-                                                        contentDescription = null,
-                                                        tint = MaterialTheme.colorScheme.primary,
-                                                        modifier = Modifier.size(20.dp),
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            contact.phoneNumber?.let {
-                                                val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))
-                                                context.startActivity(dialIntent)
-                                                onFinish()
-                                            }
-                                        },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                    ),
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // 3. ESSENTIALS SETTINGS SECTION
-                if (isSettingsEnabled && settingResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_settings))
-                    }
-                    item {
-                        RoundedCardContainer {
-                            settingResults.forEach { item ->
-                                val setting = item.searchableItem
-                                ListItem(
-                                    headlineContent = {
-                                        Text(
-                                            text = setting.title,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    },
-                                    supportingContent = {
-                                        Text(
-                                            text = setting.description,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    },
-                                    leadingContent = {
-                                        val iconRes = setting.icon ?: R.drawable.rounded_settings_24
-                                        Icon(
-                                            painter = painterResource(iconRes),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(24.dp),
-                                            tint = MaterialTheme.colorScheme.primary,
-                                        )
-                                    },
-                                    trailingContent = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(20.dp),
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                        )
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
-                                                putExtra("feature", setting.featureKey)
-                                                setting.targetSettingHighlightKey?.let {
-                                                    putExtra("highlight_setting", it)
-                                                }
-                                            }
-                                            context.startActivity(intent)
-                                            onFinish()
-                                        },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                    ),
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // 4. SHORTCUTS SECTION
-                if (isShortcutsEnabled && shortcutResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_shortcuts))
-                    }
-                    item {
-                        RoundedCardContainer {
-                            shortcutResults.forEach { shortcut ->
-                                ListItem(
-                                    headlineContent = {
-                                        Text(
-                                            text = shortcut.label,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                        )
-                                    },
-                                    supportingContent = {
-                                        Text(
-                                            text = shortcut.subtitle,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    },
-                                    leadingContent = {
-                                        Icon(
-                                            painter = painterResource(shortcut.iconRes),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(24.dp),
-                                            tint = MaterialTheme.colorScheme.primary,
-                                        )
-                                    },
-                                    trailingContent = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.rounded_open_in_new_24),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(20.dp),
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                        )
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            context.startActivity(shortcut.intent)
-                                            onFinish()
-                                        },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                    ),
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // 5. WEB SEARCH FALLBACK (Always available when query is typed)
-                if (isWebEnabled && query.isNotBlank()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_web))
-                    }
-                    item {
-                        RoundedCardContainer {
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = stringResource(R.string.pixel_search_web_search_action, query),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Medium,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.rounded_web_24),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                },
-                                trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.rounded_open_in_browser_24),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        launchWebSearch(context, query)
-                                        onFinish()
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                ),
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-            }
         }
     }
 }
@@ -654,10 +635,10 @@ fun PixelSearchResultsScreen(
 private fun SearchSectionHeader(title: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+        modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
     )
 }
 
@@ -736,6 +717,70 @@ private fun loadContacts(context: Context, query: String): List<PixelSearchResul
     } catch (_: Exception) {
     }
     return results
+}
+
+private fun loadSystemSettings(query: String): List<PixelSearchResultItem.SystemSettingItem> {
+    val q = query.lowercase()
+    val all = listOf(
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Wi-Fi",
+            subtitle = "Network & internet",
+            iconRes = R.drawable.rounded_android_wifi_3_bar_24,
+            intent = Intent(Settings.ACTION_WIFI_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Bluetooth",
+            subtitle = "Connected devices",
+            iconRes = R.drawable.rounded_bluetooth_24,
+            intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Display",
+            subtitle = "Brightness, theme, screen timeout",
+            iconRes = R.drawable.rounded_mobile_text_2_24,
+            intent = Intent(Settings.ACTION_DISPLAY_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Sound & vibration",
+            subtitle = "Volume, haptics, Do Not Disturb",
+            iconRes = R.drawable.rounded_volume_up_24,
+            intent = Intent(Settings.ACTION_SOUND_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Battery",
+            subtitle = "Battery usage and saver",
+            iconRes = R.drawable.rounded_battery_charging_60_24,
+            intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Apps",
+            subtitle = "Installed apps and permissions",
+            iconRes = R.drawable.rounded_apps_24,
+            intent = Intent(Settings.ACTION_APPLICATION_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Notifications",
+            subtitle = "Notification history and alerts",
+            iconRes = R.drawable.rounded_notifications_unread_24,
+            intent = Intent(Settings.ACTION_ALL_APPS_NOTIFICATION_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Storage",
+            subtitle = "Internal storage, cleanup",
+            iconRes = R.drawable.rounded_save_24,
+            intent = Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+        PixelSearchResultItem.SystemSettingItem(
+            title = "Security & privacy",
+            subtitle = "Screen lock, app permissions",
+            iconRes = R.drawable.rounded_security_24,
+            intent = Intent(Settings.ACTION_SECURITY_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+        ),
+    )
+
+    return all.filter {
+        it.title.lowercase().contains(q) || it.subtitle.lowercase().contains(q)
+    }.take(4)
 }
 
 private fun loadShortcuts(context: Context, query: String): List<PixelSearchResultItem.ShortcutItem> {

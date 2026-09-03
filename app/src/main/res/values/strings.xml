@@ -2386,7 +2386,8 @@
     <string name="pixel_search_no_results">No matching results found</string>
     <string name="pixel_search_section_apps">Apps</string>
     <string name="pixel_search_section_contacts">Contacts</string>
-    <string name="pixel_search_section_settings">Settings</string>
+    <string name="pixel_search_section_system_settings">System Settings</string>
+    <string name="pixel_search_section_essentials">Essentials</string>
     <string name="pixel_search_section_shortcuts">Shortcuts</string>
     <string name="pixel_search_section_web">Web</string>
     <string name="perm_contacts_title">Contacts permission</string>

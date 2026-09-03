@@ -28,6 +28,13 @@ sealed class PixelSearchResultItem {
         val photoUri: String?,
     ) : PixelSearchResultItem()
 
+    data class SystemSettingItem(
+        val title: String,
+        val subtitle: String,
+        @DrawableRes val iconRes: Int,
+        val intent: Intent,
+    ) : PixelSearchResultItem()
+
     data class SettingItem(
         val searchableItem: SearchableItem,
     ) : PixelSearchResultItem()
