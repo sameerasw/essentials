@@ -9,7 +9,10 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,17 +23,23 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.LaunchedEffect
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -185,7 +194,36 @@ fun AlwaysOnDisplaySettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
+        val wallpaperBitmap = viewModel.currentWallpaperBitmap.value
+        val opacity = viewModel.aodWallpaperOpacity.floatValue
+
+        LaunchedEffect(isStoragePermissionGranted) {
+            if (isStoragePermissionGranted) {
+                viewModel.loadCurrentWallpaperBitmap(context)
+            }
+        }
+
         RoundedCardContainer {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .background(Color.Black),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (wallpaperBitmap != null) {
+                    Image(
+                        bitmap = wallpaperBitmap.asImageBitmap(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(140.dp)
+                            .alpha(if (viewModel.isAodWallpaperEnabled.value) opacity else 0f),
+                    )
+                }
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_wallpaper_24,
                 title = stringResource(R.string.feat_aod_wallpaper_title),
@@ -200,6 +238,7 @@ fun AlwaysOnDisplaySettingsUI(
                             requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_title, missing)
                         } else {
                             viewModel.toggleAodWallpaperEnabled(true)
+                            viewModel.loadCurrentWallpaperBitmap(context)
                         }
                     } else {
                         viewModel.toggleAodWallpaperEnabled(false)
@@ -216,6 +255,20 @@ fun AlwaysOnDisplaySettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "aod_wallpaper"),
             )
+
+            if (viewModel.isAodWallpaperEnabled.value) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_opacity),
+                    value = opacity * 100f,
+                    onValueChange = {
+                        viewModel.setAodWallpaperOpacity(it / 100f)
+                    },
+                    valueRange = 5f..100f,
+                    increment = 5f,
+                    valueFormatter = { "${it.toInt()}%" },
+                    iconRes = R.drawable.rounded_visibility_24,
+                )
+            }
         }
 
         Text(

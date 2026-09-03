@@ -226,7 +226,9 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST
             ) {
                 smartPixelsHandler.updateState()
-            } else if (key == SettingsRepository.KEY_AOD_WALLPAPER_ENABLED) {
+            } else if (key == SettingsRepository.KEY_AOD_WALLPAPER_ENABLED ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_OPACITY
+            ) {
                 aodWallpaperOverlayHandler.updateState()
             }
         }

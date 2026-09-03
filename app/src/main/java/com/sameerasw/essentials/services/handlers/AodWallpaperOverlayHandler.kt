@@ -73,6 +73,7 @@ class AodWallpaperOverlayHandler(
     }
 
     private fun showOverlay() {
+        val opacity = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_OPACITY, 0.3f)
         if (overlayContainer == null) {
             val root = FrameLayout(service).apply {
                 setBackgroundColor(Color.TRANSPARENT)
@@ -83,11 +84,13 @@ class AodWallpaperOverlayHandler(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                 )
                 scaleType = ImageView.ScaleType.CENTER_CROP
-                alpha = 0.3f
+                alpha = opacity
             }
             root.addView(imageView)
             wallpaperImageView = imageView
             overlayContainer = root
+        } else {
+            wallpaperImageView?.alpha = opacity
         }
 
         loadAndApplyWallpaper()
