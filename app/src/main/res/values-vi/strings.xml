@@ -1623,4 +1623,12 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="feat_sim_names_desc">Đổi tên hiển thị của nhà mạng cho các thẻ SIM đang hoạt động</string>
     <string name="setting_location_reached_full_screen_alarm_title">Báo thức toàn màn hình</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Phát nhạc chuông báo thức và hiển thị thông báo toàn màn hình khi có cuộc gọi đến</string>
+    <string name="label_ripple_animation">Hoạt ảnh gợn sóng</string>
+    <string name="label_motion_blur">Hiệu ứng mờ chuyển động</string>
+    <string name="setting_app_icon_title">Biểu tượng ứng dụng</string>
+    <string name="setting_app_icon_desc">Tùy chỉnh biểu tượng trình khởi chạy màn hình chính</string>
+    <string name="app_icon_default">Mặc định</string>
+    <string name="app_icon_black">Năng động</string>
+    <string name="app_icon_gta">Phố</string>
+    <string name="app_icon_google">Phổ</string>
 </resources>
