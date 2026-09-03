@@ -161,6 +161,8 @@ class MainViewModel : ViewModel() {
     val isAodWallpaperEnabled = mutableStateOf(false)
     val aodWallpaperOpacity = mutableFloatStateOf(0.3f)
     val aodWallpaperTimeout = mutableIntStateOf(3)
+    val aodWallpaperBlur = mutableFloatStateOf(0f)
+    val aodWallpaperVignette = mutableFloatStateOf(0f)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
@@ -1912,6 +1914,10 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperOpacity()
         aodWallpaperTimeout.intValue =
             settingsRepository.getAodWallpaperTimeout()
+        aodWallpaperBlur.floatValue =
+            settingsRepository.getAodWallpaperBlur()
+        aodWallpaperVignette.floatValue =
+            settingsRepository.getAodWallpaperVignette()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -6945,6 +6951,16 @@ class MainViewModel : ViewModel() {
     fun setAodWallpaperTimeout(minutes: Int) {
         settingsRepository.setAodWallpaperTimeout(minutes)
         aodWallpaperTimeout.intValue = minutes
+    }
+
+    fun setAodWallpaperBlur(radius: Float) {
+        settingsRepository.setAodWallpaperBlur(radius)
+        aodWallpaperBlur.floatValue = radius
+    }
+
+    fun setAodWallpaperVignette(intensity: Float) {
+        settingsRepository.setAodWallpaperVignette(intensity)
+        aodWallpaperVignette.floatValue = intensity
     }
 
     fun loadCurrentWallpaperBitmap(context: Context) {

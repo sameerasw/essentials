@@ -16,6 +16,8 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.graphics.RadialGradient
+import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -122,12 +124,62 @@ class AodWallpaperOverlayHandler(
         }
     }
 
+    private fun applyBlurEffect(imageView: ImageView, blurRadius: Float) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (blurRadius > 0f) {
+                val effect = android.graphics.RenderEffect.createBlurEffect(
+                    blurRadius * 4f,
+                    blurRadius * 4f,
+                    Shader.TileMode.CLAMP,
+                )
+                imageView.setRenderEffect(effect)
+            } else {
+                imageView.setRenderEffect(null)
+            }
+        }
+    }
+
+    private fun buildMaskedContainer(vignetteIntensity: Float): FrameLayout {
+        return object : FrameLayout(service) {
+            private val maskPaint = android.graphics.Paint().apply {
+                xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN)
+                isAntiAlias = true
+            }
+
+            override fun dispatchDraw(canvas: android.graphics.Canvas) {
+                super.dispatchDraw(canvas)
+                val intensity = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE, 0f)
+                if (intensity <= 0f || width == 0 || height == 0) return
+                val cx = width / 2f
+                val cy = height / 2f
+                val radius = Math.hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                val edgeAlpha = ((1f - intensity / 100f).coerceIn(0f, 1f) * 255).toInt()
+                maskPaint.shader = RadialGradient(
+                    cx, cy, radius,
+                    intArrayOf(
+                        Color.BLACK,
+                        Color.BLACK,
+                        Color.argb(edgeAlpha, 0, 0, 0),
+                    ),
+                    floatArrayOf(0f, 0.45f, 1f),
+                    Shader.TileMode.CLAMP,
+                )
+                canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), maskPaint)
+            }
+        }.apply {
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            setBackgroundColor(Color.TRANSPARENT)
+        }
+    }
+
     private fun showOverlay() {
         val opacity = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_OPACITY, 0.3f)
+        val blurRadius = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_BLUR, 0f)
+
         if (overlayContainer == null) {
-            val root = FrameLayout(service).apply {
-                setBackgroundColor(Color.TRANSPARENT)
-            }
+            val root = buildMaskedContainer(
+                prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE, 0f)
+            )
             val imageView = ImageView(service).apply {
                 layoutParams = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
@@ -136,11 +188,13 @@ class AodWallpaperOverlayHandler(
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 alpha = opacity
             }
+            applyBlurEffect(imageView, blurRadius)
             root.addView(imageView)
             wallpaperImageView = imageView
             overlayContainer = root
         } else {
             wallpaperImageView?.alpha = opacity
+            applyBlurEffect(wallpaperImageView ?: return, blurRadius)
         }
 
         loadAndApplyWallpaper()

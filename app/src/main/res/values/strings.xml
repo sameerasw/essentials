@@ -2361,6 +2361,8 @@
     <string name="feat_aod_wallpaper_timeout_3m">3 min</string>
     <string name="feat_aod_wallpaper_timeout_5m">5 min</string>
     <string name="feat_aod_wallpaper_timeout_10m">10 min</string>
+    <string name="feat_aod_wallpaper_blur">Blur</string>
+    <string name="feat_aod_wallpaper_vignette">Vignette</string>
     <string name="perm_storage_title">All files access</string>
     <string name="perm_storage_desc">To read your current wallpaper which is not accessible with regular privileges, Essentials needs external storage permissions.</string>
 </resources>

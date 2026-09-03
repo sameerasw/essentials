@@ -318,6 +318,8 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_ENABLED = "aod_wallpaper_enabled"
         const val KEY_AOD_WALLPAPER_OPACITY = "aod_wallpaper_opacity"
         const val KEY_AOD_WALLPAPER_TIMEOUT = "aod_wallpaper_timeout"
+        const val KEY_AOD_WALLPAPER_BLUR = "aod_wallpaper_blur"
+        const val KEY_AOD_WALLPAPER_VIGNETTE = "aod_wallpaper_vignette"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
@@ -2949,4 +2951,14 @@ class SettingsRepository(
     fun getAodWallpaperTimeout(): Int = getInt(KEY_AOD_WALLPAPER_TIMEOUT, 3)
 
     fun setAodWallpaperTimeout(value: Int) = putInt(KEY_AOD_WALLPAPER_TIMEOUT, value)
+
+    // blur  0-25
+    fun getAodWallpaperBlur(): Float = getFloat(KEY_AOD_WALLPAPER_BLUR, 0f)
+
+    fun setAodWallpaperBlur(value: Float) = putFloat(KEY_AOD_WALLPAPER_BLUR, value)
+
+    // vignette 0-100
+    fun getAodWallpaperVignette(): Float = getFloat(KEY_AOD_WALLPAPER_VIGNETTE, 0f)
+
+    fun setAodWallpaperVignette(value: Float) = putFloat(KEY_AOD_WALLPAPER_VIGNETTE, value)
 }

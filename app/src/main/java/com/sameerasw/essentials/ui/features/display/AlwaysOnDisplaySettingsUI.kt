@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,13 +39,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.center
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
@@ -213,11 +229,36 @@ fun AlwaysOnDisplaySettingsUI(
         }
 
         val isWallpaperEnabled = viewModel.isAodWallpaperEnabled.value
+        val blurRadius = viewModel.aodWallpaperBlur.floatValue
+        val vignetteIntensity = viewModel.aodWallpaperVignette.floatValue
+
         val animatedPreviewAlpha by animateFloatAsState(
             targetValue = if (isWallpaperEnabled) opacity else 0f,
             animationSpec = tween(durationMillis = 300),
             label = "aodWallpaperPreviewAlpha",
         )
+
+        @OptIn(ExperimentalTextApi::class)
+        val aodClockFont = remember {
+            FontFamily(
+                Font(
+                    R.font.google_sans_flex,
+                    weight = FontWeight.Thin,
+                    variationSettings = FontVariation.Settings(
+                        FontVariation.Setting("wght", 100f),
+                        FontVariation.Setting("ROND", 100f),
+                        FontVariation.Setting("wdth", 150f),
+                    ),
+                )
+            )
+        }
+
+        val timeText = remember {
+            val cal = java.util.Calendar.getInstance()
+            val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
+            val pattern = if (is24Hour) "HH mm" else "hh mm"
+            java.text.SimpleDateFormat(pattern, java.util.Locale.getDefault()).format(cal.time)
+        }
 
         RoundedCardContainer {
             AnimatedVisibility(
@@ -228,19 +269,60 @@ fun AlwaysOnDisplaySettingsUI(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(140.dp)
+                        .height(200.dp)
                         .background(Color.Black),
                     contentAlignment = Alignment.Center,
                 ) {
-                    if (wallpaperBitmap != null) {
-                        Image(
-                            bitmap = wallpaperBitmap.asImageBitmap(),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(140.dp)
-                                .alpha(animatedPreviewAlpha),
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                            .drawWithContent {
+                                drawContent()
+                                if (vignetteIntensity > 0f && isWallpaperEnabled) {
+                                    val edgeAlpha = (1f - vignetteIntensity / 100f).coerceIn(0f, 1f)
+                                    drawRect(
+                                        brush = Brush.radialGradient(
+                                            colorStops = arrayOf(
+                                                0.0f to Color.Black,
+                                                0.45f to Color.Black,
+                                                1.0f to Color.Black.copy(alpha = edgeAlpha),
+                                            ),
+                                            center = center,
+                                            radius = maxOf(size.width, size.height) * 0.75f,
+                                        ),
+                                        blendMode = BlendMode.DstIn,
+                                    )
+                                }
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        if (wallpaperBitmap != null) {
+                            Image(
+                                bitmap = wallpaperBitmap.asImageBitmap(),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .alpha(animatedPreviewAlpha)
+                                    .then(
+                                        if (blurRadius > 0f) Modifier.blur(blurRadius.dp) else Modifier
+                                    ),
+                            )
+                        }
+
+                        Text(
+                            text = timeText,
+                            style = TextStyle(
+                                fontFamily = aodClockFont,
+                                fontWeight = FontWeight.Thin,
+                                fontSize = 52.sp,
+                                letterSpacing = 4.sp,
+                                color = MaterialTheme.colorScheme.primaryContainer.copy(
+                                    alpha = if (isWallpaperEnabled) (animatedPreviewAlpha * 1.4f).coerceIn(0f, 1f) else 0f,
+                                ),
+                            ),
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
@@ -293,6 +375,38 @@ fun AlwaysOnDisplaySettingsUI(
                     increment = 5f,
                     valueFormatter = { "${it.toInt()}%" },
                     iconRes = R.drawable.rounded_visibility_24,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_blur),
+                    value = blurRadius,
+                    onValueChange = { viewModel.setAodWallpaperBlur(it) },
+                    valueRange = 0f..25f,
+                    increment = 1f,
+                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
+                    iconRes = R.drawable.rounded_blur_on_24,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_vignette),
+                    value = vignetteIntensity,
+                    onValueChange = { viewModel.setAodWallpaperVignette(it) },
+                    valueRange = 0f..100f,
+                    increment = 5f,
+                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}%" },
+                    iconRes = R.drawable.rounded_grain_24,
                 )
             }
 
