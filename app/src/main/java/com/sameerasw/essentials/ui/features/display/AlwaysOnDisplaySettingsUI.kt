@@ -302,10 +302,10 @@ fun AlwaysOnDisplaySettingsUI(
                                 androidx.compose.ui.graphics.ColorFilter.colorMatrix(
                                     androidx.compose.ui.graphics.ColorMatrix(
                                         floatArrayOf(
-                                            1f, 0f, 0f, 0f, 0f,
-                                            0f, 1f, 0f, 0f, 0f,
-                                            0f, 0f, 1f, 0f, 0f,
-                                            0.2126f, 0.7152f, 0.0722f, 0f, 0f,
+                                            1.2f, 0f, 0f, 0f, 0f,
+                                            0f, 1.2f, 0f, 0f, 0f,
+                                            0f, 0f, 1.2f, 0f, 0f,
+                                            0.5f, 1.5f, 0.2f, 0f, -15f,
                                         )
                                     )
                                 )
