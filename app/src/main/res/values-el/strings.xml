@@ -1478,4 +1478,5 @@
     <string name="setting_enable_unsupported_features_desc">Εμφάνιση λειτουργιών που αφορούν συγκεκριμένα τον OEM ή περιττών λειτουργιών που είναι κρυφές από προεπιλογή.</string>
     <string name="feat_flashlight_title">Φακός </string>
     <string name="feat_flashlight_desc">Βελτιώστε την συμπεριφορά του φακού </string>
+    <string name="setting_swipe_tabs_title">Σάρωση μεταξύ καρτελών</string>
 </resources>
