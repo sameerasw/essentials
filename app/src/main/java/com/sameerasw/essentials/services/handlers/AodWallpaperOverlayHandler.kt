@@ -46,6 +46,18 @@ class AodWallpaperOverlayHandler(
     private val handler = Handler(Looper.getMainLooper())
     private val handlerScope = CoroutineScope(Dispatchers.Main + Job())
 
+    private val BURN_IN_INTERVAL_MS = 5 * 60 * 1000L
+    // private val BURN_IN_INTERVAL_MS = 10 * 1500L // 10s for testing
+
+    private val burnInShiftRunnable = object : Runnable {
+        override fun run() {
+            if (isOverlayAdded && isScreenOff) {
+                applyBurnInShift(animated = false)
+                handler.postDelayed(this, BURN_IN_INTERVAL_MS)
+            }
+        }
+    }
+
     private val prefs by lazy {
         service.getSharedPreferences(
             SettingsRepository.PREFS_NAME,
@@ -69,6 +81,37 @@ class AodWallpaperOverlayHandler(
             showOverlay()
         } else {
             hideOverlay()
+        }
+    }
+
+    private fun applyBurnInShift(animated: Boolean) {
+        val imageView = wallpaperImageView ?: return
+        val maxShiftPx = (8 * service.resources.displayMetrics.density).toInt()
+        val targetX = (-maxShiftPx..maxShiftPx).random().toFloat()
+        val targetY = (-maxShiftPx..maxShiftPx).random().toFloat()
+
+        if (animated) {
+            ObjectAnimator.ofFloat(imageView, "scaleX", imageView.scaleX, 1.05f).apply {
+                duration = 1000
+                start()
+            }
+            ObjectAnimator.ofFloat(imageView, "scaleY", imageView.scaleY, 1.05f).apply {
+                duration = 1000
+                start()
+            }
+            ObjectAnimator.ofFloat(imageView, "translationX", imageView.translationX, targetX).apply {
+                duration = 1000
+                start()
+            }
+            ObjectAnimator.ofFloat(imageView, "translationY", imageView.translationY, targetY).apply {
+                duration = 1000
+                start()
+            }
+        } else {
+            imageView.scaleX = 1.05f
+            imageView.scaleY = 1.05f
+            imageView.translationX = targetX
+            imageView.translationY = targetY
         }
     }
 
@@ -124,6 +167,7 @@ class AodWallpaperOverlayHandler(
                 val container = overlayContainer ?: return
                 container.visibility = View.VISIBLE
                 container.alpha = 0f
+                applyBurnInShift(animated = false)
                 windowManager?.addView(container, params)
                 isOverlayAdded = true
 
@@ -131,6 +175,9 @@ class AodWallpaperOverlayHandler(
                     duration = 2000
                     start()
                 }
+
+                handler.removeCallbacks(burnInShiftRunnable)
+                handler.postDelayed(burnInShiftRunnable, BURN_IN_INTERVAL_MS)
             } catch (e: Exception) {
                 Log.e("AodWallpaperOverlay", "Failed to add AOD wallpaper overlay", e)
             }
@@ -141,6 +188,8 @@ class AodWallpaperOverlayHandler(
                 duration = 2000
                 start()
             }
+            handler.removeCallbacks(burnInShiftRunnable)
+            handler.postDelayed(burnInShiftRunnable, BURN_IN_INTERVAL_MS)
         }
     }
 
@@ -199,13 +248,43 @@ class AodWallpaperOverlayHandler(
     }
 
     private fun hideOverlay() {
+        handler.removeCallbacks(burnInShiftRunnable)
         if (isOverlayAdded && overlayContainer != null) {
             val currentView = overlayContainer ?: return
+            val imageView = wallpaperImageView
+
+            if (imageView != null) {
+                if (imageView.translationX != 0f || imageView.translationY != 0f) {
+                    ObjectAnimator.ofFloat(imageView, "translationX", imageView.translationX, 0f).apply {
+                        duration = 500
+                        start()
+                    }
+                    ObjectAnimator.ofFloat(imageView, "translationY", imageView.translationY, 0f).apply {
+                        duration = 500
+                        start()
+                    }
+                }
+                if (imageView.scaleX != 1.0f || imageView.scaleY != 1.0f) {
+                    ObjectAnimator.ofFloat(imageView, "scaleX", imageView.scaleX, 1.0f).apply {
+                        duration = 500
+                        start()
+                    }
+                    ObjectAnimator.ofFloat(imageView, "scaleY", imageView.scaleY, 1.0f).apply {
+                        duration = 500
+                        start()
+                    }
+                }
+            }
+
             ObjectAnimator.ofFloat(currentView, "alpha", currentView.alpha, 0f).apply {
                 duration = 500
                 addListener(object : android.animation.AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: android.animation.Animator) {
                         currentView.visibility = View.GONE
+                        imageView?.translationX = 0f
+                        imageView?.translationY = 0f
+                        imageView?.scaleX = 1.0f
+                        imageView?.scaleY = 1.0f
                         try {
                             windowManager?.removeView(currentView)
                         } catch (_: Exception) {
@@ -219,6 +298,7 @@ class AodWallpaperOverlayHandler(
     }
 
     fun removeOverlay() {
+        handler.removeCallbacks(burnInShiftRunnable)
         hideOverlay()
         overlayContainer = null
         wallpaperImageView = null
