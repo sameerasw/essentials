@@ -48,6 +48,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -65,6 +66,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -338,6 +340,16 @@ fun PixelSearchResultsScreen(
         }
     }
 
+    val listState = rememberLazyListState()
+    var userHasScrolled by remember { mutableStateOf(false) }
+
+    if (listState.isScrollInProgress) {
+        DisposableEffect(Unit) {
+            userHasScrolled = true
+            onDispose { }
+        }
+    }
+
     var appResults by remember { mutableStateOf<List<PixelSearchResultItem.AppItem>>(emptyList()) }
     var contactResults by remember { mutableStateOf<List<PixelSearchResultItem.ContactItem>>(emptyList()) }
     var systemSettingResults by remember { mutableStateOf<List<PixelSearchResultItem.SystemSettingItem>>(emptyList()) }
@@ -423,7 +435,14 @@ fun PixelSearchResultsScreen(
     }
 
     LaunchedEffect(query) {
+        userHasScrolled = false
         performSearch(query)
+    }
+
+    LaunchedEffect(appResults, contactResults, systemSettingResults, settingResults, shortcutResults) {
+        if (!userHasScrolled && (listState.firstVisibleItemIndex != 0 || listState.firstVisibleItemScrollOffset != 0)) {
+            listState.scrollToItem(0)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -515,6 +534,7 @@ fun PixelSearchResultsScreen(
                     ),
             ) {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .nestedScroll(overscrollNestedScrollConnection)
@@ -527,11 +547,11 @@ fun PixelSearchResultsScreen(
                 ) {
                 // APPS
                 if (isAppsEnabled && appResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_apps))
+                    item(key = "apps_header") {
+                        SearchSectionHeader(stringResource(R.string.pixel_search_section_apps), Modifier.animateItem())
                     }
-                    item {
-                        RoundedCardContainer {
+                    item(key = "apps_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
                             appResults.forEachIndexed { index, app ->
                                 val isTopmost = index == 0 && hasApps
                                 FeatureCard(
@@ -561,11 +581,14 @@ fun PixelSearchResultsScreen(
 
                 // CONTACTS
                 if (isContactsEnabled && contactResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_contacts))
+                    item(key = "contacts_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_contacts),
+                            modifier = Modifier.animateItem(),
+                        )
                     }
-                    item {
-                        RoundedCardContainer {
+                    item(key = "contacts_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
                             contactResults.forEachIndexed { index, contact ->
                                 val isTopmost = index == 0 && hasContacts
                                 ListItem(
@@ -665,11 +688,14 @@ fun PixelSearchResultsScreen(
 
                 // SETTINGS (System Settings)
                 if (isSettingsEnabled && systemSettingResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_system_settings))
+                    item(key = "system_settings_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_system_settings),
+                            modifier = Modifier.animateItem(),
+                        )
                     }
-                    item {
-                        RoundedCardContainer {
+                    item(key = "system_settings_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
                             systemSettingResults.forEachIndexed { index, setting ->
                                 val isTopmost = index == 0 && hasSystemSettings
                                 FeatureCard(
@@ -694,11 +720,14 @@ fun PixelSearchResultsScreen(
 
                 // ESSENTIALS
                 if (isSettingsEnabled && settingResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_essentials))
+                    item(key = "essentials_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_essentials),
+                            modifier = Modifier.animateItem(),
+                        )
                     }
-                    item {
-                        RoundedCardContainer {
+                    item(key = "essentials_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
                             settingResults.forEachIndexed { index, item ->
                                 val isTopmost = index == 0 && hasEssentials
                                 val setting = item.searchableItem
@@ -731,11 +760,14 @@ fun PixelSearchResultsScreen(
 
                 // SHORTCUTS
                 if (isShortcutsEnabled && shortcutResults.isNotEmpty()) {
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_shortcuts))
+                    item(key = "shortcuts_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_shortcuts),
+                            modifier = Modifier.animateItem(),
+                        )
                     }
-                    item {
-                        RoundedCardContainer {
+                    item(key = "shortcuts_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
                             shortcutResults.forEachIndexed { index, shortcut ->
                                 val isTopmost = index == 0 && hasShortcuts
                                 FeatureCard(
@@ -761,11 +793,14 @@ fun PixelSearchResultsScreen(
                 // WEB SEARCH
                 if (isWebEnabled && query.isNotBlank()) {
                     val isTopmost = !hasApps && !hasContacts && !hasSystemSettings && !hasEssentials && !hasShortcuts
-                    item {
-                        SearchSectionHeader(stringResource(R.string.pixel_search_section_web))
+                    item(key = "web_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_web),
+                            modifier = Modifier.animateItem(),
+                        )
                     }
-                    item {
-                        RoundedCardContainer {
+                    item(key = "web_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
                             FeatureCard(
                                 title = stringResource(R.string.pixel_search_web_search_action, query),
                                 isEnabled = true,
@@ -863,13 +898,16 @@ fun PixelSearchResultsScreen(
 }
 
 @Composable
-private fun SearchSectionHeader(title: String) {
+private fun SearchSectionHeader(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
+        modifier = modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
     )
 }
 
