@@ -18,13 +18,19 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.view.WindowInsetsAnimationControlListener
+import android.view.WindowInsetsAnimationController
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +43,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -60,6 +67,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -69,7 +77,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -80,8 +92,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import coil.compose.AsyncImage
@@ -167,9 +182,124 @@ fun PixelSearchResultsScreen(
     val repository = remember { SettingsRepository(context) }
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val density = LocalDensity.current
 
     var query by remember { mutableStateOf(initialQuery) }
     val focusRequester = remember { FocusRequester() }
+
+    var dragOffsetY by remember { mutableFloatStateOf(0f) }
+    val dismissThresholdPx = with(density) { 180.dp.toPx() }
+
+    var insetsAnimController by remember { mutableStateOf<WindowInsetsAnimationController?>(null) }
+
+    val overscrollNestedScrollConnection = remember {
+        object : NestedScrollConnection {
+
+            override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                if (source == NestedScrollSource.UserInput && available.y > 0f) {
+                    dragOffsetY = (dragOffsetY + available.y).coerceAtLeast(0f)
+                    return Offset(0f, available.y)
+                }
+                return Offset.Zero
+            }
+
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (source != NestedScrollSource.UserInput) return Offset.Zero
+
+                if (available.y < 0f && dragOffsetY > 0f) {
+                    val snap = minOf(-available.y, dragOffsetY)
+                    dragOffsetY = (dragOffsetY - snap).coerceAtLeast(0f)
+                    return Offset(0f, -snap)
+                }
+
+                if (available.y < 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (insetsAnimController == null) {
+                        val rootInsets = view.rootWindowInsets
+                        if (rootInsets != null &&
+                            rootInsets.isVisible(android.view.WindowInsets.Type.ime())
+                        ) {
+                            view.windowInsetsController?.controlWindowInsetsAnimation(
+                                android.view.WindowInsets.Type.ime(),
+                                -1L, null, null,
+                                object : WindowInsetsAnimationControlListener {
+                                    override fun onReady(controller: WindowInsetsAnimationController, types: Int) {
+                                        insetsAnimController = controller
+                                    }
+                                    override fun onFinished(controller: WindowInsetsAnimationController) {
+                                        insetsAnimController = null
+                                    }
+                                    override fun onCancelled(controller: WindowInsetsAnimationController?) {
+                                        insetsAnimController = null
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    val ctrl = insetsAnimController
+                    if (ctrl != null) {
+                        val shown = ctrl.shownStateInsets.bottom.toFloat()
+                        if (shown > 0f) {
+                            val current = ctrl.currentInsets.bottom.toFloat()
+                            val target = (current + available.y).coerceIn(0f, shown)
+                            ctrl.setInsetsAndAlpha(
+                                android.graphics.Insets.of(0, 0, 0, target.toInt()),
+                                1f,
+                                target / shown,
+                            )
+                        }
+                    }
+                }
+
+                return Offset.Zero
+            }
+
+            override suspend fun onPreFling(available: Velocity): Velocity {
+                if (dragOffsetY > dismissThresholdPx) {
+                    onFinish()
+                    return Velocity.Zero
+                } else if (dragOffsetY > 0f) {
+                    scope.launch {
+                        animate(
+                            initialValue = dragOffsetY,
+                            targetValue = 0f,
+                            animationSpec = spring(),
+                        ) { v, _ -> dragOffsetY = v }
+                    }
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val ctrl = insetsAnimController
+                    if (ctrl != null) {
+                        insetsAnimController = null
+                        val current = ctrl.currentInsets.bottom.toFloat()
+                        val shown = ctrl.shownStateInsets.bottom.toFloat()
+                        val shouldShow = !(shown > 0f && (available.y < -500f || current < shown * 0.5f))
+                        val target = if (shouldShow) shown else 0f
+                        animate(
+                            initialValue = current,
+                            targetValue = target,
+                            initialVelocity = (-available.y).coerceIn(-shown * 15f, shown * 15f),
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioNoBouncy,
+                                stiffness = Spring.StiffnessMedium,
+                            ),
+                        ) { value, _ ->
+                            if (shown > 0f) {
+                                ctrl.setInsetsAndAlpha(
+                                    android.graphics.Insets.of(0, 0, 0, value.toInt()),
+                                    1f,
+                                    value / shown,
+                                )
+                            }
+                        }
+                        ctrl.finish(shouldShow)
+                    }
+                }
+
+                return Velocity.Zero
+            }
+        }
+    }
 
     var appResults by remember { mutableStateOf<List<PixelSearchResultItem.AppItem>>(emptyList()) }
     var contactResults by remember { mutableStateOf<List<PixelSearchResultItem.ContactItem>>(emptyList()) }
@@ -328,23 +458,29 @@ fun PixelSearchResultsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .imePadding()
-                .progressiveBlur(
-                    blurRadius = 40f,
-                    height = bottomBlurHeightPx,
-                    direction = BlurDirection.BOTTOM,
-                ),
+                .offset { IntOffset(0, dragOffsetY.roundToInt()) },
         ) {
-            LazyColumn(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(
-                    top = statusBarHeight + 16.dp,
-                    bottom = 120.dp,
-                ),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .imePadding()
+                    .progressiveBlur(
+                        blurRadius = 40f,
+                        height = bottomBlurHeightPx,
+                        direction = BlurDirection.BOTTOM,
+                    ),
             ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .nestedScroll(overscrollNestedScrollConnection)
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(
+                        top = statusBarHeight + 16.dp,
+                        bottom = 120.dp,
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
                 // APPS
                 if (isAppsEnabled && appResults.isNotEmpty()) {
                     item {
@@ -610,7 +746,7 @@ fun PixelSearchResultsScreen(
             }
         }
 
-        Box(
+            Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -690,6 +826,7 @@ fun PixelSearchResultsScreen(
             }
         }
     }
+}
 }
 
 @Composable
