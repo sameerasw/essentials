@@ -381,7 +381,7 @@ fun PixelSearchResultsScreen(
         isSearching = true
         scope.launch(Dispatchers.IO) {
             if (isAppsEnabled) {
-                val installed = AppUtil.getInstalledApps(context)
+                val installed = AppUtil.getInstalledApps(context, includeSelf = true)
                 val filteredApps = installed
                     .filter { app ->
                         app.appName.contains(trimmed, ignoreCase = true) &&
@@ -810,7 +810,7 @@ fun PixelSearchResultsScreen(
                         } else {
                             stringResource(R.string.pixel_search_web_search_action, query)
                         }
-                        val webIcon = if (isUrl) R.drawable.rounded_link_24 else R.drawable.rounded_web_24
+                        val webIcon = if (isUrl) R.drawable.rounded_link_24 else R.drawable.rounded_language_24
 
                         RoundedCardContainer(modifier = Modifier.animateItem()) {
                             FeatureCard(
@@ -824,6 +824,8 @@ fun PixelSearchResultsScreen(
                                 },
                                 containerColor = if (isTopmost) highlightColor else normalCardColor,
                                 iconRes = webIcon,
+                                hasIconBackground = false,
+                                iconTint = MaterialTheme.colorScheme.primary,
                                 showToggle = false,
                                 hasMoreSettings = false,
                             )

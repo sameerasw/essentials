@@ -82,6 +82,7 @@ fun FeatureCard(
     containerColor: androidx.compose.ui.graphics.Color? = null,
     iconSize: androidx.compose.ui.unit.Dp = 24.dp,
     hasIconBackground: Boolean = true,
+    iconTint: androidx.compose.ui.graphics.Color? = null,
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
@@ -183,7 +184,7 @@ fun FeatureCard(
                                     painter = painterResource(id = validIconRes),
                                     contentDescription = resolvedTitle,
                                     modifier = Modifier.size(iconSize),
-                                    tint = ColorUtil.getVibrantColorFor(resolvedTitle),
+                                    tint = iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle),
                                 )
                             }
                         }
