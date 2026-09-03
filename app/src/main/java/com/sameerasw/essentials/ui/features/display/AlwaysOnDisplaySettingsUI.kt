@@ -298,10 +298,24 @@ fun AlwaysOnDisplaySettingsUI(
                         contentAlignment = Alignment.Center,
                     ) {
                         if (wallpaperBitmap != null) {
+                            val luminanceFilter = remember {
+                                androidx.compose.ui.graphics.ColorFilter.colorMatrix(
+                                    androidx.compose.ui.graphics.ColorMatrix(
+                                        floatArrayOf(
+                                            1f, 0f, 0f, 0f, 0f,
+                                            0f, 1f, 0f, 0f, 0f,
+                                            0f, 0f, 1f, 0f, 0f,
+                                            0.2126f, 0.7152f, 0.0722f, 0f, 0f,
+                                        )
+                                    )
+                                )
+                            }
+
                             Image(
                                 bitmap = wallpaperBitmap.asImageBitmap(),
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
+                                colorFilter = luminanceFilter,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .alpha(animatedPreviewAlpha)
