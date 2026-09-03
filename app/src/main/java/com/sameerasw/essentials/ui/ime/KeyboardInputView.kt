@@ -599,11 +599,11 @@ fun KeyboardInputView(
                 rows.add(RowDef(keys = r3Keys, expandEdges = true))
 
                 val r4Keys = listOf(
-                    KeyDef("sym", if (isSymbols) "ABC" else "?123", "", KeyAction.SYMBOLS, weight = 1.5f),
+                    KeyDef("sym", if (isSymbols) "ABC" else "?123", "", KeyAction.SYMBOLS, weight = 1.2f),
                     KeyDef("comma", ",", ",", KeyAction.COMMA, weight = 0.7f),
-                    KeyDef("space", " ", " ", KeyAction.SPACE, weight = 3f),
+                    KeyDef("space", " ", " ", KeyAction.SPACE, weight = 3.3f),
                     KeyDef("dot", ".", ".", KeyAction.DOT, weight = 0.7f),
-                    KeyDef("return", "enter", "\n", KeyAction.ENTER, weight = 1.5f),
+                    KeyDef("return", "enter", "\n", KeyAction.ENTER, weight = 1.2f),
                 )
                 rows.add(RowDef(keys = r4Keys, expandEdges = true))
 
@@ -2080,7 +2080,7 @@ fun KeyboardInputView(
                                             Box(
                                                 modifier =
                                                     Modifier
-                                                        .weight(3f)
+                                                        .weight(3.3f)
                                                         .fillMaxHeight()
                                                         .bounceClick(isPressedSpace)
                                                         .clip(RoundedCornerShape(animatedRadiusSpace))
@@ -2271,7 +2271,7 @@ fun KeyboardInputView(
                                                 shape = RoundedCornerShape(animatedRadiusReturn),
                                                 modifier =
                                                     Modifier
-                                                        .weight(1.5f)
+                                                        .weight(1.2f)
                                                         .fillMaxHeight(),
                                             ) {
                                                 Icon(
