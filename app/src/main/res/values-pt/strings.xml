@@ -707,7 +707,7 @@
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
     <string name="action_restart_systemui">Reiniciar UI do Sistema</string>
-    <string name="desc_restart_systemui">Para e Recomeça a UI do Sistema para aplicar alterações imediatamente </string>
+    <string name="desc_restart_systemui">Para e Reinicia a  UI do Sistema para aplicar alterações imediatamente</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Feito</string>
