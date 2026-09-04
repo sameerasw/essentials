@@ -1695,4 +1695,6 @@
     <string name="label_ripple_animation">波紋アニメーション</string>
     <string name="desc_ripple_animation">UI全体でリキッド・リップル・アニメーションを有効にする</string>
     <string name="label_motion_blur">モーションブラー</string>
+    <string name="watch_complications_title">コンプリケーション</string>
+    <string name="watch_complications_desc">コンプリケーションウィジェットをカスタマイズする</string>
 </resources>
