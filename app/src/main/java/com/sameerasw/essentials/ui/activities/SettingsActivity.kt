@@ -1060,8 +1060,7 @@ fun SettingsContent(
                     actionLabel = if (isAccessibilityEnabled) "Granted" else "Grant Permission",
                     isGranted = isAccessibilityEnabled,
                     onActionClick = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        context.startActivity(intent)
+                        PermissionUtils.openAccessibilitySettings(context)
                     },
                 )
 

@@ -135,6 +135,37 @@
     <string name="setting_use_usage_access_title">Use usage access</string>
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
 
+    <!-- Conscious Gate -->
+    <string name="conscious_gate_enable_title">Enable conscious gate</string>
+    <string name="conscious_gate_select_apps_title">Select gated apps</string>
+    <string name="conscious_gate_select_apps_desc">Choose which apps show a mindful conscious gate screen before opening</string>
+    <string name="conscious_gate_delay_title">Pause delay</string>
+    <string name="conscious_gate_delay_desc">How long Continue stays disabled</string>
+    <string name="conscious_gate_delay_seconds_value">%1$d seconds</string>
+    <string name="conscious_gate_reappear_title">Reappear after usage</string>
+    <string name="conscious_gate_reappear_desc">Show the conscious gate screen again after continuous use</string>
+    <string name="conscious_gate_reappear_off">Off</string>
+    <string name="conscious_gate_reappear_5min">5 minutes</string>
+    <string name="conscious_gate_reappear_10min">10 minutes</string>
+    <string name="conscious_gate_reappear_15min">15 minutes</string>
+    <string name="conscious_gate_delay_custom_label">Custom seconds</string>
+    <string name="conscious_gate_reappear_custom_label">Custom minutes (0 = off)</string>
+    <string name="conscious_gate_reappear_minutes_value">%1$d minutes</string>
+    <string name="conscious_gate_selected_apps_more_suffix">+%1$d more</string>
+    <string name="conscious_gate_preview_button">Preview conscious gate screen</string>
+    <string name="conscious_gate_preview_placeholder_app">a gated app</string>
+    <string name="conscious_gate_custom_option_label">Custom</string>
+    <string name="conscious_gate_countdown_style_title">Countdown style</string>
+    <string name="conscious_gate_appearance_title">Conscious gate screen appearance</string>
+    <string name="conscious_gate_icon_picker_label">Icon</string>
+    <string name="conscious_gate_title_label">Title</string>
+    <string name="conscious_gate_message_label">Message</string>
+    <string name="conscious_gate_default_title">Take a mindful pause</string>
+    <string name="conscious_gate_default_message">Are you sure you want to open this app right now?</string>
+    <string name="conscious_gate_continue_on_app">Continue on %1$s</string>
+    <string name="conscious_gate_close_button">Close</string>
+    <string name="conscious_gate_description">Adds a brief mindful pause before opening apps you\'ve chosen to be more intentional about, such as social media.</string>
+
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Enable Button Remap</string>
     <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
@@ -643,6 +674,8 @@
     <string name="feat_screen_locked_security_title">Screen locked security</string>
     <string name="feat_app_lock_title">App lock</string>
     <string name="feat_app_lock_desc">Secure apps with biometrics</string>
+    <string name="feat_conscious_gate_title">Conscious gate</string>
+    <string name="feat_conscious_gate_desc">Pause before opening chosen apps</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
     <string name="app_lock_auto_lock_delay_none">None</string>
@@ -795,6 +828,12 @@
     <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
     <string name="search_app_lock_pick_title">Select locked apps</string>
     <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
+    <string name="search_conscious_gate_enable_title">Enable conscious gate</string>
+    <string name="search_conscious_gate_enable_desc">Master toggle for the mindful conscious gate screen</string>
+    <string name="search_conscious_gate_pick_title">Select gated apps</string>
+    <string name="search_conscious_gate_pick_desc">Choose which apps show the conscious gate screen</string>
+    <string name="search_conscious_gate_delay_title">Pause delay</string>
+    <string name="search_conscious_gate_delay_desc">How long Continue stays disabled</string>
     <string name="search_freeze_pick_title">Pick apps to freeze</string>
     <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
     <string name="search_freeze_all_title">Freeze all apps</string>
@@ -980,6 +1019,7 @@
     <string name="about_desc_dynamic_night_light">Automatically toggle your screen blue light filter based on the foreground app.</string>
     <string name="about_desc_screen_locked_security">Enhance security when your device is locked.\n\nRestrict access to some sensitive QS tiles preventing unauthorized network modifications and further preventing them re-attempting to do so by increasing the animation speed to prevent touch spam.\n\nThis feature is not robust and may have flaws such as some tiles which allow toggling directly such as bluetooth or flight mode not being able to be prevented.</string>
     <string name="about_desc_app_lock">Secure your apps with a secondary authentication layer.\n\nYour device lock screen authentication method will be used as long as it meets the class 3 biometric security level by Android standards.</string>
+    <string name="about_desc_conscious_gate">Adds a brief mindful conscious gate screen before opening apps you\'ve chosen to be more intentional about, such as social media.\n\nThe Continue button stays disabled for a few seconds so you have a moment to decide, and the pause can optionally reappear if you keep using the app past a set time.</string>
     <string name="about_desc_location_reached">Get notified when you get closer to your destination to ensure you never miss the stop.\n\nGo to Google Maps, long press a pin nearby to your destination and make sure it says \"Dropped pin\" (Otherwise the distance calculation might not be accurate), And then share the location to the Essentials app and start tracking.</string>
     <string name="location_reached_add_title">Add Destination</string>
     <string name="location_reached_edit_title">Edit Destination</string>

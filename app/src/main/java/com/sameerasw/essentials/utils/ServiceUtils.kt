@@ -93,6 +93,8 @@ object ServiceUtils {
     ) {
         val isAppLockEnabled =
             settingsRepository.getBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED)
+        val isConsciousGateEnabled =
+            settingsRepository.getBoolean(SettingsRepository.KEY_CONSCIOUS_GATE_ENABLED)
         val isDynamicNightLightEnabled =
             settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
         val isHideGestureBarOnLauncherEnabled =
@@ -109,7 +111,10 @@ object ServiceUtils {
         val hasShutUpApps = shutUpConfigs.any { it.isEnabled }
 
         val shouldRun =
-            (isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations)) ||
+            (
+                isUseUsageAccess &&
+                    (isAppLockEnabled || isConsciousGateEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations)
+            ) ||
                 hasShutUpApps
 
         val intent = Intent(context, AppDetectionService::class.java)
