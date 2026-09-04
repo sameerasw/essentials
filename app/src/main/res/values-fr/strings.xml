@@ -1525,4 +1525,8 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_battery_cycle_count">Nombre de cycles </string>
     <string name="label_battery_charge_time_remaining">Temps de charge restant </string>
     <string name="label_battery_charge_counter"> Charge Actuelle </string>
+    <string name="label_ripple_animation">Animation ondulante</string>
+    <string name="label_motion_blur">Flou de mouvement</string>
+    <string name="setting_app_icon_title">Icône de l\'application</string>
+    <string name="setting_app_icon_desc">Personnaliser l\'icône du lanceur sur l\'écran d\'accueil</string>
 </resources>

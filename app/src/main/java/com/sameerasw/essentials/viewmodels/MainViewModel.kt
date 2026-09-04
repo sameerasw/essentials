@@ -163,6 +163,7 @@ class MainViewModel : ViewModel() {
     val aodWallpaperTimeout = mutableIntStateOf(3)
     val aodWallpaperBlur = mutableFloatStateOf(0f)
     val aodWallpaperVignette = mutableFloatStateOf(0f)
+    val hasAodWallpaperCustomImage = mutableStateOf(false)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
@@ -1918,6 +1919,15 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperBlur()
         aodWallpaperVignette.floatValue =
             settingsRepository.getAodWallpaperVignette()
+        hasAodWallpaperCustomImage.value =
+            settingsRepository.hasAodWallpaperCustomImage()
+        pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
+        pixelSearchResultContacts.value = settingsRepository.isPixelSearchResultContactsEnabled()
+        pixelSearchResultSettings.value = settingsRepository.isPixelSearchResultSettingsEnabled()
+        pixelSearchResultShortcuts.value = settingsRepository.isPixelSearchResultShortcutsEnabled()
+        pixelSearchResultWeb.value = settingsRepository.isPixelSearchResultWebEnabled()
+        pixelSearchBubblesWeb.value = settingsRepository.isPixelSearchBubblesWebEnabled()
+        pixelSearchEngine.value = settingsRepository.getPixelSearchEngine()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -3540,6 +3550,49 @@ class MainViewModel : ViewModel() {
         pixelSearchbarWidgetPaddingV.intValue = value
         settingsRepository.setPixelSearchbarWidgetPaddingV(value)
         updatePixelSearchbarWidget(context)
+    }
+
+    val pixelSearchResultApps = mutableStateOf(true)
+    val pixelSearchResultContacts = mutableStateOf(true)
+    val pixelSearchResultSettings = mutableStateOf(true)
+    val pixelSearchResultShortcuts = mutableStateOf(true)
+    val pixelSearchResultWeb = mutableStateOf(true)
+    val pixelSearchBubblesWeb = mutableStateOf(false)
+    val pixelSearchEngine = mutableStateOf("Google")
+
+    fun setPixelSearchResultAppsEnabled(enabled: Boolean) {
+        pixelSearchResultApps.value = enabled
+        settingsRepository.setPixelSearchResultAppsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultContactsEnabled(enabled: Boolean) {
+        pixelSearchResultContacts.value = enabled
+        settingsRepository.setPixelSearchResultContactsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultSettingsEnabled(enabled: Boolean) {
+        pixelSearchResultSettings.value = enabled
+        settingsRepository.setPixelSearchResultSettingsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultShortcutsEnabled(enabled: Boolean) {
+        pixelSearchResultShortcuts.value = enabled
+        settingsRepository.setPixelSearchResultShortcutsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultWebEnabled(enabled: Boolean) {
+        pixelSearchResultWeb.value = enabled
+        settingsRepository.setPixelSearchResultWebEnabled(enabled)
+    }
+
+    fun setPixelSearchBubblesWebEnabled(enabled: Boolean) {
+        pixelSearchBubblesWeb.value = enabled
+        settingsRepository.setPixelSearchBubblesWebEnabled(enabled)
+    }
+
+    fun setPixelSearchEngine(engine: String) {
+        pixelSearchEngine.value = engine
+        settingsRepository.setPixelSearchEngine(engine)
     }
 
     /**
@@ -6963,9 +7016,61 @@ class MainViewModel : ViewModel() {
         aodWallpaperVignette.floatValue = intensity
     }
 
+    fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    java.io.FileOutputStream(file).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                settingsRepository.setAodWallpaperCustomImage(true)
+                val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    hasAodWallpaperCustomImage.value = true
+                    currentWallpaperBitmap.value = bitmap
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainViewModel", "Failed to save custom AOD wallpaper", e)
+            }
+        }
+    }
+
+    fun removeCustomAodWallpaper(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                if (file.exists()) {
+                    file.delete()
+                }
+                settingsRepository.setAodWallpaperCustomImage(false)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    hasAodWallpaperCustomImage.value = false
+                }
+                loadCurrentWallpaperBitmap(context)
+            } catch (e: Exception) {
+                android.util.Log.e("MainViewModel", "Failed to remove custom AOD wallpaper", e)
+            }
+        }
+    }
+
     fun loadCurrentWallpaperBitmap(context: Context) {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             try {
+                if (settingsRepository.hasAodWallpaperCustomImage()) {
+                    val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                    if (file.exists()) {
+                        val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                        if (bitmap != null) {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                currentWallpaperBitmap.value = bitmap
+                            }
+                            return@launch
+                        }
+                    }
+                }
+
                 if (PermissionUtils.hasManageExternalStoragePermission(context)) {
                     val wallpaperManager = android.app.WallpaperManager.getInstance(context)
                     val drawable =

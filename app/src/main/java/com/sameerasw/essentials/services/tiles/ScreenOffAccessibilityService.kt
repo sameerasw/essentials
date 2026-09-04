@@ -227,8 +227,12 @@ class ScreenOffAccessibilityService :
             ) {
                 smartPixelsHandler.updateState()
             } else if (key == SettingsRepository.KEY_AOD_WALLPAPER_ENABLED ||
-                key == SettingsRepository.KEY_AOD_WALLPAPER_OPACITY
+                key == SettingsRepository.KEY_AOD_WALLPAPER_OPACITY ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE
             ) {
+                if (key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE) {
+                    aodWallpaperOverlayHandler.invalidateWallpaperCache()
+                }
                 aodWallpaperOverlayHandler.updateState()
             }
         }
