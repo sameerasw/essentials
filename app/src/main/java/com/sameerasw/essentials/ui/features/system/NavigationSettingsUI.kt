@@ -86,7 +86,7 @@ fun NavigationSettingsUI(
                         val intent =
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"),
+                                Uri.parse("https://github.com/thedjchi/Shizuku"),
                             )
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)

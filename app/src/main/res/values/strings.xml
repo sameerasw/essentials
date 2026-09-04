@@ -806,7 +806,7 @@
 
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
+    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku to proceed.</string>
     <string name="perm_shizuku_install_action">Install Shizuku</string>
     <string name="perm_shizuku_grant_title">Grant Permission</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
