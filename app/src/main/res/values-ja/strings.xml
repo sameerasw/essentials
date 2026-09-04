@@ -1692,4 +1692,7 @@
     <string name="feat_sim_names_desc">アクティブなSIMカードのキャリア表示名を変更する</string>
     <string name="setting_location_reached_full_screen_alarm_title">全画面アラーム</string>
     <string name="setting_location_reached_full_screen_alarm_desc">アラーム音を再生し全画面で到着を通知する</string>
+    <string name="label_ripple_animation">波紋アニメーション</string>
+    <string name="desc_ripple_animation">UI全体でリキッド・リップル・アニメーションを有効にする</string>
+    <string name="label_motion_blur">モーションブラー</string>
 </resources>

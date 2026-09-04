@@ -39,6 +39,28 @@ object PermissionUtils {
     }
 
     /**
+     * Executes the is accessibility shortcut service enabled operation.
+     *
+     * @param context [Context] Target context.
+     * @return The resulting Boolean data.
+     */
+    fun isAccessibilityShortcutServiceEnabled(context: Context, slot: Int = 1): Boolean {
+        val enabledServices =
+            Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+            )
+        val className = when (slot) {
+            1 -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java.name
+            2 -> com.sameerasw.essentials.services.AccessibilityShortcutService2::class.java.name
+            3 -> com.sameerasw.essentials.services.AccessibilityShortcutService3::class.java.name
+            else -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java.name
+        }
+        val serviceName = "${context.packageName}/$className"
+        return enabledServices?.contains(serviceName) == true
+    }
+
+    /**
      * Executes the can write secure settings operation.
      *
      * @param context [Context] Target context.
@@ -468,4 +490,53 @@ object PermissionUtils {
         } catch (e: Exception) {
         }
     }
+
+    /**
+     * Checks whether all files access / manage external storage permission is granted (for reading wallpaper).
+     */
+    fun hasManageExternalStoragePermission(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                android.os.Environment.isExternalStorageManager()
+            } catch (_: Exception) {
+                false
+            }
+        } else {
+            androidx.core.content.ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    /**
+     * Opens Manage External Storage settings for this app.
+     */
+    fun openManageExternalStorageSettings(context: Context) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } else {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            }
+        } catch (_: Exception) {
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    fun hasStoragePermission(context: Context): Boolean = hasManageExternalStoragePermission(context)
 }

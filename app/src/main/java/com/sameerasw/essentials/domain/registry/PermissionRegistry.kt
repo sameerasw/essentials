@@ -34,6 +34,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_app_lock_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_essentials_on_display_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_conscious_gate_title)
+    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_aod_wallpaper_title)
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_statusbar_icons_title)
@@ -152,4 +153,7 @@ fun initPermissionRegistry() {
     // DIY Automations feature
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tab_diy)
     PermissionRegistry.register("WRITE_SETTINGS", R.string.tab_diy)
+
+    // AOD Wallpaper feature
+    PermissionRegistry.register("STORAGE", R.string.feat_aod_wallpaper_title)
 }

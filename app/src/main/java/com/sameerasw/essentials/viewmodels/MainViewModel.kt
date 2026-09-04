@@ -144,6 +144,7 @@ class MainViewModel : ViewModel() {
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
     val isBluetoothPermissionGranted = mutableStateOf(false)
+    val isStoragePermissionGranted = mutableStateOf(false)
     val isUsageStatsPermissionGranted = mutableStateOf(false)
     val appLanguage = mutableStateOf("en")
 
@@ -157,6 +158,13 @@ class MainViewModel : ViewModel() {
     val isAodEnabled = mutableStateOf(false)
     val isNotificationGlanceEnabled = mutableStateOf(false)
     val isAodForceTurnOffEnabled = mutableStateOf(false)
+    val isAodWallpaperEnabled = mutableStateOf(false)
+    val aodWallpaperOpacity = mutableFloatStateOf(0.3f)
+    val aodWallpaperTimeout = mutableIntStateOf(3)
+    val aodWallpaperBlur = mutableFloatStateOf(0f)
+    val aodWallpaperVignette = mutableFloatStateOf(0f)
+    val hasAodWallpaperCustomImage = mutableStateOf(false)
+    val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
     val pocketModeTriggerDelay = mutableFloatStateOf(3f) // seconds
@@ -303,8 +311,8 @@ class MainViewModel : ViewModel() {
     val isBlurSettingEnabled = mutableStateOf(true)
     val isRippleEnabled = mutableStateOf(true)
     val isRippleSettingEnabled = mutableStateOf(true)
-    val isConsoleModeEnabled = mutableStateOf(false)
-    val isConsoleModeSettingEnabled = mutableStateOf(false)
+    val isMotionBlurEnabled = mutableStateOf(false)
+    val isMotionBlurSettingEnabled = mutableStateOf(false)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
     val isPowerSaveModeEnabled = mutableStateOf(false)
@@ -758,6 +766,14 @@ class MainViewModel : ViewModel() {
                         isAodForceTurnOffEnabled.value =
                             settingsRepository.getBoolean(key)
 
+                    SettingsRepository.KEY_AOD_WALLPAPER_ENABLED ->
+                        isAodWallpaperEnabled.value =
+                            settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_OPACITY ->
+                        aodWallpaperOpacity.floatValue =
+                            settingsRepository.getFloat(key, 0.3f)
+
                     SettingsRepository.KEY_POCKET_MODE_ENABLED ->
                         isPocketModeEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -786,8 +802,8 @@ class MainViewModel : ViewModel() {
                         appContext?.let { updateRippleState(it) }
                     }
 
-                    SettingsRepository.KEY_CONSOLE_MODE -> {
-                        appContext?.let { updateConsoleModeState(it) }
+                    SettingsRepository.KEY_MOTION_BLUR -> {
+                        appContext?.let { updateMotionBlurState(it) }
                     }
 
                     SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
@@ -1351,6 +1367,7 @@ class MainViewModel : ViewModel() {
         isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
+        isStoragePermissionGranted.value = PermissionUtils.hasStoragePermission(context)
 
         context.contentResolver.registerContentObserver(
             Settings.System.getUriFor(Settings.System.FONT_SCALE),
@@ -1473,7 +1490,7 @@ class MainViewModel : ViewModel() {
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
         updateRippleState(context)
-        updateConsoleModeState(context)
+        updateMotionBlurState(context)
         updateAddedQSTiles(context)
 
         if (powerSaveReceiver == null) {
@@ -1488,7 +1505,7 @@ class MainViewModel : ViewModel() {
                                 isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(it)
                                 updateBlurState(it)
                                 updateRippleState(it)
-                                updateConsoleModeState(it)
+                                updateMotionBlurState(it)
                             }
                         }
                     }
@@ -1908,6 +1925,25 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
+        isAodWallpaperEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED)
+        aodWallpaperOpacity.floatValue =
+            settingsRepository.getAodWallpaperOpacity()
+        aodWallpaperTimeout.intValue =
+            settingsRepository.getAodWallpaperTimeout()
+        aodWallpaperBlur.floatValue =
+            settingsRepository.getAodWallpaperBlur()
+        aodWallpaperVignette.floatValue =
+            settingsRepository.getAodWallpaperVignette()
+        hasAodWallpaperCustomImage.value =
+            settingsRepository.hasAodWallpaperCustomImage()
+        pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
+        pixelSearchResultContacts.value = settingsRepository.isPixelSearchResultContactsEnabled()
+        pixelSearchResultSettings.value = settingsRepository.isPixelSearchResultSettingsEnabled()
+        pixelSearchResultShortcuts.value = settingsRepository.isPixelSearchResultShortcutsEnabled()
+        pixelSearchResultWeb.value = settingsRepository.isPixelSearchResultWebEnabled()
+        pixelSearchBubblesWeb.value = settingsRepository.isPixelSearchBubblesWebEnabled()
+        pixelSearchEngine.value = settingsRepository.getPixelSearchEngine()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isPocketModeUseLightSensor.value =
@@ -1928,7 +1964,7 @@ class MainViewModel : ViewModel() {
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
         updateRippleState(context)
-        updateConsoleModeState(context)
+        updateMotionBlurState(context)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -2478,12 +2514,12 @@ class MainViewModel : ViewModel() {
         updateRippleState(context)
     }
 
-    fun setConsoleModeEnabled(
+    fun setMotionBlurEnabled(
         enabled: Boolean,
         context: Context,
     ) {
-        settingsRepository.putBoolean(SettingsRepository.KEY_CONSOLE_MODE, enabled)
-        updateConsoleModeState(context)
+        settingsRepository.putBoolean(SettingsRepository.KEY_MOTION_BLUR, enabled)
+        updateMotionBlurState(context)
     }
 
     /**
@@ -2513,13 +2549,13 @@ class MainViewModel : ViewModel() {
         isRippleEnabled.value = useRippleSetting && !isPowerSave
     }
 
-    private fun updateConsoleModeState(context: Context) {
-        val useConsoleModeSetting = settingsRepository.getBoolean(SettingsRepository.KEY_CONSOLE_MODE, false)
+    private fun updateMotionBlurState(context: Context) {
+        val useMotionBlurSetting = settingsRepository.getBoolean(SettingsRepository.KEY_MOTION_BLUR, false)
         val isProblematic = DeviceUtils.isBlurProblematicDevice()
         val isPowerSave = DeviceUtils.isPowerSaveMode(context)
 
-        isConsoleModeSettingEnabled.value = useConsoleModeSetting
-        isConsoleModeEnabled.value = useConsoleModeSetting && !isProblematic && !isPowerSave
+        isMotionBlurSettingEnabled.value = useMotionBlurSetting
+        isMotionBlurEnabled.value = useMotionBlurSetting && !isProblematic && !isPowerSave
     }
 
     /**
@@ -3530,6 +3566,49 @@ class MainViewModel : ViewModel() {
         pixelSearchbarWidgetPaddingV.intValue = value
         settingsRepository.setPixelSearchbarWidgetPaddingV(value)
         updatePixelSearchbarWidget(context)
+    }
+
+    val pixelSearchResultApps = mutableStateOf(true)
+    val pixelSearchResultContacts = mutableStateOf(true)
+    val pixelSearchResultSettings = mutableStateOf(true)
+    val pixelSearchResultShortcuts = mutableStateOf(true)
+    val pixelSearchResultWeb = mutableStateOf(true)
+    val pixelSearchBubblesWeb = mutableStateOf(false)
+    val pixelSearchEngine = mutableStateOf("Google")
+
+    fun setPixelSearchResultAppsEnabled(enabled: Boolean) {
+        pixelSearchResultApps.value = enabled
+        settingsRepository.setPixelSearchResultAppsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultContactsEnabled(enabled: Boolean) {
+        pixelSearchResultContacts.value = enabled
+        settingsRepository.setPixelSearchResultContactsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultSettingsEnabled(enabled: Boolean) {
+        pixelSearchResultSettings.value = enabled
+        settingsRepository.setPixelSearchResultSettingsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultShortcutsEnabled(enabled: Boolean) {
+        pixelSearchResultShortcuts.value = enabled
+        settingsRepository.setPixelSearchResultShortcutsEnabled(enabled)
+    }
+
+    fun setPixelSearchResultWebEnabled(enabled: Boolean) {
+        pixelSearchResultWeb.value = enabled
+        settingsRepository.setPixelSearchResultWebEnabled(enabled)
+    }
+
+    fun setPixelSearchBubblesWebEnabled(enabled: Boolean) {
+        pixelSearchBubblesWeb.value = enabled
+        settingsRepository.setPixelSearchBubblesWebEnabled(enabled)
+    }
+
+    fun setPixelSearchEngine(engine: String) {
+        pixelSearchEngine.value = engine
+        settingsRepository.setPixelSearchEngine(engine)
     }
 
     /**
@@ -6989,6 +7068,118 @@ class MainViewModel : ViewModel() {
     fun toggleAodForceTurnOffEnabled(enabled: Boolean) {
         settingsRepository.putBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, enabled)
         isAodForceTurnOffEnabled.value = enabled
+    }
+
+    fun toggleAodWallpaperEnabled(enabled: Boolean) {
+        settingsRepository.setAodWallpaperEnabled(enabled)
+        isAodWallpaperEnabled.value = enabled
+    }
+
+    fun setAodWallpaperOpacity(opacity: Float) {
+        settingsRepository.setAodWallpaperOpacity(opacity)
+        aodWallpaperOpacity.floatValue = opacity
+    }
+
+    fun setAodWallpaperTimeout(minutes: Int) {
+        settingsRepository.setAodWallpaperTimeout(minutes)
+        aodWallpaperTimeout.intValue = minutes
+    }
+
+    fun setAodWallpaperBlur(radius: Float) {
+        settingsRepository.setAodWallpaperBlur(radius)
+        aodWallpaperBlur.floatValue = radius
+    }
+
+    fun setAodWallpaperVignette(intensity: Float) {
+        settingsRepository.setAodWallpaperVignette(intensity)
+        aodWallpaperVignette.floatValue = intensity
+    }
+
+    fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    java.io.FileOutputStream(file).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                settingsRepository.setAodWallpaperCustomImage(true)
+                val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    hasAodWallpaperCustomImage.value = true
+                    currentWallpaperBitmap.value = bitmap
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainViewModel", "Failed to save custom AOD wallpaper", e)
+            }
+        }
+    }
+
+    fun removeCustomAodWallpaper(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                if (file.exists()) {
+                    file.delete()
+                }
+                settingsRepository.setAodWallpaperCustomImage(false)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    hasAodWallpaperCustomImage.value = false
+                }
+                loadCurrentWallpaperBitmap(context)
+            } catch (e: Exception) {
+                android.util.Log.e("MainViewModel", "Failed to remove custom AOD wallpaper", e)
+            }
+        }
+    }
+
+    fun loadCurrentWallpaperBitmap(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                if (settingsRepository.hasAodWallpaperCustomImage()) {
+                    val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                    if (file.exists()) {
+                        val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                        if (bitmap != null) {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                currentWallpaperBitmap.value = bitmap
+                            }
+                            return@launch
+                        }
+                    }
+                }
+
+                if (PermissionUtils.hasManageExternalStoragePermission(context)) {
+                    val wallpaperManager = android.app.WallpaperManager.getInstance(context)
+                    val drawable =
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            wallpaperManager.getDrawable(android.app.WallpaperManager.FLAG_LOCK)
+                                ?: wallpaperManager.drawable
+                        } else {
+                            wallpaperManager.drawable
+                        }
+                    if (drawable != null) {
+                        val bitmap =
+                            if (drawable is android.graphics.drawable.BitmapDrawable && drawable.bitmap != null) {
+                                drawable.bitmap
+                            } else {
+                                val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 1080
+                                val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 2400
+                                val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                                val canvas = android.graphics.Canvas(bmp)
+                                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                                drawable.draw(canvas)
+                                bmp
+                            }
+                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                            currentWallpaperBitmap.value = bitmap
+                        }
+                    }
+                }
+            } catch (_: Exception) {
+            }
+        }
     }
 
     /**

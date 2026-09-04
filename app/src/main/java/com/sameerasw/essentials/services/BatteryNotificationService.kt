@@ -12,6 +12,7 @@ package com.sameerasw.essentials.services
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.SharedPreferences
@@ -26,6 +27,7 @@ import androidx.core.graphics.ColorUtils
 import com.google.gson.Gson
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ui.activities.BatteryDetailsActivity
 import com.sameerasw.essentials.utils.BatteryRingDrawer
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 
@@ -106,6 +108,19 @@ class BatteryNotificationService : Service() {
         }
     }
 
+    private fun getContentIntent(): PendingIntent {
+        val intent = Intent(this, BatteryDetailsActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        val flags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        return PendingIntent.getActivity(this, 0, intent, flags)
+    }
+
     private fun updateNotification() {
         val batteryItems = fetchBatteryData()
 
@@ -121,6 +136,7 @@ class BatteryNotificationService : Service() {
                     .Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.rounded_battery_charging_60_24)
                     .setLargeIcon(bitmap)
+                    .setContentIntent(getContentIntent())
                     .setStyle(
                         NotificationCompat
                             .BigPictureStyle()
@@ -145,6 +161,7 @@ class BatteryNotificationService : Service() {
             .setSmallIcon(R.drawable.rounded_battery_charging_60_24)
             .setContentTitle(title)
             .setContentText(content)
+            .setContentIntent(getContentIntent())
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .setSilent(true)

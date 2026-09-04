@@ -352,14 +352,14 @@ class AppUpdatesActivity : AppCompatActivity() {
                         }
                     } else {
                         val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
-                        val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+                        val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
                         LazyColumn(
                             state = lazyListState,
                             modifier =
                                 Modifier
                                     .fillMaxSize()
-                                    .scrollMotionBlur(lazyListState, enabled = isConsoleModeEnabled),
+                                    .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
                             contentPadding =
                                 androidx.compose.foundation.layout.PaddingValues(
                                     top = innerPadding.calculateTopPadding() + 16.dp,

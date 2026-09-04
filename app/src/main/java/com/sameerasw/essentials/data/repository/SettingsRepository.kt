@@ -325,10 +325,23 @@ class SettingsRepository(
         const val KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING = "notification_glance_same_as_lighting"
         const val KEY_NOTIFICATION_GLANCE_SELECTED_APPS = "notification_glance_selected_apps"
         const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
+        const val KEY_AOD_WALLPAPER_ENABLED = "aod_wallpaper_enabled"
+        const val KEY_AOD_WALLPAPER_OPACITY = "aod_wallpaper_opacity"
+        const val KEY_AOD_WALLPAPER_TIMEOUT = "aod_wallpaper_timeout"
+        const val KEY_AOD_WALLPAPER_BLUR = "aod_wallpaper_blur"
+        const val KEY_AOD_WALLPAPER_VIGNETTE = "aod_wallpaper_vignette"
+        const val KEY_AOD_WALLPAPER_CUSTOM_IMAGE = "aod_wallpaper_custom_image"
+        const val KEY_PIXEL_SEARCH_RESULT_APPS = "pixel_search_result_apps"
+        const val KEY_PIXEL_SEARCH_RESULT_CONTACTS = "pixel_search_result_contacts"
+        const val KEY_PIXEL_SEARCH_RESULT_SETTINGS = "pixel_search_result_settings"
+        const val KEY_PIXEL_SEARCH_RESULT_SHORTCUTS = "pixel_search_result_shortcuts"
+        const val KEY_PIXEL_SEARCH_RESULT_WEB = "pixel_search_result_web"
+        const val KEY_PIXEL_SEARCH_BUBBLES_WEB = "pixel_search_bubbles_web"
+        const val KEY_PIXEL_SEARCH_ENGINE = "pixel_search_engine"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
-        const val KEY_CONSOLE_MODE = "console_mode"
+        const val KEY_MOTION_BLUR = "motion_blur"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
@@ -401,6 +414,7 @@ class SettingsRepository(
         const val KEY_TRANSLATION_MODE_DO_NOT_SHOW_WARNING = "translation_mode_do_not_show_warning"
 
         const val KEY_LOCKDOWN_MODE = "lockdown_mode"
+        const val KEY_BUBBLE_WEB_FULLSCREEN = "bubble_web_fullscreen"
     }
 
     /**
@@ -2541,6 +2555,12 @@ class SettingsRepository(
         }
     }
 
+    fun isAodWallpaperEnabled(): Boolean = prefs.getBoolean(KEY_AOD_WALLPAPER_ENABLED, false)
+
+    fun setAodWallpaperEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_AOD_WALLPAPER_ENABLED, enabled).apply()
+    }
+
     /**
      * Executes the get private dns presets operation.
      * @return The resulting List<DnsPreset> data.
@@ -2998,4 +3018,51 @@ class SettingsRepository(
     fun getLocationReachedFullScreenAlarmEnabled(): Boolean = getBoolean(KEY_LOCATION_REACHED_FULL_SCREEN_ALARM_ENABLED, true)
 
     fun setLocationReachedFullScreenAlarmEnabled(value: Boolean) = putBoolean(KEY_LOCATION_REACHED_FULL_SCREEN_ALARM_ENABLED, value)
+
+    fun getAodWallpaperOpacity(): Float = getFloat(KEY_AOD_WALLPAPER_OPACITY, 0.3f)
+
+    fun setAodWallpaperOpacity(value: Float) = putFloat(KEY_AOD_WALLPAPER_OPACITY, value)
+
+    // timeout in minutes; 0 = Never, default = 3
+    fun getAodWallpaperTimeout(): Int = getInt(KEY_AOD_WALLPAPER_TIMEOUT, 3)
+
+    fun setAodWallpaperTimeout(value: Int) = putInt(KEY_AOD_WALLPAPER_TIMEOUT, value)
+
+    // blur  0-25
+    fun getAodWallpaperBlur(): Float = getFloat(KEY_AOD_WALLPAPER_BLUR, 0f)
+
+    fun setAodWallpaperBlur(value: Float) = putFloat(KEY_AOD_WALLPAPER_BLUR, value)
+
+    // vignette 0-100
+    fun getAodWallpaperVignette(): Float = getFloat(KEY_AOD_WALLPAPER_VIGNETTE, 0f)
+
+    fun setAodWallpaperVignette(value: Float) = putFloat(KEY_AOD_WALLPAPER_VIGNETTE, value)
+
+    fun hasAodWallpaperCustomImage(): Boolean = getBoolean(KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)
+
+    fun setAodWallpaperCustomImage(hasCustomImage: Boolean) = putBoolean(KEY_AOD_WALLPAPER_CUSTOM_IMAGE, hasCustomImage)
+
+    fun isPixelSearchResultAppsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, true)
+    fun setPixelSearchResultAppsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, enabled)
+
+    fun isPixelSearchResultContactsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_CONTACTS, true)
+    fun setPixelSearchResultContactsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_CONTACTS, enabled)
+
+    fun isPixelSearchResultSettingsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_SETTINGS, true)
+    fun setPixelSearchResultSettingsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_SETTINGS, enabled)
+
+    fun isPixelSearchResultShortcutsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_SHORTCUTS, true)
+    fun setPixelSearchResultShortcutsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_SHORTCUTS, enabled)
+
+    fun isPixelSearchResultWebEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_WEB, true)
+    fun setPixelSearchResultWebEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_WEB, enabled)
+
+    fun isPixelSearchBubblesWebEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_BUBBLES_WEB, false)
+    fun setPixelSearchBubblesWebEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_BUBBLES_WEB, enabled)
+
+    fun getPixelSearchEngine(): String = getString(KEY_PIXEL_SEARCH_ENGINE, "Google") ?: "Google"
+    fun setPixelSearchEngine(engine: String) = putString(KEY_PIXEL_SEARCH_ENGINE, engine)
+
+    fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)
+    fun setBubbleWebFullscreen(fullscreen: Boolean) = putBoolean(KEY_BUBBLE_WEB_FULLSCREEN, fullscreen)
 }

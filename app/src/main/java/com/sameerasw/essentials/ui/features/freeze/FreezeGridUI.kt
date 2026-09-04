@@ -228,13 +228,13 @@ fun FreezeGridUI(
             }
         } else {
             val scrollState = androidx.compose.foundation.rememberScrollState()
-            val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+            val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
             Column(
                 modifier =
                     Modifier
                         .fillMaxSize()
-                        .scrollMotionBlur(scrollState, enabled = isConsoleModeEnabled)
+                        .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                         .verticalScroll(scrollState)
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = { focusManager.clearFocus() })

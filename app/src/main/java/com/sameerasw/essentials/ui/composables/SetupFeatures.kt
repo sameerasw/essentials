@@ -1005,14 +1005,14 @@ fun SetupFeatures(
         val isSearchingViewModel = viewModel.isSearching.value
         val recentSearches by viewModel.recentSearches
 
-    val isConsoleModeEnabled by viewModel.isConsoleModeEnabled
+    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
     LazyColumn(
         state = lazyListState,
         modifier =
             modifier
                 .fillMaxSize()
-                .scrollMotionBlur(lazyListState, enabled = isConsoleModeEnabled),
+                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
         contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding() + 64.dp),
     ) {
             item {

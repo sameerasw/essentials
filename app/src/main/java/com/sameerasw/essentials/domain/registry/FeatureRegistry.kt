@@ -1293,6 +1293,7 @@ object FeatureRegistry {
                 category = R.string.cat_display,
                 description = R.string.feat_smart_pixels_desc,
                 aboutDescription = R.string.about_desc_smart_pixels,
+                animationRes = R.raw.smart_pixel_motion,
                 permissionKeys = listOf("ACCESSIBILITY"),
                 searchableSettings =
                     listOf(
@@ -1751,7 +1752,7 @@ object FeatureRegistry {
             object : Feature(
                 id = "Calendar Sync",
                 title = R.string.feat_calendar_sync_title,
-                iconRes = R.drawable.rounded_sync_24, // Use sync icon
+                iconRes = R.drawable.rounded_calendar_today_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_calendar_sync_desc,
                 aboutDescription = R.string.about_desc_calendar_sync,
@@ -1824,6 +1825,25 @@ object FeatureRegistry {
                 ) {}
             },
             object : Feature(
+                id = "Complications",
+                title = R.string.watch_complications_title,
+                iconRes = R.drawable.rounded_widgets_24,
+                category = R.string.cat_tools,
+                description = R.string.watch_complications_desc,
+                aboutDescription = R.string.watch_complications_desc,
+                parentFeatureId = "Watch",
+                hasMoreSettings = true,
+                showToggle = false,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
                 id = "Notification Sync",
                 title = R.string.watch_notif_sync_title,
                 iconRes = R.drawable.rounded_notification_settings_24,
@@ -1881,7 +1901,7 @@ object FeatureRegistry {
                 category = R.string.cat_tools,
                 description = R.string.feat_watch_wireless_debugging_desc,
                 parentFeatureId = "Watch",
-                hasMoreSettings = false,
+                hasMoreSettings = true,
                 showToggle = true,
             ) {
                 override fun isEnabled(viewModel: MainViewModel): Boolean {

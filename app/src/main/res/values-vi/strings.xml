@@ -195,9 +195,9 @@
     <string name="notification_lighting_sweep_position_title">Position</string>
     <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
     <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_sweep_pos_left">Left</string>
-    <string name="notification_lighting_sweep_pos_center">Center</string>
-    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="notification_lighting_sweep_pos_left">Trái</string>
+    <string name="notification_lighting_sweep_pos_center">Giữa</string>
+    <string name="notification_lighting_sweep_pos_right">Phải</string>
     <string name="settings_section_animation">Hoạt hình</string>
     <string name="notification_lighting_pulse_count_title">Số xung</string>
     <string name="notification_lighting_pulse_duration_title">Thời lượng xung</string>
@@ -1396,7 +1396,9 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Shut-Up!</string>
     <string name="feat_shut_up_desc">Tôi biết tôi đang làm cái gì</string>
-    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_description">Shut-Up! bỏ qua các hạn chế của ứng dụng và kiểm tra các tùy chọn nhà phát triển, khả năng truy cập và gỡ lỗi bằng cách tự động ẩn chúng khi bạn khởi chạy các ứng dụng nhạy cảm.
+
+Sử dụng các phím tắt tùy chỉnh để đảm bảo các cài đặt được ẩn trước khi ứng dụng khởi chạy.</string>
     <string name="shut_up_select_apps_title">Chọn ứng dụng</string>
     <string name="shut_up_select_apps_desc">Chọn ứng dụng để áp dụng logic Shut-Up!</string>
     <string name="shut_up_settings_title">Shut-Up! Settings</string>
@@ -1611,4 +1613,50 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="feat_circle_to_search_gesture_width_desc">Điều chỉnh độ rộng của vùng cảm ứng ở phía dưới</string>
     <string name="flashlight_pulse_disable_on_dnd_title">Không kích hoạt chế độ Không làm phiền (DND)</string>
     <string name="diy_category_apps">Ứng dụng</string>
+    <string name="feat_safe_volume_desc">Giảm âm lượng hội thoại lớn</string>
+    <string name="smart_pixels_disable_on_cast_title">Vô hiệu hóa trong khi chiếu màn hình</string>
+    <string name="smart_pixels_disable_on_cast_desc">Tự động tạm dừng lớp phủ lưới pixel trong khi phát hoặc ghi màn hình</string>
+    <string name="diy_volume_channel_music">Nhạc</string>
+    <string name="label_share_with">Chia sẻ Với</string>
+    <string name="label_open_with">Mở Với</string>
+    <string name="feat_sim_names_title">Tên SIM</string>
+    <string name="feat_sim_names_desc">Đổi tên hiển thị của nhà mạng cho các thẻ SIM đang hoạt động</string>
+    <string name="setting_location_reached_full_screen_alarm_title">Báo thức toàn màn hình</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Phát nhạc chuông báo thức và hiển thị thông báo toàn màn hình khi có cuộc gọi đến</string>
+    <string name="label_ripple_animation">Hoạt ảnh gợn sóng</string>
+    <string name="label_motion_blur">Hiệu ứng mờ chuyển động</string>
+    <string name="setting_app_icon_title">Biểu tượng ứng dụng</string>
+    <string name="setting_app_icon_desc">Tùy chỉnh biểu tượng trình khởi chạy màn hình chính</string>
+    <string name="app_icon_default">Mặc định</string>
+    <string name="app_icon_black">Năng động</string>
+    <string name="app_icon_gta">Phố</string>
+    <string name="app_icon_google">Phổ</string>
+    <string name="icon_no_sim">Không có SIM</string>
+    <string name="icon_network_speed">Tốc độ Mạng</string>
+    <string name="icon_glove_mode">Chế độ Găng tay</string>
+    <string name="icon_frame_rate">Tần số Làm mới / Tần số Khung hình</string>
+    <string name="watch_complications_title">Biến chứng</string>
+    <string name="watch_complications_desc">Tùy chỉnh tiện ích biên chứng</string>
+    <string name="watchface_show_glow_title">Hiển thị ánh sáng</string>
+    <string name="watchface_show_glow_desc">Hiệu ứng chuyển màu gradient nổi bật ở phần trên, phù hợp với các sự kiện và chuyến đi</string>
+    <string name="watchface_glance_complications_desc">Chọn nội dung muốn hiển thị</string>
+    <string name="watch_watchface_title">Mặt đồng hồ</string>
+    <string name="watch_watchface_desc">Tùy chỉnh mặt đồng hồ</string>
+    <string name="watchface_clock_font_size">Kích cỡ chữ</string>
+    <string name="watchface_clock_dual_tone_title">Hai tông màu</string>
+    <string name="watchface_clock_dual_tone_desc">Giờ hiển thị bằng màu trắng, phút hiển thị bằng màu nhấn</string>
+    <string name="watchface_clock_outline_title">Chỉ có đường viền</string>
+    <string name="watchface_clock_outline_desc">Chỉ hiển thị đường viền chữ thay vì toàn bộ văn bản</string>
+    <string name="watchface_hide_battery_title">Ẩn pin</string>
+    <string name="watchface_hide_battery_desc">Ẩn các đường cong và chỉ báo hồ quang pin</string>
+    <string name="watchface_hide_device_icons_title">Ẩn biểu tượng thiết bị</string>
+    <string name="watchface_hide_device_icons_desc">Ẩn các biểu tượng đồng hồ và điện thoại ở phía dưới</string>
+    <string name="watchface_show_complications_title">Hiển thị các biến chứng</string>
+    <string name="watchface_show_complications_desc">Hiển thị các tiện ích bên trái và bên phải</string>
+    <string name="watchface_complications_on_aod_title">Hiển thị trên AOD</string>
+    <string name="watchface_complications_on_aod_desc">Luôn hiển thị các thông báo lỗi trên màn hình Luôn bật</string>
+    <string name="watchface_complication_outline_title">Tóm tắt biến chứng</string>
+    <string name="watchface_complication_outline_desc">Hiển thị đường viền tròn mỏng xung quanh các mục</string>
+    <string name="watchface_left_complication_title">Biến chứng bên trái</string>
+    <string name="watchface_right_complication_title">Biến chứng bên phải</string>
 </resources>

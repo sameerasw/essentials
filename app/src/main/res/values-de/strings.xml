@@ -446,8 +446,8 @@
     <string name="feat_lock_from_watch_title">Sperre von der Uhr aus</string>
     <string name="feat_lock_from_watch_desc">Sperre dein Telefon aus der Ferne</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
-    <string name="remote_lock_mode_screen_off">Screen off</string>
-    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_screen_off">Bildschirm aus</string>
+    <string name="remote_lock_mode_lock">Sperren</string>
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
     <string name="watch_connected_status">Connected</string>
     <string name="watch_unknown_name">Unknown Watch</string>
@@ -771,7 +771,9 @@ Sehe dir den Akkustatus deiner Bluetooth-Kopfhörer, deiner Smartwatch und ander
     <string name="about_desc_watermark">Fügen Sie Ihren Fotos eine benutzerdefinierte Bildunterschrift/ein Wasserzeichen mit EXIF-Daten und Geräteinformationen hinzu.
 
 Teilen Sie ein Bild direkt aus einer anderen App mit Essentials, um ganz einfach ein Wasserzeichen hinzuzufügen</string>
-    <string name="about_desc_calendar_sync">Sync all your upcoming calendar schedule not matter the restrictions on Google accounts not letting to be added to wearOS devices due to work or school policies. \n\nMake sure to install the wearOS Essentials companion app to display the schedule in the app as well as in a tile or a complication.</string>
+    <string name="about_desc_calendar_sync">Synchronisieren Sie Ihren gesamten anstehenden Kalender, unabhängig von den Einschränkungen, die Google-Konten aufgrund von Arbeits- oder Schulrichtlinien möglicherweise nicht zu WearOS-Geräten hinzufügen lassen.
+
+Stellen Sie sicher, dass Sie die WearOS Essentials-Begleit-App installieren, um den Zeitplan sowohl in der App als auch in einer Kachel oder Komplikation anzuzeigen</string>
     <string name="about_desc_app_updates">Keep track of updates for your installed apps.\n\nGet notified about available updates, view changelogs and install them easily with a tap.</string>
     <string name="about_desc_call_vibrations">Füge deinen Anrufen haptisches Feedback hinzu.\n\nDas Gerät vibriert, wenn eine Verbindung hergestellt, getrennt oder ein Anruf angenommen wird, sodass Sie eine taktile Rückmeldung erhalten, ohne auf den Bildschirm schauen zu müssen.</string>
     <string name="about_desc_sound_mode_tile">Wechseln Sie schnell zwischen den Modi „Ton“, „Vibration“ und „Lautlos“.
@@ -1640,7 +1642,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="feat_sim_names_desc">Anzeigenamen des Mobilfunkanbieters für aktive SIM-Karten anpassen </string>
     <string name="setting_location_reached_full_screen_alarm_title">Vollbild-Alarm</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Bei Ankunft den Alarmklingelton abspielen und eine Vollbild-Warnmeldung anzeigen</string>
-    <string name="label_ripple_animation">Ripple Animation</string>
+    <string name="label_ripple_animation">Wellenanimation</string>
     <string name="desc_ripple_animation">Aktiviere Ripplranimationen in der Benutzeroberfläche</string>
     <string name="tile_lockdown_mode_desc">Bildschirm aus QS-tile</string>
     <string name="watch_watchface_title">Zifferblatt</string>
@@ -1655,15 +1657,6 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watchface_complications_on_aod_title">Auf dem AOD anzeigen</string>
     <string name="setting_app_icon_title">App-Icon</string>
     <string name="setting_app_icon_desc">Das App-Symbol auf dem Startbildschirm anpassen</string>
-    <string name="feat_medrop_profile_professional">Professionel</string>
-    <string name="feat_medrop_allow_when_locked">Im gesperrten Zustand zulassen</string>
-    <string name="feat_medrop_allow_when_locked_desc">Öffne MeDrop über die Schnellkachel, auch wenn der Bildschirm gesperrt ist</string>
-    <string name="feat_medrop_include_photo">Profilfoto miteinbeziehen</string>
-    <string name="feat_medrop_use_photo_for_all">Für alle Profile verwenden</string>
-    <string name="feat_medrop_use_photo_for_all_desc">Verwendet das Kontaktfoto für alle Profile</string>
-    <string name="feat_medrop_choose_custom_photo">Eigenes Foto auswählen</string>
-    <string name="feat_medrop_profile_enabled">Dieses Profil aktivieren</string>
-    <string name="feat_medrop_profile_enabled_desc">Dieses Profil beim Teilen per NFC verfügbar machen</string>
     <string name="pixel_searchbar_background_pill_title">Hintergrund-Pille</string>
     <string name="pixel_searchbar_background_pill_desc">Zeigt das Datum in einem Container</string>
     <string name="pixel_searchbar_widget_padding_h">Horizontaler Abstand</string>
@@ -1675,4 +1668,17 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="app_icon_legacy">altes Icon</string>
     <string name="app_icon_black">Dynamisch</string>
     <string name="app_icon_google">Spektrum</string>
+    <string name="settings_genai_automation_title">GenAl-Nutzung aktivieren</string>
+    <string name="settings_genai_automation_desc">Verwende Gemini Nano auf dem Gerät, um Automatisierungen aus Beschreibungen zu erstellen</string>
+    <string name="label_motion_blur">Bewegungsunschärfe</string>
+    <string name="watchface_hide_battery_desc">Akkuanzeige und -indikatoren ausblenden</string>
+    <string name="watchface_hide_device_icons_desc">Uhren- und Telefonsymbole unten ausblenden</string>
+    <string name="watchface_show_complications_title">Komplikationen anzeigen</string>
+    <string name="watchface_show_complications_desc">Widgets links und rechts anzeigen</string>
+    <string name="watchface_complications_on_aod_desc">Komplikationen auf Always-on-Display sichtbar lassen</string>
+    <string name="watchface_complication_outline_title">Komplikationsumriss</string>
+    <string name="watchface_complication_outline_desc">Dünnen Kreisrahmen um Elemente anzeigen</string>
+    <string name="watchface_left_complication_title">Linke Komplikation</string>
+    <string name="watchface_right_complication_title">Rechte Komplikation</string>
+    <string name="watchface_clock_outline_thickness">Konturstärke</string>
 </resources>
