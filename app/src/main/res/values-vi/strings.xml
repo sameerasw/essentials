@@ -1659,4 +1659,11 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="watchface_complication_outline_desc">Hiển thị đường viền tròn mỏng xung quanh các mục</string>
     <string name="watchface_left_complication_title">Biến chứng bên trái</string>
     <string name="watchface_right_complication_title">Biến chứng bên phải</string>
+    <string name="label_thermal_skin">Nhiệt độ mặt sau</string>
+    <string name="label_audio_drain">Mức tiêu thụ Âm thanh</string>
+    <string name="label_video_drain">Mức tiêu thụ Video</string>
+    <string name="label_camera_drain">Mức tiêu thụ Máy ảnh</string>
+    <string name="label_flashlight_drain">Mức tiêu thụ Đèn pin</string>
+    <string name="label_cpu_idle_drain">Mức tiêu hao năng lượng CPU khi không hoạt động</string>
+    <string name="label_cpu_suspend_drain">Mức tiêu thụ khi tạm dừng CPU</string>
 </resources>
