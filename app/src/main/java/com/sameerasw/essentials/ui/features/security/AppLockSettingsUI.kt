@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -34,29 +35,27 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.core.sheets.PermissionItem
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.BiometricHelper
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.PermissionViewModel
-import com.sameerasw.essentials.viewmodels.SecurityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppLockSettingsUI(
     viewModel: MainViewModel,
-    securityViewModel: SecurityViewModel =
-        androidx.lifecycle.viewmodel.compose
-            .viewModel(),
-    permissionViewModel: PermissionViewModel =
-        androidx.lifecycle.viewmodel.compose
-            .viewModel(),
+    permissionViewModel: PermissionViewModel = viewModel(),
     modifier: Modifier = Modifier,
     highlightKey: String? = null,
 ) {
     val context = LocalContext.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
+    var showPermissionSheet by remember { mutableStateOf(false) }
 
-    val isAppLockEnabled by securityViewModel.isAppLockEnabled
+    val isAppLockEnabled by viewModel.isAppLockEnabled
     val isUseUsageAccess by viewModel.isUseUsageAccess
     val isAccessibilityEnabled by permissionViewModel.isAccessibilityEnabled
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
@@ -117,7 +116,7 @@ fun AppLockSettingsUI(
                     }
                 },
                 enabled = canEnableAppLock,
-                onDisabledClick = {},
+                onDisabledClick = { showPermissionSheet = true },
                 modifier = Modifier.highlight(highlightKey == "app_lock_enabled"),
             )
 
@@ -185,6 +184,41 @@ fun AppLockSettingsUI(
                         enabled,
                     )
                 },
+            )
+        }
+
+        if (showPermissionSheet) {
+            val permissionItem =
+                if (isUseUsageAccess) {
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_data_usage_24,
+                        title = R.string.perm_usage_stats_title,
+                        description = R.string.perm_usage_stats_desc_app_lock,
+                        dependentFeatures = listOf(R.string.feat_app_lock_title),
+                        actionLabel = if (isUsageStatsPermissionGranted) R.string.perm_action_granted else R.string.perm_action_grant,
+                        action = { PermissionUtils.openUsageStatsSettings(context) },
+                        isGranted = isUsageStatsPermissionGranted,
+                    )
+                } else {
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_settings_accessibility_24,
+                        title = R.string.perm_accessibility_title,
+                        description = R.string.perm_accessibility_desc_common,
+                        dependentFeatures = listOf(R.string.feat_app_lock_title),
+                        actionLabel = if (isAccessibilityEnabled) R.string.perm_action_granted else R.string.perm_action_grant,
+                        action = { PermissionUtils.openAccessibilitySettings(context) },
+                        isGranted = isAccessibilityEnabled,
+                    )
+                }
+
+            PermissionsBottomSheet(
+                onDismissRequest = {
+                    showPermissionSheet = false
+                    permissionViewModel.refreshPermissions(context)
+                    viewModel.check(context)
+                },
+                featureTitle = R.string.feat_app_lock_title,
+                permissions = listOf(permissionItem),
             )
         }
     }
