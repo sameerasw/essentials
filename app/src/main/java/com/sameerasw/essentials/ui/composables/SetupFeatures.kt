@@ -1460,10 +1460,25 @@ private fun RecentSearchesSection(
             )
         }
 
+        val validSearches =
+            remember(recentSearches, allFeatures) {
+                recentSearches.filter { item ->
+                    item.title.isNotBlank() &&
+                        allFeatures.any { it.id == item.featureKey }
+                }
+            }
+
+        LaunchedEffect(recentSearches.size, validSearches.size) {
+            if (recentSearches.isNotEmpty() && validSearches.size != recentSearches.size) {
+                // If any corrupted/invalid feature IDs were found in history, clean them up
+                viewModel.clearRecentSearches()
+            }
+        }
+
         RoundedCardContainer(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
-            recentSearches.forEach { result ->
+            validSearches.forEach { result ->
                 FeatureCard(
                     title = result.title,
                     isEnabled = true,

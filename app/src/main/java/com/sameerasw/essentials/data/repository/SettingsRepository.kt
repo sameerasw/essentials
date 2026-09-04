@@ -1579,18 +1579,21 @@ class SettingsRepository(
      * @return The resulting List<com data.
      */
     fun getRecentSearches(): List<com.sameerasw.essentials.domain.model.SearchableItem> {
-        val json = prefs.getString(KEY_RECENT_SEARCHES, null)
-        return if (json != null) {
-            try {
-                gson
-                    .fromJson(
-                        json,
-                        Array<com.sameerasw.essentials.domain.model.SearchableItem>::class.java,
-                    ).toList()
-            } catch (e: Exception) {
-                emptyList()
+        val json = prefs.getString(KEY_RECENT_SEARCHES, null) ?: return emptyList()
+        return try {
+            val list = gson.fromJson(
+                json,
+                Array<com.sameerasw.essentials.domain.model.SearchableItem>::class.java,
+            )?.toList() ?: emptyList()
+
+            // Validate that every item has valid non-empty fields
+            list.filter {
+                @Suppress("SENSELESS_COMPARISON")
+                it != null && !it.title.isNullOrBlank() && !it.featureKey.isNullOrBlank()
             }
-        } else {
+        } catch (e: Throwable) {
+            android.util.Log.e("SettingsRepository", "Failed to parse recent searches, clearing history: ${e.message}")
+            remove(KEY_RECENT_SEARCHES)
             emptyList()
         }
     }
