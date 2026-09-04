@@ -320,6 +320,7 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_TIMEOUT = "aod_wallpaper_timeout"
         const val KEY_AOD_WALLPAPER_BLUR = "aod_wallpaper_blur"
         const val KEY_AOD_WALLPAPER_VIGNETTE = "aod_wallpaper_vignette"
+        const val KEY_AOD_WALLPAPER_BLACK_THRESHOLD = "aod_wallpaper_black_threshold"
         const val KEY_AOD_WALLPAPER_CUSTOM_IMAGE = "aod_wallpaper_custom_image"
         const val KEY_PIXEL_SEARCH_RESULT_APPS = "pixel_search_result_apps"
         const val KEY_PIXEL_SEARCH_RESULT_CONTACTS = "pixel_search_result_contacts"
@@ -2970,6 +2971,11 @@ class SettingsRepository(
     fun getAodWallpaperVignette(): Float = getFloat(KEY_AOD_WALLPAPER_VIGNETTE, 0f)
 
     fun setAodWallpaperVignette(value: Float) = putFloat(KEY_AOD_WALLPAPER_VIGNETTE, value)
+
+    // black threshold 0-50 (default 15)
+    fun getAodWallpaperBlackThreshold(): Float = getFloat(KEY_AOD_WALLPAPER_BLACK_THRESHOLD, 15f)
+
+    fun setAodWallpaperBlackThreshold(value: Float) = putFloat(KEY_AOD_WALLPAPER_BLACK_THRESHOLD, value)
 
     fun hasAodWallpaperCustomImage(): Boolean = getBoolean(KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)
 

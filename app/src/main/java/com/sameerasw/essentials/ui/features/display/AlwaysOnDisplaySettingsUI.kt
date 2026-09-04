@@ -156,6 +156,7 @@ fun AlwaysOnDisplaySettingsUI(
         val isWallpaperEnabled = viewModel.isAodWallpaperEnabled.value
         val blurRadius = viewModel.aodWallpaperBlur.floatValue
         val vignetteIntensity = viewModel.aodWallpaperVignette.floatValue
+        val blackThreshold = viewModel.aodWallpaperBlackThreshold.floatValue
 
         val animatedPreviewAlpha by animateFloatAsState(
             targetValue = if (isWallpaperEnabled) opacity else 0f,
@@ -238,15 +239,29 @@ fun AlwaysOnDisplaySettingsUI(
                             },
                         contentAlignment = Alignment.Center,
                     ) {
+                        Text(
+                            text = timeText,
+                            style = TextStyle(
+                                fontFamily = aodClockFont,
+                                fontWeight = FontWeight.Thin,
+                                fontSize = 52.sp,
+                                letterSpacing = 4.sp,
+                                color = MaterialTheme.colorScheme.primary.copy(
+                                    alpha = if (isWallpaperEnabled) (animatedPreviewAlpha * 1.4f).coerceIn(0f, 1f) else 0f,
+                                ),
+                            ),
+                            textAlign = TextAlign.Center,
+                        )
+
                         if (wallpaperBitmap != null) {
-                            val luminanceFilter = remember {
+                            val luminanceFilter = remember(blackThreshold) {
                                 androidx.compose.ui.graphics.ColorFilter.colorMatrix(
                                     androidx.compose.ui.graphics.ColorMatrix(
                                         floatArrayOf(
                                             1.2f, 0f, 0f, 0f, 0f,
                                             0f, 1.2f, 0f, 0f, 0f,
                                             0f, 0f, 1.2f, 0f, 0f,
-                                            0.5f, 1.5f, 0.2f, 0f, -15f,
+                                            0.5f, 1.5f, 0.2f, 0f, -blackThreshold,
                                         )
                                     )
                                 )
@@ -265,20 +280,6 @@ fun AlwaysOnDisplaySettingsUI(
                                     ),
                             )
                         }
-
-                        Text(
-                            text = timeText,
-                            style = TextStyle(
-                                fontFamily = aodClockFont,
-                                fontWeight = FontWeight.Thin,
-                                fontSize = 52.sp,
-                                letterSpacing = 4.sp,
-                                color = MaterialTheme.colorScheme.primaryContainer.copy(
-                                    alpha = if (isWallpaperEnabled) (animatedPreviewAlpha * 1.4f).coerceIn(0f, 1f) else 0f,
-                                ),
-                            ),
-                            textAlign = TextAlign.Center,
-                        )
                     }
 
                     SegmentedDropdownMenu(
@@ -399,6 +400,22 @@ fun AlwaysOnDisplaySettingsUI(
                     increment = 5f,
                     valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}%" },
                     iconRes = R.drawable.rounded_grain_24,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_black_threshold),
+                    value = blackThreshold,
+                    onValueChange = { viewModel.setAodWallpaperBlackThreshold(it) },
+                    valueRange = 0f..50f,
+                    increment = 1f,
+                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
+                    iconRes = R.drawable.rounded_invert_colors_24,
                 )
             }
 

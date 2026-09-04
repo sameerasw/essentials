@@ -266,6 +266,7 @@ class AodWallpaperOverlayHandler(
     private fun showOverlay() {
         val opacity = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_OPACITY, 0.3f)
         val blurRadius = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_BLUR, 0f)
+        val blackThreshold = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_BLACK_THRESHOLD, 15f)
 
         val luminanceFilter = android.graphics.ColorMatrixColorFilter(
             android.graphics.ColorMatrix(
@@ -273,7 +274,7 @@ class AodWallpaperOverlayHandler(
                     1.2f, 0f, 0f, 0f, 0f,
                     0f, 1.2f, 0f, 0f, 0f,
                     0f, 0f, 1.2f, 0f, 0f,
-                    0.5f, 1.5f, 0.2f, 0f, -15f,
+                    0.5f, 1.5f, 0.2f, 0f, -blackThreshold,
                 )
             )
         )

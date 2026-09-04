@@ -163,6 +163,7 @@ class MainViewModel : ViewModel() {
     val aodWallpaperTimeout = mutableIntStateOf(3)
     val aodWallpaperBlur = mutableFloatStateOf(0f)
     val aodWallpaperVignette = mutableFloatStateOf(0f)
+    val aodWallpaperBlackThreshold = mutableFloatStateOf(15f)
     val hasAodWallpaperCustomImage = mutableStateOf(false)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
@@ -1919,6 +1920,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperBlur()
         aodWallpaperVignette.floatValue =
             settingsRepository.getAodWallpaperVignette()
+        aodWallpaperBlackThreshold.floatValue =
+            settingsRepository.getAodWallpaperBlackThreshold()
         hasAodWallpaperCustomImage.value =
             settingsRepository.hasAodWallpaperCustomImage()
         pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
@@ -7014,6 +7017,11 @@ class MainViewModel : ViewModel() {
     fun setAodWallpaperVignette(intensity: Float) {
         settingsRepository.setAodWallpaperVignette(intensity)
         aodWallpaperVignette.floatValue = intensity
+    }
+
+    fun setAodWallpaperBlackThreshold(threshold: Float) {
+        settingsRepository.setAodWallpaperBlackThreshold(threshold)
+        aodWallpaperBlackThreshold.floatValue = threshold
     }
 
     fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {
