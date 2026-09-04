@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -89,111 +90,116 @@ fun ReorderFavoritesBottomSheet(
                 modifier = Modifier.padding(start = 8.dp, bottom = 16.dp),
             )
 
-            RoundedCardContainer(
+            LazyColumn(
+                state = lazyListState,
                 modifier = Modifier.fillMaxWidth(),
-                spacing = 2.dp,
-                cornerRadius = 24.dp,
+                contentPadding = PaddingValues(bottom = 32.dp),
             ) {
-                LazyColumn(
-                    state = lazyListState,
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    items(pinnedKeys, key = { it }) { featureId ->
-                        ReorderableItem(reorderableLazyListState, key = featureId) { isDragging ->
-                            val feature = featuresMap[featureId]
-                            val resolvedTitle =
-                                if (feature != null) stringResource(id = feature.title) else featureId
+                item {
+                    RoundedCardContainer(
+                        modifier = Modifier.fillMaxWidth(),
+                        spacing = 2.dp,
+                        cornerRadius = 24.dp,
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                        ) {
+                            pinnedKeys.forEach { featureId ->
+                                val feature = featuresMap[featureId]
+                                val resolvedTitle =
+                                    if (feature != null) stringResource(id = feature.title) else featureId
 
-                            ListItem(
-                                colors =
-                                    ListItemDefaults.colors(
-                                        containerColor =
-                                            if (isDragging) {
-                                                MaterialTheme.colorScheme.surfaceContainerHighest
-                                            } else {
-                                                MaterialTheme.colorScheme.surfaceBright
-                                            },
-                                    ),
-                                modifier = Modifier.fillMaxWidth(),
-                                leadingContent = {
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .size(40.dp)
-                                                .background(
-                                                    color = ColorUtil.getPastelColorFor(resolvedTitle),
-                                                    shape = CircleShape,
-                                                ),
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Icon(
-                                            painter =
-                                                painterResource(
-                                                    id = feature?.iconRes ?: R.drawable.rounded_bookmark_24,
-                                                ),
-                                            contentDescription = resolvedTitle,
-                                            modifier = Modifier.size(24.dp),
-                                            tint = ColorUtil.getVibrantColorFor(resolvedTitle),
-                                        )
-                                    }
-                                },
-                                content = {
-                                    Text(
-                                        text = resolvedTitle,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
+                                ReorderableItem(reorderableLazyListState, key = featureId) { isDragging ->
+                                    ListItem(
+                                        colors =
+                                            ListItemDefaults.colors(
+                                                containerColor =
+                                                    if (isDragging) {
+                                                        MaterialTheme.colorScheme.surfaceContainerHighest
+                                                    } else {
+                                                        MaterialTheme.colorScheme.surfaceBright
+                                                    },
+                                            ),
+                                        modifier = Modifier.fillMaxWidth(),
+                                        leadingContent = {
+                                            Box(
+                                                modifier =
+                                                    Modifier
+                                                        .size(40.dp)
+                                                        .background(
+                                                            color = ColorUtil.getPastelColorFor(resolvedTitle),
+                                                            shape = CircleShape,
+                                                        ),
+                                                contentAlignment = Alignment.Center,
+                                            ) {
+                                                Icon(
+                                                    painter =
+                                                        painterResource(
+                                                            id = feature?.iconRes ?: R.drawable.rounded_bookmark_24,
+                                                        ),
+                                                    contentDescription = resolvedTitle,
+                                                    modifier = Modifier.size(24.dp),
+                                                    tint = ColorUtil.getVibrantColorFor(resolvedTitle),
+                                                )
+                                            }
+                                        },
+                                        content = {
+                                            Text(
+                                                text = resolvedTitle,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                            )
+                                        },
+                                        trailingContent = {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                            ) {
+                                                IconButton(
+                                                    onClick = {
+                                                        HapticUtil.performVirtualKeyHaptic(view)
+                                                        viewModel.togglePinFeature(featureId)
+                                                    },
+                                                ) {
+                                                    Icon(
+                                                        painter =
+                                                            painterResource(id = R.drawable.rounded_bookmark_remove_24),
+                                                        contentDescription = stringResource(R.string.action_unpin),
+                                                        tint = MaterialTheme.colorScheme.error,
+                                                    )
+                                                }
+
+                                                IconButton(
+                                                    modifier =
+                                                        Modifier.draggableHandle(
+                                                            onDragStarted = {
+                                                                hapticFeedback.performHapticFeedback(
+                                                                    HapticFeedbackType.GestureThresholdActivate,
+                                                                )
+                                                            },
+                                                            onDragStopped = {
+                                                                hapticFeedback.performHapticFeedback(
+                                                                    HapticFeedbackType.GestureEnd,
+                                                                )
+                                                            },
+                                                        ),
+                                                    onClick = {},
+                                                ) {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_drag_handle_24),
+                                                        contentDescription = stringResource(R.string.content_desc_drag_reorder),
+                                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    )
+                                                }
+                                            }
+                                        },
                                     )
-                                },
-                                trailingContent = {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        IconButton(
-                                            onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                viewModel.togglePinFeature(featureId)
-                                            },
-                                        ) {
-                                            Icon(
-                                                painter =
-                                                    painterResource(id = R.drawable.rounded_bookmark_remove_24),
-                                                contentDescription = stringResource(R.string.action_unpin),
-                                                tint = MaterialTheme.colorScheme.error,
-                                            )
-                                        }
-
-                                        IconButton(
-                                            modifier =
-                                                Modifier.draggableHandle(
-                                                    onDragStarted = {
-                                                        hapticFeedback.performHapticFeedback(
-                                                            HapticFeedbackType.GestureThresholdActivate,
-                                                        )
-                                                    },
-                                                    onDragStopped = {
-                                                        hapticFeedback.performHapticFeedback(
-                                                            HapticFeedbackType.GestureEnd,
-                                                        )
-                                                    },
-                                                ),
-                                            onClick = {},
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_drag_handle_24),
-                                                contentDescription = stringResource(R.string.content_desc_drag_reorder),
-                                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            )
-                                        }
-                                    }
-                                },
-                            )
+                                }
+                            }
                         }
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

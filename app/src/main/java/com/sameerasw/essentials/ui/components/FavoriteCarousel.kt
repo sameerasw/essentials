@@ -145,6 +145,8 @@ fun FavoriteCarousel(
                 label = "alpha",
             )
 
+            val pastelColor = ColorUtil.getPastelColorFor(resolvedTitle)
+
             Box(
                 modifier =
                     Modifier
@@ -179,7 +181,7 @@ fun FavoriteCarousel(
                             Modifier
                                 .size(40.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(resolvedTitle),
+                                    color = MaterialTheme.colorScheme.surfaceBright,
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,
@@ -188,13 +190,14 @@ fun FavoriteCarousel(
                             painter = painterResource(id = feature.iconRes),
                             contentDescription = resolvedTitle,
                             modifier = Modifier.size(24.dp),
-                            tint = ColorUtil.getVibrantColorFor(resolvedTitle),
+                            tint = pastelColor,
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = resolvedTitle,
                         style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         modifier =
