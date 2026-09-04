@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,11 +46,12 @@ import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
 fun CategoryExpandableSection(
+    modifier: Modifier = Modifier,
     title: String,
-    itemCount: Int,
+    isSettingsSection: Boolean = false,
+    itemCount: Int? = null,
     isExpanded: Boolean,
     onToggleExpand: () -> Unit,
-    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val view = LocalView.current
@@ -60,7 +62,6 @@ fun CategoryExpandableSection(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
             modifier =
@@ -70,7 +71,8 @@ fun CategoryExpandableSection(
                     .clickable {
                         HapticUtil.performUIHaptic(view)
                         onToggleExpand()
-                    }.padding(horizontal = 12.dp, vertical = 8.dp),
+                    }
+                    .padding(if (isSettingsSection) 16.dp else 12.dp, 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -81,22 +83,25 @@ fun CategoryExpandableSection(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = if (!isSettingsSection) FontWeight.Bold else null,
+                    color = if (isSettingsSection) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                 )
-                Box(
-                    modifier =
-                        Modifier
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                            .padding(horizontal = 8.dp, vertical = 2.dp),
-                ) {
-                    Text(
-                        text = itemCount.toString(),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+
+                if (itemCount != null) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                                .padding(horizontal = 8.dp, vertical = 2.dp),
+                    ) {
+                        Text(
+                            text = itemCount.toString(),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
 
@@ -115,8 +120,9 @@ fun CategoryExpandableSection(
             visible = isExpanded,
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
+            modifier = Modifier.clip(RoundedCornerShape(24.dp))
         ) {
-            RoundedCardContainer(spacing = 2.dp) {
+            RoundedCardContainer(modifier = Modifier.padding(top = 8.dp)) {
                 content()
             }
         }

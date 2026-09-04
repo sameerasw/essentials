@@ -404,6 +404,7 @@ class SettingsRepository(
         const val KEY_TRANSLATION_MODE_DO_NOT_SHOW_WARNING = "translation_mode_do_not_show_warning"
 
         const val KEY_LOCKDOWN_MODE = "lockdown_mode"
+        const val KEY_DISABLE_LINK_PREVIEW = "disable_link_preview"
         const val KEY_BUBBLE_WEB_FULLSCREEN = "bubble_web_fullscreen"
     }
 

@@ -17,10 +17,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 
 class LinkPickerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +36,7 @@ class LinkPickerActivity : AppCompatActivity() {
         }
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
-        val locationViewModel =
-            com.sameerasw.essentials.viewmodels
-                .LocationReachedViewModel(application)
+        val locationViewModel = LocationReachedViewModel(application)
         if (locationViewModel.handleIntent(intent)) {
             val settingsIntent =
                 Intent(this, FeatureSettingsActivity::class.java).apply {
@@ -64,17 +65,16 @@ class LinkPickerActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
-                androidx.lifecycle.viewmodel.compose
-                    .viewModel()
-            val context = androidx.compose.ui.platform.LocalContext.current
-            androidx.compose.runtime.LaunchedEffect(Unit) {
-                viewModel.check(context)
-            }
-            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            val context = LocalContext.current
+            val settingsRepository = remember(context) { SettingsRepository(context) }
+            val isPitchBlackThemeEnabled =
+                settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
+            val disableLinkPreview =
+                settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_LINK_PREVIEW)
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 LinkPickerScreen(
                     uri = uri,
+                    disableLinkPreview = disableLinkPreview,
                     onFinish = { finish() },
                     modifier = Modifier.fillMaxSize(),
                 )

@@ -231,7 +231,7 @@ fun NavigationSettingsUI(
             IconToggleItem(
                 title = stringResource(R.string.feat_circle_to_search_gesture_title),
                 description = stringResource(R.string.feat_circle_to_search_gesture_desc),
-                isChecked = viewModel.isCircleToSearchGestureEnabled.value,
+                isChecked = (isAccessibilityEnabled && viewModel.isCircleToSearchGestureEnabled.value),
                 onCheckedChange = { enabled ->
                     if (isShellGranted && isAccessibilityEnabled) {
                         viewModel.setCircleToSearchGestureEnabled(enabled, context)
@@ -271,7 +271,7 @@ fun NavigationSettingsUI(
             )
 
             AnimatedVisibility(
-                visible = viewModel.isCircleToSearchGestureEnabled.value,
+                visible = isAccessibilityEnabled && viewModel.isCircleToSearchGestureEnabled.value,
                 enter = expandVertically(),
                 exit = shrinkVertically(),
             ) {
@@ -279,7 +279,7 @@ fun NavigationSettingsUI(
                     title = stringResource(R.string.feat_circle_to_search_gesture_height_title),
                     value = viewModel.circleToSearchGestureHeight.floatValue,
                     onValueChange = { viewModel.setCircleToSearchGestureHeight(it) },
-                    valueRange = 24f..120f,
+                    valueRange = 14f..120f,
                     increment = 4f,
                     iconRes = R.drawable.rounded_border_bottom_24,
                     description = stringResource(R.string.feat_circle_to_search_gesture_height_desc),
@@ -288,7 +288,7 @@ fun NavigationSettingsUI(
             }
 
             AnimatedVisibility(
-                visible = viewModel.isCircleToSearchGestureEnabled.value,
+                visible = isAccessibilityEnabled && viewModel.isCircleToSearchGestureEnabled.value,
                 enter = expandVertically(),
                 exit = shrinkVertically(),
             ) {
