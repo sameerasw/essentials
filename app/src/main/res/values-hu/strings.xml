@@ -327,7 +327,6 @@
     <string name="icon_samsung_smart">Samsung intelligens funkciók</string>
     <string name="icon_samsung_services">Samsung-szolgáltatások</string>
     <string name="icon_ethernet">Ethernet</string>
-
     <!-- Status Bar Settings -->
     <string name="stb_clock_seconds">Másodpercek megjelenítése az órán</string>
     <string name="stb_battery_percentage">Akkumulátortöltöttség</string>
@@ -370,60 +369,42 @@
     <!-- Search -->
     <string name="search_clock_seconds_title">Óra másodpercei</string>
     <string name="search_clock_seconds_desc">Másodpercek megjelenítése az állapotsor órájában</string>
-
     <string name="search_battery_percentage_title">Akkumulátortöltöttség</string>
     <string name="search_battery_percentage_desc">Az akkumulátortöltöttség százalékos kijelzésének beállítása</string>
-
     <string name="search_privacy_chip_title">Adatvédelmi jelzők</string>
     <string name="search_privacy_chip_desc">Jelző megjelenítése, ha a kamera vagy a mikrofon használatban van</string>
-
     <string name="search_desc_toggle_visibility">A(z) %1$s láthatóságának be- és kikapcsolása</string>
-
     <string name="action_pin">Rögzítés a Kedvencekhez</string>
     <string name="action_unpin">Eltávolítás a Kedvencek közül</string>
-
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
     <string name="cat_tools">Eszközök</string>
     <string name="cat_visuals">Megjelenés</string>
     <string name="cat_system">Rendszer</string>
     <!-- UI Elements -->
-
     <string name="search_placeholder">Essentials keresése</string>
     <string name="search_no_results">Nincs találat erre: „%1$s”</string>
     <string name="search_results_title">Keresési eredmények</string>
     <string name="requires_following_permissions">%1$s a következő engedélyeket igényli</string>
-
     <!-- Features -->
-
     <string name="feat_screen_off_widget_title">Kikapcsolt képernyő widgetje</string>
     <string name="feat_screen_off_widget_desc">Láthatatlan widget a képernyő kikapcsolásához</string>
-
     <string name="feat_statusbar_icons_title">Állapotsáv ikonjai</string>
     <string name="feat_statusbar_icons_desc">Az állapotsáv ikonjainak láthatóságának szabályozása</string>
-
     <string name="feat_caffeinate_title">Képernyő ébren tartása</string>
     <string name="feat_caffeinate_desc">A képernyő ébren tartása</string>
-
     <string name="feat_maps_power_saving_title">Maps energiatakarékos módja</string>
     <string name="feat_maps_power_saving_desc">Bármely Android-eszközhöz</string>
-
     <string name="feat_notification_lighting_title">Értesítési világítás</string>
     <string name="feat_notification_lighting_desc">Világítás megjelenítése értesítéseknél</string>
-
     <string name="feat_flashlight_pulse_desc">A zseblámpa villogtatása értesítéseknél</string>
-
     <string name="feat_sound_mode_tile_title">Hangmód csempéje</string>
-
     <string name="feat_call_vibrations_title">Hívásrezgés</string>
     <string name="feat_call_vibrations_desc">Rezgés a hívásokhoz kapcsolódó műveleteknél</string>
-
     <string name="show_bluetooth_devices">Bluetooth-eszközök megjelenítése</string>
     <string name="show_bluetooth_devices_summary">A csatlakoztatott Bluetooth-eszközök akkumulátortöltöttségének megjelenítése</string>
-
     <string name="limit_max_devices">Eszközök maximális számának korlátozása</string>
     <string name="limit_max_devices_summary">A widgetben megjelenő eszközök maximális számának beállítása</string>
-
     <string name="widget_background_title">Widget háttere</string>
     <string name="widget_background_summary">A widget hátterének megjelenítése</string>
     <!-- DIY Automation -->
