@@ -22,6 +22,8 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.GitHubRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.NotificationApp
+import org.json.JSONArray
+import org.json.JSONObject
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubAsset
 import com.sameerasw.essentials.domain.model.github.GitHubOwner
@@ -737,8 +739,7 @@ class AppUpdatesViewModel : ViewModel() {
     ): Boolean =
         try {
             val json = inputStream.bufferedReader().use { it.readText() }
-            val importedRepos: List<TrackedRepo> =
-                gson.fromJson(json, Array<TrackedRepo>::class.java).toList()
+            val importedRepos = parseImportedRepos(context, json)
             if (importedRepos.isNotEmpty()) {
                 val settingsRepo = SettingsRepository(context)
                 val currentRepos = settingsRepo.getTrackedRepos().toMutableList()
@@ -765,4 +766,121 @@ class AppUpdatesViewModel : ViewModel() {
             } catch (e: Exception) {
             }
         }
+
+    private fun parseImportedRepos(
+        context: Context,
+        json: String,
+    ): List<TrackedRepo> {
+        // Try native export format first
+        try {
+            val nativeRepos = gson.fromJson(json, Array<TrackedRepo>::class.java)?.toList()
+            if (!nativeRepos.isNullOrEmpty() && nativeRepos.all { it.fullName.isNotBlank() }) {
+                return nativeRepos
+            }
+        } catch (e: Exception) {
+        }
+
+        // Try ObtainX / Obtainium export format
+        try {
+            val jsonObject = JSONObject(json)
+            if (jsonObject.has("apps")) {
+                val appsArray = jsonObject.getJSONArray("apps")
+                val pm = context.packageManager
+                val list = mutableListOf<TrackedRepo>()
+
+                for (i in 0 until appsArray.length()) {
+                    val appObj = appsArray.getJSONObject(i)
+                    val id = appObj.optString("id").takeIf { it.isNotBlank() }
+                    val url = appObj.optString("url").takeIf { it.isNotBlank() } ?: continue
+                    val name = appObj.optString("name").takeIf { it.isNotBlank() } ?: "Unknown"
+                    val author = appObj.optString("author").takeIf { it.isNotBlank() }
+                    val latestVersion = appObj.optString("latestVersion").takeIf { it.isNotBlank() } ?: ""
+
+                    var owner = author
+                    var repoName: String? = null
+
+                    val ghRegex = Regex("""(?:https?://)?(?:www\.)?github\.com/([^/]+)/([^/\\s?#]+)""")
+                    val ghMatch = ghRegex.find(url)
+                    if (ghMatch != null) {
+                        owner = ghMatch.groupValues[1]
+                        repoName = ghMatch.groupValues[2].removeSuffix(".git")
+                    } else {
+                        val apkUrlsStr = appObj.optString("apkUrls")
+                        val otherUrlsStr = appObj.optString("otherAssetUrls")
+                        val apiGhRegex = Regex("""(?:https?://)?(?:api\.)?github\.com/repos/([^/]+)/([^/\\s?#]+)""")
+                        val apiMatch = apiGhRegex.find(apkUrlsStr) ?: apiGhRegex.find(otherUrlsStr)
+                        if (apiMatch != null) {
+                            owner = apiMatch.groupValues[1]
+                            repoName = apiMatch.groupValues[2].removeSuffix(".git")
+                        }
+                    }
+
+                    if (owner.isNullOrBlank() || repoName.isNullOrBlank()) {
+                        continue
+                    }
+
+                    val fullName = "$owner/$repoName"
+
+                    val additionalSettings = appObj.optString("additionalSettings")
+                    val allowPreReleases = additionalSettings.contains("\"includePrereleases\":true")
+
+                    var mappedPackageName: String? = null
+                    var mappedAppName: String? = null
+
+                    if (!id.isNullOrBlank()) {
+                        try {
+                            val appInfo = pm.getApplicationInfo(id, 0)
+                            mappedPackageName = id
+                            mappedAppName = pm.getApplicationLabel(appInfo).toString()
+                        } catch (e: Exception) {
+                            // App not installed
+                        }
+                    }
+
+                    // Pick selected APK name if available
+                    var selectedApkName = "Auto"
+                    try {
+                        val apkUrlsStr = appObj.optString("apkUrls")
+                        if (apkUrlsStr.isNotBlank()) {
+                            val parsedApkUrls = JSONArray(apkUrlsStr)
+                            val preferredIndex = appObj.optInt("preferredApkIndex", 0)
+                            if (parsedApkUrls.length() > preferredIndex) {
+                                val pair = parsedApkUrls.getJSONArray(preferredIndex)
+                                selectedApkName = pair.getString(0)
+                            } else if (parsedApkUrls.length() > 0) {
+                                selectedApkName = parsedApkUrls.getJSONArray(0).getString(0)
+                            }
+                        }
+                    } catch (e: Exception) {
+                    }
+
+                    val tracked = TrackedRepo(
+                        owner = owner,
+                        name = repoName,
+                        fullName = fullName,
+                        description = null,
+                        stars = 0,
+                        avatarUrl = "https://github.com/$owner.png",
+                        latestTagName = latestVersion,
+                        latestReleaseName = latestVersion.ifBlank { null },
+                        latestReleaseBody = appObj.optString("changeLog").takeIf { it.isNotBlank() },
+                        latestReleaseUrl = url,
+                        downloadUrl = null,
+                        publishedAt = "",
+                        selectedApkName = selectedApkName,
+                        mappedPackageName = mappedPackageName,
+                        mappedAppName = mappedAppName ?: name,
+                        allowPreReleases = allowPreReleases,
+                        notificationsEnabled = true
+                    )
+                    list.add(tracked)
+                }
+                return list
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return emptyList()
+    }
 }
