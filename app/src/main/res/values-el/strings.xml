@@ -1414,7 +1414,7 @@
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Ρολόι οθόνης κλειδώματος</string>
-    <string name="feat_lock_screen_clock_desc">Προσαρμογή ρολογιού κλειδώματος οθόνης σε συσκευές Pixels</string>
+    <string name="feat_lock_screen_clock_desc">Προσαρμογή ρολογιού κλειδώματος οθόνης σε συσκευές Pixel</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
