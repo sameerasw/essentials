@@ -216,30 +216,46 @@ class AodWallpaperOverlayHandler(
 
     private fun buildMaskedContainer(vignetteIntensity: Float): FrameLayout {
         return object : FrameLayout(service) {
-            private val maskPaint = android.graphics.Paint().apply {
+            private val vignettePaint = android.graphics.Paint().apply {
                 xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN)
                 isAntiAlias = true
             }
 
             override fun dispatchDraw(canvas: android.graphics.Canvas) {
-                super.dispatchDraw(canvas)
+                if (width == 0 || height == 0) {
+                    super.dispatchDraw(canvas)
+                    return
+                }
+
                 val intensity = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE, 0f)
-                if (intensity <= 0f || width == 0 || height == 0) return
-                val cx = width / 2f
-                val cy = height / 2f
-                val radius = Math.hypot(cx.toDouble(), cy.toDouble()).toFloat()
-                val edgeAlpha = ((1f - intensity / 100f).coerceIn(0f, 1f) * 255).toInt()
-                maskPaint.shader = RadialGradient(
-                    cx, cy, radius,
-                    intArrayOf(
-                        Color.BLACK,
-                        Color.BLACK,
-                        Color.argb(edgeAlpha, 0, 0, 0),
-                    ),
-                    floatArrayOf(0f, 0.45f, 1f),
-                    Shader.TileMode.CLAMP,
-                )
-                canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), maskPaint)
+                val hasVignette = intensity > 0f
+
+                val saveCount = if (hasVignette) {
+                    canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
+                } else {
+                    -1
+                }
+
+                super.dispatchDraw(canvas)
+
+                if (hasVignette) {
+                    val cx = width / 2f
+                    val cy = height / 2f
+                    val radius = Math.hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                    val edgeAlpha = ((1f - intensity / 100f).coerceIn(0f, 1f) * 255).toInt()
+                    vignettePaint.shader = RadialGradient(
+                        cx, cy, radius,
+                        intArrayOf(
+                            Color.BLACK,
+                            Color.BLACK,
+                            Color.argb(edgeAlpha, 0, 0, 0),
+                        ),
+                        floatArrayOf(0f, 0.45f, 1f),
+                        Shader.TileMode.CLAMP,
+                    )
+                    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), vignettePaint)
+                    canvas.restoreToCount(saveCount)
+                }
             }
         }.apply {
             setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -250,6 +266,17 @@ class AodWallpaperOverlayHandler(
     private fun showOverlay() {
         val opacity = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_OPACITY, 0.3f)
         val blurRadius = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_BLUR, 0f)
+
+        val luminanceFilter = android.graphics.ColorMatrixColorFilter(
+            android.graphics.ColorMatrix(
+                floatArrayOf(
+                    1.2f, 0f, 0f, 0f, 0f,
+                    0f, 1.2f, 0f, 0f, 0f,
+                    0f, 0f, 1.2f, 0f, 0f,
+                    0.5f, 1.5f, 0.2f, 0f, -15f,
+                )
+            )
+        )
 
         if (overlayContainer == null) {
             val root = buildMaskedContainer(
@@ -262,6 +289,7 @@ class AodWallpaperOverlayHandler(
                 )
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 alpha = opacity
+                colorFilter = luminanceFilter
             }
             applyBlurEffect(imageView, blurRadius)
             root.addView(imageView)
@@ -269,6 +297,7 @@ class AodWallpaperOverlayHandler(
             overlayContainer = root
         } else {
             wallpaperImageView?.alpha = opacity
+            wallpaperImageView?.colorFilter = luminanceFilter
             applyBlurEffect(wallpaperImageView ?: return, blurRadius)
         }
 
@@ -371,6 +400,14 @@ class AodWallpaperOverlayHandler(
 
     private fun extractCurrentWallpaper(): Bitmap? {
         return try {
+            if (prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)) {
+                val file = java.io.File(service.filesDir, "custom_aod_wallpaper.png")
+                if (file.exists()) {
+                    val customBmp = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                    if (customBmp != null) return customBmp
+                }
+            }
+
             val wallpaperManager = WallpaperManager.getInstance(service)
             val drawable: Drawable? =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

@@ -40,7 +40,7 @@ object AppUtil {
     /**
      * Get all installed apps (not just launcher apps)
      */
-    suspend fun getInstalledApps(context: Context): List<NotificationApp> =
+    suspend fun getInstalledApps(context: Context, includeSelf: Boolean = false): List<NotificationApp> =
         withContext(Dispatchers.IO) {
             try {
                 val pm = context.packageManager
@@ -50,8 +50,8 @@ object AppUtil {
                     pm
                         .getInstalledApplications(0)
                         .filter { appInfo ->
-                            // Filter out our own app
-                            !appInfo.packageName.contains("essentials")
+                            // Filter out our own app unless requested
+                            includeSelf || !appInfo.packageName.contains("essentials")
                         }
 
                 val apps =
