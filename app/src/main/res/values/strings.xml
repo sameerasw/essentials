@@ -450,6 +450,9 @@
     <string name="sound_mode_sound">Sound</string>
     <string name="sound_mode_vibrate">Vibrate</string>
     <string name="sound_mode_silent">Silent</string>
+    <string name="sound_mode_use_shizuku_title">Use Shizuku</string>
+    <string name="sound_mode_use_shizuku_desc">Use Shizuku to set ringer mode without activating DND</string>
+    <string name="sound_mode_shizuku_info">Due to AOSP limitations, Android treats silent mode as DND. But with Shizuku we can override it. It will dynamically use Shizuku if available or fallback to regular DND mode.</string>
 
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Connectivity</string>

@@ -46,6 +46,11 @@ import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.min
 
 @Composable
@@ -54,6 +59,7 @@ fun SoundModeTileSettingsUI(
     highlightSetting: String? = null,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val prefs =
         remember {
             context.getSharedPreferences(
@@ -61,6 +67,9 @@ fun SoundModeTileSettingsUI(
                 android.content.Context.MODE_PRIVATE,
             )
         }
+    var useShizuku by remember {
+        mutableStateOf(prefs.getBoolean("sound_mode_use_shizuku", true))
+    }
     val defaultOrder = listOf("Sound", "Vibrate", "Silent")
     val orderString =
         prefs.getString("sound_mode_order", defaultOrder.joinToString(","))
@@ -324,6 +333,29 @@ fun SoundModeTileSettingsUI(
                     }
                 }
             }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+            RoundedCardContainer {
+                IconToggleItem(
+                    title = stringResource(R.string.sound_mode_use_shizuku_title),
+                    description = stringResource(R.string.sound_mode_use_shizuku_desc),
+                    iconRes = R.drawable.rounded_code_24,
+                    isChecked = useShizuku,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performUIHaptic(view)
+                        useShizuku = checked
+                        prefs.edit { putBoolean("sound_mode_use_shizuku", checked) }
+                    },
+                )
+            }
+            Text(
+                text = stringResource(R.string.sound_mode_shizuku_info),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 24.dp),
+            )
         }
     }
 }
