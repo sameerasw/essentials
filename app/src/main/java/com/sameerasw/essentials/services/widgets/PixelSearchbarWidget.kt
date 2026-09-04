@@ -23,6 +23,7 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.AndroidRemoteViews
 import androidx.glance.appwidget.GlanceAppWidget
+import com.sameerasw.essentials.ui.activities.PixelSearchResultsActivity
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
@@ -76,7 +77,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
             if (tapActionEnabled) {
                 actionStartActivity(com.sameerasw.essentials.ui.activities.PixelSearchbarTapActivity::class.java)
             } else {
-                null
+                actionStartActivity(PixelSearchResultsActivity::class.java)
             }
 
         provideContent {

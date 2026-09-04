@@ -9,7 +9,16 @@
 
 package com.sameerasw.essentials.ui.components.text
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculateCentroidSize
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,10 +37,17 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
@@ -47,7 +63,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil.compose.SubcomposeAsyncImage
+import kotlinx.coroutines.launch
 
 @Composable
 fun SimpleMarkdown(
@@ -420,11 +438,14 @@ private fun ImageBlock(
     images: List<ImageData>,
     isCentered: Boolean,
 ) {
+    var hasActiveZoom by remember { mutableStateOf(false) }
+
     FlowRow(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(vertical = 8.dp)
+                .zIndex(if (hasActiveZoom) 999f else 0f),
         horizontalArrangement = if (isCentered) Arrangement.Center else Arrangement.Start,
     ) {
         images.forEach { image ->
@@ -433,6 +454,9 @@ private fun ImageBlock(
                 alt = image.alt,
                 widthFraction = image.widthFraction,
                 isCentered = isCentered,
+                onZoomStateChange = { zooming ->
+                    hasActiveZoom = zooming
+                },
             )
         }
     }
@@ -445,6 +469,7 @@ private fun RenderImage(
     alt: String,
     widthFraction: Float?,
     isCentered: Boolean,
+    onZoomStateChange: (Boolean) -> Unit = {},
 ) {
     val modifier =
         if (widthFraction != null) {
@@ -453,13 +478,93 @@ private fun RenderImage(
             Modifier.fillMaxWidth()
         }
 
+    val coroutineScope = rememberCoroutineScope()
+    val scaleAnim = remember { Animatable(1f) }
+    val offsetAnim = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
+
+    val isZooming = scaleAnim.value > 1.01f || scaleAnim.isRunning || offsetAnim.isRunning
+
+    androidx.compose.runtime.LaunchedEffect(isZooming) {
+        onZoomStateChange(isZooming)
+    }
+
     Box(
-        modifier = modifier.padding(4.dp),
+        modifier =
+            modifier
+                .padding(4.dp)
+                .zIndex(if (isZooming) 999f else 0f),
         contentAlignment = if (isCentered) Alignment.Center else Alignment.CenterStart,
     ) {
         Box(
             modifier =
                 Modifier
+                    .graphicsLayer {
+                        scaleX = scaleAnim.value
+                        scaleY = scaleAnim.value
+                        translationX = offsetAnim.value.x
+                        translationY = offsetAnim.value.y
+                        clip = false
+                    }
+                    .pointerInput(Unit) {
+                        awaitEachGesture {
+                            awaitFirstDown(requireUnconsumed = false)
+                            var isInteracting = false
+                            do {
+                                val event = awaitPointerEvent()
+                                val pressedCount = event.changes.count { it.pressed }
+
+                                if (pressedCount >= 2) {
+                                    isInteracting = true
+                                    val zoomChange = event.calculateZoom()
+                                    val panChange = event.calculatePan()
+                                    val centroid = event.calculateCentroid(useCurrent = true)
+
+                                    val oldScale = scaleAnim.value
+                                    val newScale = (oldScale * zoomChange).coerceIn(1f, 6f)
+
+                                    val centerOffset = centroid - Offset(size.width / 2f, size.height / 2f)
+                                    val newOffset = (offsetAnim.value + panChange) + centerOffset * (1f - newScale / oldScale)
+
+                                    coroutineScope.launch {
+                                        scaleAnim.snapTo(newScale)
+                                        if (newScale > 1.01f) {
+                                            offsetAnim.snapTo(newOffset)
+                                        } else {
+                                            offsetAnim.snapTo(Offset.Zero)
+                                        }
+                                    }
+                                    event.changes.forEach { it.consume() }
+                                } else if (isInteracting || scaleAnim.value > 1.05f) {
+                                    // While zoomed, single finger moves the zoomed image freely relative to finger
+                                    isInteracting = true
+                                    val panChange = event.calculatePan()
+                                    if (panChange != Offset.Zero) {
+                                        coroutineScope.launch {
+                                            offsetAnim.snapTo(offsetAnim.value + panChange)
+                                        }
+                                    }
+                                    event.changes.forEach { it.consume() }
+                                }
+                            } while (event.changes.any { it.pressed })
+
+                            if (isInteracting || scaleAnim.value > 1.01f) {
+                                coroutineScope.launch {
+                                    launch {
+                                        scaleAnim.animateTo(
+                                            targetValue = 1f,
+                                            animationSpec = spring(dampingRatio = 0.8f, stiffness = 400f),
+                                        )
+                                    }
+                                    launch {
+                                        offsetAnim.animateTo(
+                                            targetValue = Offset.Zero,
+                                            animationSpec = spring(dampingRatio = 0.8f, stiffness = 400f),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                     .clip(RoundedCornerShape(12.dp)),
         ) {
             SubcomposeAsyncImage(

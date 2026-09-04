@@ -68,7 +68,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.services.widgets.WidgetScraperService
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -79,6 +81,7 @@ import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 class PixelSearchbarSettingsActivity : ComponentActivity() {
@@ -219,6 +222,7 @@ fun PixelSearchbarSettingsUI(
     val view = LocalView.current
     val isEnabled = viewModel.isPixelSearchbarEnabled.value
     var showPermissionSheet by remember { mutableStateOf(false) }
+    var requestingPermissionKey by remember { mutableStateOf<String?>(null) }
     val currentType = viewModel.pixelSearchbarType.value
 
     val options = listOf("empty", "date", "widget", "music")
@@ -664,6 +668,135 @@ fun PixelSearchbarSettingsUI(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = stringResource(R.string.pixel_search_results_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                val appsEnabled = viewModel.pixelSearchResultApps.value
+                val contactsEnabled = viewModel.pixelSearchResultContacts.value
+                val settingsEnabled = viewModel.pixelSearchResultSettings.value
+                val shortcutsEnabled = viewModel.pixelSearchResultShortcuts.value
+                val webEnabled = viewModel.pixelSearchResultWeb.value
+
+                RoundedCardContainer {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_apps_24,
+                        title = stringResource(R.string.pixel_search_results_apps_title),
+                        description = stringResource(R.string.pixel_search_results_apps_desc),
+                        isChecked = appsEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchResultAppsEnabled(checked)
+                        },
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_call_24,
+                        title = stringResource(R.string.pixel_search_results_contacts_title),
+                        description = stringResource(R.string.pixel_search_results_contacts_desc),
+                        isChecked = contactsEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            if (checked) {
+                                val hasContactsPerm = androidx.core.content.ContextCompat.checkSelfPermission(
+                                    context,
+                                    android.Manifest.permission.READ_CONTACTS,
+                                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+                                if (!hasContactsPerm) {
+                                    requestingPermissionKey = "READ_CONTACTS"
+                                } else {
+                                    viewModel.setPixelSearchResultContactsEnabled(true)
+                                }
+                            } else {
+                                viewModel.setPixelSearchResultContactsEnabled(false)
+                            }
+                        },
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_settings_24,
+                        title = stringResource(R.string.pixel_search_results_settings_title),
+                        description = stringResource(R.string.pixel_search_results_settings_desc),
+                        isChecked = settingsEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchResultSettingsEnabled(checked)
+                        },
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_rocket_launch_24,
+                        title = stringResource(R.string.pixel_search_results_shortcuts_title),
+                        description = stringResource(R.string.pixel_search_results_shortcuts_desc),
+                        isChecked = shortcutsEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchResultShortcutsEnabled(checked)
+                        },
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_web_24,
+                        title = stringResource(R.string.pixel_search_results_web_title),
+                        description = stringResource(R.string.pixel_search_results_web_desc),
+                        isChecked = webEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchResultWebEnabled(checked)
+                        },
+                    )
+
+                    val bubblesWebEnabled = viewModel.pixelSearchBubblesWeb.value
+                    val searchEngine = viewModel.pixelSearchEngine.value
+                    val searchEngineOptions = remember {
+                        listOf(
+                            "Google",
+                            "DuckDuckGo",
+                            "Brave Search",
+                            "Startpage",
+                            "Kagi",
+                            "Ecosia",
+                            "Bing",
+                        )
+                    }
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_bubble_24,
+                        title = stringResource(R.string.pixel_search_use_bubbles_title),
+                        description = stringResource(R.string.pixel_search_use_bubbles_desc),
+                        isChecked = bubblesWebEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchBubblesWebEnabled(checked)
+                        },
+                    )
+
+                    if (bubblesWebEnabled) {
+                        ConfigPickerItem(
+                            iconRes = R.drawable.rounded_search_24,
+                            title = stringResource(R.string.pixel_search_engine_title),
+                            description = stringResource(R.string.pixel_search_engine_desc),
+                            selectedValue = searchEngine,
+                        ) {
+                            searchEngineOptions.forEach { engine ->
+                                SegmentedDropdownMenuItem(
+                                    text = { Text(engine) },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        viewModel.setPixelSearchEngine(engine)
+                                    },
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -671,7 +804,7 @@ fun PixelSearchbarSettingsUI(
     if (showPermissionSheet) {
         val permissionItem =
             remember(context, viewModel) {
-                com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItem(
+                PermissionUIHelper.getPermissionItem(
                     "WRITE_SECURE_SETTINGS",
                     context,
                     viewModel,
@@ -682,6 +815,34 @@ fun PixelSearchbarSettingsUI(
                 onDismissRequest = { showPermissionSheet = false },
                 featureTitle = "Pixel Searchbar",
                 permissions = listOf(permissionItem),
+            )
+        }
+    }
+
+    if (requestingPermissionKey != null) {
+        val permItem =
+            remember(requestingPermissionKey, context, viewModel) {
+                PermissionUIHelper.getPermissionItem(
+                    requestingPermissionKey!!,
+                    context,
+                    viewModel,
+                )
+            }
+        if (permItem != null) {
+            PermissionsBottomSheet(
+                onDismissRequest = {
+                    val key = requestingPermissionKey
+                    requestingPermissionKey = null
+                    if (key == "READ_CONTACTS") {
+                        val hasContactsPerm = androidx.core.content.ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_CONTACTS,
+                        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                        viewModel.setPixelSearchResultContactsEnabled(hasContactsPerm)
+                    }
+                },
+                featureTitle = stringResource(R.string.pixel_search_results_title),
+                permissions = listOf(permItem),
             )
         }
     }
