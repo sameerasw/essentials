@@ -79,6 +79,10 @@ fun FeatureCard(
     customTrailingContent: (@Composable () -> Unit)? = null,
     iconPainter: androidx.compose.ui.graphics.painter.Painter? = null,
     hasBadge: Boolean = false,
+    containerColor: androidx.compose.ui.graphics.Color? = null,
+    iconSize: androidx.compose.ui.unit.Dp = 24.dp,
+    hasIconBackground: Boolean = true,
+    iconTint: androidx.compose.ui.graphics.Color? = null,
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
@@ -141,21 +145,26 @@ fun FeatureCard(
             if (iconPainter != null || iconRes != null) {
                 {
                     Box {
-                        Box(
-                            modifier =
+                        val containerModifier =
+                            if (hasIconBackground) {
                                 Modifier
                                     .size(40.dp)
                                     .background(
                                         color = ColorUtil.getPastelColorFor(resolvedTitle),
                                         shape = CircleShape,
-                                    ),
+                                    )
+                            } else {
+                                Modifier.size(40.dp)
+                            }
+                        Box(
+                            modifier = containerModifier,
                             contentAlignment = Alignment.Center,
                         ) {
                             if (iconPainter != null) {
                                 androidx.compose.foundation.Image(
                                     painter = iconPainter,
                                     contentDescription = resolvedTitle,
-                                    modifier = Modifier.size(24.dp),
+                                    modifier = Modifier.size(iconSize),
                                 )
                             } else if (iconRes != null) {
                                 val context = LocalContext.current
@@ -174,8 +183,8 @@ fun FeatureCard(
                                 Icon(
                                     painter = painterResource(id = validIconRes),
                                     contentDescription = resolvedTitle,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = ColorUtil.getVibrantColorFor(resolvedTitle),
+                                    modifier = Modifier.size(iconSize),
+                                    tint = iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle),
                                 )
                             }
                         }
@@ -305,7 +314,7 @@ fun FeatureCard(
         },
         colors =
             androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
+                containerColor = containerColor ?: MaterialTheme.colorScheme.surfaceBright,
             ),
         contentPadding =
             androidx.compose.foundation.layout.PaddingValues(
