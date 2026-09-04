@@ -95,6 +95,7 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.ReorderFavoritesBottomSheet
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -137,6 +138,7 @@ fun SetupFeatures(
 
     var showSheet by remember { mutableStateOf(false) }
     var currentFeature by remember { mutableStateOf<Int?>(null) }
+    var showReorderFavoritesSheet by remember { mutableStateOf(false) }
 
     // Help Sheet State
     var showHelpSheet by remember { mutableStateOf(false) }
@@ -818,6 +820,13 @@ fun SetupFeatures(
         )
     }
 
+    if (showReorderFavoritesSheet) {
+        ReorderFavoritesBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showReorderFavoritesSheet = false },
+        )
+    }
+
     val lazyListState = rememberLazyListState()
     val view = LocalView.current
     val focusRequester = remember { FocusRequester() }
@@ -1206,6 +1215,9 @@ fun SetupFeatures(
                         },
                         onFeatureLongClick = { feature ->
                             viewModel.togglePinFeature(feature.id)
+                        },
+                        onReorderClick = {
+                            showReorderFavoritesSheet = true
                         },
                         modifier = Modifier.padding(bottom = 16.dp),
                     )

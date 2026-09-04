@@ -65,6 +65,7 @@ fun FavoriteCarousel(
     pinnedKeys: List<String>,
     onFeatureClick: (Feature) -> Unit,
     onFeatureLongClick: (Feature) -> Unit,
+    onReorderClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (pinnedKeys.isEmpty()) return
@@ -207,6 +208,20 @@ fun FavoriteCarousel(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                 ) {
+                    SegmentedDropdownMenuItem(
+                        text = { Text(stringResource(R.string.action_reorder)) },
+                        onClick = {
+                            showMenu = false
+                            onReorderClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_drag_handle_24),
+                                contentDescription = null,
+                            )
+                        },
+                    )
+
                     SegmentedDropdownMenuItem(
                         text = { Text(stringResource(R.string.action_unpin)) },
                         onClick = {
