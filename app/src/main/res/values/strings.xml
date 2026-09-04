@@ -450,6 +450,9 @@
     <string name="sound_mode_sound">Sound</string>
     <string name="sound_mode_vibrate">Vibrate</string>
     <string name="sound_mode_silent">Silent</string>
+    <string name="sound_mode_use_shizuku_title">Use Shizuku</string>
+    <string name="sound_mode_use_shizuku_desc">Use Shizuku to set ringer mode without activating DND</string>
+    <string name="sound_mode_shizuku_info">Due to AOSP limitations, Android treats silent mode as DND. But with Shizuku we can override it. It will dynamically use Shizuku if available or fallback to regular DND mode.</string>
 
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Connectivity</string>
@@ -555,6 +558,7 @@
     <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
     <string name="action_pin">Pin to Favorites</string>
     <string name="action_unpin">Unpin from Favorites</string>
+    <string name="action_reorder">Re-order</string>
 
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
@@ -802,7 +806,7 @@
 
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
+    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku to proceed.</string>
     <string name="perm_shizuku_install_action">Install Shizuku</string>
     <string name="perm_shizuku_grant_title">Grant Permission</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
@@ -2363,8 +2367,13 @@
     <string name="feat_aod_wallpaper_timeout_10m">10 min</string>
     <string name="feat_aod_wallpaper_blur">Blur</string>
     <string name="feat_aod_wallpaper_vignette">Vignette</string>
+    <string name="feat_aod_wallpaper_black_threshold">Black threshold</string>
     <string name="feat_aod_wallpaper_pick_image">Pick image</string>
     <string name="feat_aod_wallpaper_remove_custom_image">Remove custom image</string>
+    <string name="feat_aod_wallpaper_media_section_title">Media</string>
+    <string name="feat_aod_wallpaper_keep_on_media">Keep on while media playing</string>
+    <string name="feat_aod_wallpaper_use_album_art">Use album art</string>
+    <string name="feat_aod_wallpaper_media_apps">Skip media apps</string>
     <string name="perm_storage_title">All files access</string>
     <string name="perm_storage_desc">To read your current wallpaper which is not accessible with regular privileges, Essentials needs external storage permissions.</string>
 
@@ -2398,4 +2407,5 @@
     <string name="pixel_search_engine_desc">Default search provider used when searching the web</string>
     <string name="pixel_search_open_url_action">Open \"%1$s\"</string>
     <string name="bubble_web_link_copied">Link copied to clipboard</string>
+    <string name="label_apply_after_reboot">Apply after reboot</string>
 </resources>

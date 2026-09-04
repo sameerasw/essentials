@@ -23,7 +23,12 @@ import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.services.AppDetectionService
 import com.sameerasw.essentials.services.AppUpdateWorker
 import com.sameerasw.essentials.services.BatteryNotificationService
+import com.sameerasw.essentials.utils.SimCarrierUtil
+import com.sameerasw.essentials.utils.ShellUtils
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object ServiceUtils {
     /**
@@ -37,6 +42,49 @@ object ServiceUtils {
         startAppDetectionServiceIfNeeded(context, settingsRepository)
         startBatteryNotificationServiceIfNeeded(context, settingsRepository)
         schedulePeriodicAppUpdateCheck(context, settingsRepository)
+        applyPostRebootSettings(context, settingsRepository)
+    }
+
+    private fun applyPostRebootSettings(
+        context: Context,
+        settingsRepository: SettingsRepository,
+    ) {
+        if (!ShizukuUtils.isShizukuAvailable() || !ShizukuUtils.hasPermission()) {
+            return
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            if (settingsRepository.isSimNamesApplyOnBootEnabled()) {
+                SimCarrierUtil.applySavedCarrierNames(context)
+            }
+
+            if (settingsRepository.isPowerSavingApplyOnBootEnabled()) {
+                val triggerLevel =
+                    android.provider.Settings.Global.getInt(
+                        context.contentResolver,
+                        "low_power_trigger_level",
+                        0,
+                    )
+                if (triggerLevel > 0) {
+                    ShellUtils.runCommandWithOutput(
+                        context,
+                        "settings put global low_power_trigger_level $triggerLevel",
+                    )
+                }
+
+                val constants =
+                    android.provider.Settings.Global.getString(
+                        context.contentResolver,
+                        "battery_saver_constants",
+                    )
+                if (!constants.isNullOrBlank()) {
+                    ShellUtils.runCommandWithOutput(
+                        context,
+                        "settings put global battery_saver_constants \"$constants\"",
+                    )
+                }
+            }
+        }
     }
 
     private fun startAppDetectionServiceIfNeeded(

@@ -228,7 +228,13 @@ class ScreenOffAccessibilityService :
                 smartPixelsHandler.updateState()
             } else if (key == SettingsRepository.KEY_AOD_WALLPAPER_ENABLED ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_OPACITY ||
-                key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE
+                key == SettingsRepository.KEY_AOD_WALLPAPER_BLUR ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_BLACK_THRESHOLD ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS
             ) {
                 if (key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE) {
                     aodWallpaperOverlayHandler.invalidateWallpaperCache()

@@ -95,6 +95,7 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.ReorderFavoritesBottomSheet
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -137,6 +138,7 @@ fun SetupFeatures(
 
     var showSheet by remember { mutableStateOf(false) }
     var currentFeature by remember { mutableStateOf<Int?>(null) }
+    var showReorderFavoritesSheet by remember { mutableStateOf(false) }
 
     // Help Sheet State
     var showHelpSheet by remember { mutableStateOf(false) }
@@ -407,7 +409,7 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri(),
+                                                "https://github.com/thedjchi/Shizuku".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)
@@ -694,7 +696,7 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri(),
+                                                "https://github.com/thedjchi/Shizuku".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)
@@ -815,6 +817,13 @@ fun SetupFeatures(
                 selectedHelpFeature = null
             },
             feature = selectedHelpFeature!!,
+        )
+    }
+
+    if (showReorderFavoritesSheet) {
+        ReorderFavoritesBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showReorderFavoritesSheet = false },
         )
     }
 
@@ -1207,6 +1216,9 @@ fun SetupFeatures(
                         onFeatureLongClick = { feature ->
                             viewModel.togglePinFeature(feature.id)
                         },
+                        onReorderClick = {
+                            showReorderFavoritesSheet = true
+                        },
                         modifier = Modifier.padding(bottom = 16.dp),
                     )
                 }
@@ -1448,10 +1460,25 @@ private fun RecentSearchesSection(
             )
         }
 
+        val validSearches =
+            remember(recentSearches, allFeatures) {
+                recentSearches.filter { item ->
+                    item.title.isNotBlank() &&
+                        allFeatures.any { it.id == item.featureKey }
+                }
+            }
+
+        LaunchedEffect(recentSearches.size, validSearches.size) {
+            if (recentSearches.isNotEmpty() && validSearches.size != recentSearches.size) {
+                // If any corrupted/invalid feature IDs were found in history, clean them up
+                viewModel.clearRecentSearches()
+            }
+        }
+
         RoundedCardContainer(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
-            recentSearches.forEach { result ->
+            validSearches.forEach { result ->
                 FeatureCard(
                     title = result.title,
                     isEnabled = true,

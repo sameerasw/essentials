@@ -163,7 +163,10 @@ class MainViewModel : ViewModel() {
     val aodWallpaperTimeout = mutableIntStateOf(3)
     val aodWallpaperBlur = mutableFloatStateOf(0f)
     val aodWallpaperVignette = mutableFloatStateOf(0f)
+    val aodWallpaperBlackThreshold = mutableFloatStateOf(15f)
     val hasAodWallpaperCustomImage = mutableStateOf(false)
+    val isAodWallpaperUseAlbumArt = mutableStateOf(false)
+    val isAodWallpaperKeepOnMedia = mutableStateOf(false)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
@@ -765,6 +768,14 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_AOD_WALLPAPER_OPACITY ->
                         aodWallpaperOpacity.floatValue =
                             settingsRepository.getFloat(key, 0.3f)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART ->
+                        isAodWallpaperUseAlbumArt.value =
+                            settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA ->
+                        isAodWallpaperKeepOnMedia.value =
+                            settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_POCKET_MODE_ENABLED ->
                         isPocketModeEnabled.value =
@@ -1919,8 +1930,14 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperBlur()
         aodWallpaperVignette.floatValue =
             settingsRepository.getAodWallpaperVignette()
+        aodWallpaperBlackThreshold.floatValue =
+            settingsRepository.getAodWallpaperBlackThreshold()
         hasAodWallpaperCustomImage.value =
             settingsRepository.hasAodWallpaperCustomImage()
+        isAodWallpaperUseAlbumArt.value =
+            settingsRepository.isAodWallpaperUseAlbumArtEnabled()
+        isAodWallpaperKeepOnMedia.value =
+            settingsRepository.isAodWallpaperKeepOnMediaEnabled()
         pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
         pixelSearchResultContacts.value = settingsRepository.isPixelSearchResultContactsEnabled()
         pixelSearchResultSettings.value = settingsRepository.isPixelSearchResultSettingsEnabled()
@@ -2087,6 +2104,21 @@ class MainViewModel : ViewModel() {
         }
         pinnedFeatureKeys.value = current
         settingsRepository.savePinnedFeatures(current)
+
+        appContext?.let { context ->
+            com.sameerasw.essentials.utils.ShortcutUtil
+                .updateLauncherDynamicShortcuts(context)
+            val intent =
+                Intent("com.sameerasw.essentials.action.FAVORITES_WIDGET_UPDATE").apply {
+                    setPackage(context.packageName)
+                }
+            context.sendBroadcast(intent)
+        }
+    }
+
+    fun updatePinnedFeatures(newOrder: List<String>) {
+        pinnedFeatureKeys.value = newOrder
+        settingsRepository.savePinnedFeatures(newOrder)
 
         appContext?.let { context ->
             com.sameerasw.essentials.utils.ShortcutUtil
@@ -7014,6 +7046,38 @@ class MainViewModel : ViewModel() {
     fun setAodWallpaperVignette(intensity: Float) {
         settingsRepository.setAodWallpaperVignette(intensity)
         aodWallpaperVignette.floatValue = intensity
+    }
+
+    fun setAodWallpaperBlackThreshold(threshold: Float) {
+        settingsRepository.setAodWallpaperBlackThreshold(threshold)
+        aodWallpaperBlackThreshold.floatValue = threshold
+    }
+
+    fun setAodWallpaperUseAlbumArt(enabled: Boolean) {
+        settingsRepository.setAodWallpaperUseAlbumArt(enabled)
+        isAodWallpaperUseAlbumArt.value = enabled
+    }
+
+    fun setAodWallpaperKeepOnMedia(enabled: Boolean) {
+        settingsRepository.setAodWallpaperKeepOnMedia(enabled)
+        isAodWallpaperKeepOnMedia.value = enabled
+    }
+
+    fun loadAodWallpaperMediaApps(context: Context): List<AppSelection> = settingsRepository.loadAodWallpaperMediaExcludedApps()
+
+    fun saveAodWallpaperMediaApps(
+        context: Context,
+        apps: List<AppSelection>,
+    ) {
+        settingsRepository.saveAodWallpaperMediaExcludedApps(apps)
+    }
+
+    fun updateAodWallpaperMediaAppEnabled(
+        context: Context,
+        packageName: String,
+        enabled: Boolean,
+    ) {
+        settingsRepository.updateAodWallpaperMediaExcludedAppSelection(packageName, enabled)
     }
 
     fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {

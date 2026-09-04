@@ -21,6 +21,7 @@ import android.service.quicksettings.Tile
 import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.handlers.SoundModeHandler
+import com.sameerasw.essentials.utils.ShizukuUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
 class SoundModeTileService : BaseTileService() {
@@ -70,6 +71,11 @@ class SoundModeTileService : BaseTileService() {
     override fun getTileSubtitle(): String = if (hasFeaturePermission()) "Mode" else getString(R.string.permission_missing)
 
     override fun hasFeaturePermission(): Boolean {
+        val prefs = getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val useShizuku = prefs.getBoolean("sound_mode_use_shizuku", true)
+        if (useShizuku && ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
+            return true
+        }
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         return notificationManager.isNotificationPolicyAccessGranted
     }

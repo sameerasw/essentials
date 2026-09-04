@@ -91,6 +91,7 @@ fun AlwaysOnDisplaySettingsUI(
     val view = LocalView.current
 
     var showAppSelectionSheet by remember { mutableStateOf(false) }
+    var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
 
     val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
@@ -138,87 +139,6 @@ fun AlwaysOnDisplaySettingsUI(
         }
 
         Text(
-            text = stringResource(R.string.feat_notification_glance_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        RoundedCardContainer {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_notification_settings_24,
-                title = stringResource(R.string.feat_notification_glance_title),
-                isChecked = viewModel.isNotificationGlanceEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.toggleNotificationGlanceEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "notification_glance_enabled"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_apps_24,
-                title = stringResource(R.string.notification_glance_same_as_lighting_title),
-                isChecked = viewModel.isNotificationGlanceSameAsLightingEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setNotificationGlanceSameAsLightingEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_power_settings_new_24,
-                title = stringResource(R.string.feat_aod_force_turn_off_title),
-                isChecked = viewModel.isAodForceTurnOffEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked && !isAccessibilityEnabled) {
-                        requestingPermissionsFor =
-                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
-                    } else {
-                        viewModel.toggleAodForceTurnOffEnabled(checked)
-                    }
-                },
-                enabled = true,
-                onDisabledClick = {
-                    if (!isAccessibilityEnabled) {
-                        requestingPermissionsFor =
-                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off"),
-            )
-        }
-
-        Text(
-            text = stringResource(R.string.notification_glance_desc),
-            modifier = Modifier.padding(horizontal = 16.dp),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        Text(
-            text = stringResource(R.string.feat_aod_force_turn_off_desc),
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        if (!viewModel.isNotificationGlanceSameAsLightingEnabled.value) {
-            Button(
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    showAppSelectionSheet = true
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = viewModel.isNotificationGlanceEnabled.value,
-            ) {
-                Text(stringResource(R.string.action_select_apps))
-            }
-        }
-
-        Text(
             text = stringResource(R.string.feat_aod_wallpaper_section_title),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
@@ -237,6 +157,7 @@ fun AlwaysOnDisplaySettingsUI(
         val isWallpaperEnabled = viewModel.isAodWallpaperEnabled.value
         val blurRadius = viewModel.aodWallpaperBlur.floatValue
         val vignetteIntensity = viewModel.aodWallpaperVignette.floatValue
+        val blackThreshold = viewModel.aodWallpaperBlackThreshold.floatValue
 
         val animatedPreviewAlpha by animateFloatAsState(
             targetValue = if (isWallpaperEnabled) opacity else 0f,
@@ -319,15 +240,29 @@ fun AlwaysOnDisplaySettingsUI(
                             },
                         contentAlignment = Alignment.Center,
                     ) {
+                        Text(
+                            text = timeText,
+                            style = TextStyle(
+                                fontFamily = aodClockFont,
+                                fontWeight = FontWeight.Thin,
+                                fontSize = 52.sp,
+                                letterSpacing = 4.sp,
+                                color = MaterialTheme.colorScheme.primary.copy(
+                                    alpha = if (isWallpaperEnabled) (animatedPreviewAlpha * 1.4f).coerceIn(0f, 1f) else 0f,
+                                ),
+                            ),
+                            textAlign = TextAlign.Center,
+                        )
+
                         if (wallpaperBitmap != null) {
-                            val luminanceFilter = remember {
+                            val luminanceFilter = remember(blackThreshold) {
                                 androidx.compose.ui.graphics.ColorFilter.colorMatrix(
                                     androidx.compose.ui.graphics.ColorMatrix(
                                         floatArrayOf(
                                             1.2f, 0f, 0f, 0f, 0f,
                                             0f, 1.2f, 0f, 0f, 0f,
                                             0f, 0f, 1.2f, 0f, 0f,
-                                            0.5f, 1.5f, 0.2f, 0f, -15f,
+                                            0.5f, 1.5f, 0.2f, 0f, -blackThreshold,
                                         )
                                     )
                                 )
@@ -346,20 +281,6 @@ fun AlwaysOnDisplaySettingsUI(
                                     ),
                             )
                         }
-
-                        Text(
-                            text = timeText,
-                            style = TextStyle(
-                                fontFamily = aodClockFont,
-                                fontWeight = FontWeight.Thin,
-                                fontSize = 52.sp,
-                                letterSpacing = 4.sp,
-                                color = MaterialTheme.colorScheme.primaryContainer.copy(
-                                    alpha = if (isWallpaperEnabled) (animatedPreviewAlpha * 1.4f).coerceIn(0f, 1f) else 0f,
-                                ),
-                            ),
-                            textAlign = TextAlign.Center,
-                        )
                     }
 
                     SegmentedDropdownMenu(
@@ -488,6 +409,22 @@ fun AlwaysOnDisplaySettingsUI(
                 enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
                 exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
             ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_aod_wallpaper_black_threshold),
+                    value = blackThreshold,
+                    onValueChange = { viewModel.setAodWallpaperBlackThreshold(it) },
+                    valueRange = 0f..50f,
+                    increment = 1f,
+                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
+                    iconRes = R.drawable.rounded_invert_colors_24,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isWallpaperEnabled,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
+            ) {
                 val timeoutOptions = listOf(
                     0 to stringResource(R.string.feat_aod_wallpaper_timeout_never),
                     1 to stringResource(R.string.feat_aod_wallpaper_timeout_1m),
@@ -516,12 +453,163 @@ fun AlwaysOnDisplaySettingsUI(
             }
         }
 
+        val isNotificationListenerGranted = viewModel.isNotificationListenerEnabled.value
+        val isAlbumArtEnabled = viewModel.isAodWallpaperUseAlbumArt.value
+
         Text(
-            text = stringResource(R.string.feat_aod_wallpaper_desc),
+            text = stringResource(R.string.feat_aod_wallpaper_media_section_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        val isKeepOnMedia = viewModel.isAodWallpaperKeepOnMedia.value
+        val isTimeoutNever = viewModel.aodWallpaperTimeout.intValue == 0
+
+        RoundedCardContainer {
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_note_24,
+                title = stringResource(R.string.feat_aod_wallpaper_use_album_art),
+                isChecked = isAlbumArtEnabled,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked) {
+                        if (!isNotificationListenerGranted) {
+                            requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
+                        } else {
+                            viewModel.setAodWallpaperUseAlbumArt(true)
+                        }
+                    } else {
+                        viewModel.setAodWallpaperUseAlbumArt(false)
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isNotificationListenerGranted) {
+                        requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_album_art"),
+            )
+
+
+            AnimatedVisibility(
+                visible = isAlbumArtEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_timer_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_keep_on_media),
+                    isChecked = if (isTimeoutNever) true else isKeepOnMedia,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setAodWallpaperKeepOnMedia(checked)
+                    },
+                    enabled = !isTimeoutNever,
+                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_keep_on_media"),
+                )
+
+            }
+
+            AnimatedVisibility(
+                visible = isAlbumArtEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_apps_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_media_apps),
+                    showToggle = false,
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showMediaAppSelectionSheet = true
+                    },
+                )
+            }
+        }
+
+        Text(
+            text = stringResource(R.string.feat_notification_glance_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notification_settings_24,
+                title = stringResource(R.string.feat_notification_glance_title),
+                isChecked = viewModel.isNotificationGlanceEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.toggleNotificationGlanceEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "notification_glance_enabled"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_apps_24,
+                title = stringResource(R.string.notification_glance_same_as_lighting_title),
+                isChecked = viewModel.isNotificationGlanceSameAsLightingEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setNotificationGlanceSameAsLightingEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_power_settings_new_24,
+                title = stringResource(R.string.feat_aod_force_turn_off_title),
+                isChecked = viewModel.isAodForceTurnOffEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !isAccessibilityEnabled) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
+                    } else {
+                        viewModel.toggleAodForceTurnOffEnabled(checked)
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAccessibilityEnabled) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off"),
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.notification_glance_desc),
             modifier = Modifier.padding(horizontal = 16.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        Text(
+            text = stringResource(R.string.feat_aod_force_turn_off_desc),
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        if (!viewModel.isNotificationGlanceSameAsLightingEnabled.value) {
+            Button(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    showAppSelectionSheet = true
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = viewModel.isNotificationGlanceEnabled.value,
+            ) {
+                Text(stringResource(R.string.action_select_apps))
+            }
+        }
 
         Spacer(modifier = Modifier.height(80.dp))
 
@@ -537,6 +625,27 @@ fun AlwaysOnDisplaySettingsUI(
                 },
                 onAppToggle = { ctx, pkg, enabled ->
                     viewModel.updateNotificationGlanceAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled,
+                    )
+                },
+                context = context,
+            )
+        }
+
+        if (showMediaAppSelectionSheet) {
+            AppSelectionSheet(
+                onDismissRequest = { showMediaAppSelectionSheet = false },
+                onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
+                onSaveApps = { ctx, apps ->
+                    viewModel.saveAodWallpaperMediaApps(
+                        ctx,
+                        apps,
+                    )
+                },
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateAodWallpaperMediaAppEnabled(
                         ctx,
                         pkg,
                         enabled,
