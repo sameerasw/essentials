@@ -93,4 +93,5 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="show_bluetooth_devices">Perlihatkan perangkat bluetooth</string>
     <string name="show_bluetooth_devices_summary">Menampilkan level baterai perangkat Bluetooth yang terhubung.</string>
     <string name="widget_background_summary">Tampilkan latar belakang widget</string>
+    <string name="perm_write_secure_title">Write Secure Settings</string>
 </resources>
