@@ -29,7 +29,7 @@
     <string name="app_lock_warning">Προσέξτε ότι αυτή δεν είναι μια ισχυρή λύση, καθώς πρόκειται μόνο για μια εφαρμογή τρίτου κατασκευαστή. Εάν χρειάζεστε ισχυρή ασφάλεια, σκεφτείτε να χρησιμοποιήσετε τον ιδιωτικό χώρο ή άλλες τέτοιες λειτουργίες.</string>
     <string name="app_lock_biometric_note">Μια άλλη σημείωση, η προτροπή βιομετρικού ελέγχου ταυτότητας σάς επιτρέπει να χρησιμοποιείτε μόνο μεθόδους STRONG ασφαλούς κλάσης. Οι μέθοδοι ασφαλείας με το Face Unlock στην κατηγορία WEAK σε συσκευές όπως το Pixel 7 θα μπορούν να χρησιμοποιούν μόνο τις διαθέσιμες άλλες μεθόδους STRONG auth, όπως το δακτυλικό αποτύπωμα ή η καρφίτσα.</string>
     <string name="setting_use_usage_access_title">Χρήση δεδομένων χρήσης εφαρμογών</string>
-    <string name="setting_use_usage_access_desc">Αντί για προσβασιμότητα (</string>
+    <string name="setting_use_usage_access_desc">Αντί για προσβασιμότητα (Πάγωμα εφαρμογών, κλείδωμα εφαρμογών, Αυτόματη λειτουργία νύχτας)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Ενεργοποίηση επαναχάρτωσης κουμπιών</string>
     <string name="button_remap_use_shizuku_title">Χρησιμοποιήστε Shizuku ή Root ή Root</string>
@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Επανεκκίνηση SystemUI</string>
-    <string name="desc_restart_systemui">Τερματίσε και επανεκκινισε τη διεργασία SystemUI για να εφαρμόστουν αμέσως ορισμένες αλλαγές</string>
+    <string name="action_restart_systemui">Επανακίνηση SystemUI</string>
+    <string name="desc_restart_systemui">Σταματάει και ξεκινάει το SystemUI για να εφαρμόσει κάποιες αλλαγές αμέσως </string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Γινώμενος</string>
@@ -1344,7 +1344,7 @@
     <string name="feat_auto_accessibility_desc">Εκχωρεί αυτόματα την άδεια προσβασιμότητας κατά την εκκίνηση της εφαρμογής εάν λείπει χρησιμοποιώντας WRITE_SECURE_SETTINGS.</string>
     <string name="label_help_guide">Βοήθεια και Οδηγοί</string>
     <string name="tab_your_android">Το Android σας</string>
-    <string name="label_device_storage">Αποθήκευση</string>
+    <string name="label_device_storage">Αποθηκευτικός χώρος </string>
     <string name="label_device_ram">Μνήμη</string>
     <string name="label_use_blur">Χρήση θολού</string>
     <string name="desc_use_blur">Ενεργοποιήστε τα στοιχεία προοδευτικού θαμπώματος σε όλη τη διεπαφή χρήστη</string>
