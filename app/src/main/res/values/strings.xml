@@ -2211,6 +2211,8 @@
     <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
 
     <!-- Developer Settings & Wallpaper Check -->
+    <string name="btn_clear_search_history">Clear search history</string>
+    <string name="toast_search_history_cleared">Search history cleared</string>
     <string name="import_config_sheet_title">Restore Configuration</string>
     <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
     <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
