@@ -1413,8 +1413,8 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_title">Orologio Schermata di Blocco </string>
+    <string name="feat_lock_screen_clock_desc">Personalizza l\'orologio della schermata di blocco</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1467,4 +1467,6 @@
     <string name="setting_swipe_tabs_title">Scorri fra le schermate</string>
     <string name="setting_swipe_tabs_desc">Nella schermata home</string>
     <string name="settings_translated_texts_desc">%d modifiche salvate — tocca per inviarle o scartarle</string>
+    <string name="cat_navigation">Navigazione</string>
+    <string name="feat_smart_pixels_title">Pixel Intelligenti</string>
 </resources>
