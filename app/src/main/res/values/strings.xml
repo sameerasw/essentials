@@ -2371,7 +2371,9 @@
     <string name="feat_aod_wallpaper_pick_image">Pick image</string>
     <string name="feat_aod_wallpaper_remove_custom_image">Remove custom image</string>
     <string name="feat_aod_wallpaper_media_section_title">Media</string>
+    <string name="feat_aod_wallpaper_keep_on_media">Keep on while media playing</string>
     <string name="feat_aod_wallpaper_use_album_art">Use album art</string>
+    <string name="feat_aod_wallpaper_media_apps">Skip media apps</string>
     <string name="perm_storage_title">All files access</string>
     <string name="perm_storage_desc">To read your current wallpaper which is not accessible with regular privileges, Essentials needs external storage permissions.</string>
 

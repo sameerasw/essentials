@@ -91,6 +91,7 @@ fun AlwaysOnDisplaySettingsUI(
     val view = LocalView.current
 
     var showAppSelectionSheet by remember { mutableStateOf(false) }
+    var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
 
     val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
@@ -462,7 +463,11 @@ fun AlwaysOnDisplaySettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
+        val isKeepOnMedia = viewModel.isAodWallpaperKeepOnMedia.value
+        val isTimeoutNever = viewModel.aodWallpaperTimeout.intValue == 0
+
         RoundedCardContainer {
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_music_note_24,
                 title = stringResource(R.string.feat_aod_wallpaper_use_album_art),
@@ -487,6 +492,42 @@ fun AlwaysOnDisplaySettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_album_art"),
             )
+
+
+            AnimatedVisibility(
+                visible = isAlbumArtEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_timer_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_keep_on_media),
+                    isChecked = if (isTimeoutNever) true else isKeepOnMedia,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setAodWallpaperKeepOnMedia(checked)
+                    },
+                    enabled = !isTimeoutNever,
+                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_keep_on_media"),
+                )
+
+            }
+
+            AnimatedVisibility(
+                visible = isAlbumArtEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_apps_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_media_apps),
+                    showToggle = false,
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showMediaAppSelectionSheet = true
+                    },
+                )
+            }
         }
 
         Text(
@@ -584,6 +625,27 @@ fun AlwaysOnDisplaySettingsUI(
                 },
                 onAppToggle = { ctx, pkg, enabled ->
                     viewModel.updateNotificationGlanceAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled,
+                    )
+                },
+                context = context,
+            )
+        }
+
+        if (showMediaAppSelectionSheet) {
+            AppSelectionSheet(
+                onDismissRequest = { showMediaAppSelectionSheet = false },
+                onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
+                onSaveApps = { ctx, apps ->
+                    viewModel.saveAodWallpaperMediaApps(
+                        ctx,
+                        apps,
+                    )
+                },
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateAodWallpaperMediaAppEnabled(
                         ctx,
                         pkg,
                         enabled,

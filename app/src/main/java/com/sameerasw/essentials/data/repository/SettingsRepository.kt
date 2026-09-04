@@ -323,6 +323,8 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_BLACK_THRESHOLD = "aod_wallpaper_black_threshold"
         const val KEY_AOD_WALLPAPER_CUSTOM_IMAGE = "aod_wallpaper_custom_image"
         const val KEY_AOD_WALLPAPER_USE_ALBUM_ART = "aod_wallpaper_use_album_art"
+        const val KEY_AOD_WALLPAPER_KEEP_ON_MEDIA = "aod_wallpaper_keep_on_media"
+        const val KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS = "aod_wallpaper_media_excluded_apps"
         const val KEY_PIXEL_SEARCH_RESULT_APPS = "pixel_search_result_apps"
         const val KEY_PIXEL_SEARCH_RESULT_CONTACTS = "pixel_search_result_contacts"
         const val KEY_PIXEL_SEARCH_RESULT_SETTINGS = "pixel_search_result_settings"
@@ -1075,6 +1077,15 @@ class SettingsRepository(
         packageName: String,
         enabled: Boolean,
     ) = updateAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS, packageName, enabled)
+
+    fun loadAodWallpaperMediaExcludedApps() = loadAppSelection(KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS)
+
+    fun saveAodWallpaperMediaExcludedApps(apps: List<AppSelection>) = saveAppSelection(KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, apps)
+
+    fun updateAodWallpaperMediaExcludedAppSelection(
+        packageName: String,
+        enabled: Boolean,
+    ) = updateAppSelection(KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, packageName, enabled)
 
     /**
      * Executes the load shut up configs operation.
@@ -2998,6 +3009,10 @@ class SettingsRepository(
     fun isAodWallpaperUseAlbumArtEnabled(): Boolean = getBoolean(KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)
 
     fun setAodWallpaperUseAlbumArt(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_USE_ALBUM_ART, enabled)
+
+    fun isAodWallpaperKeepOnMediaEnabled(): Boolean = getBoolean(KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, false)
+
+    fun setAodWallpaperKeepOnMedia(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, enabled)
 
     fun isPixelSearchResultAppsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, true)
     fun setPixelSearchResultAppsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, enabled)
