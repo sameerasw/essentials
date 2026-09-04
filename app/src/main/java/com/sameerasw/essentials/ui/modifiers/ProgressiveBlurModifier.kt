@@ -112,18 +112,7 @@ fun Modifier.progressiveBlur(
 
         val blurModifier =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && blurRadius > 0f && !isPowerSave && !isSamsungOneUi7OrLess) {
-                Modifier.graphicsLayer {
-                    val shader = RuntimeShader(PROGRESSIVE_BLUR_SKSL)
-                    shader.setFloatUniform("blurRadius", blurRadius)
-                    shader.setFloatUniform("height", height)
-                    shader.setFloatUniform("contentHeight", size.height)
-                    shader.setIntUniform("isTop", if (direction == BlurDirection.TOP) 1 else 0)
-
-                    renderEffect =
-                        RenderEffect
-                            .createRuntimeShaderEffect(shader, "content")
-                            .asComposeRenderEffect()
-                }
+                Api33ProgressiveBlur.createBlurModifier(blurRadius, height, direction)
             } else {
                 Modifier
             }
@@ -158,3 +147,25 @@ fun Modifier.progressiveBlur(
             .then(blurModifier)
             .then(gradientModifier)
     }
+
+@androidx.annotation.RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private object Api33ProgressiveBlur {
+    fun createBlurModifier(
+        blurRadius: Float,
+        height: Float,
+        direction: BlurDirection,
+    ): Modifier {
+        return Modifier.graphicsLayer {
+            val shader = RuntimeShader(PROGRESSIVE_BLUR_SKSL)
+            shader.setFloatUniform("blurRadius", blurRadius)
+            shader.setFloatUniform("height", height)
+            shader.setFloatUniform("contentHeight", size.height)
+            shader.setIntUniform("isTop", if (direction == BlurDirection.TOP) 1 else 0)
+
+            renderEffect =
+                RenderEffect
+                    .createRuntimeShaderEffect(shader, "content")
+                    .asComposeRenderEffect()
+        }
+    }
+}

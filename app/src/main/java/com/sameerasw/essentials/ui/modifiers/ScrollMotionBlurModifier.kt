@@ -117,20 +117,36 @@ fun Modifier.scrollMotionBlur(
         }
     }
 
-    val shader = remember { RuntimeShader(DIRECTIONAL_BLUR_AGSL) }
+    Api33ScrollBlur.applyScrollMotionBlur(
+        modifier = Modifier,
+        animatedVelocity = animatedVelocity,
+        isHorizontal = isHorizontal,
+    )
+}
 
-    Modifier.graphicsLayer {
-        val vel = animatedVelocity.value
-        if (abs(vel) > 0.05f) {
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("scrollVelocity", vel)
-            shader.setFloatUniform("isHorizontal", if (isHorizontal) 1.0f else 0.0f)
+@androidx.annotation.RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private object Api33ScrollBlur {
+    @Composable
+    fun applyScrollMotionBlur(
+        modifier: Modifier,
+        animatedVelocity: Animatable<Float, *>,
+        isHorizontal: Boolean,
+    ): Modifier {
+        val shader = remember { RuntimeShader(DIRECTIONAL_BLUR_AGSL) }
 
-            renderEffect = RenderEffect
-                .createRuntimeShaderEffect(shader, "composable")
-                .asComposeRenderEffect()
-        } else {
-            renderEffect = null
+        return modifier.graphicsLayer {
+            val vel = animatedVelocity.value
+            if (abs(vel) > 0.05f) {
+                shader.setFloatUniform("resolution", size.width, size.height)
+                shader.setFloatUniform("scrollVelocity", vel)
+                shader.setFloatUniform("isHorizontal", if (isHorizontal) 1.0f else 0.0f)
+
+                renderEffect = RenderEffect
+                    .createRuntimeShaderEffect(shader, "composable")
+                    .asComposeRenderEffect()
+            } else {
+                renderEffect = null
+            }
         }
     }
 }
@@ -187,22 +203,11 @@ fun Modifier.scrollMotionBlur(
         }
     }
 
-    val shader = remember { RuntimeShader(DIRECTIONAL_BLUR_AGSL) }
-
-    Modifier.graphicsLayer {
-        val vel = animatedVelocity.value
-        if (abs(vel) > 0.05f) {
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("scrollVelocity", vel)
-            shader.setFloatUniform("isHorizontal", if (isHorizontal) 1.0f else 0.0f)
-
-            renderEffect = RenderEffect
-                .createRuntimeShaderEffect(shader, "composable")
-                .asComposeRenderEffect()
-        } else {
-            renderEffect = null
-        }
-    }
+    Api33ScrollBlur.applyScrollMotionBlur(
+        modifier = Modifier,
+        animatedVelocity = animatedVelocity,
+        isHorizontal = isHorizontal,
+    )
 }
 
 fun Modifier.scrollMotionBlur(
@@ -256,22 +261,11 @@ fun Modifier.scrollMotionBlur(
         }
     }
 
-    val shader = remember { RuntimeShader(DIRECTIONAL_BLUR_AGSL) }
-
-    Modifier.graphicsLayer {
-        val vel = animatedVelocity.value
-        if (abs(vel) > 0.05f) {
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("scrollVelocity", vel)
-            shader.setFloatUniform("isHorizontal", 0.0f)
-
-            renderEffect = RenderEffect
-                .createRuntimeShaderEffect(shader, "composable")
-                .asComposeRenderEffect()
-        } else {
-            renderEffect = null
-        }
-    }
+    Api33ScrollBlur.applyScrollMotionBlur(
+        modifier = Modifier,
+        animatedVelocity = animatedVelocity,
+        isHorizontal = false,
+    )
 }
 
 fun Modifier.scrollMotionBlur(
@@ -325,21 +319,10 @@ fun Modifier.scrollMotionBlur(
         }
     }
 
-    val shader = remember { RuntimeShader(DIRECTIONAL_BLUR_AGSL) }
-
-    Modifier.graphicsLayer {
-        val vel = animatedVelocity.value
-        if (abs(vel) > 0.05f) {
-            shader.setFloatUniform("resolution", size.width, size.height)
-            shader.setFloatUniform("scrollVelocity", vel)
-            shader.setFloatUniform("isHorizontal", 1.0f)
-
-            renderEffect = RenderEffect
-                .createRuntimeShaderEffect(shader, "composable")
-                .asComposeRenderEffect()
-        } else {
-            renderEffect = null
-        }
-    }
+    Api33ScrollBlur.applyScrollMotionBlur(
+        modifier = Modifier,
+        animatedVelocity = animatedVelocity,
+        isHorizontal = true,
+    )
 }
 
