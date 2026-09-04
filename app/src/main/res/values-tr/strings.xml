@@ -1611,4 +1611,15 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="app_icon_google">Spektrum</string>
     <string name="watch_watchface_title">Saat kadranı</string>
     <string name="watch_watchface_desc">Saat kadranını özelleştirin</string>
+    <string name="tile_url_shortener">URL\'yi kısalt</string>
+    <string name="tile_url_shortener_subtitle">Panoyu Kısalt</string>
+    <string name="label_motion_blur">Hareket bulanıklığı</string>
+    <string name="label_ripple_animation">Dalgalanma animasyonu</string>
+    <string name="smart_pixels_disable_on_cast_title">Ekran kaydı sırasında devre dışı bırak</string>
+    <string name="smart_pixels_disable_on_cast_desc">Ekranı yayınlarken veya kaydederken piksel ızgarası yerleşimini otomatik olarak duraklat</string>
+    <string name="watch_complications_title">Komplikasyonlar</string>
+    <string name="watch_complications_desc">Komplikasyon widget\'larını özelleştirin</string>
+    <string name="watchface_glance_complications_desc">Ne gösterileceğini seçin</string>
+    <string name="watchface_show_glow_title">Parıltı göster</string>
+    <string name="watchface_show_glow_desc">Yaklaşan etkinliklere ve seyahate dinamik üst vurgu gradyanı</string>
 </resources>

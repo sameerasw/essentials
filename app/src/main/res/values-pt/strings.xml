@@ -707,7 +707,7 @@
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
     <string name="action_restart_systemui">Reiniciar UI do Sistema</string>
-    <string name="desc_restart_systemui">Para e Recomeça a UI do Sistema para aplicar alterações imediatamente </string>
+    <string name="desc_restart_systemui">Para e Reinicia a  UI do Sistema para aplicar alterações imediatamente</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Feito</string>
@@ -1455,7 +1455,7 @@
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
     <string name="feat_daily_wallpaper_title">Papel de parede</string>
-    <string name="feat_daily_wallpaper_desc">Papéis de parede animados e selecionados diariamente.</string>
+    <string name="feat_daily_wallpaper_desc">Papéis de parede animados e selecionados diariamente</string>
     <string name="feat_watch_controls_title">Personalizar</string>
     <string name="feat_watch_controls_desc">Personalize os controles do app WearOS</string>
     <string name="feat_watch_wireless_debugging_title">Depuração sem fio</string>
@@ -1469,7 +1469,7 @@
     <string name="feat_pixel_searchbar_title">Barra de pesquisa do Pixel</string>
     <string name="feat_pixel_searchbar_desc">Defina o Essentials como o provedor de pesquisa padrão para a barra de pesquisa da tela inicial no Pixel Launcher.</string>
     <string name="feat_power_battery_title">Energia e bateria</string>
-    <string name="feat_power_battery_desc">Configurar as políticas de economia de energia</string>
+    <string name="feat_power_battery_desc">Configure as políticas de economia de energia</string>
     <string name="feat_flashlight_title">Lanterna</string>
     <string name="feat_flashlight_desc">Melhorar o comportamento da lanterna</string>
     <string name="feat_notification_snoozing_title">Adiar notificações</string>
