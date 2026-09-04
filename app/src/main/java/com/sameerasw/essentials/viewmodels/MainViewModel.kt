@@ -165,6 +165,7 @@ class MainViewModel : ViewModel() {
     val aodWallpaperVignette = mutableFloatStateOf(0f)
     val aodWallpaperBlackThreshold = mutableFloatStateOf(15f)
     val hasAodWallpaperCustomImage = mutableStateOf(false)
+    val isAodWallpaperUseAlbumArt = mutableStateOf(false)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
@@ -766,6 +767,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_AOD_WALLPAPER_OPACITY ->
                         aodWallpaperOpacity.floatValue =
                             settingsRepository.getFloat(key, 0.3f)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART ->
+                        isAodWallpaperUseAlbumArt.value =
+                            settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_POCKET_MODE_ENABLED ->
                         isPocketModeEnabled.value =
@@ -1924,6 +1929,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getAodWallpaperBlackThreshold()
         hasAodWallpaperCustomImage.value =
             settingsRepository.hasAodWallpaperCustomImage()
+        isAodWallpaperUseAlbumArt.value =
+            settingsRepository.isAodWallpaperUseAlbumArtEnabled()
         pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
         pixelSearchResultContacts.value = settingsRepository.isPixelSearchResultContactsEnabled()
         pixelSearchResultSettings.value = settingsRepository.isPixelSearchResultSettingsEnabled()
@@ -7037,6 +7044,11 @@ class MainViewModel : ViewModel() {
     fun setAodWallpaperBlackThreshold(threshold: Float) {
         settingsRepository.setAodWallpaperBlackThreshold(threshold)
         aodWallpaperBlackThreshold.floatValue = threshold
+    }
+
+    fun setAodWallpaperUseAlbumArt(enabled: Boolean) {
+        settingsRepository.setAodWallpaperUseAlbumArt(enabled)
+        isAodWallpaperUseAlbumArt.value = enabled
     }
 
     fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {

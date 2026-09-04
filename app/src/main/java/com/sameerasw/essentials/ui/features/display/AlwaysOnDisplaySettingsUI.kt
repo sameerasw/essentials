@@ -452,6 +452,42 @@ fun AlwaysOnDisplaySettingsUI(
             }
         }
 
+        val isNotificationListenerGranted = viewModel.isNotificationListenerEnabled.value
+        val isAlbumArtEnabled = viewModel.isAodWallpaperUseAlbumArt.value
+
+        Text(
+            text = stringResource(R.string.feat_aod_wallpaper_media_section_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_note_24,
+                title = stringResource(R.string.feat_aod_wallpaper_use_album_art),
+                isChecked = isAlbumArtEnabled,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked) {
+                        if (!isNotificationListenerGranted) {
+                            requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
+                        } else {
+                            viewModel.setAodWallpaperUseAlbumArt(true)
+                        }
+                    } else {
+                        viewModel.setAodWallpaperUseAlbumArt(false)
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isNotificationListenerGranted) {
+                        requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_album_art"),
+            )
+        }
 
         Text(
             text = stringResource(R.string.feat_notification_glance_title),

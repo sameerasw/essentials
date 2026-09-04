@@ -231,7 +231,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_AOD_WALLPAPER_BLUR ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_BLACK_THRESHOLD ||
-                key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE
+                key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART
             ) {
                 if (key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE) {
                     aodWallpaperOverlayHandler.invalidateWallpaperCache()

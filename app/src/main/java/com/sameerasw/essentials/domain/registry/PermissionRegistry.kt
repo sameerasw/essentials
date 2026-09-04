@@ -88,6 +88,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_notification_lighting_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_call_vibrations_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_essentials_on_display_title)
+    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_aod_wallpaper_use_album_art)
 
     // Bluetooth permissions
     PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)
