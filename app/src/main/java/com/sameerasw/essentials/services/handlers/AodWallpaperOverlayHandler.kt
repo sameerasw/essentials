@@ -90,14 +90,50 @@ class AodWallpaperOverlayHandler(
     }
 
     private fun checkAndApplyMediaState() {
+        val keepOnMedia = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, false)
+        val useAlbumArt = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)
+        val aodEnabled = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED, false)
+
         val controller = activeMediaController
-        if (controller == null) {
-            isMediaPlaying = false
+        val excludedAppsJson = prefs.getString(SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, null)
+        val excludedPackages: Set<String> = if (!excludedAppsJson.isNullOrBlank()) {
+            try {
+                val listType = object : com.google.gson.reflect.TypeToken<List<AppSelection>>() {}.type
+                val apps: List<AppSelection> = Gson().fromJson(excludedAppsJson, listType) ?: emptyList()
+                apps.filter { it.isEnabled }.map { it.packageName }.toSet()
+            } catch (_: Exception) {
+                emptySet()
+            }
+        } else {
+            emptySet()
+        }
+
+        val isExcluded = controller != null && excludedPackages.contains(controller.packageName)
+        val wasPlaying = isMediaPlaying
+        val nowPlaying = !isExcluded && controller?.playbackState?.state == PlaybackState.STATE_PLAYING
+
+        isMediaPlaying = nowPlaying
+
+        if (controller == null || isExcluded) {
             currentArtBitmap = null
+            if (wasPlaying && !nowPlaying && isOverlayAdded && isScreenOff) {
+                scheduleTimeout()
+            }
             evaluateAndApplyDisplayBitmap(animated = isOverlayAdded)
             return
         }
-        isMediaPlaying = controller.playbackState?.state == PlaybackState.STATE_PLAYING
+
+        if (keepOnMedia && useAlbumArt && isScreenOff && aodEnabled) {
+            if (nowPlaying) {
+                handler.removeCallbacks(timeoutRunnable)
+                if (!isOverlayAdded) {
+                    showOverlay()
+                }
+            } else if (wasPlaying && !nowPlaying && isOverlayAdded) {
+                scheduleTimeout()
+            }
+        }
+
         handlerScope.launch(Dispatchers.IO) {
             val art = extractMediaArtwork(controller.metadata, controller)
             withContext(Dispatchers.Main) {
@@ -132,8 +168,14 @@ class AodWallpaperOverlayHandler(
         }
     }
 
-    private val timeoutRunnable = Runnable {
+    private val timeoutRunnable: Runnable = Runnable {
         if (isOverlayAdded && isScreenOff) {
+            val keepOnMedia = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, false)
+            val useAlbumArt = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)
+            if (keepOnMedia && useAlbumArt && isMediaPlaying) {
+                handler.removeCallbacks(timeoutRunnable)
+                return@Runnable
+            }
             hideOverlay()
         }
     }
@@ -440,6 +482,12 @@ class AodWallpaperOverlayHandler(
 
     private fun scheduleTimeout() {
         handler.removeCallbacks(timeoutRunnable)
+        val keepOnMedia = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, false)
+        val useAlbumArt = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)
+        if (keepOnMedia && useAlbumArt && isMediaPlaying) {
+            return
+        }
+
         val timeoutMinutes = prefs.getInt(SettingsRepository.KEY_AOD_WALLPAPER_TIMEOUT, 3)
         if (timeoutMinutes > 0) {
             handler.postDelayed(timeoutRunnable, timeoutMinutes * 60_000L)
@@ -680,7 +728,13 @@ class AodWallpaperOverlayHandler(
     }
 
     private fun hideOverlay() {
-        unregisterMediaSessionListener()
+        val keepOnMedia = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, false)
+        val useAlbumArt = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)
+        val aodEnabled = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED, false)
+
+        if (!isScreenOff || !aodEnabled || !useAlbumArt || !keepOnMedia) {
+            unregisterMediaSessionListener()
+        }
         crossfadeAnimator?.cancel()
         crossfadeAnimator = null
         currentDisplayedBitmap = null
@@ -727,6 +781,8 @@ class AodWallpaperOverlayHandler(
                         } catch (_: Exception) {
                         }
                         isOverlayAdded = false
+                        overlayContainer = null
+                        wallpaperImageView = null
                     }
                 })
                 start()
