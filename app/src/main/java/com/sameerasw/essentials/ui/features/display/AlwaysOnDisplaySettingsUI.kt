@@ -138,87 +138,6 @@ fun AlwaysOnDisplaySettingsUI(
         }
 
         Text(
-            text = stringResource(R.string.feat_notification_glance_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        RoundedCardContainer {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_notification_settings_24,
-                title = stringResource(R.string.feat_notification_glance_title),
-                isChecked = viewModel.isNotificationGlanceEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.toggleNotificationGlanceEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "notification_glance_enabled"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_apps_24,
-                title = stringResource(R.string.notification_glance_same_as_lighting_title),
-                isChecked = viewModel.isNotificationGlanceSameAsLightingEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setNotificationGlanceSameAsLightingEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_power_settings_new_24,
-                title = stringResource(R.string.feat_aod_force_turn_off_title),
-                isChecked = viewModel.isAodForceTurnOffEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked && !isAccessibilityEnabled) {
-                        requestingPermissionsFor =
-                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
-                    } else {
-                        viewModel.toggleAodForceTurnOffEnabled(checked)
-                    }
-                },
-                enabled = true,
-                onDisabledClick = {
-                    if (!isAccessibilityEnabled) {
-                        requestingPermissionsFor =
-                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off"),
-            )
-        }
-
-        Text(
-            text = stringResource(R.string.notification_glance_desc),
-            modifier = Modifier.padding(horizontal = 16.dp),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        Text(
-            text = stringResource(R.string.feat_aod_force_turn_off_desc),
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        if (!viewModel.isNotificationGlanceSameAsLightingEnabled.value) {
-            Button(
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    showAppSelectionSheet = true
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = viewModel.isNotificationGlanceEnabled.value,
-            ) {
-                Text(stringResource(R.string.action_select_apps))
-            }
-        }
-
-        Text(
             text = stringResource(R.string.feat_aod_wallpaper_section_title),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
@@ -516,12 +435,87 @@ fun AlwaysOnDisplaySettingsUI(
             }
         }
 
+
         Text(
-            text = stringResource(R.string.feat_aod_wallpaper_desc),
+            text = stringResource(R.string.feat_notification_glance_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notification_settings_24,
+                title = stringResource(R.string.feat_notification_glance_title),
+                isChecked = viewModel.isNotificationGlanceEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.toggleNotificationGlanceEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "notification_glance_enabled"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_apps_24,
+                title = stringResource(R.string.notification_glance_same_as_lighting_title),
+                isChecked = viewModel.isNotificationGlanceSameAsLightingEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setNotificationGlanceSameAsLightingEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_power_settings_new_24,
+                title = stringResource(R.string.feat_aod_force_turn_off_title),
+                isChecked = viewModel.isAodForceTurnOffEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !isAccessibilityEnabled) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
+                    } else {
+                        viewModel.toggleAodForceTurnOffEnabled(checked)
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAccessibilityEnabled) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_force_turn_off_title, listOf("ACCESSIBILITY"))
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off"),
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.notification_glance_desc),
             modifier = Modifier.padding(horizontal = 16.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        Text(
+            text = stringResource(R.string.feat_aod_force_turn_off_desc),
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        if (!viewModel.isNotificationGlanceSameAsLightingEnabled.value) {
+            Button(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    showAppSelectionSheet = true
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = viewModel.isNotificationGlanceEnabled.value,
+            ) {
+                Text(stringResource(R.string.action_select_apps))
+            }
+        }
 
         Spacer(modifier = Modifier.height(80.dp))
 
