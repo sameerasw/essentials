@@ -2403,4 +2403,5 @@
     <string name="pixel_search_engine_desc">Default search provider used when searching the web</string>
     <string name="pixel_search_open_url_action">Open \"%1$s\"</string>
     <string name="bubble_web_link_copied">Link copied to clipboard</string>
+    <string name="label_apply_after_reboot">Apply after reboot</string>
 </resources>

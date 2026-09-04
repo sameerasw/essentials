@@ -406,7 +406,17 @@ class SettingsRepository(
 
         const val KEY_LOCKDOWN_MODE = "lockdown_mode"
         const val KEY_BUBBLE_WEB_FULLSCREEN = "bubble_web_fullscreen"
+        const val KEY_SIM_NAMES_APPLY_ON_BOOT = "sim_names_apply_on_boot"
+        const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
     }
+
+    fun isSimNamesApplyOnBootEnabled(): Boolean = getBoolean(KEY_SIM_NAMES_APPLY_ON_BOOT, false)
+
+    fun setSimNamesApplyOnBootEnabled(enabled: Boolean) = putBoolean(KEY_SIM_NAMES_APPLY_ON_BOOT, enabled)
+
+    fun isPowerSavingApplyOnBootEnabled(): Boolean = getBoolean(KEY_POWER_SAVING_APPLY_ON_BOOT, false)
+
+    fun setPowerSavingApplyOnBootEnabled(enabled: Boolean) = putBoolean(KEY_POWER_SAVING_APPLY_ON_BOOT, enabled)
 
     /**
      * Executes the is translation mode warning suppressed operation.
