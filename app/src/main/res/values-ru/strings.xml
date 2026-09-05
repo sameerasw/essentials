@@ -1567,4 +1567,5 @@
     <string name="setting_app_icon_title">Иконка приложения</string>
     <string name="setting_app_icon_desc">Выберите иконку, которая будет отображатся на домашне экране</string>
     <string name="label_motion_blur">Размытие при скролле</string>
+    <string name="label_device_battery">Батарея</string>
 </resources>
