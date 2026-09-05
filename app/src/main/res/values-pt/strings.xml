@@ -1501,4 +1501,5 @@
     <string name="feat_smart_pixels_title">Pixeis inteligentes </string>
     <string name="feat_smart_pixels_desc">Desligue pixeis para economizar energia</string>
     <string name="tile_lockdown_mode_desc">Desligue a tela com configuração rápida </string>
+    <string name="label_adjust_brightness_factor">Fator de ajuste de brilho</string>
 </resources>
