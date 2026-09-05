@@ -94,4 +94,27 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="show_bluetooth_devices_summary">Menampilkan level baterai perangkat Bluetooth yang terhubung.</string>
     <string name="widget_background_summary">Tampilkan latar belakang widget</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
+    <string name="feat_aod_wallpaper_use_album_art">Gunakan seni album </string>
+    <string name="feat_aod_wallpaper_keep_on_media">Lanjutkan saat media diputar</string>
+    <string name="feat_aod_wallpaper_media_apps">Lewati aplikasi media</string>
+    <string name="feat_aod_force_turn_off_title">Paksa matikan AOD</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Sama seperti aplikasi pencahayaan notifikasi </string>
+    <string name="feat_notification_glance_title">Sekilas notifikasi</string>
+    <string name="feat_aod_wallpaper_timeout">Waktu tunggu wallpaper</string>
+    <string name="feat_aod_wallpaper_black_threshold">Ambang batas hitam</string>
+    <string name="feat_aod_wallpaper_opacity">Kegelapan</string>
+    <string name="feat_aod_wallpaper_title">Perlihatkan wallpaper di AOD</string>
+    <string name="label_mode_glove">Mode sarung tangan</string>
+    <string name="app_icon_default">Bawaan </string>
+    <string name="label_increase_touch_sensitivity">Tingkatkan sensitivitas sentuhan</string>
+    <string name="desc_increase_touch_sensitivity">Meningkatkan responsivitas layar sentuh saat menggunakan sarung tangan atau pelindung layar.</string>
+    <string name="label_auto_rotate">Rotasi otomatis </string>
+    <string name="desc_auto_rotate">Layar akan berputar secara otomatis saat perangkat diputar.</string>
+    <string name="label_screen_timeout">Waktu tunggu layar </string>
+    <string name="label_smallest_width">Lebar terkecil (DPI)</string>
+    <string name="label_animator_duration_scale">Skala durasi animator</string>
+    <string name="label_transition_animation_scale">Skala animasi transisi</string>
+    <string name="label_window_animation_scale">Skala animasi jendela</string>
+    <string name="setting_app_icon_title">Ikon aplikasi </string>
+    <string name="setting_app_icon_desc">Sesuaikan ikon peluncur layar beranda.</string>
 </resources>
