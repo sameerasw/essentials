@@ -14,7 +14,7 @@
     <string name="screen_off_widget_label">Пустой виджет для отключения экрана</string>
     <string name="app_freezing_tile_label">Заморозка приложений</string>
     <string name="flashlight_pulse_tile_label">Мигание фонариком</string>
-    <string name="check_pre_releases_label">Проверять наличие pre-releases</string>
+    <string name="check_pre_releases_label">Проверять наличие пред-релизов</string>
     <string name="check_pre_releases_desc">Могут быть нестабильны</string>
     <string name="label_default_tab">Вкладка по умолчанию</string>
     <!-- App Lock -->
@@ -1564,4 +1564,7 @@
     <string name="watch_notif_sync_choose_apps_desc">Только выбранные приложения будут синхронизированы с часами</string>
     <string name="setting_location_reached_full_screen_alarm_title">Сообщение на весь экран</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Проигрывает звук будильника и показывает уведомление на весь экран</string>
+    <string name="setting_app_icon_title">Иконка приложения</string>
+    <string name="setting_app_icon_desc">Выберите иконку, которая будет отображатся на домашне экране</string>
+    <string name="label_motion_blur">Размытие при скролле</string>
 </resources>
