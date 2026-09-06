@@ -1539,4 +1539,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="setting_app_icon_desc">Dostosuj ikonę aplikacji na ekranie głównym </string>
     <string name="label_motion_blur">Rozmycie ruchu </string>
     <string name="label_ripple_animation">Efekt fali</string>
+    <string name="feat_networks_desc">Sterownie łącznością i sieciami</string>
+    <string name="feat_flashlight_title">Latarka </string>
+    <string name="feat_flashlight_desc">Popraw zachowanie latarki </string>
 </resources>
