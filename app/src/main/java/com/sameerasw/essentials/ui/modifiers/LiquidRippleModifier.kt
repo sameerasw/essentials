@@ -15,6 +15,7 @@ import android.os.Build
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -84,14 +85,40 @@ fun Modifier.liquidRipple(
         }
     }
 
-    val shader = remember {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RuntimeShader(LIQUID_RIPPLE_AGSL)
-        } else null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Api33LiquidRipple.applyLiquidRipple(
+            modifier = Modifier,
+            animTime = animTime,
+            density = density,
+            durationMillis = durationMillis,
+            amplitudeDp = amplitudeDp,
+            frequency = frequency,
+            decay = decay,
+            speedDp = speedDp,
+            origin = origin,
+        )
+    } else {
+        Modifier
     }
+}
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && shader != null) {
-        Modifier.graphicsLayer {
+@androidx.annotation.RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private object Api33LiquidRipple {
+    @Composable
+    fun applyLiquidRipple(
+        modifier: Modifier,
+        animTime: Animatable<Float, *>,
+        density: androidx.compose.ui.unit.Density,
+        durationMillis: Int,
+        amplitudeDp: Float,
+        frequency: Float,
+        decay: Float,
+        speedDp: Float,
+        origin: Offset,
+    ): Modifier {
+        val shader = remember { RuntimeShader(LIQUID_RIPPLE_AGSL) }
+
+        return modifier.graphicsLayer {
             val currentTime = animTime.value
             val maxTime = durationMillis / 1000f
             if (currentTime > 0f && currentTime < maxTime) {
@@ -115,7 +142,5 @@ fun Modifier.liquidRipple(
                 renderEffect = null
             }
         }
-    } else {
-        Modifier
     }
 }

@@ -1413,6 +1413,41 @@ fun SettingsContent(
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = Shapes.extraSmall,
+                            ).padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.clearRecentSearches()
+                            Toast.makeText(context, context.getString(R.string.toast_search_history_cleared), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(40.dp),
+                        shape = ButtonDefaults.shape,
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError,
+                            ),
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.btn_clear_search_history),
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                    }
+                }
+
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = Shapes.extraSmall,
                             ).padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
