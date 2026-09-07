@@ -1465,7 +1465,7 @@
     <string name="feat_notification_snoozing_title">Αναβολή ειδοποίησεων</string>
     <string name="feat_notification_snoozing_desc">Επαναπρογραμματισμός ειδοποιήσεων</string>
     <string name="feat_safe_volume_title">Απενεργοποίηση προειδοποίησης ασφαλούς έντασης</string>
-    <string name="feat_safe_volume_desc">Καταστολή διαλόγου υψηλής έντασης</string>
+    <string name="feat_safe_volume_desc">Καταστολή προειδοποίησης υψηλής έντασης</string>
     <string name="label_ripple_animation">Εφέ κυματισμού</string>
     <string name="feat_pocket_mode_title">Λειτουργία τσέπης</string>
     <string name="feat_pocket_mode_desc">Αποτροπή τυχαίων αγγιγμάτων ενώ το τηλέφωνό σας βρίσκεται στην τσέπη</string>
