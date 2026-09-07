@@ -14,7 +14,7 @@
     <string name="screen_off_widget_label">Пустой виджет для отключения экрана</string>
     <string name="app_freezing_tile_label">Заморозка приложений</string>
     <string name="flashlight_pulse_tile_label">Мигание фонариком</string>
-    <string name="check_pre_releases_label">Проверять наличие pre-releases</string>
+    <string name="check_pre_releases_label">Проверять наличие пред-релизов</string>
     <string name="check_pre_releases_desc">Могут быть нестабильны</string>
     <string name="label_default_tab">Вкладка по умолчанию</string>
     <!-- App Lock -->
@@ -1576,4 +1576,8 @@
     <string name="feat_allow_overlays_in_settings_desc">Разрешить приложениям отрисовывать оверлеи поверх системного приложения Настроек</string>
     <string name="feat_transparent_navigation_bar_title">Прозрачная панель навигации</string>
     <string name="feat_transparent_navigation_bar_desc">Сделать фон системной панели навигации прозрачным</string>
+    <string name="setting_app_icon_title">Иконка приложения</string>
+    <string name="setting_app_icon_desc">Выберите иконку, которая будет отображатся на домашне экране</string>
+    <string name="label_motion_blur">Размытие при скролле</string>
+    <string name="label_device_battery">Батарея</string>
 </resources>
