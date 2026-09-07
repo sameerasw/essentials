@@ -391,7 +391,7 @@
     <string name="feat_screen_off_widget_desc">화면을 끄는 보이지 않는 위젯</string>
     <string name="feat_statusbar_icons_title">상태 표시줄 아이콘</string>
     <string name="feat_statusbar_icons_desc">상태 표시줄 아이콘 표시 여부 제어</string>
-    <string name="feat_caffeinate_title">카페인</string>
+    <string name="feat_caffeinate_title">각성</string>
     <string name="feat_caffeinate_desc">화면 꺼짐 방지</string>
     <string name="feat_maps_power_saving_title">지도 절전 모드</string>
     <string name="feat_maps_power_saving_desc">모든 Android 기기에 적용 가능</string>
@@ -1528,7 +1528,7 @@
     <string name="label_device_battery">배터리</string>
     <string name="flashlight_pulse_disable_on_dnd_title">방해 금지 모드 시 트리거 금지</string>
     <string name="cat_navigation">내비게이션 바</string>
-    <string name="search_smart_pixels_enable_title">스마트 픽셀</string>
+    <string name="search_smart_pixels_enable_title">스마트 픽셀 활성화</string>
     <string name="smart_pixels_intensity_title">강도</string>
     <string name="feat_allow_overlays_in_settings_title">설정 앱에 오버레이 표시 허용</string>
     <string name="feat_allow_overlays_in_settings_desc">설정 앱에 오버레이 표시 허용</string>
@@ -1558,4 +1558,24 @@
     <string name="freeze_tag_color_coded_title">태그 색 코드</string>
     <string name="freeze_tag_color_coded_desc">앱 목록에서 태그 컬러 표시</string>
     <string name="setting_enable_unsupported_features_desc">기본적으로 비활성화된 기기에 따라 다른 설정 보이기</string>
+    <string name="setting_app_icon_title">앱 아이콘</string>
+    <string name="setting_app_icon_desc">앱 아이콘 선택</string>
+    <string name="app_icon_default">기본</string>
+    <string name="app_icon_legacy">구형</string>
+    <string name="app_icon_black">자동</string>
+    <string name="app_icon_google">스팩트럼</string>
+    <string name="label_enable_quick_doze">빠른 절전 활성화</string>
+    <string name="smart_pixels_disable_on_cast_title">화면 공유 중 중지</string>
+    <string name="smart_pixels_disable_on_cast_desc">화면 녹화 또는 공유 시 자동으로 스마트 픽셀 비활성화</string>
+    <string name="feat_flashlight_title">손전등</string>
+    <string name="shorten_settings_auto_copy_title">링크 자동 복사</string>
+    <string name="shorten_settings_auto_copy_desc">생성된 링크를 자동으로 복사</string>
+    <string name="shorten_settings_auto_strip_title">트래커 차단</string>
+    <string name="shorten_settings_auto_strip_desc">마케팅, 원격 정보 수집 파라미터 제거</string>
+    <string name="shorten_settings_notification_desc">알림에 공유 및 복사 버튼 보이기</string>
+    <string name="shorten_settings_notification_title">작동 알림</string>
+    <string name="desc_enable_quick_doze">화면 꺼짐 시 더 빠르게 절전 모드 진입</string>
+    <string name="feat_sim_names_title">SIM 이름</string>
+    <string name="feat_sim_names_desc">SIM 카드 이름 편집</string>
+    <string name="setting_location_reached_full_screen_alarm_title">전체 화면 알림</string>
 </resources>
