@@ -247,9 +247,7 @@ fun AlwaysOnDisplaySettingsUI(
                                 fontWeight = FontWeight.Thin,
                                 fontSize = 52.sp,
                                 letterSpacing = 4.sp,
-                                color = MaterialTheme.colorScheme.primary.copy(
-                                    alpha = if (isWallpaperEnabled) (animatedPreviewAlpha * 1.4f).coerceIn(0f, 1f) else 0f,
-                                ),
+                                color = MaterialTheme.colorScheme.primary,
                             ),
                             textAlign = TextAlign.Center,
                         )
