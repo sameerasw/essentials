@@ -413,6 +413,7 @@ class AodWallpaperOverlayHandler(
             wallpaperImageView?.alpha = opacity
             wallpaperImageView?.colorFilter = luminanceFilter
             applyBlurEffect(wallpaperImageView ?: return, blurRadius)
+            overlayContainer?.invalidate()
         }
 
         if (prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)) {
@@ -470,12 +471,7 @@ class AodWallpaperOverlayHandler(
         } else if (isOverlayAdded && overlayContainer != null) {
             val container = overlayContainer ?: return
             container.visibility = View.VISIBLE
-            ObjectAnimator.ofFloat(container, "alpha", container.alpha, 1f).apply {
-                duration = 2000
-                start()
-            }
-            handler.removeCallbacks(burnInShiftRunnable)
-            handler.postDelayed(burnInShiftRunnable, BURN_IN_INTERVAL_MS)
+            container.alpha = 1f
             scheduleTimeout()
         }
     }

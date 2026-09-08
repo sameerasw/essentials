@@ -769,6 +769,26 @@ class MainViewModel : ViewModel() {
                         aodWallpaperOpacity.floatValue =
                             settingsRepository.getFloat(key, 0.3f)
 
+                    SettingsRepository.KEY_AOD_WALLPAPER_TIMEOUT ->
+                        aodWallpaperTimeout.intValue =
+                            settingsRepository.getAodWallpaperTimeout()
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_BLUR ->
+                        aodWallpaperBlur.floatValue =
+                            settingsRepository.getAodWallpaperBlur()
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE ->
+                        aodWallpaperVignette.floatValue =
+                            settingsRepository.getAodWallpaperVignette()
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_BLACK_THRESHOLD ->
+                        aodWallpaperBlackThreshold.floatValue =
+                            settingsRepository.getAodWallpaperBlackThreshold()
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE ->
+                        hasAodWallpaperCustomImage.value =
+                            settingsRepository.hasAodWallpaperCustomImage()
+
                     SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART ->
                         isAodWallpaperUseAlbumArt.value =
                             settingsRepository.getBoolean(key)
