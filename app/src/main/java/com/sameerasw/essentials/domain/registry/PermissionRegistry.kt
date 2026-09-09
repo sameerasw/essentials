@@ -10,9 +10,17 @@
 package com.sameerasw.essentials.domain.registry
 
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.AppPermission
 
 object PermissionRegistry {
     private val registry = mutableMapOf<String, MutableList<Int>>()
+
+    fun register(
+        permission: AppPermission,
+        featureTitleRes: Int,
+    ) {
+        register(permission.name, featureTitleRes)
+    }
 
     fun register(
         permissionKey: String,
@@ -22,7 +30,20 @@ object PermissionRegistry {
         if (!list.contains(featureTitleRes)) list.add(featureTitleRes)
     }
 
-    fun getFeatures(permissionKey: String): List<Int> = registry[permissionKey]?.toList() ?: emptyList()
+    fun getFeatures(permission: AppPermission): List<Int> {
+        val direct = registry[permission.name] ?: emptyList()
+        val aliasMatches = permission.aliases.flatMap { registry[it] ?: emptyList() }
+        return (direct + aliasMatches).distinct()
+    }
+
+    fun getFeatures(permissionKey: String): List<Int> {
+        val perm = AppPermission.fromKey(permissionKey)
+        return if (perm != null) {
+            getFeatures(perm)
+        } else {
+            registry[permissionKey]?.toList() ?: emptyList()
+        }
+    }
 }
 
 // Register existing dependencies

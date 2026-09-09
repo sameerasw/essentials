@@ -121,6 +121,7 @@ import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import rikka.shizuku.Shizuku
@@ -1068,249 +1069,48 @@ fun SettingsContent(
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
         ) {
+            val permissionItems =
+                remember(
+                    isAccessibilityEnabled,
+                    isWriteSecureSettingsEnabled,
+                    isRootEnabled,
+                    isRootPermissionGranted,
+                    isShizukuPermissionGranted,
+                    isShizukuAvailable,
+                    isReadPhoneStateEnabled,
+                    isPostNotificationsEnabled,
+                    isOverlayPermissionGranted,
+                    isNotificationListenerEnabled,
+                    isWriteSettingsEnabled,
+                    isNotificationPolicyAccessGranted,
+                    isDefaultBrowserSet,
+                    isUsageStatsPermissionGranted,
+                    isLocationPermissionGranted,
+                    isBackgroundLocationPermissionGranted,
+                    isDeviceAdminEnabled,
+                    isCalendarPermissionGranted,
+                ) {
+                    PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
+                }
+
             RoundedCardContainer {
-                PermissionCard(
-                    iconRes = R.drawable.rounded_settings_accessibility_24,
-                    title = "Accessibility",
-                    dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                    actionLabel = if (isAccessibilityEnabled) "Granted" else "Grant Permission",
-                    isGranted = isAccessibilityEnabled,
-                    onActionClick = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        context.startActivity(intent)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_security_24,
-                    title = "Write Secure Settings",
-                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
-                    actionLabel = if (isWriteSecureSettingsEnabled) "Granted" else "Copy ADB Command",
-                    isGranted = isWriteSecureSettingsEnabled,
-                    onActionClick = {
-                        val adbCommand =
-                            "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                        val clipboard =
-                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val clip = ClipData.newPlainText("adb_command", adbCommand)
-                        clipboard.setPrimaryClip(clip)
-                    },
-                    secondaryActionLabel = "Check",
-                    onSecondaryActionClick = {
-                        viewModel.check(context)
-                    },
-                )
-
-                if (isRootEnabled) {
+                permissionItems.forEach { item ->
                     PermissionCard(
-                        iconRes = R.drawable.rounded_numbers_24,
-                        title = stringResource(R.string.perm_root_title),
-                        dependentFeatures = PermissionRegistry.getFeatures("ROOT"),
-                        actionLabel = if (isRootPermissionGranted) "Granted" else "Grant Access",
-                        isGranted = isRootPermissionGranted,
-                        onActionClick = {
-                            viewModel.check(context)
-                        },
-                    )
-                } else if (isShizukuAvailable) {
-                    PermissionCard(
-                        iconRes = R.drawable.rounded_adb_24,
-                        title = "Shizuku",
-                        dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                        actionLabel = if (isShizukuPermissionGranted) "Granted" else "Request Permission",
-                        isGranted = isShizukuPermissionGranted,
-                        onActionClick = {
-                            viewModel.requestShizukuPermission()
-                        },
-                        secondaryActionLabel = if (isShizukuPermissionGranted && !isWriteSecureSettingsEnabled) "Auto-Grant" else null,
-                        onSecondaryActionClick =
-                            if (isShizukuPermissionGranted && !isWriteSecureSettingsEnabled) {
-                                {
-                                    viewModel.grantWriteSecureSettingsWithShizuku(context)
-                                }
-                            } else {
-                                null
-                            },
+                        iconRes = item.iconRes,
+                        title = item.title,
+                        dependentFeatures = item.dependentFeatures,
+                        actionLabel = item.actionLabel ?: R.string.perm_action_grant,
+                        isGranted = item.isGranted,
+                        onActionClick = { item.action?.invoke() },
+                        secondaryActionLabel = item.secondaryActionLabel,
+                        onSecondaryActionClick = item.secondaryAction,
+                        shizukuActionLabel = item.shizukuActionLabel,
+                        shizukuActionEnabled = item.shizukuActionEnabled,
+                        onShizukuActionClick = item.shizukuAction,
+                        instructions = item.instructions,
+                        description = item.description,
                     )
                 }
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_android_cell_dual_4_bar_24,
-                    title = "Read Phone State",
-                    dependentFeatures = PermissionRegistry.getFeatures("READ_PHONE_STATE"),
-                    actionLabel = if (isReadPhoneStateEnabled) "Granted" else "Grant Permission",
-                    isGranted = isReadPhoneStateEnabled,
-                    onActionClick = {
-                        viewModel.requestReadPhoneStatePermission(context as ComponentActivity)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_notifications_unread_24,
-                    title = "Post Notifications",
-                    dependentFeatures = PermissionRegistry.getFeatures("POST_NOTIFICATIONS"),
-                    actionLabel = if (isPostNotificationsEnabled) "Granted" else "Grant Permission",
-                    isGranted = isPostNotificationsEnabled,
-                    onActionClick = {
-                        // Request permission
-                        ActivityCompat.requestPermissions(
-                            context as ComponentActivity,
-                            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                            1002,
-                        )
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_magnify_fullscreen_24,
-                    title = "Draw Overlays",
-                    dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVER_OTHER_APPS"),
-                    actionLabel = if (isOverlayPermissionGranted) "Granted" else "Grant Permission",
-                    isGranted = isOverlayPermissionGranted,
-                    onActionClick = {
-                        val intent =
-                            Intent(
-                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                android.net.Uri.parse("package:${context.packageName}"),
-                            )
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        context.startActivity(intent)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_notification_settings_24,
-                    title = "Notification Listener",
-                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
-                    actionLabel = if (isNotificationListenerEnabled) "Granted" else "Enable listener",
-                    isGranted = isNotificationListenerEnabled,
-                    onActionClick = {
-                        val intent =
-                            Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-                        context.startActivity(intent)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_security_24,
-                    title = stringResource(R.string.perm_write_settings_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
-                    actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
-                    isGranted = isWriteSettingsEnabled,
-                    onActionClick = {
-                        PermissionUtils.openWriteSettings(context)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_volume_up_24,
-                    title = stringResource(R.string.perm_notif_policy_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
-                    actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
-                    isGranted = isNotificationPolicyAccessGranted,
-                    onActionClick = {
-                        PermissionUtils.openNotificationPolicySettings(context)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_open_in_browser_24,
-                    title = stringResource(R.string.perm_default_browser_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),
-                    actionLabel = if (isDefaultBrowserSet) "Granted" else "Set as Default",
-                    isGranted = isDefaultBrowserSet,
-                    onActionClick = {
-                        val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
-                        try {
-                            context.startActivity(intent)
-                        } catch (e: Exception) {
-                            // Fallback for older Android versions
-                            val settingsIntent = Intent(Settings.ACTION_SETTINGS)
-                            context.startActivity(settingsIntent)
-                        }
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_settings_motion_mode_24,
-                    title = stringResource(R.string.perm_write_settings_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
-                    actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
-                    isGranted = isWriteSettingsEnabled,
-                    onActionClick = {
-                        PermissionUtils.openWriteSettings(context)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_notifications_off_24,
-                    title = stringResource(R.string.perm_notif_policy_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
-                    actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
-                    isGranted = isNotificationPolicyAccessGranted,
-                    onActionClick = {
-                        PermissionUtils.openNotificationPolicySettings(context)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_data_usage_24,
-                    title = stringResource(R.string.perm_usage_stats_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
-                    actionLabel = if (isUsageStatsPermissionGranted) "Granted" else "Grant Permission",
-                    isGranted = isUsageStatsPermissionGranted,
-                    onActionClick = {
-                        PermissionUtils.openUsageStatsSettings(context)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_location_on_24,
-                    title = "Location Access",
-                    dependentFeatures = PermissionRegistry.getFeatures("LOCATION"),
-                    actionLabel = if (isLocationPermissionGranted) "Granted" else "Grant Permission",
-                    isGranted = isLocationPermissionGranted,
-                    onActionClick = {
-                        viewModel.requestLocationPermission(context as ComponentActivity)
-                    },
-                )
-
-                if (isLocationPermissionGranted && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    PermissionCard(
-                        iconRes = R.drawable.rounded_location_on_24,
-                        title = "Background Location",
-                        dependentFeatures = PermissionRegistry.getFeatures("BACKGROUND_LOCATION"),
-                        actionLabel = if (isBackgroundLocationPermissionGranted) "Granted" else "Grant Permission",
-                        isGranted = isBackgroundLocationPermissionGranted,
-                        onActionClick = {
-                            viewModel.requestBackgroundLocationPermission(context as ComponentActivity)
-                        },
-                    )
-                }
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_admin_panel_settings_24,
-                    title = "Device Admin",
-                    dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
-                    actionLabel = if (isDeviceAdminEnabled) "Granted" else "Enable Admin",
-                    isGranted = isDeviceAdminEnabled,
-                    onActionClick = {
-                        viewModel.requestDeviceAdmin(context)
-                    },
-                )
-
-                PermissionCard(
-                    iconRes = R.drawable.rounded_calendar_today_24,
-                    title = "Calendar",
-                    dependentFeatures = PermissionRegistry.getFeatures("READ_CALENDAR"),
-                    actionLabel = if (isCalendarPermissionGranted) "Granted" else "Grant Permission",
-                    isGranted = isCalendarPermissionGranted,
-                    onActionClick = {
-                        viewModel.requestCalendarPermission(context as ComponentActivity)
-                    },
-                )
             }
         }
 
