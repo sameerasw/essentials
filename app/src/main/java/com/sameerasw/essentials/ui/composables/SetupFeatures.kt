@@ -489,6 +489,22 @@ fun SetupFeatures(
                     }
                 }
 
+                R.string.flashlight_pulse_title -> {
+                    if (!isNotificationListenerEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_notifications_unread_24,
+                                title = R.string.perm_notif_listener_title,
+                                description = R.string.perm_notif_listener_desc_lighting,
+                                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestNotificationListenerPermission(context) },
+                                isGranted = isNotificationListenerEnabled,
+                            ),
+                        )
+                    }
+                }
+
                 R.string.feat_essentials_on_display_title -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -757,6 +773,19 @@ fun SetupFeatures(
                             action = { viewModel.requestReadPhoneStatePermission(context as Activity) },
                             isGranted = isReadPhoneStateEnabled,
                         ),
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_notifications_unread_24,
+                            title = R.string.perm_notif_listener_title,
+                            description = R.string.perm_notif_listener_desc_lighting,
+                            dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                            actionLabel = R.string.perm_action_grant,
+                            action = { viewModel.requestNotificationListenerPermission(context) },
+                            isGranted = isNotificationListenerEnabled,
+                        ),
+                    )
+
+                R.string.flashlight_pulse_title ->
+                    listOf(
                         PermissionItem(
                             iconRes = R.drawable.rounded_notifications_unread_24,
                             title = R.string.perm_notif_listener_title,

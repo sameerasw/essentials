@@ -341,6 +341,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     !isOverlayPermissionGranted ||
                                         !isNotificationLightingAccessibilityEnabled ||
                                         !isNotificationListenerEnabled
+                                "Flashlight pulse" -> !isNotificationListenerEnabled
+                                "Notification Sync" -> !isNotificationListenerEnabled
                                 "Button remap" -> !isAccessibilityEnabled
                                 "Pocket mode" -> !isAccessibilityEnabled
                                 "Dynamic night light" ->
@@ -754,6 +756,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                                 !isOverlayPermissionGranted ||
                                                                     !isNotificationLightingAccessibilityEnabled ||
                                                                     !isNotificationListenerEnabled
+                                                            "Flashlight pulse" -> !isNotificationListenerEnabled
                                                             "Button remap" -> !isAccessibilityEnabled
                                                             "Dynamic night light" ->
                                                                 (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||

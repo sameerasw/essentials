@@ -126,7 +126,7 @@ fun WatchNotificationSettingsUI(
                         prefs.edit().putBoolean("watch_notif_sync_enabled", checked).apply()
                     }
                 },
-                enabled = true,
+                enabled = isNotifSyncPermissionGranted,
                 onDisabledClick = {
                     if (!isNotifSyncPermissionGranted) {
                         showNotifPermissionSheet = true

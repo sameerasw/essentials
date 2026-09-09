@@ -38,6 +38,10 @@ import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.core.sheets.PermissionItem
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FlashlightPulseSettingsUI(
@@ -49,6 +53,8 @@ fun FlashlightPulseSettingsUI(
     val view = LocalView.current
 
     var showAppSelectionSheet by remember { mutableStateOf(false) }
+    var showPermissionsSheet by remember { mutableStateOf(false) }
+    val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
@@ -63,6 +69,8 @@ fun FlashlightPulseSettingsUI(
                 iconRes = R.drawable.rounded_flashlight_on_24,
                 title = stringResource(R.string.flashlight_pulse_title),
                 isChecked = viewModel.isFlashlightPulseEnabled.value,
+                enabled = isNotificationListenerEnabled,
+                onDisabledClick = { showPermissionsSheet = true },
                 onCheckedChange = { checked ->
                     viewModel.setFlashlightPulseEnabled(checked, context)
                 },
@@ -156,6 +164,25 @@ fun FlashlightPulseSettingsUI(
                     )
                 },
                 context = context,
+            )
+        }
+
+        if (showPermissionsSheet) {
+            PermissionsBottomSheet(
+                onDismissRequest = { showPermissionsSheet = false },
+                featureTitle = R.string.flashlight_pulse_title,
+                permissions =
+                    listOf(
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_notifications_unread_24,
+                            title = R.string.perm_notif_listener_title,
+                            description = R.string.perm_notif_listener_desc_lighting,
+                            dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                            actionLabel = R.string.perm_action_grant,
+                            action = { viewModel.requestNotificationListenerPermission(context) },
+                            isGranted = isNotificationListenerEnabled,
+                        ),
+                    ),
             )
         }
     }
