@@ -116,7 +116,7 @@ fun PermissionsBottomSheet(
                             shizukuActionEnabled = perm.shizukuActionEnabled,
                             onShizukuActionClick = { perm.shizukuAction?.invoke() },
                             instructions = perm.instructions,
-                            description = perm.description,
+                            description = null,
                         )
                     }
                 }
@@ -155,7 +155,7 @@ fun PermissionsBottomSheet(
                                 shizukuActionEnabled = perm.shizukuActionEnabled,
                                 onShizukuActionClick = { perm.shizukuAction?.invoke() },
                                 instructions = perm.instructions,
-                                description = perm.description,
+                                description = null,
                             )
                         }
                     }

@@ -152,36 +152,41 @@ fun PermissionCard(
                             modifier = Modifier.size(36.dp),
                         )
                     },
-                    supportingContent = {
-                        Column {
-                            if (resolvedDescription != null) {
-                                Text(
-                                    text = resolvedDescription,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                            if (dependentFeatures.isNotEmpty()) {
-                                if (resolvedDescription != null) {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                }
-                                Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
-                                Spacer(modifier = Modifier.height(4.dp))
-                                dependentFeatures.forEach { f ->
-                                    val resolvedFeature =
-                                        when (f) {
-                                            is Int -> stringResource(id = f)
-                                            is String -> f
-                                            else -> ""
+                    supportingContent =
+                        if (resolvedDescription != null || dependentFeatures.isNotEmpty()) {
+                            {
+                                Column {
+                                    if (resolvedDescription != null) {
+                                        Text(
+                                            text = resolvedDescription,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                    if (dependentFeatures.isNotEmpty()) {
+                                        if (resolvedDescription != null) {
+                                            Spacer(modifier = Modifier.height(8.dp))
                                         }
-                                    Text(
-                                        text = "• $resolvedFeature",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
+                                        Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        dependentFeatures.forEach { f ->
+                                            val resolvedFeature =
+                                                when (f) {
+                                                    is Int -> stringResource(id = f)
+                                                    is String -> f
+                                                    else -> ""
+                                                }
+                                            Text(
+                                                text = "• $resolvedFeature",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    },
+                        } else {
+                            null
+                        },
                     content = {
                         Text(
                             text = resolvedTitle,
