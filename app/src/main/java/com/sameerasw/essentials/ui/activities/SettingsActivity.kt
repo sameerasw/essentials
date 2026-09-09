@@ -1212,7 +1212,7 @@ fun SettingsContent(
                                 SimpleDateFormat(
                                     "yyyyMMdd_HHmmss",
                                     Locale.getDefault(),
-                                ).format(Date())
+                                    ).format(Date())
                             exportLauncher.launch("essentials_config_$timeStamp.json")
                         },
                         modifier =
@@ -1222,7 +1222,7 @@ fun SettingsContent(
                         shape = ButtonGroupDefaults.connectedLeadingButtonShapes().shape,
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.rounded_vertical_align_bottom_24),
+                            painter = painterResource(R.drawable.rounded_vertical_align_top_24),
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
                         )
@@ -1241,7 +1241,7 @@ fun SettingsContent(
                         shape = ButtonGroupDefaults.connectedTrailingButtonShapes().shape,
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.rounded_vertical_align_top_24),
+                            painter = painterResource(R.drawable.rounded_vertical_align_bottom_24),
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
                         )
