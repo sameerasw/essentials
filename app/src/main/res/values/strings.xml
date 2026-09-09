@@ -914,8 +914,12 @@
     <string name="sentry_report_mode_title">Crash reporting</string>
     <string name="sentry_mode_off">Off</string>
     <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="sentry_crash_toast">Essentials crashed, report saved and sent</string>
     <string name="simulate_crash">Simulate crash</string>
+    <string name="btn_share_crash_logs">Share latest crash log</string>
+    <string name="btn_clear_crash_logs">Clear crash logs</string>
+    <string name="toast_crash_logs_cleared">Crash logs cleared</string>
+    <string name="toast_no_crash_logs">No crash logs found</string>
     <string name="welcome_title">Welcome to Essentials</string>
     <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>

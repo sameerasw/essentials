@@ -96,7 +96,21 @@ class EssentialsApp : Application() {
                 "https://e105699467efe3a43a16bfbad3a63b33@o4510996760887296.ingest.de.sentry.io/4510996763312208"
             options.isEnabled = true
 
-            options.setBeforeSend { event, _ ->
+            options.setBeforeSend { event, hint ->
+                try {
+                    val throwable = event.throwable
+                    val threadName = event.threads?.firstOrNull()?.name ?: Thread.currentThread().name
+                    val message = event.message?.formatted ?: event.exceptions?.firstOrNull()?.value
+                    com.sameerasw.essentials.utils.LogManager.saveCrashReport(
+                        context = this@EssentialsApp,
+                        threadName = threadName,
+                        throwable = throwable,
+                        customMessage = message,
+                    )
+                } catch (e: Exception) {
+                    android.util.Log.e("EssentialsApp", "Failed to save crash report locally in Sentry callback", e)
+                }
+
                 Handler(Looper.getMainLooper()).post {
                     Toast
                         .makeText(
