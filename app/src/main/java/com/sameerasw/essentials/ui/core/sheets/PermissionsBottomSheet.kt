@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,6 +77,12 @@ fun PermissionsBottomSheet(
 
     val pendingPermissions = permissions.filter { !it.isGranted }
     val grantedPermissions = permissions.filter { it.isGranted }
+
+    LaunchedEffect(pendingPermissions.isEmpty()) {
+        if (pendingPermissions.isEmpty() && permissions.isNotEmpty()) {
+            onDismissRequest()
+        }
+    }
 
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
