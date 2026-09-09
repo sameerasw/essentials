@@ -1454,7 +1454,7 @@ object FeatureRegistry {
                     context: Context,
                 ) = (
                     if (viewModel.isUseUsageAccess.value) {
-                        viewModel.isUsageStatsPermissionGranted.value
+                        viewModel.isUsageStatsPermissionGranted.value && viewModel.isAccessibilityEnabled.value
                     } else {
                         viewModel.isAccessibilityEnabled.value
                     }

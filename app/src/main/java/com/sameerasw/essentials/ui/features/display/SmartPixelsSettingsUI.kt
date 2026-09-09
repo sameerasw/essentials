@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,8 +28,10 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -40,6 +43,25 @@ fun SmartPixelsSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
+    val isSmartPixelsEnabled by viewModel.isSmartPixelsEnabled
+    var showPermissionSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.check(context)
+    }
+
+    if (showPermissionSheet) {
+        val permissionItems = PermissionUIHelper.getPermissionItems(listOf("ACCESSIBILITY"), context, viewModel)
+        PermissionsBottomSheet(
+            onDismissRequest = {
+                showPermissionSheet = false
+                viewModel.check(context)
+            },
+            featureTitle = R.string.feat_smart_pixels_title,
+            permissions = permissionItems,
+        )
+    }
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         RoundedCardContainer(
@@ -49,11 +71,17 @@ fun SmartPixelsSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_grain_24,
                 title = stringResource(R.string.smart_pixels_enable_title),
-                isChecked = viewModel.isSmartPixelsEnabled.value,
+                isChecked = isSmartPixelsEnabled && isAccessibilityEnabled,
                 onCheckedChange = { checked ->
                     HapticUtil.performUIHaptic(view)
-                    viewModel.setSmartPixelsEnabled(context, checked)
+                    if (isAccessibilityEnabled) {
+                        viewModel.setSmartPixelsEnabled(context, checked)
+                    } else {
+                        showPermissionSheet = true
+                    }
                 },
+                enabled = isAccessibilityEnabled,
+                onDisabledClick = { showPermissionSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "smart_pixels_enable_toggle"),
             )
         }
@@ -79,6 +107,7 @@ fun SmartPixelsSettingsUI(
                 valueRange = 10f..90f,
                 increment = 5f,
                 iconRes = R.drawable.rounded_blur_linear_24,
+                enabled = isSmartPixelsEnabled && isAccessibilityEnabled,
                 modifier = Modifier.highlight(highlightSetting == "smart_pixels_intensity_slider"),
             )
         }
@@ -96,6 +125,7 @@ fun SmartPixelsSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setSmartPixelsDisableOnCastEnabled(context, checked)
                 },
+                enabled = isSmartPixelsEnabled && isAccessibilityEnabled,
                 modifier = Modifier.highlight(highlightSetting == "smart_pixels_disable_on_cast_toggle"),
             )
         }

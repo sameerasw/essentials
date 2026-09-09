@@ -914,8 +914,24 @@
     <string name="sentry_report_mode_title">Crash reporting</string>
     <string name="sentry_mode_off">Off</string>
     <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="sentry_crash_toast">Essentials crashed, report saved and sent</string>
     <string name="simulate_crash">Simulate crash</string>
+    <string name="crash_logs_title">Crash logs</string>
+    <string name="crash_logs_desc">View and share recent crash reports</string>
+    <string name="btn_clear_all_crash_logs">Clear all</string>
+    <string name="toast_crash_logs_cleared">Crash logs cleared</string>
+    <string name="toast_no_crash_logs">No crash logs found</string>
+    <string name="btn_export_config">Export Config</string>
+    <string name="btn_import_config">Import Config</string>
+    <string name="btn_reset_onboarding">Reset onboarding</string>
+    <string name="btn_reset_update_note">Reset update note</string>
+    <string name="toast_onboarding_reset">Onboarding reset</string>
+    <string name="toast_update_note_reset">Update note reset</string>
+    <string name="label_developer_options">Developer Options</string>
+    <string name="label_wallpaper_update">Wallpaper Update</string>
+    <string name="btn_wallpaper_desktop">Desktop</string>
+    <string name="btn_wallpaper_both">Both</string>
+    <string name="btn_wallpaper_mobile">Mobile</string>
     <string name="welcome_title">Welcome to Essentials</string>
     <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
@@ -2425,4 +2441,9 @@
     <string name="action_enable_admin">Enable Admin</string>
     <string name="action_set_as_default">Set as Default</string>
     <string name="action_auto_grant">Auto-Grant</string>
+    <string name="settings_section_customizations">Customizations</string>
+    <string name="settings_permissions_all">All permissions</string>
+    <string name="settings_section_more">More</string>
+    <string name="action_show_granted">Show granted</string>
+    <string name="action_hide_granted">Hide granted</string>
 </resources>

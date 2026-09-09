@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.spring
@@ -35,7 +34,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -164,27 +162,13 @@ fun FeatureHelpMediaViewer(
             }
         }
 
-    Box(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .animateContentSize(
-                    animationSpec = spring(dampingRatio = 0.8f, stiffness = 400f),
-                ),
+    AnimatedVisibility(
+        visible = (mediaItem != null && (mediaItem?.type.equals("video", ignoreCase = true) == false || isMediaReady)),
+        enter = fadeIn(),
+        exit = fadeOut(),
+        modifier = modifier.fillMaxWidth(),
     ) {
-        if (!hasCheckedMedia) {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(9f / 12f)
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(MaterialTheme.colorScheme.surfaceBright),
-                contentAlignment = Alignment.Center,
-            ) {
-                LoadingIndicator()
-            }
-        } else if (mediaItem != null) {
+        if (mediaItem != null) {
             val currentMedia = mediaItem!!
             val localView = LocalView.current
             Box(
@@ -218,22 +202,6 @@ fun FeatureHelpMediaViewer(
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
-
-                    AnimatedVisibility(
-                        visible = !isMediaReady,
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                    ) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colorScheme.surfaceBright),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            LoadingIndicator()
-                        }
-                    }
                 } else {
                     SubcomposeAsyncImage(
                         model =
@@ -243,17 +211,6 @@ fun FeatureHelpMediaViewer(
                                 .build(),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
-                        loading = {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .fillMaxSize()
-                                        .background(MaterialTheme.colorScheme.surfaceBright),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                LoadingIndicator()
-                            }
-                        },
                         contentScale = ContentScale.Crop,
                     )
                 }

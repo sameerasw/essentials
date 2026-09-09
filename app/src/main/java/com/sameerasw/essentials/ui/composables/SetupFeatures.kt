@@ -460,6 +460,26 @@ fun SetupFeatures(
                     }
                 }
 
+                R.string.feat_smart_pixels_title -> {
+                    if (!isAccessibilityEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = R.string.perm_accessibility_title,
+                                description = R.string.perm_accessibility_desc_common,
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = R.string.perm_action_enable,
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isAccessibilityEnabled,
+                            ),
+                        )
+                    }
+                }
+
                 R.string.feat_call_vibrations_title -> {
                     if (!viewModel.isReadPhoneStateEnabled.value) {
                         missing.add(
@@ -474,6 +494,22 @@ fun SetupFeatures(
                             ),
                         )
                     }
+                    if (!isNotificationListenerEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_notifications_unread_24,
+                                title = R.string.perm_notif_listener_title,
+                                description = R.string.perm_notif_listener_desc_lighting,
+                                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestNotificationListenerPermission(context) },
+                                isGranted = isNotificationListenerEnabled,
+                            ),
+                        )
+                    }
+                }
+
+                R.string.flashlight_pulse_title -> {
                     if (!isNotificationListenerEnabled) {
                         missing.add(
                             PermissionItem(
@@ -746,6 +782,23 @@ fun SetupFeatures(
                         ),
                     )
 
+                R.string.feat_smart_pixels_title ->
+                    listOf(
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_settings_accessibility_24,
+                            title = R.string.perm_accessibility_title,
+                            description = R.string.perm_accessibility_desc_common,
+                            dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                            actionLabel = R.string.perm_action_enable,
+                            action = {
+                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(intent)
+                            },
+                            isGranted = isAccessibilityEnabled,
+                        ),
+                    )
+
                 R.string.feat_call_vibrations_title ->
                     listOf(
                         PermissionItem(
@@ -757,6 +810,19 @@ fun SetupFeatures(
                             action = { viewModel.requestReadPhoneStatePermission(context as Activity) },
                             isGranted = isReadPhoneStateEnabled,
                         ),
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_notifications_unread_24,
+                            title = R.string.perm_notif_listener_title,
+                            description = R.string.perm_notif_listener_desc_lighting,
+                            dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                            actionLabel = R.string.perm_action_grant,
+                            action = { viewModel.requestNotificationListenerPermission(context) },
+                            isGranted = isNotificationListenerEnabled,
+                        ),
+                    )
+
+                R.string.flashlight_pulse_title ->
+                    listOf(
                         PermissionItem(
                             iconRes = R.drawable.rounded_notifications_unread_24,
                             title = R.string.perm_notif_listener_title,

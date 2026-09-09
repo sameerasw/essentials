@@ -27,6 +27,8 @@ object LogManager {
     private const val MAX_LOG_SIZE = 500
     private val logBuffer = LinkedList<LogEntry>()
     private const val CRASH_LOG_FILENAME = "last_crash.log"
+    private const val CRASH_REPORTS_DIR = "crash_reports"
+    private const val MAX_CRASH_REPORTS = 5
     private var lastCrashLog: String? = null
     private val isInitialized = AtomicBoolean(false)
 
@@ -46,9 +48,6 @@ object LogManager {
         if (crashFile.exists()) {
             try {
                 lastCrashLog = crashFile.readText()
-                // delete after reading so we don't report old crashes forever?
-                // meaningful to keep it until a successful report? Let's keep it for now but maybe we can clear it if needed.
-                // For now, let's keep it.
             } catch (e: Exception) {
                 Log.e("LogManager", "Failed to read crash log", e)
             }
@@ -67,39 +66,124 @@ object LogManager {
         }
     }
 
+    fun getCrashReportsDirectory(context: Context): File {
+        val externalDir = context.getExternalFilesDir(CRASH_REPORTS_DIR)
+        val dir = if (externalDir != null) {
+            externalDir
+        } else {
+            File(context.filesDir, CRASH_REPORTS_DIR)
+        }
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        return dir
+    }
+
+    fun getAllCrashReports(context: Context): List<File> {
+        val dir = getCrashReportsDirectory(context)
+        return dir.listFiles { file -> file.isFile && (file.extension == "log" || file.extension == "txt") }
+            ?.sortedByDescending { it.lastModified() }
+            ?: emptyList()
+    }
+
+    fun getLatestCrashReport(context: Context): File? {
+        return getAllCrashReports(context).firstOrNull()
+    }
+
+    fun clearAllCrashReports(context: Context) {
+        try {
+            getCrashReportsDirectory(context).listFiles()?.forEach { it.delete() }
+            File(context.filesDir, CRASH_LOG_FILENAME).delete()
+            lastCrashLog = null
+        } catch (e: Exception) {
+            Log.e("LogManager", "Failed to clear crash reports", e)
+        }
+    }
+
+    private fun pruneOldCrashReports(context: Context) {
+        try {
+            val reports = getAllCrashReports(context)
+            if (reports.size > MAX_CRASH_REPORTS) {
+                reports.drop(MAX_CRASH_REPORTS).forEach { it.delete() }
+            }
+        } catch (e: Exception) {
+            Log.e("LogManager", "Failed to prune crash reports", e)
+        }
+    }
+
+    fun saveCrashReport(
+        context: Context,
+        threadName: String = Thread.currentThread().name,
+        throwable: Throwable? = null,
+        customMessage: String? = null,
+    ): File? {
+        val timestamp = System.currentTimeMillis()
+        val fileDateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(Date(timestamp))
+        val stackTrace = throwable?.let {
+            val sw = StringWriter()
+            it.printStackTrace(PrintWriter(sw))
+            sw.toString()
+        } ?: ""
+
+        val appVersion = try {
+            val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            "${pInfo.versionName} (${if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pInfo.longVersionCode else @Suppress("DEPRECATION") pInfo.versionCode})"
+        } catch (e: Exception) {
+            "Unknown"
+        }
+
+        val report = buildString {
+            append("Crash Time: ${formatDate(timestamp)}\n")
+            append("App Version: $appVersion\n")
+            append("Device: ${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})\n")
+            append("Android OS: ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})\n")
+            append("Thread: $threadName\n")
+            if (throwable != null) {
+                append("Exception: ${throwable.javaClass.name}\n")
+                append("Message: ${throwable.message}\n")
+                append("Stack Trace:\n$stackTrace\n")
+            }
+            if (!customMessage.isNullOrBlank()) {
+                append("Details:\n$customMessage\n")
+            }
+            append("\n--- Last Logs before crash ---\n")
+            synchronized(logBuffer) {
+                logBuffer.takeLast(50).forEach { entry ->
+                    append(formatLogEntry(entry))
+                    append("\n")
+                }
+            }
+        }
+
+        return try {
+            // Write legacy last_crash.log
+            val crashFile = File(context.filesDir, CRASH_LOG_FILENAME)
+            crashFile.writeText(report)
+            lastCrashLog = report
+
+            // Write dated file in crash_reports directory
+            val reportsDir = getCrashReportsDirectory(context)
+            val logFile = File(reportsDir, "crash_$fileDateFormat.log")
+            logFile.writeText(report)
+
+            pruneOldCrashReports(context)
+            logFile
+        } catch (e: Exception) {
+            Log.e("LogManager", "Failed to write crash log", e)
+            null
+        }
+    }
+
     private fun handleCrash(
         context: Context,
         thread: Thread,
         throwable: Throwable,
     ) {
-        val sw = StringWriter()
-        val pw = PrintWriter(sw)
-        throwable.printStackTrace(pw)
-        val stackTrace = sw.toString()
-
-        val report =
-            buildString {
-                append("Crash Time: ${formatDate(System.currentTimeMillis())}\n")
-                append("Thread: ${thread.name}\n")
-                append("Exception: ${throwable.javaClass.simpleName}\n")
-                append("Message: ${throwable.message}\n")
-                append("Stack Trace:\n$stackTrace\n")
-                append("\n--- Last Logs before crash ---\n")
-                synchronized(logBuffer) {
-                    // Take last 50 logs for context
-                    logBuffer.takeLast(50).forEach { entry ->
-                        append(formatLogEntry(entry))
-                        append("\n")
-                    }
-                }
-            }
-
-        try {
-            val crashFile = File(context.filesDir, CRASH_LOG_FILENAME)
-            crashFile.writeText(report)
-        } catch (e: Exception) {
-            Log.e("LogManager", "Failed to write crash log", e)
-        }
+        saveCrashReport(
+            context = context,
+            threadName = thread.name,
+            throwable = throwable,
+        )
     }
 
     fun log(

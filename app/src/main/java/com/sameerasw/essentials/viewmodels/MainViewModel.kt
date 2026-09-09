@@ -7183,7 +7183,7 @@ class MainViewModel : ViewModel() {
                 if (PermissionUtils.hasManageExternalStoragePermission(context)) {
                     val wallpaperManager = android.app.WallpaperManager.getInstance(context)
                     val drawable =
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                             wallpaperManager.getDrawable(android.app.WallpaperManager.FLAG_LOCK)
                                 ?: wallpaperManager.drawable
                         } else {
@@ -7207,7 +7207,7 @@ class MainViewModel : ViewModel() {
                         }
                     }
                 }
-            } catch (_: Exception) {
+            } catch (_: Throwable) {
             }
         }
     }

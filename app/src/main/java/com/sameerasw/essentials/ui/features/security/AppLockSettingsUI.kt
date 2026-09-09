@@ -61,7 +61,7 @@ fun AppLockSettingsUI(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
 
     val canEnableAppLock =
-        if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
+        if (isUseUsageAccess) isUsageStatsPermissionGranted && isAccessibilityEnabled else isAccessibilityEnabled
 
     val delayLabels =
         listOf(
@@ -188,27 +188,32 @@ fun AppLockSettingsUI(
         }
 
         if (showPermissionSheet) {
-            val permissionItem =
+            val accessibilityItem =
+                PermissionItem(
+                    iconRes = R.drawable.rounded_settings_accessibility_24,
+                    title = R.string.perm_accessibility_title,
+                    description = R.string.perm_accessibility_desc_common,
+                    dependentFeatures = listOf(R.string.feat_app_lock_title),
+                    actionLabel = if (isAccessibilityEnabled) R.string.perm_action_granted else R.string.perm_action_grant,
+                    action = { PermissionUtils.openAccessibilitySettings(context) },
+                    isGranted = isAccessibilityEnabled,
+                )
+
+            val permissionsList =
                 if (isUseUsageAccess) {
-                    PermissionItem(
-                        iconRes = R.drawable.rounded_data_usage_24,
-                        title = R.string.perm_usage_stats_title,
-                        description = R.string.perm_usage_stats_desc_app_lock,
-                        dependentFeatures = listOf(R.string.feat_app_lock_title),
-                        actionLabel = if (isUsageStatsPermissionGranted) R.string.perm_action_granted else R.string.perm_action_grant,
-                        action = { PermissionUtils.openUsageStatsSettings(context) },
-                        isGranted = isUsageStatsPermissionGranted,
-                    )
+                    val usageStatsItem =
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_data_usage_24,
+                            title = R.string.perm_usage_stats_title,
+                            description = R.string.perm_usage_stats_desc_app_lock,
+                            dependentFeatures = listOf(R.string.feat_app_lock_title),
+                            actionLabel = if (isUsageStatsPermissionGranted) R.string.perm_action_granted else R.string.perm_action_grant,
+                            action = { PermissionUtils.openUsageStatsSettings(context) },
+                            isGranted = isUsageStatsPermissionGranted,
+                        )
+                    listOf(accessibilityItem, usageStatsItem)
                 } else {
-                    PermissionItem(
-                        iconRes = R.drawable.rounded_settings_accessibility_24,
-                        title = R.string.perm_accessibility_title,
-                        description = R.string.perm_accessibility_desc_common,
-                        dependentFeatures = listOf(R.string.feat_app_lock_title),
-                        actionLabel = if (isAccessibilityEnabled) R.string.perm_action_granted else R.string.perm_action_grant,
-                        action = { PermissionUtils.openAccessibilitySettings(context) },
-                        isGranted = isAccessibilityEnabled,
-                    )
+                    listOf(accessibilityItem)
                 }
 
             PermissionsBottomSheet(
@@ -218,7 +223,7 @@ fun AppLockSettingsUI(
                     viewModel.check(context)
                 },
                 featureTitle = R.string.feat_app_lock_title,
-                permissions = listOf(permissionItem),
+                permissions = permissionsList,
             )
         }
     }

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
@@ -119,7 +120,7 @@ fun PermissionCard(
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.extraSmall,
+        shape = Shapes.extraSmall,
         colors =
             CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceBright,
@@ -151,32 +152,41 @@ fun PermissionCard(
                             modifier = Modifier.size(36.dp),
                         )
                     },
-                    supportingContent = {
-                        Column {
-                            if (resolvedDescription != null) {
-                                Text(
-                                    text = resolvedDescription,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                            }
-                            Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            dependentFeatures.forEach { f ->
-                                val resolvedFeature =
-                                    when (f) {
-                                        is Int -> stringResource(id = f)
-                                        is String -> f
-                                        else -> ""
+                    supportingContent =
+                        if (resolvedDescription != null || dependentFeatures.isNotEmpty()) {
+                            {
+                                Column {
+                                    if (resolvedDescription != null) {
+                                        Text(
+                                            text = resolvedDescription,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
                                     }
-                                Text(
-                                    text = "• $resolvedFeature",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
+                                    if (dependentFeatures.isNotEmpty()) {
+                                        if (resolvedDescription != null) {
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                        }
+                                        Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        dependentFeatures.forEach { f ->
+                                            val resolvedFeature =
+                                                when (f) {
+                                                    is Int -> stringResource(id = f)
+                                                    is String -> f
+                                                    else -> ""
+                                                }
+                                            Text(
+                                                text = "• $resolvedFeature",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                            )
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    },
+                        } else {
+                            null
+                        },
                     content = {
                         Text(
                             text = resolvedTitle,
