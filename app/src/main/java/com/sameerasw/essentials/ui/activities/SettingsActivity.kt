@@ -41,6 +41,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -1172,10 +1173,12 @@ fun SettingsContent(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = Shapes.extraSmall,
                             ).padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Button(
                         onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
                             val timeStamp =
                                 SimpleDateFormat(
                                     "yyyyMMdd_HHmmss",
@@ -1183,21 +1186,42 @@ fun SettingsContent(
                                 ).format(Date())
                             exportLauncher.launch("essentials_config_$timeStamp.json")
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .defaultMinSize(minHeight = 44.dp),
+                        shape = ButtonGroupDefaults.connectedLeadingButtonShapes().shape,
                     ) {
-                        Text("Export Config")
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_vertical_align_bottom_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_export_config))
                     }
                     Button(
                         onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
                             importLauncher.launch(arrayOf("application/json"))
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .defaultMinSize(minHeight = 44.dp),
+                        shape = ButtonGroupDefaults.connectedTrailingButtonShapes().shape,
                     ) {
-                        Text("Import Config")
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_vertical_align_top_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_import_config))
                     }
                 }
 
-                Row(
+                Column(
                     modifier =
                         Modifier
                             .fillMaxWidth()
@@ -1205,49 +1229,58 @@ fun SettingsContent(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = Shapes.extraSmall,
                             ).padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     Button(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.resetOnboarding(context)
-                            Toast.makeText(context, "Onboarding reset", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.toast_onboarding_reset), Toast.LENGTH_SHORT).show()
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
                         colors =
                             ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
                             ),
                     ) {
-                        Text("Reset onboarding", color = MaterialTheme.colorScheme.onError)
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_refresh_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_reset_onboarding))
                     }
 
                     Button(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.resetUpdateNote(context)
-                            Toast.makeText(context, "Update note reset", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.toast_update_note_reset), Toast.LENGTH_SHORT).show()
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
                         colors =
                             ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
                             ),
                     ) {
-                        Text("Reset update note", color = MaterialTheme.colorScheme.onError)
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_refresh_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_reset_update_note))
                     }
-                }
 
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceBright,
-                                shape = Shapes.extraSmall,
-                            ).padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
                     Button(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
@@ -1257,19 +1290,20 @@ fun SettingsContent(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(40.dp),
-                        shape = ButtonDefaults.shape,
+                                .defaultMinSize(minHeight = 44.dp),
                         colors =
                             ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.error,
                                 contentColor = MaterialTheme.colorScheme.onError,
                             ),
-                        contentPadding = PaddingValues(0.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.btn_clear_search_history),
-                            style = MaterialTheme.typography.labelLarge,
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_delete_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_clear_search_history))
                     }
                 }
 
@@ -1290,8 +1324,7 @@ fun SettingsContent(
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = Shapes.extraSmall,
-                            ).padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ).padding(16.dp),
                 ) {
                     Button(
                         onClick = {
@@ -1301,15 +1334,20 @@ fun SettingsContent(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(40.dp),
+                                .defaultMinSize(minHeight = 44.dp),
                         shape = ButtonDefaults.shape,
                         colors =
                             ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
                             ),
-                        contentPadding = PaddingValues(0.dp),
                     ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_bug_report_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(R.string.simulate_crash),
                             style = MaterialTheme.typography.labelLarge,
@@ -1487,30 +1525,60 @@ fun SettingsContent(
                                         HapticUtil.performUIHaptic(view)
                                         viewModel.triggerWallpaperUpdate("desktop")
                                     },
-                                    modifier = Modifier.weight(1f),
+                                    modifier =
+                                        Modifier
+                                            .weight(1f)
+                                            .defaultMinSize(minHeight = 44.dp),
+                                    shape = ButtonGroupDefaults.connectedLeadingButtonShapes().shape,
                                     enabled = !isTriggering,
                                 ) {
-                                    Text("Desktop")
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_laptop_mac_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(stringResource(R.string.btn_wallpaper_desktop))
                                 }
                                 Button(
                                     onClick = {
                                         HapticUtil.performUIHaptic(view)
                                         viewModel.triggerWallpaperUpdate("both")
                                     },
-                                    modifier = Modifier.weight(1f),
+                                    modifier =
+                                        Modifier
+                                            .weight(1f)
+                                            .defaultMinSize(minHeight = 44.dp),
+                                    shape = ButtonGroupDefaults.connectedMiddleButtonShapes().shape,
                                     enabled = !isTriggering,
                                 ) {
-                                    Text("Both")
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_devices_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(stringResource(R.string.btn_wallpaper_both))
                                 }
                                 Button(
                                     onClick = {
                                         HapticUtil.performUIHaptic(view)
                                         viewModel.triggerWallpaperUpdate("mobile")
                                     },
-                                    modifier = Modifier.weight(1f),
+                                    modifier =
+                                        Modifier
+                                            .weight(1f)
+                                            .defaultMinSize(minHeight = 44.dp),
+                                    shape = ButtonGroupDefaults.connectedTrailingButtonShapes().shape,
                                     enabled = !isTriggering,
                                 ) {
-                                    Text("Mobile")
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_mobile_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(stringResource(R.string.btn_wallpaper_mobile))
                                 }
                             }
 

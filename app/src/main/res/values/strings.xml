@@ -921,6 +921,17 @@
     <string name="btn_clear_all_crash_logs">Clear all</string>
     <string name="toast_crash_logs_cleared">Crash logs cleared</string>
     <string name="toast_no_crash_logs">No crash logs found</string>
+    <string name="btn_export_config">Export Config</string>
+    <string name="btn_import_config">Import Config</string>
+    <string name="btn_reset_onboarding">Reset onboarding</string>
+    <string name="btn_reset_update_note">Reset update note</string>
+    <string name="toast_onboarding_reset">Onboarding reset</string>
+    <string name="toast_update_note_reset">Update note reset</string>
+    <string name="label_developer_options">Developer Options</string>
+    <string name="label_wallpaper_update">Wallpaper Update</string>
+    <string name="btn_wallpaper_desktop">Desktop</string>
+    <string name="btn_wallpaper_both">Both</string>
+    <string name="btn_wallpaper_mobile">Mobile</string>
     <string name="welcome_title">Welcome to Essentials</string>
     <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
