@@ -17,6 +17,8 @@ import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
 
 class PrivateNotificationsTileService : BaseTileService() {
+    override val isSensitiveTile: Boolean = true
+
     override fun getTileLabel(): String = "Sensitive Content"
 
     override fun getTileSubtitle(): String = if (arePrivateNotificationsAllowed()) "Shown on lock screen" else "Hidden on lock screen"

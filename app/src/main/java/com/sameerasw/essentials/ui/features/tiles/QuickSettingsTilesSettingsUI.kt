@@ -87,6 +87,8 @@ import com.sameerasw.essentials.services.tiles.TapToWakeTileService
 import com.sameerasw.essentials.services.tiles.UiBlurTileService
 import com.sameerasw.essentials.services.tiles.UrlShortenerTileService
 import com.sameerasw.essentials.services.tiles.UsbDebuggingTileService
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
@@ -502,6 +504,27 @@ fun QuickSettingsTilesSettingsUI(
     ) {
         Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
         Spacer(modifier = Modifier.height(16.dp))
+
+        val isSecureSensitiveTilesEnabled by viewModel.isSecureSensitiveTilesEnabled
+        RoundedCardContainer(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .highlight(
+                        highlightSetting.equals(
+                            resources.getString(R.string.qs_secure_sensitive_tiles_title),
+                            ignoreCase = true,
+                        ),
+                    ),
+        ) {
+            IconToggleItem(
+                title = stringResource(R.string.qs_secure_sensitive_tiles_title),
+                description = stringResource(R.string.qs_secure_sensitive_tiles_desc),
+                iconRes = R.drawable.rounded_shield_lock_24,
+                isChecked = isSecureSensitiveTilesEnabled,
+                onCheckedChange = { viewModel.setSecureSensitiveTilesEnabled(it) },
+            )
+        }
 
         categorizedTiles.forEachIndexed { index, (categoryRes, tilesInSection) ->
             if (index > 0) {

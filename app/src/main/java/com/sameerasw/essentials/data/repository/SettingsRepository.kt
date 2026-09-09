@@ -273,6 +273,7 @@ class SettingsRepository(
 
         const val KEY_PINNED_FEATURES = "pinned_features"
         const val KEY_PINNED_QS_TILES = "pinned_qs_tiles"
+        const val KEY_SECURE_SENSITIVE_TILES = "secure_sensitive_tiles"
         const val KEY_LIKE_SONG_TOAST_ENABLED = "like_song_toast_enabled"
         const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
@@ -3037,4 +3038,7 @@ class SettingsRepository(
 
     fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)
     fun setBubbleWebFullscreen(fullscreen: Boolean) = putBoolean(KEY_BUBBLE_WEB_FULLSCREEN, fullscreen)
+
+    fun isSecureSensitiveTilesEnabled(): Boolean = getBoolean(KEY_SECURE_SENSITIVE_TILES, true)
+    fun setSecureSensitiveTilesEnabled(enabled: Boolean) = putBoolean(KEY_SECURE_SENSITIVE_TILES, enabled)
 }

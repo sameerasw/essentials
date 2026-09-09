@@ -2410,4 +2410,7 @@
     <string name="pixel_search_open_url_action">Open \"%1$s\"</string>
     <string name="bubble_web_link_copied">Link copied to clipboard</string>
     <string name="label_apply_after_reboot">Apply after reboot</string>
+    <string name="qs_secure_sensitive_tiles_title">Secure sensitive tiles</string>
+    <string name="qs_secure_sensitive_tiles_desc">Request to unlock before triggering sensitive QS tiles while locked</string>
+    <string name="qs_tile_unlock_to_use">Unlock device to use %1$s</string>
 </resources>

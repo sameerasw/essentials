@@ -1014,6 +1014,13 @@ object FeatureRegistry {
                 searchableSettings =
                     listOf(
                         SearchSetting(
+                            R.string.qs_secure_sensitive_tiles_title,
+                            R.string.qs_secure_sensitive_tiles_desc,
+                            "Secure sensitive tiles",
+                            R.array.keywords_privacy,
+                            R.string.feat_qs_tiles_title,
+                        ),
+                        SearchSetting(
                             R.string.search_qs_blur_title,
                             R.string.search_qs_blur_desc,
                             "UI Blur",

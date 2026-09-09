@@ -16,6 +16,8 @@ import android.service.quicksettings.Tile
 import com.sameerasw.essentials.ui.activities.AppFreezingActivity
 
 class AppFreezingTileService : BaseTileService() {
+    override val isSensitiveTile: Boolean = true
+
     override fun onTileClick() {
         val intent =
             Intent(this, AppFreezingActivity::class.java).apply {

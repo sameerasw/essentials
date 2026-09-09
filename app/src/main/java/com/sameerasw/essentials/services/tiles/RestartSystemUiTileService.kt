@@ -21,6 +21,8 @@ import com.sameerasw.essentials.utils.ShizukuUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
 class RestartSystemUiTileService : BaseTileService() {
+    override val isSensitiveTile: Boolean = true
+
     override fun onClick() {
         if (!hasFeaturePermission()) {
             val intent =
