@@ -104,6 +104,7 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -192,7 +193,7 @@ fun SetupFeatures(
                                 description = R.string.perm_accessibility_desc_common,
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 action = {
-                                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                                    PermissionUtils.openAccessibilitySettings(context)
                                 },
                                 isGranted = isAccessibilityEnabled,
                             ),
@@ -259,9 +260,7 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
+                                    PermissionUtils.openAccessibilitySettings(context)
                                 },
                                 isGranted = isNotificationLightingAccessibilityEnabled,
                             ),
@@ -292,9 +291,7 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
+                                    PermissionUtils.openAccessibilitySettings(context)
                                 },
                                 isGranted = isAccessibilityEnabled,
                             ),
@@ -312,9 +309,7 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
+                                    PermissionUtils.openAccessibilitySettings(context)
                                 },
                                 isGranted = isAccessibilityEnabled,
                             ),
@@ -442,9 +437,7 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    context.startActivity(intent)
+                                    PermissionUtils.openAccessibilitySettings(context)
                                 },
                                 isGranted = isAccessibilityEnabled,
                             ),
@@ -491,10 +484,7 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
-                                    val intent =
-                                        Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
+                                    PermissionUtils.openAccessibilitySettings(context)
                                 },
                                 isGranted = isAccessibilityEnabled,
                             ),
@@ -534,7 +524,7 @@ fun SetupFeatures(
                             dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                             actionLabel = R.string.perm_action_grant,
                             action = {
-                                context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                                PermissionUtils.openAccessibilitySettings(context)
                             },
                             isGranted = isAccessibilityEnabled,
                         ),
@@ -591,9 +581,7 @@ fun SetupFeatures(
                             dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                             actionLabel = R.string.perm_action_enable,
                             action = {
-                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
+                                PermissionUtils.openAccessibilitySettings(context)
                             },
                             isGranted = isNotificationLightingAccessibilityEnabled,
                         ),
@@ -617,9 +605,7 @@ fun SetupFeatures(
                             dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                             actionLabel = R.string.perm_action_enable,
                             action = {
-                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
+                                PermissionUtils.openAccessibilitySettings(context)
                             },
                             isGranted = isAccessibilityEnabled,
                         ),
@@ -647,9 +633,7 @@ fun SetupFeatures(
                             dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                             actionLabel = R.string.perm_action_enable,
                             action = {
-                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
+                                PermissionUtils.openAccessibilitySettings(context)
                             },
                             isGranted = isAccessibilityEnabled,
                         ),
@@ -730,9 +714,7 @@ fun SetupFeatures(
                             dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                             actionLabel = R.string.perm_action_enable,
                             action = {
-                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
+                                PermissionUtils.openAccessibilitySettings(context)
                             },
                             isGranted = isAccessibilityEnabled,
                         ),
@@ -769,9 +751,7 @@ fun SetupFeatures(
                             dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                             actionLabel = R.string.perm_action_enable,
                             action = {
-                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
+                                PermissionUtils.openAccessibilitySettings(context)
                             },
                             isGranted = isAccessibilityEnabled,
                         ),

@@ -58,6 +58,17 @@ class AppDetectionService : Service() {
                     "APP_AUTHENTICATION_FAILED" -> {
                         goHome()
                     }
+
+                    "CONSCIOUS_GATE_CONFIRMED" -> {
+                        val packageName = intent.getStringExtra("package_name")
+                        if (packageName != null) {
+                            appFlowHandler.onConsciousGateConfirmed(packageName)
+                        }
+                    }
+
+                    "CONSCIOUS_GATE_CLOSED" -> {
+                        goHome()
+                    }
                 }
             }
         }
@@ -72,6 +83,8 @@ class AppDetectionService : Service() {
             IntentFilter().apply {
                 addAction("APP_AUTHENTICATED")
                 addAction("APP_AUTHENTICATION_FAILED")
+                addAction("CONSCIOUS_GATE_CONFIRMED")
+                addAction("CONSCIOUS_GATE_CLOSED")
             }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(authReceiver, filter, RECEIVER_EXPORTED)

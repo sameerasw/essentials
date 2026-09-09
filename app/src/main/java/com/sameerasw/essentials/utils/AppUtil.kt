@@ -290,6 +290,24 @@ object AppUtil {
         }
 
     /**
+     * Resolves the human-readable label for a single package name.
+     *
+     * @param context [Context] Target context.
+     * @param packageName [String] Target package name.
+     * @return The app's display label, or the raw package name if it can't be resolved.
+     */
+    fun getAppLabel(
+        context: Context,
+        packageName: String,
+    ): String =
+        try {
+            val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
+            context.packageManager.getApplicationLabel(appInfo).toString()
+        } catch (e: Exception) {
+            packageName
+        }
+
+    /**
      * Checks if the device is currently in Car Mode or projecting Android Auto
      */
     fun isAndroidAutoRunning(context: Context): Boolean {
