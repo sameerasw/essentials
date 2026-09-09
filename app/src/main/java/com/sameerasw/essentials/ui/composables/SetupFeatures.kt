@@ -88,6 +88,8 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
+import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
 import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
@@ -1590,10 +1592,15 @@ private fun SearchResultsSection(
                                 feature = feature,
                                 action = {
                                     val intent =
-                                        if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                        if (targetFeatureKey == "Pixel Searchbar") {
                                             Intent(
                                                 context,
-                                                com.sameerasw.essentials.ui.activities.WallpaperActivity::class.java,
+                                                PixelSearchbarSettingsActivity::class.java,
+                                            )
+                                        } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                            Intent(
+                                                context,
+                                                WallpaperActivity::class.java,
                                             ).apply {
                                                 putExtra(
                                                     "tab",
@@ -1603,7 +1610,7 @@ private fun SearchResultsSection(
                                         } else if (targetFeatureKey == "App updates") {
                                             Intent(
                                                 context,
-                                                com.sameerasw.essentials.ui.activities.YourAndroidActivity::class.java,
+                                                YourAndroidActivity::class.java,
                                             )
                                         } else {
                                             Intent(
@@ -1621,10 +1628,15 @@ private fun SearchResultsSection(
                             )
                         } else {
                             val intent =
-                                if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
+                                if (result.featureKey == "Pixel Searchbar") {
                                     Intent(
                                         context,
-                                        com.sameerasw.essentials.ui.activities.WallpaperActivity::class.java,
+                                        PixelSearchbarSettingsActivity::class.java,
+                                    )
+                                } else if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
+                                    Intent(
+                                        context,
+                                        WallpaperActivity::class.java,
                                     ).apply {
                                         putExtra(
                                             "tab",
@@ -1634,7 +1646,7 @@ private fun SearchResultsSection(
                                 } else if (result.featureKey == "App updates") {
                                     Intent(
                                         context,
-                                        com.sameerasw.essentials.ui.activities.YourAndroidActivity::class.java,
+                                        YourAndroidActivity::class.java,
                                     )
                                 } else {
                                     Intent(context, FeatureSettingsActivity::class.java).apply {

@@ -436,6 +436,7 @@ object FeatureRegistry {
                 description = R.string.feat_network_download_rate_limit_desc,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 parentFeatureId = "Networks",
+                hasMoreSettings = false,
                 showToggle = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.networkDownloadRateLimit.intValue != -1
@@ -454,6 +455,7 @@ object FeatureRegistry {
                 description = R.string.feat_mobile_data_always_on_desc,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 parentFeatureId = "Networks",
+                hasMoreSettings = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isMobileDataAlwaysOnEnabled.value
 
@@ -471,6 +473,7 @@ object FeatureRegistry {
                 description = R.string.feat_wireless_display_certification_desc,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 parentFeatureId = "Networks",
+                hasMoreSettings = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isWirelessDisplayCertificationEnabled.value
 
@@ -488,6 +491,7 @@ object FeatureRegistry {
                 description = R.string.feat_sim_names_desc,
                 permissionKeys = listOf("SHIZUKU", "READ_PHONE_STATE"),
                 parentFeatureId = "Networks",
+                hasMoreSettings = false,
                 showToggle = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

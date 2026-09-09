@@ -107,8 +107,11 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.PixelSearchResultItem
+import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.SearchRegistry
+import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
+import com.sameerasw.essentials.ui.activities.YourAndroidActivity
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
@@ -745,12 +748,40 @@ fun PixelSearchResultsScreen(
                                     onToggle = {},
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
-                                        val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
-                                            putExtra("feature", setting.featureKey)
-                                            setting.targetSettingHighlightKey?.let {
-                                                putExtra("highlight_setting", it)
+                                        val feature = FeatureRegistry.ALL_FEATURES.find { it.id == setting.featureKey }
+                                        val targetFeatureKey =
+                                            if (feature != null && !feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                                feature.parentFeatureId
+                                            } else {
+                                                setting.featureKey
                                             }
-                                        }
+                                        val highlightKey =
+                                            if (feature != null && !feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                                feature.id
+                                            } else {
+                                                setting.targetSettingHighlightKey
+                                            }
+
+                                        val intent =
+                                            if (targetFeatureKey == "Pixel Searchbar") {
+                                                Intent(context, PixelSearchbarSettingsActivity::class.java)
+                                            } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                                Intent(context, WallpaperActivity::class.java).apply {
+                                                    putExtra(
+                                                        "tab",
+                                                        if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                                                    )
+                                                }
+                                            } else if (targetFeatureKey == "App updates") {
+                                                Intent(context, YourAndroidActivity::class.java)
+                                            } else {
+                                                Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                    putExtra("feature", targetFeatureKey)
+                                                    highlightKey?.let {
+                                                        putExtra("highlight_setting", it)
+                                                    }
+                                                }
+                                            }
                                         context.startActivity(intent)
                                         onFinish()
                                     },
