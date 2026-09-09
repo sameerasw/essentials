@@ -686,7 +686,7 @@ class AodWallpaperOverlayHandler(
 
             val wallpaperManager = WallpaperManager.getInstance(service)
             val drawable: Drawable? =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     wallpaperManager.getDrawable(WallpaperManager.FLAG_LOCK)
                         ?: wallpaperManager.drawable
                 } else {
@@ -694,7 +694,7 @@ class AodWallpaperOverlayHandler(
                 }
 
             drawableToBitmap(drawable)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("AodWallpaperOverlay", "Error extracting current wallpaper", e)
             null
         }
