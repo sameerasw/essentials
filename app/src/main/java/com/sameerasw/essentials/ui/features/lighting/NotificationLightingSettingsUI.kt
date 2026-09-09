@@ -123,7 +123,22 @@ fun NotificationLightingSettingsUI(
         }
     }
 
+    val isNotificationLightingEnabled by viewModel.isNotificationLightingEnabled
+
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                title = stringResource(R.string.feat_notification_lighting_title),
+                isChecked = isNotificationLightingEnabled,
+                onCheckedChange = { checked ->
+                    viewModel.setNotificationLightingEnabled(checked, context)
+                },
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_power_settings_new_24,
@@ -132,6 +147,7 @@ fun NotificationLightingSettingsUI(
                 onCheckedChange = { checked ->
                     viewModel.setOnlyShowWhenScreenOff(checked, context)
                 },
+                enabled = isNotificationLightingEnabled,
                 modifier = Modifier.highlight(highlightSetting == "only_screen_off"),
             )
             IconToggleItem(

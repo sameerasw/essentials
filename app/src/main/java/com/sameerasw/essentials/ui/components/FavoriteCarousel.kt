@@ -15,6 +15,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +66,7 @@ fun FavoriteCarousel(
     pinnedKeys: List<String>,
     onFeatureClick: (Feature) -> Unit,
     onFeatureLongClick: (Feature) -> Unit,
+    onReorderClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (pinnedKeys.isEmpty()) return
@@ -144,6 +146,14 @@ fun FavoriteCarousel(
                 label = "alpha",
             )
 
+            val isDarkTheme = isSystemInDarkTheme()
+            val iconColor =
+                if (isDarkTheme) {
+                    ColorUtil.getPastelColorFor(resolvedTitle)
+                } else {
+                    ColorUtil.getVibrantColorFor(resolvedTitle)
+                }
+
             Box(
                 modifier =
                     Modifier
@@ -178,7 +188,7 @@ fun FavoriteCarousel(
                             Modifier
                                 .size(40.dp)
                                 .background(
-                                    color = ColorUtil.getPastelColorFor(resolvedTitle),
+                                    color = MaterialTheme.colorScheme.surfaceBright,
                                     shape = CircleShape,
                                 ),
                         contentAlignment = Alignment.Center,
@@ -187,13 +197,14 @@ fun FavoriteCarousel(
                             painter = painterResource(id = feature.iconRes),
                             contentDescription = resolvedTitle,
                             modifier = Modifier.size(24.dp),
-                            tint = ColorUtil.getVibrantColorFor(resolvedTitle),
+                            tint = iconColor,
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = resolvedTitle,
                         style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         modifier =
@@ -207,6 +218,20 @@ fun FavoriteCarousel(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                 ) {
+                    SegmentedDropdownMenuItem(
+                        text = { Text(stringResource(R.string.action_reorder)) },
+                        onClick = {
+                            showMenu = false
+                            onReorderClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_drag_handle_24),
+                                contentDescription = null,
+                            )
+                        },
+                    )
+
                     SegmentedDropdownMenuItem(
                         text = { Text(stringResource(R.string.action_unpin)) },
                         onClick = {

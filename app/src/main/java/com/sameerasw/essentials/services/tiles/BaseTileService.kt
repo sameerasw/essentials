@@ -14,6 +14,7 @@ import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import android.widget.Toast
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -31,6 +32,8 @@ abstract class BaseTileService : TileService() {
     private val secureSettingsCache = mutableMapOf<String, Int>()
 
     protected var isProcessing = false
+
+    open val isSensitiveTile: Boolean = false
 
     abstract fun onTileClick()
 
@@ -88,6 +91,23 @@ abstract class BaseTileService : TileService() {
             return
         }
 
+        val settingsRepository = SettingsRepository(this)
+        if (isSensitiveTile && settingsRepository.isSecureSensitiveTilesEnabled() && isLocked) {
+            Toast.makeText(
+                this,
+                getString(R.string.qs_tile_unlock_to_use, getTileLabel()),
+                Toast.LENGTH_SHORT,
+            ).show()
+            unlockAndRun {
+                executeTileClick()
+            }
+            return
+        }
+
+        executeTileClick()
+    }
+
+    private fun executeTileClick() {
         // Immediate feedback 2: Processing state
         isProcessing = true
         updateTile()

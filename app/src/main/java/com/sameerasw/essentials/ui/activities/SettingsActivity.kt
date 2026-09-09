@@ -41,6 +41,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -74,6 +75,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -120,9 +123,12 @@ import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.ui.core.sheets.CrashLogsBottomSheet
 import rikka.shizuku.Shizuku
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -215,9 +221,12 @@ class SettingsActivity : AppCompatActivity() {
                             end = 16.dp,
                         )
 
+                    val expandPermissions = intent.getBooleanExtra("expand_permissions", false)
+
                     SettingsContent(
                         viewModel = viewModel,
                         contentPadding = contentPadding,
+                        expandPermissionsInitial = expandPermissions,
                         onAppIconSelectedWithPosition = { _, pos ->
                             iconRippleOrigin = pos
                             iconRippleTrigger++
@@ -284,6 +293,7 @@ fun SettingsContent(
     viewModel: MainViewModel,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    expandPermissionsInitial: Boolean = false,
     onAppIconSelectedWithPosition: ((com.sameerasw.essentials.domain.model.AppIcon, Offset) -> Unit)? = null,
     onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
     onRippleToggleEnabledWithPosition: ((Offset) -> Unit)? = null,
@@ -306,7 +316,7 @@ fun SettingsContent(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val context = LocalContext.current
     val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
-    var isPermissionsExpanded by remember { mutableStateOf(false) }
+    var isPermissionsExpanded by remember { mutableStateOf(expandPermissionsInitial) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
     val isUpdateAvailable by viewModel.isUpdateAvailable
@@ -326,6 +336,7 @@ fun SettingsContent(
     val isRootPermissionGranted by viewModel.isRootPermissionGranted
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
     var showInstructionsSheet by remember { mutableStateOf(false) }
+    var showCrashLogsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
@@ -445,6 +456,12 @@ fun SettingsContent(
         )
     }
 
+    if (showCrashLogsSheet) {
+        CrashLogsBottomSheet(
+            onDismissRequest = { showCrashLogsSheet = false },
+        )
+    }
+
     if (showUnsupportedFeaturesSheet) {
         UnsupportedFeaturesConfirmationSheet(
             onDismissRequest = { showUnsupportedFeaturesSheet = false },
@@ -528,6 +545,13 @@ fun SettingsContent(
     val sentryMode by viewModel.sentryReportMode
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
     val scrollState = rememberScrollState()
+    var permissionsSectionY by remember { mutableStateOf<Float?>(null) }
+
+    LaunchedEffect(expandPermissionsInitial, permissionsSectionY) {
+        if (expandPermissionsInitial && permissionsSectionY != null) {
+            scrollState.animateScrollTo(permissionsSectionY!!.toInt())
+        }
+    }
 
     Column(
         modifier =
@@ -541,7 +565,7 @@ fun SettingsContent(
     ) {
         val view = LocalView.current
 
-        // Help Section
+        // Help & Guides
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_help_24,
@@ -558,7 +582,7 @@ fun SettingsContent(
             )
         }
 
-        // Updates Section
+        // Updates 
         Text(
             text = "Updates",
             style = MaterialTheme.typography.titleMedium,
@@ -644,19 +668,41 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // App Settings Section
+        // Customizations 
         Text(
-            text = "App Settings",
+            text = stringResource(R.string.settings_section_customizations),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         RoundedCardContainer {
+            val selectedAppIcon by viewModel.selectedAppIcon
+            AppIconPicker(
+                selectedIcon = selectedAppIcon,
+                onIconSelected = { viewModel.setAppIcon(it, context) },
+                onIconSelectedWithPosition = onAppIconSelectedWithPosition,
+            )
+
             val appLanguage by viewModel.appLanguage
             LanguagePicker(
                 selectedLanguageCode = appLanguage,
                 onLanguageSelected = { viewModel.setAppLanguage(it) },
+            )
+
+            val defaultTab by viewModel.defaultTab
+            val availableTabs = remember { DIYTabs.entries }
+            DefaultTabPicker(
+                selectedTab = defaultTab,
+                onTabSelected = { viewModel.setDefaultTab(it, context) },
+                options = availableTabs,
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_touch_app_24,
+                title = stringResource(R.string.setting_swipe_tabs_title),
+                isChecked = viewModel.isSwipeTabsEnabled.value,
+                onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
             )
 
             IconToggleItem(
@@ -710,38 +756,120 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setMotionBlurEnabled(it, context) },
             )
 
-            CrashReportingPicker(
-                selectedMode = sentryMode,
-                onModeSelected = { viewModel.setSentryReportMode(it, context) },
-            )
-
-            val defaultTab by viewModel.defaultTab
-
-            val availableTabs = remember { DIYTabs.entries }
-            DefaultTabPicker(
-                selectedTab = defaultTab,
-                onTabSelected = { viewModel.setDefaultTab(it, context) },
-                options = availableTabs,
-            )
-
-            val selectedAppIcon by viewModel.selectedAppIcon
-            AppIconPicker(
-                selectedIcon = selectedAppIcon,
-                onIconSelected = { viewModel.setAppIcon(it, context) },
-                onIconSelectedWithPosition = onAppIconSelectedWithPosition,
-            )
-
             IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.setting_swipe_tabs_title),
-                isChecked = viewModel.isSwipeTabsEnabled.value,
-                onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
+                iconRes = R.drawable.rounded_music_video_24,
+                title = stringResource(R.string.label_online_help_media),
+                isChecked = viewModel.isOnlineHelpMediaEnabled.value,
+                onCheckedChange = { viewModel.setOnlineHelpMediaEnabled(it, context) },
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Permissions 
+        Text(
+            text = stringResource(R.string.settings_section_permissions),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
         RoundedCardContainer {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(72.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = Shapes.extraSmall,
+                        )
+                        .onGloballyPositioned { coordinates ->
+                            permissionsSectionY = coordinates.positionInParent().y
+                        }
+                        .clickable { isPermissionsExpanded = !isPermissionsExpanded }
+                        .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_shield_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_permissions_all),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                Icon(
+                    painter =
+                        painterResource(
+                            id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
+                        ),
+                    contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isPermissionsExpanded,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                val permissionItems =
+                    remember(
+                        isAccessibilityEnabled,
+                        isWriteSecureSettingsEnabled,
+                        isRootEnabled,
+                        isRootPermissionGranted,
+                        isShizukuPermissionGranted,
+                        isShizukuAvailable,
+                        isReadPhoneStateEnabled,
+                        isPostNotificationsEnabled,
+                        isOverlayPermissionGranted,
+                        isNotificationListenerEnabled,
+                        isWriteSettingsEnabled,
+                        isNotificationPolicyAccessGranted,
+                        isDefaultBrowserSet,
+                        isUsageStatsPermissionGranted,
+                        isLocationPermissionGranted,
+                        isBackgroundLocationPermissionGranted,
+                        isDeviceAdminEnabled,
+                        isCalendarPermissionGranted,
+                    ) {
+                        PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
+                    }
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    permissionItems.forEach { item ->
+                        PermissionCard(
+                            iconRes = item.iconRes,
+                            title = item.title,
+                            dependentFeatures = item.dependentFeatures,
+                            actionLabel = item.actionLabel ?: R.string.perm_action_grant,
+                            isGranted = item.isGranted,
+                            onActionClick = { item.action?.invoke() },
+                            secondaryActionLabel = item.secondaryActionLabel,
+                            onSecondaryActionClick = item.secondaryAction,
+                            shizukuActionLabel = item.shizukuActionLabel,
+                            shizukuActionEnabled = item.shizukuActionEnabled,
+                            onShizukuActionClick = item.shizukuAction,
+                            instructions = item.instructions,
+                            description = item.description,
+                        )
+                    }
+                }
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_numbers_24,
                 title = stringResource(R.string.setting_use_root_title),
@@ -824,6 +952,33 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setUseUsageAccess(it, context) },
             )
 
+            if (isGenAISupported) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_auto_awesome_24,
+                    title = stringResource(R.string.settings_genai_automation_title),
+                    description = stringResource(R.string.settings_genai_automation_desc),
+                    isChecked = isGenAIAutomationEnabled,
+                    onCheckedChange = { viewModel.setGenAIAutomationEnabled(it, context) },
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // More
+        Text(
+            text = stringResource(R.string.settings_section_more),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            CrashReportingPicker(
+                selectedMode = sentryMode,
+                onModeSelected = { viewModel.setSentryReportMode(it, context) },
+            )
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_release_alert_24,
                 title = stringResource(R.string.setting_enable_unsupported_features_title),
@@ -837,16 +992,6 @@ fun SettingsContent(
                     }
                 },
             )
-
-            if (isGenAISupported) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_auto_awesome_24,
-                    title = stringResource(R.string.settings_genai_automation_title),
-                    description = stringResource(R.string.settings_genai_automation_desc),
-                    isChecked = isGenAIAutomationEnabled,
-                    onCheckedChange = { viewModel.setGenAIAutomationEnabled(it, context) },
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -1002,7 +1147,7 @@ fun SettingsContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         RoundedCardContainer {
             FeatureCard(
@@ -1013,259 +1158,6 @@ fun SettingsContent(
                 showToggle = false,
                 onClick = { viewModel.restartSystemUI() },
                 iconRes = R.drawable.rounded_refresh_24,
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Expandable permissions
-        CategoryExpandableSection(
-            title = "Permissions",
-            isSettingsSection = true,
-            isExpanded = isPermissionsExpanded,
-            onToggleExpand = { isPermissionsExpanded = !isPermissionsExpanded },
-        ) {
-            PermissionCard(
-                iconRes = R.drawable.rounded_settings_accessibility_24,
-                title = "Accessibility",
-                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                actionLabel = if (isAccessibilityEnabled) "Granted" else "Grant Permission",
-                isGranted = isAccessibilityEnabled,
-                onActionClick = {
-                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    context.startActivity(intent)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_security_24,
-                title = "Write Secure Settings",
-                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
-                actionLabel = if (isWriteSecureSettingsEnabled) "Granted" else "Copy ADB Command",
-                isGranted = isWriteSecureSettingsEnabled,
-                onActionClick = {
-                    val adbCommand =
-                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                    val clipboard =
-                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip = ClipData.newPlainText("adb_command", adbCommand)
-                    clipboard.setPrimaryClip(clip)
-                },
-                secondaryActionLabel = "Check",
-                onSecondaryActionClick = {
-                    viewModel.check(context)
-                },
-            )
-
-            if (isRootEnabled) {
-                PermissionCard(
-                    iconRes = R.drawable.rounded_numbers_24,
-                    title = stringResource(R.string.perm_root_title),
-                    dependentFeatures = PermissionRegistry.getFeatures("ROOT"),
-                    actionLabel = if (isRootPermissionGranted) "Granted" else "Grant Access",
-                    isGranted = isRootPermissionGranted,
-                    onActionClick = {
-                        viewModel.check(context)
-                    },
-                )
-            } else if (isShizukuAvailable) {
-                PermissionCard(
-                    iconRes = R.drawable.rounded_adb_24,
-                    title = "Shizuku",
-                    dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                    actionLabel = if (isShizukuPermissionGranted) "Granted" else "Request Permission",
-                    isGranted = isShizukuPermissionGranted,
-                    onActionClick = {
-                        viewModel.requestShizukuPermission()
-                    },
-                    secondaryActionLabel = if (isShizukuPermissionGranted && !isWriteSecureSettingsEnabled) "Auto-Grant" else null,
-                    onSecondaryActionClick =
-                        if (isShizukuPermissionGranted && !isWriteSecureSettingsEnabled) {
-                            {
-                                viewModel.grantWriteSecureSettingsWithShizuku(context)
-                            }
-                        } else {
-                            null
-                        },
-                )
-            }
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_android_cell_dual_4_bar_24,
-                title = "Read Phone State",
-                dependentFeatures = PermissionRegistry.getFeatures("READ_PHONE_STATE"),
-                actionLabel = if (isReadPhoneStateEnabled) "Granted" else "Grant Permission",
-                isGranted = isReadPhoneStateEnabled,
-                onActionClick = {
-                    viewModel.requestReadPhoneStatePermission(context as ComponentActivity)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_notifications_unread_24,
-                title = "Post Notifications",
-                dependentFeatures = PermissionRegistry.getFeatures("POST_NOTIFICATIONS"),
-                actionLabel = if (isPostNotificationsEnabled) "Granted" else "Grant Permission",
-                isGranted = isPostNotificationsEnabled,
-                onActionClick = {
-                    // Request permission
-                    ActivityCompat.requestPermissions(
-                        context as ComponentActivity,
-                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                        1002,
-                    )
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_magnify_fullscreen_24,
-                title = "Draw Overlays",
-                dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVER_OTHER_APPS"),
-                actionLabel = if (isOverlayPermissionGranted) "Granted" else "Grant Permission",
-                isGranted = isOverlayPermissionGranted,
-                onActionClick = {
-                    val intent =
-                        Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            android.net.Uri.parse("package:${context.packageName}"),
-                        )
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(intent)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_notification_settings_24,
-                title = "Notification Listener",
-                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
-                actionLabel = if (isNotificationListenerEnabled) "Granted" else "Enable listener",
-                isGranted = isNotificationListenerEnabled,
-                onActionClick = {
-                    val intent =
-                        Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        }
-                    context.startActivity(intent)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_security_24,
-                title = stringResource(R.string.perm_write_settings_title),
-                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
-                actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
-                isGranted = isWriteSettingsEnabled,
-                onActionClick = {
-                    PermissionUtils.openWriteSettings(context)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_volume_up_24,
-                title = stringResource(R.string.perm_notif_policy_title),
-                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
-                actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
-                isGranted = isNotificationPolicyAccessGranted,
-                onActionClick = {
-                    PermissionUtils.openNotificationPolicySettings(context)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_open_in_browser_24,
-                title = stringResource(R.string.perm_default_browser_title),
-                dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),
-                actionLabel = if (isDefaultBrowserSet) "Granted" else "Set as Default",
-                isGranted = isDefaultBrowserSet,
-                onActionClick = {
-                    val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: Exception) {
-                        // Fallback for older Android versions
-                        val settingsIntent = Intent(Settings.ACTION_SETTINGS)
-                        context.startActivity(settingsIntent)
-                    }
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_settings_motion_mode_24,
-                title = stringResource(R.string.perm_write_settings_title),
-                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
-                actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
-                isGranted = isWriteSettingsEnabled,
-                onActionClick = {
-                    PermissionUtils.openWriteSettings(context)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_notifications_off_24,
-                title = stringResource(R.string.perm_notif_policy_title),
-                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
-                actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
-                isGranted = isNotificationPolicyAccessGranted,
-                onActionClick = {
-                    PermissionUtils.openNotificationPolicySettings(context)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_data_usage_24,
-                title = stringResource(R.string.perm_usage_stats_title),
-                dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
-                actionLabel = if (isUsageStatsPermissionGranted) "Granted" else "Grant Permission",
-                isGranted = isUsageStatsPermissionGranted,
-                onActionClick = {
-                    PermissionUtils.openUsageStatsSettings(context)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_location_on_24,
-                title = "Location Access",
-                dependentFeatures = PermissionRegistry.getFeatures("LOCATION"),
-                actionLabel = if (isLocationPermissionGranted) "Granted" else "Grant Permission",
-                isGranted = isLocationPermissionGranted,
-                onActionClick = {
-                    viewModel.requestLocationPermission(context as ComponentActivity)
-                },
-            )
-
-            if (isLocationPermissionGranted && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                PermissionCard(
-                    iconRes = R.drawable.rounded_location_on_24,
-                    title = "Background Location",
-                    dependentFeatures = PermissionRegistry.getFeatures("BACKGROUND_LOCATION"),
-                    actionLabel = if (isBackgroundLocationPermissionGranted) "Granted" else "Grant Permission",
-                    isGranted = isBackgroundLocationPermissionGranted,
-                    onActionClick = {
-                        viewModel.requestBackgroundLocationPermission(context as ComponentActivity)
-                    },
-                )
-            }
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_admin_panel_settings_24,
-                title = "Device Admin",
-                dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
-                actionLabel = if (isDeviceAdminEnabled) "Granted" else "Enable Admin",
-                isGranted = isDeviceAdminEnabled,
-                onActionClick = {
-                    viewModel.requestDeviceAdmin(context)
-                },
-            )
-
-            PermissionCard(
-                iconRes = R.drawable.rounded_calendar_today_24,
-                title = "Calendar",
-                dependentFeatures = PermissionRegistry.getFeatures("READ_CALENDAR"),
-                actionLabel = if (isCalendarPermissionGranted) "Granted" else "Grant Permission",
-                isGranted = isCalendarPermissionGranted,
-                onActionClick = {
-                    viewModel.requestCalendarPermission(context as ComponentActivity)
-                },
             )
         }
 
@@ -1311,10 +1203,12 @@ fun SettingsContent(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = Shapes.extraSmall,
                             ).padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Button(
                         onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
                             val timeStamp =
                                 SimpleDateFormat(
                                     "yyyyMMdd_HHmmss",
@@ -1322,19 +1216,136 @@ fun SettingsContent(
                                 ).format(Date())
                             exportLauncher.launch("essentials_config_$timeStamp.json")
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .defaultMinSize(minHeight = 44.dp),
+                        shape = ButtonGroupDefaults.connectedLeadingButtonShapes().shape,
                     ) {
-                        Text("Export Config")
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_vertical_align_bottom_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_export_config))
                     }
                     Button(
                         onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
                             importLauncher.launch(arrayOf("application/json"))
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .defaultMinSize(minHeight = 44.dp),
+                        shape = ButtonGroupDefaults.connectedTrailingButtonShapes().shape,
                     ) {
-                        Text("Import Config")
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_vertical_align_top_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_import_config))
                     }
                 }
+
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = Shapes.extraSmall,
+                            ).padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.resetOnboarding(context)
+                            Toast.makeText(context, context.getString(R.string.toast_onboarding_reset), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            ),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_refresh_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_reset_onboarding))
+                    }
+
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.resetUpdateNote(context)
+                            Toast.makeText(context, context.getString(R.string.toast_update_note_reset), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            ),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_refresh_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_reset_update_note))
+                    }
+
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.clearRecentSearches()
+                            Toast.makeText(context, context.getString(R.string.toast_search_history_cleared), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError,
+                            ),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_delete_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_clear_search_history))
+                    }
+                }
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_bug_report_24,
+                    title = stringResource(R.string.crash_logs_title),
+                    description = stringResource(R.string.crash_logs_desc),
+                    showToggle = false,
+                    onClick = {
+                        showCrashLogsSheet = true
+                    },
+                )
 
                 Row(
                     modifier =
@@ -1344,48 +1355,6 @@ fun SettingsContent(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = Shapes.extraSmall,
                             ).padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Button(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            viewModel.resetOnboarding(context)
-                            Toast.makeText(context, "Onboarding reset", Toast.LENGTH_SHORT).show()
-                        },
-                        modifier = Modifier.weight(1f),
-                        colors =
-                            ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                            ),
-                    ) {
-                        Text("Reset onboarding", color = MaterialTheme.colorScheme.onError)
-                    }
-
-                    Button(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            viewModel.resetUpdateNote(context)
-                            Toast.makeText(context, "Update note reset", Toast.LENGTH_SHORT).show()
-                        },
-                        modifier = Modifier.weight(1f),
-                        colors =
-                            ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                            ),
-                    ) {
-                        Text("Reset update note", color = MaterialTheme.colorScheme.onError)
-                    }
-                }
-
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceBright,
-                                shape = Shapes.extraSmall,
-                            ).padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Button(
                         onClick = {
@@ -1395,15 +1364,20 @@ fun SettingsContent(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(40.dp),
+                                .defaultMinSize(minHeight = 44.dp),
                         shape = ButtonDefaults.shape,
                         colors =
                             ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
                             ),
-                        contentPadding = PaddingValues(0.dp),
                     ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_bug_report_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(R.string.simulate_crash),
                             style = MaterialTheme.typography.labelLarge,
@@ -1581,30 +1555,60 @@ fun SettingsContent(
                                         HapticUtil.performUIHaptic(view)
                                         viewModel.triggerWallpaperUpdate("desktop")
                                     },
-                                    modifier = Modifier.weight(1f),
+                                    modifier =
+                                        Modifier
+                                            .weight(1f)
+                                            .defaultMinSize(minHeight = 44.dp),
+                                    shape = ButtonGroupDefaults.connectedLeadingButtonShapes().shape,
                                     enabled = !isTriggering,
                                 ) {
-                                    Text("Desktop")
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_laptop_mac_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(stringResource(R.string.btn_wallpaper_desktop))
                                 }
                                 Button(
                                     onClick = {
                                         HapticUtil.performUIHaptic(view)
                                         viewModel.triggerWallpaperUpdate("both")
                                     },
-                                    modifier = Modifier.weight(1f),
+                                    modifier =
+                                        Modifier
+                                            .weight(1f)
+                                            .defaultMinSize(minHeight = 44.dp),
+                                    shape = ButtonGroupDefaults.connectedMiddleButtonShapes().shape,
                                     enabled = !isTriggering,
                                 ) {
-                                    Text("Both")
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_devices_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(stringResource(R.string.btn_wallpaper_both))
                                 }
                                 Button(
                                     onClick = {
                                         HapticUtil.performUIHaptic(view)
                                         viewModel.triggerWallpaperUpdate("mobile")
                                     },
-                                    modifier = Modifier.weight(1f),
+                                    modifier =
+                                        Modifier
+                                            .weight(1f)
+                                            .defaultMinSize(minHeight = 44.dp),
+                                    shape = ButtonGroupDefaults.connectedTrailingButtonShapes().shape,
                                     enabled = !isTriggering,
                                 ) {
-                                    Text("Mobile")
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_mobile_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(stringResource(R.string.btn_wallpaper_mobile))
                                 }
                             }
 

@@ -50,6 +50,8 @@ class NotificationListener : NotificationListenerService() {
 
         fun getCachedBitmap(hash: Long): Bitmap? = if (latestArtHash == hash) latestArtBitmap else null
 
+        fun getLatestArtBitmap(): Bitmap? = latestArtBitmap
+
         fun getUnreadPackages(): List<String> =
             instance
                 ?.unreadNotifications

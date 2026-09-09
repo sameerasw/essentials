@@ -177,7 +177,7 @@ fun NetworksSettingsUI(
                         val intent =
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"),
+                                Uri.parse("https://github.com/thedjchi/Shizuku"),
                             )
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
@@ -275,7 +275,11 @@ fun NetworksSettingsUI(
                 },
                 iconRes = R.drawable.rounded_cell_wifi_24,
                 enabled = true,
-                modifier = Modifier.highlight(highlightSetting == "network_download_rate_limit_slider"),
+                modifier =
+                    Modifier.highlight(
+                        highlightSetting == "network_download_rate_limit_slider" ||
+                            highlightSetting == "Network download rate limit",
+                    ),
             )
 
             IconToggleItem(
@@ -296,7 +300,11 @@ fun NetworksSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_mobile_24,
-                modifier = Modifier.highlight(highlightSetting == "mobile_data_always_on_toggle"),
+                modifier =
+                    Modifier.highlight(
+                        highlightSetting == "mobile_data_always_on_toggle" ||
+                            highlightSetting == "Mobile data always on",
+                    ),
             )
 
             IconToggleItem(
@@ -319,7 +327,11 @@ fun NetworksSettingsUI(
                     }
                 },
                 iconRes = R.drawable.rounded_cast_24,
-                modifier = Modifier.highlight(highlightSetting == "wireless_display_certification_toggle"),
+                modifier =
+                    Modifier.highlight(
+                        highlightSetting == "wireless_display_certification_toggle" ||
+                            highlightSetting == "Wireless display certification",
+                    ),
             )
 
             IconToggleItem(
@@ -334,7 +346,11 @@ fun NetworksSettingsUI(
                         requestingPermissionFor = NetworkPermissionModule.SIM_NAMES
                     }
                 },
-                modifier = Modifier.highlight(highlightSetting == "sim_names_item"),
+                modifier =
+                    Modifier.highlight(
+                        highlightSetting == "sim_names_item" ||
+                            highlightSetting == "SIM names",
+                    ),
             )
         }
     }

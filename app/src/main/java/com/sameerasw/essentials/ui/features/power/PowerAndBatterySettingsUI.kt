@@ -22,12 +22,17 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -42,6 +47,7 @@ fun PowerAndBatterySettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val settingsRepository = remember { SettingsRepository(context) }
     val isEnabled = viewModel.isWriteSecureSettingsEnabled.value
 
     val constants = viewModel.batterySaverConstants.value
@@ -462,6 +468,24 @@ fun PowerAndBatterySettingsUI(
                     )
                 }
             }
+        }
+
+        // Apply After Reboot
+        RoundedCardContainer {
+            var isApplyAfterRebootEnabled by remember {
+                mutableStateOf(settingsRepository.isPowerSavingApplyOnBootEnabled())
+            }
+            IconToggleItem(
+                title = stringResource(R.string.label_apply_after_reboot),
+                isChecked = isApplyAfterRebootEnabled,
+                onCheckedChange = {
+                    isApplyAfterRebootEnabled = it
+                    settingsRepository.setPowerSavingApplyOnBootEnabled(it)
+                    HapticUtil.performUIHaptic(view)
+                },
+                enabled = isEnabled,
+                iconRes = R.drawable.rounded_cycle_24,
+            )
         }
 
         // Reset Button

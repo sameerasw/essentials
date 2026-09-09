@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Restartuje interfejs uzytkownika, aby natychmiast zastosować niektóre zmiany</string>
+    <string name="action_restart_systemui">Zrestartuj interfejs systemu </string>
+    <string name="desc_restart_systemui">Restartuje interfejs użytkownika, aby natychmiast zastosować niektóre zmiany</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Zrobione</string>
@@ -1506,7 +1506,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="setting_enable_unsupported_features_title">Włącz niewspierane opcje </string>
     <string name="settings_translated_texts">Przetłumaczone </string>
     <string name="settings_translated_texts_desc">%d edycji oczekujących — naciśnij by wysłać lub je odrzucić </string>
-    <string name="settings_translate_mode">Tryb tlumaczenia </string>
+    <string name="settings_translate_mode">Tryb tłumaczenia</string>
     <string name="settings_translate_mode_desc">Naciśnij i przytrzymaj dowolny tekst, aby go przetłumaczyć i przyczynić się do rozwoju społeczności</string>
     <string name="setting_enable_unsupported_features_desc">Pokaż funkcje specyficzne dla producenta telefonu lub zbędne, które są domyślnie ukryte</string>
     <string name="label_snooze_default">Domyślny czas drzemki </string>
@@ -1535,4 +1535,11 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="feat_power_saving_desc">Konfiguruj politykę oszczędzania energii </string>
     <string name="feat_standby_apps_desc">Optymalizuj aktywność w tle aplikacji </string>
     <string name="label_low_power_trigger_level">Niestandardowy poziom wyzwolenia </string>
+    <string name="setting_app_icon_title">Ikona aplikacji </string>
+    <string name="setting_app_icon_desc">Dostosuj ikonę aplikacji na ekranie głównym </string>
+    <string name="label_motion_blur">Rozmycie ruchu </string>
+    <string name="label_ripple_animation">Efekt fali</string>
+    <string name="feat_networks_desc">Sterownie łącznością i sieciami</string>
+    <string name="feat_flashlight_title">Latarka </string>
+    <string name="feat_flashlight_desc">Popraw zachowanie latarki </string>
 </resources>

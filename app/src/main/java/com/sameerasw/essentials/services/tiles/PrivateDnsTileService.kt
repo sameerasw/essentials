@@ -31,6 +31,8 @@ class PrivateDnsTileService : BaseTileService() {
         private const val MODE_HOSTNAME = "hostname"
     }
 
+    override val isSensitiveTile: Boolean = true
+
     override fun onClick() {
         if (!hasFeaturePermission()) {
             val intent =

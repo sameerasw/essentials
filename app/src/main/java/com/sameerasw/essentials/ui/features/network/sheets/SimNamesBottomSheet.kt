@@ -50,6 +50,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.SimCarrierInfo
@@ -65,11 +67,15 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
     val view = LocalView.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val settingsRepository = remember { SettingsRepository(context) }
 
     var isLoading by remember { mutableStateOf(true) }
     var isSaving by remember { mutableStateOf(false) }
     var simList by remember { mutableStateOf<List<SimCarrierInfo>>(emptyList()) }
     val carrierNameInputs = remember { mutableStateMapOf<Int, String>() }
+    var isApplyAfterRebootEnabled by remember {
+        mutableStateOf(settingsRepository.isSimNamesApplyOnBootEnabled())
+    }
 
     LaunchedEffect(Unit) {
         val sims =
@@ -175,6 +181,19 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                 }
             }
 
+            RoundedCardContainer {
+                IconToggleItem(
+                    title = stringResource(R.string.label_apply_after_reboot),
+                    isChecked = isApplyAfterRebootEnabled,
+                    onCheckedChange = {
+                        isApplyAfterRebootEnabled = it
+                        settingsRepository.setSimNamesApplyOnBootEnabled(it)
+                        HapticUtil.performUIHaptic(view)
+                    },
+                    iconRes = R.drawable.rounded_cycle_24,
+                )
+            }
+
             Spacer(Modifier.height(8.dp))
 
             Row(
@@ -197,14 +216,17 @@ fun SimNamesBottomSheet(onDismissRequest: () -> Unit) {
                         HapticUtil.performVirtualKeyHaptic(view)
                         isSaving = true
                         scope.launch {
+                            val savedMap = mutableMapOf<Int, String>()
                             simList.forEach { sim ->
                                 val newName = carrierNameInputs[sim.subId]?.trim()
                                 if (newName.isNullOrBlank() || newName == sim.defaultCarrierName) {
                                     SimCarrierUtil.resetCarrierName(context, sim.subId)
                                 } else {
                                     SimCarrierUtil.overrideCarrierName(context, sim.subId, newName)
+                                    savedMap[sim.subId] = newName
                                 }
                             }
+                            SimCarrierUtil.saveCustomCarrierNames(context, savedMap)
                             isSaving = false
                             onDismissRequest()
                         }

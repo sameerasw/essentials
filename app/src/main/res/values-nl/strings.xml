@@ -1108,7 +1108,7 @@
     <string name="bug_report_email_subject">Essentials foutrapport</string>
     <string name="bug_report_send_via">Sturen via</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are We There Yet?</string>
+    <string name="feat_location_reached_title">Zijn We Er Al?</string>
     <string name="feat_location_reached_desc">Bereid je voor op je bestemming.</string>
     <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
     <string name="location_reached_radius_title">Radius: %d m</string>
@@ -1540,4 +1540,31 @@
     <string name="cat_navigation">Navigatie</string>
     <string name="search_smart_pixels_enable_title">Zet slimme pixels aan</string>
     <string name="smart_pixels_intensity_title">Intensiteit</string>
+    <string name="watch_watchface_title">Wijzerplaat</string>
+    <string name="watch_watchface_desc">Personaliseer de wijzerplaat</string>
+    <string name="watch_complications_title">Complicaties</string>
+    <string name="watch_complications_desc">Personaliseer complicatie widgets</string>
+    <string name="watchface_glance_complications_desc">Kies wat weer te geven</string>
+    <string name="watchface_show_glow_desc">Dynamisch accent kleurverloop bij nadering van evenementen en reizen</string>
+    <string name="feat_sync_location_reached_title">Zijn we er al status</string>
+    <string name="watch_notif_sync_title">Meldingen</string>
+    <string name="watch_notif_sync_desc">Alleen voor de launcher</string>
+    <string name="watch_call_sync_title">Telefoongesprekken</string>
+    <string name="watch_call_sync_desc">Alleen voor de launcher</string>
+    <string name="watchface_clock_font_size">Lettergrootte</string>
+    <string name="watchface_clock_dual_tone_desc">Uren in het wit, minuten in de accentkleur</string>
+    <string name="watchface_hide_battery_title">Verberg batterij</string>
+    <string name="watchface_hide_battery_desc">Verberg de batterij ringen en -indicatoren</string>
+    <string name="watchface_hide_device_icons_title">Verberg apparaaticonen</string>
+    <string name="watchface_hide_device_icons_desc">Verberg de horloge- en telefooniconen onderaan</string>
+    <string name="watchface_show_complications_title">Toon complicaties</string>
+    <string name="watchface_show_complications_desc">Toon widgets aan de linker- en rechterkant</string>
+    <string name="watchface_complications_on_aod_title">Toon op AOD</string>
+    <string name="watchface_complications_on_aod_desc">Toon complicaties ook op het Always on Display</string>
+    <string name="watchface_left_complication_title">Linker complicatie</string>
+    <string name="watchface_right_complication_title">Rechter complicatie</string>
+    <string name="watchface_clock_outline_title">Alleen omlijning</string>
+    <string name="watchface_clock_outline_desc">Toon enkel een omlijning van de tekst in plaats van gevulde tekst</string>
+    <string name="watchface_complication_outline_title">Complicatie omlijning</string>
+    <string name="watchface_complication_outline_desc">Toon een dunne ronde rand om items heen</string>
 </resources>

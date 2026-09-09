@@ -136,7 +136,7 @@ fun StandbyAppsSettingsUI(
                         val intent =
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"),
+                                Uri.parse("https://github.com/thedjchi/Shizuku"),
                             ).apply {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             }

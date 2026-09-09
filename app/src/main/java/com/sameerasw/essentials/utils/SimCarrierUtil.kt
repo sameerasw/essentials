@@ -158,4 +158,30 @@ object SimCarrierUtil {
             null
         }
     }
+
+    fun saveCustomCarrierNames(context: Context, names: Map<Int, String>) {
+        val prefs = context.getSharedPreferences("sim_names_prefs", Context.MODE_PRIVATE)
+        val json = com.google.gson.Gson().toJson(names)
+        prefs.edit().putString("saved_carrier_names", json).apply()
+    }
+
+    fun getSavedCustomCarrierNames(context: Context): Map<Int, String> {
+        val prefs = context.getSharedPreferences("sim_names_prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("saved_carrier_names", null) ?: return emptyMap()
+        return try {
+            val type = object : com.google.gson.reflect.TypeToken<Map<Int, String>>() {}.type
+            com.google.gson.Gson().fromJson(json, type) ?: emptyMap()
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
+
+    suspend fun applySavedCarrierNames(context: Context) {
+        val saved = getSavedCustomCarrierNames(context)
+        saved.forEach { (subId, name) ->
+            if (name.isNotBlank()) {
+                overrideCarrierName(context, subId, name)
+            }
+        }
+    }
 }

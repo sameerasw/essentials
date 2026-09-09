@@ -17,6 +17,8 @@ import android.content.Intent
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -88,6 +90,9 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.domain.registry.QSTileRegistry
+import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
+import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
 import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
@@ -95,6 +100,10 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.ReorderFavoritesBottomSheet
+import com.sameerasw.essentials.ui.features.permissions.PermissionsSearchResultCard
+import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -137,6 +146,7 @@ fun SetupFeatures(
 
     var showSheet by remember { mutableStateOf(false) }
     var currentFeature by remember { mutableStateOf<Int?>(null) }
+    var showReorderFavoritesSheet by remember { mutableStateOf(false) }
 
     // Help Sheet State
     var showHelpSheet by remember { mutableStateOf(false) }
@@ -407,7 +417,7 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri(),
+                                                "https://github.com/thedjchi/Shizuku".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)
@@ -694,7 +704,7 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri(),
+                                                "https://github.com/thedjchi/Shizuku".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)
@@ -815,6 +825,13 @@ fun SetupFeatures(
                 selectedHelpFeature = null
             },
             feature = selectedHelpFeature!!,
+        )
+    }
+
+    if (showReorderFavoritesSheet) {
+        ReorderFavoritesBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showReorderFavoritesSheet = false },
         )
     }
 
@@ -1024,6 +1041,24 @@ fun SetupFeatures(
         val searchResults = viewModel.searchResults.value
         val isSearchingViewModel = viewModel.isSearching.value
         val recentSearches by viewModel.recentSearches
+        val matchingTiles =
+            remember(searchQuery, viewModel.isEnableUnsupportedFeatures.value, viewModel.isUseUsageAccess.value) {
+                QSTileRegistry.searchTiles(
+                    context = context,
+                    query = searchQuery,
+                    includeUnsupported = viewModel.isEnableUnsupportedFeatures.value,
+                    isUseUsageStats = viewModel.isUseUsageAccess.value,
+                )
+            }
+        val matchingPermissions =
+            remember(searchQuery, viewModel) {
+                PermissionUIHelper.searchPermissions(
+                    context = context,
+                    query = searchQuery,
+                    viewModel = viewModel,
+                    activity = context as? Activity,
+                )
+            }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
@@ -1104,7 +1139,7 @@ fun SetupFeatures(
                                                 val size = coords.size
                                                 textCenterOffset = Offset(
                                                     x = pos.x + (size.width / 2f),
-                                                    y = pos.y + (size.height / 2f)
+                                                    y = pos.y + (size.height / 2f),
                                                 )
                                             }
                                             .graphicsLayer {
@@ -1120,26 +1155,45 @@ fun SetupFeatures(
             }
 
             item {
-                // Search Field
+                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { new ->
-                        viewModel.onSearchQueryChanged(new, context)
+                    onValueChange = {
+                        viewModel.onSearchQueryChanged(it, context)
                     },
-                    maxLines = 1,
-                    textStyle = MaterialTheme.typography.bodyLarge,
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 16.dp)
-                            .defaultMinSize(minHeight = 64.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                             .focusRequester(focusRequester)
-                            .onFocusChanged { isFocused = it.isFocused },
+                            .onFocusChanged {
+                                isFocused = it.isFocused
+                            },
                     leadingIcon = {
-                        Box(modifier = Modifier.padding(start = 16.dp, end = 8.dp)) {
-                            if (isSearchingViewModel) {
-                                LoadingIndicator()
-                            } else {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .padding(start = 12.dp, end = 4.dp)
+                                    .size(40.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = isSearchingViewModel,
+                                enter = androidx.compose.animation.fadeIn(),
+                                exit = androidx.compose.animation.fadeOut(),
+                            ) {
+                                androidx.compose.material3.CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    strokeWidth = 2.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = !isSearchingViewModel,
+                                enter = androidx.compose.animation.fadeIn(),
+                                exit = androidx.compose.animation.fadeOut(),
+                            ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.rounded_search_24),
                                     contentDescription = stringResource(R.string.label_search_content_description),
@@ -1207,6 +1261,9 @@ fun SetupFeatures(
                         onFeatureLongClick = { feature ->
                             viewModel.togglePinFeature(feature.id)
                         },
+                        onReorderClick = {
+                            showReorderFavoritesSheet = true
+                        },
                         modifier = Modifier.padding(bottom = 16.dp),
                     )
                 }
@@ -1223,7 +1280,7 @@ fun SetupFeatures(
                     )
                 }
             } else if (isFocused && searchQuery.isNotEmpty()) {
-                if (!isSearchingViewModel && searchResults.isEmpty()) {
+                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty()) {
                     item {
                         Column(
                             modifier =
@@ -1254,14 +1311,16 @@ fun SetupFeatures(
                     }
                 }
 
-                item {
-                    SearchResultsSection(
-                        searchResults = searchResults,
-                        allFeatures = allFeatures,
-                        pinnedFeatureKeys = pinnedFeatureKeys,
-                        context = context,
-                        viewModel = viewModel,
-                    )
+                if (!isSearchingViewModel) {
+                    item {
+                        SearchResultsSection(
+                            searchResults = searchResults,
+                            allFeatures = allFeatures,
+                            pinnedFeatureKeys = pinnedFeatureKeys,
+                            context = context,
+                            viewModel = viewModel,
+                        )
+                    }
                 }
             } else if (!isFocused) {
                 val topLevelFeatures =
@@ -1448,10 +1507,25 @@ private fun RecentSearchesSection(
             )
         }
 
+        val validSearches =
+            remember(recentSearches, allFeatures) {
+                recentSearches.filter { item ->
+                    item.title.isNotBlank() &&
+                        allFeatures.any { it.id == item.featureKey }
+                }
+            }
+
+        LaunchedEffect(recentSearches.size, validSearches.size) {
+            if (recentSearches.isNotEmpty() && validSearches.size != recentSearches.size) {
+                // If any corrupted/invalid feature IDs were found in history, clean them up
+                viewModel.clearRecentSearches()
+            }
+        }
+
         RoundedCardContainer(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
-            recentSearches.forEach { result ->
+            validSearches.forEach { result ->
                 FeatureCard(
                     title = result.title,
                     isEnabled = true,
@@ -1526,119 +1600,206 @@ private fun SearchResultsSection(
     context: Context,
     viewModel: MainViewModel,
 ) {
-    if (searchResults.isNotEmpty()) {
-        Text(
-            text = stringResource(R.string.search_results_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+    val query = viewModel.searchQuery.value
+    val matchingTiles =
+        remember(query, viewModel.isEnableUnsupportedFeatures.value, viewModel.isUseUsageAccess.value) {
+            QSTileRegistry.searchTiles(
+                context = context,
+                query = query,
+                includeUnsupported = viewModel.isEnableUnsupportedFeatures.value,
+                isUseUsageStats = viewModel.isUseUsageAccess.value,
+            )
+        }
+    val matchingPermissions =
+        remember(query, viewModel) {
+            PermissionUIHelper.searchPermissions(
+                context = context,
+                query = query,
+                viewModel = viewModel,
+                activity = context as? Activity,
+            )
+        }
 
-        RoundedCardContainer(
-            modifier = Modifier.padding(horizontal = 16.dp),
-        ) {
-            for (result in searchResults) {
-                FeatureCard(
-                    title = result.title,
-                    isEnabled = true,
-                    onToggle = {},
-                    onClick = {
-                        viewModel.addRecentSearch(result)
-                        val feature = allFeatures.find { it.id == result.featureKey }
-                        if (feature != null) {
-                            val targetFeatureKey =
-                                if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                    feature.parentFeatureId
+    var isExpanded by rememberSaveable(query) { mutableStateOf(false) }
+
+    val nonQSSearchResults =
+        remember(searchResults) {
+            searchResults.filter { it.featureKey != "Quick settings tiles" }
+        }
+
+    val visibleResults =
+        if (!isExpanded && nonQSSearchResults.size > 7) {
+            nonQSSearchResults.take(7)
+        } else {
+            nonQSSearchResults
+        }
+
+    if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty() || matchingPermissions.isNotEmpty()) {
+        if (nonQSSearchResults.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.search_results_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            RoundedCardContainer(
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+            ) {
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .animateContentSize(animationSpec = tween(durationMillis = 300)),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    for (result in visibleResults) {
+                        FeatureCard(
+                            title = result.title,
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                viewModel.addRecentSearch(result)
+                                val feature = allFeatures.find { it.id == result.featureKey }
+                                if (feature != null) {
+                                    val targetFeatureKey =
+                                        if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                            feature.parentFeatureId
+                                        } else {
+                                            feature.id
+                                        }
+                                    val highlightKey =
+                                        if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                            feature.id
+                                        } else {
+                                            result.targetSettingHighlightKey
+                                        }
+                                    BiometricSecurityHelper.runWithAuth(
+                                        activity = context as FragmentActivity,
+                                        feature = feature,
+                                        action = {
+                                            val intent =
+                                                if (targetFeatureKey == "Pixel Searchbar") {
+                                                    Intent(
+                                                        context,
+                                                        PixelSearchbarSettingsActivity::class.java,
+                                                    )
+                                                } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                                    Intent(
+                                                        context,
+                                                        WallpaperActivity::class.java,
+                                                    ).apply {
+                                                        putExtra(
+                                                            "tab",
+                                                            if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                                                        )
+                                                    }
+                                                } else if (targetFeatureKey == "App updates") {
+                                                    Intent(
+                                                        context,
+                                                        YourAndroidActivity::class.java,
+                                                    )
+                                                } else {
+                                                    Intent(
+                                                        context,
+                                                        FeatureSettingsActivity::class.java,
+                                                    ).apply {
+                                                        putExtra("feature", targetFeatureKey)
+                                                        highlightKey?.let {
+                                                            putExtra("highlight_setting", it)
+                                                        }
+                                                    }
+                                                }
+                                            context.startActivity(intent)
+                                        },
+                                    )
                                 } else {
-                                    feature.id
-                                }
-                            val highlightKey =
-                                if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                    feature.id
-                                } else {
-                                    result.targetSettingHighlightKey
-                                }
-                            BiometricSecurityHelper.runWithAuth(
-                                activity = context as FragmentActivity,
-                                feature = feature,
-                                action = {
                                     val intent =
-                                        if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                        if (result.featureKey == "Pixel Searchbar") {
                                             Intent(
                                                 context,
-                                                com.sameerasw.essentials.ui.activities.WallpaperActivity::class.java,
+                                                PixelSearchbarSettingsActivity::class.java,
+                                            )
+                                        } else if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
+                                            Intent(
+                                                context,
+                                                WallpaperActivity::class.java,
                                             ).apply {
                                                 putExtra(
                                                     "tab",
-                                                    if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                                                    if (result.featureKey == "LiveWallpaper") "live" else "daily",
                                                 )
                                             }
-                                        } else if (targetFeatureKey == "App updates") {
+                                        } else if (result.featureKey == "App updates") {
                                             Intent(
                                                 context,
-                                                com.sameerasw.essentials.ui.activities.YourAndroidActivity::class.java,
+                                                YourAndroidActivity::class.java,
                                             )
                                         } else {
-                                            Intent(
-                                                context,
-                                                FeatureSettingsActivity::class.java,
-                                            ).apply {
-                                                putExtra("feature", targetFeatureKey)
-                                                highlightKey?.let {
+                                            Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                putExtra("feature", result.featureKey)
+                                                result.targetSettingHighlightKey?.let {
                                                     putExtra("highlight_setting", it)
                                                 }
                                             }
                                         }
                                     context.startActivity(intent)
-                                },
-                            )
-                        } else {
-                            val intent =
-                                if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
-                                    Intent(
-                                        context,
-                                        com.sameerasw.essentials.ui.activities.WallpaperActivity::class.java,
-                                    ).apply {
-                                        putExtra(
-                                            "tab",
-                                            if (result.featureKey == "LiveWallpaper") "live" else "daily",
-                                        )
-                                    }
-                                } else if (result.featureKey == "App updates") {
-                                    Intent(
-                                        context,
-                                        com.sameerasw.essentials.ui.activities.YourAndroidActivity::class.java,
-                                    )
-                                } else {
-                                    Intent(context, FeatureSettingsActivity::class.java).apply {
-                                        putExtra("feature", result.featureKey)
-                                        result.targetSettingHighlightKey?.let {
-                                            putExtra("highlight_setting", it)
-                                        }
-                                    }
                                 }
-                            context.startActivity(intent)
-                        }
-                    },
-                    iconRes = result.icon ?: R.drawable.rounded_settings_24,
-                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                    showToggle = false,
-                    hasMoreSettings = true,
-                    isBeta = result.isBeta,
-                    descriptionOverride =
-                        if (result.parentFeature !=
-                            null
-                        ) {
-                            "${result.parentFeature} > ${result.description}"
-                        } else {
-                            result.description
-                        },
-                    isPinned = pinnedFeatureKeys.contains(result.featureKey),
-                    onPinToggle = {
-                        viewModel.togglePinFeature(result.featureKey)
-                    },
+                            },
+                            iconRes = result.icon ?: R.drawable.rounded_settings_24,
+                            modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                            showToggle = false,
+                            hasMoreSettings = true,
+                            isBeta = result.isBeta,
+                            descriptionOverride =
+                                if (result.parentFeature !=
+                                    null
+                                ) {
+                                    "${result.parentFeature} > ${result.description}"
+                                } else {
+                                    result.description
+                                },
+                            isPinned = pinnedFeatureKeys.contains(result.featureKey),
+                            onPinToggle = {
+                                viewModel.togglePinFeature(result.featureKey)
+                            },
+                        )
+                    }
+                }
+            }
+
+            if (nonQSSearchResults.size > 7) {
+                ListExpandToggleButton(
+                    isExpanded = isExpanded,
+                    onToggle = { isExpanded = !isExpanded },
+                    title = R.string.action_show_more,
+                    description = R.string.action_show_less,
+                    expandedText = stringResource(R.string.action_show_less),
+                    collapsedText = stringResource(R.string.action_show_more),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 8.dp, bottom = 4.dp),
                 )
             }
+        }
+
+        if (matchingTiles.isNotEmpty()) {
+            QSTilesSearchResultCard(
+                tiles = matchingTiles,
+                viewModel = viewModel,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
+        }
+
+        if (matchingPermissions.isNotEmpty()) {
+            PermissionsSearchResultCard(
+                permissions = matchingPermissions,
+                viewModel = viewModel,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
         }
     }
 }

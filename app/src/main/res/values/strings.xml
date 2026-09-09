@@ -450,6 +450,9 @@
     <string name="sound_mode_sound">Sound</string>
     <string name="sound_mode_vibrate">Vibrate</string>
     <string name="sound_mode_silent">Silent</string>
+    <string name="sound_mode_use_shizuku_title">Use Shizuku</string>
+    <string name="sound_mode_use_shizuku_desc">Use Shizuku to set ringer mode without activating DND</string>
+    <string name="sound_mode_shizuku_info">Due to AOSP limitations, Android treats silent mode as DND. But with Shizuku we can override it. It will dynamically use Shizuku if available or fallback to regular DND mode.</string>
 
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Connectivity</string>
@@ -555,6 +558,7 @@
     <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
     <string name="action_pin">Pin to Favorites</string>
     <string name="action_unpin">Unpin from Favorites</string>
+    <string name="action_reorder">Re-order</string>
 
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
@@ -807,7 +811,7 @@
 
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
+    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku to proceed.</string>
     <string name="perm_shizuku_install_action">Install Shizuku</string>
     <string name="perm_shizuku_grant_title">Grant Permission</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
@@ -915,8 +919,24 @@
     <string name="sentry_report_mode_title">Crash reporting</string>
     <string name="sentry_mode_off">Off</string>
     <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="sentry_crash_toast">Essentials crashed, report saved and sent</string>
     <string name="simulate_crash">Simulate crash</string>
+    <string name="crash_logs_title">Crash logs</string>
+    <string name="crash_logs_desc">View and share recent crash reports</string>
+    <string name="btn_clear_all_crash_logs">Clear all</string>
+    <string name="toast_crash_logs_cleared">Crash logs cleared</string>
+    <string name="toast_no_crash_logs">No crash logs found</string>
+    <string name="btn_export_config">Export Config</string>
+    <string name="btn_import_config">Import Config</string>
+    <string name="btn_reset_onboarding">Reset onboarding</string>
+    <string name="btn_reset_update_note">Reset update note</string>
+    <string name="toast_onboarding_reset">Onboarding reset</string>
+    <string name="toast_update_note_reset">Update note reset</string>
+    <string name="label_developer_options">Developer Options</string>
+    <string name="label_wallpaper_update">Wallpaper Update</string>
+    <string name="btn_wallpaper_desktop">Desktop</string>
+    <string name="btn_wallpaper_both">Both</string>
+    <string name="btn_wallpaper_mobile">Mobile</string>
     <string name="welcome_title">Welcome to Essentials</string>
     <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
@@ -2005,6 +2025,7 @@
     <string name="label_ripple_animation">Ripple animation</string>
     <string name="desc_ripple_animation">Enable liquid ripple animations across the UI</string>
     <string name="label_motion_blur">Motion blur</string>
+    <string name="label_online_help_media">Online help media</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <string name="setting_swipe_tabs_title">Swipe between tabs</string>
     <string name="setting_swipe_tabs_desc">In home screen</string>
@@ -2212,6 +2233,8 @@
     <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
 
     <!-- Developer Settings & Wallpaper Check -->
+    <string name="btn_clear_search_history">Clear search history</string>
+    <string name="toast_search_history_cleared">Search history cleared</string>
     <string name="import_config_sheet_title">Restore Configuration</string>
     <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
     <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
@@ -2368,8 +2391,13 @@
     <string name="feat_aod_wallpaper_timeout_10m">10 min</string>
     <string name="feat_aod_wallpaper_blur">Blur</string>
     <string name="feat_aod_wallpaper_vignette">Vignette</string>
+    <string name="feat_aod_wallpaper_black_threshold">Black threshold</string>
     <string name="feat_aod_wallpaper_pick_image">Pick image</string>
     <string name="feat_aod_wallpaper_remove_custom_image">Remove custom image</string>
+    <string name="feat_aod_wallpaper_media_section_title">Media</string>
+    <string name="feat_aod_wallpaper_keep_on_media">Keep on while media playing</string>
+    <string name="feat_aod_wallpaper_use_album_art">Use album art</string>
+    <string name="feat_aod_wallpaper_media_apps">Skip media apps</string>
     <string name="perm_storage_title">All files access</string>
     <string name="perm_storage_desc">To read your current wallpaper which is not accessible with regular privileges, Essentials needs external storage permissions.</string>
 
@@ -2403,4 +2431,22 @@
     <string name="pixel_search_engine_desc">Default search provider used when searching the web</string>
     <string name="pixel_search_open_url_action">Open \"%1$s\"</string>
     <string name="bubble_web_link_copied">Link copied to clipboard</string>
+    <string name="label_apply_after_reboot">Apply after reboot</string>
+    <string name="qs_secure_sensitive_tiles_title">Secure sensitive tiles</string>
+    <string name="qs_secure_sensitive_tiles_desc">Request to unlock before triggering sensitive QS tiles while locked</string>
+    <string name="qs_tile_unlock_to_use">Unlock device to use %1$s</string>
+    <string name="action_show_more">Show more</string>
+    <string name="action_show_less">Show less</string>
+    <string name="action_view_all">View all</string>
+    <string name="settings_section_permissions">Permissions</string>
+    <string name="perm_calendar_title">Calendar</string>
+    <string name="perm_calendar_desc">Required to display events in Glance widgets and complications.</string>
+    <string name="action_request_permission">Request Permission</string>
+    <string name="action_grant_access">Grant Access</string>
+    <string name="action_enable_admin">Enable Admin</string>
+    <string name="action_set_as_default">Set as Default</string>
+    <string name="action_auto_grant">Auto-Grant</string>
+    <string name="settings_section_customizations">Customizations</string>
+    <string name="settings_permissions_all">All permissions</string>
+    <string name="settings_section_more">More</string>
 </resources>

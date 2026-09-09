@@ -9,12 +9,15 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,14 +39,21 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.PermissionItem
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
+import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.ShizukuUtils
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlin.math.min
@@ -54,6 +64,7 @@ fun SoundModeTileSettingsUI(
     highlightSetting: String? = null,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val prefs =
         remember {
             context.getSharedPreferences(
@@ -61,6 +72,13 @@ fun SoundModeTileSettingsUI(
                 android.content.Context.MODE_PRIVATE,
             )
         }
+    var useShizuku by remember {
+        mutableStateOf(prefs.getBoolean("sound_mode_use_shizuku", true))
+    }
+    var showPermissionSheet by remember { mutableStateOf(false) }
+    var isShizukuAvailable by remember { mutableStateOf(ShizukuUtils.isShizukuAvailable()) }
+    var hasShizukuPermission by remember { mutableStateOf(ShizukuUtils.hasPermission()) }
+
     val defaultOrder = listOf("Sound", "Vibrate", "Silent")
     val orderString =
         prefs.getString("sound_mode_order", defaultOrder.joinToString(","))
@@ -325,5 +343,84 @@ fun SoundModeTileSettingsUI(
                 }
             }
         }
+
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+            RoundedCardContainer {
+                IconToggleItem(
+                    title = stringResource(R.string.sound_mode_use_shizuku_title),
+                    description = stringResource(R.string.sound_mode_use_shizuku_desc),
+                    iconRes = R.drawable.rounded_code_24,
+                    isChecked = useShizuku,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performUIHaptic(view)
+                        if (checked) {
+                            isShizukuAvailable = ShizukuUtils.isShizukuAvailable()
+                            hasShizukuPermission = ShizukuUtils.hasPermission()
+                            if (!isShizukuAvailable || !hasShizukuPermission) {
+                                showPermissionSheet = true
+                            }
+                        }
+                        useShizuku = checked
+                        prefs.edit { putBoolean("sound_mode_use_shizuku", checked) }
+                    },
+                    onDisabledClick = {
+                        isShizukuAvailable = ShizukuUtils.isShizukuAvailable()
+                        hasShizukuPermission = ShizukuUtils.hasPermission()
+                        if (!isShizukuAvailable || !hasShizukuPermission) {
+                            showPermissionSheet = true
+                        }
+                    },
+                )
+            }
+            Text(
+                text = stringResource(R.string.sound_mode_shizuku_info),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 24.dp),
+            )
+        }
+    }
+
+    if (showPermissionSheet) {
+        val shizukuPermission =
+            PermissionItem(
+                iconRes = R.drawable.rounded_adb_24,
+                title = if (!isShizukuAvailable) R.string.perm_shizuku_title else R.string.perm_shizuku_grant_title,
+                description = if (!isShizukuAvailable) R.string.perm_shizuku_desc else R.string.perm_shizuku_grant_desc,
+                dependentFeatures = listOf(R.string.tile_sound_mode),
+                actionLabel =
+                    if (!isShizukuAvailable) {
+                        R.string.perm_shizuku_install_action
+                    } else if (hasShizukuPermission) {
+                        R.string.perm_action_granted
+                    } else {
+                        R.string.perm_action_grant
+                    },
+                action = {
+                    if (!isShizukuAvailable) {
+                        val intent =
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/thedjchi/Shizuku"),
+                            )
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    } else {
+                        ShizukuUtils.requestPermission()
+                    }
+                },
+                isGranted = hasShizukuPermission,
+            )
+
+        PermissionsBottomSheet(
+            onDismissRequest = {
+                showPermissionSheet = false
+                isShizukuAvailable = ShizukuUtils.isShizukuAvailable()
+                hasShizukuPermission = ShizukuUtils.hasPermission()
+            },
+            featureTitle = R.string.tile_sound_mode,
+            permissions = listOf(shizukuPermission),
+        )
     }
 }
