@@ -1697,4 +1697,8 @@
     <string name="label_motion_blur">モーションブラー</string>
     <string name="watch_complications_title">コンプリケーション</string>
     <string name="watch_complications_desc">コンプリケーションウィジェットをカスタマイズする</string>
+    <string name="label_online_help_media">オンラインヘルプメディア</string>
+    <string name="sound_mode_use_shizuku_desc">Shizukuを使用して、DND（サイレントモード）を有効にせずに着信モードを設定する</string>
+    <string name="qs_secure_sensitive_tiles_title">機密性の高いタイルを保護する</string>
+    <string name="qs_secure_sensitive_tiles_desc">ロック中に機密性の高いクイック設定タイルを操作する前のロック解除の要求</string>
 </resources>
