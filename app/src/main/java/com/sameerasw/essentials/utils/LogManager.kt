@@ -28,7 +28,7 @@ object LogManager {
     private val logBuffer = LinkedList<LogEntry>()
     private const val CRASH_LOG_FILENAME = "last_crash.log"
     private const val CRASH_REPORTS_DIR = "crash_reports"
-    private const val MAX_CRASH_REPORTS = 10
+    private const val MAX_CRASH_REPORTS = 5
     private var lastCrashLog: String? = null
     private val isInitialized = AtomicBoolean(false)
 

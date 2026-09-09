@@ -124,8 +124,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import androidx.core.content.FileProvider
-import com.sameerasw.essentials.utils.LogManager
+import com.sameerasw.essentials.ui.core.sheets.CrashLogsBottomSheet
 import rikka.shizuku.Shizuku
 import java.io.File
 import java.text.SimpleDateFormat
@@ -335,6 +334,7 @@ fun SettingsContent(
     val isRootPermissionGranted by viewModel.isRootPermissionGranted
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
     var showInstructionsSheet by remember { mutableStateOf(false) }
+    var showCrashLogsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
@@ -451,6 +451,12 @@ fun SettingsContent(
     if (showInstructionsSheet) {
         InstructionsBottomSheet(
             onDismissRequest = { showInstructionsSheet = false },
+        )
+    }
+
+    if (showCrashLogsSheet) {
+        CrashLogsBottomSheet(
+            onDismissRequest = { showCrashLogsSheet = false },
         )
     }
 
@@ -1267,83 +1273,15 @@ fun SettingsContent(
                     }
                 }
 
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceBright,
-                                shape = Shapes.extraSmall,
-                            ).padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Button(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            val latestCrash = LogManager.getLatestCrashReport(context)
-                            if (latestCrash != null && latestCrash.exists()) {
-                                try {
-                                    val uri = FileProvider.getUriForFile(
-                                        context,
-                                        "${context.packageName}.fileprovider",
-                                        latestCrash
-                                    )
-                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                        type = "text/plain"
-                                        putExtra(Intent.EXTRA_STREAM, uri)
-                                        putExtra(Intent.EXTRA_SUBJECT, "Essentials Crash Log - ${latestCrash.name}")
-                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                    }
-                                    context.startActivity(Intent.createChooser(shareIntent, null))
-                                } catch (e: Exception) {
-                                    Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
-                                }
-                            } else {
-                                Toast.makeText(context, context.getString(R.string.toast_no_crash_logs), Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .height(40.dp),
-                        shape = ButtonDefaults.shape,
-                        colors =
-                            ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            ),
-                        contentPadding = PaddingValues(0.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.btn_share_crash_logs),
-                            style = MaterialTheme.typography.labelMedium,
-                        )
-                    }
-
-                    Button(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            LogManager.clearAllCrashReports(context)
-                            Toast.makeText(context, context.getString(R.string.toast_crash_logs_cleared), Toast.LENGTH_SHORT).show()
-                        },
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .height(40.dp),
-                        shape = ButtonDefaults.shape,
-                        colors =
-                            ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                contentColor = MaterialTheme.colorScheme.onSurface,
-                            ),
-                        contentPadding = PaddingValues(0.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.btn_clear_crash_logs),
-                            style = MaterialTheme.typography.labelMedium,
-                        )
-                    }
-                }
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_bug_report_24,
+                    title = stringResource(R.string.crash_logs_title),
+                    description = stringResource(R.string.crash_logs_desc),
+                    showToggle = false,
+                    onClick = {
+                        showCrashLogsSheet = true
+                    },
+                )
 
                 Row(
                     modifier =
