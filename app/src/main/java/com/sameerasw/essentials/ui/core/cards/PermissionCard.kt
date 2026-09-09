@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
@@ -119,7 +120,7 @@ fun PermissionCard(
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.extraSmall,
+        shape = Shapes.extraSmall,
         colors =
             CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceBright,

@@ -564,7 +564,7 @@ fun SettingsContent(
     ) {
         val view = LocalView.current
 
-        // Help Section
+        // Help & Permissions Section
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_help_24,
@@ -579,6 +579,101 @@ fun SettingsContent(
                         .fillMaxWidth()
                         .height(72.dp),
             )
+
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(72.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = Shapes.extraSmall,
+                        )
+                        .onGloballyPositioned { coordinates ->
+                            permissionsSectionY = coordinates.positionInParent().y
+                        }
+                        .clickable { isPermissionsExpanded = !isPermissionsExpanded }
+                        .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_shield_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_section_permissions),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                Icon(
+                    painter =
+                        painterResource(
+                            id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
+                        ),
+                    contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isPermissionsExpanded,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                val permissionItems =
+                    remember(
+                        isAccessibilityEnabled,
+                        isWriteSecureSettingsEnabled,
+                        isRootEnabled,
+                        isRootPermissionGranted,
+                        isShizukuPermissionGranted,
+                        isShizukuAvailable,
+                        isReadPhoneStateEnabled,
+                        isPostNotificationsEnabled,
+                        isOverlayPermissionGranted,
+                        isNotificationListenerEnabled,
+                        isWriteSettingsEnabled,
+                        isNotificationPolicyAccessGranted,
+                        isDefaultBrowserSet,
+                        isUsageStatsPermissionGranted,
+                        isLocationPermissionGranted,
+                        isBackgroundLocationPermissionGranted,
+                        isDeviceAdminEnabled,
+                        isCalendarPermissionGranted,
+                    ) {
+                        PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
+                    }
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    permissionItems.forEach { item ->
+                        PermissionCard(
+                            iconRes = item.iconRes,
+                            title = item.title,
+                            dependentFeatures = item.dependentFeatures,
+                            actionLabel = item.actionLabel ?: R.string.perm_action_grant,
+                            isGranted = item.isGranted,
+                            onActionClick = { item.action?.invoke() },
+                            secondaryActionLabel = item.secondaryActionLabel,
+                            onSecondaryActionClick = item.secondaryAction,
+                            shizukuActionLabel = item.shizukuActionLabel,
+                            shizukuActionEnabled = item.shizukuActionEnabled,
+                            onShizukuActionClick = item.shizukuAction,
+                            instructions = item.instructions,
+                            description = item.description,
+                        )
+                    }
+                }
+            }
         }
 
         // Updates Section
@@ -1045,93 +1140,6 @@ fun SettingsContent(
                 iconRes = R.drawable.rounded_refresh_24,
             )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Permissions Section
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned { coordinates ->
-                        permissionsSectionY = coordinates.positionInParent().y
-                    }
-                    .clickable { isPermissionsExpanded = !isPermissionsExpanded }
-                    .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_section_permissions),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            Icon(
-                painter =
-                    painterResource(
-                        id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
-                    ),
-                contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-
-        AnimatedVisibility(
-            visible = isPermissionsExpanded,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut(),
-        ) {
-            val permissionItems =
-                remember(
-                    isAccessibilityEnabled,
-                    isWriteSecureSettingsEnabled,
-                    isRootEnabled,
-                    isRootPermissionGranted,
-                    isShizukuPermissionGranted,
-                    isShizukuAvailable,
-                    isReadPhoneStateEnabled,
-                    isPostNotificationsEnabled,
-                    isOverlayPermissionGranted,
-                    isNotificationListenerEnabled,
-                    isWriteSettingsEnabled,
-                    isNotificationPolicyAccessGranted,
-                    isDefaultBrowserSet,
-                    isUsageStatsPermissionGranted,
-                    isLocationPermissionGranted,
-                    isBackgroundLocationPermissionGranted,
-                    isDeviceAdminEnabled,
-                    isCalendarPermissionGranted,
-                ) {
-                    PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
-                }
-
-            RoundedCardContainer {
-                permissionItems.forEach { item ->
-                    PermissionCard(
-                        iconRes = item.iconRes,
-                        title = item.title,
-                        dependentFeatures = item.dependentFeatures,
-                        actionLabel = item.actionLabel ?: R.string.perm_action_grant,
-                        isGranted = item.isGranted,
-                        onActionClick = { item.action?.invoke() },
-                        secondaryActionLabel = item.secondaryActionLabel,
-                        onSecondaryActionClick = item.secondaryAction,
-                        shizukuActionLabel = item.shizukuActionLabel,
-                        shizukuActionEnabled = item.shizukuActionEnabled,
-                        onShizukuActionClick = item.shizukuAction,
-                        instructions = item.instructions,
-                        description = item.description,
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         MadebySameeraswCard()
 
