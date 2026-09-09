@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -38,6 +39,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -48,6 +50,7 @@ fun NavigationSettingsUI(
     highlightSetting: String? = null,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     var requestingPermissionFor by remember { mutableStateOf(PermissionModule.NONE) }
 
     if (requestingPermissionFor != PermissionModule.NONE) {
@@ -233,17 +236,16 @@ fun NavigationSettingsUI(
                 description = stringResource(R.string.feat_circle_to_search_gesture_desc),
                 isChecked = viewModel.isCircleToSearchGestureEnabled.value,
                 onCheckedChange = { enabled ->
+                    HapticUtil.performUIHaptic(view)
                     if (isShellGranted && isAccessibilityEnabled) {
                         viewModel.setCircleToSearchGestureEnabled(enabled, context)
                     } else {
                         requestingPermissionFor = PermissionModule.CIRCLE_TO_SEARCH
                     }
                 },
-                enabled = true,
+                enabled = isShellGranted && isAccessibilityEnabled,
                 onDisabledClick = {
-                    if (!isShellGranted || !isAccessibilityEnabled) {
-                        requestingPermissionFor = PermissionModule.CIRCLE_TO_SEARCH
-                    }
+                    requestingPermissionFor = PermissionModule.CIRCLE_TO_SEARCH
                 },
                 iconRes = R.drawable.rounded_touch_app_24,
                 modifier = Modifier.highlight(highlightSetting == "circle_to_search_gesture_toggle"),
