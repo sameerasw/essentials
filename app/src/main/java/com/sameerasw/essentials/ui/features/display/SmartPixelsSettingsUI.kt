@@ -43,7 +43,8 @@ fun SmartPixelsSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
+    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
+    val isSmartPixelsEnabled by viewModel.isSmartPixelsEnabled
     var showPermissionSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -70,7 +71,7 @@ fun SmartPixelsSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_grain_24,
                 title = stringResource(R.string.smart_pixels_enable_title),
-                isChecked = viewModel.isSmartPixelsEnabled.value,
+                isChecked = isSmartPixelsEnabled && isAccessibilityEnabled,
                 onCheckedChange = { checked ->
                     HapticUtil.performUIHaptic(view)
                     if (isAccessibilityEnabled) {
@@ -106,6 +107,7 @@ fun SmartPixelsSettingsUI(
                 valueRange = 10f..90f,
                 increment = 5f,
                 iconRes = R.drawable.rounded_blur_linear_24,
+                enabled = isSmartPixelsEnabled && isAccessibilityEnabled,
                 modifier = Modifier.highlight(highlightSetting == "smart_pixels_intensity_slider"),
             )
         }
@@ -123,6 +125,7 @@ fun SmartPixelsSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setSmartPixelsDisableOnCastEnabled(context, checked)
                 },
+                enabled = isSmartPixelsEnabled && isAccessibilityEnabled,
                 modifier = Modifier.highlight(highlightSetting == "smart_pixels_disable_on_cast_toggle"),
             )
         }

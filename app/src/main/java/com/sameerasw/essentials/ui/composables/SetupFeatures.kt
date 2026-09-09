@@ -460,6 +460,26 @@ fun SetupFeatures(
                     }
                 }
 
+                R.string.feat_smart_pixels_title -> {
+                    if (!isAccessibilityEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = R.string.perm_accessibility_title,
+                                description = R.string.perm_accessibility_desc_common,
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = R.string.perm_action_enable,
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isAccessibilityEnabled,
+                            ),
+                        )
+                    }
+                }
+
                 R.string.feat_call_vibrations_title -> {
                     if (!viewModel.isReadPhoneStateEnabled.value) {
                         missing.add(
@@ -746,6 +766,23 @@ fun SetupFeatures(
                 }
 
                 R.string.feat_app_lock_title ->
+                    listOf(
+                        PermissionItem(
+                            iconRes = R.drawable.rounded_settings_accessibility_24,
+                            title = R.string.perm_accessibility_title,
+                            description = R.string.perm_accessibility_desc_common,
+                            dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                            actionLabel = R.string.perm_action_enable,
+                            action = {
+                                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(intent)
+                            },
+                            isGranted = isAccessibilityEnabled,
+                        ),
+                    )
+
+                R.string.feat_smart_pixels_title ->
                     listOf(
                         PermissionItem(
                             iconRes = R.drawable.rounded_settings_accessibility_24,
