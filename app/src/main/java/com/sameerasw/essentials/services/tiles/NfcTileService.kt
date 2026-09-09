@@ -21,6 +21,8 @@ import java.lang.reflect.Method
 
 @RequiresApi(Build.VERSION_CODES.N)
 class NfcTileService : BaseTileService() {
+    override val isSensitiveTile: Boolean = true
+
     private val nfcReceiver =
         object : android.content.BroadcastReceiver() {
             override fun onReceive(

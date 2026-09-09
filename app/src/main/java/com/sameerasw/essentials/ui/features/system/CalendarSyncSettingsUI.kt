@@ -65,6 +65,20 @@ fun CalendarSyncSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_calendar_today_24,
+                title = stringResource(R.string.feat_calendar_sync_title),
+                isChecked = isEnabled,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setCalendarSyncEnabled(checked, context)
+                },
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
         Text(
             text = stringResource(R.string.calendar_sync_settings_title),
             style = MaterialTheme.typography.titleMedium,

@@ -2004,6 +2004,7 @@
     <string name="label_ripple_animation">Ripple animation</string>
     <string name="desc_ripple_animation">Enable liquid ripple animations across the UI</string>
     <string name="label_motion_blur">Motion blur</string>
+    <string name="label_online_help_media">Online help media</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <string name="setting_swipe_tabs_title">Swipe between tabs</string>
     <string name="setting_swipe_tabs_desc">In home screen</string>
@@ -2410,4 +2411,18 @@
     <string name="pixel_search_open_url_action">Open \"%1$s\"</string>
     <string name="bubble_web_link_copied">Link copied to clipboard</string>
     <string name="label_apply_after_reboot">Apply after reboot</string>
+    <string name="qs_secure_sensitive_tiles_title">Secure sensitive tiles</string>
+    <string name="qs_secure_sensitive_tiles_desc">Request to unlock before triggering sensitive QS tiles while locked</string>
+    <string name="qs_tile_unlock_to_use">Unlock device to use %1$s</string>
+    <string name="action_show_more">Show more</string>
+    <string name="action_show_less">Show less</string>
+    <string name="action_view_all">View all</string>
+    <string name="settings_section_permissions">Permissions</string>
+    <string name="perm_calendar_title">Calendar</string>
+    <string name="perm_calendar_desc">Required to display events in Glance widgets and complications.</string>
+    <string name="action_request_permission">Request Permission</string>
+    <string name="action_grant_access">Grant Access</string>
+    <string name="action_enable_admin">Enable Admin</string>
+    <string name="action_set_as_default">Set as Default</string>
+    <string name="action_auto_grant">Auto-Grant</string>
 </resources>

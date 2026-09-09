@@ -38,6 +38,9 @@ import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 
+import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.utils.HapticUtil
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CaffeinateSettingsUI(
@@ -46,6 +49,8 @@ fun CaffeinateSettingsUI(
     highlightSetting: String? = null,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
+    val isCaffeinateActive by viewModel.isActive
 
     var showPermissionSheet by remember { mutableStateOf(false) }
 
@@ -104,6 +109,17 @@ fun CaffeinateSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_coffee_24,
+                title = stringResource(R.string.feat_caffeinate_title),
+                isChecked = isCaffeinateActive,
+                onCheckedChange = { _ ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.toggle(context)
+                },
+            )
+        }
         RoundedCardContainer {
             IconToggleItem(
                 title = stringResource(R.string.caffeinate_battery_optimization_title),

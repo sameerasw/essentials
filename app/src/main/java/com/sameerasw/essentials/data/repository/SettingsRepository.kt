@@ -273,6 +273,7 @@ class SettingsRepository(
 
         const val KEY_PINNED_FEATURES = "pinned_features"
         const val KEY_PINNED_QS_TILES = "pinned_qs_tiles"
+        const val KEY_SECURE_SENSITIVE_TILES = "secure_sensitive_tiles"
         const val KEY_LIKE_SONG_TOAST_ENABLED = "like_song_toast_enabled"
         const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
@@ -336,6 +337,7 @@ class SettingsRepository(
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
         const val KEY_MOTION_BLUR = "motion_blur"
+        const val KEY_ONLINE_HELP_MEDIA = "online_help_media"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
@@ -1674,6 +1676,10 @@ class SettingsRepository(
      * @return The resulting Boolean data.
      */
     fun isShutUpAttemptShizukuRestartEnabled(): Boolean = getBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, true)
+
+    fun isOnlineHelpMediaEnabled(): Boolean = getBoolean(KEY_ONLINE_HELP_MEDIA, true)
+
+    fun setOnlineHelpMediaEnabled(enabled: Boolean) = putBoolean(KEY_ONLINE_HELP_MEDIA, enabled)
 
     /**
      * Executes the set shut up attempt shizuku restart enabled operation.
@@ -3037,4 +3043,7 @@ class SettingsRepository(
 
     fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)
     fun setBubbleWebFullscreen(fullscreen: Boolean) = putBoolean(KEY_BUBBLE_WEB_FULLSCREEN, fullscreen)
+
+    fun isSecureSensitiveTilesEnabled(): Boolean = getBoolean(KEY_SECURE_SENSITIVE_TILES, true)
+    fun setSecureSensitiveTilesEnabled(enabled: Boolean) = putBoolean(KEY_SECURE_SENSITIVE_TILES, enabled)
 }

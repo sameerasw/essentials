@@ -90,7 +90,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 62
-        versionName = "18.0-beta.1"
+        versionName = "18.0-beta.2"
 
         val whatsNewCounter = 2
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
@@ -220,9 +220,10 @@ dependencies {
     // AutoUpdater
     implementation(libs.autoupdater)
 
-    // Media3 for Live Wallpaper
+    // Media3 for Live Wallpaper & Online Help Media
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.media3.ui)
 
     // RemoteIntent support
     implementation(libs.androidx.wear.remote.interactions.v110alpha02)

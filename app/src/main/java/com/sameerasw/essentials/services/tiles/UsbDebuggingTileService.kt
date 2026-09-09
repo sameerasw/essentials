@@ -21,6 +21,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class UsbDebuggingTileService : BaseTileService() {
+    override val isSensitiveTile: Boolean = true
+
     override fun onClick() {
         if (!hasFeaturePermission()) {
             val intent =

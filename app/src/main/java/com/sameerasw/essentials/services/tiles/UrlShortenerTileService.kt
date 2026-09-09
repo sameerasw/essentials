@@ -29,6 +29,8 @@ import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.N)
 class UrlShortenerTileService : BaseTileService() {
+    override val isSensitiveTile: Boolean = true
+
     override fun getTileLabel(): String = getString(R.string.tile_url_shortener)
 
     override fun getTileSubtitle(): String = getString(R.string.tile_url_shortener_subtitle)

@@ -19,6 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.getValue
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -34,14 +37,29 @@ fun SnoozeNotificationsSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val isMasterEnabled by viewModel.isSnoozeHeadsUpEnabled
 
     Column(
         modifier =
             modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_snooze_24,
+                title = stringResource(R.string.feat_snooze_notifications_title),
+                isChecked = isMasterEnabled,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setSnoozeHeadsUpEnabled(checked, context)
+                },
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
         RoundedCardContainer(
             modifier = Modifier,
             spacing = 2.dp,
@@ -62,6 +80,7 @@ fun SnoozeNotificationsSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setSnoozeChannelBlocked(channel.id, checked, context)
                     },
+                    enabled = isMasterEnabled,
                     modifier = Modifier.highlight(highlightSetting == channel.id),
                 )
             }

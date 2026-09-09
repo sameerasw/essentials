@@ -302,12 +302,14 @@ class MainViewModel : ViewModel() {
     val isLocationReachedFullScreenAlarmEnabled = mutableStateOf(true)
 
     val isEnableUnsupportedFeatures = mutableStateOf(false)
+    val isSecureSensitiveTilesEnabled = mutableStateOf(true)
     val isBlurEnabled = mutableStateOf(true)
     val isBlurSettingEnabled = mutableStateOf(true)
     val isRippleEnabled = mutableStateOf(true)
     val isRippleSettingEnabled = mutableStateOf(true)
     val isMotionBlurEnabled = mutableStateOf(false)
     val isMotionBlurSettingEnabled = mutableStateOf(false)
+    val isOnlineHelpMediaEnabled = mutableStateOf(true)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
     val isPowerSaveModeEnabled = mutableStateOf(false)
@@ -593,6 +595,11 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
+                    SettingsRepository.KEY_SECURE_SENSITIVE_TILES -> {
+                        isSecureSensitiveTilesEnabled.value =
+                            settingsRepository.isSecureSensitiveTilesEnabled()
+                    }
+
                     SettingsRepository.KEY_KEYBOARD_HEIGHT ->
                         keyboardHeight.floatValue =
                             settingsRepository.getFloat(key, 54f)
@@ -827,6 +834,10 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_MOTION_BLUR -> {
                         appContext?.let { updateMotionBlurState(it) }
+                    }
+
+                    SettingsRepository.KEY_ONLINE_HELP_MEDIA -> {
+                        isOnlineHelpMediaEnabled.value = settingsRepository.isOnlineHelpMediaEnabled()
                     }
 
                     SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
@@ -1764,6 +1775,7 @@ class MainViewModel : ViewModel() {
         isLocationReachedFullScreenAlarmEnabled.value =
             settingsRepository.getLocationReachedFullScreenAlarmEnabled()
         isEnableUnsupportedFeatures.value = settingsRepository.isEnableUnsupportedFeatures()
+        isSecureSensitiveTilesEnabled.value = settingsRepository.isSecureSensitiveTilesEnabled()
 
         keyboardHeight.floatValue =
             settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)
@@ -2044,6 +2056,11 @@ class MainViewModel : ViewModel() {
         if (searchQuery.value.isNotBlank()) {
             onSearchQueryChanged(searchQuery.value, context)
         }
+    }
+
+    fun setSecureSensitiveTilesEnabled(enabled: Boolean) {
+        isSecureSensitiveTilesEnabled.value = enabled
+        settingsRepository.setSecureSensitiveTilesEnabled(enabled)
     }
 
     /**
@@ -2556,6 +2573,14 @@ class MainViewModel : ViewModel() {
     ) {
         settingsRepository.putBoolean(SettingsRepository.KEY_MOTION_BLUR, enabled)
         updateMotionBlurState(context)
+    }
+
+    fun setOnlineHelpMediaEnabled(
+        enabled: Boolean,
+        context: Context? = null,
+    ) {
+        settingsRepository.setOnlineHelpMediaEnabled(enabled)
+        isOnlineHelpMediaEnabled.value = enabled
     }
 
     /**
