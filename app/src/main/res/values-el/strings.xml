@@ -362,7 +362,7 @@
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
     <string name="feat_other_customizations_title">Λοιπές προσαρμογές</string>
-    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_other_customizations_desc">Επιπλέον τροποποιήσεις και προσαρμογές συστήματος</string>
     <string name="status_bar_icons_disclaimer">Λάβετε υπόψη ότι η υλοποίηση αυτών των επιλογών μπορεί να εξαρτάται από τον OEM και ορισμένες μπορεί να μην είναι καθόλου λειτουργικές.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Αλλος</string>
