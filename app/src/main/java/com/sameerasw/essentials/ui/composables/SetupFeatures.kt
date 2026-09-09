@@ -17,6 +17,8 @@ import android.content.Intent
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -1579,9 +1581,18 @@ private fun SearchResultsSection(
             )
         }
 
+    var isExpanded by rememberSaveable(query) { mutableStateOf(false) }
+
     val nonQSSearchResults =
         remember(searchResults) {
             searchResults.filter { it.featureKey != "Quick settings tiles" }
+        }
+
+    val visibleResults =
+        if (!isExpanded && nonQSSearchResults.size > 7) {
+            nonQSSearchResults.take(7)
+        } else {
+            nonQSSearchResults
         }
 
     if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty()) {
@@ -1594,120 +1605,145 @@ private fun SearchResultsSection(
 
         if (nonQSSearchResults.isNotEmpty()) {
             RoundedCardContainer(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
             ) {
-                for (result in nonQSSearchResults) {
-                    FeatureCard(
-                        title = result.title,
-                        isEnabled = true,
-                        onToggle = {},
-                        onClick = {
-                            viewModel.addRecentSearch(result)
-                            val feature = allFeatures.find { it.id == result.featureKey }
-                            if (feature != null) {
-                                val targetFeatureKey =
-                                    if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                        feature.parentFeatureId
-                                    } else {
-                                        feature.id
-                                    }
-                                val highlightKey =
-                                    if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                        feature.id
-                                    } else {
-                                        result.targetSettingHighlightKey
-                                    }
-                                BiometricSecurityHelper.runWithAuth(
-                                    activity = context as FragmentActivity,
-                                    feature = feature,
-                                    action = {
-                                        val intent =
-                                            if (targetFeatureKey == "Pixel Searchbar") {
-                                                Intent(
-                                                    context,
-                                                    PixelSearchbarSettingsActivity::class.java,
-                                                )
-                                            } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
-                                                Intent(
-                                                    context,
-                                                    WallpaperActivity::class.java,
-                                                ).apply {
-                                                    putExtra(
-                                                        "tab",
-                                                        if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .animateContentSize(animationSpec = tween(durationMillis = 300)),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    for (result in visibleResults) {
+                        FeatureCard(
+                            title = result.title,
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                viewModel.addRecentSearch(result)
+                                val feature = allFeatures.find { it.id == result.featureKey }
+                                if (feature != null) {
+                                    val targetFeatureKey =
+                                        if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                            feature.parentFeatureId
+                                        } else {
+                                            feature.id
+                                        }
+                                    val highlightKey =
+                                        if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                            feature.id
+                                        } else {
+                                            result.targetSettingHighlightKey
+                                        }
+                                    BiometricSecurityHelper.runWithAuth(
+                                        activity = context as FragmentActivity,
+                                        feature = feature,
+                                        action = {
+                                            val intent =
+                                                if (targetFeatureKey == "Pixel Searchbar") {
+                                                    Intent(
+                                                        context,
+                                                        PixelSearchbarSettingsActivity::class.java,
                                                     )
-                                                }
-                                            } else if (targetFeatureKey == "App updates") {
-                                                Intent(
-                                                    context,
-                                                    YourAndroidActivity::class.java,
-                                                )
-                                            } else {
-                                                Intent(
-                                                    context,
-                                                    FeatureSettingsActivity::class.java,
-                                                ).apply {
-                                                    putExtra("feature", targetFeatureKey)
-                                                    highlightKey?.let {
-                                                        putExtra("highlight_setting", it)
+                                                } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                                    Intent(
+                                                        context,
+                                                        WallpaperActivity::class.java,
+                                                    ).apply {
+                                                        putExtra(
+                                                            "tab",
+                                                            if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                                                        )
+                                                    }
+                                                } else if (targetFeatureKey == "App updates") {
+                                                    Intent(
+                                                        context,
+                                                        YourAndroidActivity::class.java,
+                                                    )
+                                                } else {
+                                                    Intent(
+                                                        context,
+                                                        FeatureSettingsActivity::class.java,
+                                                    ).apply {
+                                                        putExtra("feature", targetFeatureKey)
+                                                        highlightKey?.let {
+                                                            putExtra("highlight_setting", it)
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        context.startActivity(intent)
-                                    },
-                                )
-                            } else {
-                                val intent =
-                                    if (result.featureKey == "Pixel Searchbar") {
-                                        Intent(
-                                            context,
-                                            PixelSearchbarSettingsActivity::class.java,
-                                        )
-                                    } else if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
-                                        Intent(
-                                            context,
-                                            WallpaperActivity::class.java,
-                                        ).apply {
-                                            putExtra(
-                                                "tab",
-                                                if (result.featureKey == "LiveWallpaper") "live" else "daily",
+                                            context.startActivity(intent)
+                                        },
+                                    )
+                                } else {
+                                    val intent =
+                                        if (result.featureKey == "Pixel Searchbar") {
+                                            Intent(
+                                                context,
+                                                PixelSearchbarSettingsActivity::class.java,
                                             )
-                                        }
-                                    } else if (result.featureKey == "App updates") {
-                                        Intent(
-                                            context,
-                                            YourAndroidActivity::class.java,
-                                        )
-                                    } else {
-                                        Intent(context, FeatureSettingsActivity::class.java).apply {
-                                            putExtra("feature", result.featureKey)
-                                            result.targetSettingHighlightKey?.let {
-                                                putExtra("highlight_setting", it)
+                                        } else if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
+                                            Intent(
+                                                context,
+                                                WallpaperActivity::class.java,
+                                            ).apply {
+                                                putExtra(
+                                                    "tab",
+                                                    if (result.featureKey == "LiveWallpaper") "live" else "daily",
+                                                )
+                                            }
+                                        } else if (result.featureKey == "App updates") {
+                                            Intent(
+                                                context,
+                                                YourAndroidActivity::class.java,
+                                            )
+                                        } else {
+                                            Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                putExtra("feature", result.featureKey)
+                                                result.targetSettingHighlightKey?.let {
+                                                    putExtra("highlight_setting", it)
+                                                }
                                             }
                                         }
-                                    }
-                                context.startActivity(intent)
-                            }
-                        },
-                        iconRes = result.icon ?: R.drawable.rounded_settings_24,
-                        modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                        showToggle = false,
-                        hasMoreSettings = true,
-                        isBeta = result.isBeta,
-                        descriptionOverride =
-                            if (result.parentFeature !=
-                                null
-                            ) {
-                                "${result.parentFeature} > ${result.description}"
-                            } else {
-                                result.description
+                                    context.startActivity(intent)
+                                }
                             },
-                        isPinned = pinnedFeatureKeys.contains(result.featureKey),
-                        onPinToggle = {
-                            viewModel.togglePinFeature(result.featureKey)
-                        },
-                    )
+                            iconRes = result.icon ?: R.drawable.rounded_settings_24,
+                            modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                            showToggle = false,
+                            hasMoreSettings = true,
+                            isBeta = result.isBeta,
+                            descriptionOverride =
+                                if (result.parentFeature !=
+                                    null
+                                ) {
+                                    "${result.parentFeature} > ${result.description}"
+                                } else {
+                                    result.description
+                                },
+                            isPinned = pinnedFeatureKeys.contains(result.featureKey),
+                            onPinToggle = {
+                                viewModel.togglePinFeature(result.featureKey)
+                            },
+                        )
+                    }
                 }
+            }
+
+            if (nonQSSearchResults.size > 7) {
+                ListExpandToggleButton(
+                    isExpanded = isExpanded,
+                    onToggle = { isExpanded = !isExpanded },
+                    title = R.string.action_show_more,
+                    description = R.string.action_show_less,
+                    expandedText = stringResource(R.string.action_show_less),
+                    collapsedText = stringResource(R.string.action_show_more),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 8.dp, bottom = 4.dp),
+                )
             }
         }
 
