@@ -2441,4 +2441,7 @@
     <string name="action_enable_admin">Enable Admin</string>
     <string name="action_set_as_default">Set as Default</string>
     <string name="action_auto_grant">Auto-Grant</string>
+    <string name="settings_section_customizations">Customizations</string>
+    <string name="settings_permissions_all">All permissions</string>
+    <string name="settings_section_more">More</string>
 </resources>

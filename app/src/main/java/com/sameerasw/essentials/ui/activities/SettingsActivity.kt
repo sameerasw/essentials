@@ -564,7 +564,7 @@ fun SettingsContent(
     ) {
         val view = LocalView.current
 
-        // Help & Permissions Section
+        // Help & Guides
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_help_24,
@@ -579,104 +579,9 @@ fun SettingsContent(
                         .fillMaxWidth()
                         .height(72.dp),
             )
-
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(72.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceBright,
-                            shape = Shapes.extraSmall,
-                        )
-                        .onGloballyPositioned { coordinates ->
-                            permissionsSectionY = coordinates.positionInParent().y
-                        }
-                        .clickable { isPermissionsExpanded = !isPermissionsExpanded }
-                        .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_shield_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    Text(
-                        text = stringResource(R.string.settings_section_permissions),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-                Icon(
-                    painter =
-                        painterResource(
-                            id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
-                        ),
-                    contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            AnimatedVisibility(
-                visible = isPermissionsExpanded,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                val permissionItems =
-                    remember(
-                        isAccessibilityEnabled,
-                        isWriteSecureSettingsEnabled,
-                        isRootEnabled,
-                        isRootPermissionGranted,
-                        isShizukuPermissionGranted,
-                        isShizukuAvailable,
-                        isReadPhoneStateEnabled,
-                        isPostNotificationsEnabled,
-                        isOverlayPermissionGranted,
-                        isNotificationListenerEnabled,
-                        isWriteSettingsEnabled,
-                        isNotificationPolicyAccessGranted,
-                        isDefaultBrowserSet,
-                        isUsageStatsPermissionGranted,
-                        isLocationPermissionGranted,
-                        isBackgroundLocationPermissionGranted,
-                        isDeviceAdminEnabled,
-                        isCalendarPermissionGranted,
-                    ) {
-                        PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
-                    }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    permissionItems.forEach { item ->
-                        PermissionCard(
-                            iconRes = item.iconRes,
-                            title = item.title,
-                            dependentFeatures = item.dependentFeatures,
-                            actionLabel = item.actionLabel ?: R.string.perm_action_grant,
-                            isGranted = item.isGranted,
-                            onActionClick = { item.action?.invoke() },
-                            secondaryActionLabel = item.secondaryActionLabel,
-                            onSecondaryActionClick = item.secondaryAction,
-                            shizukuActionLabel = item.shizukuActionLabel,
-                            shizukuActionEnabled = item.shizukuActionEnabled,
-                            onShizukuActionClick = item.shizukuAction,
-                            instructions = item.instructions,
-                            description = item.description,
-                        )
-                    }
-                }
-            }
         }
 
-        // Updates Section
+        // Updates 
         Text(
             text = "Updates",
             style = MaterialTheme.typography.titleMedium,
@@ -762,19 +667,41 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // App Settings Section
+        // Customizations 
         Text(
-            text = "App Settings",
+            text = stringResource(R.string.settings_section_customizations),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         RoundedCardContainer {
+            val selectedAppIcon by viewModel.selectedAppIcon
+            AppIconPicker(
+                selectedIcon = selectedAppIcon,
+                onIconSelected = { viewModel.setAppIcon(it, context) },
+                onIconSelectedWithPosition = onAppIconSelectedWithPosition,
+            )
+
             val appLanguage by viewModel.appLanguage
             LanguagePicker(
                 selectedLanguageCode = appLanguage,
                 onLanguageSelected = { viewModel.setAppLanguage(it) },
+            )
+
+            val defaultTab by viewModel.defaultTab
+            val availableTabs = remember { DIYTabs.entries }
+            DefaultTabPicker(
+                selectedTab = defaultTab,
+                onTabSelected = { viewModel.setDefaultTab(it, context) },
+                options = availableTabs,
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_touch_app_24,
+                title = stringResource(R.string.setting_swipe_tabs_title),
+                isChecked = viewModel.isSwipeTabsEnabled.value,
+                onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
             )
 
             IconToggleItem(
@@ -834,39 +761,114 @@ fun SettingsContent(
                 isChecked = viewModel.isOnlineHelpMediaEnabled.value,
                 onCheckedChange = { viewModel.setOnlineHelpMediaEnabled(it, context) },
             )
-
-            CrashReportingPicker(
-                selectedMode = sentryMode,
-                onModeSelected = { viewModel.setSentryReportMode(it, context) },
-            )
-
-            val defaultTab by viewModel.defaultTab
-
-            val availableTabs = remember { DIYTabs.entries }
-            DefaultTabPicker(
-                selectedTab = defaultTab,
-                onTabSelected = { viewModel.setDefaultTab(it, context) },
-                options = availableTabs,
-            )
-
-            val selectedAppIcon by viewModel.selectedAppIcon
-            AppIconPicker(
-                selectedIcon = selectedAppIcon,
-                onIconSelected = { viewModel.setAppIcon(it, context) },
-                onIconSelectedWithPosition = onAppIconSelectedWithPosition,
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.setting_swipe_tabs_title),
-                isChecked = viewModel.isSwipeTabsEnabled.value,
-                onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
-            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Permissions 
+        Text(
+            text = stringResource(R.string.settings_section_permissions),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
         RoundedCardContainer {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(72.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = Shapes.extraSmall,
+                        )
+                        .onGloballyPositioned { coordinates ->
+                            permissionsSectionY = coordinates.positionInParent().y
+                        }
+                        .clickable { isPermissionsExpanded = !isPermissionsExpanded }
+                        .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_shield_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_permissions_all),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                Icon(
+                    painter =
+                        painterResource(
+                            id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24,
+                        ),
+                    contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isPermissionsExpanded,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                val permissionItems =
+                    remember(
+                        isAccessibilityEnabled,
+                        isWriteSecureSettingsEnabled,
+                        isRootEnabled,
+                        isRootPermissionGranted,
+                        isShizukuPermissionGranted,
+                        isShizukuAvailable,
+                        isReadPhoneStateEnabled,
+                        isPostNotificationsEnabled,
+                        isOverlayPermissionGranted,
+                        isNotificationListenerEnabled,
+                        isWriteSettingsEnabled,
+                        isNotificationPolicyAccessGranted,
+                        isDefaultBrowserSet,
+                        isUsageStatsPermissionGranted,
+                        isLocationPermissionGranted,
+                        isBackgroundLocationPermissionGranted,
+                        isDeviceAdminEnabled,
+                        isCalendarPermissionGranted,
+                    ) {
+                        PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
+                    }
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    permissionItems.forEach { item ->
+                        PermissionCard(
+                            iconRes = item.iconRes,
+                            title = item.title,
+                            dependentFeatures = item.dependentFeatures,
+                            actionLabel = item.actionLabel ?: R.string.perm_action_grant,
+                            isGranted = item.isGranted,
+                            onActionClick = { item.action?.invoke() },
+                            secondaryActionLabel = item.secondaryActionLabel,
+                            onSecondaryActionClick = item.secondaryAction,
+                            shizukuActionLabel = item.shizukuActionLabel,
+                            shizukuActionEnabled = item.shizukuActionEnabled,
+                            onShizukuActionClick = item.shizukuAction,
+                            instructions = item.instructions,
+                            description = item.description,
+                        )
+                    }
+                }
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_numbers_24,
                 title = stringResource(R.string.setting_use_root_title),
@@ -949,6 +951,33 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setUseUsageAccess(it, context) },
             )
 
+            if (isGenAISupported) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_auto_awesome_24,
+                    title = stringResource(R.string.settings_genai_automation_title),
+                    description = stringResource(R.string.settings_genai_automation_desc),
+                    isChecked = isGenAIAutomationEnabled,
+                    onCheckedChange = { viewModel.setGenAIAutomationEnabled(it, context) },
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // More
+        Text(
+            text = stringResource(R.string.settings_section_more),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            CrashReportingPicker(
+                selectedMode = sentryMode,
+                onModeSelected = { viewModel.setSentryReportMode(it, context) },
+            )
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_release_alert_24,
                 title = stringResource(R.string.setting_enable_unsupported_features_title),
@@ -962,16 +991,6 @@ fun SettingsContent(
                     }
                 },
             )
-
-            if (isGenAISupported) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_auto_awesome_24,
-                    title = stringResource(R.string.settings_genai_automation_title),
-                    description = stringResource(R.string.settings_genai_automation_desc),
-                    isChecked = isGenAIAutomationEnabled,
-                    onCheckedChange = { viewModel.setGenAIAutomationEnabled(it, context) },
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -1127,7 +1146,7 @@ fun SettingsContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         RoundedCardContainer {
             FeatureCard(
