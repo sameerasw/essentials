@@ -1141,6 +1141,8 @@ fun SettingsContent(
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         MadebySameeraswCard()
 
         Spacer(modifier = Modifier.height(4.dp))
