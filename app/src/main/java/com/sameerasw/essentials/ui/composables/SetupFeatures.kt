@@ -101,7 +101,9 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ReorderFavoritesBottomSheet
+import com.sameerasw.essentials.ui.features.permissions.PermissionsSearchResultCard
 import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
+import com.sameerasw.essentials.utils.PermissionUIHelper
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -1048,6 +1050,15 @@ fun SetupFeatures(
                     isUseUsageStats = viewModel.isUseUsageAccess.value,
                 )
             }
+        val matchingPermissions =
+            remember(searchQuery, viewModel) {
+                PermissionUIHelper.searchPermissions(
+                    context = context,
+                    query = searchQuery,
+                    viewModel = viewModel,
+                    activity = context as? Activity,
+                )
+            }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
@@ -1128,7 +1139,7 @@ fun SetupFeatures(
                                                 val size = coords.size
                                                 textCenterOffset = Offset(
                                                     x = pos.x + (size.width / 2f),
-                                                    y = pos.y + (size.height / 2f)
+                                                    y = pos.y + (size.height / 2f),
                                                 )
                                             }
                                             .graphicsLayer {
@@ -1144,26 +1155,45 @@ fun SetupFeatures(
             }
 
             item {
-                // Search Field
+                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { new ->
-                        viewModel.onSearchQueryChanged(new, context)
+                    onValueChange = {
+                        viewModel.onSearchQueryChanged(it, context)
                     },
-                    maxLines = 1,
-                    textStyle = MaterialTheme.typography.bodyLarge,
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 16.dp)
-                            .defaultMinSize(minHeight = 64.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                             .focusRequester(focusRequester)
-                            .onFocusChanged { isFocused = it.isFocused },
+                            .onFocusChanged {
+                                isFocused = it.isFocused
+                            },
                     leadingIcon = {
-                        Box(modifier = Modifier.padding(start = 16.dp, end = 8.dp)) {
-                            if (isSearchingViewModel) {
-                                LoadingIndicator()
-                            } else {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .padding(start = 12.dp, end = 4.dp)
+                                    .size(40.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = isSearchingViewModel,
+                                enter = androidx.compose.animation.fadeIn(),
+                                exit = androidx.compose.animation.fadeOut(),
+                            ) {
+                                androidx.compose.material3.CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    strokeWidth = 2.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = !isSearchingViewModel,
+                                enter = androidx.compose.animation.fadeIn(),
+                                exit = androidx.compose.animation.fadeOut(),
+                            ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.rounded_search_24),
                                     contentDescription = stringResource(R.string.label_search_content_description),
@@ -1250,7 +1280,7 @@ fun SetupFeatures(
                     )
                 }
             } else if (isFocused && searchQuery.isNotEmpty()) {
-                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty()) {
+                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty()) {
                     item {
                         Column(
                             modifier =
@@ -1580,6 +1610,15 @@ private fun SearchResultsSection(
                 isUseUsageStats = viewModel.isUseUsageAccess.value,
             )
         }
+    val matchingPermissions =
+        remember(query, viewModel) {
+            PermissionUIHelper.searchPermissions(
+                context = context,
+                query = query,
+                viewModel = viewModel,
+                activity = context as? Activity,
+            )
+        }
 
     var isExpanded by rememberSaveable(query) { mutableStateOf(false) }
 
@@ -1595,15 +1634,15 @@ private fun SearchResultsSection(
             nonQSSearchResults
         }
 
-    if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty()) {
-        Text(
-            text = stringResource(R.string.search_results_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
+    if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty() || matchingPermissions.isNotEmpty()) {
         if (nonQSSearchResults.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.search_results_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
             RoundedCardContainer(
                 modifier =
                     Modifier
@@ -1750,6 +1789,14 @@ private fun SearchResultsSection(
         if (matchingTiles.isNotEmpty()) {
             QSTilesSearchResultCard(
                 tiles = matchingTiles,
+                viewModel = viewModel,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
+        }
+
+        if (matchingPermissions.isNotEmpty()) {
+            PermissionsSearchResultCard(
+                permissions = matchingPermissions,
                 viewModel = viewModel,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             )

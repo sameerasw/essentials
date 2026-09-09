@@ -2416,4 +2416,5 @@
     <string name="action_show_more">Show more</string>
     <string name="action_show_less">Show less</string>
     <string name="action_view_all">View all</string>
+    <string name="settings_section_permissions">Permissions</string>
 </resources>

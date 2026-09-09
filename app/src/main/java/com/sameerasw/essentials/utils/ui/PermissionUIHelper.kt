@@ -495,4 +495,80 @@ object PermissionUIHelper {
         viewModel: MainViewModel,
         activity: Activity? = null,
     ): List<PermissionItem> = keys.mapNotNull { getPermissionItem(it, context, viewModel, activity) }.distinctBy { it.title }
+
+    fun getAllPermissionItems(
+        context: Context,
+        viewModel: MainViewModel,
+        activity: Activity? = null,
+    ): List<PermissionItem> {
+        val allKeys =
+            listOf(
+                "ACCESSIBILITY",
+                "WRITE_SECURE_SETTINGS",
+                "NOTIFICATION_LISTENER",
+                "DRAW_OVERLAYS",
+                "WRITE_SETTINGS",
+                "NOTIFICATION_POLICY",
+                "POST_NOTIFICATIONS",
+                "READ_PHONE_STATE",
+                "LOCATION",
+                "BACKGROUND_LOCATION",
+                "DEVICE_ADMIN",
+                "ROOT",
+                "SHIZUKU",
+                "READ_CALENDAR",
+                "USAGE_STATS",
+                "DEFAULT_BROWSER",
+                "BLUETOOTH_CONNECT",
+                "REQUEST_INSTALL_PACKAGES",
+                "READ_CONTACTS",
+                "STORAGE",
+            )
+        return getPermissionItems(allKeys, context, viewModel, activity)
+    }
+
+    fun searchPermissions(
+        context: Context,
+        query: String,
+        viewModel: MainViewModel,
+        activity: Activity? = null,
+    ): List<PermissionItem> {
+        val trimmedQuery = query.trim()
+        if (trimmedQuery.isEmpty()) return emptyList()
+
+        return getAllPermissionItems(context, viewModel, activity).filter { item ->
+            val titleStr =
+                when (val t = item.title) {
+                    is Int -> context.getString(t)
+                    is String -> t
+                    else -> ""
+                }
+            val descStr =
+                when (val d = item.description) {
+                    is Int -> context.getString(d)
+                    is String -> d
+                    else -> ""
+                }
+            val dependentFeaturesMatch =
+                item.dependentFeatures.any { featureRes ->
+                    val featureName =
+                        when (featureRes) {
+                            is Int -> {
+                                try {
+                                    context.getString(featureRes)
+                                } catch (e: Exception) {
+                                    ""
+                                }
+                            }
+                            is String -> featureRes
+                            else -> ""
+                        }
+                    featureName.contains(trimmedQuery, ignoreCase = true)
+                }
+
+            titleStr.contains(trimmedQuery, ignoreCase = true) ||
+                descStr.contains(trimmedQuery, ignoreCase = true) ||
+                dependentFeaturesMatch
+        }
+    }
 }

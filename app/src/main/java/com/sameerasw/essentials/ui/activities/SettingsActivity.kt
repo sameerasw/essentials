@@ -74,6 +74,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -214,9 +216,12 @@ class SettingsActivity : AppCompatActivity() {
                             end = 16.dp,
                         )
 
+                    val expandPermissions = intent.getBooleanExtra("expand_permissions", false)
+
                     SettingsContent(
                         viewModel = viewModel,
                         contentPadding = contentPadding,
+                        expandPermissionsInitial = expandPermissions,
                         onAppIconSelectedWithPosition = { _, pos ->
                             iconRippleOrigin = pos
                             iconRippleTrigger++
@@ -283,6 +288,7 @@ fun SettingsContent(
     viewModel: MainViewModel,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    expandPermissionsInitial: Boolean = false,
     onAppIconSelectedWithPosition: ((com.sameerasw.essentials.domain.model.AppIcon, Offset) -> Unit)? = null,
     onAvatarLongClickWithPosition: ((Offset) -> Unit)? = null,
     onRippleToggleEnabledWithPosition: ((Offset) -> Unit)? = null,
@@ -305,7 +311,7 @@ fun SettingsContent(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val context = LocalContext.current
     val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
-    var isPermissionsExpanded by remember { mutableStateOf(false) }
+    var isPermissionsExpanded by remember { mutableStateOf(expandPermissionsInitial) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
     val isUpdateAvailable by viewModel.isUpdateAvailable
@@ -527,6 +533,13 @@ fun SettingsContent(
     val sentryMode by viewModel.sentryReportMode
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
     val scrollState = rememberScrollState()
+    var permissionsSectionY by remember { mutableStateOf<Float?>(null) }
+
+    LaunchedEffect(expandPermissionsInitial, permissionsSectionY) {
+        if (expandPermissionsInitial && permissionsSectionY != null) {
+            scrollState.animateScrollTo(permissionsSectionY!!.toInt())
+        }
+    }
 
     Column(
         modifier =
@@ -1022,6 +1035,9 @@ fun SettingsContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        permissionsSectionY = coordinates.positionInParent().y
+                    }
                     .clickable { isPermissionsExpanded = !isPermissionsExpanded }
                     .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -1032,7 +1048,7 @@ fun SettingsContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = "Permissions",
+                    text = stringResource(R.string.settings_section_permissions),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
