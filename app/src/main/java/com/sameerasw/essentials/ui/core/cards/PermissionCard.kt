@@ -160,21 +160,25 @@ fun PermissionCard(
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
                             }
-                            Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            dependentFeatures.forEach { f ->
-                                val resolvedFeature =
-                                    when (f) {
-                                        is Int -> stringResource(id = f)
-                                        is String -> f
-                                        else -> ""
-                                    }
-                                Text(
-                                    text = "• $resolvedFeature",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
+                            if (dependentFeatures.isNotEmpty()) {
+                                if (resolvedDescription != null) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
+                                Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                dependentFeatures.forEach { f ->
+                                    val resolvedFeature =
+                                        when (f) {
+                                            is Int -> stringResource(id = f)
+                                            is String -> f
+                                            else -> ""
+                                        }
+                                    Text(
+                                        text = "• $resolvedFeature",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                    )
+                                }
                             }
                         }
                     },

@@ -87,7 +87,7 @@ fun PermissionsBottomSheet(
                     PermissionCard(
                         iconRes = perm.iconRes,
                         title = perm.title,
-                        dependentFeatures = perm.dependentFeatures,
+                        dependentFeatures = emptyList(),
                         actionLabel = perm.actionLabel ?: R.string.perm_action_enable,
                         isGranted = perm.isGranted,
                         onActionClick = { perm.action?.invoke() },
