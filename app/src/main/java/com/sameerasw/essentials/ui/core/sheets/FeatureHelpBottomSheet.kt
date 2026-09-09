@@ -21,10 +21,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,12 +40,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.domain.model.Feature
+import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.media.FeatureHelpMediaViewer
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FeatureHelpBottomSheet(
     onDismissRequest: () -> Unit,
@@ -50,12 +55,16 @@ fun FeatureHelpBottomSheet(
     viewModel: MainViewModel = viewModel(),
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
+
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
     ) {
         Column(
             modifier =
                 Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
@@ -87,12 +96,18 @@ fun FeatureHelpBottomSheet(
                 }
 
                 Column {
-                    com.sameerasw.essentials.translation.TranslatableText(
+                    TranslatableText(
                         stringResId = feature.title,
                         style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }
+
+            // Online Help Media 
+            FeatureHelpMediaViewer(
+                feature = feature,
+                viewModel = viewModel,
+            )
 
             // Description Body
             RoundedCardContainer(
@@ -101,7 +116,7 @@ fun FeatureHelpBottomSheet(
                 Column(modifier = Modifier.padding(16.dp)) {
                     val descRes = feature.aboutDescription ?: feature.description
 
-                    com.sameerasw.essentials.translation.TranslatableText(
+                    TranslatableText(
                         stringResId = descRes,
                         style = MaterialTheme.typography.bodyLarge,
                     )

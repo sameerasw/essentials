@@ -723,6 +723,13 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setMotionBlurEnabled(it, context) },
             )
 
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_video_24,
+                title = stringResource(R.string.label_online_help_media),
+                isChecked = viewModel.isOnlineHelpMediaEnabled.value,
+                onCheckedChange = { viewModel.setOnlineHelpMediaEnabled(it, context) },
+            )
+
             CrashReportingPicker(
                 selectedMode = sentryMode,
                 onModeSelected = { viewModel.setSentryReportMode(it, context) },

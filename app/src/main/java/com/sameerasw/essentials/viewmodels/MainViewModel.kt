@@ -309,6 +309,7 @@ class MainViewModel : ViewModel() {
     val isRippleSettingEnabled = mutableStateOf(true)
     val isMotionBlurEnabled = mutableStateOf(false)
     val isMotionBlurSettingEnabled = mutableStateOf(false)
+    val isOnlineHelpMediaEnabled = mutableStateOf(true)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
     val isPowerSaveModeEnabled = mutableStateOf(false)
@@ -833,6 +834,10 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_MOTION_BLUR -> {
                         appContext?.let { updateMotionBlurState(it) }
+                    }
+
+                    SettingsRepository.KEY_ONLINE_HELP_MEDIA -> {
+                        isOnlineHelpMediaEnabled.value = settingsRepository.isOnlineHelpMediaEnabled()
                     }
 
                     SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
@@ -2568,6 +2573,14 @@ class MainViewModel : ViewModel() {
     ) {
         settingsRepository.putBoolean(SettingsRepository.KEY_MOTION_BLUR, enabled)
         updateMotionBlurState(context)
+    }
+
+    fun setOnlineHelpMediaEnabled(
+        enabled: Boolean,
+        context: Context? = null,
+    ) {
+        settingsRepository.setOnlineHelpMediaEnabled(enabled)
+        isOnlineHelpMediaEnabled.value = enabled
     }
 
     /**

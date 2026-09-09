@@ -337,6 +337,7 @@ class SettingsRepository(
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
         const val KEY_MOTION_BLUR = "motion_blur"
+        const val KEY_ONLINE_HELP_MEDIA = "online_help_media"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
@@ -1675,6 +1676,10 @@ class SettingsRepository(
      * @return The resulting Boolean data.
      */
     fun isShutUpAttemptShizukuRestartEnabled(): Boolean = getBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, true)
+
+    fun isOnlineHelpMediaEnabled(): Boolean = getBoolean(KEY_ONLINE_HELP_MEDIA, true)
+
+    fun setOnlineHelpMediaEnabled(enabled: Boolean) = putBoolean(KEY_ONLINE_HELP_MEDIA, enabled)
 
     /**
      * Executes the set shut up attempt shizuku restart enabled operation.
