@@ -108,16 +108,21 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.PixelSearchResultItem
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import com.sameerasw.essentials.domain.registry.QSTileInfo
+import com.sameerasw.essentials.domain.registry.QSTileRegistry
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.WindowingUtils
@@ -357,10 +362,12 @@ fun PixelSearchResultsScreen(
         }
     }
 
+    val viewModel: MainViewModel = viewModel()
     var appResults by remember { mutableStateOf<List<PixelSearchResultItem.AppItem>>(emptyList()) }
     var contactResults by remember { mutableStateOf<List<PixelSearchResultItem.ContactItem>>(emptyList()) }
     var systemSettingResults by remember { mutableStateOf<List<PixelSearchResultItem.SystemSettingItem>>(emptyList()) }
     var settingResults by remember { mutableStateOf<List<PixelSearchResultItem.SettingItem>>(emptyList()) }
+    var matchingQsTiles by remember { mutableStateOf<List<QSTileInfo>>(emptyList()) }
     var shortcutResults by remember { mutableStateOf<List<PixelSearchResultItem.ShortcutItem>>(emptyList()) }
     var isSearching by remember { mutableStateOf(false) }
 
@@ -379,6 +386,7 @@ fun PixelSearchResultsScreen(
             contactResults = emptyList()
             systemSettingResults = emptyList()
             settingResults = emptyList()
+            matchingQsTiles = emptyList()
             shortcutResults = emptyList()
             isSearching = false
             return
@@ -421,12 +429,22 @@ fun PixelSearchResultsScreen(
             if (isSettingsEnabled) {
                 val systemSettings = loadSystemSettings(trimmed)
                 val results = SearchRegistry.search(context, trimmed, repository.isEnableUnsupportedFeatures())
-                val mappedSettings = results.take(6).map {
-                    PixelSearchResultItem.SettingItem(it)
-                }
+                val qsTiles = QSTileRegistry.searchTiles(
+                    context = context,
+                    query = trimmed,
+                    includeUnsupported = repository.isEnableUnsupportedFeatures(),
+                    isUseUsageStats = repository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS),
+                )
+                val mappedSettings = results
+                    .filter { it.featureKey != "Quick settings tiles" }
+                    .take(6)
+                    .map {
+                        PixelSearchResultItem.SettingItem(it)
+                    }
                 withContext(Dispatchers.Main) {
                     systemSettingResults = systemSettings
                     settingResults = mappedSettings
+                    matchingQsTiles = qsTiles
                 }
             }
 
@@ -467,7 +485,7 @@ fun PixelSearchResultsScreen(
     val hasApps = isAppsEnabled && appResults.isNotEmpty()
     val hasContacts = !hasApps && isContactsEnabled && contactResults.isNotEmpty()
     val hasSystemSettings = !hasApps && !hasContacts && isSettingsEnabled && systemSettingResults.isNotEmpty()
-    val hasEssentials = !hasApps && !hasContacts && !hasSystemSettings && isSettingsEnabled && settingResults.isNotEmpty()
+    val hasEssentials = !hasApps && !hasContacts && !hasSystemSettings && isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())
     val hasShortcuts = !hasApps && !hasContacts && !hasSystemSettings && !hasEssentials && isShortcutsEnabled && shortcutResults.isNotEmpty()
 
     val highlightColor = MaterialTheme.colorScheme.secondaryContainer
@@ -730,69 +748,86 @@ fun PixelSearchResultsScreen(
                 }
 
                 // ESSENTIALS
-                if (isSettingsEnabled && settingResults.isNotEmpty()) {
+                if (isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())) {
                     item(key = "essentials_header") {
                         SearchSectionHeader(
                             stringResource(R.string.pixel_search_section_essentials),
                             modifier = Modifier.animateItem(),
                         )
                     }
-                    item(key = "essentials_cards") {
-                        RoundedCardContainer(modifier = Modifier.animateItem()) {
-                            settingResults.forEachIndexed { index, item ->
-                                val isTopmost = index == 0 && hasEssentials
-                                val setting = item.searchableItem
-                                FeatureCard(
-                                    title = setting.title,
-                                    isEnabled = true,
-                                    onToggle = {},
-                                    onClick = {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        val feature = FeatureRegistry.ALL_FEATURES.find { it.id == setting.featureKey }
-                                        val targetFeatureKey =
-                                            if (feature != null && !feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                                feature.parentFeatureId
-                                            } else {
-                                                setting.featureKey
-                                            }
-                                        val highlightKey =
-                                            if (feature != null && !feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                                feature.id
-                                            } else {
-                                                setting.targetSettingHighlightKey
-                                            }
-
-                                        val intent =
-                                            if (targetFeatureKey == "Pixel Searchbar") {
-                                                Intent(context, PixelSearchbarSettingsActivity::class.java)
-                                            } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
-                                                Intent(context, WallpaperActivity::class.java).apply {
-                                                    putExtra(
-                                                        "tab",
-                                                        if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
-                                                    )
+                    if (settingResults.isNotEmpty()) {
+                        item(key = "essentials_cards") {
+                            RoundedCardContainer(modifier = Modifier.animateItem()) {
+                                settingResults.forEachIndexed { index, item ->
+                                    val isTopmost = index == 0 && hasEssentials
+                                    val setting = item.searchableItem
+                                    FeatureCard(
+                                        title = setting.title,
+                                        isEnabled = true,
+                                        onToggle = {},
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            val feature = FeatureRegistry.ALL_FEATURES.find { it.id == setting.featureKey }
+                                            val targetFeatureKey =
+                                                if (feature != null && !feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                                    feature.parentFeatureId
+                                                } else {
+                                                    setting.featureKey
                                                 }
-                                            } else if (targetFeatureKey == "App updates") {
-                                                Intent(context, YourAndroidActivity::class.java)
-                                            } else {
-                                                Intent(context, FeatureSettingsActivity::class.java).apply {
-                                                    putExtra("feature", targetFeatureKey)
-                                                    highlightKey?.let {
-                                                        putExtra("highlight_setting", it)
+                                            val highlightKey =
+                                                if (feature != null && !feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                                    feature.id
+                                                } else {
+                                                    setting.targetSettingHighlightKey
+                                                }
+
+                                            val intent =
+                                                if (targetFeatureKey == "Pixel Searchbar") {
+                                                    Intent(context, PixelSearchbarSettingsActivity::class.java)
+                                                } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                                    Intent(context, WallpaperActivity::class.java).apply {
+                                                        putExtra(
+                                                            "tab",
+                                                            if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                                                        )
+                                                    }
+                                                } else if (targetFeatureKey == "App updates") {
+                                                    Intent(context, YourAndroidActivity::class.java)
+                                                } else {
+                                                    Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                        putExtra("feature", targetFeatureKey)
+                                                        highlightKey?.let {
+                                                            putExtra("highlight_setting", it)
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        context.startActivity(intent)
-                                        onFinish()
-                                    },
-                                    containerColor = if (isTopmost) highlightColor else normalCardColor,
-                                    iconRes = setting.icon ?: R.drawable.rounded_settings_24,
-                                    showToggle = false,
-                                    hasMoreSettings = true,
-                                    description = setting.description,
-                                    isBeta = setting.isBeta,
-                                )
+                                            context.startActivity(intent)
+                                            onFinish()
+                                        },
+                                        containerColor = if (isTopmost) highlightColor else normalCardColor,
+                                        iconRes = setting.icon ?: R.drawable.rounded_settings_24,
+                                        showToggle = false,
+                                        hasMoreSettings = true,
+                                        description = setting.description,
+                                        isBeta = setting.isBeta,
+                                        descriptionOverride =
+                                            if (setting.parentFeature != null) {
+                                                "${setting.parentFeature} > ${setting.description}"
+                                            } else {
+                                                setting.description
+                                            },
+                                    )
+                                }
                             }
+                        }
+                    }
+                    if (matchingQsTiles.isNotEmpty()) {
+                        item(key = "essentials_qs_tiles") {
+                            QSTilesSearchResultCard(
+                                tiles = matchingQsTiles,
+                                viewModel = viewModel,
+                                modifier = Modifier.animateItem(),
+                            )
                         }
                     }
                 }

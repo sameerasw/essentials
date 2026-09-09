@@ -88,6 +88,7 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.domain.registry.QSTileRegistry
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
@@ -98,6 +99,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ReorderFavoritesBottomSheet
+import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -1035,6 +1037,15 @@ fun SetupFeatures(
         val searchResults = viewModel.searchResults.value
         val isSearchingViewModel = viewModel.isSearching.value
         val recentSearches by viewModel.recentSearches
+        val matchingTiles =
+            remember(searchQuery, viewModel.isEnableUnsupportedFeatures.value, viewModel.isUseUsageAccess.value) {
+                QSTileRegistry.searchTiles(
+                    context = context,
+                    query = searchQuery,
+                    includeUnsupported = viewModel.isEnableUnsupportedFeatures.value,
+                    isUseUsageStats = viewModel.isUseUsageAccess.value,
+                )
+            }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
@@ -1237,7 +1248,7 @@ fun SetupFeatures(
                     )
                 }
             } else if (isFocused && searchQuery.isNotEmpty()) {
-                if (!isSearchingViewModel && searchResults.isEmpty()) {
+                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty()) {
                     item {
                         Column(
                             modifier =
@@ -1268,14 +1279,16 @@ fun SetupFeatures(
                     }
                 }
 
-                item {
-                    SearchResultsSection(
-                        searchResults = searchResults,
-                        allFeatures = allFeatures,
-                        pinnedFeatureKeys = pinnedFeatureKeys,
-                        context = context,
-                        viewModel = viewModel,
-                    )
+                if (!isSearchingViewModel) {
+                    item {
+                        SearchResultsSection(
+                            searchResults = searchResults,
+                            allFeatures = allFeatures,
+                            pinnedFeatureKeys = pinnedFeatureKeys,
+                            context = context,
+                            viewModel = viewModel,
+                        )
+                    }
                 }
             } else if (!isFocused) {
                 val topLevelFeatures =
@@ -1555,7 +1568,23 @@ private fun SearchResultsSection(
     context: Context,
     viewModel: MainViewModel,
 ) {
-    if (searchResults.isNotEmpty()) {
+    val query = viewModel.searchQuery.value
+    val matchingTiles =
+        remember(query, viewModel.isEnableUnsupportedFeatures.value, viewModel.isUseUsageAccess.value) {
+            QSTileRegistry.searchTiles(
+                context = context,
+                query = query,
+                includeUnsupported = viewModel.isEnableUnsupportedFeatures.value,
+                isUseUsageStats = viewModel.isUseUsageAccess.value,
+            )
+        }
+
+    val nonQSSearchResults =
+        remember(searchResults) {
+            searchResults.filter { it.featureKey != "Quick settings tiles" }
+        }
+
+    if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty()) {
         Text(
             text = stringResource(R.string.search_results_title),
             style = MaterialTheme.typography.titleMedium,
@@ -1563,121 +1592,131 @@ private fun SearchResultsSection(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        RoundedCardContainer(
-            modifier = Modifier.padding(horizontal = 16.dp),
-        ) {
-            for (result in searchResults) {
-                FeatureCard(
-                    title = result.title,
-                    isEnabled = true,
-                    onToggle = {},
-                    onClick = {
-                        viewModel.addRecentSearch(result)
-                        val feature = allFeatures.find { it.id == result.featureKey }
-                        if (feature != null) {
-                            val targetFeatureKey =
-                                if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                    feature.parentFeatureId
-                                } else {
-                                    feature.id
-                                }
-                            val highlightKey =
-                                if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
-                                    feature.id
-                                } else {
-                                    result.targetSettingHighlightKey
-                                }
-                            BiometricSecurityHelper.runWithAuth(
-                                activity = context as FragmentActivity,
-                                feature = feature,
-                                action = {
-                                    val intent =
-                                        if (targetFeatureKey == "Pixel Searchbar") {
-                                            Intent(
-                                                context,
-                                                PixelSearchbarSettingsActivity::class.java,
-                                            )
-                                        } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
-                                            Intent(
-                                                context,
-                                                WallpaperActivity::class.java,
-                                            ).apply {
-                                                putExtra(
-                                                    "tab",
-                                                    if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+        if (nonQSSearchResults.isNotEmpty()) {
+            RoundedCardContainer(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            ) {
+                for (result in nonQSSearchResults) {
+                    FeatureCard(
+                        title = result.title,
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            viewModel.addRecentSearch(result)
+                            val feature = allFeatures.find { it.id == result.featureKey }
+                            if (feature != null) {
+                                val targetFeatureKey =
+                                    if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                        feature.parentFeatureId
+                                    } else {
+                                        feature.id
+                                    }
+                                val highlightKey =
+                                    if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                        feature.id
+                                    } else {
+                                        result.targetSettingHighlightKey
+                                    }
+                                BiometricSecurityHelper.runWithAuth(
+                                    activity = context as FragmentActivity,
+                                    feature = feature,
+                                    action = {
+                                        val intent =
+                                            if (targetFeatureKey == "Pixel Searchbar") {
+                                                Intent(
+                                                    context,
+                                                    PixelSearchbarSettingsActivity::class.java,
                                                 )
-                                            }
-                                        } else if (targetFeatureKey == "App updates") {
-                                            Intent(
-                                                context,
-                                                YourAndroidActivity::class.java,
-                                            )
-                                        } else {
-                                            Intent(
-                                                context,
-                                                FeatureSettingsActivity::class.java,
-                                            ).apply {
-                                                putExtra("feature", targetFeatureKey)
-                                                highlightKey?.let {
-                                                    putExtra("highlight_setting", it)
+                                            } else if (targetFeatureKey == "LiveWallpaper" || targetFeatureKey == "Daily Wallpaper") {
+                                                Intent(
+                                                    context,
+                                                    WallpaperActivity::class.java,
+                                                ).apply {
+                                                    putExtra(
+                                                        "tab",
+                                                        if (targetFeatureKey == "LiveWallpaper") "live" else "daily",
+                                                    )
+                                                }
+                                            } else if (targetFeatureKey == "App updates") {
+                                                Intent(
+                                                    context,
+                                                    YourAndroidActivity::class.java,
+                                                )
+                                            } else {
+                                                Intent(
+                                                    context,
+                                                    FeatureSettingsActivity::class.java,
+                                                ).apply {
+                                                    putExtra("feature", targetFeatureKey)
+                                                    highlightKey?.let {
+                                                        putExtra("highlight_setting", it)
+                                                    }
                                                 }
                                             }
-                                        }
-                                    context.startActivity(intent)
-                                },
-                            )
-                        } else {
-                            val intent =
-                                if (result.featureKey == "Pixel Searchbar") {
-                                    Intent(
-                                        context,
-                                        PixelSearchbarSettingsActivity::class.java,
-                                    )
-                                } else if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
-                                    Intent(
-                                        context,
-                                        WallpaperActivity::class.java,
-                                    ).apply {
-                                        putExtra(
-                                            "tab",
-                                            if (result.featureKey == "LiveWallpaper") "live" else "daily",
+                                        context.startActivity(intent)
+                                    },
+                                )
+                            } else {
+                                val intent =
+                                    if (result.featureKey == "Pixel Searchbar") {
+                                        Intent(
+                                            context,
+                                            PixelSearchbarSettingsActivity::class.java,
                                         )
-                                    }
-                                } else if (result.featureKey == "App updates") {
-                                    Intent(
-                                        context,
-                                        YourAndroidActivity::class.java,
-                                    )
-                                } else {
-                                    Intent(context, FeatureSettingsActivity::class.java).apply {
-                                        putExtra("feature", result.featureKey)
-                                        result.targetSettingHighlightKey?.let {
-                                            putExtra("highlight_setting", it)
+                                    } else if (result.featureKey == "LiveWallpaper" || result.featureKey == "Daily Wallpaper") {
+                                        Intent(
+                                            context,
+                                            WallpaperActivity::class.java,
+                                        ).apply {
+                                            putExtra(
+                                                "tab",
+                                                if (result.featureKey == "LiveWallpaper") "live" else "daily",
+                                            )
+                                        }
+                                    } else if (result.featureKey == "App updates") {
+                                        Intent(
+                                            context,
+                                            YourAndroidActivity::class.java,
+                                        )
+                                    } else {
+                                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                                            putExtra("feature", result.featureKey)
+                                            result.targetSettingHighlightKey?.let {
+                                                putExtra("highlight_setting", it)
+                                            }
                                         }
                                     }
-                                }
-                            context.startActivity(intent)
-                        }
-                    },
-                    iconRes = result.icon ?: R.drawable.rounded_settings_24,
-                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                    showToggle = false,
-                    hasMoreSettings = true,
-                    isBeta = result.isBeta,
-                    descriptionOverride =
-                        if (result.parentFeature !=
-                            null
-                        ) {
-                            "${result.parentFeature} > ${result.description}"
-                        } else {
-                            result.description
+                                context.startActivity(intent)
+                            }
                         },
-                    isPinned = pinnedFeatureKeys.contains(result.featureKey),
-                    onPinToggle = {
-                        viewModel.togglePinFeature(result.featureKey)
-                    },
-                )
+                        iconRes = result.icon ?: R.drawable.rounded_settings_24,
+                        modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                        showToggle = false,
+                        hasMoreSettings = true,
+                        isBeta = result.isBeta,
+                        descriptionOverride =
+                            if (result.parentFeature !=
+                                null
+                            ) {
+                                "${result.parentFeature} > ${result.description}"
+                            } else {
+                                result.description
+                            },
+                        isPinned = pinnedFeatureKeys.contains(result.featureKey),
+                        onPinToggle = {
+                            viewModel.togglePinFeature(result.featureKey)
+                        },
+                    )
+                }
             }
+        }
+
+        if (matchingTiles.isNotEmpty()) {
+            QSTilesSearchResultCard(
+                tiles = matchingTiles,
+                viewModel = viewModel,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
         }
     }
 }
