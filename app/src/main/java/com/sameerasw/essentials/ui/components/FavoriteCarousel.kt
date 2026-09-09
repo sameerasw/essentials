@@ -15,6 +15,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -145,7 +146,13 @@ fun FavoriteCarousel(
                 label = "alpha",
             )
 
-            val pastelColor = ColorUtil.getPastelColorFor(resolvedTitle)
+            val isDarkTheme = isSystemInDarkTheme()
+            val iconColor =
+                if (isDarkTheme) {
+                    ColorUtil.getPastelColorFor(resolvedTitle)
+                } else {
+                    ColorUtil.getVibrantColorFor(resolvedTitle)
+                }
 
             Box(
                 modifier =
@@ -190,7 +197,7 @@ fun FavoriteCarousel(
                             painter = painterResource(id = feature.iconRes),
                             contentDescription = resolvedTitle,
                             modifier = Modifier.size(24.dp),
-                            tint = pastelColor,
+                            tint = iconColor,
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
