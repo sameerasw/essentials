@@ -152,6 +152,18 @@ fun StatusBarIconSettingsUI(
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_signal_cellular_alt_24,
+                title = stringResource(R.string.feat_statusbar_icons_title),
+                isChecked = isMasterEnabled,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    mainViewModel.setStatusBarIconControlEnabled(checked, context)
+                },
+            )
+        }
+
         if (isMasterEnabled) {
             // Iterate through categories
             categories.forEach { categoryRes ->
