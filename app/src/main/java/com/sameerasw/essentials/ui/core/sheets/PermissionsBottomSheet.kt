@@ -18,13 +18,25 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.buttons.ListExpandToggleButton
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.HapticUtil
 
 data class PermissionItem(
     val iconRes: Int,
@@ -50,6 +62,12 @@ fun PermissionsBottomSheet(
     permissions: List<PermissionItem>,
     onHelpClick: () -> Unit = {},
 ) {
+    val view = LocalView.current
+    var showGranted by remember { mutableStateOf(false) }
+
+    val pendingPermissions = permissions.filter { !it.isGranted }
+    val grantedPermissions = permissions.filter { it.isGranted }
+
     val resolvedTitle =
         when (featureTitle) {
             is Int -> stringResource(id = featureTitle)
@@ -82,23 +100,65 @@ fun PermissionsBottomSheet(
                 )
             }
 
-            RoundedCardContainer {
-                permissions.forEach { perm ->
-                    PermissionCard(
-                        iconRes = perm.iconRes,
-                        title = perm.title,
-                        dependentFeatures = emptyList(),
-                        actionLabel = perm.actionLabel ?: R.string.perm_action_enable,
-                        isGranted = perm.isGranted,
-                        onActionClick = { perm.action?.invoke() },
-                        secondaryActionLabel = perm.secondaryActionLabel,
-                        onSecondaryActionClick = { perm.secondaryAction?.invoke() },
-                        shizukuActionLabel = perm.shizukuActionLabel,
-                        shizukuActionEnabled = perm.shizukuActionEnabled,
-                        onShizukuActionClick = { perm.shizukuAction?.invoke() },
-                        instructions = perm.instructions,
-                        description = perm.description,
-                    )
+            if (pendingPermissions.isNotEmpty()) {
+                RoundedCardContainer {
+                    pendingPermissions.forEach { perm ->
+                        PermissionCard(
+                            iconRes = perm.iconRes,
+                            title = perm.title,
+                            dependentFeatures = emptyList(),
+                            actionLabel = perm.actionLabel ?: R.string.perm_action_enable,
+                            isGranted = perm.isGranted,
+                            onActionClick = { perm.action?.invoke() },
+                            secondaryActionLabel = perm.secondaryActionLabel,
+                            onSecondaryActionClick = { perm.secondaryAction?.invoke() },
+                            shizukuActionLabel = perm.shizukuActionLabel,
+                            shizukuActionEnabled = perm.shizukuActionEnabled,
+                            onShizukuActionClick = { perm.shizukuAction?.invoke() },
+                            instructions = perm.instructions,
+                            description = perm.description,
+                        )
+                    }
+                }
+            }
+
+            if (grantedPermissions.isNotEmpty()) {
+                ListExpandToggleButton(
+                    isExpanded = showGranted,
+                    onToggle = {
+                        HapticUtil.performUIHaptic(view)
+                        showGranted = !showGranted
+                    },
+                    title = R.string.action_hide_granted,
+                    description = R.string.action_show_granted,
+                    expandedText = stringResource(R.string.action_hide_granted),
+                    collapsedText = stringResource(R.string.action_show_granted),
+                )
+
+                AnimatedVisibility(
+                    visible = showGranted,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically(),
+                ) {
+                    RoundedCardContainer {
+                        grantedPermissions.forEach { perm ->
+                            PermissionCard(
+                                iconRes = perm.iconRes,
+                                title = perm.title,
+                                dependentFeatures = emptyList(),
+                                actionLabel = perm.actionLabel ?: R.string.perm_action_enable,
+                                isGranted = perm.isGranted,
+                                onActionClick = { perm.action?.invoke() },
+                                secondaryActionLabel = perm.secondaryActionLabel,
+                                onSecondaryActionClick = { perm.secondaryAction?.invoke() },
+                                shizukuActionLabel = perm.shizukuActionLabel,
+                                shizukuActionEnabled = perm.shizukuActionEnabled,
+                                onShizukuActionClick = { perm.shizukuAction?.invoke() },
+                                instructions = perm.instructions,
+                                description = perm.description,
+                            )
+                        }
+                    }
                 }
             }
         }

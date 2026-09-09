@@ -2444,4 +2444,6 @@
     <string name="settings_section_customizations">Customizations</string>
     <string name="settings_permissions_all">All permissions</string>
     <string name="settings_section_more">More</string>
+    <string name="action_show_granted">Show granted</string>
+    <string name="action_hide_granted">Hide granted</string>
 </resources>
