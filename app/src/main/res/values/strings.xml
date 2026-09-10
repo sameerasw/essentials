@@ -2114,7 +2114,7 @@
     <string name="feat_standby_apps_title">Standby apps</string>
     <string name="feat_standby_apps_desc">Optimize app background activities</string>
     <string name="about_desc_networks">Configure network download speed limits, keep mobile data continuously active even when connected to Wi-Fi, and enable wireless display certification settings.</string>
-    <string name="about_desc_standby_apps">Manage Android App Standby Buckets (Active, Working set, Frequent, Rare, Restricted) to control background app execution, network usage, and battery consumption.</string>
+    <string name="about_desc_standby_apps">Manage Android App Standby Buckets to control background app execution, network usage, and battery consumption.\n\n• Active - App in use or used very recently.\n• Working set - Used regularly or daily; jobs and alarms mildly deferred.\n• Frequent - Used weekly; background work deferred more.\n• Rare - Seldom used; jobs, alarms and background internet heavily limited.\n• Restricted - Lowest priority (Android 12+); about once-daily batched jobs and one alarm per day. Best battery saving, breaks timely notifications.</string>
     <string name="about_desc_other_customizations">Advanced display and system UI customizations including gesture bar visibility, circle to search height, rotation suggestions, setting overlays, transparent navigation bar, and GPU screen compositing.</string>
     <string name="standby_bucket_active">Active</string>
     <string name="standby_bucket_working_set">Working set</string>
