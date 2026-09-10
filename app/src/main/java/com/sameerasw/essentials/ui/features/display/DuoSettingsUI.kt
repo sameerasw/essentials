@@ -233,7 +233,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_signal_cellular_alt_24,
                 title = stringResource(R.string.duo_show_networks_title),
-                description = stringResource(R.string.duo_show_networks_desc),
                 isChecked = viewModel.isDuoShowNetworks.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -244,7 +243,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_motion_play_24,
                 title = stringResource(R.string.duo_show_media_title),
-                description = stringResource(R.string.duo_show_media_desc),
                 isChecked = viewModel.isDuoShowMedia.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -275,7 +273,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_downloading_24,
                 title = stringResource(R.string.duo_show_progress_title),
-                description = stringResource(R.string.duo_show_progress_desc),
                 isChecked = viewModel.isDuoShowProgress.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -290,7 +287,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_flashlight_on_24,
                 title = stringResource(R.string.duo_show_flashlight_title),
-                description = stringResource(R.string.duo_show_flashlight_desc),
                 isChecked = viewModel.isDuoShowFlashlight.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -325,7 +321,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_palette_24,
                 title = stringResource(R.string.duo_material_you_title),
-                description = stringResource(R.string.duo_material_you_desc),
                 isChecked = viewModel.isDuoUseMaterialYou.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -336,7 +331,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_off_24,
                 title = stringResource(R.string.duo_hide_when_screen_off_title),
-                description = stringResource(R.string.duo_hide_when_screen_off_desc),
                 isChecked = viewModel.isDuoHideWhenScreenOff.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -347,7 +341,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_nightlight_24,
                 title = stringResource(R.string.duo_hide_when_screen_off_only_idle_title),
-                description = stringResource(R.string.duo_hide_when_screen_off_only_idle_desc),
                 isChecked = viewModel.isDuoHideWhenScreenOffOnlyIdle.value,
                 enabled = viewModel.isDuoHideWhenScreenOff.value,
                 onCheckedChange = { checked ->

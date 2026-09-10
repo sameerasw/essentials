@@ -1371,6 +1371,7 @@ object FeatureRegistry {
                 permissionKeys = listOf("ACCESSIBILITY"),
                 hasMoreSettings = true,
                 showToggle = true,
+                isBeta = true,
                 parentFeatureId = "Display",
             ) {
                 override fun isDeviceSupported(context: Context): Boolean {
