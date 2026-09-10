@@ -36,6 +36,7 @@ import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
 import com.sameerasw.essentials.services.handlers.AodWallpaperOverlayHandler
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
+import com.sameerasw.essentials.services.handlers.DuoOverlayHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
@@ -69,6 +70,7 @@ class ScreenOffAccessibilityService :
     private lateinit var statusBarIconHandler: StatusBarIconHandler
     private lateinit var pocketModeHandler: PocketModeHandler
     private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
+    private lateinit var duoOverlayHandler: DuoOverlayHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -241,6 +243,20 @@ class ScreenOffAccessibilityService :
                     aodWallpaperOverlayHandler.invalidateWallpaperCache()
                 }
                 aodWallpaperOverlayHandler.updateState()
+            } else if (key == SettingsRepository.KEY_DUO_ENABLED ||
+                key == SettingsRepository.KEY_DEVELOPER_MODE_ENABLED ||
+                key == SettingsRepository.KEY_DUO_USE_AUTO_DETECT ||
+                key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_X ||
+                key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_Y ||
+                key == SettingsRepository.KEY_DUO_CAMERA_SIZE ||
+                key == SettingsRepository.KEY_DUO_ARC_THICKNESS ||
+                key == SettingsRepository.KEY_DUO_DOT_SIZE ||
+                key == SettingsRepository.KEY_DUO_RING_RADIUS ||
+                key == SettingsRepository.KEY_DUO_SHOW_NETWORKS ||
+                key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ||
+                key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU
+            ) {
+                duoOverlayHandler.updateState()
             }
         }
 
@@ -262,10 +278,12 @@ class ScreenOffAccessibilityService :
         smartPixelsHandler =
             com.sameerasw.essentials.services.handlers
                 .SmartPixelsHandler(this)
+        duoOverlayHandler = DuoOverlayHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
         smartPixelsHandler.init()
+        duoOverlayHandler.init()
 
         // Screen Receiver
         screenReceiver =
@@ -281,6 +299,7 @@ class ScreenOffAccessibilityService :
                             ambientGlanceHandler.dismissImmediately()
                             aodForceTurnOffHandler.removeOverlay()
                             aodWallpaperOverlayHandler.onScreenOn()
+                            duoOverlayHandler.onScreenOn()
                             freezeHandler.removeCallbacks(freezeRunnable)
                             stopInputEventListener()
                             updateOmniOverlay()
@@ -294,6 +313,7 @@ class ScreenOffAccessibilityService :
                             startInputEventListenerIfEnabled()
                             ambientGlanceHandler.checkAndShowOnScreenOff()
                             aodWallpaperOverlayHandler.onScreenOff()
+                            duoOverlayHandler.onScreenOff()
                             omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
                             pocketModeHandler.onScreenOff()
                             updatePocketModeSensors()
@@ -389,6 +409,7 @@ class ScreenOffAccessibilityService :
                 flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
             }
         updateOmniOverlay()
+        duoOverlayHandler.updateState()
     }
 
     private fun updateOmniOverlay() {
@@ -424,6 +445,7 @@ class ScreenOffAccessibilityService :
         pocketModeHandler.removeOverlay()
         omniGestureOverlayHandler.removeOverlay()
         smartPixelsHandler.destroy()
+        duoOverlayHandler.destroy()
         statusBarIconHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
@@ -450,8 +472,40 @@ class ScreenOffAccessibilityService :
         if (event == null) return
 
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            val packageName = event.packageName?.toString() ?: return
-            appFlowHandler.onPackageChanged(packageName)
+            val packageName = event.packageName?.toString()
+            if (packageName != null) {
+                appFlowHandler.onPackageChanged(packageName)
+            }
+        }
+
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
+            event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
+        ) {
+            checkFullscreenState()
+        }
+    }
+
+    private fun checkFullscreenState() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                val currentWindows = windows
+                if (!currentWindows.isNullOrEmpty()) {
+                    val hasStatusBar = currentWindows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM }
+                    val appWindow = currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
+                        ?: currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION }
+
+                    if (appWindow != null) {
+                        val outBounds = android.graphics.Rect()
+                        appWindow.getBoundsInScreen(outBounds)
+                        val displayMetrics = resources.displayMetrics
+                        val isCoveringFullDisplay = outBounds.width() >= displayMetrics.widthPixels &&
+                            outBounds.height() >= displayMetrics.heightPixels
+
+                        val isFullscreen = isCoveringFullDisplay && !hasStatusBar
+                        duoOverlayHandler.setFullscreen(isFullscreen)
+                    }
+                }
+            } catch (_: Exception) {}
         }
     }
 
@@ -576,6 +630,7 @@ class ScreenOffAccessibilityService :
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         updateOmniOverlay() // Force refresh overlay on rotation
+        duoOverlayHandler.onConfigurationChanged(newConfig)
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {

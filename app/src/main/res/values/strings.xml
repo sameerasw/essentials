@@ -831,6 +831,7 @@
     <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_duo">Required to display the ambient indicator overlay around the camera cutout.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
@@ -2449,4 +2450,28 @@
     <string name="action_show_granted">Show granted</string>
     <string name="action_hide_granted">Hide granted</string>
     <string name="label_frozen_apps">Frozen Apps</string>
+
+    <!-- Duo -->
+    <string name="duo_title">Duo</string>
+    <string name="duo_desc">Ambient camera ring indicator with battery level and status dots</string>
+    <string name="duo_enable_title">Enable Duo</string>
+    <string name="duo_enable_desc">Display ambient ring and status indicators around camera cutout</string>
+    <string name="duo_auto_detect_title">Auto-detect camera</string>
+    <string name="duo_auto_detect_desc">Automatically locate the front camera cutout using display metrics</string>
+    <string name="duo_camera_offset_x_title">Horizontal position</string>
+    <string name="duo_camera_offset_y_title">Vertical position</string>
+    <string name="duo_camera_size_title">Camera size</string>
+    <string name="duo_arc_thickness_title">Ring thickness</string>
+    <string name="duo_ring_radius_title">Ring radius</string>
+    <string name="duo_dot_size_title">Status dot size</string>
+    <string name="duo_section_position">Position and dimensions</string>
+    <string name="duo_section_style">Style</string>
+    <string name="duo_section_what_to_show">What to show</string>
+    <string name="duo_show_networks_title">Networks</string>
+    <string name="duo_show_networks_desc">Show mobile network status indicator dots</string>
+    <string name="duo_section_behavior">Behavior</string>
+    <string name="duo_material_you_title">Use Material You colors</string>
+    <string name="duo_material_you_desc">Adapt colors dynamically from system wallpaper palette</string>
+    <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
+    <string name="duo_hide_when_screen_off_desc">Hide the overlay completely when the display is turned off or on AOD</string>
 </resources>
