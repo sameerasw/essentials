@@ -79,7 +79,7 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             val clamped = value.coerceIn(0, 100)
             field = clamped
-            if (!isCustomProgressActive()) {
+            if (!isCustomProgressActive() && chargingSurgeAnimator?.isRunning != true) {
                 updateProgressAnimation(clamped.toFloat())
             }
         }
@@ -237,9 +237,11 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private var animatedBoltScale: Float = 0f
     private var animatedProgressWiggle: Float = 0f
+    private var chargingGlowAlpha: Float = 0f
 
     private var boltAnimator: ValueAnimator? = null
     private var wiggleAnimator: ValueAnimator? = null
+    private var chargingSurgeAnimator: ValueAnimator? = null
 
     private val boltDrawable by lazy { ContextCompat.getDrawable(context, R.drawable.rounded_bolt_24) }
     private var mediaPaletteColors: Pair<Int, Int>? = null
@@ -428,33 +430,27 @@ class DuoOverlayView(context: Context) : View(context) {
         animateThemeChange()
 
         if (showChargingSurge) {
-            boltAnimator?.cancel()
-            boltAnimator = ValueAnimator.ofFloat(animatedBoltScale, 1.0f).apply {
-                duration = 450
-                interpolator = OvershootInterpolator(1.3f)
-                addUpdateListener { animation ->
-                    animatedBoltScale = animation.animatedValue as Float
-                    invalidate()
-                }
-                start()
-            }
-
-            startBatteryProgressWiggle()
+            startPremiumChargingSurge()
         } else {
             animatedBoltScale = 1.0f
+            chargingGlowAlpha = 0f
+            animatedProgress = getActiveTargetProgress()
+            animatedProgressWiggle = 0f
+            animatedScaleBounce = 1.0f
             invalidate()
         }
     }
 
     fun setChargingState(isCharging: Boolean, isFastCharging: Boolean, wattage: Float?) {
+        val wasCharging = this.isCharging
         val changed = this.isCharging != isCharging || this.isFastCharging != isFastCharging
         this.isCharging = isCharging
         this.isFastCharging = isFastCharging
         this.chargingWattage = wattage
         if (changed) {
             animateThemeChange()
-            if (isCharging) {
-                startBatteryProgressWiggle()
+            if (isCharging && !wasCharging && showChargingSurge) {
+                startPremiumChargingSurge()
             }
         }
     }
@@ -463,8 +459,12 @@ class DuoOverlayView(context: Context) : View(context) {
         isCharging = false
         isFastCharging = false
         chargingWattage = null
+        chargingSurgeAnimator?.cancel()
         wiggleAnimator?.cancel()
         animatedProgressWiggle = 0f
+        animatedScaleBounce = 1.0f
+        chargingGlowAlpha = 0f
+        animatedProgress = getActiveTargetProgress()
 
         boltAnimator?.cancel()
         boltAnimator = ValueAnimator.ofFloat(animatedBoltScale, 0f).apply {
@@ -481,18 +481,77 @@ class DuoOverlayView(context: Context) : View(context) {
         invalidate()
     }
 
-    private fun startBatteryProgressWiggle() {
+    private fun startPremiumChargingSurge() {
+        chargingSurgeAnimator?.cancel()
         wiggleAnimator?.cancel()
-        wiggleAnimator = ValueAnimator.ofFloat(0f, 6.0f, -3.5f, 1.8f, -0.6f, 0f).apply {
-            duration = 850
-            interpolator = DecelerateInterpolator()
-            addUpdateListener { animation ->
-                animatedProgressWiggle = animation.animatedValue as Float
+        boltAnimator?.cancel()
+        scaleAnimator?.cancel()
+
+        val target = getActiveTargetProgress()
+        val startProgress = 0f
+
+        chargingSurgeAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 950
+            interpolator = LinearInterpolator()
+            addUpdateListener { animator ->
+                val t = animator.animatedValue as Float
+
+                // 1. Bolt Scale: spring pop up to 1.22 in first 550ms, then settling at 1.0f
+                if (t <= 0.55f) {
+                    val boltNorm = t / 0.55f
+                    val tension = 1.8f
+                    val x = boltNorm - 1f
+                    animatedBoltScale = ((x * x * ((tension + 1) * x + tension) + 1f)).coerceIn(0f, 1.25f)
+                } else {
+                    animatedBoltScale = 1.0f
+                }
+
+                // 2. Ring Elastic Scale Breath: 1.0 -> 1.075 -> 0.995 -> 1.0
+                animatedScaleBounce = when {
+                    t < 0.35f -> {
+                        val p = t / 0.35f
+                        1.0f + 0.075f * sin(p * (Math.PI / 2).toFloat())
+                    }
+                    t < 0.75f -> {
+                        val p = (t - 0.35f) / 0.40f
+                        1.075f - 0.08f * sin(p * (Math.PI / 2).toFloat())
+                    }
+                    else -> {
+                        val p = (t - 0.75f) / 0.25f
+                        0.995f + 0.005f * p
+                    }
+                }
+
+                // 3. Liquid Progress Sweep & Damped Settle
+                if (t < 0.65f) {
+                    val p = t / 0.65f
+                    val decel = 1f - (1f - p) * (1f - p)
+                    animatedProgress = (startProgress + (target + 3.5f - startProgress) * decel).coerceIn(0f, 100f)
+                    animatedProgressWiggle = 0f
+                } else {
+                    val p = (t - 0.65f) / 0.35f
+                    val decay = 1f - p
+                    val oscillation = sin(p * Math.PI.toFloat() * 2.5f)
+                    animatedProgress = target
+                    animatedProgressWiggle = 3.5f * decay * oscillation
+                }
+
+                // 4. Luminous Electric Glow Flare
+                chargingGlowAlpha = when {
+                    t < 0.30f -> (t / 0.30f) * 0.65f
+                    t < 0.85f -> (1f - (t - 0.30f) / 0.55f) * 0.65f
+                    else -> 0f
+                }
+
                 invalidate()
             }
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
+                    animatedProgress = target
                     animatedProgressWiggle = 0f
+                    animatedBoltScale = 1.0f
+                    animatedScaleBounce = 1.0f
+                    chargingGlowAlpha = 0f
                     invalidate()
                 }
             })
@@ -663,6 +722,9 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun updateProgressAnimation(target: Float = getActiveTargetProgress()) {
         targetProgress = target
+        if (chargingSurgeAnimator?.isRunning == true) {
+            return
+        }
         if (kotlin.math.abs(animatedProgress - targetProgress) < 0.05f) {
             animatedProgress = targetProgress
             invalidate()
@@ -731,6 +793,11 @@ class DuoOverlayView(context: Context) : View(context) {
         strokeCap = Paint.Cap.ROUND
     }
 
+    private val chargingGlowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
     private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
@@ -780,6 +847,18 @@ class DuoOverlayView(context: Context) : View(context) {
         val effectiveProgress = (animatedProgress + animatedProgressWiggle).coerceIn(0f, 100f)
         val progressSweep = (effectiveProgress / 100f) * animatedTotalSweep
         if (progressSweep > 0.5f) {
+            if (chargingGlowAlpha > 0.01f) {
+                chargingGlowPaint.strokeWidth = progressPaint.strokeWidth * 1.85f
+                val glowAlpha = (Color.alpha(currentProgressColor) * chargingGlowAlpha * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                chargingGlowPaint.color = Color.argb(
+                    glowAlpha,
+                    Color.red(currentProgressColor),
+                    Color.green(currentProgressColor),
+                    Color.blue(currentProgressColor)
+                )
+                canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, chargingGlowPaint)
+            }
+
             val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
             progressPaint.color = Color.argb(
                 progAlpha,
@@ -883,6 +962,7 @@ class DuoOverlayView(context: Context) : View(context) {
         visibilityAnimator?.cancel()
         boltAnimator?.cancel()
         wiggleAnimator?.cancel()
+        chargingSurgeAnimator?.cancel()
     }
 }
 
