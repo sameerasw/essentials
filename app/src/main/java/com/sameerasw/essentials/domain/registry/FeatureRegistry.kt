@@ -686,6 +686,32 @@ object FeatureRegistry {
                 ) {}
             },
             object : Feature(
+                id = "Duo",
+                title = R.string.duo_title,
+                iconRes = R.drawable.rounded_motion_play_24,
+                category = R.string.cat_interface,
+                description = R.string.duo_desc,
+                aboutDescription = R.string.duo_desc,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                hasMoreSettings = true,
+                showToggle = true,
+                isBeta = true,
+                parentFeatureId = "Display",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isDuoEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setDuoEnabled(enabled)
+            },
+            object : Feature(
                 id = "Caffeinate",
                 title = R.string.feat_caffeinate_title,
                 iconRes = R.drawable.rounded_coffee_24,
@@ -1360,32 +1386,6 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) {}
-            },
-            object : Feature(
-                id = "Duo",
-                title = R.string.duo_title,
-                iconRes = R.drawable.rounded_motion_play_24,
-                category = R.string.cat_interface,
-                description = R.string.duo_desc,
-                aboutDescription = R.string.duo_desc,
-                permissionKeys = listOf("ACCESSIBILITY"),
-                hasMoreSettings = true,
-                showToggle = true,
-                isBeta = true,
-                parentFeatureId = "Display",
-            ) {
-                override fun isEnabled(viewModel: MainViewModel) = viewModel.isDuoEnabled.value
-
-                override fun isToggleEnabled(
-                    viewModel: MainViewModel,
-                    context: Context,
-                ) = viewModel.isAccessibilityEnabled.value
-
-                override fun onToggle(
-                    viewModel: MainViewModel,
-                    context: Context,
-                    enabled: Boolean,
-                ) = viewModel.setDuoEnabled(enabled)
             },
             object : Feature(
                 id = "Other customizations",
