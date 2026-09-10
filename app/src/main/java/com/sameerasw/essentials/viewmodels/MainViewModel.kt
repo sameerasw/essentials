@@ -325,6 +325,7 @@ class MainViewModel : ViewModel() {
     val isRippleSettingEnabled = mutableStateOf(true)
     val isMotionBlurEnabled = mutableStateOf(false)
     val isMotionBlurSettingEnabled = mutableStateOf(false)
+    val motionBlurScale = mutableFloatStateOf(1.0f)
     val isOnlineHelpMediaEnabled = mutableStateOf(true)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
@@ -2653,6 +2654,14 @@ class MainViewModel : ViewModel() {
         updateMotionBlurState(context)
     }
 
+    fun setMotionBlurScale(
+        scale: Float,
+        context: Context? = null,
+    ) {
+        motionBlurScale.floatValue = scale
+        settingsRepository.putFloat(SettingsRepository.KEY_MOTION_BLUR_SCALE, scale)
+    }
+
     fun setOnlineHelpMediaEnabled(
         enabled: Boolean,
         context: Context? = null,
@@ -2695,6 +2704,7 @@ class MainViewModel : ViewModel() {
 
         isMotionBlurSettingEnabled.value = useMotionBlurSetting
         isMotionBlurEnabled.value = useMotionBlurSetting && !isProblematic && !isPowerSave
+        motionBlurScale.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_MOTION_BLUR_SCALE, 1.0f)
     }
 
     /**

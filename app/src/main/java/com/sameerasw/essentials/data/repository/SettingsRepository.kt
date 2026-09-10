@@ -337,6 +337,7 @@ class SettingsRepository(
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
         const val KEY_MOTION_BLUR = "motion_blur"
+        const val KEY_MOTION_BLUR_SCALE = "motion_blur_scale"
         const val KEY_ONLINE_HELP_MEDIA = "online_help_media"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"

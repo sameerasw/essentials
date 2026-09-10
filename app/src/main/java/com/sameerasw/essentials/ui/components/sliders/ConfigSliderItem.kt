@@ -60,6 +60,7 @@ fun ConfigSliderItem(
     description: String? = null,
     icon: Int? = null,
     subtitle: String? = null,
+    showValue: Boolean = true,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -110,8 +111,10 @@ fun ConfigSliderItem(
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
+                    val formattedValue = if (showValue) valueFormatter(value) else ""
+                    val titleText = if (formattedValue.isNotBlank()) "$title: $formattedValue" else title
                     Text(
-                        text = "$title: ${valueFormatter(value)}",
+                        text = titleText,
                         style = MaterialTheme.typography.bodyMedium,
                         color =
                             if (enabled) {

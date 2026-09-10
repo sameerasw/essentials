@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.ui.modifiers
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
 import android.os.Build
@@ -19,15 +21,19 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.isActive
 import org.intellij.lang.annotations.Language
 import kotlin.math.abs
@@ -38,6 +44,7 @@ private const val DIRECTIONAL_BLUR_AGSL = """
     uniform float2 resolution;
     uniform float scrollVelocity;
     uniform float isHorizontal;
+    uniform float blurScale;
 
     half4 main(float2 fragCoord) {
         const int SAMPLES = 10;
@@ -45,7 +52,7 @@ private const val DIRECTIONAL_BLUR_AGSL = """
         float totalWeight = 0.0;
         
         // Scale velocity to pixel blur magnitude with max clamping
-        float blurMagnitude = clamp(scrollVelocity * 22.0, -40.0, 40.0);
+        float blurMagnitude = clamp(scrollVelocity * 22.0 * blurScale, -60.0, 60.0);
 
         for (int i = 0; i < SAMPLES; i++) {
             float offset = (float(i) / float(SAMPLES - 1) - 0.5) * blurMagnitude;
@@ -132,6 +139,22 @@ private object Api33ScrollBlur {
         animatedVelocity: Animatable<Float, *>,
         isHorizontal: Boolean,
     ): Modifier {
+        val context = LocalContext.current
+        val prefs = remember(context) { context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE) }
+        var blurScale by remember { mutableFloatStateOf(prefs.getFloat("motion_blur_scale", 1.0f)) }
+
+        DisposableEffect(prefs) {
+            val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                if (key == "motion_blur_scale") {
+                    blurScale = prefs.getFloat("motion_blur_scale", 1.0f)
+                }
+            }
+            prefs.registerOnSharedPreferenceChangeListener(listener)
+            onDispose {
+                prefs.unregisterOnSharedPreferenceChangeListener(listener)
+            }
+        }
+
         val shader = remember { RuntimeShader(DIRECTIONAL_BLUR_AGSL) }
 
         return modifier.graphicsLayer {
@@ -140,6 +163,7 @@ private object Api33ScrollBlur {
                 shader.setFloatUniform("resolution", size.width, size.height)
                 shader.setFloatUniform("scrollVelocity", vel)
                 shader.setFloatUniform("isHorizontal", if (isHorizontal) 1.0f else 0.0f)
+                shader.setFloatUniform("blurScale", blurScale)
 
                 renderEffect = RenderEffect
                     .createRuntimeShaderEffect(shader, "composable")

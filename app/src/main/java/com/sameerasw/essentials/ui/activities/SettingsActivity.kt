@@ -98,6 +98,7 @@ import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.MadebySameeraswCard
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
@@ -755,6 +756,18 @@ fun SettingsContent(
                 isChecked = viewModel.isMotionBlurSettingEnabled.value,
                 onCheckedChange = { viewModel.setMotionBlurEnabled(it, context) },
             )
+
+            if (viewModel.isMotionBlurSettingEnabled.value) {
+                ConfigSliderItem(
+                    iconRes = R.drawable.rounded_settings_motion_mode_24,
+                    title = stringResource(R.string.label_motion_blur_amount),
+                    value = viewModel.motionBlurScale.floatValue,
+                    onValueChange = { viewModel.setMotionBlurScale(it, context) },
+                    valueRange = 0.5f..2.5f,
+                    increment = 0.1f,
+                    showValue = false,
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_music_video_24,
