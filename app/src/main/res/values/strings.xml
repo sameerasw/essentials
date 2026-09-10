@@ -2483,4 +2483,6 @@
     <string name="duo_material_you_desc">Use accent color from wallpaper</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
     <string name="duo_hide_when_screen_off_desc">Hide the overlay on AOD</string>
+    <string name="duo_hide_when_screen_off_only_idle_title">Only hide on AOD while idle</string>
+    <string name="duo_hide_when_screen_off_only_idle_desc">Keep active media, progress notifications, or flashlight visible on AOD</string>
 </resources>

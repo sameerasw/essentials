@@ -136,6 +136,7 @@ class MainViewModel : ViewModel() {
     val isDuoShowProgress = mutableStateOf(true)
     val isDuoShowFlashlight = mutableStateOf(true)
     val isDuoHideWhenScreenOff = mutableStateOf(true)
+    val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -555,6 +556,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
                         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+
+                    SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE ->
+                        isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
@@ -1794,6 +1798,7 @@ class MainViewModel : ViewModel() {
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+        isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
@@ -4411,6 +4416,11 @@ class MainViewModel : ViewModel() {
     fun setDuoHideWhenScreenOff(enabled: Boolean) {
         isDuoHideWhenScreenOff.value = enabled
         settingsRepository.setDuoHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setDuoHideWhenScreenOffOnlyIdle(enabled: Boolean) {
+        isDuoHideWhenScreenOffOnlyIdle.value = enabled
+        settingsRepository.setDuoHideWhenScreenOffOnlyIdleEnabled(enabled)
     }
 
     fun setDuoUseMaterialYou(enabled: Boolean) {

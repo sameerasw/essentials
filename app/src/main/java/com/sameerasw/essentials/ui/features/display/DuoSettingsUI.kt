@@ -333,6 +333,18 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nightlight_24,
+                title = stringResource(R.string.duo_hide_when_screen_off_only_idle_title),
+                description = stringResource(R.string.duo_hide_when_screen_off_only_idle_desc),
+                isChecked = viewModel.isDuoHideWhenScreenOffOnlyIdle.value,
+                enabled = viewModel.isDuoHideWhenScreenOff.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoHideWhenScreenOffOnlyIdle(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off_only_idle"),
+            )
         }
     }
 
