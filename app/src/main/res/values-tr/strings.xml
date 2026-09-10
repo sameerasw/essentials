@@ -1622,4 +1622,12 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="watchface_glance_complications_desc">Ne gösterileceğini seçin</string>
     <string name="watchface_show_glow_title">Parıltı göster</string>
     <string name="watchface_show_glow_desc">Yaklaşan etkinliklere ve seyahate dinamik üst vurgu gradyanı</string>
+    <string name="watchface_glance_comp_battery_alerts_desc">Saat veya telefon pil seviyesi %20\'nin altına düştüğünde uyarı göster</string>
+    <string name="watchface_glance_comp_battery_alerts_title">Pil seviyesi düşük uyarısı</string>
+    <string name="watchface_glance_comp_events_desc">Bugünün yaklaşan toplantılarını göster</string>
+    <string name="watchface_glance_comp_events_title">Takvim etkinlikleri</string>
+    <string name="watchface_glance_comp_alarm_desc">Etkinlik olmadığında yaklaşan alarm zamanını göster</string>
+    <string name="watchface_glance_comp_alarm_title">Sonraki alarm</string>
+    <string name="watchface_glance_comp_travel_title">Orada mıyız? (Tahmini Varış Süresi)</string>
+    <string name="watchface_glance_comp_travel_desc">Hedefe kalan süre/mesafeyi göster</string>
 </resources>
