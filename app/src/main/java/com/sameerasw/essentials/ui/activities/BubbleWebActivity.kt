@@ -43,6 +43,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -114,6 +115,7 @@ class BubbleWebActivity : ComponentActivity() {
                 BubbleWebScreen(
                     initialUrl = initialUrl,
                     isPrivate = isPrivateMode,
+                    onCollapse = { moveTaskToBack(true) },
                     onClose = { finish() },
                     onAttachWebView = { webViewInstance = it },
                 )
@@ -140,6 +142,7 @@ class BubbleWebActivity : ComponentActivity() {
 private fun BubbleWebScreen(
     initialUrl: String,
     isPrivate: Boolean,
+    onCollapse: () -> Unit,
     onClose: () -> Unit,
     onAttachWebView: (WebView) -> Unit,
 ) {
@@ -182,7 +185,7 @@ private fun BubbleWebScreen(
         if (webViewRef?.canGoBack() == true) {
             webViewRef?.goBack()
         } else {
-            onClose()
+            onCollapse()
         }
     }
 
@@ -284,7 +287,7 @@ private fun BubbleWebScreen(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = navBarBottom + 16.dp)
+                    .padding(bottom = navBarBottom + 12.dp)
                     .offset { IntOffset(0, toolbarOffsetPx.roundToInt()) }
                     .alpha(toolbarVisibilityRatio),
                 contentAlignment = Alignment.Center,
@@ -295,37 +298,43 @@ private fun BubbleWebScreen(
                         toolbarContainerColor = MaterialTheme.colorScheme.primary,
                         toolbarContentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
-                    modifier = Modifier.height(72.dp),
+                    modifier = Modifier.height(54.dp),
                 ) {
-                    IconButton(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            if (webViewRef?.canGoBack() == true) {
-                                webViewRef?.goBack()
-                            } else {
-                                onClose()
-                            }
-                        },
-                        modifier = Modifier.size(52.dp),
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .combinedClickable(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    if (webViewRef?.canGoBack() == true) {
+                                        webViewRef?.goBack()
+                                    } else {
+                                        onCollapse()
+                                    }
+                                },
+                                onLongClick = {
+                                    HapticUtil.performHeavyHaptic(view)
+                                    onClose()
+                                },
+                            ),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             painter = painterResource(
-                                if (canGoBack) R.drawable.rounded_arrow_back_24 else R.drawable.rounded_close_24
+                                if (canGoBack) R.drawable.rounded_arrow_back_24 else R.drawable.rounded_keyboard_arrow_down_24
                             ),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                     }
 
                     Box(
                         modifier = Modifier
-                            .width(180.dp)
-                            .height(48.dp)
-                            .clip(RoundedCornerShape(24.dp))
+                            .widthIn(min = 80.dp, max = 130.dp)
+                            .height(36.dp)
+                            .clip(RoundedCornerShape(18.dp))
                             .combinedClickable(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -348,14 +357,14 @@ private fun BubbleWebScreen(
                                 progress = { pageProgress },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(16.dp),
+                                    .height(12.dp),
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 trackColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.28f),
                             )
                         } else {
                             Text(
                                 text = currentDomain,
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1,
@@ -373,7 +382,7 @@ private fun BubbleWebScreen(
                             clipboard.setPrimaryClip(ClipData.newPlainText("URL", currentUrl))
                             Toast.makeText(context, copyFeedbackText, Toast.LENGTH_SHORT).show()
                         },
-                        modifier = Modifier.size(52.dp),
+                        modifier = Modifier.size(40.dp),
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
@@ -382,7 +391,7 @@ private fun BubbleWebScreen(
                             painter = painterResource(R.drawable.rounded_link_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                     }
 
@@ -396,7 +405,7 @@ private fun BubbleWebScreen(
                             }
                             context.startActivity(shareIntent)
                         },
-                        modifier = Modifier.size(52.dp),
+                        modifier = Modifier.size(40.dp),
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
@@ -405,7 +414,31 @@ private fun BubbleWebScreen(
                             painter = painterResource(R.drawable.rounded_share_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            try {
+                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl)).apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(browserIntent)
+                                onClose()
+                            } catch (_: Exception) {}
+                        },
+                        modifier = Modifier.size(40.dp),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                        ),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_open_in_browser_24),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(20.dp),
                         )
                     }
                 }

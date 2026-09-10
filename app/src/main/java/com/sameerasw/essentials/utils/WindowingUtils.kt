@@ -121,7 +121,7 @@ object WindowingUtils {
 
         val targetUrl = uri.toString()
         val host = uri.host ?: targetUrl
-        val shortcutId = "bubble_web_preview_${Math.abs(host.hashCode())}"
+        val shortcutId = "bubble_web_preview_${Math.abs(targetUrl.hashCode())}"
         val iconRes = R.drawable.rounded_globe_24
         val bubbleIcon = IconCompat.createWithResource(context, iconRes)
 
@@ -171,7 +171,7 @@ object WindowingUtils {
             }
             val bubblePendingIntent = PendingIntent.getActivity(
                 context,
-                NOTIFICATION_ID,
+                Math.abs(targetUrl.hashCode()),
                 bubbleIntent,
                 flags,
             )
@@ -206,7 +206,7 @@ object WindowingUtils {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
             ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         ) {
-            nm.notify(NOTIFICATION_ID, builder.build())
+            nm.notify(shortcutId, NOTIFICATION_ID, builder.build())
         } else {
             // If notification permission is denied on Android 13+, launch activity directly
             context.startActivity(bubbleIntent)
