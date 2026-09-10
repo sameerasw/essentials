@@ -208,6 +208,8 @@ class DuoOverlayHandler(
                 this.dotRadiusPx = settingsRepository.getDuoDotSize() * density
                 this.isDarkTheme = isNightMode
                 this.isScreenOff = this@DuoOverlayHandler.isScreenOff
+                this.hideWhenScreenOff = settingsRepository.isDuoHideWhenScreenOffEnabled()
+                this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
             }
 

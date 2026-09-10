@@ -14,7 +14,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.os.Build
 import android.view.View
+import androidx.core.content.ContextCompat
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -77,6 +79,28 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
+                if (hideWhenScreenOff) {
+                    animateScreenOffVisibility(!value)
+                } else {
+                    animateThemeChange()
+                }
+            }
+        }
+
+    var hideWhenScreenOff: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                if (isScreenOff) {
+                    animateScreenOffVisibility(!value)
+                }
+            }
+        }
+
+    var useMaterialYouColors: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
                 animateThemeChange()
             }
         }
@@ -111,19 +135,69 @@ class DuoOverlayView(context: Context) : View(context) {
     private var layoutAnimator: android.animation.ValueAnimator? = null
     private var scaleAnimator: android.animation.ValueAnimator? = null
 
+    private var animatedVisibilityAlpha: Float = 1.0f
+    private var animatedVisibilityScale: Float = 1.0f
+    private var animatedVisibilityRotation: Float = 0f
+    private var visibilityAnimator: android.animation.ValueAnimator? = null
+
     private var currentTrackColor: Int = Color.argb(60, 255, 255, 255)
     private var currentProgressColor: Int = Color.WHITE
     private var currentDotBaseColor: Int = Color.WHITE
     private var themeAnimator: android.animation.ValueAnimator? = null
 
+    private fun animateScreenOffVisibility(visible: Boolean) {
+        visibilityAnimator?.cancel()
+        val startAlpha = animatedVisibilityAlpha
+        val targetAlpha = if (visible) 1.0f else 0.0f
+
+        val startScale = animatedVisibilityScale
+        val targetScale = if (visible) 1.0f else 0.35f
+
+        val startRotation = animatedVisibilityRotation
+        val targetRotation = if (visible) 0f else -65f
+
+        visibilityAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 750
+            interpolator = if (visible) {
+                android.view.animation.OvershootInterpolator(1.15f)
+            } else {
+                android.view.animation.DecelerateInterpolator()
+            }
+            addUpdateListener { animation ->
+                val fraction = animation.animatedFraction
+                animatedVisibilityAlpha = (startAlpha + (targetAlpha - startAlpha) * fraction).coerceIn(0f, 1f)
+                animatedVisibilityScale = (startScale + (targetScale - startScale) * fraction).coerceAtLeast(0.01f)
+                animatedVisibilityRotation = startRotation + (targetRotation - startRotation) * fraction
+                invalidate()
+            }
+            start()
+        }
+    }
+
     private fun getTargetColors(): Triple<Int, Int, Int> {
-        return if (isScreenOff) {
-            Triple(
+        if (isScreenOff) {
+            return Triple(
                 Color.argb(40, 255, 255, 255),
                 Color.argb(128, 255, 255, 255),
                 Color.argb(128, 255, 255, 255)
             )
-        } else if (isDarkTheme) {
+        }
+
+        if (useMaterialYouColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return if (isDarkTheme) {
+                val accent = ContextCompat.getColor(context, android.R.color.system_accent1_200)
+                val track = ContextCompat.getColor(context, android.R.color.system_neutral1_800)
+                val trackWithAlpha = Color.argb(90, Color.red(track), Color.green(track), Color.blue(track))
+                Triple(trackWithAlpha, accent, accent)
+            } else {
+                val accent = ContextCompat.getColor(context, android.R.color.system_accent1_600)
+                val track = ContextCompat.getColor(context, android.R.color.system_neutral1_200)
+                val trackWithAlpha = Color.argb(110, Color.red(track), Color.green(track), Color.blue(track))
+                Triple(trackWithAlpha, accent, accent)
+            }
+        }
+
+        return if (isDarkTheme) {
             Triple(
                 Color.argb(60, 255, 255, 255),
                 Color.WHITE,
@@ -253,9 +327,9 @@ class DuoOverlayView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (cameraCenterX <= 0 && cameraCenterY <= 0) return
+        if (animatedVisibilityAlpha <= 0.005f) return
 
         val baseRadius = (cameraRadiusPx + 14f * resources.displayMetrics.density) * ringRadiusScale * animatedScaleBounce
-        val strokeHalf = arcThicknessPx / 2f
         arcBounds.set(
             cameraCenterX - baseRadius,
             cameraCenterY - baseRadius,
@@ -263,10 +337,30 @@ class DuoOverlayView(context: Context) : View(context) {
             cameraCenterY + baseRadius
         )
 
+        canvas.save()
+        canvas.translate(cameraCenterX, cameraCenterY)
+        canvas.rotate(animatedVisibilityRotation)
+        canvas.scale(animatedVisibilityScale, animatedVisibilityScale)
+        canvas.translate(-cameraCenterX, -cameraCenterY)
+
+        val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
+        trackPaint.color = Color.argb(
+            trackAlpha,
+            Color.red(currentTrackColor),
+            Color.green(currentTrackColor),
+            Color.blue(currentTrackColor)
+        )
         canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
 
         val progressSweep = (animatedBatteryProgress / 100f) * animatedTotalSweep
         if (progressSweep > 0.5f) {
+            val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
+            progressPaint.color = Color.argb(
+                progAlpha,
+                Color.red(currentProgressColor),
+                Color.green(currentProgressColor),
+                Color.blue(currentProgressColor)
+            )
             canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
         }
 
@@ -285,12 +379,14 @@ class DuoOverlayView(context: Context) : View(context) {
 
                 // Signal level from 0..4 smoothly determines opacity of each dot (dot 0: 0..1, dot 1: 1..2, etc.)
                 val dotActiveFraction = (animatedSignalLevel - i).coerceIn(0f, 1f)
-                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * animatedDotAlpha
+                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * animatedDotAlpha * animatedVisibilityAlpha
                 dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
 
                 canvas.drawCircle(dotX, dotY, dotRadiusPx * animatedDotAlpha, dotPaint)
             }
         }
+
+        canvas.restore()
     }
 
     override fun onDetachedFromWindow() {
@@ -300,6 +396,7 @@ class DuoOverlayView(context: Context) : View(context) {
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
         themeAnimator?.cancel()
+        visibilityAnimator?.cancel()
     }
 }
 

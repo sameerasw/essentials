@@ -365,6 +365,8 @@ class SettingsRepository(
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
+        const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
+        const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3092,4 +3094,10 @@ class SettingsRepository(
 
     fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
     fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)
+
+    fun isDuoHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, false)
+    fun setDuoHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, enabled)
+
+    fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
+    fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
 }

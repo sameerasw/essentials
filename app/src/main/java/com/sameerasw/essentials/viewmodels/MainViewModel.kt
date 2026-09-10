@@ -132,6 +132,8 @@ class MainViewModel : ViewModel() {
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowNetworks = mutableStateOf(true)
+    val isDuoHideWhenScreenOff = mutableStateOf(false)
+    val isDuoUseMaterialYou = mutableStateOf(true)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -537,6 +539,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+
+                    SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
+                        isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+
+                    SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
+                        isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1768,6 +1776,8 @@ class MainViewModel : ViewModel() {
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+        isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+        isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4358,6 +4368,16 @@ class MainViewModel : ViewModel() {
     fun setDuoShowNetworks(enabled: Boolean) {
         isDuoShowNetworks.value = enabled
         settingsRepository.setDuoShowNetworksEnabled(enabled)
+    }
+
+    fun setDuoHideWhenScreenOff(enabled: Boolean) {
+        isDuoHideWhenScreenOff.value = enabled
+        settingsRepository.setDuoHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setDuoUseMaterialYou(enabled: Boolean) {
+        isDuoUseMaterialYou.value = enabled
+        settingsRepository.setDuoUseMaterialYouEnabled(enabled)
     }
 
     /**

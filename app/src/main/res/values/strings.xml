@@ -2468,4 +2468,9 @@
     <string name="duo_section_what_to_show">What to show</string>
     <string name="duo_show_networks_title">Networks</string>
     <string name="duo_show_networks_desc">Show mobile network status indicator dots</string>
+    <string name="duo_section_behavior">Behavior</string>
+    <string name="duo_material_you_title">Use Material You colors</string>
+    <string name="duo_material_you_desc">Adapt colors dynamically from system wallpaper palette</string>
+    <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
+    <string name="duo_hide_when_screen_off_desc">Hide the overlay completely when the display is turned off or on AOD</string>
 </resources>

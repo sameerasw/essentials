@@ -240,5 +240,40 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
             )
         }
+
+        Text(
+            text = stringResource(R.string.duo_section_behavior),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp),
+        )
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_palette_24,
+                title = stringResource(R.string.duo_material_you_title),
+                description = stringResource(R.string.duo_material_you_desc),
+                isChecked = viewModel.isDuoUseMaterialYou.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoUseMaterialYou(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_use_material_you"),
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_off_24,
+                title = stringResource(R.string.duo_hide_when_screen_off_title),
+                description = stringResource(R.string.duo_hide_when_screen_off_desc),
+                isChecked = viewModel.isDuoHideWhenScreenOff.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoHideWhenScreenOff(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off"),
+            )
+        }
     }
 }
