@@ -93,6 +93,11 @@ class DuoOverlayHandler(
         updateState()
     }
 
+    fun onConfigurationChanged(newConfig: Configuration) {
+        val isNightMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        overlayView?.isDarkTheme = isNightMode
+    }
+
     fun updateState() {
         if (!settingsRepository.isDuoEnabled()) {
             removeOverlay()

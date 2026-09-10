@@ -67,16 +67,18 @@ class DuoOverlayView(context: Context) : View(context) {
 
     var isDarkTheme: Boolean = true
         set(value) {
-            field = value
-            updateColors()
-            invalidate()
+            if (field != value) {
+                field = value
+                animateThemeChange()
+            }
         }
 
     var isScreenOff: Boolean = false
         set(value) {
-            field = value
-            updateColors()
-            invalidate()
+            if (field != value) {
+                field = value
+                animateThemeChange()
+            }
         }
 
     var showNetworks: Boolean = true
@@ -108,6 +110,57 @@ class DuoOverlayView(context: Context) : View(context) {
     private var animatedScaleBounce: Float = 1.0f
     private var layoutAnimator: android.animation.ValueAnimator? = null
     private var scaleAnimator: android.animation.ValueAnimator? = null
+
+    private var currentTrackColor: Int = Color.argb(60, 255, 255, 255)
+    private var currentProgressColor: Int = Color.WHITE
+    private var currentDotBaseColor: Int = Color.WHITE
+    private var themeAnimator: android.animation.ValueAnimator? = null
+
+    private fun getTargetColors(): Triple<Int, Int, Int> {
+        return if (isScreenOff) {
+            Triple(
+                Color.argb(40, 255, 255, 255),
+                Color.argb(128, 255, 255, 255),
+                Color.argb(128, 255, 255, 255)
+            )
+        } else if (isDarkTheme) {
+            Triple(
+                Color.argb(60, 255, 255, 255),
+                Color.WHITE,
+                Color.WHITE
+            )
+        } else {
+            Triple(
+                Color.argb(60, 0, 0, 0),
+                Color.BLACK,
+                Color.BLACK
+            )
+        }
+    }
+
+    private fun animateThemeChange() {
+        themeAnimator?.cancel()
+        val (targetTrack, targetProgress, targetDot) = getTargetColors()
+        val startTrack = currentTrackColor
+        val startProgress = currentProgressColor
+        val startDot = currentDotBaseColor
+        val evaluator = android.animation.ArgbEvaluator()
+
+        themeAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 600
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener { animation ->
+                val fraction = animation.animatedFraction
+                currentTrackColor = evaluator.evaluate(fraction, startTrack, targetTrack) as Int
+                currentProgressColor = evaluator.evaluate(fraction, startProgress, targetProgress) as Int
+                currentDotBaseColor = evaluator.evaluate(fraction, startDot, targetDot) as Int
+                trackPaint.color = currentTrackColor
+                progressPaint.color = currentProgressColor
+                invalidate()
+            }
+            start()
+        }
+    }
 
     private fun animateSignalLevelChange(targetLevel: Float) {
         signalAnimator?.cancel()
@@ -189,23 +242,12 @@ class DuoOverlayView(context: Context) : View(context) {
 
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
-        updateColors()
-    }
-
-    private fun updateColors() {
-        if (isScreenOff) {
-            trackPaint.color = Color.argb(40, 255, 255, 255)
-            progressPaint.color = Color.argb(128, 255, 255, 255)
-            dotPaint.color = Color.argb((128 * animatedDotAlpha).toInt(), 255, 255, 255)
-        } else if (isDarkTheme) {
-            trackPaint.color = Color.argb(60, 255, 255, 255)
-            progressPaint.color = Color.WHITE
-            dotPaint.color = Color.argb((255 * animatedDotAlpha).toInt(), 255, 255, 255)
-        } else {
-            trackPaint.color = Color.argb(60, 0, 0, 0)
-            progressPaint.color = Color.BLACK
-            dotPaint.color = Color.argb((255 * animatedDotAlpha).toInt(), 0, 0, 0)
-        }
+        val (track, progress, dot) = getTargetColors()
+        currentTrackColor = track
+        currentProgressColor = progress
+        currentDotBaseColor = dot
+        trackPaint.color = currentTrackColor
+        progressPaint.color = currentProgressColor
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -221,8 +263,6 @@ class DuoOverlayView(context: Context) : View(context) {
             cameraCenterY + baseRadius
         )
 
-        updateColors()
-
         canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
 
         val progressSweep = (animatedBatteryProgress / 100f) * animatedTotalSweep
@@ -232,17 +272,10 @@ class DuoOverlayView(context: Context) : View(context) {
 
         if (animatedDotAlpha > 0.01f) {
             val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
-            val baseDotColor = if (isScreenOff) {
-                Color.argb(128, 255, 255, 255)
-            } else if (isDarkTheme) {
-                Color.WHITE
-            } else {
-                Color.BLACK
-            }
-            val baseAlpha = Color.alpha(baseDotColor)
-            val red = Color.red(baseDotColor)
-            val green = Color.green(baseDotColor)
-            val blue = Color.blue(baseDotColor)
+            val baseAlpha = Color.alpha(currentDotBaseColor)
+            val red = Color.red(currentDotBaseColor)
+            val green = Color.green(currentDotBaseColor)
+            val blue = Color.blue(currentDotBaseColor)
 
             for (i in dotAngles.indices) {
                 val angleDeg = dotAngles[i]
@@ -266,6 +299,7 @@ class DuoOverlayView(context: Context) : View(context) {
         signalAnimator?.cancel()
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
+        themeAnimator?.cancel()
     }
 }
 
