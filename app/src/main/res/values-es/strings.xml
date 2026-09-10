@@ -1600,4 +1600,16 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="settings_translated_texts">Traducido</string>
     <string name="settings_translated_texts_desc">%d editado(s) pendiente - presiona para enviar o descartar</string>
     <string name="label_online_help_media">Ayuda para medios en linea</string>
+    <string name="feat_aod_wallpaper_use_album_art">Usar la portada del album</string>
+    <string name="feat_aod_wallpaper_title">Mostrar fondo de pantalla en AOD</string>
+    <string name="icon_network_speed">Velocidad de internet</string>
+    <string name="feat_transparent_navigation_bar_desc">Hace que la barra de navegacion sea transparente</string>
+    <string name="smart_pixels_disable_on_cast_title">Inhabilitar en transmision de pantalla</string>
+    <string name="smart_pixels_disable_on_cast_desc">Automaticamente pausa la cuadricula de pixeles sobrepuesta mientras estas transmitiendo pantalla o grabando pantalla</string>
+    <string name="pocket_mode_use_light_title">Usar sensor de luz</string>
+    <string name="pocket_mode_use_light_desc">Usa el sensor de luz ambiental en vez del sensor de proximidad para mejor funcionamiento</string>
+    <string name="pocket_mode_trigger_delay_title">Retraso para activar</string>
+    <string name="pocket_mode_lock_screen_only_title">Solo pantalla de bloqueo</string>
+    <string name="pocket_mode_lock_screen_only_desc">Solo activar el modo bolsillo si el dispositivo esta bloqueado</string>
+    <string name="sound_mode_use_shizuku_desc">Usar Shizuku (o Root) para cambiar el modo de sonido sin activar No molestar</string>
 </resources>
