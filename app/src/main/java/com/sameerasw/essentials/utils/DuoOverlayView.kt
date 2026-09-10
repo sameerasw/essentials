@@ -60,8 +60,9 @@ class DuoOverlayView(context: Context) : View(context) {
 
     var batteryLevel: Int = 100
         set(value) {
-            field = value.coerceIn(0, 100)
-            invalidate()
+            val clamped = value.coerceIn(0, 100)
+            field = clamped
+            animateBatteryChange(clamped.toFloat())
         }
 
     var isDarkTheme: Boolean = true
@@ -70,6 +71,29 @@ class DuoOverlayView(context: Context) : View(context) {
             updateColors()
             invalidate()
         }
+
+    var isScreenOff: Boolean = false
+        set(value) {
+            field = value
+            updateColors()
+            invalidate()
+        }
+
+    private var animatedBatteryProgress: Float = 100f
+    private var batteryAnimator: android.animation.ValueAnimator? = null
+
+    private fun animateBatteryChange(targetLevel: Float) {
+        batteryAnimator?.cancel()
+        batteryAnimator = android.animation.ValueAnimator.ofFloat(animatedBatteryProgress, targetLevel).apply {
+            duration = 600
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener { animation ->
+                animatedBatteryProgress = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
 
     private val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -93,7 +117,11 @@ class DuoOverlayView(context: Context) : View(context) {
     }
 
     private fun updateColors() {
-        if (isDarkTheme) {
+        if (isScreenOff) {
+            trackPaint.color = Color.argb(40, 255, 255, 255)
+            progressPaint.color = Color.argb(128, 255, 255, 255)
+            dotPaint.color = Color.argb(128, 255, 255, 255)
+        } else if (isDarkTheme) {
             trackPaint.color = Color.argb(60, 255, 255, 255)
             progressPaint.color = Color.WHITE
             dotPaint.color = Color.WHITE
@@ -122,7 +150,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
         canvas.drawArc(arcBounds, startAngle, totalSweep, false, trackPaint)
 
-        val progressSweep = (batteryLevel / 100f) * totalSweep
+        val progressSweep = (animatedBatteryProgress / 100f) * totalSweep
         if (progressSweep > 0.5f) {
             canvas.drawArc(arcBounds, startAngle, progressSweep, false, progressPaint)
         }
@@ -135,4 +163,10 @@ class DuoOverlayView(context: Context) : View(context) {
             canvas.drawCircle(dotX, dotY, dotRadiusPx, dotPaint)
         }
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        batteryAnimator?.cancel()
+    }
 }
+

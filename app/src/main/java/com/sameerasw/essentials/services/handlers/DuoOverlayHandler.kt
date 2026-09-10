@@ -50,17 +50,23 @@ class DuoOverlayHandler(
     }
     private var isBatteryReceiverRegistered = false
 
+    private var isScreenOff: Boolean = false
+
     fun init() {
         windowManager = service.getSystemService(AccessibilityService.WINDOW_SERVICE) as? WindowManager
         updateState()
     }
 
     fun onScreenOn() {
+        isScreenOff = false
+        overlayView?.isScreenOff = false
         updateState()
     }
 
     fun onScreenOff() {
-        removeOverlay()
+        isScreenOff = true
+        overlayView?.isScreenOff = true
+        updateState()
     }
 
     fun updateState() {
@@ -118,6 +124,7 @@ class DuoOverlayHandler(
                 this.arcThicknessPx = settingsRepository.getDuoArcThickness() * density
                 this.dotRadiusPx = settingsRepository.getDuoDotSize() * density
                 this.isDarkTheme = isNightMode
+                this.isScreenOff = this@DuoOverlayHandler.isScreenOff
             }
 
             if (!isOverlayAdded) {
