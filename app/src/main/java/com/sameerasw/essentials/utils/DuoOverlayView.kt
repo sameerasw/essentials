@@ -220,6 +220,7 @@ class DuoOverlayView(context: Context) : View(context) {
     var flashlightBrightnessProgress: Float = 100f
         private set
 
+    private var touchBounceAnimator: ValueAnimator? = null
     private var mediaPaletteColors: Pair<Int, Int>? = null
 
     private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
@@ -395,6 +396,19 @@ class DuoOverlayView(context: Context) : View(context) {
         }
         if (progressChanged || stateChanged) {
             updateProgressAnimation()
+        }
+    }
+
+    fun triggerTouchBounce() {
+        touchBounceAnimator?.cancel()
+        touchBounceAnimator = ValueAnimator.ofFloat(1.0f, 0.93f, 1.05f, 1.0f).apply {
+            duration = 260
+            interpolator = OvershootInterpolator(1.4f)
+            addUpdateListener { animator ->
+                animatedScaleBounce = animator.animatedValue as Float
+                invalidate()
+            }
+            start()
         }
     }
 
@@ -741,6 +755,7 @@ class DuoOverlayView(context: Context) : View(context) {
         scaleAnimator?.cancel()
         themeAnimator?.cancel()
         visibilityAnimator?.cancel()
+        touchBounceAnimator?.cancel()
     }
 }
 

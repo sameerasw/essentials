@@ -372,6 +372,10 @@ class SettingsRepository(
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
+        const val KEY_DUO_ENABLE_GESTURES = "duo_enable_gestures"
+        const val KEY_DUO_GESTURE_HAPTIC = "duo_gesture_haptic"
+        const val KEY_DUO_GESTURE_SINGLE_TAP = "duo_gesture_single_tap"
+        const val KEY_DUO_GESTURE_DOUBLE_TAP = "duo_gesture_double_tap"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3117,4 +3121,16 @@ class SettingsRepository(
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
+
+    fun isDuoEnableGesturesEnabled(): Boolean = getBoolean(KEY_DUO_ENABLE_GESTURES, true)
+    fun setDuoEnableGesturesEnabled(enabled: Boolean) = putBoolean(KEY_DUO_ENABLE_GESTURES, enabled)
+
+    fun isDuoGestureHapticEnabled(): Boolean = getBoolean(KEY_DUO_GESTURE_HAPTIC, true)
+    fun setDuoGestureHapticEnabled(enabled: Boolean) = putBoolean(KEY_DUO_GESTURE_HAPTIC, enabled)
+
+    fun getDuoGestureSingleTapAction(): String = getString(KEY_DUO_GESTURE_SINGLE_TAP, "notifications") ?: "notifications"
+    fun setDuoGestureSingleTapAction(action: String) = putString(KEY_DUO_GESTURE_SINGLE_TAP, action)
+
+    fun getDuoGestureDoubleTapAction(): String = getString(KEY_DUO_GESTURE_DOUBLE_TAP, "lock_screen") ?: "lock_screen"
+    fun setDuoGestureDoubleTapAction(action: String) = putString(KEY_DUO_GESTURE_DOUBLE_TAP, action)
 }

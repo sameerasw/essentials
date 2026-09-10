@@ -33,7 +33,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -294,6 +296,108 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
             )
+        }
+
+        Text(
+            text = stringResource(R.string.duo_section_gestures),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp),
+        )
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_touch_app_24,
+                title = stringResource(R.string.duo_enable_gestures_title),
+                description = stringResource(R.string.duo_enable_gestures_desc),
+                isChecked = viewModel.isDuoEnableGestures.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoEnableGestures(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_enable_gestures"),
+            )
+
+            AnimatedVisibility(
+                visible = viewModel.isDuoEnableGestures.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_mobile_vibrate_24,
+                        title = stringResource(R.string.duo_gesture_haptic_title),
+                        description = stringResource(R.string.duo_gesture_haptic_desc),
+                        isChecked = viewModel.isDuoGestureHaptic.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setDuoGestureHaptic(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "duo_gesture_haptic"),
+                    )
+
+                    val singleTapOptions = listOf(
+                        "notifications" to stringResource(R.string.duo_action_notifications),
+                        "screenshot" to stringResource(R.string.duo_action_screenshot),
+                        "lock_screen" to stringResource(R.string.duo_action_lock_screen),
+                        "torch" to stringResource(R.string.duo_action_torch),
+                        "recents" to stringResource(R.string.duo_action_recents),
+                        "none" to stringResource(R.string.duo_action_none),
+                    )
+                    val currentSingleTap = viewModel.duoGestureSingleTapAction.value
+                    val singleTapLabel = singleTapOptions.firstOrNull { it.first == currentSingleTap }?.second
+                        ?: stringResource(R.string.duo_action_notifications)
+
+                    ConfigPickerItem(
+                        title = stringResource(R.string.duo_gesture_single_tap_title),
+                        description = stringResource(R.string.duo_gesture_single_tap_desc),
+                        selectedValue = singleTapLabel,
+                        iconRes = R.drawable.rounded_touch_app_24,
+                    ) {
+                        singleTapOptions.forEach { (actionKey, label) ->
+                            SegmentedDropdownMenuItem(
+                                text = { Text(label) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.setDuoGestureSingleTapAction(actionKey)
+                                },
+                            )
+                        }
+                    }
+
+                    val doubleTapOptions = listOf(
+                        "lock_screen" to stringResource(R.string.duo_action_lock_screen),
+                        "recents" to stringResource(R.string.duo_action_recents),
+                        "notifications" to stringResource(R.string.duo_action_notifications),
+                        "screenshot" to stringResource(R.string.duo_action_screenshot),
+                        "torch" to stringResource(R.string.duo_action_torch),
+                        "none" to stringResource(R.string.duo_action_none),
+                    )
+                    val currentDoubleTap = viewModel.duoGestureDoubleTapAction.value
+                    val doubleTapLabel = doubleTapOptions.firstOrNull { it.first == currentDoubleTap }?.second
+                        ?: stringResource(R.string.duo_action_lock_screen)
+
+                    ConfigPickerItem(
+                        title = stringResource(R.string.duo_gesture_double_tap_title),
+                        description = stringResource(R.string.duo_gesture_double_tap_desc),
+                        selectedValue = doubleTapLabel,
+                        iconRes = R.drawable.rounded_touch_app_24,
+                    ) {
+                        doubleTapOptions.forEach { (actionKey, label) ->
+                            SegmentedDropdownMenuItem(
+                                text = { Text(label) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.setDuoGestureDoubleTapAction(actionKey)
+                                },
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         Text(

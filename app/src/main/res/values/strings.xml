@@ -2479,4 +2479,23 @@
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Only hide on AOD while idle</string>
+    <string name="duo_hide_when_screen_off_only_idle_desc">Keep active media, progress notifications, or flashlight visible on AOD</string>
+
+    <!-- Duo Gestures -->
+    <string name="duo_section_gestures">Gestures</string>
+    <string name="duo_enable_gestures_title">Cutout touch gestures</string>
+    <string name="duo_enable_gestures_desc">Interact with your camera cutout using tap, double tap, and swipe</string>
+    <string name="duo_gesture_haptic_title">Vibrate on touch</string>
+    <string name="duo_gesture_haptic_desc">Play tactile haptic feedback when tapping the cutout</string>
+    <string name="duo_gesture_single_tap_title">Single tap action</string>
+    <string name="duo_gesture_single_tap_desc">Action when tapped while idle</string>
+    <string name="duo_gesture_double_tap_title">Double tap action</string>
+    <string name="duo_gesture_double_tap_desc">Action when double tapped while idle</string>
+
+    <string name="duo_action_notifications">Notification shade</string>
+    <string name="duo_action_screenshot">Take screenshot</string>
+    <string name="duo_action_lock_screen">Lock screen</string>
+    <string name="duo_action_torch">Toggle flashlight</string>
+    <string name="duo_action_recents">Recents</string>
+    <string name="duo_action_none">None</string>
 </resources>

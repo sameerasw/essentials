@@ -42,7 +42,9 @@ import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import android.util.DisplayMetrics
+import android.graphics.PixelFormat
 import android.util.Log
+import android.view.Gravity
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
@@ -54,6 +56,7 @@ import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DuoOverlayView
+import com.sameerasw.essentials.utils.DuoTouchAnchorView
 import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
 import java.io.File
@@ -69,6 +72,8 @@ class DuoOverlayHandler(
     private var windowManager: WindowManager? = null
     private var overlayView: DuoOverlayView? = null
     private var isOverlayAdded = false
+    private var touchAnchorView: DuoTouchAnchorView? = null
+    private var isTouchAnchorAdded = false
     private val mainHandler = Handler(Looper.getMainLooper())
 
     private val settingsRepository by lazy { SettingsRepository(service) }
@@ -187,6 +192,11 @@ class DuoOverlayHandler(
         if (isFullscreen != fullscreen) {
             isFullscreen = fullscreen
             overlayView?.isFullscreen = fullscreen
+            if (fullscreen) {
+                removeTouchAnchor()
+            } else {
+                updateState()
+            }
         }
     }
 
@@ -204,6 +214,7 @@ class DuoOverlayHandler(
     fun onScreenOff() {
         isScreenOff = true
         overlayView?.isScreenOff = true
+        removeTouchAnchor()
         updateState()
     }
 
@@ -671,6 +682,57 @@ class DuoOverlayHandler(
                 overlayView?.invalidate()
             }
 
+            val gesturesEnabled = settingsRepository.isDuoEnableGesturesEnabled()
+            val canShowTouchAnchor = gesturesEnabled && !this@DuoOverlayHandler.isFullscreen && !this@DuoOverlayHandler.isScreenOff
+
+            if (canShowTouchAnchor) {
+                val touchPaddingPx = 16f * density
+                val touchRadius = cameraRadiusPx + touchPaddingPx
+                val touchDiameter = (touchRadius * 2f).toInt()
+
+                if (touchAnchorView == null) {
+                    touchAnchorView = DuoTouchAnchorView(service).apply {
+                        setupTouchCallbacks(this)
+                    }
+                }
+
+                touchAnchorView?.isHapticEnabled = settingsRepository.isDuoGestureHapticEnabled()
+
+                val anchorParams = WindowManager.LayoutParams(
+                    touchDiameter,
+                    touchDiameter,
+                    WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    PixelFormat.TRANSLUCENT
+                ).apply {
+                    gravity = Gravity.TOP or Gravity.START
+                    x = (centerX - touchRadius).toInt()
+                    y = (centerY - touchRadius).toInt()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    }
+                }
+
+                if (!isTouchAnchorAdded) {
+                    try {
+                        wm.addView(touchAnchorView, anchorParams)
+                        isTouchAnchorAdded = true
+                    } catch (e: Exception) {
+                        Log.e("DuoOverlayHandler", "Failed to add Duo touch anchor", e)
+                    }
+                } else {
+                    try {
+                        wm.updateViewLayout(touchAnchorView, anchorParams)
+                    } catch (_: Exception) {}
+                }
+            } else {
+                removeTouchAnchor()
+            }
+
             registerBatteryReceiver()
             registerSignalListeners()
             updateCurrentSignal()
@@ -922,8 +984,160 @@ class DuoOverlayHandler(
         }
     }
 
+    private fun setupTouchCallbacks(anchor: DuoTouchAnchorView) {
+        anchor.onTouchDown = {
+            overlayView?.triggerTouchBounce()
+        }
+        anchor.onSingleTap = {
+            handleCutoutSingleTap()
+        }
+        anchor.onDoubleTap = {
+            handleCutoutDoubleTap()
+        }
+        anchor.onLongPress = {
+            handleCutoutLongPress()
+        }
+        anchor.onSwipeRight = {
+            handleCutoutSwipe(isRight = true)
+        }
+        anchor.onSwipeLeft = {
+            handleCutoutSwipe(isRight = false)
+        }
+    }
+
+    private fun handleCutoutSingleTap() {
+        if (isFlashlightOn) {
+            turnOffFlashlight()
+            return
+        }
+        val controller = activeMediaController
+        if (isMediaPlaying && controller != null) {
+            val state = controller.playbackState?.state
+            if (state == PlaybackState.STATE_PLAYING) {
+                controller.transportControls.pause()
+            } else {
+                controller.transportControls.play()
+            }
+            return
+        }
+        executeConfiguredAction(settingsRepository.getDuoGestureSingleTapAction())
+    }
+
+    private fun handleCutoutDoubleTap() {
+        val controller = activeMediaController
+        if (isMediaPlaying && controller != null) {
+            controller.transportControls.skipToNext()
+            return
+        }
+        executeConfiguredAction(settingsRepository.getDuoGestureDoubleTapAction())
+    }
+
+    private fun handleCutoutLongPress() {
+        val controller = activeMediaController
+        if (isMediaPlaying && controller != null) {
+            val sessionActivity = controller.sessionActivity
+            if (sessionActivity != null) {
+                try {
+                    sessionActivity.send()
+                    return
+                } catch (_: Exception) {}
+            }
+            launchAppPackage(controller.packageName)
+        } else {
+            toggleFlashlight()
+        }
+    }
+
+    private fun handleCutoutSwipe(isRight: Boolean) {
+        val controller = activeMediaController ?: return
+        if (isRight) {
+            controller.transportControls.skipToNext()
+        } else {
+            controller.transportControls.skipToPrevious()
+        }
+    }
+
+    private fun executeConfiguredAction(action: String) {
+        when (action) {
+            "notifications" -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+            }
+            "quick_settings" -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
+            }
+            "lock_screen" -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
+                }
+            }
+            "screenshot" -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
+                }
+            }
+            "recents" -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS)
+            }
+            "torch" -> {
+                toggleFlashlight()
+            }
+            else -> {
+                // "none" or unhandled
+            }
+        }
+    }
+
+    private fun toggleFlashlight() {
+        val id = getCameraId() ?: return
+        try {
+            cameraManager.setTorchMode(id, !isFlashlightOn)
+        } catch (e: Exception) {
+            Log.e("DuoOverlayHandler", "Failed to toggle flashlight", e)
+        }
+    }
+
+    private fun turnOffFlashlight() {
+        if (!isFlashlightOn) return
+        val id = getCameraId() ?: return
+        try {
+            cameraManager.setTorchMode(id, false)
+        } catch (e: Exception) {
+            Log.e("DuoOverlayHandler", "Failed to turn off flashlight", e)
+        }
+    }
+
+    private fun launchAppPackage(packageName: String?) {
+        if (packageName.isNullOrBlank()) return
+        try {
+            val launchIntent = service.packageManager.getLaunchIntentForPackage(packageName)
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                service.startActivity(launchIntent)
+            }
+        } catch (e: Exception) {
+            Log.e("DuoOverlayHandler", "Failed to launch package $packageName", e)
+        }
+    }
+
+    private fun removeTouchAnchor() {
+        val runnable = Runnable {
+            if (isTouchAnchorAdded && touchAnchorView != null) {
+                try {
+                    windowManager?.removeView(touchAnchorView)
+                } catch (_: Exception) {}
+                isTouchAnchorAdded = false
+            }
+        }
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            runnable.run()
+        } else {
+            mainHandler.post(runnable)
+        }
+    }
+
     fun removeOverlay() {
         mainHandler.post {
+            removeTouchAnchor()
             if (isOverlayAdded && overlayView != null) {
                 try {
                     windowManager?.removeView(overlayView)
@@ -941,6 +1155,7 @@ class DuoOverlayHandler(
     fun destroy() {
         removeOverlay()
         overlayView = null
+        touchAnchorView = null
         currentArtOrIconBitmap = null
         currentMediaKey = null
         flashlightIconBitmap = null

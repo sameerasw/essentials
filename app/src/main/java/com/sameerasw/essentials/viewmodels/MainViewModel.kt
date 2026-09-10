@@ -138,6 +138,10 @@ class MainViewModel : ViewModel() {
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
+    val isDuoEnableGestures = mutableStateOf(true)
+    val isDuoGestureHaptic = mutableStateOf(true)
+    val duoGestureSingleTapAction = mutableStateOf("notifications")
+    val duoGestureDoubleTapAction = mutableStateOf("lock_screen")
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -563,6 +567,18 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+
+                    SettingsRepository.KEY_DUO_ENABLE_GESTURES ->
+                        isDuoEnableGestures.value = settingsRepository.isDuoEnableGesturesEnabled()
+
+                    SettingsRepository.KEY_DUO_GESTURE_HAPTIC ->
+                        isDuoGestureHaptic.value = settingsRepository.isDuoGestureHapticEnabled()
+
+                    SettingsRepository.KEY_DUO_GESTURE_SINGLE_TAP ->
+                        duoGestureSingleTapAction.value = settingsRepository.getDuoGestureSingleTapAction()
+
+                    SettingsRepository.KEY_DUO_GESTURE_DOUBLE_TAP ->
+                        duoGestureDoubleTapAction.value = settingsRepository.getDuoGestureDoubleTapAction()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1801,6 +1817,10 @@ class MainViewModel : ViewModel() {
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+        isDuoEnableGestures.value = settingsRepository.isDuoEnableGesturesEnabled()
+        isDuoGestureHaptic.value = settingsRepository.isDuoGestureHapticEnabled()
+        duoGestureSingleTapAction.value = settingsRepository.getDuoGestureSingleTapAction()
+        duoGestureDoubleTapAction.value = settingsRepository.getDuoGestureDoubleTapAction()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4430,6 +4450,26 @@ class MainViewModel : ViewModel() {
     fun setDuoUseMaterialYou(enabled: Boolean) {
         isDuoUseMaterialYou.value = enabled
         settingsRepository.setDuoUseMaterialYouEnabled(enabled)
+    }
+
+    fun setDuoEnableGestures(enabled: Boolean) {
+        isDuoEnableGestures.value = enabled
+        settingsRepository.setDuoEnableGesturesEnabled(enabled)
+    }
+
+    fun setDuoGestureHaptic(enabled: Boolean) {
+        isDuoGestureHaptic.value = enabled
+        settingsRepository.setDuoGestureHapticEnabled(enabled)
+    }
+
+    fun setDuoGestureSingleTapAction(action: String) {
+        duoGestureSingleTapAction.value = action
+        settingsRepository.setDuoGestureSingleTapAction(action)
+    }
+
+    fun setDuoGestureDoubleTapAction(action: String) {
+        duoGestureDoubleTapAction.value = action
+        settingsRepository.setDuoGestureDoubleTapAction(action)
     }
 
     /**
