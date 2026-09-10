@@ -2305,6 +2305,9 @@ class MainViewModel : ViewModel() {
         // Enabling pre-releases automatically enables Developer Mode; disabling turns it off
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBooleanSync(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+        if (!enabled) {
+            setDuoEnabled(false)
+        }
     }
 
     /**
@@ -2319,6 +2322,9 @@ class MainViewModel : ViewModel() {
     ) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+        if (!enabled) {
+            setDuoEnabled(false)
+        }
     }
 
     /**

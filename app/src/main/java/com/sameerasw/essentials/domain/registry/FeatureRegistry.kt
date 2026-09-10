@@ -14,6 +14,7 @@ import android.content.Intent
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
@@ -287,6 +288,11 @@ object FeatureRegistry {
                 showToggle = true,
                 parentFeatureId = "Display",
             ) {
+                override fun isDeviceSupported(context: Context): Boolean {
+                    val settingsRepository = SettingsRepository(context)
+                    return settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, false)
+                }
+
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isDuoEnabled.value
 
                 override fun isToggleEnabled(

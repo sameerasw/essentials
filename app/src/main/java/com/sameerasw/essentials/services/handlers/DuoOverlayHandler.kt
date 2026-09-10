@@ -109,7 +109,8 @@ class DuoOverlayHandler(
     }
 
     fun updateState() {
-        if (!settingsRepository.isDuoEnabled()) {
+        val isDevMode = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, false)
+        if (!isDevMode || !settingsRepository.isDuoEnabled()) {
             removeOverlay()
             return
         }

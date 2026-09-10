@@ -244,6 +244,7 @@ class ScreenOffAccessibilityService :
                 }
                 aodWallpaperOverlayHandler.updateState()
             } else if (key == SettingsRepository.KEY_DUO_ENABLED ||
+                key == SettingsRepository.KEY_DEVELOPER_MODE_ENABLED ||
                 key == SettingsRepository.KEY_DUO_USE_AUTO_DETECT ||
                 key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_X ||
                 key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_Y ||

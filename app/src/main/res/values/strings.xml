@@ -831,6 +831,7 @@
     <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_duo">Required to display the ambient indicator overlay around the camera cutout.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
