@@ -24,6 +24,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
+import androidx.palette.graphics.Palette
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -78,6 +79,11 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
+                mediaAppIcon?.let {
+                    if (isMediaPlaying) {
+                        mediaPaletteColors = extractMediaColors(it)
+                    }
+                }
                 animateThemeChange()
             }
         }
@@ -160,14 +166,51 @@ class DuoOverlayView(context: Context) : View(context) {
     var mediaProgress: Float = 0f
         private set
 
+    private var mediaPaletteColors: Pair<Int, Int>? = null
+
+    private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
+        val palette = try {
+            Palette.from(bitmap).generate()
+        } catch (_: Exception) {
+            null
+        }
+
+        val accent = if (isDarkTheme) {
+            palette?.getVibrantColor(0)
+                ?.takeIf { it != 0 }
+                ?: palette?.getLightVibrantColor(0)?.takeIf { it != 0 }
+                ?: palette?.getDominantColor(Color.WHITE)
+                ?: Color.WHITE
+        } else {
+            palette?.getDarkVibrantColor(0)
+                ?.takeIf { it != 0 }
+                ?: palette?.getVibrantColor(0)?.takeIf { it != 0 }
+                ?: palette?.getDominantColor(Color.BLACK)
+                ?: Color.BLACK
+        }
+
+        val trackAlpha = if (isDarkTheme) 90 else 110
+        val track = Color.argb(trackAlpha, Color.red(accent), Color.green(accent), Color.blue(accent))
+        return Pair(track, accent)
+    }
+
     fun setMediaState(isPlaying: Boolean, progress: Float, appIcon: Bitmap?) {
         val effectivePlaying = isPlaying && showMedia
         val playingChanged = isMediaPlaying != effectivePlaying
+        val iconChanged = mediaAppIcon != appIcon
         isMediaPlaying = effectivePlaying
         if (appIcon != null || !effectivePlaying) {
             mediaAppIcon = appIcon
         }
         mediaProgress = progress.coerceIn(0f, 100f)
+
+        if (effectivePlaying && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
+            mediaPaletteColors = extractMediaColors(appIcon)
+            animateThemeChange()
+        } else if (!effectivePlaying && mediaPaletteColors != null) {
+            mediaPaletteColors = null
+            animateThemeChange()
+        }
 
         if (playingChanged) {
             animateLayoutChange()
@@ -233,11 +276,22 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun getTargetColors(): Triple<Int, Int, Int> {
         if (isScreenOff) {
+            if (isMediaPlaying && mediaPaletteColors != null) {
+                val (_, accent) = mediaPaletteColors!!
+                val dimProgress = Color.argb(160, Color.red(accent), Color.green(accent), Color.blue(accent))
+                val dimTrack = Color.argb(50, Color.red(accent), Color.green(accent), Color.blue(accent))
+                return Triple(dimTrack, dimProgress, dimProgress)
+            }
             return Triple(
                 Color.argb(40, 255, 255, 255),
                 Color.argb(128, 255, 255, 255),
                 Color.argb(128, 255, 255, 255)
             )
+        }
+
+        if (isMediaPlaying && mediaPaletteColors != null) {
+            val (track, progress) = mediaPaletteColors!!
+            return Triple(track, progress, progress)
         }
 
         if (useMaterialYouColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
