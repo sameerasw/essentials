@@ -56,6 +56,11 @@ import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
 import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DuoOverlayHandler(
     private val service: AccessibilityService,
@@ -108,6 +113,24 @@ class DuoOverlayHandler(
     private var isMediaPlaying = false
     private var isProgressListenerRegistered = false
 
+    private val handlerScope = CoroutineScope(Dispatchers.Main + Job())
+    private var lastMediaChangeTimestamp = 0L
+    private val MEDIA_UPDATE_DEBOUNCE_MS = 2000L
+
+    private val mediaUpdateRunnable = Runnable {
+        checkAndApplyMediaState()
+    }
+
+    private fun scheduleMediaUpdate() {
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastMediaChangeTimestamp < MEDIA_UPDATE_DEBOUNCE_MS) {
+            return
+        }
+        lastMediaChangeTimestamp = now
+        mainHandler.removeCallbacks(mediaUpdateRunnable)
+        mainHandler.postDelayed(mediaUpdateRunnable, MEDIA_UPDATE_DEBOUNCE_MS)
+    }
+
     private val progressNotificationListener = object : NotificationListener.ProgressNotificationListener {
         override fun onProgressNotificationUpdated(data: ProgressNotificationData?) {
             mainHandler.post {
@@ -118,15 +141,15 @@ class DuoOverlayHandler(
 
     private val mediaCallback = object : MediaController.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackState?) {
-            checkAndApplyMediaState()
+            scheduleMediaUpdate()
         }
 
         override fun onMetadataChanged(metadata: MediaMetadata?) {
-            checkAndApplyMediaState()
+            scheduleMediaUpdate()
         }
 
         override fun onSessionDestroyed() {
-            checkAndApplyMediaState()
+            scheduleMediaUpdate()
         }
     }
 
@@ -262,7 +285,7 @@ class DuoOverlayHandler(
         }
     }
 
-    private fun updateActiveMediaSession(controllers: List<MediaController>?) {
+    private fun updateActiveMediaSession(controllers: List<MediaController>?, isInitial: Boolean = false) {
         mainHandler.post {
             val playingController = controllers?.firstOrNull {
                 it.playbackState?.state == PlaybackState.STATE_PLAYING
@@ -273,8 +296,22 @@ class DuoOverlayHandler(
                 activeMediaController?.unregisterCallback(mediaCallback)
                 activeMediaController = target
                 target?.registerCallback(mediaCallback, mainHandler)
+                if (isInitial) {
+                    checkAndApplyMediaState()
+                } else {
+                    scheduleMediaUpdate()
+                }
+            } else {
+                val wasPlaying = isMediaPlaying
+                val nowPlaying = target?.playbackState?.state == PlaybackState.STATE_PLAYING
+                if (wasPlaying != nowPlaying) {
+                    if (isInitial) {
+                        checkAndApplyMediaState()
+                    } else {
+                        scheduleMediaUpdate()
+                    }
+                }
             }
-            checkAndApplyMediaState()
         }
     }
 
@@ -318,7 +355,16 @@ class DuoOverlayHandler(
 
             if (currentMediaKey != mediaKey || currentArtOrIconBitmap == null) {
                 currentMediaKey = mediaKey
-                currentArtOrIconBitmap = extractMediaArtworkOrAppIcon(controller.metadata, controller)
+                handlerScope.launch(Dispatchers.IO) {
+                    val artOrIcon = extractMediaArtworkOrAppIcon(controller.metadata, controller)
+                    withContext(Dispatchers.Main) {
+                        if (currentMediaKey == mediaKey && isMediaPlaying) {
+                            currentArtOrIconBitmap = artOrIcon
+                            updateMediaProgress()
+                            checkAndApplyProgressNotificationState()
+                        }
+                    }
+                }
             }
 
             updateMediaProgress()
@@ -425,7 +471,7 @@ class DuoOverlayHandler(
                     msm.addOnActiveSessionsChangedListener(activeSessionsListener, componentName)
                     isMediaListenerRegistered = true
                     val initialSessions = msm.getActiveSessions(componentName)
-                    updateActiveMediaSession(initialSessions)
+                    updateActiveMediaSession(initialSessions, isInitial = true)
                 }
             } catch (e: Exception) {
                 Log.e("DuoOverlayHandler", "Failed to register media session listener", e)
@@ -435,6 +481,7 @@ class DuoOverlayHandler(
 
     private fun unregisterMediaSessionListener() {
         mainHandler.removeCallbacks(mediaProgressTicker)
+        mainHandler.removeCallbacks(mediaUpdateRunnable)
         if (isMediaListenerRegistered) {
             try {
                 mediaSessionManager?.removeOnActiveSessionsChangedListener(activeSessionsListener)
@@ -443,6 +490,8 @@ class DuoOverlayHandler(
             activeMediaController = null
             isMediaListenerRegistered = false
             isMediaPlaying = false
+            currentMediaKey = null
+            currentArtOrIconBitmap = null
             overlayView?.setMediaState(isPlaying = false, progress = 0f, appIcon = null)
         }
     }

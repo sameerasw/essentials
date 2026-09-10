@@ -207,24 +207,47 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
         val palette = try {
-            Palette.from(bitmap).generate()
+            Palette.from(bitmap)
+                .maximumColorCount(24)
+                .generate()
         } catch (_: Exception) {
             null
         }
 
-        val accent = if (isDarkTheme) {
-            palette?.getVibrantColor(0)
-                ?.takeIf { it != 0 }
-                ?: palette?.getLightVibrantColor(0)?.takeIf { it != 0 }
-                ?: palette?.getDominantColor(Color.WHITE)
+        val dominantSwatch = palette?.dominantSwatch
+        val vibrantSwatch = palette?.vibrantSwatch
+        val lightVibrantSwatch = palette?.lightVibrantSwatch
+        val darkVibrantSwatch = palette?.darkVibrantSwatch
+        val mutedSwatch = palette?.mutedSwatch
+        val lightMutedSwatch = palette?.lightMutedSwatch
+        val darkMutedSwatch = palette?.darkMutedSwatch
+
+        val rawAccent = if (isDarkTheme) {
+            vibrantSwatch?.rgb
+                ?: lightVibrantSwatch?.rgb
+                ?: dominantSwatch?.rgb
+                ?: mutedSwatch?.rgb
+                ?: lightMutedSwatch?.rgb
                 ?: Color.WHITE
         } else {
-            palette?.getDarkVibrantColor(0)
-                ?.takeIf { it != 0 }
-                ?: palette?.getVibrantColor(0)?.takeIf { it != 0 }
-                ?: palette?.getDominantColor(Color.BLACK)
+            darkVibrantSwatch?.rgb
+                ?: vibrantSwatch?.rgb
+                ?: dominantSwatch?.rgb
+                ?: darkMutedSwatch?.rgb
+                ?: mutedSwatch?.rgb
                 ?: Color.BLACK
         }
+
+        val hsv = FloatArray(3)
+        android.graphics.Color.colorToHSV(rawAccent, hsv)
+        if (isDarkTheme) {
+            hsv[1] = hsv[1].coerceIn(0.4f, 0.95f)
+            hsv[2] = hsv[2].coerceIn(0.7f, 1.0f)
+        } else {
+            hsv[1] = hsv[1].coerceIn(0.5f, 1.0f)
+            hsv[2] = hsv[2].coerceIn(0.2f, 0.65f)
+        }
+        val accent = android.graphics.Color.HSVToColor(hsv)
 
         val trackAlpha = if (isDarkTheme) 90 else 110
         val track = Color.argb(trackAlpha, Color.red(accent), Color.green(accent), Color.blue(accent))
