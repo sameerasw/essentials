@@ -19,6 +19,9 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
@@ -40,13 +43,17 @@ import android.telephony.TelephonyManager
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DuoOverlayView
+import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
 import java.io.File
 
@@ -62,6 +69,32 @@ class DuoOverlayHandler(
     private val telephonyManager by lazy { service.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager }
     private val connectivityManager by lazy { service.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager }
     private val wifiManager by lazy { service.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager }
+    private val cameraManager by lazy { service.getSystemService(Context.CAMERA_SERVICE) as CameraManager }
+
+    private var isFlashlightOn = false
+    private var currentFlashlightLevel = 1
+    private var flashlightIconBitmap: Bitmap? = null
+    private var isTorchCallbackRegistered = false
+
+    private val torchCallback = object : CameraManager.TorchCallback() {
+        override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
+            val primaryId = getCameraId()
+            if (cameraId != primaryId) return
+            mainHandler.post {
+                isFlashlightOn = enabled
+                checkAndApplyFlashlightState()
+            }
+        }
+
+        override fun onTorchStrengthLevelChanged(cameraId: String, newStrengthLevel: Int) {
+            val primaryId = getCameraId()
+            if (cameraId != primaryId) return
+            mainHandler.post {
+                currentFlashlightLevel = newStrengthLevel
+                checkAndApplyFlashlightState()
+            }
+        }
+    }
 
     private var telephonyCallback: Any? = null
     private var isTelephonyRegistered = false
@@ -512,6 +545,7 @@ class DuoOverlayHandler(
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
+                this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
             }
 
             if (!isOverlayAdded) {
@@ -548,6 +582,98 @@ class DuoOverlayHandler(
             } else {
                 unregisterProgressNotificationListener()
             }
+
+            if (settingsRepository.isDuoShowFlashlightEnabled()) {
+                registerTorchCallback()
+            } else {
+                unregisterTorchCallback()
+            }
+        }
+    }
+
+    private var primaryCameraId: String? = null
+    private var maxFlashlightLevel: Int = -1
+
+    private fun getCameraId(): String? {
+        if (primaryCameraId != null) return primaryCameraId
+        return try {
+            val id = cameraManager.cameraIdList.firstOrNull { camId ->
+                val chars = cameraManager.getCameraCharacteristics(camId)
+                val flashAvailable = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+                val facing = chars.get(CameraCharacteristics.LENS_FACING)
+                flashAvailable && facing == CameraCharacteristics.LENS_FACING_BACK
+            } ?: cameraManager.cameraIdList.firstOrNull()
+            primaryCameraId = id
+            if (id != null) {
+                maxFlashlightLevel = FlashlightUtil.getMaxLevel(service, id)
+            }
+            id
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun getFlashlightIcon(): Bitmap? {
+        if (flashlightIconBitmap == null) {
+            try {
+                val drawable = ContextCompat.getDrawable(service, R.drawable.rounded_flashlight_on_24)?.mutate()
+                drawable?.setTint(Color.WHITE)
+                if (drawable != null) {
+                    flashlightIconBitmap = AppUtil.drawableToBitmap(drawable, 64)
+                }
+            } catch (_: Exception) {}
+        }
+        return flashlightIconBitmap
+    }
+
+    private fun checkAndApplyFlashlightState() {
+        mainHandler.post {
+            val showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
+            val isOn = isFlashlightOn && showFlashlight
+            if (isOn) {
+                if (primaryCameraId == null) {
+                    getCameraId()
+                }
+                val maxLevel = if (maxFlashlightLevel > 1) maxFlashlightLevel else 1
+                val progress = if (maxLevel > 1) {
+                    (currentFlashlightLevel.toFloat() / maxLevel.toFloat() * 100f).coerceIn(0f, 100f)
+                } else {
+                    100f
+                }
+                overlayView?.setFlashlightState(
+                    isOn = true,
+                    brightnessProgress = progress,
+                    icon = getFlashlightIcon()
+                )
+            } else {
+                overlayView?.setFlashlightState(
+                    isOn = false,
+                    brightnessProgress = 0f,
+                    icon = null
+                )
+            }
+        }
+    }
+
+    private fun registerTorchCallback() {
+        if (!isTorchCallbackRegistered) {
+            try {
+                cameraManager.registerTorchCallback(torchCallback, mainHandler)
+                isTorchCallbackRegistered = true
+                checkAndApplyFlashlightState()
+            } catch (e: Exception) {
+                Log.e("DuoOverlayHandler", "Failed to register torch callback", e)
+            }
+        }
+    }
+
+    private fun unregisterTorchCallback() {
+        if (isTorchCallbackRegistered) {
+            try {
+                cameraManager.unregisterTorchCallback(torchCallback)
+            } catch (_: Exception) {}
+            isTorchCallbackRegistered = false
+            checkAndApplyFlashlightState()
         }
     }
 
@@ -557,7 +683,7 @@ class DuoOverlayHandler(
             val data = incomingData ?: if (showProgress) NotificationListener.getLatestProgressNotification() else null
             val isActive = showProgress && data != null && !isMediaPlaying
 
-            if (isActive && data != null) {
+            if (data != null && isActive) {
                 overlayView?.setProgressNotificationState(
                     isActive = true,
                     progress = data.progress,
@@ -704,6 +830,7 @@ class DuoOverlayHandler(
             unregisterSignalListeners()
             unregisterMediaSessionListener()
             unregisterProgressNotificationListener()
+            unregisterTorchCallback()
         }
     }
 
@@ -712,6 +839,7 @@ class DuoOverlayHandler(
         overlayView = null
         currentArtOrIconBitmap = null
         currentMediaKey = null
+        flashlightIconBitmap = null
     }
 }
 

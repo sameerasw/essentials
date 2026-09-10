@@ -134,6 +134,7 @@ class MainViewModel : ViewModel() {
     val isDuoShowNetworks = mutableStateOf(true)
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
+    val isDuoShowFlashlight = mutableStateOf(true)
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoUseMaterialYou = mutableStateOf(true)
     val snoozeChannels =
@@ -548,6 +549,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_PROGRESS ->
                         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ->
+                        isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
 
                     SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
                         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
@@ -1788,6 +1792,7 @@ class MainViewModel : ViewModel() {
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
+        isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         loadSnoozeChannels(context)
@@ -4396,6 +4401,11 @@ class MainViewModel : ViewModel() {
     fun setDuoShowProgress(enabled: Boolean) {
         isDuoShowProgress.value = enabled
         settingsRepository.setDuoShowProgressEnabled(enabled)
+    }
+
+    fun setDuoShowFlashlight(enabled: Boolean) {
+        isDuoShowFlashlight.value = enabled
+        settingsRepository.setDuoShowFlashlightEnabled(enabled)
     }
 
     fun setDuoHideWhenScreenOff(enabled: Boolean) {

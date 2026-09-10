@@ -2476,6 +2476,8 @@
     <string name="duo_show_media_desc">Display playback seekbar and media player icon around the cutout</string>
     <string name="duo_show_progress_title">Progress notifications</string>
     <string name="duo_show_progress_desc">Display ongoing task and download progress around the indicator</string>
+    <string name="duo_show_flashlight_title">Flashlight</string>
+    <string name="duo_show_flashlight_desc">Display flashlight state and brightness level around the indicator</string>
     <string name="duo_section_behavior">Behavior</string>
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_material_you_desc">Use accent color from wallpaper</string>

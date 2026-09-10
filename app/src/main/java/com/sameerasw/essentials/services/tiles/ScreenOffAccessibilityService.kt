@@ -258,6 +258,7 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_SHOW_NETWORKS ||
                 key == SettingsRepository.KEY_DUO_SHOW_MEDIA ||
                 key == SettingsRepository.KEY_DUO_SHOW_PROGRESS ||
+                key == SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ||
                 key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ||
                 key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU
             ) {

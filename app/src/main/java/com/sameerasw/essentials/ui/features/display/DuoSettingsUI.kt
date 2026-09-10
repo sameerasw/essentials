@@ -287,6 +287,17 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_progress"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_flashlight_on_24,
+                title = stringResource(R.string.duo_show_flashlight_title),
+                description = stringResource(R.string.duo_show_flashlight_desc),
+                isChecked = viewModel.isDuoShowFlashlight.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowFlashlight(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
+            )
         }
 
         Text(

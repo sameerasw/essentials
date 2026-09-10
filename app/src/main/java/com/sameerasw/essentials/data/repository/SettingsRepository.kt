@@ -367,6 +367,7 @@ class SettingsRepository(
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
+        const val KEY_DUO_SHOW_FLASHLIGHT = "duo_show_flashlight"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
 
@@ -3102,6 +3103,9 @@ class SettingsRepository(
 
     fun isDuoShowProgressEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_PROGRESS, true)
     fun setDuoShowProgressEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_PROGRESS, enabled)
+
+    fun isDuoShowFlashlightEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_FLASHLIGHT, true)
+    fun setDuoShowFlashlightEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_FLASHLIGHT, enabled)
 
     fun isDuoHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, true)
     fun setDuoHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, enabled)
