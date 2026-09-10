@@ -1596,4 +1596,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="feat_circle_to_search_gesture_width_title">Ancho de la zona de gestos</string>
     <string name="label_motion_blur">Desdibujo de movimiento</string>
     <string name="crash_logs_title">Reportes de errores</string>
+    <string name="crash_logs_desc">Mira y comparte los reportes de errores recientes</string>
 </resources>
