@@ -4,23 +4,34 @@
  *
  * Feature Module: Utilities - Overlays
  * File: DuoOverlayView.kt
- * Description: Ambient camera ring and dots overlay view.
+ * Description: Ambient camera ring and dots overlay view with media playback seekbar support.
  */
 
 package com.sameerasw.essentials.utils
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.RectF
 import android.os.Build
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
+import androidx.palette.graphics.Palette
 import kotlin.math.cos
 import kotlin.math.sin
 
 class DuoOverlayView(context: Context) : View(context) {
+    private val density = resources.displayMetrics.density
 
     var cameraCenterX: Float = 0f
         set(value) {
@@ -64,13 +75,20 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             val clamped = value.coerceIn(0, 100)
             field = clamped
-            animateBatteryChange(clamped.toFloat())
+            if (!isCustomProgressActive()) {
+                updateProgressAnimation(clamped.toFloat())
+            }
         }
 
     var isDarkTheme: Boolean = true
         set(value) {
             if (field != value) {
                 field = value
+                mediaAppIcon?.let {
+                    if (isMediaPlaying) {
+                        mediaPaletteColors = extractMediaColors(it)
+                    }
+                }
                 animateThemeChange()
             }
         }
@@ -99,8 +117,49 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var hideWhenScreenOffOnlyIdle: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityAnimation()
+            }
+        }
+
+    var showMedia: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateActiveProgressMode()
+            }
+        }
+
+    var showProgress: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateActiveProgressMode()
+            }
+        }
+
+    var showFlashlight: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateActiveProgressMode()
+            }
+        }
+
     private fun updateVisibilityAnimation() {
-        val shouldHide = isFullscreen || (isScreenOff && hideWhenScreenOff)
+        val isScreenOffHiding = if (hideWhenScreenOff) {
+            if (hideWhenScreenOffOnlyIdle) {
+                !isCustomProgressActive()
+            } else {
+                true
+            }
+        } else {
+            false
+        }
+        val shouldHide = isFullscreen || (isScreenOff && isScreenOffHiding)
         if (shouldHide) {
             animateScreenOffVisibility(false)
         } else {
@@ -121,7 +180,7 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
-                animateLayoutChange(value)
+                animateLayoutChange()
             }
         }
 
@@ -134,28 +193,235 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-    private var animatedBatteryProgress: Float = 100f
-    private var batteryAnimator: android.animation.ValueAnimator? = null
+    var isMediaPlaying: Boolean = false
+        private set
+
+    var mediaAppIcon: Bitmap? = null
+        private set
+
+    var mediaProgress: Float = 0f
+        private set
+
+    var isProgressNotificationActive: Boolean = false
+        private set
+
+    var progressNotificationIcon: Bitmap? = null
+        private set
+
+    var progressNotificationProgress: Float = 0f
+        private set
+
+    var isFlashlightOn: Boolean = false
+        private set
+
+    var flashlightIcon: Bitmap? = null
+        private set
+
+    var flashlightBrightnessProgress: Float = 100f
+        private set
+
+    private var mediaPaletteColors: Pair<Int, Int>? = null
+
+    private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
+        val palette = try {
+            Palette.from(bitmap)
+                .maximumColorCount(24)
+                .generate()
+        } catch (_: Exception) {
+            null
+        }
+
+        val dominantSwatch = palette?.dominantSwatch
+        val vibrantSwatch = palette?.vibrantSwatch
+        val lightVibrantSwatch = palette?.lightVibrantSwatch
+        val darkVibrantSwatch = palette?.darkVibrantSwatch
+        val mutedSwatch = palette?.mutedSwatch
+        val lightMutedSwatch = palette?.lightMutedSwatch
+        val darkMutedSwatch = palette?.darkMutedSwatch
+
+        val rawAccent = if (isDarkTheme) {
+            vibrantSwatch?.rgb
+                ?: lightVibrantSwatch?.rgb
+                ?: dominantSwatch?.rgb
+                ?: mutedSwatch?.rgb
+                ?: lightMutedSwatch?.rgb
+                ?: Color.WHITE
+        } else {
+            darkVibrantSwatch?.rgb
+                ?: vibrantSwatch?.rgb
+                ?: dominantSwatch?.rgb
+                ?: darkMutedSwatch?.rgb
+                ?: mutedSwatch?.rgb
+                ?: Color.BLACK
+        }
+
+        val hsv = FloatArray(3)
+        android.graphics.Color.colorToHSV(rawAccent, hsv)
+        if (isDarkTheme) {
+            hsv[1] = hsv[1].coerceIn(0.4f, 0.95f)
+            hsv[2] = hsv[2].coerceIn(0.7f, 1.0f)
+        } else {
+            hsv[1] = hsv[1].coerceIn(0.5f, 1.0f)
+            hsv[2] = hsv[2].coerceIn(0.2f, 0.65f)
+        }
+        val accent = android.graphics.Color.HSVToColor(hsv)
+
+        val trackAlpha = if (isDarkTheme) 90 else 110
+        val track = Color.argb(trackAlpha, Color.red(accent), Color.green(accent), Color.blue(accent))
+        return Pair(track, accent)
+    }
+
+    private fun isCustomProgressActive(): Boolean {
+        return (isFlashlightOn && showFlashlight) ||
+            (isMediaPlaying && showMedia) ||
+            (isProgressNotificationActive && showProgress)
+    }
+
+    private fun getCurrentCustomProgress(): Float {
+        return when {
+            isFlashlightOn && showFlashlight -> flashlightBrightnessProgress
+            isMediaPlaying && showMedia -> mediaProgress
+            else -> progressNotificationProgress
+        }
+    }
+
+    private fun getCurrentCustomIcon(): Bitmap? {
+        return when {
+            isFlashlightOn && showFlashlight -> flashlightIcon
+            isMediaPlaying && showMedia -> mediaAppIcon
+            else -> progressNotificationIcon
+        }
+    }
+
+    private fun updateActiveProgressMode() {
+        val wasActive = animatedCustomFraction > 0.5f
+        val isNowActive = isCustomProgressActive()
+        if (isMediaPlaying && showMedia && !isFlashlightOn && mediaAppIcon != null) {
+            mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
+        } else {
+            mediaPaletteColors = null
+        }
+        animateThemeChange()
+        if (wasActive != isNowActive) {
+            animateLayoutChange()
+            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
+                updateVisibilityAnimation()
+            }
+        }
+        updateProgressAnimation()
+    }
+
+    fun setMediaState(isPlaying: Boolean, progress: Float, appIcon: Bitmap?) {
+        val wasActive = isCustomProgressActive()
+        val iconChanged = mediaAppIcon != appIcon
+        isMediaPlaying = isPlaying
+        if (appIcon != null || !isPlaying) {
+            mediaAppIcon = appIcon
+        }
+        mediaProgress = progress.coerceIn(0f, 100f)
+
+        if (isPlaying && showMedia && !isFlashlightOn && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
+            mediaPaletteColors = extractMediaColors(appIcon)
+            animateThemeChange()
+        } else if ((!isPlaying || !showMedia || isFlashlightOn) && mediaPaletteColors != null) {
+            mediaPaletteColors = null
+            animateThemeChange()
+        }
+
+        val isNowActive = isCustomProgressActive()
+        if (wasActive != isNowActive) {
+            animateLayoutChange()
+            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
+                updateVisibilityAnimation()
+            }
+        }
+        updateProgressAnimation()
+    }
+
+    fun setProgressNotificationState(isActive: Boolean, progress: Float, icon: Bitmap?) {
+        val wasActive = isCustomProgressActive()
+        isProgressNotificationActive = isActive
+        if (icon != null || !isActive) {
+            progressNotificationIcon = icon
+        }
+        progressNotificationProgress = progress.coerceIn(0f, 100f)
+
+        if (!isMediaPlaying || !showMedia || isFlashlightOn) {
+            if (mediaPaletteColors != null) {
+                mediaPaletteColors = null
+                animateThemeChange()
+            }
+        }
+
+        val isNowActive = isCustomProgressActive()
+        if (wasActive != isNowActive) {
+            animateLayoutChange()
+            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
+                updateVisibilityAnimation()
+            }
+        }
+        updateProgressAnimation()
+    }
+
+    fun setFlashlightState(isOn: Boolean, brightnessProgress: Float, icon: Bitmap?) {
+        val wasActive = isCustomProgressActive()
+        val stateChanged = isFlashlightOn != isOn
+        isFlashlightOn = isOn
+        if (icon != null || !isOn) {
+            flashlightIcon = icon
+        }
+        val clampedProgress = brightnessProgress.coerceIn(0f, 100f)
+        val progressChanged = kotlin.math.abs(flashlightBrightnessProgress - clampedProgress) > 0.1f
+        flashlightBrightnessProgress = clampedProgress
+
+        if (stateChanged) {
+            if (isOn && showFlashlight) {
+                if (mediaPaletteColors != null) {
+                    mediaPaletteColors = null
+                    animateThemeChange()
+                }
+            } else if (isMediaPlaying && showMedia && mediaAppIcon != null) {
+                mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
+                animateThemeChange()
+            }
+        }
+
+        val isNowActive = isCustomProgressActive()
+        if (wasActive != isNowActive) {
+            animateLayoutChange()
+            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
+                updateVisibilityAnimation()
+            }
+        }
+        if (progressChanged || stateChanged) {
+            updateProgressAnimation()
+        }
+    }
+
+    private var targetProgress: Float = 100f
+    private var animatedProgress: Float = 100f
+    private var progressAnimator: ValueAnimator? = null
 
     private var animatedSignalLevel: Float = 4f
-    private var signalAnimator: android.animation.ValueAnimator? = null
+    private var signalAnimator: ValueAnimator? = null
 
     private var animatedStartAngle: Float = 140f
     private var animatedTotalSweep: Float = 260f
     private var animatedDotAlpha: Float = 1.0f
+    private var animatedCustomFraction: Float = 0.0f
     private var animatedScaleBounce: Float = 1.0f
-    private var layoutAnimator: android.animation.ValueAnimator? = null
-    private var scaleAnimator: android.animation.ValueAnimator? = null
+    private var layoutAnimator: ValueAnimator? = null
+    private var scaleAnimator: ValueAnimator? = null
 
     private var animatedVisibilityAlpha: Float = 1.0f
     private var animatedVisibilityScale: Float = 1.0f
     private var animatedVisibilityRotation: Float = 0f
-    private var visibilityAnimator: android.animation.ValueAnimator? = null
+    private var visibilityAnimator: ValueAnimator? = null
 
     private var currentTrackColor: Int = Color.argb(60, 255, 255, 255)
     private var currentProgressColor: Int = Color.WHITE
     private var currentDotBaseColor: Int = Color.WHITE
-    private var themeAnimator: android.animation.ValueAnimator? = null
+    private var themeAnimator: ValueAnimator? = null
 
     private fun animateScreenOffVisibility(visible: Boolean) {
         visibilityAnimator?.cancel()
@@ -168,12 +434,12 @@ class DuoOverlayView(context: Context) : View(context) {
         val startRotation = animatedVisibilityRotation
         val targetRotation = if (visible) 0f else -65f
 
-        visibilityAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+        visibilityAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 750
             interpolator = if (visible) {
-                android.view.animation.OvershootInterpolator(1.15f)
+                OvershootInterpolator(1.15f)
             } else {
-                android.view.animation.DecelerateInterpolator()
+                DecelerateInterpolator()
             }
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
@@ -188,11 +454,22 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun getTargetColors(): Triple<Int, Int, Int> {
         if (isScreenOff) {
+            if (isMediaPlaying && showMedia && mediaPaletteColors != null) {
+                val (_, accent) = mediaPaletteColors!!
+                val dimProgress = Color.argb(160, Color.red(accent), Color.green(accent), Color.blue(accent))
+                val dimTrack = Color.argb(50, Color.red(accent), Color.green(accent), Color.blue(accent))
+                return Triple(dimTrack, dimProgress, dimProgress)
+            }
             return Triple(
                 Color.argb(40, 255, 255, 255),
                 Color.argb(128, 255, 255, 255),
                 Color.argb(128, 255, 255, 255)
             )
+        }
+
+        if (isMediaPlaying && showMedia && mediaPaletteColors != null) {
+            val (track, progress) = mediaPaletteColors!!
+            return Triple(track, progress, progress)
         }
 
         if (useMaterialYouColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -230,11 +507,11 @@ class DuoOverlayView(context: Context) : View(context) {
         val startTrack = currentTrackColor
         val startProgress = currentProgressColor
         val startDot = currentDotBaseColor
-        val evaluator = android.animation.ArgbEvaluator()
+        val evaluator = ArgbEvaluator()
 
-        themeAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = 600
-            interpolator = android.view.animation.DecelerateInterpolator()
+        themeAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 500
+            interpolator = DecelerateInterpolator()
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
                 currentTrackColor = evaluator.evaluate(fraction, startTrack, targetTrack) as Int
@@ -250,9 +527,9 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun animateSignalLevelChange(targetLevel: Float) {
         signalAnimator?.cancel()
-        signalAnimator = android.animation.ValueAnimator.ofFloat(animatedSignalLevel, targetLevel).apply {
-            duration = 750
-            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+        signalAnimator = ValueAnimator.ofFloat(animatedSignalLevel, targetLevel).apply {
+            duration = 600
+            interpolator = OvershootInterpolator(1.1f)
             addUpdateListener { animation ->
                 animatedSignalLevel = animation.animatedValue as Float
                 invalidate()
@@ -261,47 +538,66 @@ class DuoOverlayView(context: Context) : View(context) {
         }
     }
 
-    private fun animateBatteryChange(targetLevel: Float) {
-        batteryAnimator?.cancel()
-        batteryAnimator = android.animation.ValueAnimator.ofFloat(animatedBatteryProgress, targetLevel).apply {
-            duration = 900
-            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+    private fun getActiveTargetProgress(): Float {
+        return if (isCustomProgressActive()) {
+            getCurrentCustomProgress()
+        } else {
+            batteryLevel.toFloat()
+        }
+    }
+
+    private fun updateProgressAnimation(target: Float = getActiveTargetProgress()) {
+        targetProgress = target
+        if (kotlin.math.abs(animatedProgress - targetProgress) < 0.05f) {
+            animatedProgress = targetProgress
+            invalidate()
+            return
+        }
+        val startVal = animatedProgress
+        progressAnimator?.cancel()
+        progressAnimator = ValueAnimator.ofFloat(startVal, targetProgress).apply {
+            duration = 350
+            interpolator = DecelerateInterpolator()
             addUpdateListener { animation ->
-                animatedBatteryProgress = animation.animatedValue as Float
+                animatedProgress = animation.animatedValue as Float
                 invalidate()
             }
             start()
         }
     }
 
-    private fun animateLayoutChange(showingNetworks: Boolean) {
+    private fun animateLayoutChange() {
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
 
-        val targetStartAngle = if (showingNetworks) 140f else -90f
-        val targetTotalSweep = if (showingNetworks) 260f else 360f
-        val targetDotAlpha = if (showingNetworks) 1.0f else 0.0f
+        val isCustom = isCustomProgressActive()
+        val targetCustomFraction = if (isCustom) 1.0f else 0.0f
+        val targetStartAngle = if (isCustom) 120f else (if (showNetworks) 140f else -90f)
+        val targetTotalSweep = if (isCustom) 300f else (if (showNetworks) 260f else 360f)
+        val targetDotAlpha = if (isCustom) 0.0f else (if (showNetworks) 1.0f else 0.0f)
 
         val startStartAngle = animatedStartAngle
         val startTotalSweep = animatedTotalSweep
         val startDotAlpha = animatedDotAlpha
+        val startCustomFraction = animatedCustomFraction
 
-        layoutAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = 850
-            interpolator = android.view.animation.OvershootInterpolator(1.15f)
+        layoutAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 650
+            interpolator = OvershootInterpolator(1.1f)
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
                 animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
                 animatedTotalSweep = startTotalSweep + (targetTotalSweep - startTotalSweep) * fraction
                 animatedDotAlpha = (startDotAlpha + (targetDotAlpha - startDotAlpha) * fraction).coerceIn(0f, 1f)
+                animatedCustomFraction = (startCustomFraction + (targetCustomFraction - startCustomFraction) * fraction).coerceIn(0f, 1f)
                 invalidate()
             }
             start()
         }
 
-        scaleAnimator = android.animation.ValueAnimator.ofFloat(1.0f, 1.04f, 1.0f).apply {
-            duration = 850
-            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+        scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.03f, 1.0f).apply {
+            duration = 650
+            interpolator = OvershootInterpolator(1.1f)
             addUpdateListener { animation ->
                 animatedScaleBounce = animation.animatedValue as Float
                 invalidate()
@@ -324,10 +620,12 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.FILL
     }
 
+    private val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val iconClipPath = Path()
+    private val iconRect = RectF()
     private val arcBounds = RectF()
 
     init {
-        setLayerType(LAYER_TYPE_SOFTWARE, null)
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
         currentProgressColor = progress
@@ -341,7 +639,7 @@ class DuoOverlayView(context: Context) : View(context) {
         if (cameraCenterX <= 0 && cameraCenterY <= 0) return
         if (animatedVisibilityAlpha <= 0.005f) return
 
-        val baseRadius = (cameraRadiusPx + 14f * resources.displayMetrics.density) * ringRadiusScale * animatedScaleBounce
+        val baseRadius = (cameraRadiusPx + 14f * density) * ringRadiusScale * animatedScaleBounce
         arcBounds.set(
             cameraCenterX - baseRadius,
             cameraCenterY - baseRadius,
@@ -364,7 +662,7 @@ class DuoOverlayView(context: Context) : View(context) {
         )
         canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
 
-        val progressSweep = (animatedBatteryProgress / 100f) * animatedTotalSweep
+        val progressSweep = (animatedProgress.coerceIn(0f, 100f) / 100f) * animatedTotalSweep
         if (progressSweep > 0.5f) {
             val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
             progressPaint.color = Color.argb(
@@ -376,7 +674,8 @@ class DuoOverlayView(context: Context) : View(context) {
             canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
         }
 
-        if (animatedDotAlpha > 0.01f) {
+        val effectiveDotAlpha = animatedDotAlpha * (1f - animatedCustomFraction)
+        if (effectiveDotAlpha > 0.01f) {
             val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
             val baseAlpha = Color.alpha(currentDotBaseColor)
             val red = Color.red(currentDotBaseColor)
@@ -389,12 +688,45 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
                 val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
 
-                // Signal level from 0..4 smoothly determines opacity of each dot (dot 0: 0..1, dot 1: 1..2, etc.)
                 val dotActiveFraction = (animatedSignalLevel - i).coerceIn(0f, 1f)
-                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * animatedDotAlpha * animatedVisibilityAlpha
+                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * effectiveDotAlpha * animatedVisibilityAlpha
                 dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
 
-                canvas.drawCircle(dotX, dotY, dotRadiusPx * animatedDotAlpha, dotPaint)
+                canvas.drawCircle(dotX, dotY, dotRadiusPx * effectiveDotAlpha, dotPaint)
+            }
+        }
+
+        if (animatedCustomFraction > 0.01f) {
+            val icon = getCurrentCustomIcon()
+            if (icon != null) {
+                val gapCenterAngleDeg = (animatedStartAngle + animatedTotalSweep + (360f - animatedTotalSweep) / 2f) % 360f
+                val angleRad = Math.toRadians(gapCenterAngleDeg.toDouble())
+                val downwardOffset = 4f * density
+                val iconRadius = (dotRadiusPx * 2.85f) * animatedCustomFraction
+                val iconCenterX = (cameraCenterX + (baseRadius + downwardOffset) * cos(angleRad)).toFloat()
+                val iconCenterY = (cameraCenterY + (baseRadius + downwardOffset) * sin(angleRad)).toFloat()
+
+                if (iconRadius > 1f) {
+                    val saveIcon = canvas.save()
+                    iconClipPath.reset()
+                    iconClipPath.addCircle(iconCenterX, iconCenterY, iconRadius, Path.Direction.CW)
+                    canvas.clipPath(iconClipPath)
+
+                    iconRect.set(
+                        iconCenterX - iconRadius,
+                        iconCenterY - iconRadius,
+                        iconCenterX + iconRadius,
+                        iconCenterY + iconRadius
+                    )
+                    iconPaint.alpha = (255 * animatedCustomFraction * animatedVisibilityAlpha).toInt()
+                    if (isFlashlightOn && showFlashlight) {
+                        iconPaint.colorFilter = PorterDuffColorFilter(currentProgressColor, PorterDuff.Mode.SRC_IN)
+                    } else {
+                        iconPaint.colorFilter = null
+                    }
+                    canvas.drawBitmap(icon, null, iconRect, iconPaint)
+                    canvas.restoreToCount(saveIcon)
+                }
             }
         }
 
@@ -403,7 +735,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        batteryAnimator?.cancel()
+        progressAnimator?.cancel()
         signalAnimator?.cancel()
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
@@ -411,4 +743,5 @@ class DuoOverlayView(context: Context) : View(context) {
         visibilityAnimator?.cancel()
     }
 }
+
 

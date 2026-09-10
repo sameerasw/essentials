@@ -132,7 +132,11 @@ class MainViewModel : ViewModel() {
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowNetworks = mutableStateOf(true)
+    val isDuoShowMedia = mutableStateOf(true)
+    val isDuoShowProgress = mutableStateOf(true)
+    val isDuoShowFlashlight = mutableStateOf(true)
     val isDuoHideWhenScreenOff = mutableStateOf(true)
+    val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -321,6 +325,7 @@ class MainViewModel : ViewModel() {
     val isRippleSettingEnabled = mutableStateOf(true)
     val isMotionBlurEnabled = mutableStateOf(false)
     val isMotionBlurSettingEnabled = mutableStateOf(false)
+    val motionBlurScale = mutableFloatStateOf(1.0f)
     val isOnlineHelpMediaEnabled = mutableStateOf(true)
     val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
@@ -541,8 +546,20 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
 
+                    SettingsRepository.KEY_DUO_SHOW_MEDIA ->
+                        isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_PROGRESS ->
+                        isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ->
+                        isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
+
                     SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
                         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+
+                    SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE ->
+                        isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
@@ -1778,7 +1795,11 @@ class MainViewModel : ViewModel() {
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+        isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
+        isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
+        isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+        isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
@@ -2307,9 +2328,6 @@ class MainViewModel : ViewModel() {
         // Enabling pre-releases automatically enables Developer Mode; disabling turns it off
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBooleanSync(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
-        if (!enabled) {
-            setDuoEnabled(false)
-        }
     }
 
     /**
@@ -2324,9 +2342,6 @@ class MainViewModel : ViewModel() {
     ) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
-        if (!enabled) {
-            setDuoEnabled(false)
-        }
     }
 
     /**
@@ -2639,6 +2654,14 @@ class MainViewModel : ViewModel() {
         updateMotionBlurState(context)
     }
 
+    fun setMotionBlurScale(
+        scale: Float,
+        context: Context? = null,
+    ) {
+        motionBlurScale.floatValue = scale
+        settingsRepository.putFloat(SettingsRepository.KEY_MOTION_BLUR_SCALE, scale)
+    }
+
     fun setOnlineHelpMediaEnabled(
         enabled: Boolean,
         context: Context? = null,
@@ -2681,6 +2704,7 @@ class MainViewModel : ViewModel() {
 
         isMotionBlurSettingEnabled.value = useMotionBlurSetting
         isMotionBlurEnabled.value = useMotionBlurSetting && !isProblematic && !isPowerSave
+        motionBlurScale.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_MOTION_BLUR_SCALE, 1.0f)
     }
 
     /**
@@ -4378,9 +4402,29 @@ class MainViewModel : ViewModel() {
         settingsRepository.setDuoShowNetworksEnabled(enabled)
     }
 
+    fun setDuoShowMedia(enabled: Boolean) {
+        isDuoShowMedia.value = enabled
+        settingsRepository.setDuoShowMediaEnabled(enabled)
+    }
+
+    fun setDuoShowProgress(enabled: Boolean) {
+        isDuoShowProgress.value = enabled
+        settingsRepository.setDuoShowProgressEnabled(enabled)
+    }
+
+    fun setDuoShowFlashlight(enabled: Boolean) {
+        isDuoShowFlashlight.value = enabled
+        settingsRepository.setDuoShowFlashlightEnabled(enabled)
+    }
+
     fun setDuoHideWhenScreenOff(enabled: Boolean) {
         isDuoHideWhenScreenOff.value = enabled
         settingsRepository.setDuoHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setDuoHideWhenScreenOffOnlyIdle(enabled: Boolean) {
+        isDuoHideWhenScreenOffOnlyIdle.value = enabled
+        settingsRepository.setDuoHideWhenScreenOffOnlyIdleEnabled(enabled)
     }
 
     fun setDuoUseMaterialYou(enabled: Boolean) {
