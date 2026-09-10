@@ -15,11 +15,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
-import android.graphics.PixelFormat
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.telephony.PhoneStateListener
+import android.telephony.SignalStrength
+import android.telephony.TelephonyCallback
+import android.telephony.TelephonyManager
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -35,6 +43,22 @@ class DuoOverlayHandler(
     private val mainHandler = Handler(Looper.getMainLooper())
 
     private val settingsRepository by lazy { SettingsRepository(service) }
+    private val telephonyManager by lazy { service.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager }
+    private val connectivityManager by lazy { service.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager }
+    private val wifiManager by lazy { service.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager }
+
+    private var telephonyCallback: Any? = null
+    private var isTelephonyRegistered = false
+    private var isNetworkCallbackRegistered = false
+
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+            updateCurrentSignal()
+        }
+        override fun onLost(network: Network) {
+            updateCurrentSignal()
+        }
+    }
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -75,6 +99,60 @@ class DuoOverlayHandler(
             return
         }
         showOrUpdateOverlay()
+    }
+
+    private fun updateCurrentSignal() {
+        mainHandler.post {
+            var level = -1
+
+            // 1. Check if connected to Wi-Fi
+            val activeNetwork = connectivityManager?.activeNetwork
+            val capabilities = activeNetwork?.let { connectivityManager?.getNetworkCapabilities(it) }
+            if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val transportInfo = capabilities.transportInfo
+                    if (transportInfo is WifiInfo) {
+                        val rssi = transportInfo.rssi
+                        if (rssi > -127) {
+                            level = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && wifiManager != null) {
+                                wifiManager?.calculateSignalLevel(rssi)?.coerceIn(0, 4) ?: 0
+                            } else {
+                                @Suppress("DEPRECATION")
+                                WifiManager.calculateSignalLevel(rssi, 5).coerceIn(0, 4)
+                            }
+                        }
+                    }
+                }
+                if (level == -1 && wifiManager != null) {
+                    @Suppress("DEPRECATION")
+                    val info = wifiManager?.connectionInfo
+                    if (info != null && info.rssi > -127) {
+                        level = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            wifiManager?.calculateSignalLevel(info.rssi)?.coerceIn(0, 4) ?: 0
+                        } else {
+                            @Suppress("DEPRECATION")
+                            WifiManager.calculateSignalLevel(info.rssi, 5).coerceIn(0, 4)
+                        }
+                    }
+                }
+            }
+
+            // 2. Cellular signal fallback / primary if on cellular
+            if (level == -1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    try {
+                        val signalStrength = telephonyManager?.signalStrength
+                        if (signalStrength != null) {
+                            level = signalStrength.level.coerceIn(0, 4)
+                        }
+                    } catch (_: Exception) {}
+                }
+            }
+
+            if (level >= 0) {
+                overlayView?.signalLevel = level
+            }
+        }
     }
 
     private fun showOrUpdateOverlay() {
@@ -148,6 +226,8 @@ class DuoOverlayHandler(
             }
 
             registerBatteryReceiver()
+            registerSignalListeners()
+            updateCurrentSignal()
         }
     }
 
@@ -181,6 +261,79 @@ class DuoOverlayHandler(
         }
     }
 
+    private fun registerSignalListeners() {
+        if (!isNetworkCallbackRegistered) {
+            try {
+                connectivityManager?.registerDefaultNetworkCallback(networkCallback)
+                isNetworkCallbackRegistered = true
+            } catch (e: Exception) {
+                android.util.Log.e("DuoOverlayHandler", "Failed to register network callback", e)
+            }
+        }
+
+        if (!isTelephonyRegistered && telephonyManager != null) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val callback = object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
+                        override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
+                            val lvl = signalStrength.level.coerceIn(0, 4)
+                            overlayView?.signalLevel = lvl
+                        }
+                    }
+                    telephonyManager?.registerTelephonyCallback(service.mainExecutor, callback)
+                    telephonyCallback = callback
+                    isTelephonyRegistered = true
+                } else {
+                    @Suppress("DEPRECATION")
+                    val listener = object : PhoneStateListener() {
+                        @Deprecated("Deprecated in Java")
+                        override fun onSignalStrengthsChanged(signalStrength: SignalStrength?) {
+                            if (signalStrength != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                val lvl = signalStrength.level.coerceIn(0, 4)
+                                overlayView?.signalLevel = lvl
+                            }
+                        }
+                    }
+                    @Suppress("DEPRECATION")
+                    telephonyManager?.listen(listener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
+                    telephonyCallback = listener
+                    isTelephonyRegistered = true
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("DuoOverlayHandler", "Failed to register telephony listener", e)
+            }
+        }
+    }
+
+    private fun unregisterSignalListeners() {
+        if (isNetworkCallbackRegistered) {
+            try {
+                connectivityManager?.unregisterNetworkCallback(networkCallback)
+            } catch (_: Exception) {}
+            isNetworkCallbackRegistered = false
+        }
+
+        if (isTelephonyRegistered && telephonyCallback != null) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val callback = telephonyCallback as? TelephonyCallback
+                    if (callback != null) {
+                        telephonyManager?.unregisterTelephonyCallback(callback)
+                    }
+                } else {
+                    @Suppress("DEPRECATION")
+                    val listener = telephonyCallback as? PhoneStateListener
+                    if (listener != null) {
+                        @Suppress("DEPRECATION")
+                        telephonyManager?.listen(listener, PhoneStateListener.LISTEN_NONE)
+                    }
+                }
+            } catch (_: Exception) {}
+            telephonyCallback = null
+            isTelephonyRegistered = false
+        }
+    }
+
     fun removeOverlay() {
         mainHandler.post {
             if (isOverlayAdded && overlayView != null) {
@@ -190,6 +343,7 @@ class DuoOverlayHandler(
                 isOverlayAdded = false
             }
             unregisterBatteryReceiver()
+            unregisterSignalListeners()
         }
     }
 

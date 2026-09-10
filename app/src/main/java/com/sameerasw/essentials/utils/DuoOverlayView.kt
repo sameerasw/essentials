@@ -87,8 +87,20 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var signalLevel: Int = 4
+        set(value) {
+            val clamped = value.coerceIn(0, 4)
+            if (field != clamped) {
+                field = clamped
+                animateSignalLevelChange(clamped.toFloat())
+            }
+        }
+
     private var animatedBatteryProgress: Float = 100f
     private var batteryAnimator: android.animation.ValueAnimator? = null
+
+    private var animatedSignalLevel: Float = 4f
+    private var signalAnimator: android.animation.ValueAnimator? = null
 
     private var animatedStartAngle: Float = 140f
     private var animatedTotalSweep: Float = 260f
@@ -96,6 +108,19 @@ class DuoOverlayView(context: Context) : View(context) {
     private var animatedScaleBounce: Float = 1.0f
     private var layoutAnimator: android.animation.ValueAnimator? = null
     private var scaleAnimator: android.animation.ValueAnimator? = null
+
+    private fun animateSignalLevelChange(targetLevel: Float) {
+        signalAnimator?.cancel()
+        signalAnimator = android.animation.ValueAnimator.ofFloat(animatedSignalLevel, targetLevel).apply {
+            duration = 750
+            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+            addUpdateListener { animation ->
+                animatedSignalLevel = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
 
     private fun animateBatteryChange(targetLevel: Float) {
         batteryAnimator?.cancel()
@@ -206,11 +231,30 @@ class DuoOverlayView(context: Context) : View(context) {
         }
 
         if (animatedDotAlpha > 0.01f) {
-            val dotAngles = floatArrayOf(60f, 80f, 100f, 120f)
-            for (angleDeg in dotAngles) {
+            val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
+            val baseDotColor = if (isScreenOff) {
+                Color.argb(128, 255, 255, 255)
+            } else if (isDarkTheme) {
+                Color.WHITE
+            } else {
+                Color.BLACK
+            }
+            val baseAlpha = Color.alpha(baseDotColor)
+            val red = Color.red(baseDotColor)
+            val green = Color.green(baseDotColor)
+            val blue = Color.blue(baseDotColor)
+
+            for (i in dotAngles.indices) {
+                val angleDeg = dotAngles[i]
                 val angleRad = Math.toRadians(angleDeg.toDouble())
                 val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
                 val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
+
+                // Signal level from 0..4 smoothly determines opacity of each dot (dot 0: 0..1, dot 1: 1..2, etc.)
+                val dotActiveFraction = (animatedSignalLevel - i).coerceIn(0f, 1f)
+                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * animatedDotAlpha
+                dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
+
                 canvas.drawCircle(dotX, dotY, dotRadiusPx * animatedDotAlpha, dotPaint)
             }
         }
@@ -219,6 +263,7 @@ class DuoOverlayView(context: Context) : View(context) {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         batteryAnimator?.cancel()
+        signalAnimator?.cancel()
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
     }
