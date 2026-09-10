@@ -58,6 +58,8 @@
     <string name="preview_web_desc">Open link in private floating web preview</string>
     <string name="preview_web_desc_enable_bubbles">This will enable notification bubbles</string>
     <string name="preview_web_desc_disabled">Notification bubbles disabled</string>
+    <string name="link_preview_show_preview">Show link preview</string>
+    <string name="link_preview_show_images">Show images</string>
     <string name="qr_code_title">QR Code</string>
     <string name="qr_code_desc">Scan to open</string>
     <string name="qr_share_image">Share QR Image</string>

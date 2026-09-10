@@ -352,6 +352,8 @@ class SettingsRepository(
         const val KEY_REFRESH_RATE_MIN = "refresh_rate_min"
         const val KEY_REFRESH_RATE_PEAK = "refresh_rate_peak"
         const val KEY_REFRESH_RATE_DEFAULT_PEAK_INFINITY = "refresh_rate_default_peak_infinity"
+        const val KEY_LINK_PREVIEW_ENABLED = "link_preview_enabled"
+        const val KEY_LINK_PREVIEW_IMAGES_ENABLED = "link_preview_images_enabled"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3046,4 +3048,10 @@ class SettingsRepository(
 
     fun isSecureSensitiveTilesEnabled(): Boolean = getBoolean(KEY_SECURE_SENSITIVE_TILES, true)
     fun setSecureSensitiveTilesEnabled(enabled: Boolean) = putBoolean(KEY_SECURE_SENSITIVE_TILES, enabled)
+
+    fun isLinkPreviewEnabled(): Boolean = getBoolean(KEY_LINK_PREVIEW_ENABLED, true)
+    fun setLinkPreviewEnabled(enabled: Boolean) = putBoolean(KEY_LINK_PREVIEW_ENABLED, enabled)
+
+    fun isLinkPreviewImagesEnabled(): Boolean = getBoolean(KEY_LINK_PREVIEW_IMAGES_ENABLED, true)
+    fun setLinkPreviewImagesEnabled(enabled: Boolean) = putBoolean(KEY_LINK_PREVIEW_IMAGES_ENABLED, enabled)
 }
