@@ -216,5 +216,29 @@ fun DuoSettingsUI(
                 valueFormatter = { "${it.toInt()} dp" },
             )
         }
+
+        Text(
+            text = stringResource(R.string.duo_section_what_to_show),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp),
+        )
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_signal_cellular_alt_24,
+                title = stringResource(R.string.duo_show_networks_title),
+                description = stringResource(R.string.duo_show_networks_desc),
+                isChecked = viewModel.isDuoShowNetworks.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowNetworks(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
+            )
+        }
     }
 }

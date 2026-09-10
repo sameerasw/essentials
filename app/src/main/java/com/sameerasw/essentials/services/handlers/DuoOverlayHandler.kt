@@ -125,6 +125,7 @@ class DuoOverlayHandler(
                 this.dotRadiusPx = settingsRepository.getDuoDotSize() * density
                 this.isDarkTheme = isNightMode
                 this.isScreenOff = this@DuoOverlayHandler.isScreenOff
+                this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
             }
 
             if (!isOverlayAdded) {

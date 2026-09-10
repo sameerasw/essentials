@@ -250,7 +250,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_CAMERA_SIZE ||
                 key == SettingsRepository.KEY_DUO_ARC_THICKNESS ||
                 key == SettingsRepository.KEY_DUO_DOT_SIZE ||
-                key == SettingsRepository.KEY_DUO_RING_RADIUS
+                key == SettingsRepository.KEY_DUO_RING_RADIUS ||
+                key == SettingsRepository.KEY_DUO_SHOW_NETWORKS
             ) {
                 duoOverlayHandler.updateState()
             }

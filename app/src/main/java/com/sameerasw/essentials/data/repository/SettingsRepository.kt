@@ -364,6 +364,7 @@ class SettingsRepository(
         const val KEY_DUO_ARC_THICKNESS = "duo_arc_thickness"
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
+        const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3088,4 +3089,7 @@ class SettingsRepository(
 
     fun getDuoRingRadius(): Float = getFloat(KEY_DUO_RING_RADIUS, 1.0f)
     fun setDuoRingRadius(value: Float) = putFloat(KEY_DUO_RING_RADIUS, value)
+
+    fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
+    fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)
 }

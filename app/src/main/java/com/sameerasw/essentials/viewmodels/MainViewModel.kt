@@ -131,6 +131,7 @@ class MainViewModel : ViewModel() {
     val duoArcThickness = mutableFloatStateOf(4f)
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
+    val isDuoShowNetworks = mutableStateOf(true)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -533,6 +534,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_RING_RADIUS ->
                         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
+
+                    SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
+                        isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1763,6 +1767,7 @@ class MainViewModel : ViewModel() {
         duoArcThickness.floatValue = settingsRepository.getDuoArcThickness()
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
+        isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4348,6 +4353,11 @@ class MainViewModel : ViewModel() {
     fun setDuoRingRadius(value: Float) {
         duoRingRadius.floatValue = value
         settingsRepository.setDuoRingRadius(value)
+    }
+
+    fun setDuoShowNetworks(enabled: Boolean) {
+        isDuoShowNetworks.value = enabled
+        settingsRepository.setDuoShowNetworksEnabled(enabled)
     }
 
     /**

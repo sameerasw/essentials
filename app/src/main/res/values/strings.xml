@@ -2465,4 +2465,7 @@
     <string name="duo_dot_size_title">Status dot size</string>
     <string name="duo_section_position">Position and dimensions</string>
     <string name="duo_section_style">Style</string>
+    <string name="duo_section_what_to_show">What to show</string>
+    <string name="duo_show_networks_title">Networks</string>
+    <string name="duo_show_networks_desc">Show mobile network status indicator dots</string>
 </resources>

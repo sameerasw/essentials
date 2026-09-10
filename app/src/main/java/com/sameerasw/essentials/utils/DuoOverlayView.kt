@@ -79,8 +79,21 @@ class DuoOverlayView(context: Context) : View(context) {
             invalidate()
         }
 
+    var showNetworks: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                animateLayoutChange(value)
+            }
+        }
+
     private var animatedBatteryProgress: Float = 100f
     private var batteryAnimator: android.animation.ValueAnimator? = null
+
+    private var animatedStartAngle: Float = 140f
+    private var animatedTotalSweep: Float = 260f
+    private var animatedDotAlpha: Float = 1.0f
+    private var layoutAnimator: android.animation.ValueAnimator? = null
 
     private fun animateBatteryChange(targetLevel: Float) {
         batteryAnimator?.cancel()
@@ -89,6 +102,30 @@ class DuoOverlayView(context: Context) : View(context) {
             interpolator = android.view.animation.DecelerateInterpolator()
             addUpdateListener { animation ->
                 animatedBatteryProgress = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    private fun animateLayoutChange(showingNetworks: Boolean) {
+        layoutAnimator?.cancel()
+        val targetStartAngle = if (showingNetworks) 140f else -90f
+        val targetTotalSweep = if (showingNetworks) 260f else 360f
+        val targetDotAlpha = if (showingNetworks) 1.0f else 0.0f
+
+        val startStartAngle = animatedStartAngle
+        val startTotalSweep = animatedTotalSweep
+        val startDotAlpha = animatedDotAlpha
+
+        layoutAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 500
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener { animation ->
+                val fraction = animation.animatedFraction
+                animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
+                animatedTotalSweep = startTotalSweep + (targetTotalSweep - startTotalSweep) * fraction
+                animatedDotAlpha = startDotAlpha + (targetDotAlpha - startDotAlpha) * fraction
                 invalidate()
             }
             start()
@@ -120,15 +157,15 @@ class DuoOverlayView(context: Context) : View(context) {
         if (isScreenOff) {
             trackPaint.color = Color.argb(40, 255, 255, 255)
             progressPaint.color = Color.argb(128, 255, 255, 255)
-            dotPaint.color = Color.argb(128, 255, 255, 255)
+            dotPaint.color = Color.argb((128 * animatedDotAlpha).toInt(), 255, 255, 255)
         } else if (isDarkTheme) {
             trackPaint.color = Color.argb(60, 255, 255, 255)
             progressPaint.color = Color.WHITE
-            dotPaint.color = Color.WHITE
+            dotPaint.color = Color.argb((255 * animatedDotAlpha).toInt(), 255, 255, 255)
         } else {
             trackPaint.color = Color.argb(60, 0, 0, 0)
             progressPaint.color = Color.BLACK
-            dotPaint.color = Color.BLACK
+            dotPaint.color = Color.argb((255 * animatedDotAlpha).toInt(), 0, 0, 0)
         }
     }
 
@@ -145,28 +182,30 @@ class DuoOverlayView(context: Context) : View(context) {
             cameraCenterY + baseRadius
         )
 
-        val startAngle = 140f
-        val totalSweep = 260f
+        updateColors()
 
-        canvas.drawArc(arcBounds, startAngle, totalSweep, false, trackPaint)
+        canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
 
-        val progressSweep = (animatedBatteryProgress / 100f) * totalSweep
+        val progressSweep = (animatedBatteryProgress / 100f) * animatedTotalSweep
         if (progressSweep > 0.5f) {
-            canvas.drawArc(arcBounds, startAngle, progressSweep, false, progressPaint)
+            canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
         }
 
-        val dotAngles = floatArrayOf(60f, 80f, 100f, 120f)
-        for (angleDeg in dotAngles) {
-            val angleRad = Math.toRadians(angleDeg.toDouble())
-            val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
-            val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
-            canvas.drawCircle(dotX, dotY, dotRadiusPx, dotPaint)
+        if (animatedDotAlpha > 0.01f) {
+            val dotAngles = floatArrayOf(60f, 80f, 100f, 120f)
+            for (angleDeg in dotAngles) {
+                val angleRad = Math.toRadians(angleDeg.toDouble())
+                val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
+                val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
+                canvas.drawCircle(dotX, dotY, dotRadiusPx, dotPaint)
+            }
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         batteryAnimator?.cancel()
+        layoutAnimator?.cancel()
     }
 }
 
