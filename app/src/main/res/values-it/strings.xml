@@ -362,7 +362,7 @@
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
     <string name="feat_other_customizations_title">Altre personalizzazioni</string>
-    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_other_customizations_desc">Ulteriori modifiche e ottimizzazioni di sistema</string>
     <string name="status_bar_icons_disclaimer">Tieni presente che l\'implementazione di queste opzioni può dipendere dall\'OEM e alcune potrebbero non essere affatto funzionanti.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Altro</string>
@@ -1473,7 +1473,13 @@
     <string name="feat_power_battery_title">Alimentazione e Batteria</string>
     <string name="feat_power_battery_desc">Ottimizza il consumo energetico</string>
     <string name="feat_networks_title">Reti</string>
-    <string name="feat_networks_desc">Controllo segnali radio e reti</string>
+    <string name="feat_networks_desc">Controlla Radio e Reti</string>
     <string name="feat_safe_volume_title">Disabilita l\' avviso del volume sicuro</string>
     <string name="feat_smart_pixels_desc">Spegne dei pixel per risparmiare batteria</string>
+    <string name="feat_pixel_searchbar_title">Sostituisci Barra di Ricerca </string>
+    <string name="feat_pixel_searchbar_desc">Sostituisci Barra di Ricerca default di Pixel Launcher</string>
+    <string name="feat_network_download_rate_limit_title">Limita velocità di download </string>
+    <string name="feat_network_download_rate_limit_desc">Limita la velocità di download a livello di sistema</string>
+    <string name="feat_sim_names_title">Nomi delle SIM</string>
+    <string name="feat_sim_names_desc">Rinomina il nome visualizzato dell\'operatore per le schede SIM attive</string>
 </resources>
