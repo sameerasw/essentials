@@ -101,8 +101,10 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ReorderFavoritesBottomSheet
+import com.sameerasw.essentials.ui.features.freeze.FrozenAppsSearchResultCard
 import com.sameerasw.essentials.ui.features.permissions.PermissionsSearchResultCard
 import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
+import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -124,6 +126,7 @@ fun SetupFeatures(
     searchRequested: Boolean = false,
     onSearchHandled: () -> Unit = {},
     onHelpClick: () -> Unit = {},
+    onNavigateToTab: ((com.sameerasw.essentials.domain.DIYTabs) -> Unit)? = null,
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -163,6 +166,7 @@ fun SetupFeatures(
 
     LaunchedEffect(Unit) {
         watchViewModel.check(context)
+        viewModel.refreshFreezePickedApps(context, silent = true)
     }
 
     // Periodic check for Caffeinate status
@@ -1125,6 +1129,19 @@ fun SetupFeatures(
                     activity = context as? Activity,
                 )
             }
+        val freezePickedApps by viewModel.freezePickedApps
+        val matchingFrozenApps =
+            remember(searchQuery, freezePickedApps) {
+                if (searchQuery.isBlank()) {
+                    emptyList()
+                } else {
+                    freezePickedApps.filter { app ->
+                        (app.appName.contains(searchQuery, ignoreCase = true) ||
+                            app.packageName.contains(searchQuery, ignoreCase = true)) &&
+                            FreezeManager.isAppFrozen(context, app.packageName)
+                    }
+                }
+            }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
@@ -1346,7 +1363,7 @@ fun SetupFeatures(
                     )
                 }
             } else if (isFocused && searchQuery.isNotEmpty()) {
-                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty()) {
+                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty() && matchingFrozenApps.isEmpty()) {
                     item {
                         Column(
                             modifier =
@@ -1385,6 +1402,7 @@ fun SetupFeatures(
                             pinnedFeatureKeys = pinnedFeatureKeys,
                             context = context,
                             viewModel = viewModel,
+                            onNavigateToTab = onNavigateToTab,
                         )
                     }
                 }
@@ -1665,6 +1683,7 @@ private fun SearchResultsSection(
     pinnedFeatureKeys: List<String>,
     context: Context,
     viewModel: MainViewModel,
+    onNavigateToTab: ((com.sameerasw.essentials.domain.DIYTabs) -> Unit)? = null,
 ) {
     val query = viewModel.searchQuery.value
     val matchingTiles =
@@ -1685,6 +1704,18 @@ private fun SearchResultsSection(
                 activity = context as? Activity,
             )
         }
+    val freezePickedApps by viewModel.freezePickedApps
+    val matchingFrozenApps =
+        remember(query, freezePickedApps) {
+            if (query.isBlank()) {
+                emptyList()
+            } else {
+                freezePickedApps.filter { app ->
+                    app.appName.contains(query, ignoreCase = true) ||
+                        app.packageName.contains(query, ignoreCase = true)
+                }
+            }
+        }
 
     var isExpanded by rememberSaveable(query) { mutableStateOf(false) }
 
@@ -1700,7 +1731,7 @@ private fun SearchResultsSection(
             nonQSSearchResults
         }
 
-    if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty() || matchingPermissions.isNotEmpty()) {
+    if (matchingTiles.isNotEmpty() || nonQSSearchResults.isNotEmpty() || matchingPermissions.isNotEmpty() || matchingFrozenApps.isNotEmpty()) {
         if (nonQSSearchResults.isNotEmpty()) {
             Text(
                 text = stringResource(R.string.search_results_title),
@@ -1850,6 +1881,15 @@ private fun SearchResultsSection(
                             .padding(top = 8.dp, bottom = 4.dp),
                 )
             }
+        }
+
+        if (matchingFrozenApps.isNotEmpty()) {
+            FrozenAppsSearchResultCard(
+                apps = matchingFrozenApps,
+                viewModel = viewModel,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                onNavigateToFreezeTab = onNavigateToTab?.let { nav -> { nav(com.sameerasw.essentials.domain.DIYTabs.FREEZE) } },
+            )
         }
 
         if (matchingTiles.isNotEmpty()) {

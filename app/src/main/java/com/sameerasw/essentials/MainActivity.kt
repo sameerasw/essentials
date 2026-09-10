@@ -855,6 +855,14 @@ class MainActivity : AppCompatActivity() {
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentPadding = contentPadding,
                                                 onHelpClick = { showInstructionsSheet = true },
+                                                onNavigateToTab = { targetTab ->
+                                                    val tabIndex = tabs.indexOf(targetTab)
+                                                    if (tabIndex != -1) {
+                                                        scope.launch {
+                                                            pagerState.animateScrollToPage(tabIndex)
+                                                        }
+                                                    }
+                                                },
                                             )
                                         }
 

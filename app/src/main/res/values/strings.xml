@@ -2446,4 +2446,5 @@
     <string name="settings_section_more">More</string>
     <string name="action_show_granted">Show granted</string>
     <string name="action_hide_granted">Hide granted</string>
+    <string name="label_frozen_apps">Frozen Apps</string>
 </resources>

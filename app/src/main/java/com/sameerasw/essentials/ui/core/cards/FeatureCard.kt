@@ -13,6 +13,7 @@ package com.sameerasw.essentials.ui.core.cards
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -50,6 +53,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -168,24 +173,36 @@ fun FeatureCard(
                                 )
                             } else if (iconRes != null) {
                                 val context = LocalContext.current
-                                val validIconRes =
+                                val iconBitmap =
                                     remember(iconRes) {
                                         try {
-                                            if (iconRes != 0 && context.resources.getResourceTypeName(iconRes) == "drawable") {
-                                                iconRes
+                                            if (iconRes != 0) {
+                                                val drawable = ContextCompat.getDrawable(context, iconRes)
+                                                drawable?.toBitmap()?.asImageBitmap()
                                             } else {
-                                                R.drawable.rounded_settings_24
+                                                null
                                             }
                                         } catch (e: Throwable) {
-                                            R.drawable.rounded_settings_24
+                                            null
                                         }
                                     }
-                                Icon(
-                                    painter = painterResource(id = validIconRes),
-                                    contentDescription = resolvedTitle,
-                                    modifier = Modifier.size(iconSize),
-                                    tint = iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle),
-                                )
+                                if (iconBitmap != null) {
+                                    Image(
+                                        bitmap = iconBitmap,
+                                        contentDescription = resolvedTitle,
+                                        modifier = Modifier.size(iconSize),
+                                        colorFilter = ColorFilter.tint(
+                                            iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle)
+                                        ),
+                                    )
+                                } else {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_settings_24),
+                                        contentDescription = resolvedTitle,
+                                        modifier = Modifier.size(iconSize),
+                                        tint = iconTint ?: ColorUtil.getVibrantColorFor(resolvedTitle),
+                                    )
+                                }
                             }
                         }
 
