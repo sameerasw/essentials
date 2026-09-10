@@ -1371,13 +1371,9 @@ object FeatureRegistry {
                 permissionKeys = listOf("ACCESSIBILITY"),
                 hasMoreSettings = true,
                 showToggle = true,
+                isBeta = true,
                 parentFeatureId = "Display",
             ) {
-                override fun isDeviceSupported(context: Context): Boolean {
-                    val settingsRepository = SettingsRepository(context)
-                    return settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, false)
-                }
-
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isDuoEnabled.value
 
                 override fun isToggleEnabled(
