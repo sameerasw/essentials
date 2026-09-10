@@ -4,17 +4,29 @@
  *
  * Feature Module: Background Services & Handlers
  * File: DuoOverlayHandler.kt
- * Description: Background handler managing the Duo ambient camera overlay.
+ * Description: Background handler managing the Duo ambient camera overlay with media playback.
  */
 
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
+import android.media.MediaMetadata
+import android.media.session.MediaController
+import android.media.session.MediaSession
+import android.media.session.MediaSessionManager
+import android.media.session.PlaybackState
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -24,15 +36,32 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.ProgressNotificationData
+import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DuoOverlayView
+import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
+import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DuoOverlayHandler(
     private val service: AccessibilityService,
@@ -46,10 +75,86 @@ class DuoOverlayHandler(
     private val telephonyManager by lazy { service.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager }
     private val connectivityManager by lazy { service.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager }
     private val wifiManager by lazy { service.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager }
+    private val cameraManager by lazy { service.getSystemService(Context.CAMERA_SERVICE) as CameraManager }
+
+    private var isFlashlightOn = false
+    private var currentFlashlightLevel = 1
+    private var flashlightIconBitmap: Bitmap? = null
+    private var isTorchCallbackRegistered = false
+
+    private val torchCallback = object : CameraManager.TorchCallback() {
+        override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
+            val primaryId = getCameraId()
+            if (cameraId != primaryId) return
+            mainHandler.post {
+                isFlashlightOn = enabled
+                checkAndApplyFlashlightState()
+            }
+        }
+
+        override fun onTorchStrengthLevelChanged(cameraId: String, newStrengthLevel: Int) {
+            val primaryId = getCameraId()
+            if (cameraId != primaryId) return
+            mainHandler.post {
+                currentFlashlightLevel = newStrengthLevel
+                checkAndApplyFlashlightState()
+            }
+        }
+    }
 
     private var telephonyCallback: Any? = null
     private var isTelephonyRegistered = false
     private var isNetworkCallbackRegistered = false
+
+    private var mediaSessionManager: MediaSessionManager? = null
+    private val monitoredControllers = mutableListOf<MediaController>()
+    private val controllerCallbacks = mutableMapOf<MediaSession.Token, MediaController.Callback>()
+    private var activeMediaController: MediaController? = null
+    private var isMediaListenerRegistered = false
+    private var currentArtOrIconBitmap: Bitmap? = null
+    private var currentMediaKey: String? = null
+    private var isMediaPlaying = false
+    private var isProgressListenerRegistered = false
+
+    private val handlerScope = CoroutineScope(Dispatchers.Main + Job())
+    private var lastMediaChangeTimestamp = 0L
+    private val MEDIA_UPDATE_DEBOUNCE_MS = 2000L
+
+    private val mediaUpdateRunnable = Runnable {
+        checkAndApplyMediaState()
+    }
+
+    private fun scheduleMediaUpdate() {
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastMediaChangeTimestamp < MEDIA_UPDATE_DEBOUNCE_MS) {
+            return
+        }
+        lastMediaChangeTimestamp = now
+        mainHandler.removeCallbacks(mediaUpdateRunnable)
+        mainHandler.postDelayed(mediaUpdateRunnable, MEDIA_UPDATE_DEBOUNCE_MS)
+    }
+
+    private val progressNotificationListener = object : NotificationListener.ProgressNotificationListener {
+        override fun onProgressNotificationUpdated(data: ProgressNotificationData?) {
+            mainHandler.post {
+                checkAndApplyProgressNotificationState(data)
+            }
+        }
+    }
+
+    private val activeSessionsListener =
+        MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
+            updateActiveMediaSession(controllers)
+        }
+
+    private val mediaProgressTicker = object : Runnable {
+        override fun run() {
+            if (isMediaPlaying && isOverlayAdded) {
+                updateMediaProgress()
+                mainHandler.postDelayed(this, 500L)
+            }
+        }
+    }
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
@@ -109,8 +214,7 @@ class DuoOverlayHandler(
     }
 
     fun updateState() {
-        val isDevMode = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, false)
-        if (!isDevMode || !settingsRepository.isDuoEnabled()) {
+        if (!settingsRepository.isDuoEnabled()) {
             removeOverlay()
             return
         }
@@ -121,7 +225,6 @@ class DuoOverlayHandler(
         mainHandler.post {
             var level = -1
 
-            // 1. Check if connected to Wi-Fi
             val activeNetwork = connectivityManager?.activeNetwork
             val capabilities = activeNetwork?.let { connectivityManager?.getNetworkCapabilities(it) }
             if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
@@ -153,7 +256,6 @@ class DuoOverlayHandler(
                 }
             }
 
-            // 2. Cellular signal fallback / primary if on cellular
             if (level == -1) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     try {
@@ -171,6 +273,283 @@ class DuoOverlayHandler(
         }
     }
 
+    private fun getExcludedPackages(): Set<String> {
+        val excludedAppsJson = settingsRepository.getString(SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, null)
+        return if (!excludedAppsJson.isNullOrBlank()) {
+            try {
+                val listType = object : TypeToken<List<AppSelection>>() {}.type
+                val apps: List<AppSelection> = Gson().fromJson(excludedAppsJson, listType) ?: emptyList()
+                apps.filter { it.isEnabled }.map { it.packageName }.toSet()
+            } catch (_: Exception) {
+                emptySet()
+            }
+        } else {
+            emptySet()
+        }
+    }
+
+    private fun reEvaluateAndApplyMedia(isInitial: Boolean = false) {
+        mainHandler.post {
+            val excludedPackages = getExcludedPackages()
+            val valid = monitoredControllers.filter { !excludedPackages.contains(it.packageName) }
+
+            val currentIsPlaying = activeMediaController?.let { current ->
+                valid.any { it.sessionToken == current.sessionToken } &&
+                    current.playbackState?.state == PlaybackState.STATE_PLAYING
+            } ?: false
+
+            val target = if (currentIsPlaying) {
+                activeMediaController
+            } else {
+                val playingController = valid.firstOrNull {
+                    it.playbackState?.state == PlaybackState.STATE_PLAYING
+                }
+                playingController
+                    ?: valid.firstOrNull { it.sessionToken == activeMediaController?.sessionToken }
+                    ?: valid.firstOrNull()
+            }
+
+            activeMediaController = target
+
+            if (isInitial) {
+                checkAndApplyMediaState()
+            } else {
+                scheduleMediaUpdate()
+            }
+        }
+    }
+
+    private fun updateActiveMediaSession(controllers: List<MediaController>?, isInitial: Boolean = false) {
+        mainHandler.post {
+            val excludedPackages = getExcludedPackages()
+            val validControllers = controllers?.filter { !excludedPackages.contains(it.packageName) } ?: emptyList()
+
+            val currentTokens = validControllers.map { it.sessionToken }.toSet()
+            val iterator = controllerCallbacks.entries.iterator()
+            while (iterator.hasNext()) {
+                val entry = iterator.next()
+                if (!currentTokens.contains(entry.key)) {
+                    val controller = monitoredControllers.find { it.sessionToken == entry.key }
+                    try {
+                        controller?.unregisterCallback(entry.value)
+                    } catch (_: Exception) {}
+                    iterator.remove()
+                }
+            }
+            monitoredControllers.removeAll { !currentTokens.contains(it.sessionToken) }
+
+            for (controller in validControllers) {
+                if (!controllerCallbacks.containsKey(controller.sessionToken)) {
+                    val callback = object : MediaController.Callback() {
+                        override fun onPlaybackStateChanged(state: PlaybackState?) {
+                            reEvaluateAndApplyMedia()
+                        }
+
+                        override fun onMetadataChanged(metadata: MediaMetadata?) {
+                            reEvaluateAndApplyMedia()
+                        }
+
+                        override fun onSessionDestroyed() {
+                            mainHandler.post {
+                                try {
+                                    controller.unregisterCallback(this)
+                                } catch (_: Exception) {}
+                                controllerCallbacks.remove(controller.sessionToken)
+                                monitoredControllers.removeAll { it.sessionToken == controller.sessionToken }
+                                reEvaluateAndApplyMedia()
+                            }
+                        }
+                    }
+                    try {
+                        controller.registerCallback(callback, mainHandler)
+                        controllerCallbacks[controller.sessionToken] = callback
+                        monitoredControllers.add(controller)
+                    } catch (_: Exception) {}
+                }
+            }
+
+            reEvaluateAndApplyMedia(isInitial = isInitial)
+        }
+    }
+
+    private fun checkAndApplyMediaState() {
+        mainHandler.post {
+            val showMedia = settingsRepository.isDuoShowMediaEnabled()
+            val controller = activeMediaController
+            val excludedPackages = getExcludedPackages()
+
+            val isExcluded = controller != null && excludedPackages.contains(controller.packageName)
+            val state = controller?.playbackState
+            val isPlaying = showMedia && !isExcluded && state?.state == PlaybackState.STATE_PLAYING
+
+            isMediaPlaying = isPlaying
+
+            if (!isPlaying) {
+                currentMediaKey = null
+                currentArtOrIconBitmap = null
+                mainHandler.removeCallbacks(mediaProgressTicker)
+                overlayView?.setMediaState(isPlaying = false, progress = 0f, appIcon = null)
+                checkAndApplyProgressNotificationState()
+                return@post
+            }
+
+            val title = controller.metadata?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
+            val artist = controller.metadata?.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: ""
+            val pkg = controller.packageName
+            val mediaKey = "${pkg}_${title}_$artist"
+
+            if (currentMediaKey != mediaKey || currentArtOrIconBitmap == null) {
+                currentMediaKey = mediaKey
+                handlerScope.launch(Dispatchers.IO) {
+                    val artOrIcon = extractMediaArtworkOrAppIcon(controller.metadata, controller)
+                    withContext(Dispatchers.Main) {
+                        if (currentMediaKey == mediaKey && isMediaPlaying) {
+                            currentArtOrIconBitmap = artOrIcon
+                            updateMediaProgress()
+                            checkAndApplyProgressNotificationState()
+                        }
+                    }
+                }
+            }
+
+            updateMediaProgress()
+            checkAndApplyProgressNotificationState()
+
+            mainHandler.removeCallbacks(mediaProgressTicker)
+            mainHandler.postDelayed(mediaProgressTicker, 500L)
+        }
+    }
+
+    private fun extractMediaArtworkOrAppIcon(metadata: MediaMetadata?, controller: MediaController): Bitmap? {
+        var bitmap = metadata?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+        if (bitmap == null) {
+            bitmap = metadata?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+        }
+
+        if (bitmap == null) {
+            val title = metadata?.getString(MediaMetadata.METADATA_KEY_TITLE)
+            val artist = metadata?.getString(MediaMetadata.METADATA_KEY_ARTIST)
+            if (!title.isNullOrBlank()) {
+                val hashToUse = kotlin.math.abs("${title}_$artist".hashCode().toLong())
+                bitmap = NotificationListener.getCachedBitmap(hashToUse)
+                if (bitmap == null) {
+                    val artFile = File(service.cacheDir, "art_$hashToUse.png")
+                    if (artFile.exists()) {
+                        try {
+                            bitmap = BitmapFactory.decodeFile(artFile.absolutePath)
+                        } catch (_: Exception) {}
+                    }
+                }
+            }
+        }
+
+        if (bitmap == null) {
+            bitmap = NotificationListener.getLatestArtBitmap()
+        }
+        if (bitmap == null) {
+            val tempArtFile = File(service.cacheDir, "temp_album_art.png")
+            if (tempArtFile.exists()) {
+                try {
+                    bitmap = BitmapFactory.decodeFile(tempArtFile.absolutePath)
+                } catch (_: Exception) {}
+            }
+        }
+
+        if (bitmap == null) {
+            bitmap = getAppIconBitmap(service, controller.packageName)
+        }
+
+        return bitmap
+    }
+
+    private fun updateMediaProgress() {
+        val controller = activeMediaController ?: return
+        val state = controller.playbackState ?: return
+        val duration = controller.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION) ?: 0L
+
+        var currentPos = state.position
+        if (state.state == PlaybackState.STATE_PLAYING) {
+            val lastUpdate = state.lastPositionUpdateTime
+            val now = SystemClock.elapsedRealtime()
+            if (lastUpdate > 0 && now > lastUpdate) {
+                val speed = if (state.playbackSpeed > 0f) state.playbackSpeed else 1f
+                currentPos += ((now - lastUpdate) * speed).toLong()
+            }
+        }
+
+        val progressPct = if (duration > 0) {
+            ((currentPos.toFloat() / duration.toFloat()) * 100f).coerceIn(0f, 100f)
+        } else {
+            0f
+        }
+
+        overlayView?.setMediaState(
+            isPlaying = true,
+            progress = progressPct,
+            appIcon = currentArtOrIconBitmap
+        )
+    }
+
+    private fun getAppIconBitmap(context: Context, packageName: String): Bitmap? {
+        return try {
+            val pm = context.packageManager
+            val drawable = pm.getApplicationIcon(packageName)
+            val density = context.resources.displayMetrics.density
+            val sizePx = (24 * density).toInt().coerceAtLeast(24)
+            val bitmap = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+            bitmap
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun registerMediaSessionListener() {
+        if (!isMediaListenerRegistered) {
+            try {
+                val msm = service.getSystemService(Context.MEDIA_SESSION_SERVICE) as? MediaSessionManager
+                mediaSessionManager = msm
+                if (msm != null) {
+                    val componentName = ComponentName(service, NotificationListener::class.java)
+                    msm.addOnActiveSessionsChangedListener(activeSessionsListener, componentName)
+                    isMediaListenerRegistered = true
+                    val initialSessions = msm.getActiveSessions(componentName)
+                    updateActiveMediaSession(initialSessions, isInitial = true)
+                }
+            } catch (e: Exception) {
+                Log.e("DuoOverlayHandler", "Failed to register media session listener", e)
+            }
+        }
+    }
+
+    private fun unregisterMediaSessionListener() {
+        mainHandler.removeCallbacks(mediaProgressTicker)
+        mainHandler.removeCallbacks(mediaUpdateRunnable)
+        if (isMediaListenerRegistered) {
+            try {
+                mediaSessionManager?.removeOnActiveSessionsChangedListener(activeSessionsListener)
+            } catch (_: Exception) {}
+            for (controller in monitoredControllers) {
+                val callback = controllerCallbacks[controller.sessionToken]
+                if (callback != null) {
+                    try {
+                        controller.unregisterCallback(callback)
+                    } catch (_: Exception) {}
+                }
+            }
+            controllerCallbacks.clear()
+            monitoredControllers.clear()
+            activeMediaController = null
+            isMediaListenerRegistered = false
+            isMediaPlaying = false
+            currentMediaKey = null
+            currentArtOrIconBitmap = null
+            overlayView?.setMediaState(isPlaying = false, progress = 0f, appIcon = null)
+        }
+    }
+
     private fun showOrUpdateOverlay() {
         mainHandler.post {
             val wm = windowManager ?: return@post
@@ -182,7 +561,6 @@ class DuoOverlayHandler(
             val screenHeight = displayMetrics.heightPixels.toFloat()
             val density = displayMetrics.density
 
-            var isFullscreenState = false
             var centerX = screenWidth * (settingsRepository.getDuoCameraOffsetX() / 100f)
             var centerY = screenHeight * (settingsRepository.getDuoCameraOffsetY() / 100f)
             var cameraRadiusPx = 18f * density * settingsRepository.getDuoCameraSize()
@@ -266,8 +644,12 @@ class DuoOverlayHandler(
                 this.isScreenOff = this@DuoOverlayHandler.isScreenOff
                 this.isFullscreen = this@DuoOverlayHandler.isFullscreen
                 this.hideWhenScreenOff = settingsRepository.isDuoHideWhenScreenOffEnabled()
+                this.hideWhenScreenOffOnlyIdle = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
+                this.showMedia = settingsRepository.isDuoShowMediaEnabled()
+                this.showProgress = settingsRepository.isDuoShowProgressEnabled()
+                this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
             }
 
             if (!isOverlayAdded) {
@@ -283,7 +665,7 @@ class DuoOverlayHandler(
                     wm.addView(overlayView, params)
                     isOverlayAdded = true
                 } catch (e: Exception) {
-                    android.util.Log.e("DuoOverlayHandler", "Failed to add Duo overlay", e)
+                    Log.e("DuoOverlayHandler", "Failed to add Duo overlay", e)
                 }
             } else {
                 overlayView?.invalidate()
@@ -292,6 +674,148 @@ class DuoOverlayHandler(
             registerBatteryReceiver()
             registerSignalListeners()
             updateCurrentSignal()
+
+            if (settingsRepository.isDuoShowMediaEnabled()) {
+                registerMediaSessionListener()
+            } else {
+                unregisterMediaSessionListener()
+            }
+
+            if (settingsRepository.isDuoShowProgressEnabled()) {
+                registerProgressNotificationListener()
+            } else {
+                unregisterProgressNotificationListener()
+            }
+
+            if (settingsRepository.isDuoShowFlashlightEnabled()) {
+                registerTorchCallback()
+            } else {
+                unregisterTorchCallback()
+            }
+        }
+    }
+
+    private var primaryCameraId: String? = null
+    private var maxFlashlightLevel: Int = -1
+
+    private fun getCameraId(): String? {
+        if (primaryCameraId != null) return primaryCameraId
+        return try {
+            val id = cameraManager.cameraIdList.firstOrNull { camId ->
+                val chars = cameraManager.getCameraCharacteristics(camId)
+                val flashAvailable = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+                val facing = chars.get(CameraCharacteristics.LENS_FACING)
+                flashAvailable && facing == CameraCharacteristics.LENS_FACING_BACK
+            } ?: cameraManager.cameraIdList.firstOrNull()
+            primaryCameraId = id
+            if (id != null) {
+                maxFlashlightLevel = FlashlightUtil.getMaxLevel(service, id)
+            }
+            id
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun getFlashlightIcon(): Bitmap? {
+        if (flashlightIconBitmap == null) {
+            try {
+                val drawable = ContextCompat.getDrawable(service, R.drawable.rounded_flashlight_on_24)?.mutate()
+                drawable?.setTint(Color.WHITE)
+                if (drawable != null) {
+                    flashlightIconBitmap = AppUtil.drawableToBitmap(drawable, 64)
+                }
+            } catch (_: Exception) {}
+        }
+        return flashlightIconBitmap
+    }
+
+    private fun checkAndApplyFlashlightState() {
+        mainHandler.post {
+            val showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
+            val isOn = isFlashlightOn && showFlashlight
+            if (isOn) {
+                if (primaryCameraId == null) {
+                    getCameraId()
+                }
+                val maxLevel = if (maxFlashlightLevel > 1) maxFlashlightLevel else 1
+                val progress = if (maxLevel > 1) {
+                    (currentFlashlightLevel.toFloat() / maxLevel.toFloat() * 100f).coerceIn(0f, 100f)
+                } else {
+                    100f
+                }
+                overlayView?.setFlashlightState(
+                    isOn = true,
+                    brightnessProgress = progress,
+                    icon = getFlashlightIcon()
+                )
+            } else {
+                overlayView?.setFlashlightState(
+                    isOn = false,
+                    brightnessProgress = 0f,
+                    icon = null
+                )
+            }
+        }
+    }
+
+    private fun registerTorchCallback() {
+        if (!isTorchCallbackRegistered) {
+            try {
+                cameraManager.registerTorchCallback(torchCallback, mainHandler)
+                isTorchCallbackRegistered = true
+                checkAndApplyFlashlightState()
+            } catch (e: Exception) {
+                Log.e("DuoOverlayHandler", "Failed to register torch callback", e)
+            }
+        }
+    }
+
+    private fun unregisterTorchCallback() {
+        if (isTorchCallbackRegistered) {
+            try {
+                cameraManager.unregisterTorchCallback(torchCallback)
+            } catch (_: Exception) {}
+            isTorchCallbackRegistered = false
+            checkAndApplyFlashlightState()
+        }
+    }
+
+    private fun checkAndApplyProgressNotificationState(incomingData: ProgressNotificationData? = null) {
+        mainHandler.post {
+            val showProgress = settingsRepository.isDuoShowProgressEnabled()
+            val data = incomingData ?: if (showProgress) NotificationListener.getLatestProgressNotification() else null
+            val isActive = showProgress && data != null && !isMediaPlaying
+
+            if (data != null && isActive) {
+                overlayView?.setProgressNotificationState(
+                    isActive = true,
+                    progress = data.progress,
+                    icon = data.icon
+                )
+            } else {
+                overlayView?.setProgressNotificationState(
+                    isActive = false,
+                    progress = 0f,
+                    icon = null
+                )
+            }
+        }
+    }
+
+    private fun registerProgressNotificationListener() {
+        if (!isProgressListenerRegistered) {
+            NotificationListener.addProgressNotificationListener(progressNotificationListener)
+            isProgressListenerRegistered = true
+            checkAndApplyProgressNotificationState()
+        }
+    }
+
+    private fun unregisterProgressNotificationListener() {
+        if (isProgressListenerRegistered) {
+            NotificationListener.removeProgressNotificationListener(progressNotificationListener)
+            isProgressListenerRegistered = false
+            checkAndApplyProgressNotificationState(null)
         }
     }
 
@@ -311,7 +835,7 @@ class DuoOverlayHandler(
                     }
                 }
             } catch (e: Exception) {
-                android.util.Log.e("DuoOverlayHandler", "Failed to register battery receiver", e)
+                Log.e("DuoOverlayHandler", "Failed to register battery receiver", e)
             }
         }
     }
@@ -331,7 +855,7 @@ class DuoOverlayHandler(
                 connectivityManager?.registerDefaultNetworkCallback(networkCallback)
                 isNetworkCallbackRegistered = true
             } catch (e: Exception) {
-                android.util.Log.e("DuoOverlayHandler", "Failed to register network callback", e)
+                Log.e("DuoOverlayHandler", "Failed to register network callback", e)
             }
         }
 
@@ -364,7 +888,7 @@ class DuoOverlayHandler(
                     isTelephonyRegistered = true
                 }
             } catch (e: Exception) {
-                android.util.Log.e("DuoOverlayHandler", "Failed to register telephony listener", e)
+                Log.e("DuoOverlayHandler", "Failed to register telephony listener", e)
             }
         }
     }
@@ -408,11 +932,18 @@ class DuoOverlayHandler(
             }
             unregisterBatteryReceiver()
             unregisterSignalListeners()
+            unregisterMediaSessionListener()
+            unregisterProgressNotificationListener()
+            unregisterTorchCallback()
         }
     }
 
     fun destroy() {
         removeOverlay()
         overlayView = null
+        currentArtOrIconBitmap = null
+        currentMediaKey = null
+        flashlightIconBitmap = null
     }
 }
+

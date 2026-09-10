@@ -27,6 +27,7 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.widgets.PixelSearchbarWidget
@@ -38,6 +39,10 @@ import java.io.File
 import java.io.FileOutputStream
 
 class NotificationListener : NotificationListenerService() {
+    interface ProgressNotificationListener {
+        fun onProgressNotificationUpdated(data: ProgressNotificationData?)
+    }
+
     companion object {
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
@@ -47,6 +52,30 @@ class NotificationListener : NotificationListenerService() {
         private var latestArtHash: Long = -1L
 
         var instance: NotificationListener? = null
+
+        private val progressListeners = mutableListOf<ProgressNotificationListener>()
+
+        fun addProgressNotificationListener(listener: ProgressNotificationListener) {
+            synchronized(progressListeners) {
+                if (!progressListeners.contains(listener)) {
+                    progressListeners.add(listener)
+                }
+            }
+        }
+
+        fun removeProgressNotificationListener(listener: ProgressNotificationListener) {
+            synchronized(progressListeners) {
+                progressListeners.remove(listener)
+            }
+        }
+
+        fun notifyProgressListeners(data: ProgressNotificationData?) {
+            val listenersCopy = synchronized(progressListeners) { progressListeners.toList() }
+            listenersCopy.forEach { it.onProgressNotificationUpdated(data) }
+        }
+
+        fun getLatestProgressNotification(): ProgressNotificationData? =
+            instance?.extractLatestProgressNotification()
 
         fun getCachedBitmap(hash: Long): Bitmap? = if (latestArtHash == hash) latestArtBitmap else null
 
@@ -886,6 +915,11 @@ class NotificationListener : NotificationListenerService() {
         handleRespectNotifications(sbn)
         WatchNotificationSyncManager.onNotificationPosted(applicationContext, sbn, isSilentNotification(sbn, rankingMap))
 
+        val extras = sbn.notification.extras
+        if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
+            notifyProgressListeners(extractLatestProgressNotification())
+        }
+
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         val isReallyLocked =
             isScreenLocked || !pm.isInteractive || com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
@@ -1239,6 +1273,8 @@ class NotificationListener : NotificationListenerService() {
             ScreenOffAccessibilityService.updateSmartPixelsState()
         }
 
+        notifyProgressListeners(extractLatestProgressNotification())
+
         // Trigger refresh if something is playing
         try {
             val mediaSessionManager =
@@ -1581,5 +1617,72 @@ class NotificationListener : NotificationListenerService() {
         } catch (e: Exception) {
             Log.e("NotificationListener", "Error in handleRespectNotifications", e)
         }
+    }
+
+    fun extractProgressNotification(sbn: StatusBarNotification): ProgressNotificationData? {
+        val notif = sbn.notification ?: return null
+        val extras = notif.extras ?: return null
+        val max = extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0)
+        val current = extras.getInt(Notification.EXTRA_PROGRESS, 0)
+        val indeterminate = extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE, false)
+
+        val hasProgress = max > 0 || (indeterminate && extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))
+        if (!hasProgress) return null
+
+        val progressPct = if (max > 0) {
+            (current.toFloat() / max.toFloat() * 100f).coerceIn(0f, 100f)
+        } else {
+            50f
+        }
+
+        var bitmap: Bitmap? = null
+        try {
+            val largeIcon = notif.getLargeIcon()
+            if (largeIcon != null) {
+                val drawable = largeIcon.loadDrawable(this)
+                if (drawable != null) {
+                    bitmap = AppUtil.drawableToBitmap(drawable)
+                }
+            }
+        } catch (_: Exception) {}
+
+        if (bitmap == null) {
+            try {
+                val smallIcon = notif.smallIcon
+                if (smallIcon != null) {
+                    val drawable = smallIcon.loadDrawable(this)
+                    if (drawable != null) {
+                        bitmap = AppUtil.drawableToBitmap(drawable)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+
+        if (bitmap == null) {
+            try {
+                val appIconDrawable = packageManager.getApplicationIcon(sbn.packageName)
+                bitmap = AppUtil.drawableToBitmap(appIconDrawable)
+            } catch (_: Exception) {}
+        }
+
+        val postTime = if (sbn.postTime > 0) sbn.postTime else notif.`when`
+
+        return ProgressNotificationData(
+            key = sbn.key,
+            packageName = sbn.packageName,
+            progress = progressPct,
+            isIndeterminate = indeterminate,
+            icon = bitmap,
+            postTime = postTime,
+        )
+    }
+
+    fun extractLatestProgressNotification(): ProgressNotificationData? {
+        val active = activeNotifications ?: return null
+        val progressNotifs = active.mapNotNull { sbn ->
+            if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
+            extractProgressNotification(sbn)
+        }
+        return progressNotifs.maxByOrNull { it.postTime }
     }
 }

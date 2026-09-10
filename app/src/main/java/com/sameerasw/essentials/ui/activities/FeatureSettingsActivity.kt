@@ -616,6 +616,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Always on Display",
                                                             "Statusbar icons",
                                                             "Maps power saving mode",
+                                                            "Duo",
                                                             "Lock screen clock",
                                                         ),
                                                         listOf(
@@ -629,7 +630,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Smart pixels",
                                                         ),
                                                         listOf(
-                                                            "Duo",
                                                             "Other customizations",
                                                         ),
                                                     )

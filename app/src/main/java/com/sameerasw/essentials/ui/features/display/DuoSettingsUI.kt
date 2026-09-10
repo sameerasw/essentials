@@ -36,6 +36,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
@@ -53,6 +54,7 @@ fun DuoSettingsUI(
     val view = LocalView.current
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+    var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.check(context)
@@ -231,13 +233,66 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_signal_cellular_alt_24,
                 title = stringResource(R.string.duo_show_networks_title),
-                description = stringResource(R.string.duo_show_networks_desc),
                 isChecked = viewModel.isDuoShowNetworks.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoShowNetworks(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_motion_play_24,
+                title = stringResource(R.string.duo_show_media_title),
+                isChecked = viewModel.isDuoShowMedia.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !viewModel.isNotificationListenerEnabled.value) {
+                        requestingPermissionsFor = Pair(R.string.duo_title, listOf("NOTIFICATION_LISTENER"))
+                    } else {
+                        viewModel.setDuoShowMedia(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_media"),
+            )
+
+            AnimatedVisibility(
+                visible = viewModel.isDuoShowMedia.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_apps_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_media_apps),
+                    showToggle = false,
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showMediaAppSelectionSheet = true
+                    },
+                )
+            }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_downloading_24,
+                title = stringResource(R.string.duo_show_progress_title),
+                isChecked = viewModel.isDuoShowProgress.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !viewModel.isNotificationListenerEnabled.value) {
+                        requestingPermissionsFor = Pair(R.string.duo_title, listOf("NOTIFICATION_LISTENER"))
+                    } else {
+                        viewModel.setDuoShowProgress(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_progress"),
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_flashlight_on_24,
+                title = stringResource(R.string.duo_show_flashlight_title),
+                isChecked = viewModel.isDuoShowFlashlight.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowFlashlight(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
             )
         }
 
@@ -255,7 +310,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_palette_24,
                 title = stringResource(R.string.duo_material_you_title),
-                description = stringResource(R.string.duo_material_you_desc),
                 isChecked = viewModel.isDuoUseMaterialYou.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -266,7 +320,6 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_off_24,
                 title = stringResource(R.string.duo_hide_when_screen_off_title),
-                description = stringResource(R.string.duo_hide_when_screen_off_desc),
                 isChecked = viewModel.isDuoHideWhenScreenOff.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -274,6 +327,38 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nightlight_24,
+                title = stringResource(R.string.duo_hide_when_screen_off_only_idle_title),
+                isChecked = viewModel.isDuoHideWhenScreenOffOnlyIdle.value,
+                enabled = viewModel.isDuoHideWhenScreenOff.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoHideWhenScreenOffOnlyIdle(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off_only_idle"),
+            )
         }
+    }
+
+    if (showMediaAppSelectionSheet) {
+        AppSelectionSheet(
+            onDismissRequest = { showMediaAppSelectionSheet = false },
+            onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
+            onSaveApps = { ctx, apps ->
+                viewModel.saveAodWallpaperMediaApps(
+                    ctx,
+                    apps,
+                )
+            },
+            onAppToggle = { ctx, pkg, enabled ->
+                viewModel.updateAodWallpaperMediaAppEnabled(
+                    ctx,
+                    pkg,
+                    enabled,
+                )
+            },
+            context = context,
+        )
     }
 }

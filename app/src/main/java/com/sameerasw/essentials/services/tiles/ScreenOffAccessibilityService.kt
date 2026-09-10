@@ -243,8 +243,10 @@ class ScreenOffAccessibilityService :
                     aodWallpaperOverlayHandler.invalidateWallpaperCache()
                 }
                 aodWallpaperOverlayHandler.updateState()
+                if (key == SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS) {
+                    duoOverlayHandler.updateState()
+                }
             } else if (key == SettingsRepository.KEY_DUO_ENABLED ||
-                key == SettingsRepository.KEY_DEVELOPER_MODE_ENABLED ||
                 key == SettingsRepository.KEY_DUO_USE_AUTO_DETECT ||
                 key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_X ||
                 key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_Y ||
@@ -253,7 +255,11 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_DOT_SIZE ||
                 key == SettingsRepository.KEY_DUO_RING_RADIUS ||
                 key == SettingsRepository.KEY_DUO_SHOW_NETWORKS ||
+                key == SettingsRepository.KEY_DUO_SHOW_MEDIA ||
+                key == SettingsRepository.KEY_DUO_SHOW_PROGRESS ||
+                key == SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ||
                 key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ||
+                key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE ||
                 key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU
             ) {
                 duoOverlayHandler.updateState()
