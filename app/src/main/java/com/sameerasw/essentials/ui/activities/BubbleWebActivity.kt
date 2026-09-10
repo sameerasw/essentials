@@ -38,11 +38,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,15 +61,10 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import android.view.View
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -79,6 +73,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -88,6 +83,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import kotlin.math.roundToInt
 
 class BubbleWebActivity : ComponentActivity() {
 
@@ -192,16 +188,6 @@ private fun BubbleWebScreen(
     val toolbarMaxOffsetPx = with(density) { 160.dp.toPx() }
     var toolbarOffsetPx by remember { mutableFloatStateOf(0f) }
 
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
-                toolbarOffsetPx = (toolbarOffsetPx - delta).coerceIn(0f, toolbarMaxOffsetPx)
-                return Offset.Zero
-            }
-        }
-    }
-
     BackHandler(enabled = true) {
         if (webViewRef?.canGoBack() == true) {
             webViewRef?.goBack()
@@ -217,9 +203,7 @@ private fun BubbleWebScreen(
         color = MaterialTheme.colorScheme.surface,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(nestedScrollConnection),
+            modifier = Modifier.fillMaxSize(),
         ) {
             Box(
                 modifier = Modifier
@@ -241,7 +225,6 @@ private fun BubbleWebScreen(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                             )
-                            setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
                             settings.apply {
                                 javaScriptEnabled = true
@@ -257,6 +240,11 @@ private fun BubbleWebScreen(
 
                             if (isPrivate) {
                                 CookieManager.getInstance().setAcceptThirdPartyCookies(this, false)
+                            }
+
+                            setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                                val delta = (scrollY - oldScrollY).toFloat()
+                                toolbarOffsetPx = (toolbarOffsetPx + delta).coerceIn(0f, toolbarMaxOffsetPx)
                             }
 
                             webChromeClient = object : WebChromeClient() {
@@ -310,6 +298,7 @@ private fun BubbleWebScreen(
                 )
             }
 
+            val toolbarVisibilityRatio = 1f - (toolbarOffsetPx / toolbarMaxOffsetPx).coerceIn(0f, 1f)
             val currentDomain = remember(currentUrl) { extractDomain(currentUrl) }
             val copyFeedbackText = stringResource(R.string.bubble_web_link_copied)
 
@@ -319,10 +308,8 @@ private fun BubbleWebScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = navBarBottom + 12.dp)
-                    .graphicsLayer {
-                        translationY = toolbarOffsetPx
-                        alpha = (1f - (toolbarOffsetPx / toolbarMaxOffsetPx)).coerceIn(0f, 1f)
-                    },
+                    .offset { IntOffset(0, toolbarOffsetPx.roundToInt()) }
+                    .alpha(toolbarVisibilityRatio),
                 contentAlignment = Alignment.Center,
             ) {
                 HorizontalFloatingToolbar(
@@ -441,30 +428,6 @@ private fun BubbleWebScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.rounded_share_24),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            try {
-                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl)).apply {
-                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                }
-                                context.startActivity(browserIntent)
-                                onClose()
-                            } catch (_: Exception) {}
-                        },
-                        modifier = Modifier.size(40.dp),
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_open_in_browser_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(20.dp),
