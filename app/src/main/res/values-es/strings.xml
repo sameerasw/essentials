@@ -1599,4 +1599,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="crash_logs_desc">Mira y comparte los reportes de errores recientes</string>
     <string name="settings_translated_texts">Traducido</string>
     <string name="settings_translated_texts_desc">%d editado(s) pendiente - presiona para enviar o descartar</string>
+    <string name="label_online_help_media">Ayuda para medios en linea</string>
 </resources>
