@@ -121,7 +121,7 @@ object WindowingUtils {
 
         val targetUrl = uri.toString()
         val host = uri.host ?: targetUrl
-        val shortcutId = "bubble_web_preview_${Math.abs(targetUrl.hashCode())}"
+        val shortcutId = "bubble_web_preview_${targetUrl.hashCode().toUInt()}"
         val iconRes = R.drawable.rounded_globe_24
         val bubbleIcon = IconCompat.createWithResource(context, iconRes)
 
@@ -171,7 +171,7 @@ object WindowingUtils {
             }
             val bubblePendingIntent = PendingIntent.getActivity(
                 context,
-                Math.abs(targetUrl.hashCode()),
+                targetUrl.hashCode().toUInt().toInt(),
                 bubbleIntent,
                 flags,
             )

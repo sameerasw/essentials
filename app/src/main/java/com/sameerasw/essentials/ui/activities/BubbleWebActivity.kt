@@ -38,7 +38,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.offset
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -95,16 +95,24 @@ class BubbleWebActivity : ComponentActivity() {
         const val EXTRA_URL = "extra_bubble_url"
         const val EXTRA_PRIVATE_MODE = "extra_bubble_private_mode"
         const val EXTRA_FULLSCREEN = "extra_bubble_fullscreen"
+
+        fun sanitizeUrl(raw: String): String {
+            val trimmed = raw.trim()
+            return if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) trimmed
+            else "https://google.com"
+        }
     }
 
     private var webViewInstance: WebView? = null
+    private var isPrivateSession = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val initialUrl = intent.getStringExtra(EXTRA_URL) ?: intent.dataString ?: "https://google.com"
-        val isPrivateMode = intent.getBooleanExtra(EXTRA_PRIVATE_MODE, true)
+        val rawUrl = intent.getStringExtra(EXTRA_URL) ?: intent.dataString ?: "https://google.com"
+        val initialUrl = sanitizeUrl(rawUrl)
+        isPrivateSession = intent.getBooleanExtra(EXTRA_PRIVATE_MODE, true)
 
         setContent {
             val viewModel: MainViewModel = viewModel()
@@ -113,7 +121,7 @@ class BubbleWebActivity : ComponentActivity() {
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 BubbleWebScreen(
                     initialUrl = initialUrl,
-                    isPrivate = isPrivateMode,
+                    isPrivate = isPrivateSession,
                     onCollapse = { moveTaskToBack(true) },
                     onClose = { finish() },
                     onAttachWebView = { webViewInstance = it },
@@ -136,11 +144,13 @@ class BubbleWebActivity : ComponentActivity() {
 
     override fun onDestroy() {
         try {
-            webViewInstance?.clearCache(true)
+            webViewInstance?.clearCache(isPrivateSession)
             webViewInstance?.clearHistory()
-            webViewInstance?.clearFormData()
-            WebStorage.getInstance().deleteAllData()
-            CookieManager.getInstance().removeAllCookies(null)
+            if (isPrivateSession) {
+                webViewInstance?.clearFormData()
+                WebStorage.getInstance().deleteAllData()
+                CookieManager.getInstance().removeAllCookies(null)
+            }
             webViewInstance?.destroy()
             webViewInstance = null
         } catch (_: Exception) {}
@@ -235,8 +245,8 @@ private fun BubbleWebScreen(
 
                             settings.apply {
                                 javaScriptEnabled = true
-                                domStorageEnabled = true
-                                cacheMode = WebSettings.LOAD_DEFAULT
+                                domStorageEnabled = !isPrivate
+                                cacheMode = if (isPrivate) WebSettings.LOAD_NO_CACHE else WebSettings.LOAD_DEFAULT
                                 setSupportZoom(true)
                                 builtInZoomControls = true
                                 displayZoomControls = false
@@ -247,11 +257,6 @@ private fun BubbleWebScreen(
 
                             if (isPrivate) {
                                 CookieManager.getInstance().setAcceptThirdPartyCookies(this, false)
-                            }
-
-                            setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-                                val delta = (scrollY - oldScrollY).toFloat()
-                                toolbarOffsetPx = (toolbarOffsetPx + delta).coerceIn(0f, toolbarMaxOffsetPx)
                             }
 
                             webChromeClient = object : WebChromeClient() {
@@ -366,9 +371,7 @@ private fun BubbleWebScreen(
                             .combinedClickable(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                    clipboard.setPrimaryClip(ClipData.newPlainText("URL", currentUrl))
-                                    Toast.makeText(context, copyFeedbackText, Toast.LENGTH_SHORT).show()
+                                    copyUrlToClipboard(context, currentUrl, copyFeedbackText)
                                 },
                                 onLongClick = {
                                     HapticUtil.performHeavyHaptic(view)
@@ -406,9 +409,7 @@ private fun BubbleWebScreen(
                     IconButton(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
-                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            clipboard.setPrimaryClip(ClipData.newPlainText("URL", currentUrl))
-                            Toast.makeText(context, copyFeedbackText, Toast.LENGTH_SHORT).show()
+                            copyUrlToClipboard(context, currentUrl, copyFeedbackText)
                         },
                         modifier = Modifier.size(40.dp),
                         colors = IconButtonDefaults.iconButtonColors(
@@ -483,4 +484,10 @@ private fun extractDomain(url: String): String {
     } catch (_: Exception) {
         url
     }
+}
+
+private fun copyUrlToClipboard(context: Context, url: String, feedbackText: String) {
+    val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    cm.setPrimaryClip(ClipData.newPlainText("URL", url))
+    Toast.makeText(context, feedbackText, Toast.LENGTH_SHORT).show()
 }
