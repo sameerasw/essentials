@@ -24,6 +24,7 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.media.MediaMetadata
 import android.media.session.MediaController
+import android.media.session.MediaSession
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
 import android.net.ConnectivityManager
@@ -106,6 +107,8 @@ class DuoOverlayHandler(
     private var isNetworkCallbackRegistered = false
 
     private var mediaSessionManager: MediaSessionManager? = null
+    private val monitoredControllers = mutableListOf<MediaController>()
+    private val controllerCallbacks = mutableMapOf<MediaSession.Token, MediaController.Callback>()
     private var activeMediaController: MediaController? = null
     private var isMediaListenerRegistered = false
     private var currentArtOrIconBitmap: Bitmap? = null
@@ -136,20 +139,6 @@ class DuoOverlayHandler(
             mainHandler.post {
                 checkAndApplyProgressNotificationState(data)
             }
-        }
-    }
-
-    private val mediaCallback = object : MediaController.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackState?) {
-            scheduleMediaUpdate()
-        }
-
-        override fun onMetadataChanged(metadata: MediaMetadata?) {
-            scheduleMediaUpdate()
-        }
-
-        override fun onSessionDestroyed() {
-            scheduleMediaUpdate()
         }
     }
 
@@ -285,33 +274,102 @@ class DuoOverlayHandler(
         }
     }
 
+    private fun getExcludedPackages(): Set<String> {
+        val excludedAppsJson = settingsRepository.getString(SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, null)
+        return if (!excludedAppsJson.isNullOrBlank()) {
+            try {
+                val listType = object : TypeToken<List<AppSelection>>() {}.type
+                val apps: List<AppSelection> = Gson().fromJson(excludedAppsJson, listType) ?: emptyList()
+                apps.filter { it.isEnabled }.map { it.packageName }.toSet()
+            } catch (_: Exception) {
+                emptySet()
+            }
+        } else {
+            emptySet()
+        }
+    }
+
+    private fun reEvaluateAndApplyMedia(isInitial: Boolean = false) {
+        mainHandler.post {
+            val excludedPackages = getExcludedPackages()
+            val valid = monitoredControllers.filter { !excludedPackages.contains(it.packageName) }
+
+            val currentIsPlaying = activeMediaController?.let { current ->
+                valid.any { it.sessionToken == current.sessionToken } &&
+                    current.playbackState?.state == PlaybackState.STATE_PLAYING
+            } ?: false
+
+            val target = if (currentIsPlaying) {
+                activeMediaController
+            } else {
+                val playingController = valid.firstOrNull {
+                    it.playbackState?.state == PlaybackState.STATE_PLAYING
+                }
+                playingController
+                    ?: valid.firstOrNull { it.sessionToken == activeMediaController?.sessionToken }
+                    ?: valid.firstOrNull()
+            }
+
+            activeMediaController = target
+
+            if (isInitial) {
+                checkAndApplyMediaState()
+            } else {
+                scheduleMediaUpdate()
+            }
+        }
+    }
+
     private fun updateActiveMediaSession(controllers: List<MediaController>?, isInitial: Boolean = false) {
         mainHandler.post {
-            val playingController = controllers?.firstOrNull {
-                it.playbackState?.state == PlaybackState.STATE_PLAYING
-            }
-            val target = playingController ?: controllers?.firstOrNull()
+            val excludedPackages = getExcludedPackages()
+            val validControllers = controllers?.filter { !excludedPackages.contains(it.packageName) } ?: emptyList()
 
-            if (activeMediaController?.sessionToken != target?.sessionToken) {
-                activeMediaController?.unregisterCallback(mediaCallback)
-                activeMediaController = target
-                target?.registerCallback(mediaCallback, mainHandler)
-                if (isInitial) {
-                    checkAndApplyMediaState()
-                } else {
-                    scheduleMediaUpdate()
-                }
-            } else {
-                val wasPlaying = isMediaPlaying
-                val nowPlaying = target?.playbackState?.state == PlaybackState.STATE_PLAYING
-                if (wasPlaying != nowPlaying) {
-                    if (isInitial) {
-                        checkAndApplyMediaState()
-                    } else {
-                        scheduleMediaUpdate()
-                    }
+            val currentTokens = validControllers.map { it.sessionToken }.toSet()
+            val iterator = controllerCallbacks.entries.iterator()
+            while (iterator.hasNext()) {
+                val entry = iterator.next()
+                if (!currentTokens.contains(entry.key)) {
+                    val controller = monitoredControllers.find { it.sessionToken == entry.key }
+                    try {
+                        controller?.unregisterCallback(entry.value)
+                    } catch (_: Exception) {}
+                    iterator.remove()
                 }
             }
+            monitoredControllers.removeAll { !currentTokens.contains(it.sessionToken) }
+
+            for (controller in validControllers) {
+                if (!controllerCallbacks.containsKey(controller.sessionToken)) {
+                    val callback = object : MediaController.Callback() {
+                        override fun onPlaybackStateChanged(state: PlaybackState?) {
+                            reEvaluateAndApplyMedia()
+                        }
+
+                        override fun onMetadataChanged(metadata: MediaMetadata?) {
+                            reEvaluateAndApplyMedia()
+                        }
+
+                        override fun onSessionDestroyed() {
+                            mainHandler.post {
+                                try {
+                                    controller.unregisterCallback(this)
+                                } catch (_: Exception) {}
+                                controllerCallbacks.remove(controller.sessionToken)
+                                monitoredControllers.removeAll { it.sessionToken == controller.sessionToken }
+                                reEvaluateAndApplyMedia()
+                            }
+                        }
+                    }
+                    try {
+                        controller.registerCallback(callback, mainHandler)
+                        controllerCallbacks[controller.sessionToken] = callback
+                        monitoredControllers.add(controller)
+                    } catch (_: Exception) {}
+                }
+            }
+
+            reEvaluateAndApplyMedia(isInitial = isInitial)
         }
     }
 
@@ -319,19 +377,7 @@ class DuoOverlayHandler(
         mainHandler.post {
             val showMedia = settingsRepository.isDuoShowMediaEnabled()
             val controller = activeMediaController
-
-            val excludedAppsJson = settingsRepository.getString(SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, null)
-            val excludedPackages: Set<String> = if (!excludedAppsJson.isNullOrBlank()) {
-                try {
-                    val listType = object : TypeToken<List<AppSelection>>() {}.type
-                    val apps: List<AppSelection> = Gson().fromJson(excludedAppsJson, listType) ?: emptyList()
-                    apps.filter { it.isEnabled }.map { it.packageName }.toSet()
-                } catch (_: Exception) {
-                    emptySet()
-                }
-            } else {
-                emptySet()
-            }
+            val excludedPackages = getExcludedPackages()
 
             val isExcluded = controller != null && excludedPackages.contains(controller.packageName)
             val state = controller?.playbackState
@@ -485,8 +531,17 @@ class DuoOverlayHandler(
         if (isMediaListenerRegistered) {
             try {
                 mediaSessionManager?.removeOnActiveSessionsChangedListener(activeSessionsListener)
-                activeMediaController?.unregisterCallback(mediaCallback)
             } catch (_: Exception) {}
+            for (controller in monitoredControllers) {
+                val callback = controllerCallbacks[controller.sessionToken]
+                if (callback != null) {
+                    try {
+                        controller.unregisterCallback(callback)
+                    } catch (_: Exception) {}
+                }
+            }
+            controllerCallbacks.clear()
+            monitoredControllers.clear()
             activeMediaController = null
             isMediaListenerRegistered = false
             isMediaPlaying = false
