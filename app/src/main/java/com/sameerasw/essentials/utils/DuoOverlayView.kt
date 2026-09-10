@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.utils
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
@@ -22,6 +24,8 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.RectF
 import android.os.Build
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
@@ -29,6 +33,21 @@ import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import kotlin.math.cos
 import kotlin.math.sin
+
+enum class DuoFeedbackType {
+    NONE,
+    SCREENSHOT,
+    LOCK_SCREEN,
+    NOTIFICATIONS,
+    QUICK_SETTINGS,
+    MEDIA_PLAY,
+    MEDIA_PAUSE,
+    TRACK_NEXT,
+    TRACK_PREV,
+    TORCH_ON,
+    TORCH_OFF,
+    RECENTS
+}
 
 class DuoOverlayView(context: Context) : View(context) {
     private val density = resources.displayMetrics.density
@@ -412,6 +431,123 @@ class DuoOverlayView(context: Context) : View(context) {
         }
     }
 
+    private var activeFeedbackType: DuoFeedbackType = DuoFeedbackType.NONE
+    private var feedbackProgress: Float = 0f
+    private var feedbackAnimator: ValueAnimator? = null
+
+    private var chargeProgress: Float = 0f
+    private var chargeAnimator: ValueAnimator? = null
+
+    private var isRotaryVisible: Boolean = false
+    private var rotaryLevel: Float = 0f
+    private var rotaryAlpha: Float = 0f
+    private var rotaryAnimator: ValueAnimator? = null
+    private val rotaryFadeRunnable = Runnable { fadeOutRotary() }
+
+    fun triggerActionFeedback(type: DuoFeedbackType) {
+        if (type == DuoFeedbackType.NONE) return
+        feedbackAnimator?.cancel()
+        activeFeedbackType = type
+        feedbackProgress = 0f
+
+        val targetDuration: Long = when (type) {
+            DuoFeedbackType.SCREENSHOT -> 350L
+            DuoFeedbackType.LOCK_SCREEN -> 320L
+            DuoFeedbackType.NOTIFICATIONS -> 380L
+            DuoFeedbackType.QUICK_SETTINGS -> 300L
+            DuoFeedbackType.MEDIA_PLAY, DuoFeedbackType.MEDIA_PAUSE -> 360L
+            DuoFeedbackType.TRACK_NEXT, DuoFeedbackType.TRACK_PREV -> 320L
+            DuoFeedbackType.TORCH_ON -> 380L
+            DuoFeedbackType.TORCH_OFF -> 260L
+            DuoFeedbackType.RECENTS -> 320L
+            DuoFeedbackType.NONE -> return
+        }
+
+        val interp = when (type) {
+            DuoFeedbackType.LOCK_SCREEN -> OvershootInterpolator(1.8f)
+            DuoFeedbackType.TORCH_ON -> OvershootInterpolator(1.3f)
+            DuoFeedbackType.SCREENSHOT -> AccelerateDecelerateInterpolator()
+            DuoFeedbackType.TORCH_OFF -> AccelerateInterpolator()
+            else -> DecelerateInterpolator()
+        }
+
+        feedbackAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = targetDuration
+            interpolator = interp
+            addUpdateListener { animator ->
+                feedbackProgress = animator.animatedValue as Float
+                invalidate()
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    activeFeedbackType = DuoFeedbackType.NONE
+                    feedbackProgress = 0f
+                    invalidate()
+                }
+            })
+            start()
+        }
+    }
+
+    fun setChargeProgress(progress: Float) {
+        chargeAnimator?.cancel()
+        if (progress <= 0f && chargeProgress > 0f) {
+            chargeAnimator = ValueAnimator.ofFloat(chargeProgress, 0f).apply {
+                duration = 180L
+                interpolator = DecelerateInterpolator()
+                addUpdateListener { animator ->
+                    chargeProgress = animator.animatedValue as Float
+                    invalidate()
+                }
+                start()
+            }
+        } else {
+            chargeProgress = progress.coerceIn(0f, 1f)
+            invalidate()
+        }
+    }
+
+    fun showRotaryLevel(level: Float, isVolume: Boolean = true) {
+        rotaryLevel = level.coerceIn(0f, 1f)
+        removeCallbacks(rotaryFadeRunnable)
+        if (!isRotaryVisible || rotaryAlpha < 0.99f) {
+            rotaryAnimator?.cancel()
+            isRotaryVisible = true
+            rotaryAnimator = ValueAnimator.ofFloat(rotaryAlpha, 1.0f).apply {
+                duration = 150L
+                interpolator = DecelerateInterpolator()
+                addUpdateListener { animator ->
+                    rotaryAlpha = animator.animatedValue as Float
+                    invalidate()
+                }
+                start()
+            }
+        } else {
+            invalidate()
+        }
+        postDelayed(rotaryFadeRunnable, 1200L)
+    }
+
+    private fun fadeOutRotary() {
+        rotaryAnimator?.cancel()
+        rotaryAnimator = ValueAnimator.ofFloat(rotaryAlpha, 0f).apply {
+            duration = 250L
+            interpolator = DecelerateInterpolator()
+            addUpdateListener { animator ->
+                rotaryAlpha = animator.animatedValue as Float
+                invalidate()
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    isRotaryVisible = false
+                    rotaryAlpha = 0f
+                    invalidate()
+                }
+            })
+            start()
+        }
+    }
+
     private var targetProgress: Float = 100f
     private var animatedProgress: Float = 100f
     private var progressAnimator: ValueAnimator? = null
@@ -639,6 +775,37 @@ class DuoOverlayView(context: Context) : View(context) {
     private val iconRect = RectF()
     private val arcBounds = RectF()
 
+    private val feedbackStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val feedbackFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+    private val feedbackBounds = RectF()
+    private val teardropPath = Path()
+    private val chevronPath = Path()
+
+    private val chargePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val chargeBounds = RectF()
+
+    private val rotaryTrackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val rotaryProgressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val rotaryTickPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val rotaryBounds = RectF()
+
     init {
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
@@ -744,6 +911,249 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+        // Long Press Charge Ring
+        if (chargeProgress > 0.01f) {
+            chargePaint.strokeWidth = 3.5f * density
+            val chargeAlpha = (240 * chargeProgress * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+            chargePaint.color = Color.argb(
+                chargeAlpha,
+                Color.red(currentProgressColor),
+                Color.green(currentProgressColor),
+                Color.blue(currentProgressColor)
+            )
+            val chargeRadius = baseRadius + 3.5f * density
+            chargeBounds.set(
+                cameraCenterX - chargeRadius,
+                cameraCenterY - chargeRadius,
+                cameraCenterX + chargeRadius,
+                cameraCenterY + chargeRadius
+            )
+            val chargeSweep = 360f * chargeProgress
+            canvas.drawArc(chargeBounds, 270f, chargeSweep, false, chargePaint)
+        }
+
+        // Action-Specific Visual Feedback
+        if (feedbackProgress > 0.001f && activeFeedbackType != DuoFeedbackType.NONE) {
+            when (activeFeedbackType) {
+                DuoFeedbackType.SCREENSHOT -> {
+                    val flashAlpha = (220 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackFillPaint.color = Color.argb(flashAlpha, 255, 255, 255)
+                    val flashRadius = cameraRadiusPx * (1f + 0.35f * feedbackProgress)
+                    canvas.drawCircle(cameraCenterX, cameraCenterY, flashRadius, feedbackFillPaint)
+
+                    feedbackStrokePaint.strokeWidth = 2f * density
+                    feedbackStrokePaint.color = Color.argb(flashAlpha, 255, 255, 255)
+                    for (i in 0..5) {
+                        val angle = i * 60f + (45f * feedbackProgress)
+                        val rad = Math.toRadians(angle.toDouble())
+                        val cosVal = cos(rad).toFloat()
+                        val sinVal = sin(rad).toFloat()
+                        val x1 = cameraCenterX + cameraRadiusPx * 0.7f * cosVal
+                        val y1 = cameraCenterY + cameraRadiusPx * 0.7f * sinVal
+                        val x2 = cameraCenterX + (baseRadius + 6f * density) * cosVal
+                        val y2 = cameraCenterY + (baseRadius + 6f * density) * sinVal
+                        canvas.drawLine(x1, y1, x2, y2, feedbackStrokePaint)
+                    }
+                }
+
+                DuoFeedbackType.LOCK_SCREEN -> {
+                    val lockScale = 1f - 0.20f * sin(feedbackProgress * Math.PI.toFloat())
+                    val lockRadius = baseRadius * lockScale
+                    val lockAlpha = (220 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackStrokePaint.strokeWidth = 4f * density
+                    feedbackStrokePaint.color = Color.argb(lockAlpha, 0, 229, 255)
+                    feedbackBounds.set(
+                        cameraCenterX - lockRadius,
+                        cameraCenterY - lockRadius,
+                        cameraCenterX + lockRadius,
+                        cameraCenterY + lockRadius
+                    )
+                    canvas.drawArc(feedbackBounds, 0f, 360f, false, feedbackStrokePaint)
+                }
+
+                DuoFeedbackType.NOTIFICATIONS -> {
+                    val dropAlpha = (220 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackFillPaint.color = Color.argb(
+                        dropAlpha,
+                        Color.red(currentProgressColor),
+                        Color.green(currentProgressColor),
+                        Color.blue(currentProgressColor)
+                    )
+                    val dropExtension = 26f * density * sin(feedbackProgress * Math.PI.toFloat())
+                    val leftX = cameraCenterX - 12f * density
+                    val rightX = cameraCenterX + 12f * density
+                    val topY = cameraCenterY + baseRadius
+                    val tipY = topY + dropExtension
+                    teardropPath.reset()
+                    teardropPath.moveTo(leftX, topY)
+                    teardropPath.cubicTo(leftX, topY + dropExtension * 0.5f, cameraCenterX - 2f * density, tipY, cameraCenterX, tipY)
+                    teardropPath.cubicTo(cameraCenterX + 2f * density, tipY, rightX, topY + dropExtension * 0.5f, rightX, topY)
+                    teardropPath.close()
+                    canvas.drawPath(teardropPath, feedbackFillPaint)
+                }
+
+                DuoFeedbackType.MEDIA_PLAY, DuoFeedbackType.MEDIA_PAUSE -> {
+                    val rippleRadius = baseRadius + (28f * density * feedbackProgress)
+                    val rippleAlpha = (200 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackStrokePaint.strokeWidth = (5f * density * (1f - feedbackProgress)).coerceAtLeast(1.5f)
+                    feedbackStrokePaint.color = Color.argb(
+                        rippleAlpha,
+                        Color.red(currentProgressColor),
+                        Color.green(currentProgressColor),
+                        Color.blue(currentProgressColor)
+                    )
+                    canvas.drawCircle(cameraCenterX, cameraCenterY, rippleRadius, feedbackStrokePaint)
+                }
+
+                DuoFeedbackType.TRACK_NEXT, DuoFeedbackType.TRACK_PREV -> {
+                    val isNext = activeFeedbackType == DuoFeedbackType.TRACK_NEXT
+                    val chevronSweepAngle = if (isNext) 45f * feedbackProgress else -45f * feedbackProgress
+                    val baseAngle = (if (isNext) 250f else 290f) + chevronSweepAngle
+                    val chevAlpha = (240 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackStrokePaint.strokeWidth = 3f * density
+                    feedbackStrokePaint.color = Color.argb(
+                        chevAlpha,
+                        Color.red(currentProgressColor),
+                        Color.green(currentProgressColor),
+                        Color.blue(currentProgressColor)
+                    )
+                    val offsets = if (isNext) floatArrayOf(-8f, 8f) else floatArrayOf(8f, -8f)
+                    for (offset in offsets) {
+                        val rad = Math.toRadians((baseAngle + offset).toDouble())
+                        val cx = (cameraCenterX + baseRadius * cos(rad)).toFloat()
+                        val cy = (cameraCenterY + baseRadius * sin(rad)).toFloat()
+                        val wingLen = 6f * density
+                        val dir = if (isNext) 1f else -1f
+                        val tangentAngle = baseAngle + 90f
+                        val tanRad = Math.toRadians(tangentAngle.toDouble())
+                        val normRad = Math.toRadians(baseAngle.toDouble())
+                        val cosTan = cos(tanRad).toFloat()
+                        val sinTan = sin(tanRad).toFloat()
+                        val cosNorm = cos(normRad).toFloat()
+                        val sinNorm = sin(normRad).toFloat()
+
+                        chevronPath.reset()
+                        chevronPath.moveTo(
+                            cx - (wingLen * 0.7f * cosTan * dir - wingLen * 0.7f * cosNorm),
+                            cy - (wingLen * 0.7f * sinTan * dir - wingLen * 0.7f * sinNorm)
+                        )
+                        chevronPath.lineTo(cx, cy)
+                        chevronPath.lineTo(
+                            cx - (wingLen * 0.7f * cosTan * dir + wingLen * 0.7f * cosNorm),
+                            cy - (wingLen * 0.7f * sinTan * dir + wingLen * 0.7f * sinNorm)
+                        )
+                        canvas.drawPath(chevronPath, feedbackStrokePaint)
+                    }
+                }
+
+                DuoFeedbackType.TORCH_ON, DuoFeedbackType.TORCH_OFF -> {
+                    val isTorchOnAnim = activeFeedbackType == DuoFeedbackType.TORCH_ON
+                    val flareAlpha = (if (isTorchOnAnim) 220 * (1f - feedbackProgress) else 180 * (1f - feedbackProgress)).toInt().coerceIn(0, 255)
+                    feedbackStrokePaint.strokeWidth = 2.5f * density
+                    feedbackStrokePaint.color = Color.argb(flareAlpha, 255, 193, 7)
+                    for (ray in 0..7) {
+                        val angleDeg = ray * 45f + (feedbackProgress * 20f)
+                        val rad = Math.toRadians(angleDeg.toDouble())
+                        val cosVal = cos(rad).toFloat()
+                        val sinVal = sin(rad).toFloat()
+                        val rStart = baseRadius + 2f * density
+                        val rEnd = rStart + (16f * density * (if (isTorchOnAnim) feedbackProgress else (1f - feedbackProgress)))
+                        val x1 = cameraCenterX + rStart * cosVal
+                        val y1 = cameraCenterY + rStart * sinVal
+                        val x2 = cameraCenterX + rEnd * cosVal
+                        val y2 = cameraCenterY + rEnd * sinVal
+                        canvas.drawLine(x1, y1, x2, y2, feedbackStrokePaint)
+                    }
+                }
+
+                DuoFeedbackType.RECENTS -> {
+                    val recAlpha = (210 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackStrokePaint.strokeWidth = 3f * density
+                    feedbackStrokePaint.color = Color.argb(
+                        recAlpha,
+                        Color.red(currentProgressColor),
+                        Color.green(currentProgressColor),
+                        Color.blue(currentProgressColor)
+                    )
+                    val recRadius = baseRadius + (12f * density * feedbackProgress)
+                    feedbackBounds.set(
+                        cameraCenterX - recRadius,
+                        cameraCenterY - recRadius,
+                        cameraCenterX + recRadius,
+                        cameraCenterY + recRadius
+                    )
+                    canvas.drawArc(feedbackBounds, 140f, 80f, false, feedbackStrokePaint)
+                    canvas.drawArc(feedbackBounds, 320f, 80f, false, feedbackStrokePaint)
+                }
+
+                DuoFeedbackType.QUICK_SETTINGS -> {
+                    val qsAlpha = (210 * (1f - feedbackProgress) * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                    feedbackStrokePaint.strokeWidth = 3.5f * density
+                    feedbackStrokePaint.color = Color.argb(
+                        qsAlpha,
+                        Color.red(currentProgressColor),
+                        Color.green(currentProgressColor),
+                        Color.blue(currentProgressColor)
+                    )
+                    val qsSpread = 16f * density * feedbackProgress
+                    val yPos = cameraCenterY
+                    canvas.drawLine(cameraCenterX - baseRadius, yPos, cameraCenterX - baseRadius - qsSpread, yPos, feedbackStrokePaint)
+                    canvas.drawLine(cameraCenterX + baseRadius, yPos, cameraCenterX + baseRadius + qsSpread, yPos, feedbackStrokePaint)
+                }
+
+                DuoFeedbackType.NONE -> {}
+            }
+        }
+
+        // Rotary Virtual Dial Gauge
+        if (rotaryAlpha > 0.01f) {
+            val dialRadius = baseRadius + 10f * density
+            rotaryBounds.set(
+                cameraCenterX - dialRadius,
+                cameraCenterY - dialRadius,
+                cameraCenterX + dialRadius,
+                cameraCenterY + dialRadius
+            )
+            val dialStartAngle = 150f
+            val dialTotalSweep = 240f
+
+            rotaryTrackPaint.strokeWidth = 3.5f * density
+            val trackA = (70 * rotaryAlpha * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+            rotaryTrackPaint.color = Color.argb(trackA, 255, 255, 255)
+            canvas.drawArc(rotaryBounds, dialStartAngle, dialTotalSweep, false, rotaryTrackPaint)
+
+            val activeSweep = dialTotalSweep * rotaryLevel
+            if (activeSweep > 0.5f) {
+                rotaryProgressPaint.strokeWidth = 4f * density
+                val progA = (240 * rotaryAlpha * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+                rotaryProgressPaint.color = Color.argb(
+                    progA,
+                    Color.red(currentProgressColor),
+                    Color.green(currentProgressColor),
+                    Color.blue(currentProgressColor)
+                )
+                canvas.drawArc(rotaryBounds, dialStartAngle, activeSweep, false, rotaryProgressPaint)
+            }
+
+            rotaryTickPaint.strokeWidth = 2f * density
+            val tickA = (120 * rotaryAlpha * animatedVisibilityAlpha).toInt().coerceIn(0, 255)
+            rotaryTickPaint.color = Color.argb(tickA, 255, 255, 255)
+            val stepDegrees = dialTotalSweep / 6f
+            for (step in 0..6) {
+                val tickAngle = dialStartAngle + stepDegrees * step
+                val tickRad = Math.toRadians(tickAngle.toDouble())
+                val cosVal = cos(tickRad).toFloat()
+                val sinVal = sin(tickRad).toFloat()
+                val rInner = dialRadius - 3.5f * density
+                val rOuter = dialRadius + 3.5f * density
+                val tx1 = cameraCenterX + rInner * cosVal
+                val ty1 = cameraCenterY + rInner * sinVal
+                val tx2 = cameraCenterX + rOuter * cosVal
+                val ty2 = cameraCenterY + rOuter * sinVal
+                canvas.drawLine(tx1, ty1, tx2, ty2, rotaryTickPaint)
+            }
+        }
+
         canvas.restore()
     }
 
@@ -756,6 +1166,10 @@ class DuoOverlayView(context: Context) : View(context) {
         themeAnimator?.cancel()
         visibilityAnimator?.cancel()
         touchBounceAnimator?.cancel()
+        feedbackAnimator?.cancel()
+        chargeAnimator?.cancel()
+        rotaryAnimator?.cancel()
+        removeCallbacks(rotaryFadeRunnable)
     }
 }
 

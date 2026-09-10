@@ -339,8 +339,33 @@ fun DuoSettingsUI(
                         modifier = Modifier.highlight(highlightSetting == "duo_gesture_haptic"),
                     )
 
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_auto_awesome_24,
+                        title = stringResource(R.string.duo_gesture_animations_title),
+                        description = stringResource(R.string.duo_gesture_animations_desc),
+                        isChecked = viewModel.isDuoGestureAnimations.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setDuoGestureAnimations(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "duo_gesture_animations"),
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_rotate_right_24,
+                        title = stringResource(R.string.duo_rotary_dial_title),
+                        description = stringResource(R.string.duo_rotary_dial_desc),
+                        isChecked = viewModel.isDuoRotaryDial.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setDuoRotaryDial(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "duo_rotary_dial"),
+                    )
+
                     val singleTapOptions = listOf(
                         "notifications" to stringResource(R.string.duo_action_notifications),
+                        "quick_settings" to stringResource(R.string.duo_action_quick_settings),
                         "screenshot" to stringResource(R.string.duo_action_screenshot),
                         "lock_screen" to stringResource(R.string.duo_action_lock_screen),
                         "torch" to stringResource(R.string.duo_action_torch),
@@ -372,6 +397,7 @@ fun DuoSettingsUI(
                         "lock_screen" to stringResource(R.string.duo_action_lock_screen),
                         "recents" to stringResource(R.string.duo_action_recents),
                         "notifications" to stringResource(R.string.duo_action_notifications),
+                        "quick_settings" to stringResource(R.string.duo_action_quick_settings),
                         "screenshot" to stringResource(R.string.duo_action_screenshot),
                         "torch" to stringResource(R.string.duo_action_torch),
                         "none" to stringResource(R.string.duo_action_none),

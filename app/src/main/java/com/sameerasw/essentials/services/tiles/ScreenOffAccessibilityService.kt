@@ -260,7 +260,13 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ||
                 key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ||
                 key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE ||
-                key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU
+                key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ||
+                key == SettingsRepository.KEY_DUO_ENABLE_GESTURES ||
+                key == SettingsRepository.KEY_DUO_GESTURE_HAPTIC ||
+                key == SettingsRepository.KEY_DUO_GESTURE_ANIMATIONS ||
+                key == SettingsRepository.KEY_DUO_ROTARY_DIAL ||
+                key == SettingsRepository.KEY_DUO_GESTURE_SINGLE_TAP ||
+                key == SettingsRepository.KEY_DUO_GESTURE_DOUBLE_TAP
             ) {
                 duoOverlayHandler.updateState()
             }

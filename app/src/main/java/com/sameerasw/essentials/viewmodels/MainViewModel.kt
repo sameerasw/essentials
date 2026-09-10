@@ -140,6 +140,8 @@ class MainViewModel : ViewModel() {
     val isDuoUseMaterialYou = mutableStateOf(true)
     val isDuoEnableGestures = mutableStateOf(true)
     val isDuoGestureHaptic = mutableStateOf(true)
+    val isDuoGestureAnimations = mutableStateOf(true)
+    val isDuoRotaryDial = mutableStateOf(true)
     val duoGestureSingleTapAction = mutableStateOf("notifications")
     val duoGestureDoubleTapAction = mutableStateOf("lock_screen")
     val snoozeChannels =
@@ -573,6 +575,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_GESTURE_HAPTIC ->
                         isDuoGestureHaptic.value = settingsRepository.isDuoGestureHapticEnabled()
+
+                    SettingsRepository.KEY_DUO_GESTURE_ANIMATIONS ->
+                        isDuoGestureAnimations.value = settingsRepository.isDuoGestureAnimationsEnabled()
+
+                    SettingsRepository.KEY_DUO_ROTARY_DIAL ->
+                        isDuoRotaryDial.value = settingsRepository.isDuoRotaryDialEnabled()
 
                     SettingsRepository.KEY_DUO_GESTURE_SINGLE_TAP ->
                         duoGestureSingleTapAction.value = settingsRepository.getDuoGestureSingleTapAction()
@@ -1819,6 +1827,8 @@ class MainViewModel : ViewModel() {
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         isDuoEnableGestures.value = settingsRepository.isDuoEnableGesturesEnabled()
         isDuoGestureHaptic.value = settingsRepository.isDuoGestureHapticEnabled()
+        isDuoGestureAnimations.value = settingsRepository.isDuoGestureAnimationsEnabled()
+        isDuoRotaryDial.value = settingsRepository.isDuoRotaryDialEnabled()
         duoGestureSingleTapAction.value = settingsRepository.getDuoGestureSingleTapAction()
         duoGestureDoubleTapAction.value = settingsRepository.getDuoGestureDoubleTapAction()
         loadSnoozeChannels(context)
@@ -4460,6 +4470,16 @@ class MainViewModel : ViewModel() {
     fun setDuoGestureHaptic(enabled: Boolean) {
         isDuoGestureHaptic.value = enabled
         settingsRepository.setDuoGestureHapticEnabled(enabled)
+    }
+
+    fun setDuoGestureAnimations(enabled: Boolean) {
+        isDuoGestureAnimations.value = enabled
+        settingsRepository.setDuoGestureAnimationsEnabled(enabled)
+    }
+
+    fun setDuoRotaryDial(enabled: Boolean) {
+        isDuoRotaryDial.value = enabled
+        settingsRepository.setDuoRotaryDialEnabled(enabled)
     }
 
     fun setDuoGestureSingleTapAction(action: String) {

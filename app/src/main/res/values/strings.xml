@@ -2487,12 +2487,17 @@
     <string name="duo_enable_gestures_desc">Interact with your camera cutout using tap, double tap, and swipe</string>
     <string name="duo_gesture_haptic_title">Vibrate on touch</string>
     <string name="duo_gesture_haptic_desc">Play tactile haptic feedback when tapping the cutout</string>
+    <string name="duo_gesture_animations_title">Gesture visual effects</string>
+    <string name="duo_gesture_animations_desc">Play dynamic visual feedback around the cutout for each gesture</string>
+    <string name="duo_rotary_dial_title">Virtual rotary dial</string>
+    <string name="duo_rotary_dial_desc">Rotate around the camera cutout to adjust media volume or flashlight</string>
     <string name="duo_gesture_single_tap_title">Single tap action</string>
     <string name="duo_gesture_single_tap_desc">Action when tapped while idle</string>
     <string name="duo_gesture_double_tap_title">Double tap action</string>
     <string name="duo_gesture_double_tap_desc">Action when double tapped while idle</string>
 
     <string name="duo_action_notifications">Notification shade</string>
+    <string name="duo_action_quick_settings">Quick settings</string>
     <string name="duo_action_screenshot">Take screenshot</string>
     <string name="duo_action_lock_screen">Lock screen</string>
     <string name="duo_action_torch">Toggle flashlight</string>

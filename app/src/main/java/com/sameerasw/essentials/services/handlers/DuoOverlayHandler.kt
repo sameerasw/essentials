@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.media.AudioManager
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSession
@@ -55,10 +56,12 @@ import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.DuoFeedbackType
 import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.DuoTouchAnchorView
 import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
+import kotlin.math.abs
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -81,9 +84,11 @@ class DuoOverlayHandler(
     private val connectivityManager by lazy { service.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager }
     private val wifiManager by lazy { service.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager }
     private val cameraManager by lazy { service.getSystemService(Context.CAMERA_SERVICE) as CameraManager }
+    private val audioManager by lazy { service.getSystemService(Context.AUDIO_SERVICE) as? AudioManager }
 
     private var isFlashlightOn = false
     private var currentFlashlightLevel = 1
+    private var rotaryAngleDegreesAccumulator: Float = 0f
     private var flashlightIconBitmap: Bitmap? = null
     private var isTorchCallbackRegistered = false
 
@@ -686,7 +691,7 @@ class DuoOverlayHandler(
             val canShowTouchAnchor = gesturesEnabled && !this@DuoOverlayHandler.isFullscreen && !this@DuoOverlayHandler.isScreenOff
 
             if (canShowTouchAnchor) {
-                val touchPaddingPx = 16f * density
+                val touchPaddingPx = if (settingsRepository.isDuoRotaryDialEnabled()) 26f * density else 16f * density
                 val touchRadius = cameraRadiusPx + touchPaddingPx
                 val touchDiameter = (touchRadius * 2f).toInt()
 
@@ -697,6 +702,7 @@ class DuoOverlayHandler(
                 }
 
                 touchAnchorView?.isHapticEnabled = settingsRepository.isDuoGestureHapticEnabled()
+                touchAnchorView?.isRotaryEnabled = settingsRepository.isDuoRotaryDialEnabled()
 
                 val anchorParams = WindowManager.LayoutParams(
                     touchDiameter,
@@ -1003,11 +1009,25 @@ class DuoOverlayHandler(
         anchor.onSwipeLeft = {
             handleCutoutSwipe(isRight = false)
         }
+        anchor.onLongPressProgress = { fraction ->
+            if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                overlayView?.setChargeProgress(fraction)
+            }
+        }
+        anchor.onRotaryDelta = { deltaAngle ->
+            handleCutoutRotary(deltaAngle)
+        }
+        anchor.onRotaryEnd = {
+            rotaryAngleDegreesAccumulator = 0f
+        }
     }
 
     private fun handleCutoutSingleTap() {
         if (isFlashlightOn) {
             turnOffFlashlight()
+            if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                overlayView?.triggerActionFeedback(DuoFeedbackType.TORCH_OFF)
+            }
             return
         }
         val controller = activeMediaController
@@ -1015,8 +1035,14 @@ class DuoOverlayHandler(
             val state = controller.playbackState?.state
             if (state == PlaybackState.STATE_PLAYING) {
                 controller.transportControls.pause()
+                if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                    overlayView?.triggerActionFeedback(DuoFeedbackType.MEDIA_PAUSE)
+                }
             } else {
                 controller.transportControls.play()
+                if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                    overlayView?.triggerActionFeedback(DuoFeedbackType.MEDIA_PLAY)
+                }
             }
             return
         }
@@ -1027,12 +1053,18 @@ class DuoOverlayHandler(
         val controller = activeMediaController
         if (isMediaPlaying && controller != null) {
             controller.transportControls.skipToNext()
+            if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                overlayView?.triggerActionFeedback(DuoFeedbackType.TRACK_NEXT)
+            }
             return
         }
         executeConfiguredAction(settingsRepository.getDuoGestureDoubleTapAction())
     }
 
     private fun handleCutoutLongPress() {
+        if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+            overlayView?.setChargeProgress(0f)
+        }
         val controller = activeMediaController
         if (isMediaPlaying && controller != null) {
             val sessionActivity = controller.sessionActivity
@@ -1045,6 +1077,10 @@ class DuoOverlayHandler(
             launchAppPackage(controller.packageName)
         } else {
             toggleFlashlight()
+            if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                val feedback = if (isFlashlightOn) DuoFeedbackType.TORCH_OFF else DuoFeedbackType.TORCH_ON
+                overlayView?.triggerActionFeedback(feedback)
+            }
         }
     }
 
@@ -1052,12 +1088,33 @@ class DuoOverlayHandler(
         val controller = activeMediaController ?: return
         if (isRight) {
             controller.transportControls.skipToNext()
+            if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                overlayView?.triggerActionFeedback(DuoFeedbackType.TRACK_NEXT)
+            }
         } else {
             controller.transportControls.skipToPrevious()
+            if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+                overlayView?.triggerActionFeedback(DuoFeedbackType.TRACK_PREV)
+            }
         }
     }
 
     private fun executeConfiguredAction(action: String) {
+        if (settingsRepository.isDuoGestureAnimationsEnabled()) {
+            val feedback = when (action) {
+                "notifications" -> DuoFeedbackType.NOTIFICATIONS
+                "quick_settings" -> DuoFeedbackType.QUICK_SETTINGS
+                "lock_screen" -> DuoFeedbackType.LOCK_SCREEN
+                "screenshot" -> DuoFeedbackType.SCREENSHOT
+                "recents" -> DuoFeedbackType.RECENTS
+                "torch" -> if (isFlashlightOn) DuoFeedbackType.TORCH_OFF else DuoFeedbackType.TORCH_ON
+                else -> DuoFeedbackType.NONE
+            }
+            if (feedback != DuoFeedbackType.NONE) {
+                overlayView?.triggerActionFeedback(feedback)
+            }
+        }
+
         when (action) {
             "notifications" -> {
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
@@ -1084,6 +1141,50 @@ class DuoOverlayHandler(
             else -> {
                 // "none" or unhandled
             }
+        }
+    }
+
+    private fun handleCutoutRotary(deltaAngle: Float) {
+        if (!settingsRepository.isDuoRotaryDialEnabled()) return
+
+        if (isFlashlightOn && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val id = getCameraId() ?: return
+            try {
+                val characteristics = cameraManager.getCameraCharacteristics(id)
+                val maxLevel = characteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL) ?: 1
+                if (maxLevel > 1) {
+                    rotaryAngleDegreesAccumulator += deltaAngle
+                    val stepDeg = 14f
+                    if (abs(rotaryAngleDegreesAccumulator) >= stepDeg) {
+                        val steps = (rotaryAngleDegreesAccumulator / stepDeg).toInt()
+                        rotaryAngleDegreesAccumulator %= stepDeg
+                        val newLevel = (currentFlashlightLevel + steps).coerceIn(1, maxLevel)
+                        if (newLevel != currentFlashlightLevel) {
+                            currentFlashlightLevel = newLevel
+                            cameraManager.turnOnTorchWithStrengthLevel(id, newLevel)
+                            val ratio = newLevel.toFloat() / maxLevel.toFloat()
+                            overlayView?.showRotaryLevel(ratio, isVolume = false)
+                        }
+                    }
+                    return
+                }
+            } catch (_: Exception) {}
+        }
+
+        val am = audioManager ?: return
+        val maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        val currentVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC)
+        rotaryAngleDegreesAccumulator += deltaAngle
+        val stepDeg = 12f
+        if (abs(rotaryAngleDegreesAccumulator) >= stepDeg) {
+            val steps = (rotaryAngleDegreesAccumulator / stepDeg).toInt()
+            rotaryAngleDegreesAccumulator %= stepDeg
+            val targetVolume = (currentVolume + steps).coerceIn(0, maxVolume)
+            if (targetVolume != currentVolume) {
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, targetVolume, 0)
+            }
+            val ratio = if (maxVolume > 0) targetVolume.toFloat() / maxVolume.toFloat() else 0f
+            overlayView?.showRotaryLevel(ratio, isVolume = true)
         }
     }
 

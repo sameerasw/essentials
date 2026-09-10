@@ -376,6 +376,8 @@ class SettingsRepository(
         const val KEY_DUO_GESTURE_HAPTIC = "duo_gesture_haptic"
         const val KEY_DUO_GESTURE_SINGLE_TAP = "duo_gesture_single_tap"
         const val KEY_DUO_GESTURE_DOUBLE_TAP = "duo_gesture_double_tap"
+        const val KEY_DUO_GESTURE_ANIMATIONS = "duo_gesture_animations"
+        const val KEY_DUO_ROTARY_DIAL = "duo_rotary_dial"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3133,4 +3135,10 @@ class SettingsRepository(
 
     fun getDuoGestureDoubleTapAction(): String = getString(KEY_DUO_GESTURE_DOUBLE_TAP, "lock_screen") ?: "lock_screen"
     fun setDuoGestureDoubleTapAction(action: String) = putString(KEY_DUO_GESTURE_DOUBLE_TAP, action)
+
+    fun isDuoGestureAnimationsEnabled(): Boolean = getBoolean(KEY_DUO_GESTURE_ANIMATIONS, true)
+    fun setDuoGestureAnimationsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_GESTURE_ANIMATIONS, enabled)
+
+    fun isDuoRotaryDialEnabled(): Boolean = getBoolean(KEY_DUO_ROTARY_DIAL, true)
+    fun setDuoRotaryDialEnabled(enabled: Boolean) = putBoolean(KEY_DUO_ROTARY_DIAL, enabled)
 }
