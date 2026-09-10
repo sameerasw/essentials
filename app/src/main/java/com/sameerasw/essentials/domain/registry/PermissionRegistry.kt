@@ -55,6 +55,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_app_lock_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_essentials_on_display_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_aod_wallpaper_title)
+    PermissionRegistry.register("ACCESSIBILITY", R.string.duo_title)
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_statusbar_icons_title)
@@ -176,4 +177,7 @@ fun initPermissionRegistry() {
 
     // AOD Wallpaper feature
     PermissionRegistry.register("STORAGE", R.string.feat_aod_wallpaper_title)
+
+    // Floating Bubbles preview
+    PermissionRegistry.register("NOTIFICATION_BUBBLES", R.string.preview_web_title)
 }

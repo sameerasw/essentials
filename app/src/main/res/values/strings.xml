@@ -58,6 +58,8 @@
     <string name="preview_web_desc">Open link in private floating web preview</string>
     <string name="preview_web_desc_enable_bubbles">This will enable notification bubbles</string>
     <string name="preview_web_desc_disabled">Notification bubbles disabled</string>
+    <string name="link_preview_show_preview">Show link preview</string>
+    <string name="link_preview_show_images">Show images</string>
     <string name="qr_code_title">QR Code</string>
     <string name="qr_code_desc">Scan to open</string>
     <string name="qr_share_image">Share QR Image</string>
@@ -829,6 +831,7 @@
     <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_duo">Required to display the ambient indicator overlay around the camera cutout.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
@@ -2446,4 +2449,32 @@
     <string name="settings_section_more">More</string>
     <string name="action_show_granted">Show granted</string>
     <string name="action_hide_granted">Hide granted</string>
+    <string name="perm_bubbles_title">Floating Bubbles</string>
+    <string name="perm_bubbles_desc">Allow web previews to open in floating conversation bubbles above other apps</string>
+    <string name="perm_bubbles_instructions">Set to "All conversations can bubble" in app notification settings, or grant via Shizuku / Root.</string>
+    <string name="label_frozen_apps">Frozen Apps</string>
+
+    <!-- Duo -->
+    <string name="duo_title">Duo</string>
+    <string name="duo_desc">This doesn\'t fold</string>
+    <string name="duo_enable_title">Enable Duo</string>
+    <string name="duo_enable_desc">This doesn\'t fold, but does cool stuff</string>
+    <string name="duo_auto_detect_title">Auto-detect camera</string>
+    <string name="duo_auto_detect_desc">Automatically locate the front camera cutout</string>
+    <string name="duo_camera_offset_x_title">Horizontal position</string>
+    <string name="duo_camera_offset_y_title">Vertical position</string>
+    <string name="duo_camera_size_title">Camera size</string>
+    <string name="duo_arc_thickness_title">Ring thickness</string>
+    <string name="duo_ring_radius_title">Ring radius</string>
+    <string name="duo_dot_size_title">Status dot size</string>
+    <string name="duo_section_position">Position and dimensions</string>
+    <string name="duo_section_style">Style</string>
+    <string name="duo_section_what_to_show">What to show</string>
+    <string name="duo_show_networks_title">Networks</string>
+    <string name="duo_show_networks_desc">Show mobile network status indicator dots</string>
+    <string name="duo_section_behavior">Behavior</string>
+    <string name="duo_material_you_title">Use Material You colors</string>
+    <string name="duo_material_you_desc">Use accent color from wallpaper</string>
+    <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
+    <string name="duo_hide_when_screen_off_desc">Hide the overlay on AOD</string>
 </resources>

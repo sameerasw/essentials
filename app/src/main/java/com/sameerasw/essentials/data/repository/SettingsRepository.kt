@@ -352,6 +352,21 @@ class SettingsRepository(
         const val KEY_REFRESH_RATE_MIN = "refresh_rate_min"
         const val KEY_REFRESH_RATE_PEAK = "refresh_rate_peak"
         const val KEY_REFRESH_RATE_DEFAULT_PEAK_INFINITY = "refresh_rate_default_peak_infinity"
+        const val KEY_LINK_PREVIEW_ENABLED = "link_preview_enabled"
+        const val KEY_LINK_PREVIEW_IMAGES_ENABLED = "link_preview_images_enabled"
+
+        // Duo
+        const val KEY_DUO_ENABLED = "duo_enabled"
+        const val KEY_DUO_USE_AUTO_DETECT = "duo_use_auto_detect"
+        const val KEY_DUO_CAMERA_OFFSET_X = "duo_camera_offset_x"
+        const val KEY_DUO_CAMERA_OFFSET_Y = "duo_camera_offset_y"
+        const val KEY_DUO_CAMERA_SIZE = "duo_camera_size"
+        const val KEY_DUO_ARC_THICKNESS = "duo_arc_thickness"
+        const val KEY_DUO_DOT_SIZE = "duo_dot_size"
+        const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
+        const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
+        const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
+        const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3046,4 +3061,43 @@ class SettingsRepository(
 
     fun isSecureSensitiveTilesEnabled(): Boolean = getBoolean(KEY_SECURE_SENSITIVE_TILES, true)
     fun setSecureSensitiveTilesEnabled(enabled: Boolean) = putBoolean(KEY_SECURE_SENSITIVE_TILES, enabled)
+
+    fun isLinkPreviewEnabled(): Boolean = getBoolean(KEY_LINK_PREVIEW_ENABLED, true)
+    fun setLinkPreviewEnabled(enabled: Boolean) = putBoolean(KEY_LINK_PREVIEW_ENABLED, enabled)
+
+    fun isLinkPreviewImagesEnabled(): Boolean = getBoolean(KEY_LINK_PREVIEW_IMAGES_ENABLED, true)
+    fun setLinkPreviewImagesEnabled(enabled: Boolean) = putBoolean(KEY_LINK_PREVIEW_IMAGES_ENABLED, enabled)
+
+    fun isDuoEnabled(): Boolean = getBoolean(KEY_DUO_ENABLED, false)
+    fun setDuoEnabled(enabled: Boolean) = putBoolean(KEY_DUO_ENABLED, enabled)
+
+    fun isDuoAutoDetectEnabled(): Boolean = getBoolean(KEY_DUO_USE_AUTO_DETECT, true)
+    fun setDuoAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_AUTO_DETECT, enabled)
+
+    fun getDuoCameraOffsetX(): Float = getFloat(KEY_DUO_CAMERA_OFFSET_X, 50f)
+    fun setDuoCameraOffsetX(value: Float) = putFloat(KEY_DUO_CAMERA_OFFSET_X, value)
+
+    fun getDuoCameraOffsetY(): Float = getFloat(KEY_DUO_CAMERA_OFFSET_Y, 3f)
+    fun setDuoCameraOffsetY(value: Float) = putFloat(KEY_DUO_CAMERA_OFFSET_Y, value)
+
+    fun getDuoCameraSize(): Float = getFloat(KEY_DUO_CAMERA_SIZE, 1.0f)
+    fun setDuoCameraSize(value: Float) = putFloat(KEY_DUO_CAMERA_SIZE, value)
+
+    fun getDuoArcThickness(): Float = getFloat(KEY_DUO_ARC_THICKNESS, 4f)
+    fun setDuoArcThickness(value: Float) = putFloat(KEY_DUO_ARC_THICKNESS, value)
+
+    fun getDuoDotSize(): Float = getFloat(KEY_DUO_DOT_SIZE, 4f)
+    fun setDuoDotSize(value: Float) = putFloat(KEY_DUO_DOT_SIZE, value)
+
+    fun getDuoRingRadius(): Float = getFloat(KEY_DUO_RING_RADIUS, 1.0f)
+    fun setDuoRingRadius(value: Float) = putFloat(KEY_DUO_RING_RADIUS, value)
+
+    fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
+    fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)
+
+    fun isDuoHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, true)
+    fun setDuoHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, enabled)
+
+    fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
+    fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
 }

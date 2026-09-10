@@ -42,7 +42,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -65,10 +65,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -95,16 +91,24 @@ class BubbleWebActivity : ComponentActivity() {
         const val EXTRA_URL = "extra_bubble_url"
         const val EXTRA_PRIVATE_MODE = "extra_bubble_private_mode"
         const val EXTRA_FULLSCREEN = "extra_bubble_fullscreen"
+
+        fun sanitizeUrl(raw: String): String {
+            val trimmed = raw.trim()
+            return if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) trimmed
+            else "https://google.com"
+        }
     }
 
     private var webViewInstance: WebView? = null
+    private var isPrivateSession = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val initialUrl = intent.getStringExtra(EXTRA_URL) ?: intent.dataString ?: "https://google.com"
-        val isPrivateMode = intent.getBooleanExtra(EXTRA_PRIVATE_MODE, true)
+        val rawUrl = intent.getStringExtra(EXTRA_URL) ?: intent.dataString ?: "https://google.com"
+        val initialUrl = sanitizeUrl(rawUrl)
+        isPrivateSession = intent.getBooleanExtra(EXTRA_PRIVATE_MODE, true)
 
         setContent {
             val viewModel: MainViewModel = viewModel()
@@ -113,7 +117,8 @@ class BubbleWebActivity : ComponentActivity() {
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 BubbleWebScreen(
                     initialUrl = initialUrl,
-                    isPrivate = isPrivateMode,
+                    isPrivate = isPrivateSession,
+                    onCollapse = { moveTaskToBack(true) },
                     onClose = { finish() },
                     onAttachWebView = { webViewInstance = it },
                 )
@@ -121,13 +126,27 @@ class BubbleWebActivity : ComponentActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        webViewInstance?.onPause()
+        webViewInstance?.pauseTimers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webViewInstance?.onResume()
+        webViewInstance?.resumeTimers()
+    }
+
     override fun onDestroy() {
         try {
-            webViewInstance?.clearCache(true)
+            webViewInstance?.clearCache(isPrivateSession)
             webViewInstance?.clearHistory()
-            webViewInstance?.clearFormData()
-            WebStorage.getInstance().deleteAllData()
-            CookieManager.getInstance().removeAllCookies(null)
+            if (isPrivateSession) {
+                webViewInstance?.clearFormData()
+                WebStorage.getInstance().deleteAllData()
+                CookieManager.getInstance().removeAllCookies(null)
+            }
             webViewInstance?.destroy()
             webViewInstance = null
         } catch (_: Exception) {}
@@ -140,6 +159,7 @@ class BubbleWebActivity : ComponentActivity() {
 private fun BubbleWebScreen(
     initialUrl: String,
     isPrivate: Boolean,
+    onCollapse: () -> Unit,
     onClose: () -> Unit,
     onAttachWebView: (WebView) -> Unit,
 ) {
@@ -168,21 +188,11 @@ private fun BubbleWebScreen(
     val toolbarMaxOffsetPx = with(density) { 160.dp.toPx() }
     var toolbarOffsetPx by remember { mutableFloatStateOf(0f) }
 
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
-                toolbarOffsetPx = (toolbarOffsetPx - delta).coerceIn(0f, toolbarMaxOffsetPx)
-                return Offset.Zero
-            }
-        }
-    }
-
     BackHandler(enabled = true) {
         if (webViewRef?.canGoBack() == true) {
             webViewRef?.goBack()
         } else {
-            onClose()
+            onCollapse()
         }
     }
 
@@ -193,9 +203,7 @@ private fun BubbleWebScreen(
         color = MaterialTheme.colorScheme.surface,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(nestedScrollConnection),
+            modifier = Modifier.fillMaxSize(),
         ) {
             Box(
                 modifier = Modifier
@@ -227,6 +235,7 @@ private fun BubbleWebScreen(
                                 displayZoomControls = false
                                 loadWithOverviewMode = true
                                 useWideViewPort = true
+                                mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                             }
 
                             if (isPrivate) {
@@ -248,7 +257,21 @@ private fun BubbleWebScreen(
 
                             webViewClient = object : WebViewClient() {
                                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                                    val url = request?.url?.toString() ?: return false
+                                    val uri = request?.url ?: return false
+                                    val scheme = uri.scheme?.lowercase() ?: return false
+
+                                    if (scheme != "http" && scheme != "https") {
+                                        try {
+                                            val intent = Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME).apply {
+                                                addCategory(Intent.CATEGORY_BROWSABLE)
+                                                component = null
+                                            }
+                                            context.startActivity(intent)
+                                        } catch (_: Exception) {}
+                                        return true
+                                    }
+
+                                    val url = uri.toString()
                                     currentUrl = url
                                     canGoBack = view?.canGoBack() == true
                                     return false
@@ -284,7 +307,7 @@ private fun BubbleWebScreen(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = navBarBottom + 16.dp)
+                    .padding(bottom = navBarBottom + 12.dp)
                     .offset { IntOffset(0, toolbarOffsetPx.roundToInt()) }
                     .alpha(toolbarVisibilityRatio),
                 contentAlignment = Alignment.Center,
@@ -295,43 +318,47 @@ private fun BubbleWebScreen(
                         toolbarContainerColor = MaterialTheme.colorScheme.primary,
                         toolbarContentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
-                    modifier = Modifier.height(72.dp),
+                    modifier = Modifier.height(54.dp),
                 ) {
-                    IconButton(
-                        onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            if (webViewRef?.canGoBack() == true) {
-                                webViewRef?.goBack()
-                            } else {
-                                onClose()
-                            }
-                        },
-                        modifier = Modifier.size(52.dp),
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .combinedClickable(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    if (webViewRef?.canGoBack() == true) {
+                                        webViewRef?.goBack()
+                                    } else {
+                                        onCollapse()
+                                    }
+                                },
+                                onLongClick = {
+                                    HapticUtil.performHeavyHaptic(view)
+                                    onClose()
+                                },
+                            ),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             painter = painterResource(
-                                if (canGoBack) R.drawable.rounded_arrow_back_24 else R.drawable.rounded_close_24
+                                if (canGoBack) R.drawable.rounded_arrow_back_24 else R.drawable.rounded_keyboard_arrow_down_24
                             ),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                     }
 
                     Box(
                         modifier = Modifier
-                            .width(180.dp)
-                            .height(48.dp)
-                            .clip(RoundedCornerShape(24.dp))
+                            .widthIn(min = 80.dp, max = 130.dp)
+                            .height(36.dp)
+                            .clip(RoundedCornerShape(18.dp))
                             .combinedClickable(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                    clipboard.setPrimaryClip(ClipData.newPlainText("URL", currentUrl))
-                                    Toast.makeText(context, copyFeedbackText, Toast.LENGTH_SHORT).show()
+                                    copyUrlToClipboard(context, currentUrl, copyFeedbackText)
                                 },
                                 onLongClick = {
                                     HapticUtil.performHeavyHaptic(view)
@@ -348,14 +375,14 @@ private fun BubbleWebScreen(
                                 progress = { pageProgress },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(16.dp),
+                                    .height(12.dp),
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 trackColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.28f),
                             )
                         } else {
                             Text(
                                 text = currentDomain,
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1,
@@ -369,11 +396,9 @@ private fun BubbleWebScreen(
                     IconButton(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
-                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            clipboard.setPrimaryClip(ClipData.newPlainText("URL", currentUrl))
-                            Toast.makeText(context, copyFeedbackText, Toast.LENGTH_SHORT).show()
+                            copyUrlToClipboard(context, currentUrl, copyFeedbackText)
                         },
-                        modifier = Modifier.size(52.dp),
+                        modifier = Modifier.size(40.dp),
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
@@ -382,7 +407,7 @@ private fun BubbleWebScreen(
                             painter = painterResource(R.drawable.rounded_link_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                     }
 
@@ -396,7 +421,7 @@ private fun BubbleWebScreen(
                             }
                             context.startActivity(shareIntent)
                         },
-                        modifier = Modifier.size(52.dp),
+                        modifier = Modifier.size(40.dp),
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
@@ -405,7 +430,7 @@ private fun BubbleWebScreen(
                             painter = painterResource(R.drawable.rounded_share_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                     }
                 }
@@ -422,4 +447,10 @@ private fun extractDomain(url: String): String {
     } catch (_: Exception) {
         url
     }
+}
+
+private fun copyUrlToClipboard(context: Context, url: String, feedbackText: String) {
+    val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    cm.setPrimaryClip(ClipData.newPlainText("URL", url))
+    Toast.makeText(context, feedbackText, Toast.LENGTH_SHORT).show()
 }

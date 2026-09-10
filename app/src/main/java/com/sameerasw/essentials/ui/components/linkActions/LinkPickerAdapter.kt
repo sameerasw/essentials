@@ -68,6 +68,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
@@ -121,6 +122,8 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -222,7 +225,13 @@ fun LinkPickerScreen(
     var selectedTab by remember { mutableIntStateOf(if (initialOpenShorten) 2 else initialTab) }
     var autoOpenShortenInTools by remember { mutableStateOf(initialOpenShorten) }
 
+    val settingsRepository = remember { SettingsRepository(context) }
+
     // Preview data state
+    var isLinkPreviewEnabled by remember { mutableStateOf(settingsRepository.isLinkPreviewEnabled()) }
+    var isLinkPreviewImagesEnabled by remember { mutableStateOf(settingsRepository.isLinkPreviewImagesEnabled()) }
+    var showSettingsMenu by remember { mutableStateOf(false) }
+
     var linkPreviewData by remember { mutableStateOf<LinkPreviewData?>(null) }
     var isLoadingPreview by remember { mutableStateOf(true) }
 
@@ -290,7 +299,6 @@ fun LinkPickerScreen(
     var showQrSheet by remember { mutableStateOf(false) }
     var showShortenSheet by remember { mutableStateOf(initialOpenShorten) }
 
-    val settingsRepository = remember { SettingsRepository(context) }
     var isMacConnected by remember {
         mutableStateOf(
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED, false) &&
@@ -300,12 +308,19 @@ fun LinkPickerScreen(
 
     DisposableEffect(Unit) {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED ||
-                key == SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED
-            ) {
-                isMacConnected =
-                    settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED, false) &&
-                        settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED, false)
+            when (key) {
+                SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED,
+                SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED -> {
+                    isMacConnected =
+                        settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED, false) &&
+                            settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED, false)
+                }
+                SettingsRepository.KEY_LINK_PREVIEW_ENABLED -> {
+                    isLinkPreviewEnabled = settingsRepository.isLinkPreviewEnabled()
+                }
+                SettingsRepository.KEY_LINK_PREVIEW_IMAGES_ENABLED -> {
+                    isLinkPreviewImagesEnabled = settingsRepository.isLinkPreviewImagesEnabled()
+                }
             }
         }
         settingsRepository.registerOnSharedPreferenceChangeListener(listener)
@@ -624,6 +639,13 @@ fun LinkPickerScreen(
                                         showShortenSheet = true
                                     },
                                 ),
+                                LinkActionItem(
+                                    titleRes = R.string.label_settings,
+                                    iconRes = R.drawable.rounded_settings_24,
+                                    onClick = {
+                                        showSettingsMenu = true
+                                    },
+                                ),
                             )
                         }
 
@@ -638,33 +660,83 @@ fun LinkPickerScreen(
                                     .height(44.dp),
                         ) { index ->
                             val action = actionItems[index]
-                            Surface(
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    action.onClick()
-                                },
-                                shape = RoundedCornerShape(16.dp),
-                                color = MaterialTheme.colorScheme.surfaceBright,
-                                modifier = Modifier.fillMaxSize().maskClip(RoundedCornerShape(16.dp)),
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center,
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Surface(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        action.onClick()
+                                    },
+                                    shape = RoundedCornerShape(16.dp),
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    modifier = Modifier.fillMaxSize().maskClip(RoundedCornerShape(16.dp)),
                                 ) {
-                                    Icon(
-                                        painter = painterResource(id = action.iconRes),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(18.dp),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = stringResource(id = action.titleRes),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        maxLines = 1,
-                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center,
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = action.iconRes),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp),
+                                            tint = MaterialTheme.colorScheme.onSurface,
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = stringResource(id = action.titleRes),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            maxLines = 1,
+                                        )
+                                    }
+                                }
+
+                                if (action.titleRes == R.string.label_settings) {
+                                    SegmentedDropdownMenu(
+                                        expanded = showSettingsMenu,
+                                        onDismissRequest = { showSettingsMenu = false },
+                                    ) {
+                                        SegmentedDropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.link_preview_show_preview)) },
+                                            onClick = {
+                                                val next = !isLinkPreviewEnabled
+                                                isLinkPreviewEnabled = next
+                                                settingsRepository.setLinkPreviewEnabled(next)
+                                            },
+                                            trailingIcon = {
+                                                Switch(
+                                                    checked = isLinkPreviewEnabled,
+                                                    onCheckedChange = { checked ->
+                                                        HapticUtil.performVirtualKeyHaptic(view)
+                                                        isLinkPreviewEnabled = checked
+                                                        settingsRepository.setLinkPreviewEnabled(checked)
+                                                    },
+                                                )
+                                            },
+                                        )
+                                        SegmentedDropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.link_preview_show_images)) },
+                                            onClick = {
+                                                if (isLinkPreviewEnabled) {
+                                                    val next = !isLinkPreviewImagesEnabled
+                                                    isLinkPreviewImagesEnabled = next
+                                                    settingsRepository.setLinkPreviewImagesEnabled(next)
+                                                }
+                                            },
+                                            enabled = isLinkPreviewEnabled,
+                                            trailingIcon = {
+                                                Switch(
+                                                    checked = isLinkPreviewImagesEnabled,
+                                                    enabled = isLinkPreviewEnabled,
+                                                    onCheckedChange = { checked ->
+                                                        HapticUtil.performVirtualKeyHaptic(view)
+                                                        isLinkPreviewImagesEnabled = checked
+                                                        settingsRepository.setLinkPreviewImagesEnabled(checked)
+                                                    },
+                                                )
+                                            },
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -821,7 +893,7 @@ fun LinkPickerScreen(
             }
         }
 
-        if (linkPreviewData?.imageUrl != null || animatedAlpha > 0f) {
+        if (isLinkPreviewEnabled && ((isLinkPreviewImagesEnabled && linkPreviewData?.imageUrl != null) || animatedAlpha > 0f)) {
             val topBlurHeightPx = with(density) { (statusBarTop * 1.5f + 48.dp).toPx() }
             val bottomBlurHeightPx = with(density) { 120.dp.toPx() }
 
@@ -844,21 +916,23 @@ fun LinkPickerScreen(
                             showGradientOverlay = false,
                         ),
             ) {
-                AsyncImage(
-                    model =
-                        ImageRequest.Builder(context)
-                            .data(linkPreviewData?.imageUrl)
-                            .crossfade(true)
-                            .build(),
-                    contentDescription = "Link Preview",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                    onSuccess = { isPreviewImageLoaded = true },
-                    onError = { isPreviewImageLoaded = false },
-                )
+                if (isLinkPreviewImagesEnabled) {
+                    AsyncImage(
+                        model =
+                            ImageRequest.Builder(context)
+                                .data(linkPreviewData?.imageUrl)
+                                .crossfade(true)
+                                .build(),
+                        contentDescription = "Link Preview",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                        onSuccess = { isPreviewImageLoaded = true },
+                        onError = { isPreviewImageLoaded = false },
+                    )
+                }
             }
 
-            if (!linkPreviewData?.title.isNullOrBlank() || !linkPreviewData?.description.isNullOrBlank()) {
+            if (isLinkPreviewEnabled && (!linkPreviewData?.title.isNullOrBlank() || !linkPreviewData?.description.isNullOrBlank())) {
                 Box(
                     modifier =
                         Modifier
