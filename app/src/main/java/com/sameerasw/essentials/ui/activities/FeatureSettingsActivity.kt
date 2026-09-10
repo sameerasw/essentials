@@ -612,7 +612,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Display" ->
                                                     listOf(
                                                         listOf(
-                                                            "Duo",
                                                             "Essentials On Display",
                                                             "Always on Display",
                                                             "Statusbar icons",
@@ -630,6 +629,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Smart pixels",
                                                         ),
                                                         listOf(
+                                                            "Duo",
                                                             "Other customizations",
                                                         ),
                                                     )
