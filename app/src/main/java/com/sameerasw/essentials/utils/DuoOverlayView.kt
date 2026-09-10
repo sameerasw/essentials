@@ -79,11 +79,15 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
-                if (hideWhenScreenOff) {
-                    animateScreenOffVisibility(!value)
-                } else {
-                    animateThemeChange()
-                }
+                updateVisibilityAnimation()
+            }
+        }
+
+    var isFullscreen: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityAnimation()
             }
         }
 
@@ -91,11 +95,19 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
-                if (isScreenOff) {
-                    animateScreenOffVisibility(!value)
-                }
+                updateVisibilityAnimation()
             }
         }
+
+    private fun updateVisibilityAnimation() {
+        val shouldHide = isFullscreen || (isScreenOff && hideWhenScreenOff)
+        if (shouldHide) {
+            animateScreenOffVisibility(false)
+        } else {
+            animateScreenOffVisibility(true)
+            animateThemeChange()
+        }
+    }
 
     var useMaterialYouColors: Boolean = true
         set(value) {

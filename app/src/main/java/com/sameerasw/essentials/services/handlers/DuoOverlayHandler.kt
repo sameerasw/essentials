@@ -75,6 +75,15 @@ class DuoOverlayHandler(
     private var isBatteryReceiverRegistered = false
 
     private var isScreenOff: Boolean = false
+    var isFullscreen: Boolean = false
+        private set
+
+    fun setFullscreen(fullscreen: Boolean) {
+        if (isFullscreen != fullscreen) {
+            isFullscreen = fullscreen
+            overlayView?.isFullscreen = fullscreen
+        }
+    }
 
     fun init() {
         windowManager = service.getSystemService(AccessibilityService.WINDOW_SERVICE) as? WindowManager
@@ -96,6 +105,7 @@ class DuoOverlayHandler(
     fun onConfigurationChanged(newConfig: Configuration) {
         val isNightMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         overlayView?.isDarkTheme = isNightMode
+        updateState()
     }
 
     fun updateState() {
@@ -171,17 +181,41 @@ class DuoOverlayHandler(
             val screenHeight = displayMetrics.heightPixels.toFloat()
             val density = displayMetrics.density
 
+            var isFullscreenState = false
             var centerX = screenWidth * (settingsRepository.getDuoCameraOffsetX() / 100f)
             var centerY = screenHeight * (settingsRepository.getDuoCameraOffsetY() / 100f)
             var cameraRadiusPx = 18f * density * settingsRepository.getDuoCameraSize()
+
+            @Suppress("DEPRECATION")
+            val rotation = wm.defaultDisplay.rotation
 
             if (settingsRepository.isDuoAutoDetectEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 @Suppress("DEPRECATION")
                 val cutout = wm.defaultDisplay.cutout
                 if (cutout != null && cutout.boundingRects.isNotEmpty()) {
-                    // Find cutout rect closest to top center of screen
-                    val topCutouts = cutout.boundingRects.filter { it.top < screenHeight / 4 }
-                    val targetRect = topCutouts.minByOrNull { kotlin.math.abs(it.centerX() - screenWidth / 2f) }
+                    val targetRect = when (rotation) {
+                        android.view.Surface.ROTATION_90 -> {
+                            cutout.boundingRects.filter { it.left < screenWidth / 4 }
+                                .minByOrNull { kotlin.math.abs(it.centerY() - screenHeight / 2f) }
+                                ?: cutout.boundingRects.firstOrNull()
+                        }
+                        android.view.Surface.ROTATION_270 -> {
+                            cutout.boundingRects.filter { it.right > screenWidth * 0.75f }
+                                .minByOrNull { kotlin.math.abs(it.centerY() - screenHeight / 2f) }
+                                ?: cutout.boundingRects.firstOrNull()
+                        }
+                        android.view.Surface.ROTATION_180 -> {
+                            cutout.boundingRects.filter { it.bottom > screenHeight * 0.75f }
+                                .minByOrNull { kotlin.math.abs(it.centerX() - screenWidth / 2f) }
+                                ?: cutout.boundingRects.firstOrNull()
+                        }
+                        else -> {
+                            cutout.boundingRects.filter { it.top < screenHeight / 4 }
+                                .minByOrNull { kotlin.math.abs(it.centerX() - screenWidth / 2f) }
+                                ?: cutout.boundingRects.firstOrNull()
+                        }
+                    }
+
                     if (targetRect != null) {
                         centerX = targetRect.centerX().toFloat()
                         centerY = targetRect.centerY().toFloat()
@@ -189,6 +223,27 @@ class DuoOverlayHandler(
                         if (computedRadius > 0) {
                             cameraRadiusPx = computedRadius
                         }
+                    }
+                }
+            } else if (!settingsRepository.isDuoAutoDetectEnabled()) {
+                val rawXRatio = settingsRepository.getDuoCameraOffsetX() / 100f
+                val rawYRatio = settingsRepository.getDuoCameraOffsetY() / 100f
+                when (rotation) {
+                    android.view.Surface.ROTATION_90 -> {
+                        centerX = screenWidth * rawYRatio
+                        centerY = screenHeight * (1f - rawXRatio)
+                    }
+                    android.view.Surface.ROTATION_270 -> {
+                        centerX = screenWidth * (1f - rawYRatio)
+                        centerY = screenHeight * rawXRatio
+                    }
+                    android.view.Surface.ROTATION_180 -> {
+                        centerX = screenWidth * (1f - rawXRatio)
+                        centerY = screenHeight * (1f - rawYRatio)
+                    }
+                    else -> {
+                        centerX = screenWidth * rawXRatio
+                        centerY = screenHeight * rawYRatio
                     }
                 }
             }
@@ -208,6 +263,7 @@ class DuoOverlayHandler(
                 this.dotRadiusPx = settingsRepository.getDuoDotSize() * density
                 this.isDarkTheme = isNightMode
                 this.isScreenOff = this@DuoOverlayHandler.isScreenOff
+                this.isFullscreen = this@DuoOverlayHandler.isFullscreen
                 this.hideWhenScreenOff = settingsRepository.isDuoHideWhenScreenOffEnabled()
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()

@@ -471,8 +471,40 @@ class ScreenOffAccessibilityService :
         if (event == null) return
 
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            val packageName = event.packageName?.toString() ?: return
-            appFlowHandler.onPackageChanged(packageName)
+            val packageName = event.packageName?.toString()
+            if (packageName != null) {
+                appFlowHandler.onPackageChanged(packageName)
+            }
+        }
+
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
+            event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
+        ) {
+            checkFullscreenState()
+        }
+    }
+
+    private fun checkFullscreenState() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                val currentWindows = windows
+                if (!currentWindows.isNullOrEmpty()) {
+                    val hasStatusBar = currentWindows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM }
+                    val appWindow = currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
+                        ?: currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION }
+
+                    if (appWindow != null) {
+                        val outBounds = android.graphics.Rect()
+                        appWindow.getBoundsInScreen(outBounds)
+                        val displayMetrics = resources.displayMetrics
+                        val isCoveringFullDisplay = outBounds.width() >= displayMetrics.widthPixels &&
+                            outBounds.height() >= displayMetrics.heightPixels
+
+                        val isFullscreen = isCoveringFullDisplay && !hasStatusBar
+                        duoOverlayHandler.setFullscreen(isFullscreen)
+                    }
+                }
+            } catch (_: Exception) {}
         }
     }
 
