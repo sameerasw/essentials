@@ -272,6 +272,21 @@ fun DuoSettingsUI(
                     },
                 )
             }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_downloading_24,
+                title = stringResource(R.string.duo_show_progress_title),
+                description = stringResource(R.string.duo_show_progress_desc),
+                isChecked = viewModel.isDuoShowProgress.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !viewModel.isNotificationListenerEnabled.value) {
+                        requestingPermissionsFor = Pair(R.string.duo_title, listOf("NOTIFICATION_LISTENER"))
+                    } else {
+                        viewModel.setDuoShowProgress(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_progress"),
+            )
         }
 
         Text(

@@ -44,6 +44,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.OverlayHelper
@@ -72,6 +73,15 @@ class DuoOverlayHandler(
     private var currentArtOrIconBitmap: Bitmap? = null
     private var currentMediaKey: String? = null
     private var isMediaPlaying = false
+    private var isProgressListenerRegistered = false
+
+    private val progressNotificationListener = object : NotificationListener.ProgressNotificationListener {
+        override fun onProgressNotificationUpdated(data: ProgressNotificationData?) {
+            mainHandler.post {
+                checkAndApplyProgressNotificationState(data)
+            }
+        }
+    }
 
     private val mediaCallback = object : MediaController.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackState?) {
@@ -264,6 +274,7 @@ class DuoOverlayHandler(
                 currentArtOrIconBitmap = null
                 mainHandler.removeCallbacks(mediaProgressTicker)
                 overlayView?.setMediaState(isPlaying = false, progress = 0f, appIcon = null)
+                checkAndApplyProgressNotificationState()
                 return@post
             }
 
@@ -278,6 +289,7 @@ class DuoOverlayHandler(
             }
 
             updateMediaProgress()
+            checkAndApplyProgressNotificationState()
 
             mainHandler.removeCallbacks(mediaProgressTicker)
             mainHandler.postDelayed(mediaProgressTicker, 500L)
@@ -499,6 +511,7 @@ class DuoOverlayHandler(
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
+                this.showProgress = settingsRepository.isDuoShowProgressEnabled()
             }
 
             if (!isOverlayAdded) {
@@ -529,6 +542,50 @@ class DuoOverlayHandler(
             } else {
                 unregisterMediaSessionListener()
             }
+
+            if (settingsRepository.isDuoShowProgressEnabled()) {
+                registerProgressNotificationListener()
+            } else {
+                unregisterProgressNotificationListener()
+            }
+        }
+    }
+
+    private fun checkAndApplyProgressNotificationState(incomingData: ProgressNotificationData? = null) {
+        mainHandler.post {
+            val showProgress = settingsRepository.isDuoShowProgressEnabled()
+            val data = incomingData ?: if (showProgress) NotificationListener.getLatestProgressNotification() else null
+            val isActive = showProgress && data != null && !isMediaPlaying
+
+            if (isActive && data != null) {
+                overlayView?.setProgressNotificationState(
+                    isActive = true,
+                    progress = data.progress,
+                    icon = data.icon
+                )
+            } else {
+                overlayView?.setProgressNotificationState(
+                    isActive = false,
+                    progress = 0f,
+                    icon = null
+                )
+            }
+        }
+    }
+
+    private fun registerProgressNotificationListener() {
+        if (!isProgressListenerRegistered) {
+            NotificationListener.addProgressNotificationListener(progressNotificationListener)
+            isProgressListenerRegistered = true
+            checkAndApplyProgressNotificationState()
+        }
+    }
+
+    private fun unregisterProgressNotificationListener() {
+        if (isProgressListenerRegistered) {
+            NotificationListener.removeProgressNotificationListener(progressNotificationListener)
+            isProgressListenerRegistered = false
+            checkAndApplyProgressNotificationState(null)
         }
     }
 
@@ -646,6 +703,7 @@ class DuoOverlayHandler(
             unregisterBatteryReceiver()
             unregisterSignalListeners()
             unregisterMediaSessionListener()
+            unregisterProgressNotificationListener()
         }
     }
 

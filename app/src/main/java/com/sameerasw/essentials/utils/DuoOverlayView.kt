@@ -116,9 +116,15 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
-                if (!value && isMediaPlaying) {
-                    setMediaState(isPlaying = false, progress = 0f, appIcon = null)
-                }
+                updateActiveProgressMode()
+            }
+        }
+
+    var showProgress: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateActiveProgressMode()
             }
         }
 
@@ -166,6 +172,15 @@ class DuoOverlayView(context: Context) : View(context) {
     var mediaProgress: Float = 0f
         private set
 
+    var isProgressNotificationActive: Boolean = false
+        private set
+
+    var progressNotificationIcon: Bitmap? = null
+        private set
+
+    var progressNotificationProgress: Float = 0f
+        private set
+
     private var mediaPaletteColors: Pair<Int, Int>? = null
 
     private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
@@ -194,35 +209,84 @@ class DuoOverlayView(context: Context) : View(context) {
         return Pair(track, accent)
     }
 
+    private fun isCustomProgressActive(): Boolean {
+        return (isMediaPlaying && showMedia) || (isProgressNotificationActive && showProgress)
+    }
+
+    private fun getCurrentCustomProgress(): Float {
+        return if (isMediaPlaying && showMedia) mediaProgress else progressNotificationProgress
+    }
+
+    private fun getCurrentCustomIcon(): Bitmap? {
+        return if (isMediaPlaying && showMedia) mediaAppIcon else progressNotificationIcon
+    }
+
+    private fun updateActiveProgressMode() {
+        val wasActive = animatedCustomFraction > 0.5f
+        val isNowActive = isCustomProgressActive()
+        if (isMediaPlaying && showMedia && mediaAppIcon != null) {
+            mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
+        } else {
+            mediaPaletteColors = null
+        }
+        animateThemeChange()
+        if (wasActive != isNowActive) {
+            animateLayoutChange()
+        }
+        animateCustomProgressChange(getCurrentCustomProgress())
+    }
+
     fun setMediaState(isPlaying: Boolean, progress: Float, appIcon: Bitmap?) {
-        val effectivePlaying = isPlaying && showMedia
-        val playingChanged = isMediaPlaying != effectivePlaying
+        val wasActive = isCustomProgressActive()
         val iconChanged = mediaAppIcon != appIcon
-        isMediaPlaying = effectivePlaying
-        if (appIcon != null || !effectivePlaying) {
+        isMediaPlaying = isPlaying
+        if (appIcon != null || !isPlaying) {
             mediaAppIcon = appIcon
         }
         mediaProgress = progress.coerceIn(0f, 100f)
 
-        if (effectivePlaying && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
+        if (isPlaying && showMedia && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
             mediaPaletteColors = extractMediaColors(appIcon)
             animateThemeChange()
-        } else if (!effectivePlaying && mediaPaletteColors != null) {
+        } else if ((!isPlaying || !showMedia) && mediaPaletteColors != null) {
             mediaPaletteColors = null
             animateThemeChange()
         }
 
-        if (playingChanged) {
+        val isNowActive = isCustomProgressActive()
+        if (wasActive != isNowActive) {
             animateLayoutChange()
         }
-        animateMediaProgressChange(mediaProgress)
+        animateCustomProgressChange(getCurrentCustomProgress())
+    }
+
+    fun setProgressNotificationState(isActive: Boolean, progress: Float, icon: Bitmap?) {
+        val wasActive = isCustomProgressActive()
+        isProgressNotificationActive = isActive
+        if (icon != null || !isActive) {
+            progressNotificationIcon = icon
+        }
+        progressNotificationProgress = progress.coerceIn(0f, 100f)
+
+        if (!isMediaPlaying || !showMedia) {
+            if (mediaPaletteColors != null) {
+                mediaPaletteColors = null
+                animateThemeChange()
+            }
+        }
+
+        val isNowActive = isCustomProgressActive()
+        if (wasActive != isNowActive) {
+            animateLayoutChange()
+        }
+        animateCustomProgressChange(getCurrentCustomProgress())
     }
 
     private var animatedBatteryProgress: Float = 100f
     private var batteryAnimator: ValueAnimator? = null
 
-    private var animatedMediaProgress: Float = 0f
-    private var mediaProgressAnimator: ValueAnimator? = null
+    private var animatedCustomProgress: Float = 0f
+    private var customProgressAnimator: ValueAnimator? = null
 
     private var animatedSignalLevel: Float = 4f
     private var signalAnimator: ValueAnimator? = null
@@ -230,7 +294,7 @@ class DuoOverlayView(context: Context) : View(context) {
     private var animatedStartAngle: Float = 140f
     private var animatedTotalSweep: Float = 260f
     private var animatedDotAlpha: Float = 1.0f
-    private var animatedMediaFraction: Float = 0.0f
+    private var animatedCustomFraction: Float = 0.0f
     private var animatedScaleBounce: Float = 1.0f
     private var layoutAnimator: ValueAnimator? = null
     private var scaleAnimator: ValueAnimator? = null
@@ -276,7 +340,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun getTargetColors(): Triple<Int, Int, Int> {
         if (isScreenOff) {
-            if (isMediaPlaying && mediaPaletteColors != null) {
+            if (isMediaPlaying && showMedia && mediaPaletteColors != null) {
                 val (_, accent) = mediaPaletteColors!!
                 val dimProgress = Color.argb(160, Color.red(accent), Color.green(accent), Color.blue(accent))
                 val dimTrack = Color.argb(50, Color.red(accent), Color.green(accent), Color.blue(accent))
@@ -289,7 +353,7 @@ class DuoOverlayView(context: Context) : View(context) {
             )
         }
 
-        if (isMediaPlaying && mediaPaletteColors != null) {
+        if (isMediaPlaying && showMedia && mediaPaletteColors != null) {
             val (track, progress) = mediaPaletteColors!!
             return Triple(track, progress, progress)
         }
@@ -373,13 +437,13 @@ class DuoOverlayView(context: Context) : View(context) {
         }
     }
 
-    private fun animateMediaProgressChange(targetProgress: Float) {
-        mediaProgressAnimator?.cancel()
-        mediaProgressAnimator = ValueAnimator.ofFloat(animatedMediaProgress, targetProgress).apply {
+    private fun animateCustomProgressChange(targetProgress: Float) {
+        customProgressAnimator?.cancel()
+        customProgressAnimator = ValueAnimator.ofFloat(animatedCustomProgress, targetProgress).apply {
             duration = 600
             interpolator = LinearInterpolator()
             addUpdateListener { animation ->
-                animatedMediaProgress = animation.animatedValue as Float
+                animatedCustomProgress = animation.animatedValue as Float
                 invalidate()
             }
             start()
@@ -390,15 +454,16 @@ class DuoOverlayView(context: Context) : View(context) {
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
 
-        val targetMediaFraction = if (isMediaPlaying) 1.0f else 0.0f
-        val targetStartAngle = if (isMediaPlaying) 120f else (if (showNetworks) 140f else -90f)
-        val targetTotalSweep = if (isMediaPlaying) 300f else (if (showNetworks) 260f else 360f)
-        val targetDotAlpha = if (isMediaPlaying) 0.0f else (if (showNetworks) 1.0f else 0.0f)
+        val isCustom = isCustomProgressActive()
+        val targetCustomFraction = if (isCustom) 1.0f else 0.0f
+        val targetStartAngle = if (isCustom) 120f else (if (showNetworks) 140f else -90f)
+        val targetTotalSweep = if (isCustom) 300f else (if (showNetworks) 260f else 360f)
+        val targetDotAlpha = if (isCustom) 0.0f else (if (showNetworks) 1.0f else 0.0f)
 
         val startStartAngle = animatedStartAngle
         val startTotalSweep = animatedTotalSweep
         val startDotAlpha = animatedDotAlpha
-        val startMediaFraction = animatedMediaFraction
+        val startCustomFraction = animatedCustomFraction
 
         layoutAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 850
@@ -408,7 +473,7 @@ class DuoOverlayView(context: Context) : View(context) {
                 animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
                 animatedTotalSweep = startTotalSweep + (targetTotalSweep - startTotalSweep) * fraction
                 animatedDotAlpha = (startDotAlpha + (targetDotAlpha - startDotAlpha) * fraction).coerceIn(0f, 1f)
-                animatedMediaFraction = (startMediaFraction + (targetMediaFraction - startMediaFraction) * fraction).coerceIn(0f, 1f)
+                animatedCustomFraction = (startCustomFraction + (targetCustomFraction - startCustomFraction) * fraction).coerceIn(0f, 1f)
                 invalidate()
             }
             start()
@@ -482,7 +547,7 @@ class DuoOverlayView(context: Context) : View(context) {
         )
         canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
 
-        val effectiveProgress = animatedBatteryProgress + (animatedMediaProgress - animatedBatteryProgress) * animatedMediaFraction
+        val effectiveProgress = animatedBatteryProgress + (animatedCustomProgress - animatedBatteryProgress) * animatedCustomFraction
         val progressSweep = (effectiveProgress / 100f) * animatedTotalSweep
         if (progressSweep > 0.5f) {
             val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
@@ -495,7 +560,7 @@ class DuoOverlayView(context: Context) : View(context) {
             canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
         }
 
-        val effectiveDotAlpha = animatedDotAlpha * (1f - animatedMediaFraction)
+        val effectiveDotAlpha = animatedDotAlpha * (1f - animatedCustomFraction)
         if (effectiveDotAlpha > 0.01f) {
             val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
             val baseAlpha = Color.alpha(currentDotBaseColor)
@@ -517,13 +582,13 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-        if (animatedMediaFraction > 0.01f && mediaAppIcon != null) {
-            val icon = mediaAppIcon
+        if (animatedCustomFraction > 0.01f) {
+            val icon = getCurrentCustomIcon()
             if (icon != null) {
                 val gapCenterAngleDeg = (animatedStartAngle + animatedTotalSweep + (360f - animatedTotalSweep) / 2f) % 360f
                 val angleRad = Math.toRadians(gapCenterAngleDeg.toDouble())
                 val downwardOffset = 4f * resources.displayMetrics.density
-                val iconRadius = (dotRadiusPx * 2.85f) * animatedMediaFraction
+                val iconRadius = (dotRadiusPx * 2.85f) * animatedCustomFraction
                 val iconCenterX = (cameraCenterX + (baseRadius + downwardOffset) * cos(angleRad)).toFloat()
                 val iconCenterY = (cameraCenterY + (baseRadius + downwardOffset) * sin(angleRad)).toFloat()
 
@@ -539,7 +604,7 @@ class DuoOverlayView(context: Context) : View(context) {
                         iconCenterX + iconRadius,
                         iconCenterY + iconRadius
                     )
-                    iconPaint.alpha = (255 * animatedMediaFraction * animatedVisibilityAlpha).toInt()
+                    iconPaint.alpha = (255 * animatedCustomFraction * animatedVisibilityAlpha).toInt()
                     canvas.drawBitmap(icon, null, iconRect, iconPaint)
                     canvas.restoreToCount(saveIcon)
                 }
@@ -552,7 +617,7 @@ class DuoOverlayView(context: Context) : View(context) {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         batteryAnimator?.cancel()
-        mediaProgressAnimator?.cancel()
+        customProgressAnimator?.cancel()
         signalAnimator?.cancel()
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
