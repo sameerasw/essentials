@@ -1612,4 +1612,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="pocket_mode_lock_screen_only_title">Solo pantalla de bloqueo</string>
     <string name="pocket_mode_lock_screen_only_desc">Solo activar el modo bolsillo si el dispositivo esta bloqueado</string>
     <string name="sound_mode_use_shizuku_desc">Usar Shizuku (o Root) para cambiar el modo de sonido sin activar No molestar</string>
+    <string name="label_force_all_apps_standby">Forzar detencion</string>
 </resources>
