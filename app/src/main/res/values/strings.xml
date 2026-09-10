@@ -2446,4 +2446,7 @@
     <string name="settings_section_more">More</string>
     <string name="action_show_granted">Show granted</string>
     <string name="action_hide_granted">Hide granted</string>
+    <string name="perm_bubbles_title">Floating Bubbles</string>
+    <string name="perm_bubbles_desc">Allow web previews to open in floating conversation bubbles above other apps</string>
+    <string name="perm_bubbles_instructions">Set to "All conversations can bubble" in app notification settings, or grant via Shizuku / Root.</string>
 </resources>

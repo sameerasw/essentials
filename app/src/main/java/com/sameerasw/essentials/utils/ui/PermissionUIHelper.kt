@@ -486,6 +486,47 @@ object PermissionUIHelper {
                     },
                     isGranted = PermissionUtils.hasStoragePermission(context),
                 )
+
+            AppPermission.NOTIFICATION_BUBBLES ->
+                PermissionItem(
+                    iconRes = permission.iconRes,
+                    title = permission.titleRes,
+                    description = R.string.perm_bubbles_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures(permission),
+                    actionLabel = if (viewModel.isBubblePermissionGranted.value) R.string.perm_action_granted else R.string.perm_action_grant,
+                    action = {
+                        PermissionUtils.openBubbleSettings(context)
+                    },
+                    secondaryActionLabel = R.string.perm_action_copy_adb,
+                    secondaryAction = {
+                        val adbCommand =
+                            "cmd notification set_bubbles ${context.packageName} 1 && cmd notification set_bubbles_channel ${context.packageName} bubble_web_preview_channel true"
+                        val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("adb_command", adbCommand)
+                        clipboard.setPrimaryClip(clip)
+                    },
+                    isGranted = viewModel.isBubblePermissionGranted.value,
+                    shizukuActionLabel = if (viewModel.isRootEnabled.value) R.string.perm_action_grant_root else R.string.perm_action_grant_shizuku,
+                    shizukuActionEnabled =
+                        if (viewModel.isRootEnabled.value) {
+                            viewModel.isRootAvailable.value
+                        } else {
+                            ShizukuUtils.hasPermission()
+                        },
+                    shizukuAction = {
+                        val command =
+                            "cmd notification set_bubbles ${context.packageName} 1 && cmd notification set_bubbles_channel ${context.packageName} bubble_web_preview_channel true"
+                        if (viewModel.isRootEnabled.value) {
+                            if (RootUtils.runCommand(command)) {
+                                viewModel.check(context)
+                            }
+                        } else {
+                            ShizukuUtils.runCommand(command)
+                            viewModel.check(context)
+                        }
+                    },
+                    instructions = R.string.perm_bubbles_instructions,
+                )
         }
 
     fun getPermissionItem(

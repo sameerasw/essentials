@@ -176,4 +176,7 @@ fun initPermissionRegistry() {
 
     // AOD Wallpaper feature
     PermissionRegistry.register("STORAGE", R.string.feat_aod_wallpaper_title)
+
+    // Floating Bubbles preview
+    PermissionRegistry.register("NOTIFICATION_BUBBLES", R.string.preview_web_title)
 }

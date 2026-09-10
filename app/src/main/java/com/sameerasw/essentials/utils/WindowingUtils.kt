@@ -30,7 +30,7 @@ import com.sameerasw.essentials.ui.activities.BubbleWebActivity
 
 object WindowingUtils {
     private const val TAG = "WindowingUtils"
-    private const val BUBBLE_CHANNEL_ID = "bubble_web_preview_channel"
+    const val BUBBLE_CHANNEL_ID = "bubble_web_preview_channel"
     private const val NOTIFICATION_ID = 90210
 
     /**
