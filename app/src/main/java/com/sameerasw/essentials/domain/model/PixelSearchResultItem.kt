@@ -19,6 +19,7 @@ sealed class PixelSearchResultItem {
         val packageName: String,
         val icon: ImageBitmap?,
         val isSystemApp: Boolean = false,
+        val isFrozen: Boolean = false,
     ) : PixelSearchResultItem()
 
     data class ContactItem(
