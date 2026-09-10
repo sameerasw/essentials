@@ -15,9 +15,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
-import android.graphics.drawable.Icon
+import androidx.core.app.Person
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -30,7 +30,7 @@ import com.sameerasw.essentials.ui.activities.BubbleWebActivity
 
 object WindowingUtils {
     private const val TAG = "WindowingUtils"
-    private const val BUBBLE_CHANNEL_ID = "bubble_web_preview_channel"
+    const val BUBBLE_CHANNEL_ID = "bubble_web_preview_channel"
     private const val NOTIFICATION_ID = 90210
 
     /**
@@ -55,7 +55,7 @@ object WindowingUtils {
      */
     fun areNotificationBubblesEnabled(context: Context): Boolean {
         return try {
-            Settings.Global.getInt(context.contentResolver, "notification_bubbles", 1) == 1
+            Settings.Secure.getInt(context.contentResolver, "notification_bubbles", 1) == 1
         } catch (_: Exception) {
             true
         }
@@ -67,7 +67,7 @@ object WindowingUtils {
     fun enableNotificationBubbles(context: Context): Boolean {
         return try {
             if (PermissionUtils.canWriteSecureSettings(context)) {
-                Settings.Global.putInt(context.contentResolver, "notification_bubbles", 1)
+                Settings.Secure.putInt(context.contentResolver, "notification_bubbles", 1)
                 true
             } else {
                 false
@@ -120,6 +120,11 @@ object WindowingUtils {
         }
 
         val targetUrl = uri.toString()
+        val host = uri.host ?: targetUrl
+        val shortcutId = "bubble_web_preview_${targetUrl.hashCode().toUInt()}"
+        val iconRes = R.drawable.rounded_globe_24
+        val bubbleIcon = IconCompat.createWithResource(context, iconRes)
+
         val bubbleIntent = Intent(context, BubbleWebActivity::class.java).apply {
             action = Intent.ACTION_VIEW
             data = uri
@@ -128,87 +133,80 @@ object WindowingUtils {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
+        // 1. AndroidX Person with matching unique key
+        val person = Person.Builder()
+            .setName(host)
+            .setIcon(bubbleIcon)
+            .setKey(shortcutId)
+            .setImportant(true)
+            .build()
 
-        val bubblePendingIntent = PendingIntent.getActivity(
-            context,
-            NOTIFICATION_ID,
-            bubbleIntent,
-            flags,
-        )
+        // 2. Publish Dynamic Conversation Shortcut via ShortcutManagerCompat
+        val shortcut = ShortcutInfoCompat.Builder(context, shortcutId)
+            .setShortLabel(host.take(25))
+            .setLongLabel(context.getString(R.string.preview_web_title))
+            .setIcon(bubbleIcon)
+            .setIntent(bubbleIntent)
+            .setLongLived(true)
+            .setPerson(person)
+            .setCategories(setOf("android.shortcut.conversation"))
+            .build()
 
-        val iconRes = R.drawable.rounded_globe_24
-        val bubbleIcon = IconCompat.createWithResource(context, iconRes)
-
-        val host = uri.host ?: targetUrl
-        val title = context.getString(R.string.preview_web_title)
-        val shortcutId = "bubble_web_preview_${host.hashCode()}"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val shortcut = ShortcutInfo.Builder(context, shortcutId)
-                .setCategories(setOf("android.shortcut.conversation"))
-                .setShortLabel(host)
-                .setLongLabel(title)
-                .setIcon(Icon.createWithResource(context, iconRes))
-                .setIntent(bubbleIntent)
-                .setLongLived(true)
-                .setPerson(
-                    android.app.Person.Builder()
-                        .setName(host)
-                        .setIcon(Icon.createWithResource(context, iconRes))
-                        .setImportant(true)
-                        .build()
-                )
-                .build()
-
-            val sm = context.getSystemService(ShortcutManager::class.java)
-            sm?.pushDynamicShortcut(shortcut)
-        }
+        ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
 
         val displayMetrics = context.resources.displayMetrics
         val screenHeightDp = (displayMetrics.heightPixels / displayMetrics.density).toInt()
 
-        val bubbleMetadata = NotificationCompat.BubbleMetadata.Builder(bubblePendingIntent, bubbleIcon)
-            .setDesiredHeight(screenHeightDp)
-            .setAutoExpandBubble(true)
-            .setSuppressNotification(true)
-            .build()
+        // 3. Build BubbleMetadata using shortcutId on Android 11+ (API 30+)
+        val bubbleMetadata = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            NotificationCompat.BubbleMetadata.Builder(shortcutId)
+                .setDesiredHeight(screenHeightDp)
+                .setAutoExpandBubble(true)
+                .build()
+        } else {
+            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            val bubblePendingIntent = PendingIntent.getActivity(
+                context,
+                targetUrl.hashCode().toUInt().toInt(),
+                bubbleIntent,
+                flags,
+            )
+            NotificationCompat.BubbleMetadata.Builder(bubblePendingIntent, bubbleIcon)
+                .setDesiredHeight(screenHeightDp)
+                .setAutoExpandBubble(true)
+                .build()
+        }
 
-        val person = androidx.core.app.Person.Builder()
-            .setName(host)
-            .setIcon(bubbleIcon)
-            .setImportant(true)
-            .build()
-
+        // 4. Create MessagingStyle Notification linked to the conversation shortcut
         val messagingStyle = NotificationCompat.MessagingStyle(person)
             .addMessage(
                 NotificationCompat.MessagingStyle.Message(
-                    title,
+                    targetUrl,
                     System.currentTimeMillis(),
                     person,
                 )
             )
 
         val builder = NotificationCompat.Builder(context, BUBBLE_CHANNEL_ID)
-            .setContentTitle(title)
+            .setContentTitle(context.getString(R.string.preview_web_title))
             .setContentText(host)
             .setSmallIcon(iconRes)
             .setStyle(messagingStyle)
-            .setBubbleMetadata(bubbleMetadata)
+            .setShortcutInfo(shortcut)
             .setShortcutId(shortcutId)
+            .setBubbleMetadata(bubbleMetadata)
             .setAutoCancel(true)
-            .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
             ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         ) {
-            nm.notify(NOTIFICATION_ID, builder.build())
+            nm.notify(shortcutId, NOTIFICATION_ID, builder.build())
         } else {
             // If notification permission is denied on Android 13+, launch activity directly
             context.startActivity(bubbleIntent)

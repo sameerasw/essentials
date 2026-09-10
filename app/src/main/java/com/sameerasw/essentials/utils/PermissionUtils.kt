@@ -135,6 +135,59 @@ object PermissionUtils {
             false
         }
 
+    fun hasBubblePermission(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as? android.app.NotificationManager ?: return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (nm.bubblePreference == android.app.NotificationManager.BUBBLE_PREFERENCE_NONE) return false
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            @Suppress("DEPRECATION")
+            if (!nm.areBubblesAllowed()) return false
+        }
+        val channel = nm.getNotificationChannel(WindowingUtils.BUBBLE_CHANNEL_ID)
+        if (channel != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return channel.canBubble()
+        }
+        return WindowingUtils.areNotificationBubblesEnabled(context)
+    }
+
+    fun openBubbleSettings(context: Context) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                context.startActivity(intent)
+                return
+            }
+        } catch (_: Exception) {}
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                context.startActivity(intent)
+                return
+            }
+        } catch (_: Exception) {}
+
+        try {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            val intent = Intent(Settings.ACTION_SETTINGS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        }
+    }
+
     /**
      * Executes the is default browser operation.
      *

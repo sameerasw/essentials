@@ -312,6 +312,7 @@ fun SettingsContent(
     val isBackgroundLocationPermissionGranted by viewModel.isBackgroundLocationPermissionGranted
     val isDeviceAdminEnabled by viewModel.isDeviceAdminEnabled
     val isCalendarPermissionGranted by viewModel.isCalendarPermissionGranted
+    val isBubblePermissionGranted by viewModel.isBubblePermissionGranted
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val context = LocalContext.current
     val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
@@ -842,6 +843,7 @@ fun SettingsContent(
                         isBackgroundLocationPermissionGranted,
                         isDeviceAdminEnabled,
                         isCalendarPermissionGranted,
+                        isBubblePermissionGranted,
                     ) {
                         PermissionUIHelper.getAllPermissionItems(context, viewModel, context as? ComponentActivity)
                     }

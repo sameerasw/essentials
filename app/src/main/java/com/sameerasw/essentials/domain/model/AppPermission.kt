@@ -127,6 +127,11 @@ enum class AppPermission(
         titleRes = R.string.perm_storage_title,
         iconRes = R.drawable.rounded_image_24,
         aliases = listOf("READ_MEDIA_IMAGES", "READ_EXTERNAL_STORAGE", "MANAGE_EXTERNAL_STORAGE"),
+    ),
+    NOTIFICATION_BUBBLES(
+        key = "NOTIFICATION_BUBBLES",
+        titleRes = R.string.perm_bubbles_title,
+        iconRes = R.drawable.rounded_bubble_24,
     );
 
     companion object {

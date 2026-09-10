@@ -331,7 +331,12 @@
             android:documentLaunchMode="always"
             android:exported="true"
             android:resizeableActivity="true"
-            android:theme="@style/Theme.Essentials" />
+            android:theme="@style/Theme.Essentials">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.activities.AutomationEditorActivity"

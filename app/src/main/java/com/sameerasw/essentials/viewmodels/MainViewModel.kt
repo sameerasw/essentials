@@ -343,6 +343,7 @@ class MainViewModel : ViewModel() {
     val isKeyboardSelected = mutableStateOf(false)
     val isWriteSettingsEnabled = mutableStateOf(false)
     val isCalendarPermissionGranted = mutableStateOf(false)
+    val isBubblePermissionGranted = mutableStateOf(false)
     val isUserDictionaryEnabled = mutableStateOf(false)
     val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
     val isUserDictionarySheetVisible = mutableStateOf(false)
@@ -1253,6 +1254,7 @@ class MainViewModel : ViewModel() {
 
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
+        isBubblePermissionGranted.value = PermissionUtils.hasBubblePermission(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         if (cachedIsUpdateAvailable) {
