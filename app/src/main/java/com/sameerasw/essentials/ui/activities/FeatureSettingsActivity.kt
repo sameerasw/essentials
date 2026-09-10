@@ -70,6 +70,7 @@ import com.sameerasw.essentials.ui.features.system.BatteryNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.system.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.features.system.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.features.system.CalendarSyncSettingsUI
+import com.sameerasw.essentials.ui.features.display.DuoSettingsUI
 import com.sameerasw.essentials.ui.features.system.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.features.system.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.FlashlightPulseSettingsUI
@@ -603,7 +604,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         viewModel.isEnableUnsupportedFeatures.value,
                                     ).filter { it.parentFeatureId == featureId }
                             if (children.isNotEmpty() && featureId != "Networks") {
-                                val sectionChildLists =
+                        val sectionChildLists =
                                     run {
                                         val childMap = children.associateBy { it.id }
                                         val definedSections =
@@ -611,6 +612,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Display" ->
                                                     listOf(
                                                         listOf(
+                                                            "Duo",
                                                             "Essentials On Display",
                                                             "Always on Display",
                                                             "Statusbar icons",
@@ -1140,6 +1142,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Maps power saving mode" -> {
                                         MapsPowerSavingSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Duo" -> {
+                                        DuoSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
