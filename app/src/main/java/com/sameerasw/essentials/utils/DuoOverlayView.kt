@@ -87,7 +87,7 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-    var hideWhenScreenOff: Boolean = false
+    var hideWhenScreenOff: Boolean = true
         set(value) {
             if (field != value) {
                 field = value

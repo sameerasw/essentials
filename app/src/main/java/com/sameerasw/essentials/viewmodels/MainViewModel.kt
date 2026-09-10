@@ -132,7 +132,7 @@ class MainViewModel : ViewModel() {
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowNetworks = mutableStateOf(true)
-    val isDuoHideWhenScreenOff = mutableStateOf(false)
+    val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoUseMaterialYou = mutableStateOf(true)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
