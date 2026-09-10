@@ -522,10 +522,11 @@ class DuoOverlayView(context: Context) : View(context) {
             if (icon != null) {
                 val gapCenterAngleDeg = (animatedStartAngle + animatedTotalSweep + (360f - animatedTotalSweep) / 2f) % 360f
                 val angleRad = Math.toRadians(gapCenterAngleDeg.toDouble())
-                val iconCenterX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
-                val iconCenterY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
+                val downwardOffset = 4f * resources.displayMetrics.density
+                val iconRadius = (dotRadiusPx * 2.85f) * animatedMediaFraction
+                val iconCenterX = (cameraCenterX + (baseRadius + downwardOffset) * cos(angleRad)).toFloat()
+                val iconCenterY = (cameraCenterY + (baseRadius + downwardOffset) * sin(angleRad)).toFloat()
 
-                val iconRadius = (dotRadiusPx * 2.2f) * animatedMediaFraction
                 if (iconRadius > 1f) {
                     val saveIcon = canvas.save()
                     iconClipPath.reset()
