@@ -4,18 +4,25 @@
  *
  * Feature Module: Utilities - Overlays
  * File: DuoOverlayView.kt
- * Description: Ambient camera ring and dots overlay view.
+ * Description: Ambient camera ring and dots overlay view with media playback seekbar support.
  */
 
 package com.sameerasw.essentials.utils
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RectF
 import android.os.Build
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import kotlin.math.cos
 import kotlin.math.sin
@@ -99,6 +106,16 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var showMedia: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                if (!value && isMediaPlaying) {
+                    setMediaState(isPlaying = false, progress = 0f, appIcon = null)
+                }
+            }
+        }
+
     private fun updateVisibilityAnimation() {
         val shouldHide = isFullscreen || (isScreenOff && hideWhenScreenOff)
         if (shouldHide) {
@@ -121,7 +138,7 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
-                animateLayoutChange(value)
+                animateLayoutChange()
             }
         }
 
@@ -134,28 +151,56 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var isMediaPlaying: Boolean = false
+        private set
+
+    var mediaAppIcon: Bitmap? = null
+        private set
+
+    var mediaProgress: Float = 0f
+        private set
+
+    fun setMediaState(isPlaying: Boolean, progress: Float, appIcon: Bitmap?) {
+        val effectivePlaying = isPlaying && showMedia
+        val playingChanged = isMediaPlaying != effectivePlaying
+        isMediaPlaying = effectivePlaying
+        if (appIcon != null || !effectivePlaying) {
+            mediaAppIcon = appIcon
+        }
+        mediaProgress = progress.coerceIn(0f, 100f)
+
+        if (playingChanged) {
+            animateLayoutChange()
+        }
+        animateMediaProgressChange(mediaProgress)
+    }
+
     private var animatedBatteryProgress: Float = 100f
-    private var batteryAnimator: android.animation.ValueAnimator? = null
+    private var batteryAnimator: ValueAnimator? = null
+
+    private var animatedMediaProgress: Float = 0f
+    private var mediaProgressAnimator: ValueAnimator? = null
 
     private var animatedSignalLevel: Float = 4f
-    private var signalAnimator: android.animation.ValueAnimator? = null
+    private var signalAnimator: ValueAnimator? = null
 
     private var animatedStartAngle: Float = 140f
     private var animatedTotalSweep: Float = 260f
     private var animatedDotAlpha: Float = 1.0f
+    private var animatedMediaFraction: Float = 0.0f
     private var animatedScaleBounce: Float = 1.0f
-    private var layoutAnimator: android.animation.ValueAnimator? = null
-    private var scaleAnimator: android.animation.ValueAnimator? = null
+    private var layoutAnimator: ValueAnimator? = null
+    private var scaleAnimator: ValueAnimator? = null
 
     private var animatedVisibilityAlpha: Float = 1.0f
     private var animatedVisibilityScale: Float = 1.0f
     private var animatedVisibilityRotation: Float = 0f
-    private var visibilityAnimator: android.animation.ValueAnimator? = null
+    private var visibilityAnimator: ValueAnimator? = null
 
     private var currentTrackColor: Int = Color.argb(60, 255, 255, 255)
     private var currentProgressColor: Int = Color.WHITE
     private var currentDotBaseColor: Int = Color.WHITE
-    private var themeAnimator: android.animation.ValueAnimator? = null
+    private var themeAnimator: ValueAnimator? = null
 
     private fun animateScreenOffVisibility(visible: Boolean) {
         visibilityAnimator?.cancel()
@@ -168,12 +213,12 @@ class DuoOverlayView(context: Context) : View(context) {
         val startRotation = animatedVisibilityRotation
         val targetRotation = if (visible) 0f else -65f
 
-        visibilityAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+        visibilityAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 750
             interpolator = if (visible) {
-                android.view.animation.OvershootInterpolator(1.15f)
+                OvershootInterpolator(1.15f)
             } else {
-                android.view.animation.DecelerateInterpolator()
+                DecelerateInterpolator()
             }
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
@@ -230,11 +275,11 @@ class DuoOverlayView(context: Context) : View(context) {
         val startTrack = currentTrackColor
         val startProgress = currentProgressColor
         val startDot = currentDotBaseColor
-        val evaluator = android.animation.ArgbEvaluator()
+        val evaluator = ArgbEvaluator()
 
-        themeAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+        themeAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 600
-            interpolator = android.view.animation.DecelerateInterpolator()
+            interpolator = DecelerateInterpolator()
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
                 currentTrackColor = evaluator.evaluate(fraction, startTrack, targetTrack) as Int
@@ -250,9 +295,9 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun animateSignalLevelChange(targetLevel: Float) {
         signalAnimator?.cancel()
-        signalAnimator = android.animation.ValueAnimator.ofFloat(animatedSignalLevel, targetLevel).apply {
+        signalAnimator = ValueAnimator.ofFloat(animatedSignalLevel, targetLevel).apply {
             duration = 750
-            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.1f)
             addUpdateListener { animation ->
                 animatedSignalLevel = animation.animatedValue as Float
                 invalidate()
@@ -263,9 +308,9 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun animateBatteryChange(targetLevel: Float) {
         batteryAnimator?.cancel()
-        batteryAnimator = android.animation.ValueAnimator.ofFloat(animatedBatteryProgress, targetLevel).apply {
+        batteryAnimator = ValueAnimator.ofFloat(animatedBatteryProgress, targetLevel).apply {
             duration = 900
-            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.1f)
             addUpdateListener { animation ->
                 animatedBatteryProgress = animation.animatedValue as Float
                 invalidate()
@@ -274,34 +319,50 @@ class DuoOverlayView(context: Context) : View(context) {
         }
     }
 
-    private fun animateLayoutChange(showingNetworks: Boolean) {
+    private fun animateMediaProgressChange(targetProgress: Float) {
+        mediaProgressAnimator?.cancel()
+        mediaProgressAnimator = ValueAnimator.ofFloat(animatedMediaProgress, targetProgress).apply {
+            duration = 600
+            interpolator = LinearInterpolator()
+            addUpdateListener { animation ->
+                animatedMediaProgress = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    private fun animateLayoutChange() {
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
 
-        val targetStartAngle = if (showingNetworks) 140f else -90f
-        val targetTotalSweep = if (showingNetworks) 260f else 360f
-        val targetDotAlpha = if (showingNetworks) 1.0f else 0.0f
+        val targetMediaFraction = if (isMediaPlaying) 1.0f else 0.0f
+        val targetStartAngle = if (isMediaPlaying) 120f else (if (showNetworks) 140f else -90f)
+        val targetTotalSweep = if (isMediaPlaying) 300f else (if (showNetworks) 260f else 360f)
+        val targetDotAlpha = if (isMediaPlaying) 0.0f else (if (showNetworks) 1.0f else 0.0f)
 
         val startStartAngle = animatedStartAngle
         val startTotalSweep = animatedTotalSweep
         val startDotAlpha = animatedDotAlpha
+        val startMediaFraction = animatedMediaFraction
 
-        layoutAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+        layoutAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 850
-            interpolator = android.view.animation.OvershootInterpolator(1.15f)
+            interpolator = OvershootInterpolator(1.15f)
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
                 animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
                 animatedTotalSweep = startTotalSweep + (targetTotalSweep - startTotalSweep) * fraction
                 animatedDotAlpha = (startDotAlpha + (targetDotAlpha - startDotAlpha) * fraction).coerceIn(0f, 1f)
+                animatedMediaFraction = (startMediaFraction + (targetMediaFraction - startMediaFraction) * fraction).coerceIn(0f, 1f)
                 invalidate()
             }
             start()
         }
 
-        scaleAnimator = android.animation.ValueAnimator.ofFloat(1.0f, 1.04f, 1.0f).apply {
+        scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.04f, 1.0f).apply {
             duration = 850
-            interpolator = android.view.animation.OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.1f)
             addUpdateListener { animation ->
                 animatedScaleBounce = animation.animatedValue as Float
                 invalidate()
@@ -324,6 +385,9 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.FILL
     }
 
+    private val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val iconClipPath = Path()
+    private val iconRect = RectF()
     private val arcBounds = RectF()
 
     init {
@@ -364,7 +428,8 @@ class DuoOverlayView(context: Context) : View(context) {
         )
         canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
 
-        val progressSweep = (animatedBatteryProgress / 100f) * animatedTotalSweep
+        val effectiveProgress = animatedBatteryProgress + (animatedMediaProgress - animatedBatteryProgress) * animatedMediaFraction
+        val progressSweep = (effectiveProgress / 100f) * animatedTotalSweep
         if (progressSweep > 0.5f) {
             val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
             progressPaint.color = Color.argb(
@@ -376,7 +441,8 @@ class DuoOverlayView(context: Context) : View(context) {
             canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
         }
 
-        if (animatedDotAlpha > 0.01f) {
+        val effectiveDotAlpha = animatedDotAlpha * (1f - animatedMediaFraction)
+        if (effectiveDotAlpha > 0.01f) {
             val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
             val baseAlpha = Color.alpha(currentDotBaseColor)
             val red = Color.red(currentDotBaseColor)
@@ -389,12 +455,39 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
                 val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
 
-                // Signal level from 0..4 smoothly determines opacity of each dot (dot 0: 0..1, dot 1: 1..2, etc.)
                 val dotActiveFraction = (animatedSignalLevel - i).coerceIn(0f, 1f)
-                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * animatedDotAlpha * animatedVisibilityAlpha
+                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * effectiveDotAlpha * animatedVisibilityAlpha
                 dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
 
-                canvas.drawCircle(dotX, dotY, dotRadiusPx * animatedDotAlpha, dotPaint)
+                canvas.drawCircle(dotX, dotY, dotRadiusPx * effectiveDotAlpha, dotPaint)
+            }
+        }
+
+        if (animatedMediaFraction > 0.01f && mediaAppIcon != null) {
+            val icon = mediaAppIcon
+            if (icon != null) {
+                val gapCenterAngleDeg = (animatedStartAngle + animatedTotalSweep + (360f - animatedTotalSweep) / 2f) % 360f
+                val angleRad = Math.toRadians(gapCenterAngleDeg.toDouble())
+                val iconCenterX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
+                val iconCenterY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
+
+                val iconRadius = (dotRadiusPx * 2.2f) * animatedMediaFraction
+                if (iconRadius > 1f) {
+                    val saveIcon = canvas.save()
+                    iconClipPath.reset()
+                    iconClipPath.addCircle(iconCenterX, iconCenterY, iconRadius, Path.Direction.CW)
+                    canvas.clipPath(iconClipPath)
+
+                    iconRect.set(
+                        iconCenterX - iconRadius,
+                        iconCenterY - iconRadius,
+                        iconCenterX + iconRadius,
+                        iconCenterY + iconRadius
+                    )
+                    iconPaint.alpha = (255 * animatedMediaFraction * animatedVisibilityAlpha).toInt()
+                    canvas.drawBitmap(icon, null, iconRect, iconPaint)
+                    canvas.restoreToCount(saveIcon)
+                }
             }
         }
 
@@ -404,6 +497,7 @@ class DuoOverlayView(context: Context) : View(context) {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         batteryAnimator?.cancel()
+        mediaProgressAnimator?.cancel()
         signalAnimator?.cancel()
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
@@ -411,4 +505,5 @@ class DuoOverlayView(context: Context) : View(context) {
         visibilityAnimator?.cancel()
     }
 }
+
 

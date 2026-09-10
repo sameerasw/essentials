@@ -36,6 +36,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
@@ -53,6 +54,7 @@ fun DuoSettingsUI(
     val view = LocalView.current
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+    var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.check(context)
@@ -239,6 +241,37 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_motion_play_24,
+                title = stringResource(R.string.duo_show_media_title),
+                description = stringResource(R.string.duo_show_media_desc),
+                isChecked = viewModel.isDuoShowMedia.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !viewModel.isNotificationListenerEnabled.value) {
+                        requestingPermissionsFor = Pair(R.string.duo_title, listOf("NOTIFICATION_LISTENER"))
+                    } else {
+                        viewModel.setDuoShowMedia(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_media"),
+            )
+
+            AnimatedVisibility(
+                visible = viewModel.isDuoShowMedia.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_apps_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_media_apps),
+                    showToggle = false,
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showMediaAppSelectionSheet = true
+                    },
+                )
+            }
         }
 
         Text(
@@ -275,5 +308,26 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off"),
             )
         }
+    }
+
+    if (showMediaAppSelectionSheet) {
+        AppSelectionSheet(
+            onDismissRequest = { showMediaAppSelectionSheet = false },
+            onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
+            onSaveApps = { ctx, apps ->
+                viewModel.saveAodWallpaperMediaApps(
+                    ctx,
+                    apps,
+                )
+            },
+            onAppToggle = { ctx, pkg, enabled ->
+                viewModel.updateAodWallpaperMediaAppEnabled(
+                    ctx,
+                    pkg,
+                    enabled,
+                )
+            },
+            context = context,
+        )
     }
 }
