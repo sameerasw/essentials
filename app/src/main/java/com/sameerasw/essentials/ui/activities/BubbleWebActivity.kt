@@ -62,11 +62,12 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.view.View
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -78,7 +79,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -88,7 +88,6 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import kotlin.math.roundToInt
 
 class BubbleWebActivity : ComponentActivity() {
 
@@ -121,6 +120,18 @@ class BubbleWebActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        webViewInstance?.onPause()
+        webViewInstance?.pauseTimers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webViewInstance?.onResume()
+        webViewInstance?.resumeTimers()
     }
 
     override fun onDestroy() {
@@ -220,16 +231,18 @@ private fun BubbleWebScreen(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                             )
+                            setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
                             settings.apply {
                                 javaScriptEnabled = true
-                                domStorageEnabled = !isPrivate
-                                cacheMode = if (isPrivate) WebSettings.LOAD_NO_CACHE else WebSettings.LOAD_DEFAULT
+                                domStorageEnabled = true
+                                cacheMode = WebSettings.LOAD_DEFAULT
                                 setSupportZoom(true)
                                 builtInZoomControls = true
                                 displayZoomControls = false
                                 loadWithOverviewMode = true
                                 useWideViewPort = true
+                                mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                             }
 
                             if (isPrivate) {
@@ -251,7 +264,21 @@ private fun BubbleWebScreen(
 
                             webViewClient = object : WebViewClient() {
                                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                                    val url = request?.url?.toString() ?: return false
+                                    val uri = request?.url ?: return false
+                                    val scheme = uri.scheme?.lowercase() ?: return false
+
+                                    if (scheme != "http" && scheme != "https") {
+                                        try {
+                                            val intent = Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME).apply {
+                                                addCategory(Intent.CATEGORY_BROWSABLE)
+                                                component = null
+                                            }
+                                            context.startActivity(intent)
+                                        } catch (_: Exception) {}
+                                        return true
+                                    }
+
+                                    val url = uri.toString()
                                     currentUrl = url
                                     canGoBack = view?.canGoBack() == true
                                     return false
@@ -278,7 +305,6 @@ private fun BubbleWebScreen(
                 )
             }
 
-            val toolbarVisibilityRatio = 1f - (toolbarOffsetPx / toolbarMaxOffsetPx).coerceIn(0f, 1f)
             val currentDomain = remember(currentUrl) { extractDomain(currentUrl) }
             val copyFeedbackText = stringResource(R.string.bubble_web_link_copied)
 
@@ -288,8 +314,10 @@ private fun BubbleWebScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = navBarBottom + 12.dp)
-                    .offset { IntOffset(0, toolbarOffsetPx.roundToInt()) }
-                    .alpha(toolbarVisibilityRatio),
+                    .graphicsLayer {
+                        translationY = toolbarOffsetPx
+                        alpha = (1f - (toolbarOffsetPx / toolbarMaxOffsetPx)).coerceIn(0f, 1f)
+                    },
                 contentAlignment = Alignment.Center,
             ) {
                 HorizontalFloatingToolbar(
