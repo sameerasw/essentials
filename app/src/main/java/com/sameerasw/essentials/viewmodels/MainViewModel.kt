@@ -122,6 +122,18 @@ class MainViewModel : ViewModel() {
     val isSmartPixelsEnabled = mutableStateOf(false)
     val smartPixelsIntensity = mutableFloatStateOf(50f)
     val isSmartPixelsDisableOnCastEnabled = mutableStateOf(true)
+
+    val isDuoEnabled = mutableStateOf(false)
+    val isDuoAutoDetect = mutableStateOf(true)
+    val duoCameraOffsetX = mutableFloatStateOf(50f)
+    val duoCameraOffsetY = mutableFloatStateOf(3f)
+    val duoCameraSize = mutableFloatStateOf(1.0f)
+    val duoArcThickness = mutableFloatStateOf(4f)
+    val duoDotSize = mutableFloatStateOf(4f)
+    val duoRingRadius = mutableFloatStateOf(1.0f)
+    val isDuoShowNetworks = mutableStateOf(true)
+    val isDuoHideWhenScreenOff = mutableStateOf(true)
+    val isDuoUseMaterialYou = mutableStateOf(true)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -501,6 +513,39 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST ->
                         isSmartPixelsDisableOnCastEnabled.value =
                             settingsRepository.getBoolean(key, true)
+
+                    SettingsRepository.KEY_DUO_ENABLED ->
+                        isDuoEnabled.value = settingsRepository.isDuoEnabled()
+
+                    SettingsRepository.KEY_DUO_USE_AUTO_DETECT ->
+                        isDuoAutoDetect.value = settingsRepository.isDuoAutoDetectEnabled()
+
+                    SettingsRepository.KEY_DUO_CAMERA_OFFSET_X ->
+                        duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
+
+                    SettingsRepository.KEY_DUO_CAMERA_OFFSET_Y ->
+                        duoCameraOffsetY.floatValue = settingsRepository.getDuoCameraOffsetY()
+
+                    SettingsRepository.KEY_DUO_CAMERA_SIZE ->
+                        duoCameraSize.floatValue = settingsRepository.getDuoCameraSize()
+
+                    SettingsRepository.KEY_DUO_ARC_THICKNESS ->
+                        duoArcThickness.floatValue = settingsRepository.getDuoArcThickness()
+
+                    SettingsRepository.KEY_DUO_DOT_SIZE ->
+                        duoDotSize.floatValue = settingsRepository.getDuoDotSize()
+
+                    SettingsRepository.KEY_DUO_RING_RADIUS ->
+                        duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
+
+                    SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
+                        isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+
+                    SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
+                        isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+
+                    SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
+                        isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1724,6 +1769,17 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_SMART_PIXELS_INTENSITY, 50f)
         isSmartPixelsDisableOnCastEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST, true)
+        isDuoEnabled.value = settingsRepository.isDuoEnabled()
+        isDuoAutoDetect.value = settingsRepository.isDuoAutoDetectEnabled()
+        duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
+        duoCameraOffsetY.floatValue = settingsRepository.getDuoCameraOffsetY()
+        duoCameraSize.floatValue = settingsRepository.getDuoCameraSize()
+        duoArcThickness.floatValue = settingsRepository.getDuoArcThickness()
+        duoDotSize.floatValue = settingsRepository.getDuoDotSize()
+        duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
+        isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+        isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
+        isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -2251,6 +2307,9 @@ class MainViewModel : ViewModel() {
         // Enabling pre-releases automatically enables Developer Mode; disabling turns it off
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBooleanSync(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+        if (!enabled) {
+            setDuoEnabled(false)
+        }
     }
 
     /**
@@ -2265,6 +2324,9 @@ class MainViewModel : ViewModel() {
     ) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+        if (!enabled) {
+            setDuoEnabled(false)
+        }
     }
 
     /**
@@ -4269,6 +4331,61 @@ class MainViewModel : ViewModel() {
     ) {
         isSmartPixelsDisableOnCastEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST, enabled)
+    }
+
+    fun setDuoEnabled(enabled: Boolean) {
+        isDuoEnabled.value = enabled
+        settingsRepository.setDuoEnabled(enabled)
+    }
+
+    fun setDuoAutoDetect(enabled: Boolean) {
+        isDuoAutoDetect.value = enabled
+        settingsRepository.setDuoAutoDetectEnabled(enabled)
+    }
+
+    fun setDuoCameraOffsetX(value: Float) {
+        duoCameraOffsetX.floatValue = value
+        settingsRepository.setDuoCameraOffsetX(value)
+    }
+
+    fun setDuoCameraOffsetY(value: Float) {
+        duoCameraOffsetY.floatValue = value
+        settingsRepository.setDuoCameraOffsetY(value)
+    }
+
+    fun setDuoCameraSize(value: Float) {
+        duoCameraSize.floatValue = value
+        settingsRepository.setDuoCameraSize(value)
+    }
+
+    fun setDuoArcThickness(value: Float) {
+        duoArcThickness.floatValue = value
+        settingsRepository.setDuoArcThickness(value)
+    }
+
+    fun setDuoDotSize(value: Float) {
+        duoDotSize.floatValue = value
+        settingsRepository.setDuoDotSize(value)
+    }
+
+    fun setDuoRingRadius(value: Float) {
+        duoRingRadius.floatValue = value
+        settingsRepository.setDuoRingRadius(value)
+    }
+
+    fun setDuoShowNetworks(enabled: Boolean) {
+        isDuoShowNetworks.value = enabled
+        settingsRepository.setDuoShowNetworksEnabled(enabled)
+    }
+
+    fun setDuoHideWhenScreenOff(enabled: Boolean) {
+        isDuoHideWhenScreenOff.value = enabled
+        settingsRepository.setDuoHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setDuoUseMaterialYou(enabled: Boolean) {
+        isDuoUseMaterialYou.value = enabled
+        settingsRepository.setDuoUseMaterialYouEnabled(enabled)
     }
 
     /**
