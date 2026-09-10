@@ -1468,5 +1468,12 @@
     <string name="setting_swipe_tabs_desc">Nella schermata home</string>
     <string name="settings_translated_texts_desc">%d modifiche salvate — tocca per inviarle o scartarle</string>
     <string name="cat_navigation">Navigazione</string>
-    <string name="feat_smart_pixels_title">Pixel Intelligenti</string>
+    <string name="feat_smart_pixels_title">Pixel samrt</string>
+    <string name="settings_translate_mode">Modalità di Traduzione</string>
+    <string name="feat_power_battery_title">Alimentazione e Batteria</string>
+    <string name="feat_power_battery_desc">Ottimizza il consumo energetico</string>
+    <string name="feat_networks_title">Reti</string>
+    <string name="feat_networks_desc">Controllo segnali radio e reti</string>
+    <string name="feat_safe_volume_title">Disabilita l\' avviso del volume sicuro</string>
+    <string name="feat_smart_pixels_desc">Spegne dei pixel per risparmiare batteria</string>
 </resources>
