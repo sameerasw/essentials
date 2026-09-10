@@ -102,10 +102,18 @@ import androidx.compose.ui.zIndex
 import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.PixelSearchResultItem
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.domain.registry.QSTileInfo
@@ -114,6 +122,7 @@ import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
 import com.sameerasw.essentials.ui.activities.YourAndroidActivity
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
@@ -121,11 +130,12 @@ import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.ColorUtil
+import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.utils.WindowingUtils
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -396,20 +406,40 @@ fun PixelSearchResultsScreen(
         scope.launch(Dispatchers.IO) {
             if (isAppsEnabled) {
                 val installed = AppUtil.getInstalledApps(context, includeSelf = true)
-                val filteredApps = installed
+                val installedPkgs = installed.map { it.packageName }.toSet()
+                val freezeSelections = repository.loadFreezeSelectedApps()
+                val missingFrozenPkgs = freezeSelections
+                    .map { it.packageName }
+                    .filter { !installedPkgs.contains(it) }
+
+                val additionalFrozenApps = if (missingFrozenPkgs.isNotEmpty()) {
+                    AppUtil.getAppsByPackageNames(context, missingFrozenPkgs)
+                } else {
+                    emptyList()
+                }
+
+                val allApps = installed + additionalFrozenApps
+                val filteredApps = allApps
                     .filter { app ->
-                        app.appName.contains(trimmed, ignoreCase = true) &&
-                            context.packageManager.getLaunchIntentForPackage(app.packageName) != null
+                        app.appName.contains(trimmed, ignoreCase = true)
                     }
-                    .take(6)
                     .map {
+                        val isFrozen = FreezeManager.isAppFrozen(context, it.packageName)
+                        val icon = if (isFrozen) {
+                            applyGrayscaleFilter(it.icon)
+                        } else {
+                            it.icon
+                        }
                         PixelSearchResultItem.AppItem(
                             appName = it.appName,
                             packageName = it.packageName,
-                            icon = it.icon,
+                            icon = icon,
                             isSystemApp = it.isSystemApp,
+                            isFrozen = isFrozen,
                         )
                     }
+                    .sortedWith(compareBy({ !it.isFrozen }, { it.appName.lowercase() }))
+                    .take(6)
                 withContext(Dispatchers.Main) {
                     appResults = filteredApps
                 }
@@ -589,15 +619,67 @@ fun PixelSearchResultsScreen(
                                     onToggle = {},
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
-                                        launchApp(context, app.packageName)
+                                        if (app.isFrozen) {
+                                            viewModel.launchAndUnfreezeApp(context, app.packageName)
+                                        } else {
+                                            launchApp(context, app.packageName)
+                                        }
                                         onFinish()
                                     },
                                     containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     showToggle = false,
-                                    hasMoreSettings = false,
-                                    customTrailingContent = null,
+                                    hasMoreSettings = app.isFrozen,
+                                    description = if (app.isFrozen) stringResource(R.string.action_unfreeze) else null,
+                                    customTrailingContent = if (app.isFrozen) {
+                                        {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_mode_cool_24),
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.size(20.dp),
+                                            )
+                                        }
+                                    } else null,
+                                    additionalMenuItems = if (app.isFrozen) {
+                                        { onDismiss ->
+                                            SegmentedDropdownMenuItem(
+                                                text = { Text(stringResource(R.string.action_unfreeze)) },
+                                                onClick = {
+                                                    onDismiss()
+                                                    scope.launch(Dispatchers.IO) {
+                                                        FreezeManager.unfreezeApp(context, app.packageName)
+                                                        viewModel.refreshFreezePickedApps(context, silent = true)
+                                                        performSearch(query)
+                                                    }
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painter = painterResource(R.drawable.rounded_mode_cool_off_24),
+                                                        contentDescription = null,
+                                                    )
+                                                },
+                                            )
+                                            SegmentedDropdownMenuItem(
+                                                text = { Text(stringResource(R.string.action_app_info)) },
+                                                onClick = {
+                                                    onDismiss()
+                                                    val infoIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                                        data = Uri.fromParts("package", app.packageName, null)
+                                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                    }
+                                                    context.startActivity(infoIntent)
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painter = painterResource(R.drawable.rounded_info_24),
+                                                        contentDescription = null,
+                                                    )
+                                                },
+                                            )
+                                        }
+                                    } else null,
                                     iconPainter = if (app.icon != null) {
-                                        androidx.compose.ui.graphics.painter.BitmapPainter(app.icon)
+                                        BitmapPainter(app.icon)
                                     } else null,
                                     iconRes = if (app.icon == null) R.drawable.rounded_apps_24 else null,
                                     iconSize = 36.dp,
@@ -994,6 +1076,20 @@ private fun SearchSectionHeader(
         fontWeight = FontWeight.SemiBold,
         modifier = modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
     )
+}
+
+private fun applyGrayscaleFilter(bitmap: ImageBitmap): ImageBitmap {
+    val src = bitmap.asAndroidBitmap()
+    val output = android.graphics.Bitmap.createBitmap(src.width, src.height, android.graphics.Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(output)
+    val paint = android.graphics.Paint()
+    val matrix = android.graphics.ColorMatrix().apply {
+        setSaturation(0.2f)
+    }
+    paint.colorFilter = android.graphics.ColorMatrixColorFilter(matrix)
+    paint.alpha = (0.65f * 255).toInt()
+    canvas.drawBitmap(src, 0f, 0f, paint)
+    return output.asImageBitmap()
 }
 
 private fun launchApp(context: Context, packageName: String) {
