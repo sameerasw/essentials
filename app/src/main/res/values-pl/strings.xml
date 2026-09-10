@@ -276,7 +276,7 @@
     <string name="warning_title">⚠️UWAGA</string>
     <string name="screen_locked_security_auth_enable">Uwierzytelnij, aby włączyć zabezpieczenie z blokadą ekranu</string>
     <string name="screen_locked_security_auth_disable">Uwierzytelnij, aby wyłączyć zabezpieczenie z blokadą ekranu</string>
-    <string name="screen_locked_security_desc">Zablokuj dostęp do elementów sterowania (Wi-Fi, Bluetooth) na ekranie blokady. </string>
+    <string name="screen_locked_security_desc">Zablokuj dostęp do szybkich ustawień (Wi-Fi, Bluetooth) na ekranie blokady.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -393,7 +393,7 @@
     <string name="feat_statusbar_icons_desc">Kontroluj widoczność ikon na pasku stanu</string>
     <string name="feat_caffeinate_title">Kofeina</string>
     <string name="feat_caffeinate_desc">Nie wygaszaj ekranu</string>
-    <string name="feat_maps_power_saving_title">Mapuje tryb oszczędzania energii</string>
+    <string name="feat_maps_power_saving_title">Oszczędzania energii podczas nawigacji</string>
     <string name="feat_maps_power_saving_desc">Na dowolne urządzenie z Androidem</string>
     <string name="feat_notification_lighting_title">Oświetlenie powiadomień</string>
     <string name="feat_notification_lighting_desc">Podświetl powiadomienia</string>
@@ -414,19 +414,19 @@
     <string name="diy_create_state_desc">Zaplanuj akcję do wykonania w oparciu o stan wejścia i wyjścia warunku</string>
     <string name="diy_editor_new_title">Nowa automatyzacja</string>
     <string name="diy_editor_edit_title">Edytuj automatyzację</string>
-    <string name="feat_link_actions_title">Działania łączące</string>
-    <string name="feat_link_actions_desc">Obsługuj łącza z wieloma aplikacjami</string>
+    <string name="feat_link_actions_title">Obsługa linków</string>
+    <string name="feat_link_actions_desc">Otwieraj linki w wielu aplikacjach</string>
     <string name="feat_snooze_notifications_title">Odłóż powiadomienia systemowe</string>
     <string name="feat_snooze_notifications_desc">Odłóż ciągłe powiadomienia</string>
     <string name="feat_qs_tiles_title">Kafelki szybkich ustawień</string>
     <string name="feat_qs_tiles_desc">Zobacz wszystkie</string>
-    <string name="feat_button_remap_title">Ponowne mapowanie przycisków</string>
-    <string name="feat_button_remap_desc">Zmień mapowanie działań przycisków sprzętowych</string>
+    <string name="feat_button_remap_title">Mapowanie przycisków</string>
+    <string name="feat_button_remap_desc">Zmień mapowanie przycisków sprzętowych</string>
     <string name="feat_dynamic_night_light_title">Dynamiczne podświetlenie nocne</string>
     <string name="feat_dynamic_night_light_desc">Uruchom podświetlenie nocne (filtr światła niebieskiego) w zależności od aplikacji </string>
-    <string name="feat_screen_locked_security_title">Bezpieczeństwo z blokadą ekranu</string>
+    <string name="feat_screen_locked_security_title">Ekran blokady</string>
     <string name="feat_app_lock_title">Blokada aplikacji</string>
-    <string name="feat_app_lock_desc">Bezpieczne aplikacje za pomocą danych biometrycznych</string>
+    <string name="feat_app_lock_desc">Zablokuj aplikacje za pomocą danych biometrycznych</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
     <string name="app_lock_auto_lock_delay_none">None</string>
@@ -615,7 +615,7 @@
     <string name="tab_essentials">Essentials </string>
     <string name="tab_freeze">Zamrażać</string>
     <string name="tab_freeze_title">Zamrażanie </string>
-    <string name="tab_diy">Zrób to sam</string>
+    <string name="tab_diy">DIY</string>
     <string name="tab_apps">Aplikacje</string>
     <string name="tab_freeze_subtitle">Wyłączone aplikacje</string>
     <string name="tab_diy_subtitle">Zrób to sam</string>
@@ -666,7 +666,7 @@
     <!-- Sentry Crash Reporting -->
     <string name="sentry_report_mode_title">Raportowanie błędów </string>
     <string name="sentry_mode_off">Wyłączone </string>
-    <string name="sentry_mode_auto">Automatycznie </string>
+    <string name="sentry_mode_auto">Automatyczne</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
     <string name="welcome_title">Welcome to Essentials</string>
@@ -685,9 +685,9 @@
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
     <string name="label_app_language">Język </string>
-    <string name="label_haptic_feedback">Wibracje haptyczne </string>
+    <string name="label_haptic_feedback">Wibracje</string>
     <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Automatycznie sprawdzaj aktualizacje </string>
+    <string name="label_auto_check_updates">Automatyczne sprawdzanie aktualizacji</string>
     <string name="desc_auto_check_updates">Sprawdzaj aktualizacje po uruchomieniu aplikacji </string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
@@ -706,7 +706,7 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Zrestartuj interfejs systemu </string>
+    <string name="action_restart_systemui">Uruchom ponownie SystemUI</string>
     <string name="desc_restart_systemui">Restartuje interfejs użytkownika, aby natychmiast zastosować niektóre zmiany</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
@@ -1223,7 +1223,7 @@ Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać 
     <string name="search_sound_mode_behavior_title">Zachowanie w cyklu</string>
     <string name="search_sound_mode_behavior_desc">Wybierz tryby, które chcesz przełączać</string>
     <string name="feat_sound_haptics_title">Dźwięk i haptyka</string>
-    <string name="feat_sound_haptics_desc">Objętość i funkcje dotykowe</string>
+    <string name="feat_sound_haptics_desc">Dźwięk i wibracje</string>
     <string name="feat_security_privacy_title">Bezpieczeństwo i prywatność</string>
     <string name="feat_security_privacy_desc">Chroń i zabezpiecz swoje urządzenie</string>
     <string name="feat_notifications_alerts_title">Powiadomienia i alerty</string>
@@ -1233,7 +1233,7 @@ Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać 
     <string name="feat_widgets_title">Widżety</string>
     <string name="feat_widgets_desc">Szybki podgląd na ekranie głównym </string>
     <string name="feat_display_visuals_title">Wyświetlacz</string>
-    <string name="feat_display_visuals_desc">Wizualizacje poprawiające wrażenia</string>
+    <string name="feat_display_visuals_desc">Dostosuj efekty wizualne</string>
     <string name="feat_watch_title">Zegarek </string>
     <string name="feat_watch_desc">Integracje z WearOS</string>
     <string name="watch_no_companion_title">Nie wykryto zegarka</string>
@@ -1346,8 +1346,8 @@ Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać 
     <string name="feat_auto_accessibility_desc">Automatycznie przyznaje uprawnienia dostępu przy uruchomieniu aplikacji, jeśli ich brakuje, używając WRITE_SECURE_SETTINGS.</string>
     <string name="label_help_guide">Pomoc i poradniki</string>
     <string name="tab_your_android">Twój Android</string>
-    <string name="label_device_storage">Składowanie</string>
-    <string name="label_device_ram">Pamięć</string>
+    <string name="label_device_storage">Pamięć</string>
+    <string name="label_device_ram">RAM</string>
     <string name="label_use_blur">Użyj rozmycia</string>
     <string name="desc_use_blur">Włącz elementy progresywnego rozmycia w interfejsie użytkownika</string>
     <string name="msg_blur_compatibility_error">Rozmycie jest wyłączone na tym urządzeniu, aby zapobiec znanemu błędowi wyświetlania na urządzeniach Samsung z systemem Android 15 lub starszym.</string>
@@ -1394,7 +1394,7 @@ Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać 
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_title">Zamknij się!</string>
     <string name="feat_shut_up_desc">Wiem co robię </string>
     <string name="shut_up_description">Shut-Up! omija ograniczenia aplikacji i sprawdza opcje programistyczne, ułatwienia dostępu i debugowanie, dynamicznie je ukrywając podczas uruchamiania wrażliwych aplikacji.
 
@@ -1418,7 +1418,7 @@ Użyj niestandardowych skrótów, aby upewnić się, że ustawienia są ukryte p
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Zegar ekranu blokady </string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_desc">Dostosuj zegar ekranu blokady na Pixelu</string>
     <string name="about_desc_lock_screen_clock">Zmień styl zegara na ekranie blokady w Pixelach. Wybierz jedną z dostępnych tarcz zegara w interfejsie systemowym. Niektóre stare style mogą być niedostępne.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1459,7 +1459,7 @@ Użyj niestandardowych skrótów, aby upewnić się, że ustawienia są ukryte p
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
     <string name="feat_daily_wallpaper_title">Tapeta </string>
-    <string name="feat_daily_wallpaper_desc">Codziennie wybierane tapety </string>
+    <string name="feat_daily_wallpaper_desc">Codzienne tapety i tapety interaktywne</string>
     <string name="feat_sync_location_reached_title">Synchronizuj status \"Czy już dotarliśmy?\" </string>
     <string name="feat_sync_sound_mode_title">Synchronizuj tryb dźwięku </string>
     <string name="feat_sync_sound_mode_desc">Automatycznie synchronizuj z zegarkiem </string>
@@ -1507,7 +1507,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="settings_translated_texts">Przetłumaczone </string>
     <string name="settings_translated_texts_desc">%d edycji oczekujących — naciśnij by wysłać lub je odrzucić </string>
     <string name="settings_translate_mode">Tryb tłumaczenia</string>
-    <string name="settings_translate_mode_desc">Naciśnij i przytrzymaj dowolny tekst, aby go przetłumaczyć i przyczynić się do rozwoju społeczności</string>
+    <string name="settings_translate_mode_desc">Naciśnij i przytrzymaj dowolny tekst, aby go przetłumaczyć i przyczynić się do rozwoju aplikacji</string>
     <string name="setting_enable_unsupported_features_desc">Pokaż funkcje specyficzne dla producenta telefonu lub zbędne, które są domyślnie ukryte</string>
     <string name="label_snooze_default">Domyślny czas drzemki </string>
     <string name="label_snooze_option_1">Opcja 1 </string>
@@ -1530,16 +1530,43 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="feat_watch_controls_desc">Dostosuj sterowanie aplikacjami WearOS</string>
     <string name="feat_sync_location_reached_desc">Do wyświetlenia w kafelku urządzenia</string>
     <string name="shut_up_restore_delay_title">Opóźnienie wyłączenia </string>
-    <string name="feat_standby_apps_title">Aplikacje w trybie gotowości </string>
+    <string name="feat_standby_apps_title">Aplikacje w tle</string>
     <string name="about_desc_standby_apps">Zarządzaj trybami gotowości aplikacji Android (Aktywny, Działający, Częsty, Rzadki, Ograniczony), aby kontrolować uruchamianie aplikacji w tle, użycie sieci i zużycie baterii.</string>
     <string name="feat_power_saving_desc">Konfiguruj politykę oszczędzania energii </string>
-    <string name="feat_standby_apps_desc">Optymalizuj aktywność w tle aplikacji </string>
+    <string name="feat_standby_apps_desc">Zarządzaj aktywnościami aplikacji w tle</string>
     <string name="label_low_power_trigger_level">Niestandardowy poziom wyzwolenia </string>
     <string name="setting_app_icon_title">Ikona aplikacji </string>
     <string name="setting_app_icon_desc">Dostosuj ikonę aplikacji na ekranie głównym </string>
     <string name="label_motion_blur">Rozmycie ruchu </string>
     <string name="label_ripple_animation">Efekt fali</string>
-    <string name="feat_networks_desc">Sterownie łącznością i sieciami</string>
-    <string name="feat_flashlight_title">Latarka </string>
-    <string name="feat_flashlight_desc">Popraw zachowanie latarki </string>
+    <string name="feat_networks_desc">Zarządzaj łącznością i sieciami</string>
+    <string name="feat_flashlight_title">Latarka</string>
+    <string name="feat_flashlight_desc">Dostosuj zachowanie latarki</string>
+    <string name="settings_genai_automation_title">Używaj generatywnego AI </string>
+    <string name="settings_genai_automation_desc">Wykorzystuje lokalny model Gemini Nano do tworzenia automatyzacji na podstawie opisów</string>
+    <string name="app_icon_default">Domyślna</string>
+    <string name="app_icon_legacy">Klasyczna</string>
+    <string name="app_icon_black">Dynamiczna</string>
+    <string name="app_icon_gta">Vice City</string>
+    <string name="app_icon_google">Spektrum</string>
+    <string name="label_battery_health">Kondycja</string>
+    <string name="label_battery_temperature">Temperatura</string>
+    <string name="label_battery_capacity">Pojemność</string>
+    <string name="label_battery_cycle_count">Ilość cykli</string>
+    <string name="label_battery_mode">Status</string>
+    <string name="label_battery_voltage">Napięcie</string>
+    <string name="label_battery_technology">Technologia</string>
+    <string name="label_battery_current_now">Aktualny prąd</string>
+    <string name="label_battery_current_avg">Średni prąd</string>
+    <string name="label_thermal_cpu">Temperatura CPU</string>
+    <string name="label_thermal_gpu">Temperatura GPU</string>
+    <string name="label_auto_reset_battery_stats_title">Automatyczne resetowanie </string>
+    <string name="label_auto_reset_battery_stats_desc">Automatycznie zresetuj statystyki baterii, gdy urządzenie jest naładowane powyżej 90% i nie ładuje się.</string>
+    <string name="label_battery_capacity_health">Pojemność rzeczywista</string>
+    <string name="label_screen_on_drain">Zużycie przy włączonym ekranie</string>
+    <string name="label_screen_max_drain">Maksymalne zużycie przez ekran</string>
+    <string name="label_ambient_aod_drain">Zużycie przy AOD</string>
+    <string name="label_device_battery">Bateria</string>
+    <string name="feat_sim_names_title">Nazwy kart SIM</string>
+    <string name="feat_sim_names_desc">Zarządzaj nazwami operatów dla aktywnych kart SIM</string>
 </resources>
