@@ -25,6 +25,8 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Vibrator
 import android.view.KeyEvent
+import android.view.Surface
+import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
@@ -495,6 +497,19 @@ class ScreenOffAccessibilityService :
     private fun checkFullscreenState() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             try {
+                val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+                @Suppress("DEPRECATION")
+                val rotation = try {
+                    wm?.defaultDisplay?.rotation ?: Surface.ROTATION_0
+                } catch (_: Exception) {
+                    Surface.ROTATION_0
+                }
+                // In portrait orientation, the camera cutout is at the top of the display and Duo must stay visible
+                if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
+                    duoOverlayHandler.setFullscreen(false)
+                    return
+                }
+
                 val currentWindows = windows
                 if (!currentWindows.isNullOrEmpty()) {
                     val hasStatusBar = currentWindows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM }
@@ -510,9 +525,15 @@ class ScreenOffAccessibilityService :
 
                         val isFullscreen = isCoveringFullDisplay && !hasStatusBar
                         duoOverlayHandler.setFullscreen(isFullscreen)
+                    } else {
+                        duoOverlayHandler.setFullscreen(false)
                     }
+                } else {
+                    duoOverlayHandler.setFullscreen(false)
                 }
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+                duoOverlayHandler.setFullscreen(false)
+            }
         }
     }
 

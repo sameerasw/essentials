@@ -368,6 +368,7 @@ class SettingsRepository(
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
         const val KEY_DUO_SHOW_FLASHLIGHT = "duo_show_flashlight"
+        const val KEY_DUO_SHOW_CHARGING_SURGE = "duo_show_charging_surge"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
@@ -1407,8 +1408,9 @@ class SettingsRepository(
     ): Boolean {
         return try {
             val json = inputStream.bufferedReader().use { it.readText() }
+            val type = object : com.google.gson.reflect.TypeToken<Map<String, Map<String, Map<String, Any>>>>() {}.type
             val allConfigs: Map<String, Map<String, Map<String, Any>>> =
-                gson.fromJson(json, Map::class.java) as Map<String, Map<String, Map<String, Any>>>
+                gson.fromJson(json, type) ?: emptyMap()
 
             allConfigs.forEach { (fileName, prefWrapper) ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
@@ -3107,6 +3109,9 @@ class SettingsRepository(
 
     fun isDuoShowFlashlightEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_FLASHLIGHT, true)
     fun setDuoShowFlashlightEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_FLASHLIGHT, enabled)
+
+    fun isDuoShowChargingSurgeEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_CHARGING_SURGE, true)
+    fun setDuoShowChargingSurgeEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_CHARGING_SURGE, enabled)
 
     fun isDuoHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, true)
     fun setDuoHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, enabled)

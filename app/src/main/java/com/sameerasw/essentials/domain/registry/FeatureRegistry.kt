@@ -1374,8 +1374,7 @@ object FeatureRegistry {
                 parentFeatureId = "Display",
             ) {
                 override fun isDeviceSupported(context: Context): Boolean {
-                    val settingsRepository = SettingsRepository(context)
-                    return settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, false)
+                    return true
                 }
 
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isDuoEnabled.value

@@ -298,6 +298,17 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_bolt_24,
+                title = stringResource(R.string.duo_show_charging_surge_title),
+                description = stringResource(R.string.duo_show_charging_surge_desc),
+                isChecked = viewModel.isDuoShowChargingSurge.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowChargingSurge(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_charging_surge"),
+            )
         }
 
         Text(

@@ -135,6 +135,7 @@ class MainViewModel : ViewModel() {
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
     val isDuoShowFlashlight = mutableStateOf(true)
+    val isDuoShowChargingSurge = mutableStateOf(true)
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
@@ -553,6 +554,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ->
                         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_CHARGING_SURGE ->
+                        isDuoShowChargingSurge.value = settingsRepository.isDuoShowChargingSurgeEnabled()
 
                     SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
                         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
@@ -1797,6 +1801,7 @@ class MainViewModel : ViewModel() {
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
+        isDuoShowChargingSurge.value = settingsRepository.isDuoShowChargingSurgeEnabled()
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
@@ -2327,9 +2332,6 @@ class MainViewModel : ViewModel() {
         // Enabling pre-releases automatically enables Developer Mode; disabling turns it off
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBooleanSync(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
-        if (!enabled) {
-            setDuoEnabled(false)
-        }
     }
 
     /**
@@ -2344,9 +2346,6 @@ class MainViewModel : ViewModel() {
     ) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
-        if (!enabled) {
-            setDuoEnabled(false)
-        }
     }
 
     /**
@@ -3805,7 +3804,7 @@ class MainViewModel : ViewModel() {
             val sessions = manager.getActiveSessions(componentName)
             val activeSession =
                 sessions
-                    ?.sortedWith(
+                    .sortedWith(
                         compareByDescending<android.media.session.MediaController> {
                             val state = it.playbackState?.state
                             state == android.media.session.PlaybackState.STATE_PLAYING ||
@@ -3813,8 +3812,8 @@ class MainViewModel : ViewModel() {
                         }.thenByDescending {
                             val state = it.playbackState?.state
                             state == android.media.session.PlaybackState.STATE_PAUSED
-                        },
-                    )?.firstOrNull()
+                        }
+                    ).firstOrNull()
 
             if (activeSession != null) {
                 val metadata = activeSession.metadata
@@ -4411,6 +4410,11 @@ class MainViewModel : ViewModel() {
     fun setDuoShowFlashlight(enabled: Boolean) {
         isDuoShowFlashlight.value = enabled
         settingsRepository.setDuoShowFlashlightEnabled(enabled)
+    }
+
+    fun setDuoShowChargingSurge(enabled: Boolean) {
+        isDuoShowChargingSurge.value = enabled
+        settingsRepository.setDuoShowChargingSurgeEnabled(enabled)
     }
 
     fun setDuoHideWhenScreenOff(enabled: Boolean) {
@@ -7115,9 +7119,9 @@ class MainViewModel : ViewModel() {
             } else {
                 val backupData = gson.fromJson(json, FreezeBackupData::class.java)
                 if (backupData != null) {
-                    importedApps = backupData.apps ?: emptyList()
-                    importedTags = backupData.tags ?: emptyList()
-                    importedMap = backupData.appTagMap ?: emptyMap()
+                    importedApps = backupData.apps
+                    importedTags = backupData.tags
+                    importedMap = backupData.appTagMap
                 }
             }
 
