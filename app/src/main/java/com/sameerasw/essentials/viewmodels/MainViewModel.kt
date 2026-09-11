@@ -27,6 +27,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.provider.CalendarContract
 import android.provider.Settings
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
@@ -1777,6 +1778,8 @@ class MainViewModel : ViewModel() {
         selectedAppIcon.value = settingsRepository.getAppIcon()
         isSwipeTabsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SWIPE_TABS, true)
+        isOnlineHelpMediaEnabled.value =
+            settingsRepository.isOnlineHelpMediaEnabled()
         sentryReportMode.value =
             settingsRepository.getString(SettingsRepository.KEY_SENTRY_REPORT_MODE, "auto")
                 ?: "auto"
@@ -7432,54 +7435,54 @@ class MainViewModel : ViewModel() {
         settingsRepository.updateAodWallpaperMediaExcludedAppSelection(packageName, enabled)
     }
 
-    fun setCustomAodWallpaper(context: Context, uri: android.net.Uri) {
-        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+    fun setCustomAodWallpaper(context: Context, uri: Uri) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
-                context.contentResolver.openInputStream(uri)?.use { input ->
-                    java.io.FileOutputStream(file).use { output ->
-                        input.copyTo(output)
+                val file = File(context.filesDir, "custom_aod_wallpaper.png")
+                val sampledBitmap = AppUtil.decodeSampledBitmapFromUri(context, uri, reqWidth = 1440, reqHeight = 3200)
+                if (sampledBitmap != null) {
+                    FileOutputStream(file).use { output ->
+                        sampledBitmap.compress(Bitmap.CompressFormat.PNG, 95, output)
+                    }
+                    settingsRepository.setAodWallpaperCustomImage(true)
+                    withContext(Dispatchers.Main) {
+                        hasAodWallpaperCustomImage.value = true
+                        currentWallpaperBitmap.value = sampledBitmap
                     }
                 }
-                settingsRepository.setAodWallpaperCustomImage(true)
-                val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                    hasAodWallpaperCustomImage.value = true
-                    currentWallpaperBitmap.value = bitmap
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("MainViewModel", "Failed to save custom AOD wallpaper", e)
+            } catch (e: Throwable) {
+                Log.e("MainViewModel", "Failed to save custom AOD wallpaper", e)
             }
         }
     }
 
     fun removeCustomAodWallpaper(context: Context) {
-        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                val file = File(context.filesDir, "custom_aod_wallpaper.png")
                 if (file.exists()) {
                     file.delete()
                 }
                 settingsRepository.setAodWallpaperCustomImage(false)
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     hasAodWallpaperCustomImage.value = false
                 }
                 loadCurrentWallpaperBitmap(context)
-            } catch (e: Exception) {
-                android.util.Log.e("MainViewModel", "Failed to remove custom AOD wallpaper", e)
+            } catch (e: Throwable) {
+                Log.e("MainViewModel", "Failed to remove custom AOD wallpaper", e)
             }
         }
     }
 
     fun loadCurrentWallpaperBitmap(context: Context) {
-        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (settingsRepository.hasAodWallpaperCustomImage()) {
-                    val file = java.io.File(context.filesDir, "custom_aod_wallpaper.png")
+                    val file = File(context.filesDir, "custom_aod_wallpaper.png")
                     if (file.exists()) {
-                        val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                        val bitmap = AppUtil.decodeSampledBitmapFromFile(file.absolutePath, reqWidth = 1440, reqHeight = 3200)
                         if (bitmap != null) {
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                            withContext(Dispatchers.Main) {
                                 currentWallpaperBitmap.value = bitmap
                             }
                             return@launch
@@ -7499,17 +7502,27 @@ class MainViewModel : ViewModel() {
                     if (drawable != null) {
                         val bitmap =
                             if (drawable is android.graphics.drawable.BitmapDrawable && drawable.bitmap != null) {
-                                drawable.bitmap
+                                val orig = drawable.bitmap
+                                if (orig.width > 2560 || orig.height > 2560) {
+                                    val scale = minOf(1440f / orig.width, 3200f / orig.height, 1.0f)
+                                    if (scale < 1.0f) {
+                                        Bitmap.createScaledBitmap(orig, (orig.width * scale).toInt(), (orig.height * scale).toInt(), true)
+                                    } else {
+                                        orig
+                                    }
+                                } else {
+                                    orig
+                                }
                             } else {
-                                val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 1080
-                                val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 2400
+                                val width = if (drawable.intrinsicWidth in 1..2560) drawable.intrinsicWidth else 1080
+                                val height = if (drawable.intrinsicHeight in 1..3200) drawable.intrinsicHeight else 2400
                                 val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                                 val canvas = android.graphics.Canvas(bmp)
                                 drawable.setBounds(0, 0, canvas.width, canvas.height)
                                 drawable.draw(canvas)
                                 bmp
                             }
-                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                        withContext(Dispatchers.Main) {
                             currentWallpaperBitmap.value = bitmap
                         }
                     }

@@ -22,6 +22,7 @@ kotlin {
 android {
     namespace = "com.sameerasw.essentials"
     compileSdk = 37
+    compileSdkMinor = 1
 
     androidResources {
         localeFilters +=
@@ -88,7 +89,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 62
-        versionName = "18.0-beta.4"
+        versionName = "18.0-beta.5"
 
         val whatsNewCounter = 2
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())

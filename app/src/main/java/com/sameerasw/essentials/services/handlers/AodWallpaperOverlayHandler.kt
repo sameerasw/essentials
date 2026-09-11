@@ -43,6 +43,7 @@ import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.utils.AppUtil
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -737,9 +738,9 @@ class AodWallpaperOverlayHandler(
     private fun extractCurrentWallpaper(): Bitmap? {
         return try {
             if (prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE, false)) {
-                val file = java.io.File(service.filesDir, "custom_aod_wallpaper.png")
+                val file = File(service.filesDir, "custom_aod_wallpaper.png")
                 if (file.exists()) {
-                    val customBmp = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                    val customBmp = AppUtil.decodeSampledBitmapFromFile(file.absolutePath, reqWidth = 1440, reqHeight = 3200)
                     if (customBmp != null) return customBmp
                 }
             }
@@ -763,11 +764,20 @@ class AodWallpaperOverlayHandler(
     private fun drawableToBitmap(drawable: Drawable?): Bitmap? {
         if (drawable == null) return null
         if (drawable is BitmapDrawable && drawable.bitmap != null) {
-            return drawable.bitmap
+            val orig = drawable.bitmap
+            if (orig.width > 2560 || orig.height > 2560) {
+                val scale = minOf(1440f / orig.width, 3200f / orig.height, 1.0f)
+                return if (scale < 1.0f) {
+                    Bitmap.createScaledBitmap(orig, (orig.width * scale).toInt(), (orig.height * scale).toInt(), true)
+                } else {
+                    orig
+                }
+            }
+            return orig
         }
 
-        val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 1080
-        val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 2400
+        val width = if (drawable.intrinsicWidth in 1..2560) drawable.intrinsicWidth else 1080
+        val height = if (drawable.intrinsicHeight in 1..3200) drawable.intrinsicHeight else 2400
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)

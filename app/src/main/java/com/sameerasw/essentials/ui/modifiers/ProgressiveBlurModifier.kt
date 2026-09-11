@@ -9,85 +9,29 @@
 
 package com.sameerasw.essentials.ui.modifiers
 
-import android.graphics.RenderEffect
-import android.graphics.RuntimeShader
-import android.os.Build
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asComposeRenderEffect
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.blur.BlurRadiusSpec
+import androidx.compose.ui.graphics.blur.BlurStop
 import androidx.compose.ui.platform.LocalContext
-import org.intellij.lang.annotations.Language
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.utils.DeviceUtils
 
 enum class BlurDirection {
     TOP,
     BOTTOM,
 }
 
-@Language("AGSL")
-private val PROGRESSIVE_BLUR_SKSL =
-    """
-    uniform shader content;
-    uniform float blurRadius;
-    uniform float height;
-    uniform float contentHeight;
-    uniform int isTop;
-
-    half4 main(float2 fragCoord) {
-        float progress;
-        if (isTop == 1) {
-            progress = 1.0 - clamp(fragCoord.y / height, 0.0, 1.0);
-        } else {
-            progress = 1.0 - clamp((contentHeight - fragCoord.y) / height, 0.0, 1.0);
-        }
-        
-        // Easing curve for smoother transition (power curve)
-        progress = pow(progress, 1.5);
-        
-        float radius = progress * blurRadius;
-        
-        if (radius <= 0.0) {
-            return content.eval(fragCoord);
-        }
-
-        half4 accum = half4(0.0);
-        float weightSum = 0.0;
-        
-        // Random value for dithering based on pixel coordinates
-        float dither = fract(sin(dot(fragCoord, float2(12.9898, 78.233))) * 43758.5453);
-        float2 jitter = float2(dither - 0.5, fract(dither * 1.618) - 0.5);
-        
-        const int SAMPLES = 4; 
-        float offsetScale = radius / float(SAMPLES);
-        
-        for (int x = -SAMPLES; x <= SAMPLES; x++) {
-            for (int y = -SAMPLES; y <= SAMPLES; y++) {
-                // Apply jittered sampling with dither
-                float2 offset = (float2(float(x), float(y)) + jitter) * offsetScale;
-                
-                float distSq = dot(offset, offset);
-                float radiusSq = radius * radius;
-                
-                if (distSq <= radiusSq) {
-                    float weight = exp(-3.0 * distSq / radiusSq);
-                    accum += content.eval(fragCoord + offset) * weight;
-                    weightSum += weight;
-                }
-            }
-        }
-        
-        return accum / weightSum;
-    }
-    """.trimIndent()
-
 /**
- * Applies a progressive blur to the specified edge of the element.
- * Only works on Android 13+ (API 33).
+ * Applies native progressive blur to the specified edge of the element.
  */
 fun Modifier.progressiveBlur(
     blurRadius: Float,
@@ -97,22 +41,53 @@ fun Modifier.progressiveBlur(
 ): Modifier =
     composed {
         val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
-
         val context = LocalContext.current
-        val isPowerSave =
-            remember(context) {
-                com.sameerasw.essentials.utils.DeviceUtils
-                    .isPowerSaveMode(context)
-            }
-        val isSamsungOneUi7OrLess =
-            remember {
-                com.sameerasw.essentials.utils.DeviceUtils
-                    .isBlurProblematicDevice()
-            }
+        val density = LocalDensity.current
+        val isPowerSave = remember(context) { DeviceUtils.isPowerSaveMode(context) }
+
+        val blurRadiusDp = with(density) { blurRadius.toDp() }
 
         val blurModifier =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && blurRadius > 0f && !isPowerSave && !isSamsungOneUi7OrLess) {
-                Api33ProgressiveBlur.createBlurModifier(blurRadius, height, direction)
+            if (blurRadius > 0f && !isPowerSave) {
+                Modifier.blur {
+                    val sizeHeightPx = size.height.toPx()
+                    if (sizeHeightPx > 0f && height > 0f) {
+                        val fraction = (height / sizeHeightPx).coerceIn(0f, 1f)
+                        radius =
+                            when (direction) {
+                                BlurDirection.TOP ->
+                                    BlurRadiusSpec.verticalGradient(
+                                        listOf(
+                                            BlurStop(0.0f, blurRadiusDp),
+                                            BlurStop(fraction, 0.dp),
+                                            BlurStop(1.0f, 0.dp),
+                                        ),
+                                    )
+                                BlurDirection.BOTTOM ->
+                                    BlurRadiusSpec.verticalGradient(
+                                        listOf(
+                                            BlurStop(0.0f, 0.dp),
+                                            BlurStop(1.0f - fraction, 0.dp),
+                                            BlurStop(1.0f, blurRadiusDp),
+                                        ),
+                                    )
+                            }
+                    } else {
+                        radius =
+                            when (direction) {
+                                BlurDirection.TOP ->
+                                    BlurRadiusSpec.verticalGradient(
+                                        startRadius = blurRadiusDp,
+                                        endRadius = 0.dp,
+                                    )
+                                BlurDirection.BOTTOM ->
+                                    BlurRadiusSpec.verticalGradient(
+                                        startRadius = 0.dp,
+                                        endRadius = blurRadiusDp,
+                                    )
+                            }
+                    }
+                }
             } else {
                 Modifier
             }
@@ -121,20 +96,19 @@ fun Modifier.progressiveBlur(
             if (showGradientOverlay) {
                 Modifier.drawWithContent {
                     drawContent()
-                    val (brush, _) =
+                    val brush =
                         when (direction) {
                             BlurDirection.TOP -> {
                                 Brush.verticalGradient(
                                     colors = listOf(overlayColor, Color.Transparent),
                                     endY = height,
-                                ) to height
+                                )
                             }
-
                             BlurDirection.BOTTOM -> {
                                 Brush.verticalGradient(
                                     colors = listOf(Color.Transparent, overlayColor),
                                     startY = size.height - height,
-                                ) to height
+                                )
                             }
                         }
                     drawRect(brush = brush)
@@ -148,24 +122,59 @@ fun Modifier.progressiveBlur(
             .then(gradientModifier)
     }
 
-@androidx.annotation.RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private object Api33ProgressiveBlur {
-    fun createBlurModifier(
-        blurRadius: Float,
-        height: Float,
-        direction: BlurDirection,
-    ): Modifier {
-        return Modifier.graphicsLayer {
-            val shader = RuntimeShader(PROGRESSIVE_BLUR_SKSL)
-            shader.setFloatUniform("blurRadius", blurRadius)
-            shader.setFloatUniform("height", height)
-            shader.setFloatUniform("contentHeight", size.height)
-            shader.setIntUniform("isTop", if (direction == BlurDirection.TOP) 1 else 0)
+fun Modifier.progressiveBlur(
+    maxRadius: Dp = 24.dp,
+    direction: BlurDirection = BlurDirection.TOP,
+    showGradientOverlay: Boolean = false,
+): Modifier =
+    composed {
+        val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
+        val context = LocalContext.current
+        val isPowerSave = remember(context) { DeviceUtils.isPowerSaveMode(context) }
 
-            renderEffect =
-                RenderEffect
-                    .createRuntimeShaderEffect(shader, "content")
-                    .asComposeRenderEffect()
-        }
+        val blurModifier =
+            if (maxRadius > 0.dp && !isPowerSave) {
+                Modifier.blur {
+                    radius =
+                        when (direction) {
+                            BlurDirection.TOP ->
+                                BlurRadiusSpec.verticalGradient(
+                                    startRadius = maxRadius,
+                                    endRadius = 0.dp,
+                                )
+                            BlurDirection.BOTTOM ->
+                                BlurRadiusSpec.verticalGradient(
+                                    startRadius = 0.dp,
+                                    endRadius = maxRadius,
+                                )
+                        }
+                }
+            } else {
+                Modifier
+            }
+
+        val gradientModifier =
+            if (showGradientOverlay) {
+                Modifier.drawWithContent {
+                    drawContent()
+                    val brush =
+                        when (direction) {
+                            BlurDirection.TOP ->
+                                Brush.verticalGradient(
+                                    colors = listOf(overlayColor, Color.Transparent),
+                                )
+                            BlurDirection.BOTTOM ->
+                                Brush.verticalGradient(
+                                    colors = listOf(Color.Transparent, overlayColor),
+                                )
+                        }
+                    drawRect(brush = brush)
+                }
+            } else {
+                Modifier
+            }
+
+        this
+            .then(blurModifier)
+            .then(gradientModifier)
     }
-}
