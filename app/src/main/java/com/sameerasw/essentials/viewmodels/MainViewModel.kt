@@ -143,6 +143,7 @@ class MainViewModel : ViewModel() {
     val duoLongPressAction = mutableStateOf<Action?>(null)
     val duoSwipeDownAction = mutableStateOf<Action?>(null)
     val duoSlideMode = mutableStateOf("none")
+    val isDuoSlideInvertDirection = mutableStateOf(false)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -583,6 +584,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SLIDE_MODE ->
                         duoSlideMode.value = settingsRepository.getDuoSlideMode()
+
+                    SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ->
+                        isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1826,6 +1830,7 @@ class MainViewModel : ViewModel() {
         duoLongPressAction.value = settingsRepository.getDuoLongPressAction()
         duoSwipeDownAction.value = settingsRepository.getDuoSwipeDownAction()
         duoSlideMode.value = settingsRepository.getDuoSlideMode()
+        isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4480,6 +4485,11 @@ class MainViewModel : ViewModel() {
     fun setDuoSlideMode(mode: String) {
         duoSlideMode.value = mode
         settingsRepository.setDuoSlideMode(mode)
+    }
+
+    fun setDuoSlideInvertDirection(enabled: Boolean) {
+        isDuoSlideInvertDirection.value = enabled
+        settingsRepository.setDuoSlideInvertDirection(enabled)
     }
 
     /**

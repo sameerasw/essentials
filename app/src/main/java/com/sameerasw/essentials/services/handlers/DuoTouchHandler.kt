@@ -294,27 +294,33 @@ class DuoTouchHandler(
             }
 
             "track" -> {
+                val isInverted = settingsRepository.isDuoSlideInvertDirectionEnabled()
                 val effectiveRadius = ((cameraRadiusPx + 14f * density) * ringRadiusScale).coerceAtLeast(1f)
-                val angleDeg = -(totalDx / effectiveRadius) * (180f / Math.PI.toFloat())
+                val baseAngleDeg = (totalDx / effectiveRadius) * (180f / Math.PI.toFloat())
+                val angleDeg = if (isInverted) baseAngleDeg else -baseAngleDeg
                 overlayView?.setInteractiveTrackRotation(angleDeg)
                 if (!isTrackTriggered) {
                     if (totalDx >= trackTriggerPx) {
                         isTrackTriggered = true
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
-                        dispatchMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT)
+                        val key = if (isInverted) KeyEvent.KEYCODE_MEDIA_PREVIOUS else KeyEvent.KEYCODE_MEDIA_NEXT
+                        dispatchMediaKey(key)
                     } else if (totalDx <= -trackTriggerPx) {
                         isTrackTriggered = true
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
-                        dispatchMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+                        val key = if (isInverted) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS
+                        dispatchMediaKey(key)
                     }
                 }
             }
 
             "sound_mode" -> {
+                val isInverted = settingsRepository.isDuoSlideInvertDirectionEnabled()
                 if (!isSoundModeTriggered) {
                     if (abs(totalDx) >= horizontalTriggerPx) {
                         isSoundModeTriggered = true
-                        cycleSoundMode(isForward = totalDx > 0)
+                        val isForward = if (isInverted) totalDx < 0 else totalDx > 0
+                        cycleSoundMode(isForward = isForward)
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
                     }
                 }

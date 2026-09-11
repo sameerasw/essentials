@@ -503,6 +503,24 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_slide_mode"),
             )
+
+            val isMirrorableMode = viewModel.duoSlideMode.value == "track" || viewModel.duoSlideMode.value == "sound_mode"
+            AnimatedVisibility(
+                visible = isMirrorableMode,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_compare_arrows_24,
+                    title = stringResource(R.string.duo_slide_mirror_direction_title),
+                    isChecked = viewModel.isDuoSlideInvertDirection.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setDuoSlideInvertDirection(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "duo_slide_invert_direction"),
+                )
+            }
         }
     }
 

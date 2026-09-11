@@ -2492,4 +2492,5 @@
     <string name="duo_action_horizontal_slide_sound_mode">Sound mode</string>
     <string name="duo_action_pick_title">Pick action</string>
     <string name="duo_action_none">None</string>
+    <string name="duo_slide_mirror_direction_title">Mirror directions</string>
 </resources>

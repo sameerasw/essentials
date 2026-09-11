@@ -377,6 +377,7 @@ class SettingsRepository(
         const val KEY_DUO_LONG_PRESS_ACTION = "duo_long_press_action"
         const val KEY_DUO_SWIPE_DOWN_ACTION = "duo_swipe_down_action"
         const val KEY_DUO_SLIDE_MODE = "duo_slide_mode"
+        const val KEY_DUO_SLIDE_INVERT_DIRECTION = "duo_slide_invert_direction"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3137,5 +3138,8 @@ class SettingsRepository(
 
     fun getDuoSlideMode(): String = getString(KEY_DUO_SLIDE_MODE, "none") ?: "none"
     fun setDuoSlideMode(mode: String) = putString(KEY_DUO_SLIDE_MODE, mode)
+
+    fun isDuoSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, false)
+    fun setDuoSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, enabled)
 }
 
