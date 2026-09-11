@@ -198,21 +198,23 @@ class DuoOverlayHandler(
                     status == BatteryManager.BATTERY_STATUS_FULL
 
                 val plugged = batteryIntent?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-                val isPlugged = plugged == BatteryManager.BATTERY_PLUGGED_AC ||
-                    plugged == BatteryManager.BATTERY_PLUGGED_USB ||
-                    plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
+                val isPlugged = plugged > 0
 
-                val isNowCharging = (isChargingStatus && isPlugged) || action == Intent.ACTION_POWER_CONNECTED
+                val isNowCharging = when (action) {
+                    Intent.ACTION_POWER_DISCONNECTED -> false
+                    Intent.ACTION_POWER_CONNECTED -> true
+                    else -> isChargingStatus || isPlugged
+                }
+
+                val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
 
                 if (action == Intent.ACTION_POWER_CONNECTED) {
-                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
                     isChargingState = true
                     overlayView?.triggerChargingAnimation(isFastCharging)
                 } else if (action == Intent.ACTION_POWER_DISCONNECTED) {
                     isChargingState = false
                     overlayView?.setCharging(false)
                 } else if (isNowCharging != isChargingState) {
-                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
                     isChargingState = isNowCharging
                     if (isNowCharging) {
                         overlayView?.triggerChargingAnimation(isFastCharging)
@@ -220,7 +222,6 @@ class DuoOverlayHandler(
                         overlayView?.setCharging(false)
                     }
                 } else if (isNowCharging) {
-                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
                     overlayView?.setCharging(true, isFastCharging)
                 }
             }
@@ -716,6 +717,7 @@ class DuoOverlayHandler(
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
                 this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
+                this.setCharging(this@DuoOverlayHandler.isChargingState)
             }
 
             if (!isOverlayAdded) {
@@ -975,10 +977,8 @@ class DuoOverlayHandler(
                     val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                         status == BatteryManager.BATTERY_STATUS_FULL
                     val plugged = it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
-                    val isPlugged = plugged == BatteryManager.BATTERY_PLUGGED_AC ||
-                        plugged == BatteryManager.BATTERY_PLUGGED_USB ||
-                        plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
-                    if (isChargingStatus && isPlugged) {
+                    val isPlugged = plugged > 0
+                    if (isChargingStatus || isPlugged) {
                         isChargingState = true
                         val isFast = plugged == BatteryManager.BATTERY_PLUGGED_AC
                         overlayView?.setCharging(true, isFast)
