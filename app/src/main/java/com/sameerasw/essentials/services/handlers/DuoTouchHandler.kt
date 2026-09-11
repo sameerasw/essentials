@@ -22,6 +22,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,7 @@ class DuoTouchHandler(
     private val handler = Handler(Looper.getMainLooper())
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
+    var overlayView: DuoOverlayView? = null
     var cameraCenterX: Float = 0f
     var cameraCenterY: Float = 0f
     var cameraRadiusPx: Float = 36f
@@ -64,13 +66,19 @@ class DuoTouchHandler(
         get() = service.resources.displayMetrics.density
 
     private val touchSlopPx: Float
-        get() = 20f * density
+        get() = 12f * density
 
     private val slideStepPx: Float
-        get() = 22f * density
+        get() = 18f * density
 
-    private val thresholdTriggerPx: Float
-        get() = 55f * density
+    private val swipeDownTriggerPx: Float
+        get() = 24f * density
+
+    private val horizontalTriggerPx: Float
+        get() = 38f * density
+
+    private val trackTriggerPx: Float
+        get() = 65f * density
 
     private val longPressTimeoutMs = 450L
     private val doubleTapTimeoutMs = 260L
@@ -112,6 +120,8 @@ class DuoTouchHandler(
                 isSoundModeTriggered = false
                 isVolumeOrBrightnessAdjusted = false
 
+                overlayView?.triggerTapAnimation()
+
                 val doubleTapAction = settingsRepository.getDuoDoubleTapAction()
                 val isSecondTapInWindow = (downTime - lastTapTime) < doubleTapTimeoutMs &&
                     hypot(x - lastTapX, y - lastTapY) < touchSlopPx * 1.5f
@@ -152,22 +162,25 @@ class DuoTouchHandler(
                 if (isLongPressTriggered) return true
 
                 val slideMode = settingsRepository.getDuoSlideMode()
-                val isHorizontalDominant = abs(dx) > abs(dy) * 1.2f
+                val swipeDownAction = settingsRepository.getDuoSwipeDownAction()
+
+                val isHorizontalDominant = abs(dx) > abs(dy) * 1.1f
+                val isVerticalDominant = dy > 0f && dy > abs(dx) * 1.1f
 
                 if (isHorizontalDominant && slideMode != "none") {
                     handleHorizontalSlide(slideMode, x, dx)
                     return true
                 }
 
-                val isVerticalDominant = dy > abs(dx) * 1.3f
-                if (isVerticalDominant && !isSwipeDownTriggered && dy > thresholdTriggerPx) {
-                    isSwipeDownTriggered = true
-                    val swipeDownAction = settingsRepository.getDuoSwipeDownAction()
-                    if (swipeDownAction != null) {
+                if (swipeDownAction != null && isVerticalDominant) {
+                    val pullOffset = (dy * 0.4f).coerceAtMost(25f * density)
+                    val stretch = 1.0f + (pullOffset / (65f * density)).coerceAtMost(0.22f)
+                    overlayView?.setPullDownOffset(pullOffset, stretch)
+
+                    if (!isSwipeDownTriggered && dy >= swipeDownTriggerPx) {
+                        isSwipeDownTriggered = true
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
                         executeAction(swipeDownAction)
-                    } else {
-                        service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
                     }
                     return true
                 }
@@ -178,6 +191,8 @@ class DuoTouchHandler(
             MotionEvent.ACTION_UP -> {
                 if (!isTouchActiveInCutout) return false
                 handler.removeCallbacks(longPressRunnable)
+                overlayView?.releasePullDown()
+                overlayView?.releaseTrackRotation()
 
                 val elapsed = SystemClock.uptimeMillis() - downTime
                 val dx = x - downX
@@ -197,6 +212,7 @@ class DuoTouchHandler(
                     if (isDoubleTapPending && doubleTapAction != null) {
                         isDoubleTapPending = false
                         lastTapTime = 0L
+                        overlayView?.triggerTapAnimation()
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
                         executeAction(doubleTapAction)
                     } else if (doubleTapAction != null) {
@@ -225,6 +241,8 @@ class DuoTouchHandler(
 
             MotionEvent.ACTION_CANCEL -> {
                 handler.removeCallbacks(longPressRunnable)
+                overlayView?.releasePullDown()
+                overlayView?.releaseTrackRotation()
                 isTouchActiveInCutout = false
                 isDoubleTapPending = false
                 return false
@@ -240,11 +258,14 @@ class DuoTouchHandler(
                 val deltaX = currentX - lastSlideX
                 if (abs(deltaX) >= slideStepPx) {
                     val direction = if (deltaX > 0) AudioManager.ADJUST_RAISE else AudioManager.ADJUST_LOWER
-                    audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, direction, AudioManager.FLAG_SHOW_UI)
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, direction, 0)
                     HapticUtil.performHapticForService(service, HapticFeedbackType.SUBTLE)
                     lastSlideX = currentX
                     isVolumeOrBrightnessAdjusted = true
                 }
+                val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                val currentVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                overlayView?.setInteractiveVolume(currentVol, maxVol)
             }
 
             "brightness" -> {
@@ -264,6 +285,7 @@ class DuoTouchHandler(
                             newBrightness
                         )
                         HapticUtil.performHapticForService(service, HapticFeedbackType.SUBTLE)
+                        overlayView?.setInteractiveBrightness(newBrightness, 255)
                     } catch (_: Exception) {
                     }
                     lastSlideX = currentX
@@ -272,27 +294,31 @@ class DuoTouchHandler(
             }
 
             "track" -> {
+                val effectiveRadius = ((cameraRadiusPx + 14f * density) * ringRadiusScale).coerceAtLeast(1f)
+                val angleDeg = -(totalDx / effectiveRadius) * (180f / Math.PI.toFloat())
+                overlayView?.setInteractiveTrackRotation(angleDeg)
                 if (!isTrackTriggered) {
-                    if (totalDx >= thresholdTriggerPx) {
-                        isTrackTriggered = true
-                        HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
-                        dispatchMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
-                    } else if (totalDx <= -thresholdTriggerPx) {
+                    if (totalDx >= trackTriggerPx) {
                         isTrackTriggered = true
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
                         dispatchMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT)
+                    } else if (totalDx <= -trackTriggerPx) {
+                        isTrackTriggered = true
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
+                        dispatchMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
                     }
                 }
             }
 
             "sound_mode" -> {
                 if (!isSoundModeTriggered) {
-                    if (abs(totalDx) >= thresholdTriggerPx) {
+                    if (abs(totalDx) >= horizontalTriggerPx) {
                         isSoundModeTriggered = true
                         cycleSoundMode(isForward = totalDx > 0)
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
                     }
                 }
+                overlayView?.setInteractiveSoundMode(audioManager.ringerMode)
             }
         }
     }

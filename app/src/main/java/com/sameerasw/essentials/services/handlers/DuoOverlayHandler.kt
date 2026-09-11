@@ -731,6 +731,7 @@ class DuoOverlayHandler(
                     duoTouchHandler = DuoTouchHandler(service)
                 }
                 duoTouchHandler?.apply {
+                    this.overlayView = this@DuoOverlayHandler.overlayView
                     this.cameraCenterX = centerX
                     this.cameraCenterY = centerY
                     this.cameraRadiusPx = cameraRadiusPx
