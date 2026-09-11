@@ -1777,6 +1777,8 @@ class MainViewModel : ViewModel() {
         selectedAppIcon.value = settingsRepository.getAppIcon()
         isSwipeTabsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SWIPE_TABS, true)
+        isOnlineHelpMediaEnabled.value =
+            settingsRepository.isOnlineHelpMediaEnabled()
         sentryReportMode.value =
             settingsRepository.getString(SettingsRepository.KEY_SENTRY_REPORT_MODE, "auto")
                 ?: "auto"
