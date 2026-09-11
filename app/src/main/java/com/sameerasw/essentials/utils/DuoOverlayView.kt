@@ -58,11 +58,20 @@ class DuoOverlayView(context: Context) : View(context) {
             invalidate()
         }
 
+    var useUniversalContrast: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
     var arcThicknessPx: Float = 10f
         set(value) {
             field = value
             trackPaint.strokeWidth = value
             progressPaint.strokeWidth = value
+            contrastTrackPaint.strokeWidth = value + 0.8f * density
             invalidate()
         }
 
@@ -873,6 +882,11 @@ class DuoOverlayView(context: Context) : View(context) {
         strokeCap = Paint.Cap.ROUND
     }
 
+    private val contrastTrackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
     private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
@@ -882,7 +896,14 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.FILL
     }
 
+    private val contrastDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
     private val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val contrastIconPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
     private val iconClipPath = Path()
     private val iconRect = RectF()
     private val arcBounds = RectF()
@@ -894,6 +915,7 @@ class DuoOverlayView(context: Context) : View(context) {
         currentDotBaseColor = dot
         trackPaint.color = currentTrackColor
         progressPaint.color = currentProgressColor
+        contrastTrackPaint.strokeWidth = arcThicknessPx + 0.8f * density
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -914,6 +936,24 @@ class DuoOverlayView(context: Context) : View(context) {
         canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
         canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
         canvas.translate(-cameraCenterX, -cameraCenterY)
+
+        val r = Color.red(currentProgressColor) / 255.0
+        val g = Color.green(currentProgressColor) / 255.0
+        val b = Color.blue(currentProgressColor) / 255.0
+        val isProgressLight = (0.299 * r + 0.587 * g + 0.114 * b) > 0.45
+        val contrastColor = if (isProgressLight) Color.BLACK else Color.WHITE
+        val baseContrastAlpha = if (isProgressLight) 24 else 28
+        val contrastAlpha = (baseContrastAlpha * animatedVisibilityAlpha).toInt()
+
+        if (useUniversalContrast && contrastAlpha > 0) {
+            contrastTrackPaint.color = Color.argb(
+                contrastAlpha,
+                Color.red(contrastColor),
+                Color.green(contrastColor),
+                Color.blue(contrastColor)
+            )
+            canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, contrastTrackPaint)
+        }
 
         val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
         trackPaint.color = Color.argb(
@@ -954,6 +994,17 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * effectiveDotAlpha * animatedVisibilityAlpha
                 dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
 
+                if (useUniversalContrast && contrastAlpha > 0) {
+                    val shadowAlpha = (contrastAlpha * effectiveDotAlpha).toInt().coerceIn(0, 255)
+                    contrastDotPaint.color = Color.argb(
+                        shadowAlpha,
+                        Color.red(contrastColor),
+                        Color.green(contrastColor),
+                        Color.blue(contrastColor)
+                    )
+                    canvas.drawCircle(dotX, dotY, (dotRadiusPx + 0.5f * density) * effectiveDotAlpha, contrastDotPaint)
+                }
+
                 canvas.drawCircle(dotX, dotY, dotRadiusPx * effectiveDotAlpha, dotPaint)
             }
         }
@@ -969,6 +1020,17 @@ class DuoOverlayView(context: Context) : View(context) {
                 val iconCenterY = (cameraCenterY + (baseRadius + downwardOffset) * sin(angleRad)).toFloat()
 
                 if (iconRadius > 1f) {
+                    if (useUniversalContrast && contrastAlpha > 0) {
+                        val iconShadowAlpha = (contrastAlpha * animatedCustomFraction).toInt().coerceIn(0, 255)
+                        contrastIconPaint.color = Color.argb(
+                            iconShadowAlpha,
+                            Color.red(contrastColor),
+                            Color.green(contrastColor),
+                            Color.blue(contrastColor)
+                        )
+                        canvas.drawCircle(iconCenterX, iconCenterY, iconRadius + 0.5f * density, contrastIconPaint)
+                    }
+
                     val saveIcon = canvas.save()
                     iconClipPath.reset()
                     iconClipPath.addCircle(iconCenterX, iconCenterY, iconRadius, Path.Direction.CW)
