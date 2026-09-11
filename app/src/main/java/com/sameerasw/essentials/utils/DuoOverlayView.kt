@@ -27,6 +27,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
+import com.sameerasw.essentials.R
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -220,6 +221,75 @@ class DuoOverlayView(context: Context) : View(context) {
     var flashlightBrightnessProgress: Float = 100f
         private set
 
+    var isCharging: Boolean = false
+        private set
+
+    var isFastCharging: Boolean = false
+        private set
+
+    private var isChargingAnnounce: Boolean = false
+    private var chargingBoltBitmap: Bitmap? = null
+
+    private val revertChargingRunnable = Runnable {
+        if (isChargingAnnounce) {
+            isChargingAnnounce = false
+            updateActiveProgressMode()
+        }
+    }
+
+    private fun getChargingBoltBitmap(): Bitmap? {
+        if (chargingBoltBitmap == null) {
+            try {
+                val drawable = ContextCompat.getDrawable(context, R.drawable.rounded_bolt_24)?.mutate()
+                drawable?.setTint(Color.WHITE)
+                if (drawable != null) {
+                    chargingBoltBitmap = AppUtil.drawableToBitmap(drawable, 64)
+                }
+            } catch (_: Exception) {}
+        }
+        return chargingBoltBitmap
+    }
+
+    fun triggerChargingAnimation(isFastCharging: Boolean) {
+        this.isCharging = true
+        this.isFastCharging = isFastCharging
+        this.isChargingAnnounce = true
+
+        removeCallbacks(revertChargingRunnable)
+        postDelayed(revertChargingRunnable, 4000L)
+
+        updateActiveProgressMode()
+
+        val target = batteryLevel.toFloat()
+        progressAnimator?.cancel()
+        animatedProgress = 0f
+        progressAnimator = ValueAnimator.ofFloat(0f, target).apply {
+            duration = 750
+            interpolator = DecelerateInterpolator(1.4f)
+            addUpdateListener { animation ->
+                animatedProgress = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun setCharging(isCharging: Boolean, isFastCharging: Boolean = false) {
+        val wasCharging = this.isCharging
+        this.isCharging = isCharging
+        this.isFastCharging = isFastCharging
+
+        if (!isCharging) {
+            isChargingAnnounce = false
+            removeCallbacks(revertChargingRunnable)
+            updateActiveProgressMode()
+        } else if (!wasCharging) {
+            triggerChargingAnimation(isFastCharging)
+        } else {
+            animateThemeChange()
+        }
+    }
+
     private var mediaPaletteColors: Pair<Int, Int>? = null
 
     private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
@@ -272,13 +342,15 @@ class DuoOverlayView(context: Context) : View(context) {
     }
 
     private fun isCustomProgressActive(): Boolean {
-        return (isFlashlightOn && showFlashlight) ||
+        return isChargingAnnounce ||
+            (isFlashlightOn && showFlashlight) ||
             (isMediaPlaying && showMedia) ||
             (isProgressNotificationActive && showProgress)
     }
 
     private fun getCurrentCustomProgress(): Float {
         return when {
+            isChargingAnnounce -> batteryLevel.toFloat()
             isFlashlightOn && showFlashlight -> flashlightBrightnessProgress
             isMediaPlaying && showMedia -> mediaProgress
             else -> progressNotificationProgress
@@ -287,6 +359,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun getCurrentCustomIcon(): Bitmap? {
         return when {
+            isChargingAnnounce -> getChargingBoltBitmap()
             isFlashlightOn && showFlashlight -> flashlightIcon
             isMediaPlaying && showMedia -> mediaAppIcon
             else -> progressNotificationIcon
@@ -296,7 +369,7 @@ class DuoOverlayView(context: Context) : View(context) {
     private fun updateActiveProgressMode() {
         val wasActive = animatedCustomFraction > 0.5f
         val isNowActive = isCustomProgressActive()
-        if (isMediaPlaying && showMedia && !isFlashlightOn && mediaAppIcon != null) {
+        if (isMediaPlaying && showMedia && !isFlashlightOn && !isChargingAnnounce && mediaAppIcon != null) {
             mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
         } else {
             mediaPaletteColors = null
@@ -320,10 +393,10 @@ class DuoOverlayView(context: Context) : View(context) {
         }
         mediaProgress = progress.coerceIn(0f, 100f)
 
-        if (isPlaying && showMedia && !isFlashlightOn && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
+        if (isPlaying && showMedia && !isFlashlightOn && !isChargingAnnounce && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
             mediaPaletteColors = extractMediaColors(appIcon)
             animateThemeChange()
-        } else if ((!isPlaying || !showMedia || isFlashlightOn) && mediaPaletteColors != null) {
+        } else if ((!isPlaying || !showMedia || isFlashlightOn || isChargingAnnounce) && mediaPaletteColors != null) {
             mediaPaletteColors = null
             animateThemeChange()
         }
@@ -346,7 +419,7 @@ class DuoOverlayView(context: Context) : View(context) {
         }
         progressNotificationProgress = progress.coerceIn(0f, 100f)
 
-        if (!isMediaPlaying || !showMedia || isFlashlightOn) {
+        if (!isMediaPlaying || !showMedia || isFlashlightOn || isChargingAnnounce) {
             if (mediaPaletteColors != null) {
                 mediaPaletteColors = null
                 animateThemeChange()
@@ -380,7 +453,7 @@ class DuoOverlayView(context: Context) : View(context) {
                     mediaPaletteColors = null
                     animateThemeChange()
                 }
-            } else if (isMediaPlaying && showMedia && mediaAppIcon != null) {
+            } else if (isMediaPlaying && showMedia && !isChargingAnnounce && mediaAppIcon != null) {
                 mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
                 animateThemeChange()
             }
@@ -460,6 +533,12 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dimTrack = Color.argb(50, Color.red(accent), Color.green(accent), Color.blue(accent))
                 return Triple(dimTrack, dimProgress, dimProgress)
             }
+            if (isCharging) {
+                val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
+                val dimProgress = Color.argb(160, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
+                val dimTrack = Color.argb(50, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
+                return Triple(dimTrack, dimProgress, dimProgress)
+            }
             return Triple(
                 Color.argb(40, 255, 255, 255),
                 Color.argb(128, 255, 255, 255),
@@ -470,6 +549,13 @@ class DuoOverlayView(context: Context) : View(context) {
         if (isMediaPlaying && showMedia && mediaPaletteColors != null) {
             val (track, progress) = mediaPaletteColors!!
             return Triple(track, progress, progress)
+        }
+
+        if (isCharging) {
+            val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
+            val trackAlpha = if (isDarkTheme) 90 else 110
+            val track = Color.argb(trackAlpha, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
+            return Triple(track, chargeAccent, chargeAccent)
         }
 
         if (useMaterialYouColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -583,7 +669,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
         layoutAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 650
-            interpolator = OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.15f)
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
                 animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
@@ -595,9 +681,9 @@ class DuoOverlayView(context: Context) : View(context) {
             start()
         }
 
-        scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.03f, 1.0f).apply {
+        scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.04f, 1.0f).apply {
             duration = 650
-            interpolator = OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.2f)
             addUpdateListener { animation ->
                 animatedScaleBounce = animation.animatedValue as Float
                 invalidate()
@@ -719,7 +805,7 @@ class DuoOverlayView(context: Context) : View(context) {
                         iconCenterY + iconRadius
                     )
                     iconPaint.alpha = (255 * animatedCustomFraction * animatedVisibilityAlpha).toInt()
-                    if (isFlashlightOn && showFlashlight) {
+                    if ((isFlashlightOn && showFlashlight) || isChargingAnnounce) {
                         iconPaint.colorFilter = PorterDuffColorFilter(currentProgressColor, PorterDuff.Mode.SRC_IN)
                     } else {
                         iconPaint.colorFilter = null
@@ -735,6 +821,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        removeCallbacks(revertChargingRunnable)
         progressAnimator?.cancel()
         signalAnimator?.cancel()
         layoutAnimator?.cancel()

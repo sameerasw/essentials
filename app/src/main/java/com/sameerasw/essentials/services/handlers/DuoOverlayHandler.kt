@@ -165,14 +165,50 @@ class DuoOverlayHandler(
         }
     }
 
+    private var isChargingState = false
+
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == Intent.ACTION_BATTERY_CHANGED) {
-                val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
+            val action = intent?.action ?: return
+            if (action == Intent.ACTION_BATTERY_CHANGED ||
+                action == Intent.ACTION_POWER_CONNECTED ||
+                action == Intent.ACTION_POWER_DISCONNECTED
+            ) {
+                val batteryIntent = if (action == Intent.ACTION_BATTERY_CHANGED) {
+                    intent
+                } else {
+                    service.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                }
+
+                val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+                val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, 100) ?: 100
                 if (level >= 0 && scale > 0) {
                     val batteryPct = (level * 100) / scale
                     overlayView?.batteryLevel = batteryPct
+                }
+
+                val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+                val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL
+
+                val plugged = batteryIntent?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+                val isPlugged = plugged == BatteryManager.BATTERY_PLUGGED_AC ||
+                    plugged == BatteryManager.BATTERY_PLUGGED_USB ||
+                    plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
+
+                val isNowCharging = (isChargingStatus && isPlugged) || action == Intent.ACTION_POWER_CONNECTED
+
+                if (action == Intent.ACTION_POWER_DISCONNECTED || (!isNowCharging && isChargingState)) {
+                    isChargingState = false
+                    overlayView?.setCharging(false)
+                } else if (isNowCharging) {
+                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                    if (!isChargingState || action == Intent.ACTION_POWER_CONNECTED) {
+                        isChargingState = true
+                        overlayView?.triggerChargingAnimation(isFastCharging)
+                    } else {
+                        overlayView?.setCharging(true, isFastCharging)
+                    }
                 }
             }
         }
@@ -822,9 +858,14 @@ class DuoOverlayHandler(
     private fun registerBatteryReceiver() {
         if (!isBatteryReceiverRegistered) {
             try {
+                val filter = IntentFilter().apply {
+                    addAction(Intent.ACTION_BATTERY_CHANGED)
+                    addAction(Intent.ACTION_POWER_CONNECTED)
+                    addAction(Intent.ACTION_POWER_DISCONNECTED)
+                }
                 val intent = service.registerReceiver(
                     batteryReceiver,
-                    IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+                    filter
                 )
                 isBatteryReceiverRegistered = true
                 intent?.let {
@@ -832,6 +873,18 @@ class DuoOverlayHandler(
                     val scale = it.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
                     if (level >= 0 && scale > 0) {
                         overlayView?.batteryLevel = (level * 100) / scale
+                    }
+                    val status = it.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+                    val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        status == BatteryManager.BATTERY_STATUS_FULL
+                    val plugged = it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
+                    val isPlugged = plugged == BatteryManager.BATTERY_PLUGGED_AC ||
+                        plugged == BatteryManager.BATTERY_PLUGGED_USB ||
+                        plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
+                    if (isChargingStatus && isPlugged) {
+                        isChargingState = true
+                        val isFast = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                        overlayView?.setCharging(true, isFast)
                     }
                 }
             } catch (e: Exception) {
