@@ -322,6 +322,22 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_battery"),
             )
+            AnimatedVisibility(
+                visible = viewModel.isDuoShowBattery.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_bolt_24,
+                    title = stringResource(R.string.duo_charging_colors_title),
+                    isChecked = viewModel.isDuoUseChargingColors.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setDuoUseChargingColors(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "duo_use_charging_colors"),
+                )
+            }
             IconToggleItem(
                 iconRes = R.drawable.rounded_signal_cellular_alt_24,
                 title = stringResource(R.string.duo_show_networks_title),

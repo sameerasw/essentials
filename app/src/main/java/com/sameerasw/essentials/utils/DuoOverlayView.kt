@@ -196,6 +196,14 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var useChargingColors: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                animateThemeChange()
+            }
+        }
+
     var showNetworks: Boolean = true
         set(value) {
             if (field != value) {
@@ -718,7 +726,7 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dimTrack = Color.argb(50, Color.red(accent), Color.green(accent), Color.blue(accent))
                 return Triple(dimTrack, dimProgress, dimProgress)
             }
-            if (isCharging) {
+            if (isCharging && useChargingColors) {
                 val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
                 val dimProgress = Color.argb(160, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
                 val dimTrack = Color.argb(50, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
@@ -736,7 +744,7 @@ class DuoOverlayView(context: Context) : View(context) {
             return Triple(track, progress, progress)
         }
 
-        if (isCharging) {
+        if (isCharging && useChargingColors) {
             val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
             val trackAlpha = if (isDarkTheme) 90 else 110
             val track = Color.argb(trackAlpha, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
