@@ -695,6 +695,7 @@ class DuoOverlayHandler(
                 this.hideWhenScreenOff = settingsRepository.isDuoHideWhenScreenOffEnabled()
                 this.hideWhenScreenOffOnlyIdle = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
+                this.showBattery = settingsRepository.isDuoShowBatteryEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()

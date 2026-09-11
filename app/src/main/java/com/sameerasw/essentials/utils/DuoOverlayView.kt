@@ -126,6 +126,15 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var showBattery: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateActiveProgressMode()
+                updateVisibilityAnimation()
+            }
+        }
+
     var showMedia: Boolean = true
         set(value) {
             if (field != value) {
@@ -160,7 +169,8 @@ class DuoOverlayView(context: Context) : View(context) {
         } else {
             false
         }
-        val shouldHide = isFullscreen || (isScreenOff && isScreenOffHiding)
+        val isNoActivityHiding = !showBattery && !isCustomProgressActive()
+        val shouldHide = isFullscreen || (isScreenOff && isScreenOffHiding) || isNoActivityHiding
         if (shouldHide) {
             animateScreenOffVisibility(false)
         } else {
@@ -551,9 +561,7 @@ class DuoOverlayView(context: Context) : View(context) {
         animateThemeChange()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         updateProgressAnimation()
     }
@@ -578,9 +586,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val isNowActive = isCustomProgressActive()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         updateProgressAnimation()
     }
@@ -603,9 +609,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val isNowActive = isCustomProgressActive()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         updateProgressAnimation()
     }
@@ -636,9 +640,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val isNowActive = isCustomProgressActive()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         if (progressChanged || stateChanged) {
             updateProgressAnimation()

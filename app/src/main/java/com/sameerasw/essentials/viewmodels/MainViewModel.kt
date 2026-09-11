@@ -131,6 +131,7 @@ class MainViewModel : ViewModel() {
     val duoArcThickness = mutableFloatStateOf(4f)
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
+    val isDuoShowBattery = mutableStateOf(true)
     val isDuoShowNetworks = mutableStateOf(true)
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
@@ -548,6 +549,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_RING_RADIUS ->
                         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
+
+                    SettingsRepository.KEY_DUO_SHOW_BATTERY ->
+                        isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
 
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
@@ -1818,6 +1822,7 @@ class MainViewModel : ViewModel() {
         duoArcThickness.floatValue = settingsRepository.getDuoArcThickness()
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
+        isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
@@ -4425,6 +4430,15 @@ class MainViewModel : ViewModel() {
     fun setDuoRingRadius(value: Float) {
         duoRingRadius.floatValue = value
         settingsRepository.setDuoRingRadius(value)
+    }
+
+    fun setDuoShowBattery(enabled: Boolean) {
+        isDuoShowBattery.value = enabled
+        settingsRepository.setDuoShowBatteryEnabled(enabled)
+        if (!enabled) {
+            isDuoShowNetworks.value = false
+            settingsRepository.setDuoShowNetworksEnabled(false)
+        }
     }
 
     fun setDuoShowNetworks(enabled: Boolean) {

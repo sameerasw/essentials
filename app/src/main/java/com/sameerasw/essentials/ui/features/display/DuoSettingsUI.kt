@@ -313,9 +313,20 @@ fun DuoSettingsUI(
             cornerRadius = 24.dp,
         ) {
             IconToggleItem(
+                iconRes = R.drawable.rounded_battery_charging_60_24,
+                title = stringResource(R.string.duo_show_battery_title),
+                isChecked = viewModel.isDuoShowBattery.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowBattery(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_battery"),
+            )
+            IconToggleItem(
                 iconRes = R.drawable.rounded_signal_cellular_alt_24,
                 title = stringResource(R.string.duo_show_networks_title),
                 isChecked = viewModel.isDuoShowNetworks.value,
+                enabled = viewModel.isDuoShowBattery.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoShowNetworks(checked)
