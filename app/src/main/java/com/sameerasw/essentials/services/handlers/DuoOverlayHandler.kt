@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PixelFormat
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.media.MediaMetadata
@@ -43,6 +44,8 @@ import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
@@ -69,6 +72,9 @@ class DuoOverlayHandler(
     private var windowManager: WindowManager? = null
     private var overlayView: DuoOverlayView? = null
     private var isOverlayAdded = false
+    private var touchAnchorView: View? = null
+    private var isTouchAnchorAdded = false
+    private var duoTouchHandler: DuoTouchHandler? = null
     private val mainHandler = Handler(Looper.getMainLooper())
 
     private val settingsRepository by lazy { SettingsRepository(service) }
@@ -165,14 +171,57 @@ class DuoOverlayHandler(
         }
     }
 
+    private var isChargingState = false
+
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == Intent.ACTION_BATTERY_CHANGED) {
-                val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
+            val action = intent?.action ?: return
+            if (action == Intent.ACTION_BATTERY_CHANGED ||
+                action == Intent.ACTION_POWER_CONNECTED ||
+                action == Intent.ACTION_POWER_DISCONNECTED
+            ) {
+                val batteryIntent = if (action == Intent.ACTION_BATTERY_CHANGED) {
+                    intent
+                } else {
+                    service.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                }
+
+                val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+                val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, 100) ?: 100
                 if (level >= 0 && scale > 0) {
                     val batteryPct = (level * 100) / scale
                     overlayView?.batteryLevel = batteryPct
+                }
+
+                val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+                val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL
+
+                val plugged = batteryIntent?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+                val isPlugged = plugged == BatteryManager.BATTERY_PLUGGED_AC ||
+                    plugged == BatteryManager.BATTERY_PLUGGED_USB ||
+                    plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
+
+                val isNowCharging = (isChargingStatus && isPlugged) || action == Intent.ACTION_POWER_CONNECTED
+
+                if (action == Intent.ACTION_POWER_CONNECTED) {
+                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                    isChargingState = true
+                    overlayView?.triggerChargingAnimation(isFastCharging)
+                } else if (action == Intent.ACTION_POWER_DISCONNECTED) {
+                    isChargingState = false
+                    overlayView?.setCharging(false)
+                } else if (isNowCharging != isChargingState) {
+                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                    isChargingState = isNowCharging
+                    if (isNowCharging) {
+                        overlayView?.triggerChargingAnimation(isFastCharging)
+                    } else {
+                        overlayView?.setCharging(false)
+                    }
+                } else if (isNowCharging) {
+                    val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                    overlayView?.setCharging(true, isFastCharging)
                 }
             }
         }
@@ -646,6 +695,7 @@ class DuoOverlayHandler(
                 this.hideWhenScreenOff = settingsRepository.isDuoHideWhenScreenOffEnabled()
                 this.hideWhenScreenOffOnlyIdle = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
+                this.showBattery = settingsRepository.isDuoShowBatteryEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
@@ -669,6 +719,73 @@ class DuoOverlayHandler(
                 }
             } else {
                 overlayView?.invalidate()
+            }
+
+            val isTouchEnabled = settingsRepository.getDuoTapAction() != null ||
+                settingsRepository.getDuoDoubleTapAction() != null ||
+                settingsRepository.getDuoLongPressAction() != null ||
+                settingsRepository.getDuoSwipeDownAction() != null ||
+                settingsRepository.getDuoSlideMode() != "none"
+
+            if (isTouchEnabled) {
+                if (duoTouchHandler == null) {
+                    duoTouchHandler = DuoTouchHandler(service)
+                }
+                duoTouchHandler?.apply {
+                    this.overlayView = this@DuoOverlayHandler.overlayView
+                    this.cameraCenterX = centerX
+                    this.cameraCenterY = centerY
+                    this.cameraRadiusPx = cameraRadiusPx
+                    this.ringRadiusScale = settingsRepository.getDuoRingRadius()
+                }
+
+                if (touchAnchorView == null) {
+                    touchAnchorView = View(service).apply {
+                        setOnTouchListener { _, event ->
+                            duoTouchHandler?.onTouchEvent(event) ?: false
+                        }
+                    }
+                }
+
+                val diameter = (((cameraRadiusPx + 20f * density) * 2 * settingsRepository.getDuoRingRadius()).toInt()).coerceAtLeast((44f * density).toInt())
+                val touchParams = WindowManager.LayoutParams(
+                    diameter,
+                    diameter,
+                    WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD,
+                    PixelFormat.TRANSLUCENT
+                ).apply {
+                    gravity = Gravity.TOP or Gravity.START
+                    x = (centerX - diameter / 2f).toInt()
+                    y = (centerY - diameter / 2f).toInt()
+                }
+
+                if (!isTouchAnchorAdded) {
+                    try {
+                        wm.addView(touchAnchorView, touchParams)
+                        isTouchAnchorAdded = true
+                    } catch (e: Exception) {
+                        Log.e("DuoOverlayHandler", "Failed to add Duo touch anchor", e)
+                    }
+                } else {
+                    try {
+                        wm.updateViewLayout(touchAnchorView, touchParams)
+                    } catch (e: Exception) {
+                        Log.e("DuoOverlayHandler", "Failed to update Duo touch anchor", e)
+                    }
+                }
+            } else {
+                if (isTouchAnchorAdded && touchAnchorView != null) {
+                    try {
+                        wm.removeView(touchAnchorView)
+                    } catch (_: Exception) {}
+                    isTouchAnchorAdded = false
+                }
             }
 
             registerBatteryReceiver()
@@ -822,9 +939,14 @@ class DuoOverlayHandler(
     private fun registerBatteryReceiver() {
         if (!isBatteryReceiverRegistered) {
             try {
+                val filter = IntentFilter().apply {
+                    addAction(Intent.ACTION_BATTERY_CHANGED)
+                    addAction(Intent.ACTION_POWER_CONNECTED)
+                    addAction(Intent.ACTION_POWER_DISCONNECTED)
+                }
                 val intent = service.registerReceiver(
                     batteryReceiver,
-                    IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+                    filter
                 )
                 isBatteryReceiverRegistered = true
                 intent?.let {
@@ -832,6 +954,18 @@ class DuoOverlayHandler(
                     val scale = it.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
                     if (level >= 0 && scale > 0) {
                         overlayView?.batteryLevel = (level * 100) / scale
+                    }
+                    val status = it.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+                    val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        status == BatteryManager.BATTERY_STATUS_FULL
+                    val plugged = it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
+                    val isPlugged = plugged == BatteryManager.BATTERY_PLUGGED_AC ||
+                        plugged == BatteryManager.BATTERY_PLUGGED_USB ||
+                        plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
+                    if (isChargingStatus && isPlugged) {
+                        isChargingState = true
+                        val isFast = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                        overlayView?.setCharging(true, isFast)
                     }
                 }
             } catch (e: Exception) {
@@ -930,6 +1064,12 @@ class DuoOverlayHandler(
                 } catch (_: Exception) {}
                 isOverlayAdded = false
             }
+            if (isTouchAnchorAdded && touchAnchorView != null) {
+                try {
+                    windowManager?.removeView(touchAnchorView)
+                } catch (_: Exception) {}
+                isTouchAnchorAdded = false
+            }
             unregisterBatteryReceiver()
             unregisterSignalListeners()
             unregisterMediaSessionListener()
@@ -941,6 +1081,7 @@ class DuoOverlayHandler(
     fun destroy() {
         removeOverlay()
         overlayView = null
+        touchAnchorView = null
         currentArtOrIconBitmap = null
         currentMediaKey = null
         flashlightIconBitmap = null

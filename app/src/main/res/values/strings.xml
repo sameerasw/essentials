@@ -2471,6 +2471,7 @@
     <string name="duo_section_position">Position and dimensions</string>
     <string name="duo_section_style">Style</string>
     <string name="duo_section_what_to_show">What to show</string>
+    <string name="duo_show_battery_title">Battery</string>
     <string name="duo_show_networks_title">Networks</string>
     <string name="duo_show_media_title">Media playback</string>
     <string name="duo_show_progress_title">Progress notifications</string>
@@ -2479,4 +2480,18 @@
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Only hide on AOD while idle</string>
+    <string name="duo_section_actions">Actions</string>
+    <string name="duo_action_tap_title">Tap</string>
+    <string name="duo_action_double_tap_title">Double tap</string>
+    <string name="duo_action_long_press_title">Long press</string>
+    <string name="duo_action_swipe_down_title">Swipe down</string>
+    <string name="duo_action_horizontal_slide_title">Horizontal slide</string>
+    <string name="duo_action_horizontal_slide_none">None</string>
+    <string name="duo_action_horizontal_slide_volume">Volume</string>
+    <string name="duo_action_horizontal_slide_brightness">Brightness</string>
+    <string name="duo_action_horizontal_slide_track">Change track</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Sound mode</string>
+    <string name="duo_action_pick_title">Pick action</string>
+    <string name="duo_action_none">None</string>
+    <string name="duo_slide_mirror_direction_title">Mirror directions</string>
 </resources>

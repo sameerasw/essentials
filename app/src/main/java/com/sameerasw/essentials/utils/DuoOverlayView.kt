@@ -27,6 +27,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
+import com.sameerasw.essentials.R
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -134,6 +135,15 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var showBattery: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateActiveProgressMode()
+                updateVisibilityAnimation()
+            }
+        }
+
     var showMedia: Boolean = true
         set(value) {
             if (field != value) {
@@ -168,7 +178,8 @@ class DuoOverlayView(context: Context) : View(context) {
         } else {
             false
         }
-        val shouldHide = isFullscreen || (isScreenOff && isScreenOffHiding)
+        val isNoActivityHiding = !showBattery && !isCustomProgressActive()
+        val shouldHide = isFullscreen || (isScreenOff && isScreenOffHiding) || isNoActivityHiding
         if (shouldHide) {
             animateScreenOffVisibility(false)
         } else {
@@ -229,6 +240,246 @@ class DuoOverlayView(context: Context) : View(context) {
     var flashlightBrightnessProgress: Float = 100f
         private set
 
+    var isCharging: Boolean = false
+        private set
+
+    var isFastCharging: Boolean = false
+        private set
+
+    companion object {
+        const val INTERACTIVE_MODE_NONE = 0
+        const val INTERACTIVE_MODE_VOLUME = 1
+        const val INTERACTIVE_MODE_BRIGHTNESS = 2
+        const val INTERACTIVE_MODE_TRACK = 3
+        const val INTERACTIVE_MODE_SOUND_MODE = 4
+    }
+
+    private var interactiveMode: Int = INTERACTIVE_MODE_NONE
+    private var interactiveProgress: Float = 0f
+    private var interactiveIcon: Bitmap? = null
+    private var interactiveTrackRotation: Float = 0f
+    private var pullDownOffsetY: Float = 0f
+    private var pullDownStretchY: Float = 1.0f
+    private var tapBounceScale: Float = 1.0f
+
+    private var tapAnimator: ValueAnimator? = null
+    private var pullDownAnimator: ValueAnimator? = null
+    private var trackRotationAnimator: ValueAnimator? = null
+
+    private var brightnessBitmap: Bitmap? = null
+
+    private val revertInteractiveRunnable = Runnable {
+        resetInteractiveState(animate = true)
+    }
+
+    private var isChargingAnnounce: Boolean = false
+    private var chargingBoltBitmap: Bitmap? = null
+
+    private val revertChargingRunnable = Runnable {
+        if (isChargingAnnounce) {
+            isChargingAnnounce = false
+            updateActiveProgressMode()
+        }
+    }
+
+    private fun getThemedBitmap(resId: Int): Bitmap? {
+        return try {
+            val drawable = ContextCompat.getDrawable(context, resId)?.mutate()
+            drawable?.setTint(Color.WHITE)
+            if (drawable != null) AppUtil.drawableToBitmap(drawable, 64) else null
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun getVolumeIcon(currentVol: Int): Bitmap? {
+        val res = when {
+            currentVol <= 0 -> R.drawable.rounded_volume_off_24
+            currentVol <= 5 -> R.drawable.rounded_volume_down_24
+            else -> R.drawable.rounded_volume_up_24
+        }
+        return getThemedBitmap(res)
+    }
+
+    private fun getBrightnessIcon(): Bitmap? {
+        if (brightnessBitmap == null) {
+            brightnessBitmap = getThemedBitmap(R.drawable.rounded_brightness_6_24)
+        }
+        return brightnessBitmap
+    }
+
+    private fun getSoundModeIcon(ringerMode: Int): Bitmap? {
+        val res = when (ringerMode) {
+            android.media.AudioManager.RINGER_MODE_NORMAL -> R.drawable.rounded_mobile_sound_24
+            android.media.AudioManager.RINGER_MODE_VIBRATE -> R.drawable.rounded_mobile_vibrate_24
+            else -> R.drawable.rounded_volume_off_24
+        }
+        return getThemedBitmap(res)
+    }
+
+    fun triggerTapAnimation() {
+        tapAnimator?.cancel()
+        tapAnimator = ValueAnimator.ofFloat(1.0f, 0.93f, 1.05f, 1.0f).apply {
+            duration = 240
+            interpolator = DecelerateInterpolator()
+            addUpdateListener { anim ->
+                tapBounceScale = anim.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun setPullDownOffset(offset: Float, stretch: Float) {
+        pullDownAnimator?.cancel()
+        pullDownOffsetY = offset
+        pullDownStretchY = stretch
+        invalidate()
+    }
+
+    fun releasePullDown() {
+        pullDownAnimator?.cancel()
+        val startOffset = pullDownOffsetY
+        val startStretch = pullDownStretchY
+        if (startOffset == 0f && startStretch == 1.0f) return
+
+        pullDownAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 320
+            interpolator = OvershootInterpolator(1.3f)
+            addUpdateListener { anim ->
+                val fraction = anim.animatedFraction
+                pullDownOffsetY = startOffset * (1f - fraction)
+                pullDownStretchY = 1.0f + (startStretch - 1.0f) * (1f - fraction)
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun setInteractiveVolume(currentVol: Int, maxVol: Int) {
+        interactiveMode = INTERACTIVE_MODE_VOLUME
+        val progress = if (maxVol > 0) (currentVol.toFloat() / maxVol.toFloat() * 100f).coerceIn(0f, 100f) else 0f
+        interactiveProgress = progress
+        interactiveIcon = getVolumeIcon(currentVol)
+
+        removeCallbacks(revertInteractiveRunnable)
+        postDelayed(revertInteractiveRunnable, 2000L)
+
+        updateActiveProgressMode()
+        updateProgressAnimation(progress)
+    }
+
+    fun setInteractiveBrightness(brightness: Int, maxBrightness: Int = 255) {
+        interactiveMode = INTERACTIVE_MODE_BRIGHTNESS
+        val progress = (brightness.toFloat() / maxBrightness.toFloat() * 100f).coerceIn(0f, 100f)
+        interactiveProgress = progress
+        interactiveIcon = getBrightnessIcon()
+
+        removeCallbacks(revertInteractiveRunnable)
+        postDelayed(revertInteractiveRunnable, 2000L)
+
+        updateActiveProgressMode()
+        updateProgressAnimation(progress)
+    }
+
+    fun setInteractiveSoundMode(ringerMode: Int) {
+        interactiveMode = INTERACTIVE_MODE_SOUND_MODE
+        interactiveProgress = when (ringerMode) {
+            android.media.AudioManager.RINGER_MODE_NORMAL -> 100f
+            android.media.AudioManager.RINGER_MODE_VIBRATE -> 50f
+            else -> 0f
+        }
+        interactiveIcon = getSoundModeIcon(ringerMode)
+
+        removeCallbacks(revertInteractiveRunnable)
+        postDelayed(revertInteractiveRunnable, 2000L)
+
+        updateActiveProgressMode()
+        updateProgressAnimation(interactiveProgress)
+    }
+
+    fun setInteractiveTrackRotation(rotationDegrees: Float) {
+        trackRotationAnimator?.cancel()
+        interactiveTrackRotation = rotationDegrees
+        invalidate()
+    }
+
+    fun releaseTrackRotation() {
+        trackRotationAnimator?.cancel()
+        val startRot = interactiveTrackRotation
+        if (startRot == 0f) return
+
+        trackRotationAnimator = ValueAnimator.ofFloat(startRot, 0f).apply {
+            duration = 320
+            interpolator = OvershootInterpolator(1.2f)
+            addUpdateListener { anim ->
+                interactiveTrackRotation = anim.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun resetInteractiveState(animate: Boolean = true) {
+        removeCallbacks(revertInteractiveRunnable)
+        if (interactiveMode == INTERACTIVE_MODE_NONE) return
+        interactiveMode = INTERACTIVE_MODE_NONE
+        interactiveIcon = null
+        releaseTrackRotation()
+        updateActiveProgressMode()
+    }
+
+    private fun getChargingBoltBitmap(): Bitmap? {
+        if (chargingBoltBitmap == null) {
+            try {
+                val drawable = ContextCompat.getDrawable(context, R.drawable.rounded_bolt_24)?.mutate()
+                drawable?.setTint(Color.WHITE)
+                if (drawable != null) {
+                    chargingBoltBitmap = AppUtil.drawableToBitmap(drawable, 64)
+                }
+            } catch (_: Exception) {}
+        }
+        return chargingBoltBitmap
+    }
+
+    fun triggerChargingAnimation(isFastCharging: Boolean) {
+        this.isCharging = true
+        this.isFastCharging = isFastCharging
+        this.isChargingAnnounce = true
+
+        removeCallbacks(revertChargingRunnable)
+        postDelayed(revertChargingRunnable, 4000L)
+
+        updateActiveProgressMode()
+
+        val target = batteryLevel.toFloat()
+        progressAnimator?.cancel()
+        animatedProgress = 0f
+        progressAnimator = ValueAnimator.ofFloat(0f, target).apply {
+            duration = 750
+            interpolator = DecelerateInterpolator(1.4f)
+            addUpdateListener { animation ->
+                animatedProgress = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun setCharging(isCharging: Boolean, isFastCharging: Boolean = false) {
+        val wasCharging = this.isCharging
+        this.isCharging = isCharging
+        this.isFastCharging = isFastCharging
+
+        if (!isCharging) {
+            isChargingAnnounce = false
+            removeCallbacks(revertChargingRunnable)
+            updateActiveProgressMode()
+        } else if (wasCharging != isCharging) {
+            animateThemeChange()
+        }
+    }
+
     private var mediaPaletteColors: Pair<Int, Int>? = null
 
     private fun extractMediaColors(bitmap: Bitmap): Pair<Int, Int> {
@@ -281,13 +532,17 @@ class DuoOverlayView(context: Context) : View(context) {
     }
 
     private fun isCustomProgressActive(): Boolean {
-        return (isFlashlightOn && showFlashlight) ||
+        return interactiveMode != INTERACTIVE_MODE_NONE ||
+            isChargingAnnounce ||
+            (isFlashlightOn && showFlashlight) ||
             (isMediaPlaying && showMedia) ||
             (isProgressNotificationActive && showProgress)
     }
 
     private fun getCurrentCustomProgress(): Float {
         return when {
+            interactiveMode != INTERACTIVE_MODE_NONE -> interactiveProgress
+            isChargingAnnounce -> batteryLevel.toFloat()
             isFlashlightOn && showFlashlight -> flashlightBrightnessProgress
             isMediaPlaying && showMedia -> mediaProgress
             else -> progressNotificationProgress
@@ -296,6 +551,8 @@ class DuoOverlayView(context: Context) : View(context) {
 
     private fun getCurrentCustomIcon(): Bitmap? {
         return when {
+            interactiveMode != INTERACTIVE_MODE_NONE -> interactiveIcon
+            isChargingAnnounce -> getChargingBoltBitmap()
             isFlashlightOn && showFlashlight -> flashlightIcon
             isMediaPlaying && showMedia -> mediaAppIcon
             else -> progressNotificationIcon
@@ -305,7 +562,7 @@ class DuoOverlayView(context: Context) : View(context) {
     private fun updateActiveProgressMode() {
         val wasActive = animatedCustomFraction > 0.5f
         val isNowActive = isCustomProgressActive()
-        if (isMediaPlaying && showMedia && !isFlashlightOn && mediaAppIcon != null) {
+        if (isMediaPlaying && showMedia && !isFlashlightOn && !isChargingAnnounce && mediaAppIcon != null) {
             mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
         } else {
             mediaPaletteColors = null
@@ -313,9 +570,7 @@ class DuoOverlayView(context: Context) : View(context) {
         animateThemeChange()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         updateProgressAnimation()
     }
@@ -329,10 +584,10 @@ class DuoOverlayView(context: Context) : View(context) {
         }
         mediaProgress = progress.coerceIn(0f, 100f)
 
-        if (isPlaying && showMedia && !isFlashlightOn && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
+        if (isPlaying && showMedia && !isFlashlightOn && !isChargingAnnounce && appIcon != null && (iconChanged || mediaPaletteColors == null)) {
             mediaPaletteColors = extractMediaColors(appIcon)
             animateThemeChange()
-        } else if ((!isPlaying || !showMedia || isFlashlightOn) && mediaPaletteColors != null) {
+        } else if ((!isPlaying || !showMedia || isFlashlightOn || isChargingAnnounce) && mediaPaletteColors != null) {
             mediaPaletteColors = null
             animateThemeChange()
         }
@@ -340,9 +595,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val isNowActive = isCustomProgressActive()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         updateProgressAnimation()
     }
@@ -355,7 +608,7 @@ class DuoOverlayView(context: Context) : View(context) {
         }
         progressNotificationProgress = progress.coerceIn(0f, 100f)
 
-        if (!isMediaPlaying || !showMedia || isFlashlightOn) {
+        if (!isMediaPlaying || !showMedia || isFlashlightOn || isChargingAnnounce) {
             if (mediaPaletteColors != null) {
                 mediaPaletteColors = null
                 animateThemeChange()
@@ -365,9 +618,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val isNowActive = isCustomProgressActive()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         updateProgressAnimation()
     }
@@ -389,7 +640,7 @@ class DuoOverlayView(context: Context) : View(context) {
                     mediaPaletteColors = null
                     animateThemeChange()
                 }
-            } else if (isMediaPlaying && showMedia && mediaAppIcon != null) {
+            } else if (isMediaPlaying && showMedia && !isChargingAnnounce && mediaAppIcon != null) {
                 mediaPaletteColors = extractMediaColors(mediaAppIcon!!)
                 animateThemeChange()
             }
@@ -398,9 +649,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val isNowActive = isCustomProgressActive()
         if (wasActive != isNowActive) {
             animateLayoutChange()
-            if (isScreenOff && hideWhenScreenOff && hideWhenScreenOffOnlyIdle) {
-                updateVisibilityAnimation()
-            }
+            updateVisibilityAnimation()
         }
         if (progressChanged || stateChanged) {
             updateProgressAnimation()
@@ -469,6 +718,12 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dimTrack = Color.argb(50, Color.red(accent), Color.green(accent), Color.blue(accent))
                 return Triple(dimTrack, dimProgress, dimProgress)
             }
+            if (isCharging) {
+                val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
+                val dimProgress = Color.argb(160, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
+                val dimTrack = Color.argb(50, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
+                return Triple(dimTrack, dimProgress, dimProgress)
+            }
             return Triple(
                 Color.argb(40, 255, 255, 255),
                 Color.argb(128, 255, 255, 255),
@@ -479,6 +734,13 @@ class DuoOverlayView(context: Context) : View(context) {
         if (isMediaPlaying && showMedia && mediaPaletteColors != null) {
             val (track, progress) = mediaPaletteColors!!
             return Triple(track, progress, progress)
+        }
+
+        if (isCharging) {
+            val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
+            val trackAlpha = if (isDarkTheme) 90 else 110
+            val track = Color.argb(trackAlpha, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
+            return Triple(track, chargeAccent, chargeAccent)
         }
 
         if (useMaterialYouColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -592,7 +854,7 @@ class DuoOverlayView(context: Context) : View(context) {
 
         layoutAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 650
-            interpolator = OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.15f)
             addUpdateListener { animation ->
                 val fraction = animation.animatedFraction
                 animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
@@ -604,9 +866,9 @@ class DuoOverlayView(context: Context) : View(context) {
             start()
         }
 
-        scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.03f, 1.0f).apply {
+        scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.04f, 1.0f).apply {
             duration = 650
-            interpolator = OvershootInterpolator(1.1f)
+            interpolator = OvershootInterpolator(1.2f)
             addUpdateListener { animation ->
                 animatedScaleBounce = animation.animatedValue as Float
                 invalidate()
@@ -661,7 +923,7 @@ class DuoOverlayView(context: Context) : View(context) {
         if (cameraCenterX <= 0 && cameraCenterY <= 0) return
         if (animatedVisibilityAlpha <= 0.005f) return
 
-        val baseRadius = (cameraRadiusPx + 14f * density) * ringRadiusScale * animatedScaleBounce
+        val baseRadius = (cameraRadiusPx + 14f * density) * ringRadiusScale * animatedScaleBounce * tapBounceScale
         arcBounds.set(
             cameraCenterX - baseRadius,
             cameraCenterY - baseRadius,
@@ -670,9 +932,9 @@ class DuoOverlayView(context: Context) : View(context) {
         )
 
         canvas.save()
-        canvas.translate(cameraCenterX, cameraCenterY)
-        canvas.rotate(animatedVisibilityRotation)
-        canvas.scale(animatedVisibilityScale, animatedVisibilityScale)
+        canvas.translate(cameraCenterX, cameraCenterY + pullDownOffsetY)
+        canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
+        canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
         canvas.translate(-cameraCenterX, -cameraCenterY)
 
         val r = Color.red(currentProgressColor) / 255.0
@@ -781,7 +1043,12 @@ class DuoOverlayView(context: Context) : View(context) {
                         iconCenterY + iconRadius
                     )
                     iconPaint.alpha = (255 * animatedCustomFraction * animatedVisibilityAlpha).toInt()
-                    if (isFlashlightOn && showFlashlight) {
+                    val isTintable = (isFlashlightOn && showFlashlight) ||
+                        isChargingAnnounce ||
+                        interactiveMode == INTERACTIVE_MODE_VOLUME ||
+                        interactiveMode == INTERACTIVE_MODE_BRIGHTNESS ||
+                        interactiveMode == INTERACTIVE_MODE_SOUND_MODE
+                    if (isTintable) {
                         iconPaint.colorFilter = PorterDuffColorFilter(currentProgressColor, PorterDuff.Mode.SRC_IN)
                     } else {
                         iconPaint.colorFilter = null
@@ -797,12 +1064,17 @@ class DuoOverlayView(context: Context) : View(context) {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        removeCallbacks(revertChargingRunnable)
+        removeCallbacks(revertInteractiveRunnable)
         progressAnimator?.cancel()
         signalAnimator?.cancel()
         layoutAnimator?.cancel()
         scaleAnimator?.cancel()
         themeAnimator?.cancel()
         visibilityAnimator?.cancel()
+        tapAnimator?.cancel()
+        pullDownAnimator?.cancel()
+        trackRotationAnimator?.cancel()
     }
 }
 
