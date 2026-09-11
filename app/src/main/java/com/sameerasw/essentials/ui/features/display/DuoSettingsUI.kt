@@ -245,7 +245,7 @@ fun DuoSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setDuoCameraSize(it)
                 },
-                valueRange = 0.2f..2.0f,
+                valueRange = 0.05f..2.0f,
                 increment = 0.05f,
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.2fx".format(it) },
@@ -270,7 +270,7 @@ fun DuoSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setDuoRingRadius(it)
                 },
-                valueRange = 0.4f..1.6f,
+                valueRange = 0.1f..1.6f,
                 increment = 0.05f,
                 iconRes = R.drawable.rounded_circle_24,
                 valueFormatter = { "%.2fx".format(it) },
@@ -282,10 +282,10 @@ fun DuoSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setDuoArcThickness(it)
                 },
-                valueRange = 2f..10f,
+                valueRange = 0.5f..10f,
                 increment = 0.5f,
                 iconRes = R.drawable.rounded_line_weight_24,
-                valueFormatter = { "${it.toInt()} dp" },
+                valueFormatter = { if (it % 1f == 0f) "${it.toInt()} dp" else "%.1f dp".format(it) },
             )
             ConfigSliderItem(
                 title = stringResource(R.string.duo_dot_size_title),
@@ -294,10 +294,10 @@ fun DuoSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setDuoDotSize(it)
                 },
-                valueRange = 2f..8f,
+                valueRange = 0.5f..8f,
                 increment = 0.5f,
                 iconRes = R.drawable.rounded_circles_24,
-                valueFormatter = { "${it.toInt()} dp" },
+                valueFormatter = { if (it % 1f == 0f) "${it.toInt()} dp" else "%.1f dp".format(it) },
             )
         }
 
