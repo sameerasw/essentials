@@ -22,6 +22,7 @@ kotlin {
 android {
     namespace = "com.sameerasw.essentials"
     compileSdk = 37
+    compileSdkMinor = 1
 
     androidResources {
         localeFilters +=
