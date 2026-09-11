@@ -59,6 +59,7 @@ class DuoTouchHandler(
     private var isLongPressTriggered: Boolean = false
     private var isSwipeDownTriggered: Boolean = false
     private var isTrackTriggered: Boolean = false
+    private var isTrackThresholdReached: Boolean = false
     private var isSoundModeTriggered: Boolean = false
     private var isVolumeOrBrightnessAdjusted: Boolean = false
 
@@ -117,6 +118,7 @@ class DuoTouchHandler(
                 isLongPressTriggered = false
                 isSwipeDownTriggered = false
                 isTrackTriggered = false
+                isTrackThresholdReached = false
                 isSoundModeTriggered = false
                 isVolumeOrBrightnessAdjusted = false
 
@@ -199,6 +201,19 @@ class DuoTouchHandler(
                 val dy = y - downY
                 val totalDist = hypot(dx, dy)
 
+                val slideMode = settingsRepository.getDuoSlideMode()
+                if (slideMode == "track" && isTrackThresholdReached) {
+                    isTrackTriggered = true
+                    val isInverted = settingsRepository.isDuoSlideInvertDirectionEnabled()
+                    HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
+                    val key = if (dx > 0) {
+                        if (isInverted) KeyEvent.KEYCODE_MEDIA_PREVIOUS else KeyEvent.KEYCODE_MEDIA_NEXT
+                    } else {
+                        if (isInverted) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS
+                    }
+                    dispatchMediaKey(key)
+                }
+
                 val didPerformAnyGesture = isLongPressTriggered ||
                     isSwipeDownTriggered ||
                     isTrackTriggered ||
@@ -244,6 +259,7 @@ class DuoTouchHandler(
                 overlayView?.releasePullDown()
                 overlayView?.releaseTrackRotation()
                 isTouchActiveInCutout = false
+                isTrackThresholdReached = false
                 isDoubleTapPending = false
                 return false
             }
@@ -299,18 +315,12 @@ class DuoTouchHandler(
                 val baseAngleDeg = (totalDx / effectiveRadius) * (180f / Math.PI.toFloat())
                 val angleDeg = if (isInverted) baseAngleDeg else -baseAngleDeg
                 overlayView?.setInteractiveTrackRotation(angleDeg)
-                if (!isTrackTriggered) {
-                    if (totalDx >= trackTriggerPx) {
-                        isTrackTriggered = true
-                        HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
-                        val key = if (isInverted) KeyEvent.KEYCODE_MEDIA_PREVIOUS else KeyEvent.KEYCODE_MEDIA_NEXT
-                        dispatchMediaKey(key)
-                    } else if (totalDx <= -trackTriggerPx) {
-                        isTrackTriggered = true
-                        HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
-                        val key = if (isInverted) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS
-                        dispatchMediaKey(key)
-                    }
+                val isPastThreshold = abs(totalDx) >= trackTriggerPx
+                if (isPastThreshold && !isTrackThresholdReached) {
+                    isTrackThresholdReached = true
+                    HapticUtil.performHapticForService(service, HapticFeedbackType.TICK)
+                } else if (!isPastThreshold && isTrackThresholdReached) {
+                    isTrackThresholdReached = false
                 }
             }
 
