@@ -254,10 +254,11 @@ object DeviceUtils {
     }
 
     fun isBlurProblematicDevice(): Boolean {
+        return false
         // Samsung devices on One UI 7 (Android 15) or below have a broken blur implementation
         // that causes a gray screen overlay. Disable it for them. (╯°□°）╯︵ ┻━┻
-        return Build.MANUFACTURER.equalsIgnoreCase("samsung") &&
-            Build.VERSION.SDK_INT <= 35 // Android 15
+        // return Build.MANUFACTURER.equalsIgnoreCase("samsung") &&
+        //     Build.VERSION.SDK_INT <= 35 // Android 15
     }
 
     fun isPowerSaveMode(context: Context): Boolean {
