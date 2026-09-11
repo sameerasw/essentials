@@ -366,6 +366,7 @@ class SettingsRepository(
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
         const val KEY_DUO_SHOW_BATTERY = "duo_show_battery"
+        const val KEY_DUO_USE_CHARGING_COLORS = "duo_use_charging_colors"
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
@@ -3106,6 +3107,9 @@ class SettingsRepository(
 
     fun isDuoShowBatteryEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_BATTERY, true)
     fun setDuoShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_BATTERY, enabled)
+
+    fun isDuoUseChargingColorsEnabled(): Boolean = getBoolean(KEY_DUO_USE_CHARGING_COLORS, false)
+    fun setDuoUseChargingColorsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_CHARGING_COLORS, enabled)
 
     fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
     fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)

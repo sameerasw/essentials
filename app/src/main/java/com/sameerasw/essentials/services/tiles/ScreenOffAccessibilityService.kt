@@ -255,6 +255,7 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_DOT_SIZE ||
                 key == SettingsRepository.KEY_DUO_RING_RADIUS ||
                 key == SettingsRepository.KEY_DUO_SHOW_BATTERY ||
+                key == SettingsRepository.KEY_DUO_USE_CHARGING_COLORS ||
                 key == SettingsRepository.KEY_DUO_SHOW_NETWORKS ||
                 key == SettingsRepository.KEY_DUO_SHOW_MEDIA ||
                 key == SettingsRepository.KEY_DUO_SHOW_PROGRESS ||
