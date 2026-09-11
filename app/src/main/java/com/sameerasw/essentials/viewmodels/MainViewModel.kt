@@ -138,6 +138,11 @@ class MainViewModel : ViewModel() {
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
+    val duoTapAction = mutableStateOf<Action?>(null)
+    val duoDoubleTapAction = mutableStateOf<Action?>(null)
+    val duoLongPressAction = mutableStateOf<Action?>(null)
+    val duoSwipeDownAction = mutableStateOf<Action?>(null)
+    val duoSlideMode = mutableStateOf("none")
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -563,6 +568,21 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+
+                    SettingsRepository.KEY_DUO_TAP_ACTION ->
+                        duoTapAction.value = settingsRepository.getDuoTapAction()
+
+                    SettingsRepository.KEY_DUO_DOUBLE_TAP_ACTION ->
+                        duoDoubleTapAction.value = settingsRepository.getDuoDoubleTapAction()
+
+                    SettingsRepository.KEY_DUO_LONG_PRESS_ACTION ->
+                        duoLongPressAction.value = settingsRepository.getDuoLongPressAction()
+
+                    SettingsRepository.KEY_DUO_SWIPE_DOWN_ACTION ->
+                        duoSwipeDownAction.value = settingsRepository.getDuoSwipeDownAction()
+
+                    SettingsRepository.KEY_DUO_SLIDE_MODE ->
+                        duoSlideMode.value = settingsRepository.getDuoSlideMode()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1801,6 +1821,11 @@ class MainViewModel : ViewModel() {
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+        duoTapAction.value = settingsRepository.getDuoTapAction()
+        duoDoubleTapAction.value = settingsRepository.getDuoDoubleTapAction()
+        duoLongPressAction.value = settingsRepository.getDuoLongPressAction()
+        duoSwipeDownAction.value = settingsRepository.getDuoSwipeDownAction()
+        duoSlideMode.value = settingsRepository.getDuoSlideMode()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4430,6 +4455,31 @@ class MainViewModel : ViewModel() {
     fun setDuoUseMaterialYou(enabled: Boolean) {
         isDuoUseMaterialYou.value = enabled
         settingsRepository.setDuoUseMaterialYouEnabled(enabled)
+    }
+
+    fun setDuoTapAction(action: Action?) {
+        duoTapAction.value = action
+        settingsRepository.setDuoTapAction(action)
+    }
+
+    fun setDuoDoubleTapAction(action: Action?) {
+        duoDoubleTapAction.value = action
+        settingsRepository.setDuoDoubleTapAction(action)
+    }
+
+    fun setDuoLongPressAction(action: Action?) {
+        duoLongPressAction.value = action
+        settingsRepository.setDuoLongPressAction(action)
+    }
+
+    fun setDuoSwipeDownAction(action: Action?) {
+        duoSwipeDownAction.value = action
+        settingsRepository.setDuoSwipeDownAction(action)
+    }
+
+    fun setDuoSlideMode(mode: String) {
+        duoSlideMode.value = mode
+        settingsRepository.setDuoSlideMode(mode)
     }
 
     /**

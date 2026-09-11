@@ -283,9 +283,7 @@ class DuoOverlayView(context: Context) : View(context) {
             isChargingAnnounce = false
             removeCallbacks(revertChargingRunnable)
             updateActiveProgressMode()
-        } else if (!wasCharging) {
-            triggerChargingAnimation(isFastCharging)
-        } else {
+        } else if (wasCharging != isCharging) {
             animateThemeChange()
         }
     }

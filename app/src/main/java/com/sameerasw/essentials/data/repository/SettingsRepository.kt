@@ -372,6 +372,11 @@ class SettingsRepository(
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
+        const val KEY_DUO_TAP_ACTION = "duo_tap_action"
+        const val KEY_DUO_DOUBLE_TAP_ACTION = "duo_double_tap_action"
+        const val KEY_DUO_LONG_PRESS_ACTION = "duo_long_press_action"
+        const val KEY_DUO_SWIPE_DOWN_ACTION = "duo_swipe_down_action"
+        const val KEY_DUO_SLIDE_MODE = "duo_slide_mode"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3117,4 +3122,20 @@ class SettingsRepository(
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
+
+    fun getDuoTapAction(): Action? = getRemapAction(KEY_DUO_TAP_ACTION)
+    fun setDuoTapAction(action: Action?) = setRemapAction(KEY_DUO_TAP_ACTION, action)
+
+    fun getDuoDoubleTapAction(): Action? = getRemapAction(KEY_DUO_DOUBLE_TAP_ACTION)
+    fun setDuoDoubleTapAction(action: Action?) = setRemapAction(KEY_DUO_DOUBLE_TAP_ACTION, action)
+
+    fun getDuoLongPressAction(): Action? = getRemapAction(KEY_DUO_LONG_PRESS_ACTION)
+    fun setDuoLongPressAction(action: Action?) = setRemapAction(KEY_DUO_LONG_PRESS_ACTION, action)
+
+    fun getDuoSwipeDownAction(): Action? = getRemapAction(KEY_DUO_SWIPE_DOWN_ACTION)
+    fun setDuoSwipeDownAction(action: Action?) = setRemapAction(KEY_DUO_SWIPE_DOWN_ACTION, action)
+
+    fun getDuoSlideMode(): String = getString(KEY_DUO_SLIDE_MODE, "none") ?: "none"
+    fun setDuoSlideMode(mode: String) = putString(KEY_DUO_SLIDE_MODE, mode)
 }
+
