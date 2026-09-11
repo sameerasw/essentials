@@ -1582,4 +1582,21 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="feat_wireless_display_certification_desc">Afficher les options pour la certification des écrans sans fil</string>
     <string name="setting_enable_unsupported_features_title">Activer les fonctionnalités non-supportées</string>
     <string name="setting_enable_unsupported_features_desc">Afficher les fonctionnalités réservées à une surcouche ou redondantes cachées par défaut</string>
+    <string name="label_motion_blur_amount">Intensité</string>
+    <string name="duo_auto_detect_title">Détecter automatiquement la caméra</string>
+    <string name="duo_enable_title">Activer Duo</string>
+    <string name="duo_camera_offset_x_title">Position horizontale</string>
+    <string name="duo_camera_offset_y_title">Position verticale</string>
+    <string name="duo_camera_size_title">Taille de la caméra </string>
+    <string name="duo_ring_radius_title">Taille de l\'anneau</string>
+    <string name="duo_arc_thickness_title">Largeur de l\'anneau</string>
+    <string name="duo_dot_size_title">Taille du cercle de statut</string>
+    <string name="cat_networks">Réseaux</string>
+    <string name="duo_show_media_title">Lecture multimédia</string>
+    <string name="feat_aod_wallpaper_media_apps">Ignorer des applications de média</string>
+    <string name="duo_show_progress_title">Notification de chargement</string>
+    <string name="duo_show_flashlight_title">Lampe torche</string>
+    <string name="duo_material_you_title">Utiliser les couleurs Material You</string>
+    <string name="duo_hide_when_screen_off_title">Cacher quand l\'écran est éteint</string>
+    <string name="duo_hide_when_screen_off_only_idle_title">Seulement cacher quand l\'AOD est éteint</string>
 </resources>
