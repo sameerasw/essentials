@@ -48,6 +48,7 @@ import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.CustomSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DeviceEffectsSettingsSheet
@@ -402,6 +403,18 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_use_material_you"),
             )
+            AnimatedVisibility(
+                visible = !viewModel.isDuoUseMaterialYou.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                ColorSwatchPicker(
+                    selectedColorHex = viewModel.duoCustomColor.value,
+                    onColorSelected = { hex ->
+                        viewModel.setDuoCustomColor(hex)
+                    },
+                )
+            }
             val areUnsupportedFeaturesEnabled = viewModel.isEnableUnsupportedFeatures.value
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_off_24,

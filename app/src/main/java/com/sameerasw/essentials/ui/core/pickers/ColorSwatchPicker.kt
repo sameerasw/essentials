@@ -34,9 +34,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
+import androidx.compose.ui.draw.clip
 
 val DUO_PRESET_COLORS =
     listOf(
+        "#FFFFFF", // Pure White
         "#00E676", // Vibrant Spring Green (Default Charging)
         "#4CAF50", // Standard Green
         "#00BCD4", // Cyan
@@ -51,7 +53,6 @@ val DUO_PRESET_COLORS =
         "#FF5722", // Deep Orange
         "#F44336", // Vivid Red (Default Critical)
         "#FF1744", // Bright Red
-        "#FFFFFF", // Pure White
     )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,58 +66,66 @@ fun ColorSwatchPicker(
     val view = LocalView.current
     val carouselState = rememberCarouselState { colors.size }
 
-    HorizontalMultiBrowseCarousel(
-        state = carouselState,
-        preferredItemWidth = 46.dp,
-        minSmallItemWidth = 10.dp,
-        maxSmallItemWidth = 42.dp,
-        itemSpacing = 6.dp,
-        contentPadding = PaddingValues(horizontal = 16.dp),
+    Box(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(52.dp)
-                .padding(vertical = 4.dp),
-    ) { index ->
-        val colorHex = colors[index]
-        val isSelected = colorHex.equals(selectedColorHex, ignoreCase = true)
-        val parsedColor =
-            try {
-                Color(android.graphics.Color.parseColor(colorHex))
-            } catch (_: Exception) {
-                MaterialTheme.colorScheme.primary
-            }
-
-        val isLightColor =
-            try {
-                val c = android.graphics.Color.parseColor(colorHex)
-                val r = android.graphics.Color.red(c) / 255.0
-                val g = android.graphics.Color.green(c) / 255.0
-                val b = android.graphics.Color.blue(c) / 255.0
-                (0.299 * r + 0.587 * g + 0.114 * b) > 0.5
-            } catch (_: Exception) {
-                false
-            }
-
-        Box(
+                .clip(MaterialTheme.shapes.extraSmall)
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .padding(vertical = 8.dp),
+    ) {
+        HorizontalMultiBrowseCarousel(
+            state = carouselState,
+            preferredItemWidth = 44.dp,
+            minSmallItemWidth = 10.dp,
+            maxSmallItemWidth = 40.dp,
+            itemSpacing = 6.dp,
+            contentPadding = PaddingValues(horizontal = 8.dp),
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .maskClip(RoundedCornerShape(16.dp))
-                    .background(parsedColor)
-                    .clickable {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onColorSelected(colorHex)
-                    },
-            contentAlignment = Alignment.Center,
-        ) {
-            if (isSelected) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_check_24),
-                    contentDescription = null,
-                    tint = if (isLightColor) Color.Black else Color.White,
-                    modifier = Modifier.size(18.dp),
-                )
+                    .fillMaxWidth()
+                    .height(48.dp),
+        ) { index ->
+            val colorHex = colors[index]
+            val isSelected = colorHex.equals(selectedColorHex, ignoreCase = true)
+            val parsedColor =
+                try {
+                    Color(android.graphics.Color.parseColor(colorHex))
+                } catch (_: Exception) {
+                    MaterialTheme.colorScheme.primary
+                }
+
+            val isLightColor =
+                try {
+                    val c = android.graphics.Color.parseColor(colorHex)
+                    val r = android.graphics.Color.red(c) / 255.0
+                    val g = android.graphics.Color.green(c) / 255.0
+                    val b = android.graphics.Color.blue(c) / 255.0
+                    (0.299 * r + 0.587 * g + 0.114 * b) > 0.5
+                } catch (_: Exception) {
+                    false
+                }
+
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .maskClip(RoundedCornerShape(14.dp))
+                        .background(parsedColor)
+                        .clickable {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onColorSelected(colorHex)
+                        },
+                contentAlignment = Alignment.Center,
+            ) {
+                if (isSelected) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_check_24),
+                        contentDescription = null,
+                        tint = if (isLightColor) Color.Black else Color.White,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
             }
         }
     }

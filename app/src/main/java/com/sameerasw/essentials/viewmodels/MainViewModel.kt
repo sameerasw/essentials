@@ -145,6 +145,7 @@ class MainViewModel : ViewModel() {
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
+    val duoCustomColor = mutableStateOf("#FFFFFF")
     val duoTapAction = mutableStateOf<Action?>(null)
     val duoDoubleTapAction = mutableStateOf<Action?>(null)
     val duoLongPressAction = mutableStateOf<Action?>(null)
@@ -597,6 +598,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ->
                         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+
+                    SettingsRepository.KEY_DUO_CUSTOM_COLOR ->
+                        duoCustomColor.value = settingsRepository.getDuoCustomColor()
 
                     SettingsRepository.KEY_DUO_TAP_ACTION ->
                         duoTapAction.value = settingsRepository.getDuoTapAction()
@@ -1860,6 +1864,7 @@ class MainViewModel : ViewModel() {
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
+        duoCustomColor.value = settingsRepository.getDuoCustomColor()
         duoTapAction.value = settingsRepository.getDuoTapAction()
         duoDoubleTapAction.value = settingsRepository.getDuoDoubleTapAction()
         duoLongPressAction.value = settingsRepository.getDuoLongPressAction()
@@ -4534,6 +4539,11 @@ class MainViewModel : ViewModel() {
     fun setDuoUseMaterialYou(enabled: Boolean) {
         isDuoUseMaterialYou.value = enabled
         settingsRepository.setDuoUseMaterialYouEnabled(enabled)
+    }
+
+    fun setDuoCustomColor(colorHex: String) {
+        duoCustomColor.value = colorHex
+        settingsRepository.setDuoCustomColor(colorHex)
     }
 
     fun setDuoTapAction(action: Action?) {

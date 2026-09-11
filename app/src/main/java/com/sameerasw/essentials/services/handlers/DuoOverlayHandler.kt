@@ -696,6 +696,9 @@ class DuoOverlayHandler(
                 this.hideWhenScreenOff = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffEnabled() else true
                 this.hideWhenScreenOffOnlyIdle = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled() else false
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
+                try {
+                    this.customColor = Color.parseColor(settingsRepository.getDuoCustomColor())
+                } catch (_: Exception) {}
                 this.isBatteryChargingColorEnabled = settingsRepository.isDuoBatteryChargingColorEnabled()
                 try {
                     this.batteryChargingColor = Color.parseColor(settingsRepository.getDuoBatteryChargingColor())

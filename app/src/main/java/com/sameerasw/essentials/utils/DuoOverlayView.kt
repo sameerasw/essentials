@@ -205,6 +205,14 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var customColor: Int = Color.WHITE
+        set(value) {
+            if (field != value) {
+                field = value
+                animateThemeChange()
+            }
+        }
+
     var isBatteryChargingColorEnabled: Boolean = true
         set(value) {
             if (field != value) {
@@ -625,11 +633,11 @@ class DuoOverlayView(context: Context) : View(context) {
         val hsv = FloatArray(3)
         android.graphics.Color.colorToHSV(color, hsv)
         if (isDarkTheme) {
-            hsv[1] = (hsv[1] * 0.85f).coerceIn(0.35f, 0.95f)
-            hsv[2] = (hsv[2] * 1.15f).coerceIn(0.80f, 1.0f)
+            hsv[1] = (hsv[1] * 0.75f).coerceIn(0.25f, 0.90f)
+            hsv[2] = (hsv[2] * 1.25f).coerceIn(0.85f, 1.0f)
         } else {
-            hsv[1] = (hsv[1] * 1.15f).coerceIn(0.55f, 1.0f)
-            hsv[2] = (hsv[2] * 0.70f).coerceIn(0.25f, 0.65f)
+            hsv[1] = (hsv[1] * 1.25f).coerceIn(0.65f, 1.0f)
+            hsv[2] = (hsv[2] * 0.60f).coerceIn(0.20f, 0.55f)
         }
         return android.graphics.Color.HSVToColor(hsv)
     }
@@ -870,6 +878,30 @@ class DuoOverlayView(context: Context) : View(context) {
             val trackAlpha = if (isDarkTheme) 90 else 110
             val track = Color.argb(trackAlpha, Color.red(lowAccent), Color.green(lowAccent), Color.blue(lowAccent))
             return Triple(track, lowAccent, lowAccent)
+        }
+
+        if (!useMaterialYouColors) {
+            val isWhite = customColor == Color.WHITE || (Color.red(customColor) >= 250 && Color.green(customColor) >= 250 && Color.blue(customColor) >= 250)
+            if (isWhite) {
+                return if (isDarkTheme) {
+                    Triple(
+                        Color.argb(60, 255, 255, 255),
+                        Color.WHITE,
+                        Color.WHITE
+                    )
+                } else {
+                    Triple(
+                        Color.argb(60, 0, 0, 0),
+                        Color.BLACK,
+                        Color.BLACK
+                    )
+                }
+            } else {
+                val accent = getThemeAdjustedColor(customColor)
+                val trackAlpha = if (isDarkTheme) 90 else 110
+                val track = Color.argb(trackAlpha, Color.red(accent), Color.green(accent), Color.blue(accent))
+                return Triple(track, accent, accent)
+            }
         }
 
         if (useMaterialYouColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

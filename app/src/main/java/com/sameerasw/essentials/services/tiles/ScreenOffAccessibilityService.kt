@@ -268,6 +268,7 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ||
                 key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE ||
                 key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ||
+                key == SettingsRepository.KEY_DUO_CUSTOM_COLOR ||
                 key == SettingsRepository.KEY_DUO_TAP_ACTION ||
                 key == SettingsRepository.KEY_DUO_DOUBLE_TAP_ACTION ||
                 key == SettingsRepository.KEY_DUO_LONG_PRESS_ACTION ||

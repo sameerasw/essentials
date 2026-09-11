@@ -379,6 +379,7 @@ class SettingsRepository(
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
+        const val KEY_DUO_CUSTOM_COLOR = "duo_custom_color"
         const val KEY_DUO_TAP_ACTION = "duo_tap_action"
         const val KEY_DUO_DOUBLE_TAP_ACTION = "duo_double_tap_action"
         const val KEY_DUO_LONG_PRESS_ACTION = "duo_long_press_action"
@@ -3151,6 +3152,9 @@ class SettingsRepository(
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
+
+    fun getDuoCustomColor(): String = getString(KEY_DUO_CUSTOM_COLOR, "#FFFFFF") ?: "#FFFFFF"
+    fun setDuoCustomColor(colorHex: String) = putString(KEY_DUO_CUSTOM_COLOR, colorHex)
 
     fun getDuoTapAction(): Action? = getRemapAction(KEY_DUO_TAP_ACTION)
     fun setDuoTapAction(action: Action?) = setRemapAction(KEY_DUO_TAP_ACTION, action)

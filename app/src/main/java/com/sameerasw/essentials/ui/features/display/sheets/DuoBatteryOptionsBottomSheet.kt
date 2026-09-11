@@ -60,11 +60,11 @@ fun DuoBatteryOptionsBottomSheet(
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
             )
 
+            // Low Battery (< 20%)
             RoundedCardContainer(
                 spacing = 2.dp,
                 cornerRadius = 24.dp,
             ) {
-                // Low Battery (< 20%)
                 IconToggleItem(
                     iconRes = R.drawable.rounded_battery_alert_24,
                     title = stringResource(R.string.duo_battery_low_color_title),
@@ -86,8 +86,13 @@ fun DuoBatteryOptionsBottomSheet(
                         },
                     )
                 }
+            }
 
-                // Critically Low Battery (< 10%)
+            // Critically Low Battery (< 10%)
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_battery_android_frame_alert_24,
                     title = stringResource(R.string.duo_battery_critical_color_title),
@@ -109,8 +114,13 @@ fun DuoBatteryOptionsBottomSheet(
                         },
                     )
                 }
+            }
 
-                // Charging
+            // Charging
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_bolt_24,
                     title = stringResource(R.string.duo_battery_charging_color_title),
