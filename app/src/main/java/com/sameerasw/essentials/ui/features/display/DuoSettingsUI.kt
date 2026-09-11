@@ -16,7 +16,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,9 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -51,6 +52,7 @@ import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.CustomSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DeviceEffectsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.FreezeTagSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
@@ -433,7 +435,7 @@ fun DuoSettingsUI(
         ) {
             val tapAction = viewModel.duoTapAction.value
             IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
+                iconRes = R.drawable.rounded_pan_tool_alt_24,
                 title = stringResource(R.string.duo_action_tap_title),
                 description = tapAction?.let { stringResource(it.title) } ?: stringResource(R.string.duo_action_none),
                 showToggle = false,
@@ -472,7 +474,7 @@ fun DuoSettingsUI(
 
             val swipeDownAction = viewModel.duoSwipeDownAction.value
             IconToggleItem(
-                iconRes = R.drawable.rounded_keyboard_arrow_down_24,
+                iconRes = R.drawable.rounded_south_24,
                 title = stringResource(R.string.duo_action_swipe_down_title),
                 description = swipeDownAction?.let { stringResource(it.title) } ?: stringResource(R.string.duo_action_none),
                 showToggle = false,
@@ -491,7 +493,7 @@ fun DuoSettingsUI(
                 else -> stringResource(R.string.duo_action_horizontal_slide_none)
             }
             IconToggleItem(
-                iconRes = R.drawable.rounded_mobiledata_arrows_24,
+                iconRes = R.drawable.rounded_compare_arrows_24,
                 title = stringResource(R.string.duo_action_horizontal_slide_title),
                 description = slideModeDescription,
                 showToggle = false,
@@ -505,22 +507,20 @@ fun DuoSettingsUI(
     }
 
     if (showSlideModeSheet) {
-        ModalBottomSheet(
+        EssentialsBottomSheet(
             onDismissRequest = { showSlideModeSheet = false },
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp, start = 16.dp, end = 16.dp, top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
                     text = stringResource(R.string.duo_action_horizontal_slide_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 RoundedCardContainer(spacing = 2.dp) {
@@ -558,23 +558,21 @@ fun DuoSettingsUI(
             else -> null
         }
 
-        ModalBottomSheet(
+        EssentialsBottomSheet(
             onDismissRequest = { pickingActionForGesture = null },
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ) {
             Column(
                 modifier = Modifier
+                    .padding(16.dp)
                     .fillMaxWidth()
-                    .padding(bottom = 32.dp, start = 16.dp, end = 16.dp, top = 8.dp)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
                     text = stringResource(R.string.duo_action_pick_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 RoundedCardContainer(spacing = 2.dp) {
@@ -680,6 +678,8 @@ fun DuoSettingsUI(
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
@@ -693,22 +693,20 @@ fun DuoSettingsUI(
     }
 
     if (showFlashlightOptions) {
-        ModalBottomSheet(
+        EssentialsBottomSheet(
             onDismissRequest = { showFlashlightOptions = false },
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp, start = 16.dp, end = 16.dp, top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
                     text = stringResource(R.string.flashlight_options_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 RoundedCardContainer(spacing = 2.dp) {
@@ -737,8 +735,7 @@ fun DuoSettingsUI(
                         showFlashlightOptions = false
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .fillMaxWidth(),
                     shape = MaterialTheme.shapes.extraLarge,
                 ) {
                     Text(stringResource(R.string.action_done))
