@@ -366,7 +366,12 @@ class SettingsRepository(
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
         const val KEY_DUO_SHOW_BATTERY = "duo_show_battery"
-        const val KEY_DUO_USE_CHARGING_COLORS = "duo_use_charging_colors"
+        const val KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED = "duo_battery_charging_color_enabled"
+        const val KEY_DUO_BATTERY_CHARGING_COLOR = "duo_battery_charging_color"
+        const val KEY_DUO_BATTERY_LOW_COLOR_ENABLED = "duo_battery_low_color_enabled"
+        const val KEY_DUO_BATTERY_LOW_COLOR = "duo_battery_low_color"
+        const val KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED = "duo_battery_critical_color_enabled"
+        const val KEY_DUO_BATTERY_CRITICAL_COLOR = "duo_battery_critical_color"
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
@@ -3108,8 +3113,23 @@ class SettingsRepository(
     fun isDuoShowBatteryEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_BATTERY, true)
     fun setDuoShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_BATTERY, enabled)
 
-    fun isDuoUseChargingColorsEnabled(): Boolean = getBoolean(KEY_DUO_USE_CHARGING_COLORS, false)
-    fun setDuoUseChargingColorsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_CHARGING_COLORS, enabled)
+    fun isDuoBatteryChargingColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, true)
+    fun setDuoBatteryChargingColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, enabled)
+
+    fun getDuoBatteryChargingColor(): String = getString(KEY_DUO_BATTERY_CHARGING_COLOR, "#00E676") ?: "#00E676"
+    fun setDuoBatteryChargingColor(colorHex: String) = putString(KEY_DUO_BATTERY_CHARGING_COLOR, colorHex)
+
+    fun isDuoBatteryLowColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_LOW_COLOR_ENABLED, true)
+    fun setDuoBatteryLowColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_LOW_COLOR_ENABLED, enabled)
+
+    fun getDuoBatteryLowColor(): String = getString(KEY_DUO_BATTERY_LOW_COLOR, "#FFEB3B") ?: "#FFEB3B"
+    fun setDuoBatteryLowColor(colorHex: String) = putString(KEY_DUO_BATTERY_LOW_COLOR, colorHex)
+
+    fun isDuoBatteryCriticalColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED, true)
+    fun setDuoBatteryCriticalColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED, enabled)
+
+    fun getDuoBatteryCriticalColor(): String = getString(KEY_DUO_BATTERY_CRITICAL_COLOR, "#F44336") ?: "#F44336"
+    fun setDuoBatteryCriticalColor(colorHex: String) = putString(KEY_DUO_BATTERY_CRITICAL_COLOR, colorHex)
 
     fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
     fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)

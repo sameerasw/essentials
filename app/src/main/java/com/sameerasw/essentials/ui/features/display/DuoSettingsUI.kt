@@ -61,6 +61,7 @@ import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
+import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.system.LikeSongSettingsSheet
 import com.sameerasw.essentials.ui.features.system.RemapActionItem
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -80,6 +81,7 @@ fun DuoSettingsUI(
     val view = LocalView.current
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+    var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     var pickingActionForGesture by remember { mutableStateOf<String?>(null) }
@@ -320,24 +322,11 @@ fun DuoSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoShowBattery(checked)
                 },
+                onSettingsClick = {
+                    showBatteryOptionsSheet = true
+                },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_battery"),
             )
-            AnimatedVisibility(
-                visible = viewModel.isDuoShowBattery.value,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_bolt_24,
-                    title = stringResource(R.string.duo_charging_colors_title),
-                    isChecked = viewModel.isDuoUseChargingColors.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setDuoUseChargingColors(checked)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "duo_use_charging_colors"),
-                )
-            }
             IconToggleItem(
                 iconRes = R.drawable.rounded_signal_cellular_alt_24,
                 title = stringResource(R.string.duo_show_networks_title),
@@ -361,24 +350,11 @@ fun DuoSettingsUI(
                         viewModel.setDuoShowMedia(checked)
                     }
                 },
+                onSettingsClick = {
+                    showMediaAppSelectionSheet = true
+                },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_media"),
             )
-
-            AnimatedVisibility(
-                visible = viewModel.isDuoShowMedia.value,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_apps_24,
-                    title = stringResource(R.string.feat_aod_wallpaper_media_apps),
-                    showToggle = false,
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        showMediaAppSelectionSheet = true
-                    },
-                )
-            }
             IconToggleItem(
                 iconRes = R.drawable.rounded_downloading_24,
                 title = stringResource(R.string.duo_show_progress_title),
@@ -963,8 +939,16 @@ fun DuoSettingsUI(
         }
     }
 
+    if (showBatteryOptionsSheet) {
+        DuoBatteryOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showBatteryOptionsSheet = false },
+        )
+    }
+
     if (showMediaAppSelectionSheet) {
         AppSelectionSheet(
+            title = stringResource(R.string.duo_media_skip_apps_title),
             onDismissRequest = { showMediaAppSelectionSheet = false },
             onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
             onSaveApps = { ctx, apps ->

@@ -132,7 +132,12 @@ class MainViewModel : ViewModel() {
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowBattery = mutableStateOf(true)
-    val isDuoUseChargingColors = mutableStateOf(false)
+    val isDuoBatteryChargingColorEnabled = mutableStateOf(true)
+    val duoBatteryChargingColor = mutableStateOf("#00E676")
+    val isDuoBatteryLowColorEnabled = mutableStateOf(true)
+    val duoBatteryLowColor = mutableStateOf("#FFEB3B")
+    val isDuoBatteryCriticalColorEnabled = mutableStateOf(true)
+    val duoBatteryCriticalColor = mutableStateOf("#F44336")
     val isDuoShowNetworks = mutableStateOf(true)
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
@@ -554,8 +559,23 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_DUO_SHOW_BATTERY ->
                         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
 
-                    SettingsRepository.KEY_DUO_USE_CHARGING_COLORS ->
-                        isDuoUseChargingColors.value = settingsRepository.isDuoUseChargingColorsEnabled()
+                    SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED ->
+                        isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR ->
+                        duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
+
+                    SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR_ENABLED ->
+                        isDuoBatteryLowColorEnabled.value = settingsRepository.isDuoBatteryLowColorEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR ->
+                        duoBatteryLowColor.value = settingsRepository.getDuoBatteryLowColor()
+
+                    SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED ->
+                        isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR ->
+                        duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
 
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
@@ -1827,7 +1847,12 @@ class MainViewModel : ViewModel() {
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
-        isDuoUseChargingColors.value = settingsRepository.isDuoUseChargingColorsEnabled()
+        isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
+        duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
+        isDuoBatteryLowColorEnabled.value = settingsRepository.isDuoBatteryLowColorEnabled()
+        duoBatteryLowColor.value = settingsRepository.getDuoBatteryLowColor()
+        isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
+        duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
@@ -4446,9 +4471,34 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setDuoUseChargingColors(enabled: Boolean) {
-        isDuoUseChargingColors.value = enabled
-        settingsRepository.setDuoUseChargingColorsEnabled(enabled)
+    fun setDuoBatteryChargingColorEnabled(enabled: Boolean) {
+        isDuoBatteryChargingColorEnabled.value = enabled
+        settingsRepository.setDuoBatteryChargingColorEnabled(enabled)
+    }
+
+    fun setDuoBatteryChargingColor(colorHex: String) {
+        duoBatteryChargingColor.value = colorHex
+        settingsRepository.setDuoBatteryChargingColor(colorHex)
+    }
+
+    fun setDuoBatteryLowColorEnabled(enabled: Boolean) {
+        isDuoBatteryLowColorEnabled.value = enabled
+        settingsRepository.setDuoBatteryLowColorEnabled(enabled)
+    }
+
+    fun setDuoBatteryLowColor(colorHex: String) {
+        duoBatteryLowColor.value = colorHex
+        settingsRepository.setDuoBatteryLowColor(colorHex)
+    }
+
+    fun setDuoBatteryCriticalColorEnabled(enabled: Boolean) {
+        isDuoBatteryCriticalColorEnabled.value = enabled
+        settingsRepository.setDuoBatteryCriticalColorEnabled(enabled)
+    }
+
+    fun setDuoBatteryCriticalColor(colorHex: String) {
+        duoBatteryCriticalColor.value = colorHex
+        settingsRepository.setDuoBatteryCriticalColor(colorHex)
     }
 
     fun setDuoShowNetworks(enabled: Boolean) {
