@@ -2481,6 +2481,7 @@
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Only hide on AOD while idle</string>
+    <string name="duo_aod_burn_in_protection_desc">Ambient/AOD options are locked to prevent screen burn-in. Turn on \"Enable unsupported features\" in settings to customize.</string>
     <string name="duo_section_actions">Actions</string>
     <string name="duo_action_tap_title">Tap</string>
     <string name="duo_action_double_tap_title">Double tap</string>

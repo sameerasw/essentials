@@ -426,10 +426,12 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_use_material_you"),
             )
+            val areUnsupportedFeaturesEnabled = viewModel.isEnableUnsupportedFeatures.value
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_off_24,
                 title = stringResource(R.string.duo_hide_when_screen_off_title),
-                isChecked = viewModel.isDuoHideWhenScreenOff.value,
+                isChecked = if (areUnsupportedFeaturesEnabled) viewModel.isDuoHideWhenScreenOff.value else true,
+                enabled = areUnsupportedFeaturesEnabled,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoHideWhenScreenOff(checked)
@@ -439,13 +441,22 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_nightlight_24,
                 title = stringResource(R.string.duo_hide_when_screen_off_only_idle_title),
-                isChecked = viewModel.isDuoHideWhenScreenOffOnlyIdle.value,
-                enabled = viewModel.isDuoHideWhenScreenOff.value,
+                isChecked = if (areUnsupportedFeaturesEnabled) viewModel.isDuoHideWhenScreenOffOnlyIdle.value else false,
+                enabled = areUnsupportedFeaturesEnabled && viewModel.isDuoHideWhenScreenOff.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoHideWhenScreenOffOnlyIdle(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off_only_idle"),
+            )
+        }
+
+        if (!viewModel.isEnableUnsupportedFeatures.value) {
+            Text(
+                text = stringResource(R.string.duo_aod_burn_in_protection_desc),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
             )
         }
 

@@ -692,8 +692,9 @@ class DuoOverlayHandler(
                 this.isDarkTheme = isNightMode
                 this.isScreenOff = this@DuoOverlayHandler.isScreenOff
                 this.isFullscreen = this@DuoOverlayHandler.isFullscreen
-                this.hideWhenScreenOff = settingsRepository.isDuoHideWhenScreenOffEnabled()
-                this.hideWhenScreenOffOnlyIdle = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
+                val areUnsupportedFeaturesEnabled = settingsRepository.isEnableUnsupportedFeatures()
+                this.hideWhenScreenOff = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffEnabled() else true
+                this.hideWhenScreenOffOnlyIdle = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled() else false
                 this.useMaterialYouColors = settingsRepository.isDuoUseMaterialYouEnabled()
                 this.useChargingColors = settingsRepository.isDuoUseChargingColorsEnabled()
                 this.showBattery = settingsRepository.isDuoShowBatteryEnabled()

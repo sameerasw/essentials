@@ -268,7 +268,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_LONG_PRESS_ACTION ||
                 key == SettingsRepository.KEY_DUO_SWIPE_DOWN_ACTION ||
                 key == SettingsRepository.KEY_DUO_SLIDE_MODE ||
-                key == SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION
+                key == SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ||
+                key == SettingsRepository.KEY_ENABLE_UNSUPPORTED_FEATURES
             ) {
                 duoOverlayHandler.updateState()
             }

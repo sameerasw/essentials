@@ -165,7 +165,7 @@ fun IconToggleItem(
                             color = MaterialTheme.colorScheme.outlineVariant,
                         )
                         Switch(
-                            checked = if (enabled) finalIsChecked else false,
+                            checked = finalIsChecked,
                             onCheckedChange = { c ->
                                 if (enabled) {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -193,7 +193,7 @@ fun IconToggleItem(
             var switchCenterOffset by remember { mutableStateOf(Offset.Zero) }
 
             ListItem(
-                checked = finalIsChecked && enabled,
+                checked = finalIsChecked,
                 onCheckedChange = { c ->
                     if (enabled) {
                         HapticUtil.performVirtualKeyHaptic(view)
@@ -235,7 +235,7 @@ fun IconToggleItem(
                     },
                 trailingContent = {
                     Switch(
-                        checked = if (enabled) finalIsChecked else false,
+                        checked = finalIsChecked,
                         onCheckedChange = null,
                         enabled = enabled,
                         modifier = Modifier.onGloballyPositioned { coords ->
