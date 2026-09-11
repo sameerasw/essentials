@@ -58,11 +58,22 @@ class DuoOverlayView(context: Context) : View(context) {
             invalidate()
         }
 
+    var useUniversalContrast: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
     var arcThicknessPx: Float = 10f
         set(value) {
             field = value
             trackPaint.strokeWidth = value
             progressPaint.strokeWidth = value
+            contrastTrackPaint.strokeWidth = value + 0.8f * density
+            tracerPaint.strokeWidth = value + 0.4f * density
+            contrastTracerPaint.strokeWidth = value + 1.2f * density
             invalidate()
         }
 
@@ -264,7 +275,10 @@ class DuoOverlayView(context: Context) : View(context) {
     }
 
     private var isChargingAnnounce: Boolean = false
+    private var isChargingThemeActive: Boolean = false
     private var chargingBoltBitmap: Bitmap? = null
+    private var tracerFraction: Float = -1f
+    private var tracerAnimator: ValueAnimator? = null
 
     private val revertChargingRunnable = Runnable {
         if (isChargingAnnounce) {
@@ -437,24 +451,49 @@ class DuoOverlayView(context: Context) : View(context) {
         this.isCharging = true
         this.isFastCharging = isFastCharging
         this.isChargingAnnounce = true
+        this.isChargingThemeActive = false
 
         removeCallbacks(revertChargingRunnable)
         postDelayed(revertChargingRunnable, 4000L)
 
         updateActiveProgressMode()
 
-        val target = batteryLevel.toFloat()
-        progressAnimator?.cancel()
-        animatedProgress = 0f
-        progressAnimator = ValueAnimator.ofFloat(0f, target).apply {
-            duration = 750
-            interpolator = DecelerateInterpolator(1.4f)
+        tracerAnimator?.cancel()
+        tracerAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 800
+            interpolator = DecelerateInterpolator(1.3f)
             addUpdateListener { animation ->
-                animatedProgress = animation.animatedValue as Float
+                tracerFraction = animation.animatedFraction
                 invalidate()
             }
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    tracerFraction = -1f
+                    invalidate()
+                }
+                override fun onAnimationCancel(animation: android.animation.Animator) {
+                    tracerFraction = -1f
+                }
+            })
             start()
         }
+
+        postDelayed({
+            if (isCharging) {
+                isChargingThemeActive = true
+                animateThemeChange()
+                scaleAnimator?.cancel()
+                scaleAnimator = ValueAnimator.ofFloat(1.0f, 1.035f, 1.0f).apply {
+                    duration = 500
+                    interpolator = OvershootInterpolator(1.2f)
+                    addUpdateListener { animation ->
+                        animatedScaleBounce = animation.animatedValue as Float
+                        invalidate()
+                    }
+                    start()
+                }
+            }
+        }, 550)
     }
 
     fun setCharging(isCharging: Boolean, isFastCharging: Boolean = false) {
@@ -464,10 +503,15 @@ class DuoOverlayView(context: Context) : View(context) {
 
         if (!isCharging) {
             isChargingAnnounce = false
+            isChargingThemeActive = false
             removeCallbacks(revertChargingRunnable)
             updateActiveProgressMode()
-        } else if (wasCharging != isCharging) {
             animateThemeChange()
+        } else if (wasCharging != isCharging) {
+            if (!isChargingAnnounce) {
+                isChargingThemeActive = true
+                animateThemeChange()
+            }
         }
     }
 
@@ -727,7 +771,7 @@ class DuoOverlayView(context: Context) : View(context) {
             return Triple(track, progress, progress)
         }
 
-        if (isCharging) {
+        if (isCharging && isChargingThemeActive) {
             val chargeAccent = if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
             val trackAlpha = if (isDarkTheme) 90 else 110
             val track = Color.argb(trackAlpha, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
@@ -883,6 +927,28 @@ class DuoOverlayView(context: Context) : View(context) {
     }
 
     private val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val contrastTrackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
+    private val contrastDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
+    private val contrastIconPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
+    private val tracerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val contrastTracerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
     private val iconClipPath = Path()
     private val iconRect = RectF()
     private val arcBounds = RectF()
@@ -894,6 +960,9 @@ class DuoOverlayView(context: Context) : View(context) {
         currentDotBaseColor = dot
         trackPaint.color = currentTrackColor
         progressPaint.color = currentProgressColor
+        contrastTrackPaint.strokeWidth = arcThicknessPx + 0.8f * density
+        tracerPaint.strokeWidth = arcThicknessPx + 0.4f * density
+        contrastTracerPaint.strokeWidth = arcThicknessPx + 1.2f * density
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -914,6 +983,24 @@ class DuoOverlayView(context: Context) : View(context) {
         canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
         canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
         canvas.translate(-cameraCenterX, -cameraCenterY)
+
+        val r = Color.red(currentProgressColor) / 255.0
+        val g = Color.green(currentProgressColor) / 255.0
+        val b = Color.blue(currentProgressColor) / 255.0
+        val isProgressLight = (0.299 * r + 0.587 * g + 0.114 * b) > 0.45
+        val contrastColor = if (isProgressLight) Color.BLACK else Color.WHITE
+        val baseContrastAlpha = if (isProgressLight) 24 else 28
+        val contrastAlpha = (baseContrastAlpha * animatedVisibilityAlpha).toInt()
+
+        if (useUniversalContrast && contrastAlpha > 0) {
+            contrastTrackPaint.color = Color.argb(
+                contrastAlpha,
+                Color.red(contrastColor),
+                Color.green(contrastColor),
+                Color.blue(contrastColor)
+            )
+            canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, contrastTrackPaint)
+        }
 
         val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
         trackPaint.color = Color.argb(
@@ -936,6 +1023,48 @@ class DuoOverlayView(context: Context) : View(context) {
             canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
         }
 
+        if (tracerFraction in 0f..1f) {
+            val t = tracerFraction
+            val headAngle = animatedStartAngle + t * 360f
+            val tailSpan = (20f + 48f * sin(t * Math.PI.toFloat())).coerceIn(16f, 68f)
+            val tracerStartAngle = headAngle - tailSpan
+            val tracerAlpha = when {
+                t < 0.12f -> t / 0.12f
+                t > 0.82f -> (1f - t) / 0.18f
+                else -> 1.0f
+            }.coerceIn(0f, 1f) * animatedVisibilityAlpha
+
+            if (tracerAlpha > 0.01f) {
+                if (useUniversalContrast && contrastAlpha > 0) {
+                    val shadowAlpha = (contrastAlpha * tracerAlpha).toInt().coerceIn(0, 255)
+                    contrastTracerPaint.color = Color.argb(
+                        shadowAlpha,
+                        Color.red(contrastColor),
+                        Color.green(contrastColor),
+                        Color.blue(contrastColor)
+                    )
+                    canvas.drawArc(arcBounds, tracerStartAngle, tailSpan, false, contrastTracerPaint)
+                }
+
+                val beamAlpha = (245 * tracerAlpha).toInt().coerceIn(0, 255)
+                val beamColor = if (isFastCharging) {
+                    Color.argb(beamAlpha, 120, 240, 255)
+                } else {
+                    Color.argb(beamAlpha, 130, 255, 200)
+                }
+                tracerPaint.color = beamColor
+                canvas.drawArc(arcBounds, tracerStartAngle, tailSpan, false, tracerPaint)
+
+                val headRad = Math.toRadians(headAngle.toDouble())
+                val sparkX = (cameraCenterX + baseRadius * cos(headRad)).toFloat()
+                val sparkY = (cameraCenterY + baseRadius * sin(headRad)).toFloat()
+                val sparkPaint = dotPaint.apply {
+                    color = Color.argb((255 * tracerAlpha).toInt(), 255, 255, 255)
+                }
+                canvas.drawCircle(sparkX, sparkY, (arcThicknessPx / 2f + 0.6f * density) * tracerAlpha, sparkPaint)
+            }
+        }
+
         val effectiveDotAlpha = animatedDotAlpha * (1f - animatedCustomFraction)
         if (effectiveDotAlpha > 0.01f) {
             val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
@@ -954,6 +1083,17 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * effectiveDotAlpha * animatedVisibilityAlpha
                 dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
 
+                if (useUniversalContrast && contrastAlpha > 0) {
+                    val shadowAlpha = (contrastAlpha * effectiveDotAlpha).toInt().coerceIn(0, 255)
+                    contrastDotPaint.color = Color.argb(
+                        shadowAlpha,
+                        Color.red(contrastColor),
+                        Color.green(contrastColor),
+                        Color.blue(contrastColor)
+                    )
+                    canvas.drawCircle(dotX, dotY, (dotRadiusPx + 0.5f * density) * effectiveDotAlpha, contrastDotPaint)
+                }
+
                 canvas.drawCircle(dotX, dotY, dotRadiusPx * effectiveDotAlpha, dotPaint)
             }
         }
@@ -969,6 +1109,17 @@ class DuoOverlayView(context: Context) : View(context) {
                 val iconCenterY = (cameraCenterY + (baseRadius + downwardOffset) * sin(angleRad)).toFloat()
 
                 if (iconRadius > 1f) {
+                    if (useUniversalContrast && contrastAlpha > 0) {
+                        val iconShadowAlpha = (contrastAlpha * animatedCustomFraction).toInt().coerceIn(0, 255)
+                        contrastIconPaint.color = Color.argb(
+                            iconShadowAlpha,
+                            Color.red(contrastColor),
+                            Color.green(contrastColor),
+                            Color.blue(contrastColor)
+                        )
+                        canvas.drawCircle(iconCenterX, iconCenterY, iconRadius + 0.5f * density, contrastIconPaint)
+                    }
+
                     val saveIcon = canvas.save()
                     iconClipPath.reset()
                     iconClipPath.addCircle(iconCenterX, iconCenterY, iconRadius, Path.Direction.CW)
@@ -1004,6 +1155,7 @@ class DuoOverlayView(context: Context) : View(context) {
         super.onDetachedFromWindow()
         removeCallbacks(revertChargingRunnable)
         removeCallbacks(revertInteractiveRunnable)
+        tracerAnimator?.cancel()
         progressAnimator?.cancel()
         signalAnimator?.cancel()
         layoutAnimator?.cancel()
