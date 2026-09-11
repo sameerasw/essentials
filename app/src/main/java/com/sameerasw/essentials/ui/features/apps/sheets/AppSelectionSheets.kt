@@ -68,6 +68,7 @@ fun AppSelectionSheet(
     onLoadApps: suspend (Context) -> List<AppSelection>,
     onSaveApps: suspend (Context, List<AppSelection>) -> Unit,
     onAppToggle: ((Context, String, Boolean) -> Unit)? = null,
+    title: String = stringResource(R.string.action_select_apps),
     excludePackages: List<String> = emptyList(),
     context: Context = LocalContext.current,
 ) {
@@ -151,7 +152,7 @@ fun AppSelectionSheet(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.action_select_apps),
+                    text = title,
                     style = MaterialTheme.typography.headlineSmall,
                 )
 

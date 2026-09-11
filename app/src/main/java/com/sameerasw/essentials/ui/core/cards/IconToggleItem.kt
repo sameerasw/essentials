@@ -18,12 +18,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import com.sameerasw.essentials.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +62,7 @@ fun IconToggleItem(
     icon: Int? = null,
     checked: Boolean? = null,
     onCheckedChangeWithPosition: ((Boolean, Offset) -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -165,7 +168,7 @@ fun IconToggleItem(
                             color = MaterialTheme.colorScheme.outlineVariant,
                         )
                         Switch(
-                            checked = if (enabled) finalIsChecked else false,
+                            checked = finalIsChecked,
                             onCheckedChange = { c ->
                                 if (enabled) {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -193,7 +196,7 @@ fun IconToggleItem(
             var switchCenterOffset by remember { mutableStateOf(Offset.Zero) }
 
             ListItem(
-                checked = finalIsChecked && enabled,
+                checked = finalIsChecked,
                 onCheckedChange = { c ->
                     if (enabled) {
                         HapticUtil.performVirtualKeyHaptic(view)
@@ -234,19 +237,47 @@ fun IconToggleItem(
                         null
                     },
                 trailingContent = {
-                    Switch(
-                        checked = if (enabled) finalIsChecked else false,
-                        onCheckedChange = null,
-                        enabled = enabled,
-                        modifier = Modifier.onGloballyPositioned { coords ->
-                            val pos = coords.positionInRoot()
-                            val size = coords.size
-                            switchCenterOffset = Offset(
-                                x = pos.x + (size.width / 2f),
-                                y = pos.y + (size.height / 2f)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        if (onSettingsClick != null && enabled && finalIsChecked) {
+                            IconButton(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onSettingsClick()
+                                },
+                                modifier = Modifier.size(36.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_settings_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            VerticalDivider(
+                                modifier =
+                                    Modifier
+                                        .height(28.dp)
+                                        .width(1.dp),
+                                color = MaterialTheme.colorScheme.outlineVariant,
                             )
-                        },
-                    )
+                        }
+                        Switch(
+                            checked = finalIsChecked,
+                            onCheckedChange = null,
+                            enabled = enabled,
+                            modifier = Modifier.onGloballyPositioned { coords ->
+                                val pos = coords.positionInRoot()
+                                val size = coords.size
+                                switchCenterOffset = Offset(
+                                    x = pos.x + (size.width / 2f),
+                                    y = pos.y + (size.height / 2f)
+                                )
+                            },
+                        )
+                    }
                 },
                 colors =
                     ListItemDefaults.colors(
