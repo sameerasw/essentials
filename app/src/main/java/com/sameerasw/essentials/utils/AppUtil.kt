@@ -12,9 +12,11 @@ package com.sameerasw.essentials.utils
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.createBitmap
@@ -253,6 +255,75 @@ object AppUtil {
         drawable.setBounds(0, 0, width, height)
         drawable.draw(canvas)
         return bitmap
+    }
+
+    /**
+     * Decodes a downsampled bitmap from a file path to prevent OOM errors with high resolution images.
+     */
+    fun decodeSampledBitmapFromFile(
+        filePath: String,
+        reqWidth: Int = 1440,
+        reqHeight: Int = 3200,
+    ): Bitmap? {
+        return try {
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            BitmapFactory.decodeFile(filePath, options)
+            if (options.outWidth <= 0 || options.outHeight <= 0) return null
+
+            var inSampleSize = 1
+            val halfHeight = options.outHeight / 2
+            val halfWidth = options.outWidth / 2
+            while ((halfHeight / inSampleSize) >= reqHeight || (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2
+            }
+
+            options.inJustDecodeBounds = false
+            options.inSampleSize = inSampleSize
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888
+            BitmapFactory.decodeFile(filePath, options)
+        } catch (e: Throwable) {
+            Log.e(TAG, "Error decoding sampled bitmap from file: $filePath", e)
+            null
+        }
+    }
+
+    /**
+     * Decodes a downsampled bitmap from a content URI to prevent OOM errors with high resolution images.
+     */
+    fun decodeSampledBitmapFromUri(
+        context: Context,
+        uri: Uri,
+        reqWidth: Int = 1440,
+        reqHeight: Int = 3200,
+    ): Bitmap? {
+        return try {
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                BitmapFactory.decodeStream(input, null, options)
+            }
+            if (options.outWidth <= 0 || options.outHeight <= 0) return null
+
+            var inSampleSize = 1
+            val halfHeight = options.outHeight / 2
+            val halfWidth = options.outWidth / 2
+            while ((halfHeight / inSampleSize) >= reqHeight || (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2
+            }
+
+            options.inJustDecodeBounds = false
+            options.inSampleSize = inSampleSize
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                BitmapFactory.decodeStream(input, null, options)
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "Error decoding sampled bitmap from uri: $uri", e)
+            null
+        }
     }
 
     /**
