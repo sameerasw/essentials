@@ -76,6 +76,7 @@ class StatusGlanceHandler(
     private var isLocked = false
     private var isShadeExpanded = false
     private var isFullscreen = false
+    private var isLandscape = false
     private var lastUnlockTimestamp = 0L
 
     private var cachedIsMediaPlaying = false
@@ -244,6 +245,8 @@ class StatusGlanceHandler(
             v.mediaArtist = cachedMediaArtist
             v.mediaArtworkBitmap = cachedMediaArtwork
 
+            isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            v.isLandscape = isLandscape
             v.isFullscreen = isFullscreen
             v.isShadeExpanded = isShadeExpanded
             v.isLocked = isLocked
@@ -882,6 +885,8 @@ class StatusGlanceHandler(
     fun onConfigurationChanged(newConfig: Configuration) {
         val isNightMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         glanceView?.isDarkTheme = isNightMode
+        isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+        glanceView?.isLandscape = isLandscape
         if (settingsRepository.isStatusGlanceEnabled()) {
             mainHandler.postDelayed({
                 updateGlancePosition()
