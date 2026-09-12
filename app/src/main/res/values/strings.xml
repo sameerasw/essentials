@@ -2503,4 +2503,31 @@
     <string name="duo_action_pick_title">Pick action</string>
     <string name="duo_action_none">None</string>
     <string name="duo_slide_mirror_direction_title">Mirror directions</string>
+
+    <!-- Status Glance -->
+    <string name="feat_status_glance_title">Status glance</string>
+    <string name="feat_status_glance_desc">At a glance overlay</string>
+    <string name="about_desc_status_glance">Status glance shows a priority-driven ambient chip beside your front camera punch hole. It dynamically displays active flashlight, upcoming calendar events, currently playing media, and the current time.</string>
+    <string name="status_glance_enable_title">Enable Status glance</string>
+    <string name="status_glance_enable_desc">Display status glance</string>
+    <string name="status_glance_section_position">Position</string>
+    <string name="status_glance_auto_detect_button_title">Detect camera position</string>
+    <string name="status_glance_auto_detect_button_desc">Set coordinates beside your front camera automatically</string>
+    <string name="status_glance_offset_x_title">Horizontal position</string>
+    <string name="status_glance_offset_y_title">Vertical position</string>
+    <string name="status_glance_max_width_title">Maximum width</string>
+    <string name="status_glance_font_size_title">Font size</string>
+    <string name="status_glance_section_what_to_show">What to show</string>
+    <string name="status_glance_show_flashlight_title">Flashlight</string>
+    <string name="status_glance_show_flashlight_desc">Highest priority indicator when torch is active</string>
+    <string name="status_glance_show_calendar_title">Calendar events</string>
+    <string name="status_glance_show_calendar_desc">Upcoming events today; urgent within 15 minutes</string>
+    <string name="status_glance_show_media_title">Media playback</string>
+    <string name="status_glance_show_media_desc">Currently playing track with album art tint</string>
+    <string name="status_glance_show_time_title">Time</string>
+    <string name="status_glance_show_time_desc">Default fallback clock</string>
+    <string name="status_glance_section_appearance">Appearance</string>
+    <string name="status_glance_background_pill_title">Background pill</string>
+    <string name="status_glance_background_pill_desc">Surround status with dynamic Material You capsule</string>
+    <string name="status_glance_slot_flashlight">Flashlight On</string>
 </resources>

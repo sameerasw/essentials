@@ -22,12 +22,14 @@ import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.provider.CalendarContract
 import android.provider.Settings
 import android.util.Log
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
@@ -157,6 +159,20 @@ class MainViewModel : ViewModel() {
     val duoSlideMode = mutableStateOf("none")
     val isDuoSlideTrack = mutableStateOf(false)
     val isDuoSlideInvertDirection = mutableStateOf(false)
+
+    val isStatusGlanceEnabled = mutableStateOf(false)
+    val isStatusGlanceAutoDetect = mutableStateOf(true)
+    val statusGlanceOffsetX = mutableFloatStateOf(60f)
+    val statusGlanceOffsetY = mutableFloatStateOf(2f)
+    val statusGlanceMaxWidth = mutableFloatStateOf(180f)
+    val statusGlanceFontSize = mutableFloatStateOf(13f)
+    val isStatusGlanceShowFlashlight = mutableStateOf(true)
+    val isStatusGlanceShowCalendar = mutableStateOf(true)
+    val isStatusGlanceShowMedia = mutableStateOf(true)
+    val isStatusGlanceShowTime = mutableStateOf(true)
+    val isStatusGlanceBackgroundPill = mutableStateOf(false)
+    val isStatusGlanceHideWhenFullscreen = mutableStateOf(true)
+
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels =
@@ -636,6 +652,42 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ->
                         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_ENABLED ->
+                        isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_USE_AUTO_DETECT ->
+                        isStatusGlanceAutoDetect.value = settingsRepository.isStatusGlanceAutoDetectEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_OFFSET_X ->
+                        statusGlanceOffsetX.floatValue = settingsRepository.getStatusGlanceOffsetX()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_OFFSET_Y ->
+                        statusGlanceOffsetY.floatValue = settingsRepository.getStatusGlanceOffsetY()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_MAX_WIDTH ->
+                        statusGlanceMaxWidth.floatValue = settingsRepository.getStatusGlanceMaxWidth()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_FONT_SIZE ->
+                        statusGlanceFontSize.floatValue = settingsRepository.getStatusGlanceFontSize()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_SHOW_FLASHLIGHT ->
+                        isStatusGlanceShowFlashlight.value = settingsRepository.isStatusGlanceShowFlashlightEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_SHOW_CALENDAR ->
+                        isStatusGlanceShowCalendar.value = settingsRepository.isStatusGlanceShowCalendarEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_SHOW_MEDIA ->
+                        isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_SHOW_TIME ->
+                        isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BACKGROUND_PILL ->
+                        isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN ->
+                        isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1894,6 +1946,18 @@ class MainViewModel : ViewModel() {
         duoSlideMode.value = settingsRepository.getDuoSlideMode()
         isDuoSlideTrack.value = settingsRepository.isDuoSlideTrackEnabled()
         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
+        isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
+        isStatusGlanceAutoDetect.value = settingsRepository.isStatusGlanceAutoDetectEnabled()
+        statusGlanceOffsetX.floatValue = settingsRepository.getStatusGlanceOffsetX()
+        statusGlanceOffsetY.floatValue = settingsRepository.getStatusGlanceOffsetY()
+        statusGlanceMaxWidth.floatValue = settingsRepository.getStatusGlanceMaxWidth()
+        statusGlanceFontSize.floatValue = settingsRepository.getStatusGlanceFontSize()
+        isStatusGlanceShowFlashlight.value = settingsRepository.isStatusGlanceShowFlashlightEnabled()
+        isStatusGlanceShowCalendar.value = settingsRepository.isStatusGlanceShowCalendarEnabled()
+        isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
+        isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
+        isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
+        isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4627,6 +4691,97 @@ class MainViewModel : ViewModel() {
     fun setDuoSlideInvertDirection(enabled: Boolean) {
         isDuoSlideInvertDirection.value = enabled
         settingsRepository.setDuoSlideInvertDirection(enabled)
+    }
+
+    fun setStatusGlanceEnabled(enabled: Boolean) {
+        isStatusGlanceEnabled.value = enabled
+        settingsRepository.setStatusGlanceEnabled(enabled)
+    }
+
+    fun setStatusGlanceAutoDetect(enabled: Boolean) {
+        isStatusGlanceAutoDetect.value = enabled
+        settingsRepository.setStatusGlanceAutoDetectEnabled(enabled)
+    }
+
+    fun setStatusGlanceOffsetX(value: Float) {
+        statusGlanceOffsetX.floatValue = value
+        settingsRepository.setStatusGlanceOffsetX(value)
+    }
+
+    fun setStatusGlanceOffsetY(value: Float) {
+        statusGlanceOffsetY.floatValue = value
+        settingsRepository.setStatusGlanceOffsetY(value)
+    }
+
+    fun setStatusGlanceShowFlashlight(enabled: Boolean) {
+        isStatusGlanceShowFlashlight.value = enabled
+        settingsRepository.setStatusGlanceShowFlashlightEnabled(enabled)
+    }
+
+    fun setStatusGlanceShowCalendar(enabled: Boolean) {
+        isStatusGlanceShowCalendar.value = enabled
+        settingsRepository.setStatusGlanceShowCalendarEnabled(enabled)
+    }
+
+    fun setStatusGlanceShowMedia(enabled: Boolean) {
+        isStatusGlanceShowMedia.value = enabled
+        settingsRepository.setStatusGlanceShowMediaEnabled(enabled)
+    }
+
+    fun setStatusGlanceShowTime(enabled: Boolean) {
+        isStatusGlanceShowTime.value = enabled
+        settingsRepository.setStatusGlanceShowTimeEnabled(enabled)
+    }
+
+    fun setStatusGlanceBackgroundPill(enabled: Boolean) {
+        isStatusGlanceBackgroundPill.value = enabled
+        settingsRepository.setStatusGlanceBackgroundPillEnabled(enabled)
+    }
+
+    fun setStatusGlanceHideWhenFullscreen(enabled: Boolean) {
+        isStatusGlanceHideWhenFullscreen.value = enabled
+        settingsRepository.setStatusGlanceHideWhenFullscreenEnabled(enabled)
+    }
+
+    fun setStatusGlanceMaxWidth(value: Float) {
+        statusGlanceMaxWidth.floatValue = value
+        settingsRepository.setStatusGlanceMaxWidth(value)
+    }
+
+    fun setStatusGlanceFontSize(value: Float) {
+        statusGlanceFontSize.floatValue = value
+        settingsRepository.setStatusGlanceFontSize(value)
+    }
+
+    fun autoDetectStatusGlancePosition(context: Context) {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager ?: return
+        val dm = context.resources.displayMetrics
+        val screenWidth = dm.widthPixels.toFloat()
+        val screenHeight = dm.heightPixels.toFloat()
+        val density = dm.density
+
+        var detectedXPercent = 60f
+        var detectedYPercent = 2f
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            @Suppress("DEPRECATION")
+            val cutout = wm.defaultDisplay?.cutout
+            if (cutout != null && cutout.boundingRects.isNotEmpty()) {
+                val targetRect = cutout.boundingRects.firstOrNull()
+                if (targetRect != null) {
+                    detectedXPercent = ((targetRect.right + 8f * density) / screenWidth) * 100f
+                    detectedYPercent = (targetRect.centerY().toFloat() / screenHeight) * 100f
+                }
+            } else {
+                val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+                val statusBarHeight = if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId).toFloat() else 24f * density
+                detectedXPercent = 50f
+                detectedYPercent = ((statusBarHeight / 2f) / screenHeight) * 100f
+            }
+        }
+
+        setStatusGlanceOffsetX(detectedXPercent.coerceIn(0f, 100f))
+        setStatusGlanceOffsetY(detectedYPercent.coerceIn(0f, 20f))
     }
 
     /**

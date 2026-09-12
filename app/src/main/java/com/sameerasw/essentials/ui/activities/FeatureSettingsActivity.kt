@@ -71,6 +71,7 @@ import com.sameerasw.essentials.ui.features.system.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.features.system.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.features.system.CalendarSyncSettingsUI
 import com.sameerasw.essentials.ui.features.display.DuoSettingsUI
+import com.sameerasw.essentials.ui.features.display.StatusGlanceSettingsUI
 import com.sameerasw.essentials.ui.features.system.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.features.system.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.FlashlightPulseSettingsUI
@@ -615,6 +616,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Essentials On Display",
                                                             "Always on Display",
                                                             "Statusbar icons",
+                                                            "Status glance",
                                                             "Maps power saving mode",
                                                             "Duo",
                                                             "Lock screen clock",
@@ -1150,6 +1152,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Duo" -> {
                                         DuoSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Status glance" -> {
+                                        StatusGlanceSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,

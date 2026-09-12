@@ -393,6 +393,20 @@ class SettingsRepository(
         const val KEY_DUO_SLIDE_TRACK = "duo_slide_track"
         const val KEY_DUO_SLIDE_INVERT_DIRECTION = "duo_slide_invert_direction"
 
+        // Status Glance
+        const val KEY_STATUS_GLANCE_ENABLED = "status_glance_enabled"
+        const val KEY_STATUS_GLANCE_USE_AUTO_DETECT = "status_glance_use_auto_detect"
+        const val KEY_STATUS_GLANCE_OFFSET_X = "status_glance_offset_x"
+        const val KEY_STATUS_GLANCE_OFFSET_Y = "status_glance_offset_y"
+        const val KEY_STATUS_GLANCE_MAX_WIDTH = "status_glance_max_width"
+        const val KEY_STATUS_GLANCE_FONT_SIZE = "status_glance_font_size"
+        const val KEY_STATUS_GLANCE_SHOW_FLASHLIGHT = "status_glance_show_flashlight"
+        const val KEY_STATUS_GLANCE_SHOW_CALENDAR = "status_glance_show_calendar"
+        const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
+        const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
+        const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
+        const val KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN = "status_glance_hide_when_fullscreen"
+
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
         const val KEY_LIVE_WALLPAPER_SELECTED_VIDEO = "selected_video"
@@ -3191,5 +3205,42 @@ class SettingsRepository(
 
     fun isDuoSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, false)
     fun setDuoSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, enabled)
+
+    // Status Glance
+    fun isStatusGlanceEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ENABLED, false)
+    fun setStatusGlanceEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_ENABLED, enabled)
+
+    fun isStatusGlanceAutoDetectEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, true)
+    fun setStatusGlanceAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, enabled)
+
+    fun getStatusGlanceOffsetX(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f)
+    fun setStatusGlanceOffsetX(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_X, value)
+
+    fun getStatusGlanceOffsetY(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f)
+    fun setStatusGlanceOffsetY(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_Y, value)
+
+    fun getStatusGlanceMaxWidth(): Float = getFloat(KEY_STATUS_GLANCE_MAX_WIDTH, 180f)
+    fun setStatusGlanceMaxWidth(value: Float) = putFloat(KEY_STATUS_GLANCE_MAX_WIDTH, value)
+
+    fun getStatusGlanceFontSize(): Float = getFloat(KEY_STATUS_GLANCE_FONT_SIZE, 13f)
+    fun setStatusGlanceFontSize(value: Float) = putFloat(KEY_STATUS_GLANCE_FONT_SIZE, value)
+
+    fun isStatusGlanceShowFlashlightEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_FLASHLIGHT, true)
+    fun setStatusGlanceShowFlashlightEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_FLASHLIGHT, enabled)
+
+    fun isStatusGlanceShowCalendarEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_CALENDAR, true)
+    fun setStatusGlanceShowCalendarEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_CALENDAR, enabled)
+
+    fun isStatusGlanceShowMediaEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_MEDIA, true)
+    fun setStatusGlanceShowMediaEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_MEDIA, enabled)
+
+    fun isStatusGlanceShowTimeEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_TIME, true)
+    fun setStatusGlanceShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_TIME, enabled)
+
+    fun isStatusGlanceBackgroundPillEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, false)
+    fun setStatusGlanceBackgroundPillEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, enabled)
+
+    fun isStatusGlanceHideWhenFullscreenEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN, true)
+    fun setStatusGlanceHideWhenFullscreenEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN, enabled)
 }
 

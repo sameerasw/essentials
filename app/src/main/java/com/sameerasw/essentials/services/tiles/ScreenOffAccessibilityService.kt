@@ -16,6 +16,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -42,6 +43,7 @@ import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
 import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
+import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.performHapticFeedback
@@ -71,6 +73,7 @@ class ScreenOffAccessibilityService :
     private lateinit var pocketModeHandler: PocketModeHandler
     private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
     private lateinit var duoOverlayHandler: DuoOverlayHandler
+    private lateinit var statusGlanceHandler: StatusGlanceHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -280,6 +283,21 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_ENABLE_UNSUPPORTED_FEATURES
             ) {
                 duoOverlayHandler.updateState()
+            } else if (key?.startsWith("status_glance_") == true ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_ENABLED ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_USE_AUTO_DETECT ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_OFFSET_X ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_OFFSET_Y ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_MAX_WIDTH ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_FONT_SIZE ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_FLASHLIGHT ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_CALENDAR ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_MEDIA ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_TIME ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_BACKGROUND_PILL ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN
+            ) {
+                statusGlanceHandler.updateState()
             }
         }
 
@@ -302,11 +320,13 @@ class ScreenOffAccessibilityService :
             com.sameerasw.essentials.services.handlers
                 .SmartPixelsHandler(this)
         duoOverlayHandler = DuoOverlayHandler(this)
+        statusGlanceHandler = StatusGlanceHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
         smartPixelsHandler.init()
         duoOverlayHandler.init()
+        statusGlanceHandler.init()
 
         // Screen Receiver
         screenReceiver =
@@ -323,6 +343,7 @@ class ScreenOffAccessibilityService :
                             aodForceTurnOffHandler.removeOverlay()
                             aodWallpaperOverlayHandler.onScreenOn()
                             duoOverlayHandler.onScreenOn()
+                            statusGlanceHandler.onScreenOn()
                             freezeHandler.removeCallbacks(freezeRunnable)
                             stopInputEventListener()
                             updateOmniOverlay()
@@ -337,6 +358,7 @@ class ScreenOffAccessibilityService :
                             ambientGlanceHandler.checkAndShowOnScreenOff()
                             aodWallpaperOverlayHandler.onScreenOff()
                             duoOverlayHandler.onScreenOff()
+                            statusGlanceHandler.onScreenOff()
                             omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
                             pocketModeHandler.onScreenOff()
                             updatePocketModeSensors()
@@ -433,6 +455,7 @@ class ScreenOffAccessibilityService :
             }
         updateOmniOverlay()
         duoOverlayHandler.updateState()
+        statusGlanceHandler.updateState()
     }
 
     private fun updateOmniOverlay() {
@@ -469,6 +492,7 @@ class ScreenOffAccessibilityService :
         omniGestureOverlayHandler.removeOverlay()
         smartPixelsHandler.destroy()
         duoOverlayHandler.destroy()
+        statusGlanceHandler.destroy()
         statusBarIconHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
@@ -650,10 +674,11 @@ class ScreenOffAccessibilityService :
         accuracy: Int,
     ) {}
 
-    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         updateOmniOverlay() // Force refresh overlay on rotation
         duoOverlayHandler.onConfigurationChanged(newConfig)
+        statusGlanceHandler.onConfigurationChanged(newConfig)
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
