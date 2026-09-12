@@ -30,6 +30,7 @@ import android.media.session.MediaController
 import android.media.session.MediaSession
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
+import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -85,6 +86,12 @@ class StatusGlanceHandler(
     private var cachedIsEventToday = false
     private var cachedTimeString = ""
 
+    private var cachedBatteryLevel = 100
+    private var cachedIsBatteryCharging = false
+    private var cachedIsBatteryFull = false
+    private var cachedIsPowerSaveMode = false
+    private var isBatteryReceiverRegistered = false
+
     private val handlerScope = CoroutineScope(Dispatchers.Main + Job())
     private var calendarObserver: ContentObserver? = null
 
@@ -116,6 +123,12 @@ class StatusGlanceHandler(
     }
     private var isTimeReceiverRegistered = false
 
+    private val batteryReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            updateBatteryStatus(intent)
+        }
+    }
+
     fun init() {
         windowManager = service.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as? PowerManager
@@ -134,6 +147,7 @@ class StatusGlanceHandler(
                 registerMediaListener()
                 registerCalendarObserver()
                 registerTimeReceiver()
+                registerBatteryReceiver()
 
                 if (!isOverlayAdded) {
                     createOverlay()
@@ -142,6 +156,7 @@ class StatusGlanceHandler(
                 }
 
                 updateTime()
+                updateBatteryStatus()
                 queryUpcomingCalendarEvent()
                 reEvaluateAndApplyMedia(isInitial = true)
                 syncConfigToView()
@@ -151,6 +166,7 @@ class StatusGlanceHandler(
                 unregisterMediaListener()
                 unregisterCalendarObserver()
                 unregisterTimeReceiver()
+                unregisterBatteryReceiver()
             }
         }
     }
@@ -204,6 +220,18 @@ class StatusGlanceHandler(
             v.maxWidthDp = settingsRepository.getStatusGlanceMaxWidth()
             v.fontSize = settingsRepository.getStatusGlanceFontSize()
             v.isFlashlightOn = isFlashlightOn
+
+            v.showBattery = settingsRepository.isStatusGlanceShowBatteryEnabled()
+            v.batteryDisplayMode = settingsRepository.getStatusGlanceBatteryDisplayMode()
+            v.showBatteryWhenLow = settingsRepository.isStatusGlanceBatteryShowLowEnabled()
+            v.showBatteryWhileCharging = settingsRepository.isStatusGlanceBatteryShowChargingEnabled()
+            v.showBatteryWhileFull = settingsRepository.isStatusGlanceBatteryShowFullEnabled()
+            v.showBatteryOtherwise = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
+
+            v.batteryLevel = cachedBatteryLevel
+            v.isBatteryCharging = cachedIsBatteryCharging
+            v.isBatteryFull = cachedIsBatteryFull
+            v.isPowerSaveMode = cachedIsPowerSaveMode
 
             v.nextEventTitle = cachedEventTitle
             v.nextEventTimeMillis = cachedEventTimeMillis
@@ -291,6 +319,57 @@ class StatusGlanceHandler(
         val formattedTime = timeFormat.format(Date())
         cachedTimeString = formattedTime
         glanceView?.currentTimeString = formattedTime
+    }
+
+    private fun updateBatteryStatus(intent: Intent? = null) {
+        val batteryIntent = intent ?: service.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, 100) ?: 100
+        val batteryPct = if (level >= 0 && scale > 0) ((level.toFloat() / scale.toFloat()) * 100f).toInt() else 100
+
+        val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+        val isFull = status == BatteryManager.BATTERY_STATUS_FULL || batteryPct >= 100
+
+        val powerManager = service.getSystemService(Context.POWER_SERVICE) as? PowerManager
+        val isPowerSave = powerManager?.isPowerSaveMode ?: false
+
+        cachedBatteryLevel = batteryPct
+        cachedIsBatteryCharging = isCharging
+        cachedIsBatteryFull = isFull
+        cachedIsPowerSaveMode = isPowerSave
+
+        mainHandler.post {
+            glanceView?.let { v ->
+                v.batteryLevel = batteryPct
+                v.isBatteryCharging = isCharging
+                v.isBatteryFull = isFull
+                v.isPowerSaveMode = isPowerSave
+            }
+        }
+    }
+
+    private fun registerBatteryReceiver() {
+        if (isBatteryReceiverRegistered) return
+        try {
+            val filter = IntentFilter().apply {
+                addAction(Intent.ACTION_BATTERY_CHANGED)
+                addAction(Intent.ACTION_POWER_CONNECTED)
+                addAction(Intent.ACTION_POWER_DISCONNECTED)
+                addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+            }
+            service.registerReceiver(batteryReceiver, filter)
+            isBatteryReceiverRegistered = true
+            updateBatteryStatus()
+        } catch (_: Exception) {}
+    }
+
+    private fun unregisterBatteryReceiver() {
+        if (!isBatteryReceiverRegistered) return
+        try {
+            service.unregisterReceiver(batteryReceiver)
+        } catch (_: Exception) {}
+        isBatteryReceiverRegistered = false
     }
 
     private fun queryUpcomingCalendarEvent() {
@@ -680,6 +759,7 @@ class StatusGlanceHandler(
             glanceView?.isScreenOff = false
             glanceView?.isLocked = isLocked
             updateTime()
+            updateBatteryStatus()
             queryUpcomingCalendarEvent()
             reEvaluateAndApplyMedia(isInitial = true)
             syncConfigToView()
@@ -706,6 +786,7 @@ class StatusGlanceHandler(
             glanceView?.isLocked = false
             glanceView?.isShadeExpanded = false
             updateTime()
+            updateBatteryStatus()
             queryUpcomingCalendarEvent()
             reEvaluateAndApplyMedia(isInitial = true)
             syncConfigToView()
@@ -740,5 +821,6 @@ class StatusGlanceHandler(
         unregisterMediaListener()
         unregisterCalendarObserver()
         unregisterTimeReceiver()
+        unregisterBatteryReceiver()
     }
 }

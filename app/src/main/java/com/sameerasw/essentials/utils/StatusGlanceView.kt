@@ -28,7 +28,6 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.Typeface
-import android.graphics.Xfermode
 import android.os.Build
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -82,6 +81,66 @@ class StatusGlanceView(context: Context) : View(context) {
         set(value) {
             field = value
             reevaluateSlot()
+        }
+
+    var showBattery: Boolean = false
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var batteryDisplayMode: String = "icon"
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var showBatteryWhenLow: Boolean = true
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var showBatteryWhileCharging: Boolean = true
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var showBatteryWhileFull: Boolean = true
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var showBatteryOtherwise: Boolean = true
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var batteryLevel: Int = 100
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var isBatteryCharging: Boolean = false
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var isBatteryFull: Boolean = false
+        set(value) {
+            field = value
+            reevaluateBatteryState()
+        }
+
+    var isPowerSaveMode: Boolean = false
+        set(value) {
+            field = value
+            reevaluateBatteryState()
         }
 
     var useBackgroundPill: Boolean = false
@@ -149,6 +208,7 @@ class StatusGlanceView(context: Context) : View(context) {
         set(value) {
             field = value
             textPaint.textSize = value * density
+            batteryTextPaint.textSize = (value * 0.85f) * density
             reevaluateSlot()
         }
 
@@ -272,6 +332,12 @@ class StatusGlanceView(context: Context) : View(context) {
     private var revealProgress: Float = 1f
     private var revealAnimator: ValueAnimator? = null
 
+    // Battery state & animation
+    private var isBatteryVisible: Boolean = false
+    private var batteryAlpha: Float = 0f
+    private var batteryAlphaAnimator: ValueAnimator? = null
+    private val batteryIconBitmapCache = mutableMapOf<Int, Bitmap>()
+
     private var slotAlpha: Float = 1f
     private var alphaAnimator: ValueAnimator? = null
     private var colorAnimator: ValueAnimator? = null
@@ -290,6 +356,11 @@ class StatusGlanceView(context: Context) : View(context) {
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = 13f * density
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+    }
+
+    private val batteryTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = (17f * 0.85f) * density
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
     }
 
@@ -401,6 +472,43 @@ class StatusGlanceView(context: Context) : View(context) {
         }
     }
 
+    private fun isBatteryConditionMet(): Boolean {
+        if (!showBattery) return false
+        val isLow = batteryLevel <= 20
+        val isCharging = isBatteryCharging
+        val isFull = isBatteryFull || batteryLevel >= 100
+        val isOtherwise = !isLow && !isCharging && !isFull
+
+        return (isLow && showBatteryWhenLow) ||
+            (isCharging && showBatteryWhileCharging) ||
+            (isFull && showBatteryWhileFull) ||
+            (isOtherwise && showBatteryOtherwise)
+    }
+
+    private fun reevaluateBatteryState() {
+        val shouldShow = isBatteryConditionMet()
+        if (isBatteryVisible != shouldShow) {
+            isBatteryVisible = shouldShow
+            batteryAlphaAnimator?.cancel()
+            val targetAlpha = if (shouldShow) 1f else 0f
+            batteryAlphaAnimator = ValueAnimator.ofFloat(batteryAlpha, targetAlpha).apply {
+                duration = 260L
+                interpolator = DecelerateInterpolator()
+                addUpdateListener {
+                    batteryAlpha = it.animatedValue as Float
+                    targetContentWidth = calculateTargetWidth()
+                    animateWidth()
+                    invalidate()
+                }
+                start()
+            }
+        } else {
+            targetContentWidth = calculateTargetWidth()
+            animateWidth()
+            invalidate()
+        }
+    }
+
     fun reevaluateSlot() {
         val now = System.currentTimeMillis()
         val isEventWithin15Min = isEventToday && (nextEventTimeMillis - now) in 0..(15 * 60 * 1000L)
@@ -462,7 +570,6 @@ class StatusGlanceView(context: Context) : View(context) {
             return
         }
 
-        // Snapshot current content before updating
         previousSlot = activeSlot
         val (prevClock, prevMarquee) = getSlotTexts(activeSlot)
         previousClockText = prevClock
@@ -592,9 +699,6 @@ class StatusGlanceView(context: Context) : View(context) {
         marqueeOffset = 0f
     }
 
-    /**
-     * Returns Pair(clockText, marqueeText)
-     */
     private fun getSlotTexts(slot: GlanceSlot): Pair<String, String> {
         return when (slot) {
             GlanceSlot.FLASHLIGHT -> Pair("", context.getString(R.string.status_glance_slot_flashlight))
@@ -621,6 +725,28 @@ class StatusGlanceView(context: Context) : View(context) {
                 if (showCalendar && isEventToday && nextEventTitle.isNotBlank()) calendarIcon else null
             }
             GlanceSlot.NONE -> null
+        }
+    }
+
+    private fun getBatteryDrawableId(): Int {
+        return when {
+            isPowerSaveMode -> R.drawable.battery_android_frame_plus_24px
+            isBatteryCharging -> R.drawable.battery_android_frame_bolt_24px
+            batteryLevel <= 15 -> R.drawable.battery_android_frame_alert_24px
+            batteryLevel <= 10 -> R.drawable.battery_android_0_24px
+            batteryLevel <= 25 -> R.drawable.battery_android_frame_1_24px
+            batteryLevel <= 40 -> R.drawable.battery_android_frame_2_24px
+            batteryLevel <= 60 -> R.drawable.battery_android_frame_3_24px
+            batteryLevel <= 75 -> R.drawable.battery_android_frame_4_24px
+            batteryLevel <= 90 -> R.drawable.battery_android_frame_5_24px
+            else -> R.drawable.battery_android_frame_full_24px
+        }
+    }
+
+    private fun getBatteryBitmap(sizePx: Int): Bitmap? {
+        val drawableId = getBatteryDrawableId()
+        return batteryIconBitmapCache.getOrPut(drawableId) {
+            getBitmapFromVector(drawableId, sizePx) ?: return null
         }
     }
 
@@ -655,6 +781,17 @@ class StatusGlanceView(context: Context) : View(context) {
         if (marqueeText.isNotBlank()) {
             val marqueeWidth = textPaint.measureText(marqueeText)
             calculated += marqueeWidth
+        }
+
+        if (isBatteryConditionMet() || batteryAlpha > 0f) {
+            val batteryWidth = if (batteryDisplayMode == "icon") {
+                22f * density
+            } else {
+                val pctText = "$batteryLevel%"
+                batteryTextPaint.measureText(pctText)
+            }
+            val batterySpacing = 5f * density
+            calculated += (batterySpacing + batteryWidth) * batteryAlpha
         }
 
         val maxAllowedWidth = maxWidthDp * density
@@ -720,6 +857,8 @@ class StatusGlanceView(context: Context) : View(context) {
         artworkPaint.alpha = combinedIconAlpha
         textPaint.color = currentTextColor
         textPaint.alpha = combinedTextAlpha
+        batteryTextPaint.color = currentTextColor
+        batteryTextPaint.alpha = combinedTextAlpha
 
         var cursorX = left
 
@@ -749,6 +888,18 @@ class StatusGlanceView(context: Context) : View(context) {
         }
         val iconTop = glanceCenterY - iconSize / 2f + offsetY
 
+        // Compute reserved right space for battery
+        val batteryReservedWidth = if (batteryAlpha > 0f) {
+            val itemW = if (batteryDisplayMode == "icon") {
+                16f * density
+            } else {
+                batteryTextPaint.measureText("$batteryLevel%")
+            }
+            (itemW + 5f * density) * batteryAlpha
+        } else {
+            0f
+        }
+
         if (marqueeText.isNotBlank() && combinedTextAlpha > 0) {
             val textSpacing = if (hasIcon) {
                 if (isArtwork) 3f * density else 4f * density
@@ -756,7 +907,7 @@ class StatusGlanceView(context: Context) : View(context) {
                 if (clockText.isBlank()) 10f * density else 0f
             }
             val textLeft = if (hasIcon) (iconLeft + iconSize + textSpacing) else (cursorX + textSpacing)
-            val textRight = if (useBackgroundPill) right else right - 8f * density
+            val textRight = (if (useBackgroundPill) right else right - 8f * density) - batteryReservedWidth
             val maxTextWidth = (textRight - textLeft).coerceAtLeast(0f)
 
             if (!isTransitioning) {
@@ -777,7 +928,7 @@ class StatusGlanceView(context: Context) : View(context) {
                 val marqueeBounds = RectF(fadeStart, top, textRight, bottom)
                 val saveLayerCount = canvas.saveLayer(marqueeBounds, null)
 
-                if (useBackgroundPill) {
+                if (useBackgroundPill && batteryAlpha <= 0f) {
                     marqueeClipPath.reset()
                     val radii = floatArrayOf(
                         0f, 0f,
@@ -802,12 +953,27 @@ class StatusGlanceView(context: Context) : View(context) {
                 canvas.drawText(marqueeText, x1, textY, textPaint)
                 canvas.drawText(marqueeText, x2, textY, textPaint)
 
+                // Left fade gradient
                 marqueeFadePaint.shader = LinearGradient(
                     fadeStart, 0f, fadeStart + fadeWidth, 0f,
                     Color.TRANSPARENT, Color.BLACK,
                     Shader.TileMode.CLAMP
                 )
                 canvas.drawRect(fadeStart, top, fadeStart + fadeWidth, bottom, marqueeFadePaint)
+
+                // Right fade gradient when battery indicator is present
+                if (batteryAlpha > 0f) {
+                    val rightFadeWidth = 14f * density
+                    val rightFadeStart = (textRight - rightFadeWidth).coerceAtLeast(fadeStart + fadeWidth)
+                    if (rightFadeStart < textRight) {
+                        marqueeFadePaint.shader = LinearGradient(
+                            rightFadeStart, 0f, textRight, 0f,
+                            Color.BLACK, Color.TRANSPARENT,
+                            Shader.TileMode.CLAMP
+                        )
+                        canvas.drawRect(rightFadeStart, top, textRight, bottom, marqueeFadePaint)
+                    }
+                }
 
                 canvas.restoreToCount(saveLayerCount)
             } else {
@@ -836,6 +1002,34 @@ class StatusGlanceView(context: Context) : View(context) {
                 iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
                 val dstRect = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
                 canvas.drawBitmap(icon, null, dstRect, iconPaint)
+            }
+        }
+
+        if (batteryAlpha > 0f && expandPhase > 0.3f) {
+            val batteryPhaseAlpha = ((expandPhase - 0.3f) / 0.7f).coerceIn(0f, 1f)
+            val combinedBatteryAlpha = (slotAlpha * alphaMultiplier * revealTextAlpha * batteryAlpha * batteryPhaseAlpha * 255).toInt().coerceIn(0, 255)
+            if (combinedBatteryAlpha > 0) {
+                if (batteryDisplayMode == "icon") {
+                    val batteryIconSize = 16f * density
+                    val batteryIcon = getBatteryBitmap(batteryIconSize.toInt())
+                    if (batteryIcon != null) {
+                        iconPaint.alpha = combinedBatteryAlpha
+                        iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
+                        val batteryLeft = right - (5.5f * density) - batteryIconSize
+                        val batteryTop = glanceCenterY - batteryIconSize / 2f + offsetY
+                        val dstRect = RectF(batteryLeft, batteryTop, batteryLeft + batteryIconSize, batteryTop + batteryIconSize)
+                        canvas.drawBitmap(batteryIcon, null, dstRect, iconPaint)
+                    }
+                } else {
+                    val pctText = "$batteryLevel%"
+                    batteryTextPaint.alpha = combinedBatteryAlpha
+                    batteryTextPaint.color = currentTextColor
+                    batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
+                    val pctWidth = batteryTextPaint.measureText(pctText)
+                    val pctX = right - (5.5f * density) - pctWidth
+                    val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
+                    canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
+                }
             }
         }
     }
@@ -894,7 +1088,6 @@ class StatusGlanceView(context: Context) : View(context) {
             val newOffsetY = transitionDirection * (1f - p) * flipDistance
             val newAlpha = p.coerceIn(0f, 1f)
 
-            //  outgoing slot
             drawSlotContent(
                 canvas = canvas,
                 clockText = previousClockText,
@@ -914,7 +1107,6 @@ class StatusGlanceView(context: Context) : View(context) {
                 expandPhase = expandPhase
             )
 
-            //  incoming slot
             val (currentClock, currentMarquee) = getSlotTexts(activeSlot)
             val currentIcon = getSlotIcon(activeSlot)
             val currentIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
@@ -971,5 +1163,6 @@ class StatusGlanceView(context: Context) : View(context) {
         colorAnimator?.cancel()
         transitionAnimator?.cancel()
         revealAnimator?.cancel()
+        batteryAlphaAnimator?.cancel()
     }
 }

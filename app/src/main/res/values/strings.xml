@@ -2532,4 +2532,18 @@
     <string name="status_glance_hide_in_quick_settings_title">Hide in quick settings</string>
     <string name="status_glance_hide_in_quick_settings_desc">Automatically hide when notification shade or quick settings is expanded</string>
     <string name="status_glance_slot_flashlight">Flashlight On</string>
+    <string name="status_glance_show_battery_title">Battery</string>
+    <string name="status_glance_show_battery_desc">Display battery indicator on the right side of the pill</string>
+    <string name="status_glance_battery_options_title">Battery options</string>
+    <string name="status_glance_battery_display_mode_title">Display mode</string>
+    <string name="status_glance_battery_mode_icon">Icon</string>
+    <string name="status_glance_battery_mode_percentage">Percentage</string>
+    <string name="status_glance_battery_show_low_title">Show when low battery</string>
+    <string name="status_glance_battery_show_low_desc">When battery drops below 20%</string>
+    <string name="status_glance_battery_show_charging_title">Show while charging</string>
+    <string name="status_glance_battery_show_charging_desc">When device is plugged in or charging</string>
+    <string name="status_glance_battery_show_full_title">Show while full</string>
+    <string name="status_glance_battery_show_full_desc">When battery is fully charged</string>
+    <string name="status_glance_battery_show_otherwise_title">Show otherwise</string>
+    <string name="status_glance_battery_show_otherwise_desc">Always show during normal discharging states</string>
 </resources>
