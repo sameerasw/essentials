@@ -92,6 +92,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("SHIZUKU", R.string.feat_sim_names_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_transparent_navigation_bar_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_standby_apps_title)
+    PermissionRegistry.register("SHIZUKU", R.string.duo_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_freeze_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_app_lock_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_dynamic_night_light_title)
@@ -115,6 +116,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_aod_wallpaper_use_album_art)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.duo_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_status_glance_title)
+    PermissionRegistry.register("RECEIVE_SENSITIVE_NOTIFICATIONS", R.string.duo_title)
 
     // Bluetooth permissions
     PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)

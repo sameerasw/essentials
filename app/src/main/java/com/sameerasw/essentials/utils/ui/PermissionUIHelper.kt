@@ -487,6 +487,26 @@ object PermissionUIHelper {
                     isGranted = PermissionUtils.hasStoragePermission(context),
                 )
 
+            AppPermission.RECEIVE_SENSITIVE_NOTIFICATIONS ->
+                PermissionItem(
+                    iconRes = permission.iconRes,
+                    title = permission.titleRes,
+                    description = R.string.duo_otp_sensitive_perm_missing_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures(permission),
+                    actionLabel = if (viewModel.isSensitiveNotificationAccessGranted.value) R.string.perm_action_granted else R.string.perm_action_grant_shizuku,
+                    action = {
+                        viewModel.requestSensitiveNotificationAccess(context)
+                    },
+                    secondaryActionLabel = R.string.perm_action_copy_adb,
+                    secondaryAction = {
+                        val adbCommand = "adb shell cmd appops set ${context.packageName} RECEIVE_SENSITIVE_NOTIFICATIONS allow"
+                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                        val clip = android.content.ClipData.newPlainText("adb_command", adbCommand)
+                        clipboard.setPrimaryClip(clip)
+                    },
+                    isGranted = viewModel.isSensitiveNotificationAccessGranted.value,
+                )
+
             AppPermission.NOTIFICATION_BUBBLES ->
                 PermissionItem(
                     iconRes = permission.iconRes,

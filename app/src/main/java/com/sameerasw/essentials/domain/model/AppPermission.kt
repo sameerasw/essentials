@@ -128,6 +128,11 @@ enum class AppPermission(
         iconRes = R.drawable.rounded_image_24,
         aliases = listOf("READ_MEDIA_IMAGES", "READ_EXTERNAL_STORAGE", "MANAGE_EXTERNAL_STORAGE"),
     ),
+    RECEIVE_SENSITIVE_NOTIFICATIONS(
+        key = "RECEIVE_SENSITIVE_NOTIFICATIONS",
+        titleRes = R.string.perm_sensitive_notif_title,
+        iconRes = R.drawable.rounded_security_24,
+    ),
     NOTIFICATION_BUBBLES(
         key = "NOTIFICATION_BUBBLES",
         titleRes = R.string.perm_bubbles_title,

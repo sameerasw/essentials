@@ -391,6 +391,32 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var showOtpGlance: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                if (!value && isOtpGlanceActive) {
+                    setOtpGlance(false, "", "")
+                }
+            }
+        }
+
+    var isOtpGlanceActive: Boolean = false
+        private set
+
+    var activeOtpCode: String = ""
+        private set
+
+    var activeOtpSender: String = ""
+        private set
+
+    private var otpMorphFraction: Float = 0f
+    private var otpMorphAnimator: ValueAnimator? = null
+    private var otpCopiedPulseFraction: Float = 0f
+    private var otpCopiedAnimator: ValueAnimator? = null
+    private val pillBounds = RectF()
+    private val contrastPillBounds = RectF()
+
     var currentTimeText: String = ""
         set(value) {
             if (field != value) {
@@ -643,6 +669,85 @@ class DuoOverlayView(context: Context) : View(context) {
         interactiveIcon = null
         releaseTrackRotation()
         updateActiveProgressMode()
+    }
+
+    enum class QuickGlanceType {
+        OTP,
+        CLIPBOARD,
+        GENERIC
+    }
+
+    var activeGlanceType: QuickGlanceType = QuickGlanceType.OTP
+        private set
+
+    fun setOtpGlance(isActive: Boolean, otpCode: String, sender: String) {
+        setQuickGlance(isActive, otpCode, sender, QuickGlanceType.OTP)
+    }
+
+    fun setClipboardGlance(isActive: Boolean, text: String) {
+        setQuickGlance(isActive, text, "", QuickGlanceType.CLIPBOARD)
+    }
+
+    fun setQuickGlance(isActive: Boolean, text: String, sender: String = "", type: QuickGlanceType = QuickGlanceType.OTP) {
+        if (isOtpGlanceActive == isActive && activeOtpCode == text && activeGlanceType == type) return
+        isOtpGlanceActive = isActive
+        activeOtpCode = text
+        activeOtpSender = sender
+        activeGlanceType = type
+
+        otpMorphAnimator?.cancel()
+        val startFraction = otpMorphFraction
+        val targetFraction = if (isActive) 1.0f else 0.0f
+        otpMorphAnimator = ValueAnimator.ofFloat(startFraction, targetFraction).apply {
+            duration = if (isActive) 520L else 340L
+            interpolator = if (isActive) OvershootInterpolator(1.2f) else DecelerateInterpolator()
+            addUpdateListener { anim ->
+                otpMorphFraction = anim.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun triggerOtpCopiedAnimation() {
+        otpCopiedAnimator?.cancel()
+        otpCopiedAnimator = ValueAnimator.ofFloat(0f, 1f, 0f).apply {
+            duration = 550L
+            interpolator = DecelerateInterpolator()
+            addUpdateListener { anim ->
+                otpCopiedPulseFraction = anim.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun getPillTouchBounds(): RectF? {
+        if (otpMorphFraction < 0.4f || !isOtpGlanceActive) return null
+        return RectF(pillBounds)
+    }
+
+    private var clipboardBitmap: Bitmap? = null
+
+    private fun getGlanceIcon(): Bitmap? {
+        return when (activeGlanceType) {
+            QuickGlanceType.OTP -> getClipboardIcon()
+            QuickGlanceType.CLIPBOARD -> getClipboardIcon()
+            QuickGlanceType.GENERIC -> getClipboardIcon()
+        }
+    }
+
+    private fun getClipboardIcon(): Bitmap? {
+        if (clipboardBitmap == null) {
+            try {
+                val drawable = ContextCompat.getDrawable(context, R.drawable.rounded_content_paste_24)?.mutate()
+                drawable?.setTint(Color.WHITE)
+                if (drawable != null) {
+                    clipboardBitmap = AppUtil.drawableToBitmap(drawable, 48)
+                }
+            } catch (_: Exception) {}
+        }
+        return clipboardBitmap
     }
 
     private fun getChargingBoltBitmap(): Bitmap? {
@@ -1296,6 +1401,20 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.STROKE
     }
 
+    private val pillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+    private val contrastPillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+    private val otpTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+    }
+    private val contrastOtpTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        style = Paint.Style.STROKE
+    }
+
     init {
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
@@ -1318,9 +1437,13 @@ class DuoOverlayView(context: Context) : View(context) {
         if (flexFont != null) {
             timePaint.typeface = flexFont
             contrastTimePaint.typeface = flexFont
+            otpTextPaint.typeface = flexFont
+            contrastOtpTextPaint.typeface = flexFont
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 timePaint.fontVariationSettings = "'ROND' 100.0, 'wdth' 100.0, 'wght' 600.0"
                 contrastTimePaint.fontVariationSettings = "'ROND' 100.0, 'wdth' 100.0, 'wght' 600.0"
+                otpTextPaint.fontVariationSettings = "'ROND' 100.0, 'wdth' 100.0, 'wght' 700.0"
+                contrastOtpTextPaint.fontVariationSettings = "'ROND' 100.0, 'wdth' 100.0, 'wght' 700.0"
             }
         } else {
             val roundedTypeface = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1330,11 +1453,19 @@ class DuoOverlayView(context: Context) : View(context) {
             }
             timePaint.typeface = roundedTypeface
             contrastTimePaint.typeface = roundedTypeface
+            otpTextPaint.typeface = roundedTypeface
+            contrastOtpTextPaint.typeface = roundedTypeface
         }
         timePaint.letterSpacing = 0.18f
         contrastTimePaint.letterSpacing = 0.18f
+        otpTextPaint.letterSpacing = 0.12f
+        contrastOtpTextPaint.letterSpacing = 0.12f
 
         contrastTimePaint.apply {
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+        }
+        contrastOtpTextPaint.apply {
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
         }
@@ -1591,7 +1722,10 @@ class DuoOverlayView(context: Context) : View(context) {
         }
 
         val effectiveDotAlpha = animatedDotAlpha * (1f - animatedCustomFraction)
-        if (effectiveDotAlpha > 0.01f) {
+        val isOtpActiveOrMorphing = otpMorphFraction > 0.005f
+
+        // Draw network dots or emergent seed droplet during morph phase 1
+        if (effectiveDotAlpha > 0.01f || isOtpActiveOrMorphing) {
             val spreadFraction = animatedDotAlpha.coerceIn(0f, 1f)
             val dotAngleOffsets = floatArrayOf(30f, 10f, -10f, -30f)
             val baseAlpha = Color.alpha(currentDotBaseColor)
@@ -1599,29 +1733,153 @@ class DuoOverlayView(context: Context) : View(context) {
             val green = Color.green(currentDotBaseColor)
             val blue = Color.blue(currentDotBaseColor)
 
-            for (i in dotAngleOffsets.indices) {
-                val angleDeg = 90f + dotAngleOffsets[i] * spreadFraction
-                val angleRad = Math.toRadians(angleDeg.toDouble())
-                val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
-                val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
+            val mergeProgress = (otpMorphFraction / 0.35f).coerceIn(0f, 1f)
+            val dotsFadeOut = if (otpMorphFraction > 0.32f) {
+                (1f - (otpMorphFraction - 0.32f) / 0.10f).coerceIn(0f, 1f)
+            } else {
+                1.0f
+            }
 
-                val dotActiveFraction = (animatedSignalLevel - i).coerceIn(0f, 1f)
-                val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * effectiveDotAlpha * animatedVisibilityAlpha
-                dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt(), red, green, blue)
+            if (dotsFadeOut > 0.01f) {
+                if (effectiveDotAlpha > 0.01f) {
+                    // Networks enabled: 4 dots merge along the arc into 90°
+                    for (i in dotAngleOffsets.indices) {
+                        val restingAngle = 90f + dotAngleOffsets[i] * spreadFraction
+                        val currentAngleDeg = restingAngle + (90f - restingAngle) * mergeProgress
+                        val angleRad = Math.toRadians(currentAngleDeg.toDouble())
+                        val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
+                        val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
 
-                if (useUniversalContrast && contrastAlpha > 0) {
-                    val shadowAlpha = (contrastAlpha * effectiveDotAlpha).toInt().coerceIn(0, 255)
-                    contrastDotPaint.color = Color.argb(
-                        shadowAlpha,
-                        Color.red(contrastColor),
-                        Color.green(contrastColor),
-                        Color.blue(contrastColor)
-                    )
-                    canvas.drawCircle(dotX, dotY, (dotRadiusPx + 0.5f * density) * effectiveDotAlpha, contrastDotPaint)
+                        val dotActiveFraction = (animatedSignalLevel - i).coerceIn(0f, 1f)
+                        val dotOpacity = (0.22f + 0.78f * dotActiveFraction) * effectiveDotAlpha * animatedVisibilityAlpha * dotsFadeOut
+                        val finalDotRadius = dotRadiusPx * (1f + 0.45f * mergeProgress)
+
+                        dotPaint.color = Color.argb((baseAlpha * dotOpacity).toInt().coerceIn(0, 255), red, green, blue)
+
+                        if (useUniversalContrast && contrastAlpha > 0) {
+                            val shadowAlpha = (contrastAlpha * effectiveDotAlpha * dotsFadeOut).toInt().coerceIn(0, 255)
+                            contrastDotPaint.color = Color.argb(
+                                shadowAlpha,
+                                Color.red(contrastColor),
+                                Color.green(contrastColor),
+                                Color.blue(contrastColor)
+                            )
+                            canvas.drawCircle(dotX, dotY, (finalDotRadius + 0.5f * density) * effectiveDotAlpha, contrastDotPaint)
+                        }
+
+                        canvas.drawCircle(dotX, dotY, finalDotRadius * effectiveDotAlpha, dotPaint)
+                    }
+                } else if (isOtpActiveOrMorphing) {
+                    // Networks disabled (e.g. Time only or clean ring): Emergent seed droplet at 90°
+                    val seedScale = (otpMorphFraction / 0.32f).coerceIn(0f, 1f)
+                    val seedRadius = dotRadiusPx * (0.4f + 0.8f * seedScale)
+                    val seedX = cameraCenterX
+                    val seedY = cameraCenterY + baseRadius
+                    val seedOpacity = animatedVisibilityAlpha * dotsFadeOut * seedScale
+
+                    dotPaint.color = Color.argb((baseAlpha * seedOpacity).toInt().coerceIn(0, 255), red, green, blue)
+
+                    if (useUniversalContrast && contrastAlpha > 0) {
+                        val shadowAlpha = (contrastAlpha * seedOpacity).toInt().coerceIn(0, 255)
+                        contrastDotPaint.color = Color.argb(
+                            shadowAlpha,
+                            Color.red(contrastColor),
+                            Color.green(contrastColor),
+                            Color.blue(contrastColor)
+                        )
+                        canvas.drawCircle(seedX, seedY, seedRadius + 0.5f * density, contrastDotPaint)
+                    }
+
+                    canvas.drawCircle(seedX, seedY, seedRadius, dotPaint)
+                }
+            }
+        }
+
+        if (otpMorphFraction > 0.30f && activeOtpCode.isNotEmpty()) {
+            val pillProgress = ((otpMorphFraction - 0.30f) / 0.70f).coerceIn(0f, 1f)
+
+            val pillHeight = 26f * density
+            val targetCornerRadius = pillHeight / 2f
+
+            val formattedCode = activeOtpCode
+            val textWidth = otpTextPaint.measureText(formattedCode)
+            val iconSize = 14f * density
+            val contentPadding = 10f * density
+            val targetPillWidth = (textWidth + iconSize + contentPadding * 2.8f).coerceAtLeast(84f * density)
+
+            val animatedWidth = dotRadiusPx * 2f + (targetPillWidth - dotRadiusPx * 2f) * pillProgress
+            val animatedHeight = dotRadiusPx * 2f + (pillHeight - dotRadiusPx * 2f) * pillProgress
+            val currentCornerRadius = dotRadiusPx + (targetCornerRadius - dotRadiusPx) * pillProgress
+            val pillCenterY = cameraCenterY + baseRadius + (15f * density) * pillProgress + pullDownOffsetY
+
+            pillBounds.set(
+                cameraCenterX - animatedWidth / 2f,
+                pillCenterY - animatedHeight / 2f,
+                cameraCenterX + animatedWidth / 2f,
+                pillCenterY + animatedHeight / 2f
+            )
+
+            val pillAlpha = (animatedVisibilityAlpha * ((otpMorphFraction - 0.28f) / 0.15f).coerceIn(0f, 1f)).coerceIn(0f, 1f)
+
+            if (useUniversalContrast && contrastAlpha > 0) {
+                contrastPillBounds.set(
+                    pillBounds.left - 1.2f * density,
+                    pillBounds.top - 1.2f * density,
+                    pillBounds.right + 1.2f * density,
+                    pillBounds.bottom + 1.2f * density
+                )
+                val shadowAlpha = (contrastAlpha * 1.6f * pillAlpha).toInt().coerceIn(0, 255)
+                contrastPillPaint.color = Color.argb(
+                    shadowAlpha,
+                    Color.red(contrastColor),
+                    Color.green(contrastColor),
+                    Color.blue(contrastColor)
+                )
+                canvas.drawRoundRect(contrastPillBounds, currentCornerRadius + 1.2f * density, currentCornerRadius + 1.2f * density, contrastPillPaint)
+            }
+
+            val pillBaseColor = if (otpCopiedPulseFraction > 0.01f) {
+                Color.rgb(0, 230, 118)
+            } else {
+                currentProgressColor
+            }
+
+            val pR = Color.red(pillBaseColor)
+            val pG = Color.green(pillBaseColor)
+            val pB = Color.blue(pillBaseColor)
+            val fillAlpha = ((if (isDarkTheme) 230 else 245) * pillAlpha).toInt().coerceIn(0, 255)
+            pillPaint.color = Color.argb(fillAlpha, pR, pG, pB)
+            canvas.drawRoundRect(pillBounds, currentCornerRadius, currentCornerRadius, pillPaint)
+
+            if (pillProgress > 0.40f) {
+                val contentAlpha = ((pillProgress - 0.40f) / 0.60f).coerceIn(0f, 1f) * pillAlpha
+                val isPillLight = (0.299 * pR / 255.0 + 0.587 * pG / 255.0 + 0.114 * pB / 255.0) > 0.55
+                val textCol = if (isPillLight) Color.BLACK else Color.WHITE
+
+                val icon = getGlanceIcon()
+                val iconLeft = pillBounds.left + contentPadding
+                val iconTop = pillCenterY - iconSize / 2f
+                if (icon != null) {
+                    val iconPaintWithAlpha = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
+                        colorFilter = PorterDuffColorFilter(Color.argb((255 * contentAlpha).toInt(), Color.red(textCol), Color.green(textCol), Color.blue(textCol)), PorterDuff.Mode.SRC_IN)
+                        alpha = (255 * contentAlpha).toInt()
+                    }
+                    val iconDest = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
+                    canvas.drawBitmap(icon, null, iconDest, iconPaintWithAlpha)
                 }
 
-                canvas.drawCircle(dotX, dotY, dotRadiusPx * effectiveDotAlpha, dotPaint)
+                otpTextPaint.apply {
+                    color = Color.argb((255 * contentAlpha).toInt(), Color.red(textCol), Color.green(textCol), Color.blue(textCol))
+                    textSize = 12.5f * density
+                    letterSpacing = 0.12f
+                }
+                val textX = if (icon != null) iconLeft + iconSize + 6f * density + textWidth / 2f else cameraCenterX
+                val fontMetrics = otpTextPaint.fontMetrics
+                val textY = pillCenterY - (fontMetrics.ascent + fontMetrics.descent) / 2f
+                canvas.drawText(formattedCode, textX, textY, otpTextPaint)
             }
+        } else {
+            pillBounds.set(0f, 0f, 0f, 0f)
         }
 
         val effectiveWifiAlpha = animatedWifiAlpha * (1f - animatedCustomFraction)
@@ -1680,7 +1938,12 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-        val effectiveTimeAlpha = animatedTimeAlpha * (1f - animatedCustomFraction)
+        val otpHideTimeFraction = if (otpMorphFraction > 0.001f) {
+            (1f - (otpMorphFraction / 0.25f)).coerceIn(0f, 1f)
+        } else {
+            1.0f
+        }
+        val effectiveTimeAlpha = animatedTimeAlpha * (1f - animatedCustomFraction) * otpHideTimeFraction
         if (effectiveTimeAlpha > 0.01f && currentTimeText.isNotEmpty()) {
             val baseAlpha = Color.alpha(currentDotBaseColor)
             val red = Color.red(currentDotBaseColor)

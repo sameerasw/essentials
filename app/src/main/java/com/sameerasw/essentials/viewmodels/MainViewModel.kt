@@ -102,6 +102,8 @@ class MainViewModel : ViewModel() {
     val pinnedFeatureKeys = mutableStateOf<List<String>>(emptyList())
     val pinnedQsTileKeys = mutableStateOf<List<String>>(emptyList())
     val isNotificationListenerEnabled = mutableStateOf(false)
+    val isSensitiveNotificationAccessGranted = mutableStateOf(false)
+    val isAdbFallbackDialogVisible = mutableStateOf(false)
     val isMapsPowerSavingEnabled = mutableStateOf(false)
     val isNotificationLightingEnabled = mutableStateOf(false)
     val isOverlayPermissionGranted = mutableStateOf(false)
@@ -162,6 +164,11 @@ class MainViewModel : ViewModel() {
     val duoSlideMode = mutableStateOf("none")
     val isDuoSlideTrack = mutableStateOf(false)
     val isDuoSlideInvertDirection = mutableStateOf(false)
+    val isDuoShowOtpGlance = mutableStateOf(false)
+    val isDuoOtpAutoPaste = mutableStateOf(true)
+    val isDuoOtpAutoDismiss = mutableStateOf(true)
+    val duoOtpExpirySeconds = mutableIntStateOf(45)
+    val isDuoOtpAppFilterEnabled = mutableStateOf(false)
 
     val isStatusGlanceEnabled = mutableStateOf(false)
     val isStatusGlanceAutoDetect = mutableStateOf(true)
@@ -681,6 +688,21 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ->
                         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_OTP_GLANCE ->
+                        isDuoShowOtpGlance.value = settingsRepository.isDuoShowOtpGlanceEnabled()
+
+                    SettingsRepository.KEY_DUO_OTP_AUTO_PASTE ->
+                        isDuoOtpAutoPaste.value = settingsRepository.isDuoOtpAutoPasteEnabled()
+
+                    SettingsRepository.KEY_DUO_OTP_AUTO_DISMISS ->
+                        isDuoOtpAutoDismiss.value = settingsRepository.isDuoOtpAutoDismissEnabled()
+
+                    SettingsRepository.KEY_DUO_OTP_EXPIRY_SECONDS ->
+                        duoOtpExpirySeconds.intValue = settingsRepository.getDuoOtpExpirySeconds()
+
+                    SettingsRepository.KEY_DUO_OTP_APP_FILTER_ENABLED ->
+                        isDuoOtpAppFilterEnabled.value = settingsRepository.isDuoOtpAppFilterEnabled()
 
                     SettingsRepository.KEY_STATUS_GLANCE_ENABLED ->
                         isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
@@ -1650,6 +1672,8 @@ class MainViewModel : ViewModel() {
         ) == PackageManager.PERMISSION_GRANTED
         isNotificationListenerEnabled.value =
             PermissionUtils.hasNotificationListenerPermission(context)
+        isSensitiveNotificationAccessGranted.value =
+            PermissionUtils.hasSensitiveNotificationPermission(context)
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
         isNotificationLightingAccessibilityEnabled.value =
             PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
@@ -2026,6 +2050,12 @@ class MainViewModel : ViewModel() {
         duoSlideMode.value = settingsRepository.getDuoSlideMode()
         isDuoSlideTrack.value = settingsRepository.isDuoSlideTrackEnabled()
         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
+        isDuoShowOtpGlance.value = settingsRepository.isDuoShowOtpGlanceEnabled()
+        isDuoOtpAutoPaste.value = settingsRepository.isDuoOtpAutoPasteEnabled()
+        isDuoOtpAutoDismiss.value = settingsRepository.isDuoOtpAutoDismissEnabled()
+        duoOtpExpirySeconds.intValue = settingsRepository.getDuoOtpExpirySeconds()
+        isDuoOtpAppFilterEnabled.value = settingsRepository.isDuoOtpAppFilterEnabled()
+
         isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
         isStatusGlanceAutoDetect.value = settingsRepository.isStatusGlanceAutoDetectEnabled()
         statusGlanceOffsetX.floatValue = settingsRepository.getStatusGlanceOffsetX()
@@ -4062,7 +4092,7 @@ class MainViewModel : ViewModel() {
             val sessions = manager.getActiveSessions(componentName)
             val activeSession =
                 sessions
-                    ?.sortedWith(
+                    .sortedWith(
                         compareByDescending<android.media.session.MediaController> {
                             val state = it.playbackState?.state
                             state == android.media.session.PlaybackState.STATE_PLAYING ||
@@ -4071,7 +4101,7 @@ class MainViewModel : ViewModel() {
                             val state = it.playbackState?.state
                             state == android.media.session.PlaybackState.STATE_PAUSED
                         },
-                    )?.firstOrNull()
+                    ).firstOrNull()
 
             if (activeSession != null) {
                 val metadata = activeSession.metadata
@@ -4804,6 +4834,48 @@ class MainViewModel : ViewModel() {
     fun setDuoSlideInvertDirection(enabled: Boolean) {
         isDuoSlideInvertDirection.value = enabled
         settingsRepository.setDuoSlideInvertDirection(enabled)
+    }
+
+    fun setDuoShowOtpGlance(enabled: Boolean) {
+        isDuoShowOtpGlance.value = enabled
+        settingsRepository.setDuoShowOtpGlanceEnabled(enabled)
+    }
+
+    fun setDuoOtpAutoPaste(enabled: Boolean) {
+        isDuoOtpAutoPaste.value = enabled
+        settingsRepository.setDuoOtpAutoPasteEnabled(enabled)
+    }
+
+    fun setDuoOtpAutoDismiss(enabled: Boolean) {
+        isDuoOtpAutoDismiss.value = enabled
+        settingsRepository.setDuoOtpAutoDismissEnabled(enabled)
+    }
+
+    fun setDuoOtpExpirySeconds(seconds: Int) {
+        duoOtpExpirySeconds.intValue = seconds
+        settingsRepository.setDuoOtpExpirySeconds(seconds)
+    }
+
+    fun setDuoOtpAppFilterEnabled(enabled: Boolean) {
+        isDuoOtpAppFilterEnabled.value = enabled
+        settingsRepository.setDuoOtpAppFilterEnabled(enabled)
+    }
+
+    fun loadDuoOtpSelectedApps(context: Context): List<AppSelection> = settingsRepository.loadDuoOtpSelectedApps()
+
+    fun saveDuoOtpSelectedApps(
+        context: Context,
+        apps: List<AppSelection>,
+    ) {
+        settingsRepository.saveDuoOtpSelectedApps(apps)
+    }
+
+    fun updateDuoOtpAppSelection(
+        context: Context,
+        packageName: String,
+        enabled: Boolean,
+    ) {
+        settingsRepository.updateDuoOtpAppSelection(packageName, enabled)
     }
 
     fun setStatusGlanceEnabled(enabled: Boolean) {
@@ -6101,10 +6173,16 @@ class MainViewModel : ViewModel() {
 
         val windowManager =
             context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-        val metrics = android.util.DisplayMetrics()
-        windowManager.defaultDisplay.getRealMetrics(metrics)
-        val centerX = metrics.widthPixels / 2
-        val centerY = metrics.heightPixels / 2
+        val bounds = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            windowManager.currentWindowMetrics.bounds
+        } else {
+            val metrics = android.util.DisplayMetrics()
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getRealMetrics(metrics)
+            android.graphics.Rect(0, 0, metrics.widthPixels, metrics.heightPixels)
+        }
+        val centerX = bounds.width() / 2
+        val centerY = bounds.height() / 2
 
         val command =
             if (notificationLightingSystemMode.intValue == 0) {
@@ -6112,8 +6190,8 @@ class MainViewModel : ViewModel() {
             } else if (notificationLightingSystemMode.intValue == 1) {
                 "cmd statusbar auth-ripple custom $centerX $centerY"
             } else {
-                val posX = (notificationLightingIndicatorX.value / 100f * metrics.widthPixels).toInt()
-                val posY = (notificationLightingIndicatorY.value / 100f * metrics.heightPixels).toInt()
+                val posX = (notificationLightingIndicatorX.value / 100f * bounds.width()).toInt()
+                val posY = (notificationLightingIndicatorY.value / 100f * bounds.height()).toInt()
                 "cmd statusbar auth-ripple custom $posX $posY"
             }
 
@@ -6706,6 +6784,42 @@ class MainViewModel : ViewModel() {
     }
 
     /**
+     * Executes the request sensitive notification access permission operation.
+     *
+     * @param context [Context] Target context.
+     */
+    
+    fun revokeSensitiveNotificationAccess(context: Context) {
+        if (ShizukuUtils.isShizukuAvailable()) {
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand("cmd appops set ${context.packageName} RECEIVE_SENSITIVE_NOTIFICATIONS default")
+                check(context)
+                Toast.makeText(context, "Sensitive Notification Access Revoked. Please restart device.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    fun requestSensitiveNotificationAccess(context: Context) {
+        if (ShizukuUtils.isShizukuAvailable()) {
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand("cmd appops set ${context.packageName} RECEIVE_SENSITIVE_NOTIFICATIONS allow")
+                check(context)
+                // We show a toast to ask for restart, or we can open a dialog. The plan says a dialog or toast. 
+                // We can't show a dialog directly from VM without a state.
+                // Wait, let's just trigger a toast for simplicity, but the chat says "ask the user to restart the device".
+                // I'll show a toast for restarting the device to keep the UI clean, or use the fallback dialog.
+                // Let's use the fallback dialog to also show restart instructions? No, fallback dialog is for ADB.
+                // Let's show a toast for restart.
+                Toast.makeText(context, "Permission granted. Please restart your device to apply.", Toast.LENGTH_LONG).show()
+            } else {
+                ShizukuUtils.requestPermission()
+            }
+        } else {
+            isAdbFallbackDialogVisible.value = true
+        }
+    }
+
+    /**
      * Executes the request shizuku permission operation.
      */
     fun requestShizukuPermission() {
@@ -6758,6 +6872,7 @@ class MainViewModel : ViewModel() {
         isCaffeinateActive.value = false
     }
 
+    @Suppress("DEPRECATION")
     private fun isCaffeinateServiceRunning(context: Context): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
@@ -7736,9 +7851,9 @@ class MainViewModel : ViewModel() {
             } else {
                 val backupData = gson.fromJson(json, FreezeBackupData::class.java)
                 if (backupData != null) {
-                    importedApps = backupData.apps ?: emptyList()
-                    importedTags = backupData.tags ?: emptyList()
-                    importedMap = backupData.appTagMap ?: emptyMap()
+                    importedApps = backupData.apps
+                    importedTags = backupData.tags
+                    importedMap = backupData.appTagMap
                 }
             }
 

@@ -66,6 +66,7 @@ import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryPercentageOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoNetworkOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.DuoOtpOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.system.LikeSongSettingsSheet
 import com.sameerasw.essentials.ui.features.system.RemapActionItem
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -88,6 +89,7 @@ fun DuoSettingsUI(
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryPercentageOptionsSheet by remember { mutableStateOf(false) }
     var showNetworkOptionsSheet by remember { mutableStateOf(false) }
+    var showOtpOptionsSheet by remember { mutableStateOf(false) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     var pickingActionForGesture by remember { mutableStateOf<String?>(null) }
@@ -412,6 +414,51 @@ fun DuoSettingsUI(
                     viewModel.setDuoShowFlashlight(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
+            )
+            val missingOtpPermissions = mutableListOf<String>()
+            if (!viewModel.isAccessibilityEnabled.value) {
+                missingOtpPermissions.add("ACCESSIBILITY")
+            }
+            if (!viewModel.isNotificationListenerEnabled.value) {
+                missingOtpPermissions.add("NOTIFICATION_LISTENER")
+            }
+            if (android.os.Build.VERSION.SDK_INT >= 34) {
+                if (!viewModel.isSensitiveNotificationAccessGranted.value) {
+                    missingOtpPermissions.add("RECEIVE_SENSITIVE_NOTIFICATIONS")
+                }
+                if (!viewModel.isShizukuPermissionGranted.value && !viewModel.isRootPermissionGranted.value) {
+                    missingOtpPermissions.add("SHIZUKU")
+                }
+            }
+            val allDuoOtpPermissions = listOf(
+                "ACCESSIBILITY",
+                "NOTIFICATION_LISTENER",
+                "RECEIVE_SENSITIVE_NOTIFICATIONS",
+                "SHIZUKU",
+            )
+            val hasMissingOtpPermissions = missingOtpPermissions.isNotEmpty()
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_content_paste_24,
+                title = stringResource(R.string.duo_show_otp_glance_title),
+                isChecked = viewModel.isDuoShowOtpGlance.value,
+                isBeta = true,
+                enabled = !hasMissingOtpPermissions || viewModel.isDuoShowOtpGlance.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && hasMissingOtpPermissions) {
+                        requestingPermissionsFor = Pair(R.string.duo_title, allDuoOtpPermissions)
+                    } else {
+                        viewModel.setDuoShowOtpGlance(checked)
+                    }
+                },
+                onDisabledClick = {
+                    requestingPermissionsFor = Pair(R.string.duo_title, allDuoOtpPermissions)
+                },
+                onSettingsClick = {
+                    showOtpOptionsSheet = true
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_otp_glance"),
             )
         }
 
@@ -1009,6 +1056,13 @@ fun DuoSettingsUI(
         DuoBatteryOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showBatteryOptionsSheet = false },
+        )
+    }
+
+    if (showOtpOptionsSheet) {
+        DuoOtpOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showOtpOptionsSheet = false },
         )
     }
 
