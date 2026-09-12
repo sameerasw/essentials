@@ -116,6 +116,34 @@ fun DuoBatteryOptionsBottomSheet(
                 }
             }
 
+            // Battery Saver
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_battery_android_frame_plus_24,
+                    title = stringResource(R.string.duo_battery_power_save_color_title),
+                    isChecked = viewModel.isDuoBatteryPowerSaveColorEnabled.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setDuoBatteryPowerSaveColorEnabled(checked)
+                    },
+                )
+                AnimatedVisibility(
+                    visible = viewModel.isDuoBatteryPowerSaveColorEnabled.value,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    ColorSwatchPicker(
+                        selectedColorHex = viewModel.duoBatteryPowerSaveColor.value,
+                        onColorSelected = { hex ->
+                            viewModel.setDuoBatteryPowerSaveColor(hex)
+                        },
+                    )
+                }
+            }
+
             // Charging
             RoundedCardContainer(
                 spacing = 2.dp,

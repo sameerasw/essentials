@@ -37,6 +37,7 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.os.SystemClock
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
@@ -86,6 +87,7 @@ class DuoOverlayHandler(
     private val connectivityManager by lazy { service.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager }
     private val wifiManager by lazy { service.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager }
     private val cameraManager by lazy { service.getSystemService(Context.CAMERA_SERVICE) as CameraManager }
+    private val powerManager by lazy { service.getSystemService(Context.POWER_SERVICE) as? PowerManager }
 
     private var isFlashlightOn = false
     private var currentFlashlightLevel = 1
@@ -180,10 +182,15 @@ class DuoOverlayHandler(
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action ?: return
+            if (action == PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) {
+                overlayView?.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
+                return
+            }
             if (action == Intent.ACTION_BATTERY_CHANGED ||
                 action == Intent.ACTION_POWER_CONNECTED ||
                 action == Intent.ACTION_POWER_DISCONNECTED
             ) {
+                overlayView?.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 val batteryIntent = if (action == Intent.ACTION_BATTERY_CHANGED) {
                     intent
                 } else {
@@ -755,6 +762,10 @@ class DuoOverlayHandler(
                 try {
                     this.batteryChargingColor = Color.parseColor(settingsRepository.getDuoBatteryChargingColor())
                 } catch (_: Exception) {}
+                this.isBatteryPowerSaveColorEnabled = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
+                try {
+                    this.batteryPowerSaveColor = Color.parseColor(settingsRepository.getDuoBatteryPowerSaveColor())
+                } catch (_: Exception) {}
                 this.isBatteryLowColorEnabled = settingsRepository.isDuoBatteryLowColorEnabled()
                 try {
                     this.batteryLowColor = Color.parseColor(settingsRepository.getDuoBatteryLowColor())
@@ -763,6 +774,7 @@ class DuoOverlayHandler(
                 try {
                     this.batteryCriticalColor = Color.parseColor(settingsRepository.getDuoBatteryCriticalColor())
                 } catch (_: Exception) {}
+                this.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 this.showBattery = settingsRepository.isDuoShowBatteryEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
                 this.showTime = settingsRepository.isDuoShowTimeEnabled()
@@ -1021,12 +1033,14 @@ class DuoOverlayHandler(
                     addAction(Intent.ACTION_BATTERY_CHANGED)
                     addAction(Intent.ACTION_POWER_CONNECTED)
                     addAction(Intent.ACTION_POWER_DISCONNECTED)
+                    addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
                 }
                 val intent = service.registerReceiver(
                     batteryReceiver,
                     filter
                 )
                 isBatteryReceiverRegistered = true
+                overlayView?.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 intent?.let {
                     val level = it.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
                     val scale = it.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
