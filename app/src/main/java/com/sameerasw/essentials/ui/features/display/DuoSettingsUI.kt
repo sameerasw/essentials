@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -63,6 +64,8 @@ import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryPercentageOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.DuoNetworkOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.system.LikeSongSettingsSheet
 import com.sameerasw.essentials.ui.features.system.RemapActionItem
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -83,6 +86,8 @@ fun DuoSettingsUI(
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
+    var showBatteryPercentageOptionsSheet by remember { mutableStateOf(false) }
+    var showNetworkOptionsSheet by remember { mutableStateOf(false) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     var pickingActionForGesture by remember { mutableStateOf<String?>(null) }
@@ -329,6 +334,20 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_show_battery"),
             )
             IconToggleItem(
+                iconRes = R.drawable.rounded_battery_android_frame_6_24,
+                title = stringResource(R.string.duo_show_battery_percentage_title),
+                isChecked = viewModel.isDuoShowBatteryPercentage.value,
+                enabled = viewModel.isDuoShowBattery.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowBatteryPercentage(checked)
+                },
+                onSettingsClick = {
+                    showBatteryPercentageOptionsSheet = true
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_battery_percentage"),
+            )
+            IconToggleItem(
                 iconRes = R.drawable.rounded_signal_cellular_alt_24,
                 title = stringResource(R.string.duo_show_networks_title),
                 isChecked = viewModel.isDuoShowNetworks.value,
@@ -337,7 +356,21 @@ fun DuoSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoShowNetworks(checked)
                 },
+                onSettingsClick = {
+                    showNetworkOptionsSheet = true
+                },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_schedule_24,
+                title = stringResource(R.string.duo_show_time_title),
+                isChecked = viewModel.isDuoShowTime.value,
+                enabled = viewModel.isDuoShowBattery.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowTime(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_time"),
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_motion_play_24,
@@ -512,12 +545,20 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_swipe_down_action"),
             )
 
-            val slideModeDescription = when (viewModel.duoSlideMode.value) {
+            val baseSlideDescription = when (viewModel.duoSlideMode.value) {
                 "volume" -> stringResource(R.string.duo_action_horizontal_slide_volume)
                 "brightness" -> stringResource(R.string.duo_action_horizontal_slide_brightness)
-                "track" -> stringResource(R.string.duo_action_horizontal_slide_track)
                 "sound_mode" -> stringResource(R.string.duo_action_horizontal_slide_sound_mode)
                 else -> stringResource(R.string.duo_action_horizontal_slide_none)
+            }
+            val slideModeDescription = if (viewModel.isDuoSlideTrack.value) {
+                if (viewModel.duoSlideMode.value != "none") {
+                    "$baseSlideDescription • " + stringResource(R.string.duo_action_horizontal_slide_track)
+                } else {
+                    stringResource(R.string.duo_action_horizontal_slide_track)
+                }
+            } else {
+                baseSlideDescription
             }
             IconToggleItem(
                 iconRes = R.drawable.rounded_compare_arrows_24,
@@ -531,7 +572,7 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_slide_mode"),
             )
 
-            val isMirrorableMode = viewModel.duoSlideMode.value == "track" || viewModel.duoSlideMode.value == "sound_mode"
+            val isMirrorableMode = viewModel.isDuoSlideTrack.value || viewModel.duoSlideMode.value == "sound_mode"
             AnimatedVisibility(
                 visible = isMirrorableMode,
                 enter = expandVertically() + fadeIn(),
@@ -573,7 +614,6 @@ fun DuoSettingsUI(
                         Triple("none", R.string.duo_action_horizontal_slide_none, R.drawable.rounded_do_not_disturb_on_24),
                         Triple("volume", R.string.duo_action_horizontal_slide_volume, R.drawable.rounded_volume_up_24),
                         Triple("brightness", R.string.duo_action_horizontal_slide_brightness, R.drawable.rounded_brightness_6_24),
-                        Triple("track", R.string.duo_action_horizontal_slide_track, R.drawable.rounded_skip_next_24),
                         Triple("sound_mode", R.string.duo_action_horizontal_slide_sound_mode, R.drawable.rounded_mobile_sound_24),
                     )
 
@@ -588,6 +628,19 @@ fun DuoSettingsUI(
                             },
                         )
                     }
+                }
+
+                RoundedCardContainer(spacing = 2.dp) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_skip_next_24,
+                        title = stringResource(R.string.duo_action_horizontal_slide_track),
+                        description = stringResource(R.string.duo_action_horizontal_slide_track_desc),
+                        isChecked = viewModel.isDuoSlideTrack.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setDuoSlideTrackEnabled(checked)
+                        },
+                    )
                 }
             }
         }
@@ -956,6 +1009,20 @@ fun DuoSettingsUI(
         DuoBatteryOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showBatteryOptionsSheet = false },
+        )
+    }
+
+    if (showBatteryPercentageOptionsSheet) {
+        DuoBatteryPercentageOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showBatteryPercentageOptionsSheet = false },
+        )
+    }
+
+    if (showNetworkOptionsSheet) {
+        DuoNetworkOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showNetworkOptionsSheet = false },
         )
     }
 

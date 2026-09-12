@@ -15,6 +15,7 @@ import android.content.Intent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.utils.StatusBarManager
 
 class SecurityReceiver : BroadcastReceiver() {
     override fun onReceive(
@@ -47,33 +48,34 @@ class SecurityReceiver : BroadcastReceiver() {
 
                 // New Disable QS logic
                 if (isDisableQsEnabled) {
-                    com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
+                    StatusBarManager.requestDisable(
                         context,
                         "DisableQsWhenLocked",
-                        setOf(com.sameerasw.essentials.utils.StatusBarManager.FLAG_QUICK_SETTINGS),
+                        setOf(StatusBarManager.FLAG_QUICK_SETTINGS),
                     )
                 }
 
                 // Dynamic Hide System Icons logic
                 if (isHideSystemIconsEnabled && isHideSystemIconsLockedOnlyEnabled) {
-                    com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
+                    StatusBarManager.requestDisable(
                         context,
                         "StatusBarIconAdvancedLocked",
-                        setOf(com.sameerasw.essentials.utils.StatusBarManager.FLAG_SYSTEM_ICONS),
+                        setOf(StatusBarManager.FLAG_SYSTEM_ICONS),
                     )
                 }
             }
 
             Intent.ACTION_USER_PRESENT -> {
                 // Restore QS and System Icons on unlock
-                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                StatusBarManager.requestRestore(
                     context,
                     "DisableQsWhenLocked",
                 )
-                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                StatusBarManager.requestRestore(
                     context,
                     "StatusBarIconAdvancedLocked",
                 )
+                StatusBarManager.reassertFlags(context)
             }
         }
     }

@@ -37,11 +37,13 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.os.SystemClock
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
+import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
@@ -60,6 +62,9 @@ import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -82,6 +87,7 @@ class DuoOverlayHandler(
     private val connectivityManager by lazy { service.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager }
     private val wifiManager by lazy { service.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager }
     private val cameraManager by lazy { service.getSystemService(Context.CAMERA_SERVICE) as CameraManager }
+    private val powerManager by lazy { service.getSystemService(Context.POWER_SERVICE) as? PowerManager }
 
     private var isFlashlightOn = false
     private var currentFlashlightLevel = 1
@@ -172,14 +178,58 @@ class DuoOverlayHandler(
     }
 
     private var isChargingState = false
+    private var isFastChargingState = false
+
+    private fun isFastCharging(intent: Intent?, plugged: Int): Boolean {
+        if (intent == null) return plugged == BatteryManager.BATTERY_PLUGGED_AC
+
+        try {
+            // 1. Samsung One UI specific charging extras (guarded against ClassCastException on non-Samsung OEMs)
+            val chargerType = try { intent.getIntExtra("charger_type", -1) } catch (_: Exception) { -1 }
+            if (chargerType >= 2) return true
+
+            val chargeType = try { intent.getIntExtra("charge_type", -1) } catch (_: Exception) { -1 }
+            if (chargeType >= 3) return true
+
+            val isFastExtra = try {
+                intent.getBooleanExtra("fast_charge", false) || intent.getBooleanExtra("is_fast_charge", false)
+            } catch (_: Exception) { false }
+            if (isFastExtra) return true
+
+            // 2. Standard Android / AOSP charging wattage check (Pixel, Motorola, Xiaomi, Sony, etc.)
+            val maxCurrent = try { intent.getIntExtra("max_charging_current", -1) } catch (_: Exception) { -1 }
+            val maxVoltage = try { intent.getIntExtra("max_charging_voltage", -1) } catch (_: Exception) { -1 }
+            if (maxCurrent > 0 && maxVoltage > 0) {
+                val watts = (maxCurrent.toDouble() / 1_000_000.0) * (maxVoltage.toDouble() / 1_000_000.0)
+                if (watts >= 10.0) return true
+                if (watts > 0 && watts < 7.5) return false
+            } else if (maxCurrent >= 2_000_000) {
+                return true
+            }
+
+            // 3. Fallback based on power source
+            // USB port charging (PC/laptop) is standard/slow charging (green)
+            if (plugged == BatteryManager.BATTERY_PLUGGED_USB) return false
+
+            // AC wall chargers are predominantly fast charging on modern devices (cyan)
+            return plugged == BatteryManager.BATTERY_PLUGGED_AC
+        } catch (_: Exception) {
+            return plugged == BatteryManager.BATTERY_PLUGGED_AC
+        }
+    }
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action ?: return
+            if (action == PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) {
+                overlayView?.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
+                return
+            }
             if (action == Intent.ACTION_BATTERY_CHANGED ||
                 action == Intent.ACTION_POWER_CONNECTED ||
                 action == Intent.ACTION_POWER_DISCONNECTED
             ) {
+                overlayView?.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 val batteryIntent = if (action == Intent.ACTION_BATTERY_CHANGED) {
                     intent
                 } else {
@@ -206,7 +256,8 @@ class DuoOverlayHandler(
                     else -> isChargingStatus || isPlugged
                 }
 
-                val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                val isFastCharging = isFastCharging(batteryIntent, plugged)
+                isFastChargingState = isFastCharging
 
                 if (action == Intent.ACTION_POWER_CONNECTED) {
                     isChargingState = true
@@ -228,6 +279,53 @@ class DuoOverlayHandler(
         }
     }
     private var isBatteryReceiverRegistered = false
+
+    private val timeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            updateCurrentTime()
+        }
+    }
+    private var isTimeReceiverRegistered = false
+
+    private fun updateCurrentTime() {
+        val is24Hour = DateFormat.is24HourFormat(service)
+        val pattern = if (is24Hour) "H:mm" else "h:mm"
+        val formattedTime = SimpleDateFormat(pattern, Locale.getDefault()).format(Date())
+        overlayView?.currentTimeText = formattedTime
+    }
+
+    private fun registerTimeReceiver() {
+        if (!isTimeReceiverRegistered) {
+            val filter = IntentFilter().apply {
+                addAction(Intent.ACTION_TIME_TICK)
+                addAction(Intent.ACTION_TIME_CHANGED)
+                addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            }
+            try {
+                ContextCompat.registerReceiver(
+                    service,
+                    timeReceiver,
+                    filter,
+                    ContextCompat.RECEIVER_NOT_EXPORTED
+                )
+                isTimeReceiverRegistered = true
+            } catch (_: Exception) {
+                try {
+                    service.registerReceiver(timeReceiver, filter)
+                    isTimeReceiverRegistered = true
+                } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private fun unregisterTimeReceiver() {
+        if (isTimeReceiverRegistered) {
+            try {
+                service.unregisterReceiver(timeReceiver)
+            } catch (_: Exception) {}
+            isTimeReceiverRegistered = false
+        }
+    }
 
     private var isScreenOff: Boolean = false
     var isFullscreen: Boolean = false
@@ -274,10 +372,12 @@ class DuoOverlayHandler(
     private fun updateCurrentSignal() {
         mainHandler.post {
             var level = -1
+            var isWifi = false
 
             val activeNetwork = connectivityManager?.activeNetwork
             val capabilities = activeNetwork?.let { connectivityManager?.getNetworkCapabilities(it) }
             if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+                isWifi = true
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     val transportInfo = capabilities.transportInfo
                     if (transportInfo is WifiInfo) {
@@ -307,6 +407,7 @@ class DuoOverlayHandler(
             }
 
             if (level == -1) {
+                isWifi = false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     try {
                         val signalStrength = telephonyManager?.signalStrength
@@ -317,6 +418,7 @@ class DuoOverlayHandler(
                 }
             }
 
+            overlayView?.isWifi = isWifi
             if (level >= 0) {
                 overlayView?.signalLevel = level
             }
@@ -701,8 +803,18 @@ class DuoOverlayHandler(
                     this.customColor = Color.parseColor(settingsRepository.getDuoCustomColor())
                 } catch (_: Exception) {}
                 this.isBatteryChargingColorEnabled = settingsRepository.isDuoBatteryChargingColorEnabled()
+                val chargingColorStr = settingsRepository.getDuoBatteryChargingColor()
+                if (chargingColorStr.equals("auto", ignoreCase = true)) {
+                    this.isChargingColorAuto = true
+                } else {
+                    this.isChargingColorAuto = false
+                    try {
+                        this.batteryChargingColor = Color.parseColor(chargingColorStr)
+                    } catch (_: Exception) {}
+                }
+                this.isBatteryPowerSaveColorEnabled = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
                 try {
-                    this.batteryChargingColor = Color.parseColor(settingsRepository.getDuoBatteryChargingColor())
+                    this.batteryPowerSaveColor = Color.parseColor(settingsRepository.getDuoBatteryPowerSaveColor())
                 } catch (_: Exception) {}
                 this.isBatteryLowColorEnabled = settingsRepository.isDuoBatteryLowColorEnabled()
                 try {
@@ -712,12 +824,17 @@ class DuoOverlayHandler(
                 try {
                     this.batteryCriticalColor = Color.parseColor(settingsRepository.getDuoBatteryCriticalColor())
                 } catch (_: Exception) {}
+                this.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 this.showBattery = settingsRepository.isDuoShowBatteryEnabled()
+                this.showBatteryPercentage = settingsRepository.isDuoShowBatteryPercentageEnabled()
+                this.isBatteryPercentageOnlyColored = settingsRepository.isDuoBatteryPercentageOnlyColoredEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
+                this.isDifferentiateWifi = settingsRepository.isDuoDifferentiateWifiEnabled()
+                this.showTime = settingsRepository.isDuoShowTimeEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
                 this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
-                this.setCharging(this@DuoOverlayHandler.isChargingState)
+                this.setCharging(this@DuoOverlayHandler.isChargingState, this@DuoOverlayHandler.isFastChargingState)
             }
 
             if (!isOverlayAdded) {
@@ -739,11 +856,19 @@ class DuoOverlayHandler(
                 overlayView?.invalidate()
             }
 
+            if (settingsRepository.isDuoShowTimeEnabled()) {
+                registerTimeReceiver()
+                updateCurrentTime()
+            } else {
+                unregisterTimeReceiver()
+            }
+
             val isTouchEnabled = settingsRepository.getDuoTapAction() != null ||
                 settingsRepository.getDuoDoubleTapAction() != null ||
                 settingsRepository.getDuoLongPressAction() != null ||
                 settingsRepository.getDuoSwipeDownAction() != null ||
-                settingsRepository.getDuoSlideMode() != "none"
+                settingsRepository.getDuoSlideMode() != "none" ||
+                settingsRepository.isDuoSlideTrackEnabled()
 
             if (isTouchEnabled) {
                 if (duoTouchHandler == null) {
@@ -961,12 +1086,14 @@ class DuoOverlayHandler(
                     addAction(Intent.ACTION_BATTERY_CHANGED)
                     addAction(Intent.ACTION_POWER_CONNECTED)
                     addAction(Intent.ACTION_POWER_DISCONNECTED)
+                    addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
                 }
                 val intent = service.registerReceiver(
                     batteryReceiver,
                     filter
                 )
                 isBatteryReceiverRegistered = true
+                overlayView?.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 intent?.let {
                     val level = it.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
                     val scale = it.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
@@ -980,7 +1107,8 @@ class DuoOverlayHandler(
                     val isPlugged = plugged > 0
                     if (isChargingStatus || isPlugged) {
                         isChargingState = true
-                        val isFast = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                        val isFast = isFastCharging(it, plugged)
+                        isFastChargingState = isFast
                         overlayView?.setCharging(true, isFast)
                     }
                 }
@@ -1087,6 +1215,7 @@ class DuoOverlayHandler(
                 isTouchAnchorAdded = false
             }
             unregisterBatteryReceiver()
+            unregisterTimeReceiver()
             unregisterSignalListeners()
             unregisterMediaSessionListener()
             unregisterProgressNotificationListener()

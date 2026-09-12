@@ -11,6 +11,11 @@
 package com.sameerasw.essentials.utils
 
 import android.content.Context
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object StatusBarManager {
     // Disable request flags (Official flags from 'cmd statusbar' help)
@@ -58,10 +63,27 @@ object StatusBarManager {
     }
 
     /**
-     * Aggregate all active disable requests and apply the final status bar state.
+     * Aggregate all active disable requests along with persistent settings and apply the final status bar state.
      */
-    private fun update(context: Context) {
-        val allFlags = disableRequests.values.flatten().toSet()
+    fun update(context: Context) {
+        val allFlags = disableRequests.values.flatten().toMutableSet()
+
+        val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val isHideSystemIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
+        val isHideSystemIconsLockedOnly = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+        val isHideClock = prefs.getBoolean(SettingsRepository.KEY_HIDE_CLOCK, false)
+        val isHideNotificationIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_NOTIFICATION_ICONS, false)
+
+        if (isHideSystemIcons && !isHideSystemIconsLockedOnly) {
+            allFlags.add(FLAG_SYSTEM_ICONS)
+        }
+        if (isHideClock) {
+            allFlags.add(FLAG_CLOCK)
+        }
+        if (isHideNotificationIcons) {
+            allFlags.add(FLAG_NOTIFICATION_ICONS)
+        }
+
         val command =
             if (allFlags.isEmpty()) {
                 "cmd statusbar send-disable-flag none"
@@ -69,6 +91,39 @@ object StatusBarManager {
                 "cmd statusbar send-disable-flag ${allFlags.joinToString(" ")}"
             }
         ShellUtils.runCommand(context, command)
+    }
+
+    /**
+     * Re-assert status bar disable flags after keyguard unlock or transition.
+     * Forces a state delta in system_server so the disable event is dispatched
+     * to SystemUI to prevent system icons from unhiding.
+     */
+    fun reassertFlags(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+            val isHideSystemIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
+            val isHideSystemIconsLockedOnly = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+
+            if (isHideSystemIcons && !isHideSystemIconsLockedOnly) {
+                // Allow SystemUI keyguard dismissal animation to complete
+                delay(250)
+
+                val tempFlags = disableRequests.values.flatten().toMutableSet()
+                if (prefs.getBoolean(SettingsRepository.KEY_HIDE_CLOCK, false)) tempFlags.add(FLAG_CLOCK)
+                if (prefs.getBoolean(SettingsRepository.KEY_HIDE_NOTIFICATION_ICONS, false)) tempFlags.add(FLAG_NOTIFICATION_ICONS)
+
+                val tempCmd =
+                    if (tempFlags.isEmpty()) {
+                        "cmd statusbar send-disable-flag none"
+                    } else {
+                        "cmd statusbar send-disable-flag ${tempFlags.joinToString(" ")}"
+                    }
+
+                ShellUtils.runCommand(context, tempCmd)
+                delay(50)
+            }
+            update(context)
+        }
     }
 
     // --- Action Commands ---

@@ -209,6 +209,8 @@ class SettingsRepository(
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
         const val KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY = "hide_system_icons_locked_only"
+        const val KEY_HIDE_CLOCK = "hide_clock"
+        const val KEY_HIDE_NOTIFICATION_ICONS = "hide_notification_icons"
         const val KEY_HIDE_GESTURE_BAR_ENABLED = "hide_gesture_bar_enabled"
         const val KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED = "hide_gesture_bar_on_launcher_enabled"
         const val KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED = "circle_to_search_gesture_enabled"
@@ -366,13 +368,19 @@ class SettingsRepository(
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
         const val KEY_DUO_SHOW_BATTERY = "duo_show_battery"
+        const val KEY_DUO_SHOW_BATTERY_PERCENTAGE = "duo_show_battery_percentage"
+        const val KEY_DUO_BATTERY_PERCENTAGE_ONLY_COLORED = "duo_battery_percentage_only_colored"
         const val KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED = "duo_battery_charging_color_enabled"
         const val KEY_DUO_BATTERY_CHARGING_COLOR = "duo_battery_charging_color"
+        const val KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED = "duo_battery_power_save_color_enabled"
+        const val KEY_DUO_BATTERY_POWER_SAVE_COLOR = "duo_battery_power_save_color"
         const val KEY_DUO_BATTERY_LOW_COLOR_ENABLED = "duo_battery_low_color_enabled"
         const val KEY_DUO_BATTERY_LOW_COLOR = "duo_battery_low_color"
         const val KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED = "duo_battery_critical_color_enabled"
         const val KEY_DUO_BATTERY_CRITICAL_COLOR = "duo_battery_critical_color"
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
+        const val KEY_DUO_DIFFERENTIATE_WIFI = "duo_differentiate_wifi"
+        const val KEY_DUO_SHOW_TIME = "duo_show_time"
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
         const val KEY_DUO_SHOW_FLASHLIGHT = "duo_show_flashlight"
@@ -385,6 +393,7 @@ class SettingsRepository(
         const val KEY_DUO_LONG_PRESS_ACTION = "duo_long_press_action"
         const val KEY_DUO_SWIPE_DOWN_ACTION = "duo_swipe_down_action"
         const val KEY_DUO_SLIDE_MODE = "duo_slide_mode"
+        const val KEY_DUO_SLIDE_TRACK = "duo_slide_track"
         const val KEY_DUO_SLIDE_INVERT_DIRECTION = "duo_slide_invert_direction"
 
         // Live Wallpaper
@@ -3114,11 +3123,23 @@ class SettingsRepository(
     fun isDuoShowBatteryEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_BATTERY, true)
     fun setDuoShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_BATTERY, enabled)
 
+    fun isDuoShowBatteryPercentageEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_BATTERY_PERCENTAGE, false)
+    fun setDuoShowBatteryPercentageEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_BATTERY_PERCENTAGE, enabled)
+
+    fun isDuoBatteryPercentageOnlyColoredEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_PERCENTAGE_ONLY_COLORED, false)
+    fun setDuoBatteryPercentageOnlyColoredEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_PERCENTAGE_ONLY_COLORED, enabled)
+
     fun isDuoBatteryChargingColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, true)
     fun setDuoBatteryChargingColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, enabled)
 
-    fun getDuoBatteryChargingColor(): String = getString(KEY_DUO_BATTERY_CHARGING_COLOR, "#00E676") ?: "#00E676"
+    fun getDuoBatteryChargingColor(): String = getString(KEY_DUO_BATTERY_CHARGING_COLOR, "auto") ?: "auto"
     fun setDuoBatteryChargingColor(colorHex: String) = putString(KEY_DUO_BATTERY_CHARGING_COLOR, colorHex)
+
+    fun isDuoBatteryPowerSaveColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED, true)
+    fun setDuoBatteryPowerSaveColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED, enabled)
+
+    fun getDuoBatteryPowerSaveColor(): String = getString(KEY_DUO_BATTERY_POWER_SAVE_COLOR, "#FF9800") ?: "#FF9800"
+    fun setDuoBatteryPowerSaveColor(colorHex: String) = putString(KEY_DUO_BATTERY_POWER_SAVE_COLOR, colorHex)
 
     fun isDuoBatteryLowColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_LOW_COLOR_ENABLED, true)
     fun setDuoBatteryLowColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_LOW_COLOR_ENABLED, enabled)
@@ -3134,6 +3155,12 @@ class SettingsRepository(
 
     fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
     fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)
+
+    fun isDuoDifferentiateWifiEnabled(): Boolean = getBoolean(KEY_DUO_DIFFERENTIATE_WIFI, true)
+    fun setDuoDifferentiateWifiEnabled(enabled: Boolean) = putBoolean(KEY_DUO_DIFFERENTIATE_WIFI, enabled)
+
+    fun isDuoShowTimeEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_TIME, false)
+    fun setDuoShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_TIME, enabled)
 
     fun isDuoShowMediaEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_MEDIA, true)
     fun setDuoShowMediaEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_MEDIA, enabled)
@@ -3170,6 +3197,9 @@ class SettingsRepository(
 
     fun getDuoSlideMode(): String = getString(KEY_DUO_SLIDE_MODE, "none") ?: "none"
     fun setDuoSlideMode(mode: String) = putString(KEY_DUO_SLIDE_MODE, mode)
+
+    fun isDuoSlideTrackEnabled(): Boolean = getBoolean(KEY_DUO_SLIDE_TRACK, false)
+    fun setDuoSlideTrackEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SLIDE_TRACK, enabled)
 
     fun isDuoSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, false)
     fun setDuoSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, enabled)

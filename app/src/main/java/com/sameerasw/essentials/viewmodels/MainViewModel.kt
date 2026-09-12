@@ -133,13 +133,19 @@ class MainViewModel : ViewModel() {
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowBattery = mutableStateOf(true)
+    val isDuoShowBatteryPercentage = mutableStateOf(false)
+    val isDuoBatteryPercentageOnlyColored = mutableStateOf(false)
     val isDuoBatteryChargingColorEnabled = mutableStateOf(true)
-    val duoBatteryChargingColor = mutableStateOf("#00E676")
+    val duoBatteryChargingColor = mutableStateOf("auto")
+    val isDuoBatteryPowerSaveColorEnabled = mutableStateOf(true)
+    val duoBatteryPowerSaveColor = mutableStateOf("#FF9800")
     val isDuoBatteryLowColorEnabled = mutableStateOf(true)
     val duoBatteryLowColor = mutableStateOf("#FFEB3B")
     val isDuoBatteryCriticalColorEnabled = mutableStateOf(true)
     val duoBatteryCriticalColor = mutableStateOf("#F44336")
     val isDuoShowNetworks = mutableStateOf(true)
+    val isDuoDifferentiateWifi = mutableStateOf(true)
+    val isDuoShowTime = mutableStateOf(false)
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
     val isDuoShowFlashlight = mutableStateOf(true)
@@ -152,6 +158,7 @@ class MainViewModel : ViewModel() {
     val duoLongPressAction = mutableStateOf<Action?>(null)
     val duoSwipeDownAction = mutableStateOf<Action?>(null)
     val duoSlideMode = mutableStateOf("none")
+    val isDuoSlideTrack = mutableStateOf(false)
     val isDuoSlideInvertDirection = mutableStateOf(false)
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -561,11 +568,23 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_DUO_SHOW_BATTERY ->
                         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
 
+                    SettingsRepository.KEY_DUO_SHOW_BATTERY_PERCENTAGE ->
+                        isDuoShowBatteryPercentage.value = settingsRepository.isDuoShowBatteryPercentageEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_PERCENTAGE_ONLY_COLORED ->
+                        isDuoBatteryPercentageOnlyColored.value = settingsRepository.isDuoBatteryPercentageOnlyColoredEnabled()
+
                     SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED ->
                         isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
 
                     SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR ->
                         duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
+
+                    SettingsRepository.KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED ->
+                        isDuoBatteryPowerSaveColorEnabled.value = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_POWER_SAVE_COLOR ->
+                        duoBatteryPowerSaveColor.value = settingsRepository.getDuoBatteryPowerSaveColor()
 
                     SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR_ENABLED ->
                         isDuoBatteryLowColorEnabled.value = settingsRepository.isDuoBatteryLowColorEnabled()
@@ -581,6 +600,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+
+                    SettingsRepository.KEY_DUO_DIFFERENTIATE_WIFI ->
+                        isDuoDifferentiateWifi.value = settingsRepository.isDuoDifferentiateWifiEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_TIME ->
+                        isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
 
                     SettingsRepository.KEY_DUO_SHOW_MEDIA ->
                         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
@@ -617,6 +642,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SLIDE_MODE ->
                         duoSlideMode.value = settingsRepository.getDuoSlideMode()
+
+                    SettingsRepository.KEY_DUO_SLIDE_TRACK ->
+                        isDuoSlideTrack.value = settingsRepository.isDuoSlideTrackEnabled()
 
                     SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ->
                         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
@@ -1854,13 +1882,19 @@ class MainViewModel : ViewModel() {
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
+        isDuoShowBatteryPercentage.value = settingsRepository.isDuoShowBatteryPercentageEnabled()
+        isDuoBatteryPercentageOnlyColored.value = settingsRepository.isDuoBatteryPercentageOnlyColoredEnabled()
         isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
         duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
+        isDuoBatteryPowerSaveColorEnabled.value = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
+        duoBatteryPowerSaveColor.value = settingsRepository.getDuoBatteryPowerSaveColor()
         isDuoBatteryLowColorEnabled.value = settingsRepository.isDuoBatteryLowColorEnabled()
         duoBatteryLowColor.value = settingsRepository.getDuoBatteryLowColor()
         isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
         duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+        isDuoDifferentiateWifi.value = settingsRepository.isDuoDifferentiateWifiEnabled()
+        isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
@@ -1873,6 +1907,7 @@ class MainViewModel : ViewModel() {
         duoLongPressAction.value = settingsRepository.getDuoLongPressAction()
         duoSwipeDownAction.value = settingsRepository.getDuoSwipeDownAction()
         duoSlideMode.value = settingsRepository.getDuoSlideMode()
+        isDuoSlideTrack.value = settingsRepository.isDuoSlideTrackEnabled()
         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
@@ -4474,9 +4509,23 @@ class MainViewModel : ViewModel() {
         isDuoShowBattery.value = enabled
         settingsRepository.setDuoShowBatteryEnabled(enabled)
         if (!enabled) {
+            isDuoShowBatteryPercentage.value = false
+            settingsRepository.setDuoShowBatteryPercentageEnabled(false)
             isDuoShowNetworks.value = false
             settingsRepository.setDuoShowNetworksEnabled(false)
+            isDuoShowTime.value = false
+            settingsRepository.setDuoShowTimeEnabled(false)
         }
+    }
+
+    fun setDuoShowBatteryPercentage(enabled: Boolean) {
+        isDuoShowBatteryPercentage.value = enabled
+        settingsRepository.setDuoShowBatteryPercentageEnabled(enabled)
+    }
+
+    fun setDuoBatteryPercentageOnlyColored(enabled: Boolean) {
+        isDuoBatteryPercentageOnlyColored.value = enabled
+        settingsRepository.setDuoBatteryPercentageOnlyColoredEnabled(enabled)
     }
 
     fun setDuoBatteryChargingColorEnabled(enabled: Boolean) {
@@ -4487,6 +4536,16 @@ class MainViewModel : ViewModel() {
     fun setDuoBatteryChargingColor(colorHex: String) {
         duoBatteryChargingColor.value = colorHex
         settingsRepository.setDuoBatteryChargingColor(colorHex)
+    }
+
+    fun setDuoBatteryPowerSaveColorEnabled(enabled: Boolean) {
+        isDuoBatteryPowerSaveColorEnabled.value = enabled
+        settingsRepository.setDuoBatteryPowerSaveColorEnabled(enabled)
+    }
+
+    fun setDuoBatteryPowerSaveColor(colorHex: String) {
+        duoBatteryPowerSaveColor.value = colorHex
+        settingsRepository.setDuoBatteryPowerSaveColor(colorHex)
     }
 
     fun setDuoBatteryLowColorEnabled(enabled: Boolean) {
@@ -4512,6 +4571,24 @@ class MainViewModel : ViewModel() {
     fun setDuoShowNetworks(enabled: Boolean) {
         isDuoShowNetworks.value = enabled
         settingsRepository.setDuoShowNetworksEnabled(enabled)
+        if (enabled) {
+            isDuoShowTime.value = false
+            settingsRepository.setDuoShowTimeEnabled(false)
+        }
+    }
+
+    fun setDuoDifferentiateWifi(enabled: Boolean) {
+        isDuoDifferentiateWifi.value = enabled
+        settingsRepository.setDuoDifferentiateWifiEnabled(enabled)
+    }
+
+    fun setDuoShowTime(enabled: Boolean) {
+        isDuoShowTime.value = enabled
+        settingsRepository.setDuoShowTimeEnabled(enabled)
+        if (enabled) {
+            isDuoShowNetworks.value = false
+            settingsRepository.setDuoShowNetworksEnabled(false)
+        }
     }
 
     fun setDuoShowMedia(enabled: Boolean) {
@@ -4572,6 +4649,11 @@ class MainViewModel : ViewModel() {
     fun setDuoSlideMode(mode: String) {
         duoSlideMode.value = mode
         settingsRepository.setDuoSlideMode(mode)
+    }
+
+    fun setDuoSlideTrackEnabled(enabled: Boolean) {
+        isDuoSlideTrack.value = enabled
+        settingsRepository.setDuoSlideTrackEnabled(enabled)
     }
 
     fun setDuoSlideInvertDirection(enabled: Boolean) {

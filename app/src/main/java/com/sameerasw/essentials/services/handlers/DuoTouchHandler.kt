@@ -163,7 +163,7 @@ class DuoTouchHandler(
 
                 if (isLongPressTriggered) return true
 
-                val slideMode = settingsRepository.getDuoSlideMode()
+                val slideMode = getEffectiveSlideMode()
                 val swipeDownAction = settingsRepository.getDuoSwipeDownAction()
 
                 val isHorizontalDominant = abs(dx) > abs(dy) * 1.1f
@@ -201,7 +201,7 @@ class DuoTouchHandler(
                 val dy = y - downY
                 val totalDist = hypot(dx, dy)
 
-                val slideMode = settingsRepository.getDuoSlideMode()
+                val slideMode = getEffectiveSlideMode()
                 if (slideMode == "track" && isTrackThresholdReached) {
                     isTrackTriggered = true
                     val isInverted = settingsRepository.isDuoSlideInvertDirectionEnabled()
@@ -375,6 +375,15 @@ class DuoTouchHandler(
             } catch (_: Exception) {
             }
         }
+    }
+
+    private fun getEffectiveSlideMode(): String {
+        val isTrackEnabled = settingsRepository.isDuoSlideTrackEnabled()
+        val isMediaActive = overlayView?.isMediaPlaying == true || audioManager.isMusicActive
+        if (isTrackEnabled && isMediaActive) {
+            return "track"
+        }
+        return settingsRepository.getDuoSlideMode()
     }
 }
 
