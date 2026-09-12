@@ -13,14 +13,20 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.Typeface
+import android.graphics.Xfermode
 import android.os.Build
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -97,6 +103,20 @@ class StatusGlanceView(context: Context) : View(context) {
             reevaluateSlot()
         }
 
+    var isDarkTheme: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                resolveColors()
+                if (activeSlot == GlanceSlot.MEDIA && rawArtworkPaletteColor != null) {
+                    paletteMediaColor = getThemeAdjustedColor(rawArtworkPaletteColor!!)
+                    animateColorChange(paletteMediaColor!!)
+                } else {
+                    animateColorChange(defaultMaterialYouColor)
+                }
+            }
+        }
+
     // State data
     var isFlashlightOn: Boolean = false
         set(value) {
@@ -122,19 +142,23 @@ class StatusGlanceView(context: Context) : View(context) {
             reevaluateSlot()
         }
 
+    private var rawArtworkPaletteColor: Int? = null
+
     var mediaArtworkBitmap: Bitmap? = null
         set(value) {
             field = value
             if (value != null) {
                 Palette.from(value).generate { palette ->
-                    palette?.dominantSwatch?.rgb?.let { color ->
-                        paletteMediaColor = color
-                        if (activeSlot == GlanceSlot.MEDIA) {
-                            animateColorChange(color)
-                        }
+                    val color = extractPaletteAccent(palette)
+                    rawArtworkPaletteColor = color
+                    val adjustedColor = getThemeAdjustedColor(color)
+                    paletteMediaColor = adjustedColor
+                    if (activeSlot == GlanceSlot.MEDIA) {
+                        animateColorChange(adjustedColor)
                     }
                 }
             } else {
+                rawArtworkPaletteColor = null
                 paletteMediaColor = null
                 if (activeSlot == GlanceSlot.MEDIA) {
                     animateColorChange(defaultMaterialYouColor)
@@ -207,6 +231,10 @@ class StatusGlanceView(context: Context) : View(context) {
         isFilterBitmap = true
     }
 
+    private val artworkPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        isFilterBitmap = true
+    }
+
     // Bitmaps
     private var flashlightIcon: Bitmap? = null
     private var calendarIcon: Bitmap? = null
@@ -215,6 +243,10 @@ class StatusGlanceView(context: Context) : View(context) {
 
     private val textBounds = Rect()
     private val chipRect = RectF()
+    private val marqueeClipPath = Path()
+    private val marqueeFadePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
+    }
 
     init {
         resolveColors()
@@ -222,14 +254,56 @@ class StatusGlanceView(context: Context) : View(context) {
     }
 
     private fun resolveColors() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val primaryColor = ContextCompat.getColor(context, android.R.color.system_accent1_600)
-            defaultMaterialYouColor = primaryColor
+        defaultMaterialYouColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (isDarkTheme) {
+                ContextCompat.getColor(context, android.R.color.system_accent1_200)
+            } else {
+                ContextCompat.getColor(context, android.R.color.system_accent1_600)
+            }
         } else {
-            defaultMaterialYouColor = Color.parseColor("#388E3C")
+            if (isDarkTheme) Color.parseColor("#81C784") else Color.parseColor("#2E7D32")
         }
         currentPillColor = defaultMaterialYouColor
         updateTextColor(currentPillColor)
+    }
+
+    private fun extractPaletteAccent(palette: Palette?): Int {
+        val dominantSwatch = palette?.dominantSwatch
+        val vibrantSwatch = palette?.vibrantSwatch
+        val lightVibrantSwatch = palette?.lightVibrantSwatch
+        val darkVibrantSwatch = palette?.darkVibrantSwatch
+        val mutedSwatch = palette?.mutedSwatch
+        val lightMutedSwatch = palette?.lightMutedSwatch
+        val darkMutedSwatch = palette?.darkMutedSwatch
+
+        return if (isDarkTheme) {
+            vibrantSwatch?.rgb
+                ?: lightVibrantSwatch?.rgb
+                ?: dominantSwatch?.rgb
+                ?: mutedSwatch?.rgb
+                ?: lightMutedSwatch?.rgb
+                ?: Color.WHITE
+        } else {
+            darkVibrantSwatch?.rgb
+                ?: vibrantSwatch?.rgb
+                ?: dominantSwatch?.rgb
+                ?: darkMutedSwatch?.rgb
+                ?: mutedSwatch?.rgb
+                ?: Color.BLACK
+        }
+    }
+
+    private fun getThemeAdjustedColor(color: Int): Int {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        if (isDarkTheme) {
+            hsv[1] = (hsv[1] * 0.75f).coerceIn(0.25f, 0.90f)
+            hsv[2] = (hsv[2] * 1.25f).coerceIn(0.85f, 1.0f)
+        } else {
+            hsv[1] = (hsv[1] * 1.25f).coerceIn(0.65f, 1.0f)
+            hsv[2] = (hsv[2] * 0.60f).coerceIn(0.20f, 0.55f)
+        }
+        return Color.HSVToColor(hsv)
     }
 
     private fun loadIcons() {
@@ -328,7 +402,7 @@ class StatusGlanceView(context: Context) : View(context) {
 
     private fun updateTextColor(bgColor: Int) {
         if (!useBackgroundPill) {
-            currentTextColor = Color.WHITE
+            currentTextColor = if (isDarkTheme) Color.WHITE else Color.BLACK
             return
         }
         val luminance = (0.299 * Color.red(bgColor) + 0.587 * Color.green(bgColor) + 0.114 * Color.blue(bgColor)) / 255.0
@@ -436,12 +510,14 @@ class StatusGlanceView(context: Context) : View(context) {
         val text = getActiveText()
         textPaint.getTextBounds(text, 0, text.length, textBounds)
         val textWidth = textBounds.width().toFloat()
-        val iconSize = 14f * density
-        val padding = 10f * density
-        val spacing = 6f * density
+        val isArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
+        val iconSize = if (isArtwork) 22f * density else 14f * density
+        val paddingLeft = if (isArtwork) 1f * density else 8f * density
+        val paddingRight = 10f * density
+        val spacing = if (isArtwork) 5f * density else 6f * density
 
         val maxAllowedWidth = maxWidthDp * density
-        val calculated = padding * 2 + iconSize + spacing + textWidth
+        val calculated = paddingLeft + iconSize + spacing + textWidth + paddingRight
         return calculated.coerceAtMost(maxAllowedWidth)
     }
 
@@ -471,30 +547,22 @@ class StatusGlanceView(context: Context) : View(context) {
         }
 
         // Draw Icon and Text
+        val isArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
         val icon = getActiveIcon()
-        val iconSize = 14f * density
-        val paddingLeft = 8f * density
+        val iconSize = if (isArtwork) 22f * density else 14f * density
+        val paddingLeft = if (isArtwork) 1f * density else 8f * density
         val iconLeft = left + paddingLeft
         val iconTop = glanceCenterY - iconSize / 2f
 
         iconPaint.alpha = alphaInt
-        if (icon != null) {
-            if (activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null) {
-                val dstRect = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
-                iconPaint.colorFilter = null
-                canvas.drawBitmap(icon, null, dstRect, iconPaint)
-            } else {
-                iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
-                val dstRect = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
-                canvas.drawBitmap(icon, null, dstRect, iconPaint)
-            }
-        }
+        artworkPaint.alpha = alphaInt
 
         // Draw Text
         val text = getActiveText()
         if (text.isNotBlank()) {
-            val textLeft = iconLeft + iconSize + 6f * density
-            val textRight = right - 8f * density
+            val spacing = if (isArtwork) 5f * density else 6f * density
+            val textLeft = iconLeft + iconSize + spacing
+            val textRight = if (useBackgroundPill) right else right - 8f * density
             val maxTextWidth = (textRight - textLeft).coerceAtLeast(0f)
 
             checkAndStartMarquee(text, maxTextWidth)
@@ -506,17 +574,70 @@ class StatusGlanceView(context: Context) : View(context) {
             val textY = glanceCenterY - textBounds.exactCenterY()
 
             if (isMarqueeNeeded) {
-                val saveCount = canvas.save()
-                canvas.clipRect(textLeft, top, textRight, bottom)
+                val fadeWidth = 12f * density
+                val marqueeBounds = RectF(textLeft, top, textRight, bottom)
+                val saveLayerCount = canvas.saveLayer(marqueeBounds, null)
+
+                if (useBackgroundPill) {
+                    marqueeClipPath.reset()
+                    val radii = floatArrayOf(
+                        0f, 0f,
+                        cornerRadius, cornerRadius,
+                        cornerRadius, cornerRadius,
+                        0f, 0f
+                    )
+                    marqueeClipPath.addRoundRect(
+                        RectF(textLeft, top, right, bottom),
+                        radii,
+                        Path.Direction.CW
+                    )
+                    canvas.clipPath(marqueeClipPath)
+                } else {
+                    canvas.clipRect(textLeft, top, textRight, bottom)
+                }
+
                 val marqueeGap = 28f * density
                 val textWidth = textPaint.measureText(text)
                 val x1 = textLeft - marqueeOffset
                 val x2 = x1 + textWidth + marqueeGap
                 canvas.drawText(text, x1, textY, textPaint)
                 canvas.drawText(text, x2, textY, textPaint)
-                canvas.restoreToCount(saveCount)
+
+                // fade
+                marqueeFadePaint.shader = LinearGradient(
+                    textLeft, 0f, textLeft + fadeWidth, 0f,
+                    Color.TRANSPARENT, Color.BLACK,
+                    Shader.TileMode.CLAMP
+                )
+                canvas.drawRect(textLeft, top, textLeft + fadeWidth, bottom, marqueeFadePaint)
+
+                canvas.restoreToCount(saveLayerCount)
             } else {
                 canvas.drawText(text, textLeft, textY, textPaint)
+            }
+        }
+
+        if (icon != null) {
+            if (isArtwork) {
+                val artworkRadius = iconSize / 2f
+                val artworkCenterX = iconLeft + artworkRadius
+                val artworkCenterY = glanceCenterY
+
+                val shader = BitmapShader(icon, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+                val matrix = android.graphics.Matrix()
+                val scale = iconSize / icon.width.coerceAtMost(icon.height).toFloat()
+                val dx = iconLeft - (icon.width * scale - iconSize) / 2f
+                val dy = iconTop - (icon.height * scale - iconSize) / 2f
+                matrix.setScale(scale, scale)
+                matrix.postTranslate(dx, dy)
+                shader.setLocalMatrix(matrix)
+
+                artworkPaint.shader = shader
+                canvas.drawCircle(artworkCenterX, artworkCenterY, artworkRadius, artworkPaint)
+            } else {
+                iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
+                val dstRect = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
+                canvas.drawBitmap(icon, null, dstRect, iconPaint)
             }
         }
     }
@@ -529,3 +650,4 @@ class StatusGlanceView(context: Context) : View(context) {
         colorAnimator?.cancel()
     }
 }
+
