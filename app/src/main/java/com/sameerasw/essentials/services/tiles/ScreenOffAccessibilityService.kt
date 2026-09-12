@@ -300,7 +300,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_TIME ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_BACKGROUND_PILL ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN ||
-                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS
+                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED
             ) {
                 statusGlanceHandler.updateState()
             }
