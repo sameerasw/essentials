@@ -2546,4 +2546,17 @@
     <string name="status_glance_battery_show_full_desc">When battery is fully charged</string>
     <string name="status_glance_battery_show_otherwise_title">Show otherwise</string>
     <string name="status_glance_battery_show_otherwise_desc">Always show during normal discharging states</string>
+    <string name="status_glance_calendar_options_title">Calendar events options</string>
+    <string name="status_glance_calendar_timeframe_title">Show upcoming events in</string>
+    <string name="status_glance_calendar_timeframe_15_mins">15 mins</string>
+    <string name="status_glance_calendar_timeframe_30_mins">30 mins</string>
+    <string name="status_glance_calendar_timeframe_1_hour">1 hour</string>
+    <string name="status_glance_calendar_timeframe_2_hours">2 hours</string>
+    <string name="status_glance_calendar_timeframe_6_hours">6 hours</string>
+    <string name="status_glance_calendar_timeframe_24_hours">24 hrs</string>
+    <string name="status_glance_calendar_timeframe_today">today</string>
+    <string name="status_glance_calendar_timeframe_next">Next</string>
+    <string name="status_glance_calendar_select_calendars_title">Calendars to show</string>
+    <string name="status_glance_calendar_no_calendars">No calendars found on device</string>
+    <string name="status_glance_calendar_event_in_time">in %1$s</string>
 </resources>

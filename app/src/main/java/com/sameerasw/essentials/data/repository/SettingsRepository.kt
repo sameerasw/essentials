@@ -402,6 +402,8 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_FONT_SIZE = "status_glance_font_size"
         const val KEY_STATUS_GLANCE_SHOW_FLASHLIGHT = "status_glance_show_flashlight"
         const val KEY_STATUS_GLANCE_SHOW_CALENDAR = "status_glance_show_calendar"
+        const val KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME = "status_glance_calendar_timeframe"
+        const val KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS = "status_glance_calendar_selected_calendars"
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
@@ -3237,6 +3239,27 @@ class SettingsRepository(
 
     fun isStatusGlanceShowCalendarEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_CALENDAR, true)
     fun setStatusGlanceShowCalendarEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_CALENDAR, enabled)
+
+    fun getStatusGlanceCalendarTimeframe(): String = getString(KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME, "today") ?: "today"
+    fun setStatusGlanceCalendarTimeframe(timeframe: String) = putString(KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME, timeframe)
+
+    fun getStatusGlanceCalendarSelectedCalendars(): Set<String> {
+        val json = prefs.getString(KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(json, Array<String>::class.java).toSet()
+            } catch (e: Exception) {
+                emptySet()
+            }
+        } else {
+            emptySet()
+        }
+    }
+
+    fun saveStatusGlanceCalendarSelectedCalendars(calendarIds: Set<String>) {
+        val json = gson.toJson(calendarIds)
+        putString(KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS, json)
+    }
 
     fun isStatusGlanceShowMediaEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_MEDIA, true)
     fun setStatusGlanceShowMediaEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_MEDIA, enabled)

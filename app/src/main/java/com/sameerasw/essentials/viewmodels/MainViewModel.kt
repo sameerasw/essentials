@@ -168,6 +168,9 @@ class MainViewModel : ViewModel() {
     val statusGlanceFontSize = mutableFloatStateOf(13f)
     val isStatusGlanceShowFlashlight = mutableStateOf(true)
     val isStatusGlanceShowCalendar = mutableStateOf(true)
+    val statusGlanceCalendarTimeframe = mutableStateOf("today")
+    val statusGlanceSelectedCalendarIds = mutableStateOf<Set<String>>(emptySet())
+    val statusGlanceAvailableCalendars = mutableStateListOf<CalendarAccount>()
     val isStatusGlanceShowMedia = mutableStateOf(true)
     val isStatusGlanceShowTime = mutableStateOf(true)
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
@@ -683,6 +686,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_SHOW_CALENDAR ->
                         isStatusGlanceShowCalendar.value = settingsRepository.isStatusGlanceShowCalendarEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME ->
+                        statusGlanceCalendarTimeframe.value = settingsRepository.getStatusGlanceCalendarTimeframe()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS ->
+                        statusGlanceSelectedCalendarIds.value = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
 
                     SettingsRepository.KEY_STATUS_GLANCE_SHOW_MEDIA ->
                         isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
@@ -1982,6 +1991,8 @@ class MainViewModel : ViewModel() {
         statusGlanceFontSize.floatValue = settingsRepository.getStatusGlanceFontSize()
         isStatusGlanceShowFlashlight.value = settingsRepository.isStatusGlanceShowFlashlightEnabled()
         isStatusGlanceShowCalendar.value = settingsRepository.isStatusGlanceShowCalendarEnabled()
+        statusGlanceCalendarTimeframe.value = settingsRepository.getStatusGlanceCalendarTimeframe()
+        statusGlanceSelectedCalendarIds.value = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
         isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
         isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
@@ -4756,6 +4767,88 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceShowCalendar(enabled: Boolean) {
         isStatusGlanceShowCalendar.value = enabled
         settingsRepository.setStatusGlanceShowCalendarEnabled(enabled)
+    }
+
+    fun setStatusGlanceCalendarTimeframe(timeframe: String) {
+        statusGlanceCalendarTimeframe.value = timeframe
+        settingsRepository.setStatusGlanceCalendarTimeframe(timeframe)
+    }
+
+    fun fetchStatusGlanceCalendars(context: Context) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CALENDAR,
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val savedSelected = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
+            withContext(Dispatchers.Main) {
+                statusGlanceSelectedCalendarIds.value = savedSelected
+            }
+
+            val calendars = mutableListOf<CalendarAccount>()
+            val projection =
+                arrayOf(
+                    CalendarContract.Calendars._ID,
+                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                    CalendarContract.Calendars.ACCOUNT_NAME,
+                    CalendarContract.Calendars.CALENDAR_COLOR,
+                )
+
+            context.contentResolver
+                .query(
+                    CalendarContract.Calendars.CONTENT_URI,
+                    projection,
+                    null,
+                    null,
+                    null,
+                )?.use { cursor ->
+                    val idColumn = cursor.getColumnIndex(CalendarContract.Calendars._ID)
+                    val nameColumn = cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
+                    val accountColumn = cursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME)
+
+                    while (cursor.moveToNext()) {
+                        val id = cursor.getLong(idColumn)
+                        val name = cursor.getString(nameColumn) ?: "Unnamed Calendar"
+                        val account = cursor.getString(accountColumn) ?: "Local"
+
+                        calendars.add(
+                            CalendarAccount(
+                                id,
+                                name,
+                                account,
+                                savedSelected.isEmpty() || savedSelected.contains(id.toString()),
+                            ),
+                        )
+                    }
+                }
+
+            withContext(Dispatchers.Main) {
+                statusGlanceAvailableCalendars.clear()
+                statusGlanceAvailableCalendars.addAll(calendars)
+            }
+        }
+    }
+
+    fun toggleStatusGlanceCalendarSelection(calendarId: Long) {
+        val currentIds = statusGlanceSelectedCalendarIds.value.toMutableSet()
+        val idString = calendarId.toString()
+        if (currentIds.contains(idString)) {
+            currentIds.remove(idString)
+        } else {
+            currentIds.add(idString)
+        }
+        statusGlanceSelectedCalendarIds.value = currentIds
+        settingsRepository.saveStatusGlanceCalendarSelectedCalendars(currentIds)
+
+        val index = statusGlanceAvailableCalendars.indexOfFirst { it.id == calendarId }
+        if (index != -1) {
+            statusGlanceAvailableCalendars[index] =
+                statusGlanceAvailableCalendars[index].copy(isSelected = currentIds.contains(idString))
+        }
     }
 
     fun setStatusGlanceShowMedia(enabled: Boolean) {
