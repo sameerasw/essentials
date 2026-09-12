@@ -32,6 +32,7 @@ import android.os.Build
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.R
@@ -356,6 +357,12 @@ class StatusGlanceView(context: Context) : View(context) {
     private var isMarqueeNeeded: Boolean = false
     private var lastMarqueeText: String = ""
     private var lastMaxTextWidth: Float = 0f
+
+    // Gesture animations
+    private var swipeArtworkOffset: Float = 0f
+    private var swipeArtworkAnimator: ValueAnimator? = null
+    private var animatedTapScale: Float = 1.0f
+    private var tapScaleAnimator: ValueAnimator? = null
 
     // Paints
     private val pillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -838,6 +845,40 @@ class StatusGlanceView(context: Context) : View(context) {
         }
     }
 
+    fun setSwipeArtworkOffset(offset: Float) {
+        swipeArtworkAnimator?.cancel()
+        swipeArtworkOffset = offset.coerceAtLeast(0f)
+        invalidate()
+    }
+
+    fun releaseSwipeArtwork() {
+        swipeArtworkAnimator?.cancel()
+        val start = swipeArtworkOffset
+        if (start == 0f) return
+        swipeArtworkAnimator = ValueAnimator.ofFloat(start, 0f).apply {
+            duration = 320L
+            interpolator = OvershootInterpolator(1.2f)
+            addUpdateListener {
+                swipeArtworkOffset = it.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    fun triggerTapAnimation() {
+        tapScaleAnimator?.cancel()
+        tapScaleAnimator = ValueAnimator.ofFloat(0.92f, 1.0f).apply {
+            duration = 300L
+            interpolator = OvershootInterpolator(2.0f)
+            addUpdateListener {
+                animatedTapScale = it.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
     private fun drawSlotContent(
         canvas: Canvas,
         clockText: String,
@@ -992,13 +1033,13 @@ class StatusGlanceView(context: Context) : View(context) {
         if (hasIcon && combinedIconAlpha > 0) {
             if (isArtwork) {
                 val artworkRadius = iconSize / 2f
-                val artworkCenterX = iconLeft + artworkRadius
+                val artworkCenterX = iconLeft + artworkRadius + swipeArtworkOffset
                 val artworkCenterY = glanceCenterY + offsetY
 
                 val shader = BitmapShader(icon, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
                 val matrix = android.graphics.Matrix()
                 val scale = iconSize / icon.width.coerceAtMost(icon.height).toFloat()
-                val dx = iconLeft - (icon.width * scale - iconSize) / 2f
+                val dx = (iconLeft + swipeArtworkOffset) - (icon.width * scale - iconSize) / 2f
                 val dy = (glanceCenterY - iconSize / 2f + offsetY) - (icon.height * scale - iconSize) / 2f
                 matrix.setScale(scale, scale)
                 matrix.postTranslate(dx, dy)
@@ -1073,6 +1114,11 @@ class StatusGlanceView(context: Context) : View(context) {
 
         chipRect.set(left, top, right, bottom)
 
+        val saveContainerCount = canvas.save()
+        if (animatedTapScale != 1.0f) {
+            canvas.scale(animatedTapScale, animatedTapScale, left + width / 2f, glanceCenterY)
+        }
+
         val alphaInt = (slotAlpha * iconAlpha * 255).toInt().coerceIn(0, 255)
 
         if (useBackgroundPill) {
@@ -1081,7 +1127,6 @@ class StatusGlanceView(context: Context) : View(context) {
             canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, pillPaint)
         }
 
-        val saveContainerCount = canvas.save()
         containerClipPath.reset()
         containerClipPath.addRoundRect(chipRect, cornerRadius, cornerRadius, Path.Direction.CW)
         canvas.clipPath(containerClipPath)
@@ -1172,5 +1217,7 @@ class StatusGlanceView(context: Context) : View(context) {
         transitionAnimator?.cancel()
         revealAnimator?.cancel()
         batteryAlphaAnimator?.cancel()
+        swipeArtworkAnimator?.cancel()
+        tapScaleAnimator?.cancel()
     }
 }

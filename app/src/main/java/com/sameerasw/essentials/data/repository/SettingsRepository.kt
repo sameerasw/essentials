@@ -415,6 +415,9 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE = "status_glance_battery_show_otherwise"
         const val KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN = "status_glance_hide_when_fullscreen"
         const val KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS = "status_glance_hide_in_quick_settings"
+        const val KEY_STATUS_GLANCE_TAP_ACTION = "status_glance_tap_action"
+        const val KEY_STATUS_GLANCE_DOUBLE_TAP_ACTION = "status_glance_double_tap_action"
+        const val KEY_STATUS_GLANCE_LONG_PRESS_ACTION = "status_glance_long_press_action"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3293,5 +3296,14 @@ class SettingsRepository(
 
     fun isStatusGlanceBatteryShowOtherwiseEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE, true)
     fun setStatusGlanceBatteryShowOtherwiseEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE, enabled)
+
+    fun getStatusGlanceTapAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_TAP_ACTION)
+    fun setStatusGlanceTapAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_TAP_ACTION, action)
+
+    fun getStatusGlanceDoubleTapAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_DOUBLE_TAP_ACTION)
+    fun setStatusGlanceDoubleTapAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_DOUBLE_TAP_ACTION, action)
+
+    fun getStatusGlanceLongPressAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION)
+    fun setStatusGlanceLongPressAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION, action)
 }
 
