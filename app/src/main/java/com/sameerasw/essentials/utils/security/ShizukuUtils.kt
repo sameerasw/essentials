@@ -21,6 +21,13 @@ object ShizukuUtils {
     private val binderReceivedListener =
         Shizuku.OnBinderReceivedListener {
             binder = Shizuku.getBinder()
+            try {
+                if (hasPermission()) {
+                    val appCtx = com.sameerasw.essentials.EssentialsApp.context
+                    StatusBarManager.update(appCtx)
+                }
+            } catch (_: Throwable) {
+            }
         }
 
     private val binderDeadListener =

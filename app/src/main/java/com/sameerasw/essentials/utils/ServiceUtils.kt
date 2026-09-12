@@ -45,7 +45,7 @@ object ServiceUtils {
         applyPostRebootSettings(context, settingsRepository)
     }
 
-    private fun applyPostRebootSettings(
+    fun applyPostRebootSettings(
         context: Context,
         settingsRepository: SettingsRepository,
     ) {
@@ -54,6 +54,8 @@ object ServiceUtils {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
+            StatusBarManager.update(context)
+
             if (settingsRepository.isSimNamesApplyOnBootEnabled()) {
                 SimCarrierUtil.applySavedCarrierNames(context)
             }
