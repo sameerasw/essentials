@@ -75,6 +75,7 @@ class SecurityReceiver : BroadcastReceiver() {
                     context,
                     "StatusBarIconAdvancedLocked",
                 )
+                StatusBarManager.reassertFlags(context)
             }
         }
     }
