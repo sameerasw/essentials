@@ -209,6 +209,8 @@ class SettingsRepository(
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
         const val KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY = "hide_system_icons_locked_only"
+        const val KEY_HIDE_CLOCK = "hide_clock"
+        const val KEY_HIDE_NOTIFICATION_ICONS = "hide_notification_icons"
         const val KEY_HIDE_GESTURE_BAR_ENABLED = "hide_gesture_bar_enabled"
         const val KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED = "hide_gesture_bar_on_launcher_enabled"
         const val KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED = "circle_to_search_gesture_enabled"

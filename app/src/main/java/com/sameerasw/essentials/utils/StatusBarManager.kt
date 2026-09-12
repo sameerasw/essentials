@@ -11,6 +11,7 @@
 package com.sameerasw.essentials.utils
 
 import android.content.Context
+import com.sameerasw.essentials.data.repository.SettingsRepository
 
 object StatusBarManager {
     // Disable request flags (Official flags from 'cmd statusbar' help)
@@ -58,18 +59,35 @@ object StatusBarManager {
     }
 
     /**
-     * Aggregate all active disable requests and apply the final status bar state.
+     * Aggregate all active disable requests along with persistent settings and apply the final status bar state.
      */
-    private fun update(context: Context) {
-        val allFlags = disableRequests.values.flatten().toSet()
-        val command =
-            if (allFlags.isEmpty()) {
-                "cmd statusbar send-disable-flag none"
-            } else {
-                "cmd statusbar send-disable-flag ${allFlags.joinToString(" ")}"
-            }
-        ShellUtils.runCommand(context, command)
-    }
+     private fun update(context: Context) {
+         val allFlags = disableRequests.values.flatten().toMutableSet()
+
+         val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+         val isHideSystemIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
+         val isHideSystemIconsLockedOnly = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+         val isHideClock = prefs.getBoolean(SettingsRepository.KEY_HIDE_CLOCK, false)
+         val isHideNotificationIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_NOTIFICATION_ICONS, false)
+
+         if (isHideSystemIcons && !isHideSystemIconsLockedOnly) {
+             allFlags.add(FLAG_SYSTEM_ICONS)
+         }
+         if (isHideClock) {
+             allFlags.add(FLAG_CLOCK)
+         }
+         if (isHideNotificationIcons) {
+             allFlags.add(FLAG_NOTIFICATION_ICONS)
+         }
+
+         val command =
+             if (allFlags.isEmpty()) {
+                 "cmd statusbar send-disable-flag none"
+             } else {
+                 "cmd statusbar send-disable-flag ${allFlags.joinToString(" ")}"
+             }
+         ShellUtils.runCommand(context, command)
+     }
 
     // --- Action Commands ---
 
