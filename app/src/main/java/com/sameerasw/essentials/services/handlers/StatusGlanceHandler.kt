@@ -160,6 +160,8 @@ class StatusGlanceHandler(
 
     private fun syncConfigToView() {
         glanceView?.let { v ->
+            val isNightMode = (service.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            v.isDarkTheme = isNightMode
             v.showFlashlight = settingsRepository.isStatusGlanceShowFlashlightEnabled()
             v.showCalendar = settingsRepository.isStatusGlanceShowCalendarEnabled()
             v.showMedia = settingsRepository.isStatusGlanceShowMediaEnabled()
@@ -495,6 +497,8 @@ class StatusGlanceHandler(
     }
 
     fun onConfigurationChanged(newConfig: Configuration) {
+        val isNightMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        glanceView?.isDarkTheme = isNightMode
         if (settingsRepository.isStatusGlanceEnabled()) {
             mainHandler.postDelayed({
                 updateGlancePosition()
