@@ -172,7 +172,7 @@ fun StatusGlanceSettingsUI(
             IconToggleItem(
                 title = stringResource(R.string.status_glance_enable_title),
                 description = stringResource(R.string.status_glance_enable_desc),
-                iconRes = R.drawable.rounded_motion_play_24,
+                iconRes = R.drawable.rounded_ad_units_24,
                 isChecked = viewModel.isStatusGlanceEnabled.value,
                 onCheckedChange = { isChecked ->
                     HapticUtil.performUIHaptic(view)
