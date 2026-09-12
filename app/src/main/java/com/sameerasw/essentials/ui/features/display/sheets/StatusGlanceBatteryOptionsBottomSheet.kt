@@ -18,9 +18,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -94,11 +96,12 @@ fun StatusGlanceBatteryOptionsBottomSheet(
             RoundedCardContainer {
                 Row(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .background(
                             color = MaterialTheme.colorScheme.surfaceBright,
-                            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                            shape = RoundedCornerShape(24.dp),
                         )
-                        .padding(10.dp),
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                 ) {
                     modes.forEachIndexed { index, mode ->
@@ -119,16 +122,19 @@ fun StatusGlanceBatteryOptionsBottomSheet(
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.Center,
                             ) {
                                 Icon(
                                     painter = painterResource(id = icons[index]),
                                     contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
+                                    modifier = Modifier.size(18.dp),
                                 )
+                                Spacer(modifier = Modifier.width(6.dp))
                                 Text(
                                     text = labels[index],
-                                    style = MaterialTheme.typography.labelLarge,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    softWrap = false,
                                 )
                             }
                         }
