@@ -248,6 +248,7 @@ class ScreenOffAccessibilityService :
                 aodWallpaperOverlayHandler.updateState()
                 if (key == SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS) {
                     duoOverlayHandler.updateState()
+                    statusGlanceHandler.updateState()
                 }
             } else if (key == SettingsRepository.KEY_DUO_ENABLED ||
                 key == SettingsRepository.KEY_DUO_USE_AUTO_DETECT ||
