@@ -2547,7 +2547,7 @@
     <string name="status_glance_battery_options_title">Battery options</string>
     <string name="status_glance_battery_display_mode_title">Display mode</string>
     <string name="status_glance_battery_mode_icon">Icon</string>
-    <string name="status_glance_battery_mode_percentage">Percentage</string>
+    <string name="status_glance_battery_mode_percentage">Percent</string>
     <string name="status_glance_battery_mode_both">Both</string>
     <string name="status_glance_battery_icon_size_title">Battery icon size</string>
     <string name="status_glance_battery_show_low_title">Show when low battery</string>
