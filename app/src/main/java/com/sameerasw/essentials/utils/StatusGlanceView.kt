@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.utils
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
@@ -195,6 +197,17 @@ class StatusGlanceView(context: Context) : View(context) {
     var activeSlot: GlanceSlot = GlanceSlot.NONE
         private set
 
+    // Slot transition state for car meter roll / flip animation
+    private var previousSlot: GlanceSlot = GlanceSlot.NONE
+    private var previousText: String = ""
+    private var previousIcon: Bitmap? = null
+    private var previousIsArtwork: Boolean = false
+
+    private var transitionProgress: Float = 0f
+    private var transitionDirection: Int = 1
+    private var isTransitioning: Boolean = false
+    private var transitionAnimator: ValueAnimator? = null
+
     // Colors
     private var defaultMaterialYouColor: Int = Color.parseColor("#388E3C")
     private var paletteMediaColor: Int? = null
@@ -243,6 +256,7 @@ class StatusGlanceView(context: Context) : View(context) {
 
     private val textBounds = Rect()
     private val chipRect = RectF()
+    private val containerClipPath = Path()
     private val marqueeClipPath = Path()
     private val marqueeFadePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
@@ -326,6 +340,17 @@ class StatusGlanceView(context: Context) : View(context) {
         }
     }
 
+    private fun getSlotPriority(slot: GlanceSlot): Int {
+        return when (slot) {
+            GlanceSlot.FLASHLIGHT -> 5
+            GlanceSlot.CALENDAR_URGENT -> 4
+            GlanceSlot.MEDIA -> 3
+            GlanceSlot.CALENDAR_TODAY -> 2
+            GlanceSlot.TIME -> 1
+            GlanceSlot.NONE -> 0
+        }
+    }
+
     fun reevaluateSlot() {
         val now = System.currentTimeMillis()
         val isEventWithin15Min = isEventToday && (nextEventTimeMillis - now) in 0..(15 * 60 * 1000L)
@@ -350,6 +375,7 @@ class StatusGlanceView(context: Context) : View(context) {
 
     private fun transitionToSlot(newSlot: GlanceSlot) {
         stopMarquee()
+
         if (activeSlot == GlanceSlot.NONE) {
             activeSlot = newSlot
             val targetColor = if (newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
@@ -366,34 +392,68 @@ class StatusGlanceView(context: Context) : View(context) {
             return
         }
 
-        alphaAnimator?.cancel()
-        alphaAnimator = ValueAnimator.ofFloat(slotAlpha, 0f).apply {
-            duration = 150
+        if (newSlot == GlanceSlot.NONE) {
+            alphaAnimator?.cancel()
+            alphaAnimator = ValueAnimator.ofFloat(slotAlpha, 0f).apply {
+                duration = 200
+                addUpdateListener {
+                    slotAlpha = it.animatedValue as Float
+                    invalidate()
+                }
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        activeSlot = GlanceSlot.NONE
+                        isTransitioning = false
+                        currentContentWidth = 0f
+                        invalidate()
+                    }
+                })
+                start()
+            }
+            return
+        }
+
+        // Snapshot current content before updating
+        previousSlot = activeSlot
+        previousText = getActiveText()
+        previousIcon = getActiveIcon()
+        previousIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
+
+        // Determine counter flip direction: +1 if higher priority incoming (roll up), -1 if lower priority (roll down)
+        val oldPriority = getSlotPriority(activeSlot)
+        val newPriority = getSlotPriority(newSlot)
+        transitionDirection = if (newPriority >= oldPriority) 1 else -1
+
+        activeSlot = newSlot
+        isTransitioning = true
+
+        val targetColor = if (newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
+            paletteMediaColor!!
+        } else {
+            defaultMaterialYouColor
+        }
+
+        // Animate width smoothly
+        targetContentWidth = calculateTargetWidth()
+        animateWidth()
+
+        // Animate background color change smoothly without affecting container structure
+        animateColorChange(targetColor)
+
+        // Animate odometer / meter flip transition inside container
+        transitionAnimator?.cancel()
+        transitionAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 360L
+            interpolator = DecelerateInterpolator(1.8f)
             addUpdateListener {
-                slotAlpha = it.animatedValue as Float
+                transitionProgress = it.animatedValue as Float
                 invalidate()
             }
-            addListener(object : android.animation.AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: android.animation.Animator) {
-                    activeSlot = newSlot
-                    val targetColor = if (newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
-                        paletteMediaColor!!
-                    } else {
-                        defaultMaterialYouColor
-                    }
-                    currentPillColor = targetColor
-                    updateTextColor(targetColor)
-                    targetContentWidth = calculateTargetWidth()
-                    animateWidth()
-
-                    alphaAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-                        duration = 200
-                        addUpdateListener { anim ->
-                            slotAlpha = anim.animatedValue as Float
-                            invalidate()
-                        }
-                        start()
-                    }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    isTransitioning = false
+                    transitionProgress = 0f
+                    invalidate()
                 }
             })
             start()
@@ -412,7 +472,8 @@ class StatusGlanceView(context: Context) : View(context) {
     private fun animateColorChange(targetColor: Int) {
         colorAnimator?.cancel()
         colorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), currentPillColor, targetColor).apply {
-            duration = 300
+            duration = 380L
+            interpolator = DecelerateInterpolator()
             addUpdateListener {
                 currentPillColor = it.animatedValue as Int
                 updateTextColor(currentPillColor)
@@ -425,8 +486,8 @@ class StatusGlanceView(context: Context) : View(context) {
     private fun animateWidth() {
         widthAnimator?.cancel()
         widthAnimator = ValueAnimator.ofFloat(currentContentWidth, targetContentWidth).apply {
-            duration = 250
-            interpolator = DecelerateInterpolator()
+            duration = 320L
+            interpolator = DecelerateInterpolator(1.6f)
             addUpdateListener {
                 currentContentWidth = it.animatedValue as Float
                 invalidate()
@@ -436,6 +497,8 @@ class StatusGlanceView(context: Context) : View(context) {
     }
 
     private fun checkAndStartMarquee(text: String, maxTextWidth: Float) {
+        if (isTransitioning) return
+
         val textWidth = textPaint.measureText(text)
         val needed = textWidth > maxTextWidth && maxTextWidth > 0f
 
@@ -521,59 +584,49 @@ class StatusGlanceView(context: Context) : View(context) {
         return calculated.coerceAtMost(maxAllowedWidth)
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        if (activeSlot == GlanceSlot.NONE && currentContentWidth <= 0f) return
+    private fun drawSlotContent(
+        canvas: Canvas,
+        text: String,
+        icon: Bitmap?,
+        isArtwork: Boolean,
+        alphaMultiplier: Float,
+        offsetY: Float,
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float,
+        cornerRadius: Float,
+        chipHeight: Float
+    ) {
+        if (alphaMultiplier <= 0f) return
 
-        val height = 24f * density
-        val width = currentContentWidth
-        if (width <= 0f) return
-
-        val left = glanceCenterX
-        val top = glanceCenterY - height / 2f
-        val right = left + width
-        val bottom = glanceCenterY + height / 2f
-        val cornerRadius = height / 2f
-
-        chipRect.set(left, top, right, bottom)
-
-        val alphaInt = (slotAlpha * 255).toInt().coerceIn(0, 255)
-
-        // Draw background pill if enabled
-        if (useBackgroundPill) {
-            pillPaint.color = currentPillColor
-            pillPaint.alpha = alphaInt
-            canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, pillPaint)
-        }
-
-        // Draw Icon and Text
-        val isArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
-        val icon = getActiveIcon()
         val iconSize = if (isArtwork) 22f * density else 14f * density
         val paddingLeft = if (isArtwork) 1f * density else 8f * density
         val iconLeft = left + paddingLeft
-        val iconTop = glanceCenterY - iconSize / 2f
+        val iconTop = glanceCenterY - iconSize / 2f + offsetY
 
-        iconPaint.alpha = alphaInt
-        artworkPaint.alpha = alphaInt
+        val combinedAlpha = (slotAlpha * alphaMultiplier * 255).toInt().coerceIn(0, 255)
+        iconPaint.alpha = combinedAlpha
+        artworkPaint.alpha = combinedAlpha
 
         // Draw Text
-        val text = getActiveText()
         if (text.isNotBlank()) {
             val spacing = if (isArtwork) 5f * density else 6f * density
             val textLeft = iconLeft + iconSize + spacing
             val textRight = if (useBackgroundPill) right else right - 8f * density
             val maxTextWidth = (textRight - textLeft).coerceAtLeast(0f)
 
-            checkAndStartMarquee(text, maxTextWidth)
+            if (!isTransitioning) {
+                checkAndStartMarquee(text, maxTextWidth)
+            }
 
             textPaint.color = currentTextColor
-            textPaint.alpha = alphaInt
+            textPaint.alpha = combinedAlpha
 
             textPaint.getTextBounds(text, 0, text.length, textBounds)
-            val textY = glanceCenterY - textBounds.exactCenterY()
+            val textY = glanceCenterY - textBounds.exactCenterY() + offsetY
 
-            if (isMarqueeNeeded) {
+            if (isMarqueeNeeded && !isTransitioning) {
                 val fadeWidth = 12f * density
                 val marqueeBounds = RectF(textLeft, top, textRight, bottom)
                 val saveLayerCount = canvas.saveLayer(marqueeBounds, null)
@@ -597,13 +650,13 @@ class StatusGlanceView(context: Context) : View(context) {
                 }
 
                 val marqueeGap = 28f * density
-                val textWidth = textPaint.measureText(text)
+                val textWidthMeasure = textPaint.measureText(text)
                 val x1 = textLeft - marqueeOffset
-                val x2 = x1 + textWidth + marqueeGap
+                val x2 = x1 + textWidthMeasure + marqueeGap
                 canvas.drawText(text, x1, textY, textPaint)
                 canvas.drawText(text, x2, textY, textPaint)
 
-                // fade
+                // Left fade gradient
                 marqueeFadePaint.shader = LinearGradient(
                     textLeft, 0f, textLeft + fadeWidth, 0f,
                     Color.TRANSPARENT, Color.BLACK,
@@ -617,17 +670,18 @@ class StatusGlanceView(context: Context) : View(context) {
             }
         }
 
+        // Draw Icon on top of text layer
         if (icon != null) {
             if (isArtwork) {
                 val artworkRadius = iconSize / 2f
                 val artworkCenterX = iconLeft + artworkRadius
-                val artworkCenterY = glanceCenterY
+                val artworkCenterY = glanceCenterY + offsetY
 
                 val shader = BitmapShader(icon, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
                 val matrix = android.graphics.Matrix()
                 val scale = iconSize / icon.width.coerceAtMost(icon.height).toFloat()
                 val dx = iconLeft - (icon.width * scale - iconSize) / 2f
-                val dy = iconTop - (icon.height * scale - iconSize) / 2f
+                val dy = (glanceCenterY - iconSize / 2f + offsetY) - (icon.height * scale - iconSize) / 2f
                 matrix.setScale(scale, scale)
                 matrix.postTranslate(dx, dy)
                 shader.setLocalMatrix(matrix)
@@ -642,12 +696,112 @@ class StatusGlanceView(context: Context) : View(context) {
         }
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        if (activeSlot == GlanceSlot.NONE && currentContentWidth <= 0f) return
+
+        val height = 24f * density
+        val width = currentContentWidth
+        if (width <= 0f) return
+
+        val left = glanceCenterX
+        val top = glanceCenterY - height / 2f
+        val right = left + width
+        val bottom = glanceCenterY + height / 2f
+        val cornerRadius = height / 2f
+
+        chipRect.set(left, top, right, bottom)
+
+        val alphaInt = (slotAlpha * 255).toInt().coerceIn(0, 255)
+
+        // 1. Draw background pill container (stays completely intact and morphs width/color smoothly)
+        if (useBackgroundPill) {
+            pillPaint.color = currentPillColor
+            pillPaint.alpha = alphaInt
+            canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, pillPaint)
+        }
+
+        // 2. Draw content with odometer flip animation inside the container
+        val saveContainerCount = canvas.save()
+        containerClipPath.reset()
+        containerClipPath.addRoundRect(chipRect, cornerRadius, cornerRadius, Path.Direction.CW)
+        canvas.clipPath(containerClipPath)
+
+        if (isTransitioning) {
+            val flipDistance = height * 0.95f
+            val p = transitionProgress
+
+            // Direction: +1 means incoming rolls up from bottom (+flipDistance -> 0), outgoing rolls up (0 -> -flipDistance)
+            // -1 means incoming rolls down from top (-flipDistance -> 0), outgoing rolls down (0 -> +flipDistance)
+            val oldOffsetY = -transitionDirection * p * flipDistance
+            val oldAlpha = (1f - p).coerceIn(0f, 1f)
+
+            val newOffsetY = transitionDirection * (1f - p) * flipDistance
+            val newAlpha = p.coerceIn(0f, 1f)
+
+            // Draw outgoing slot
+            drawSlotContent(
+                canvas = canvas,
+                text = previousText,
+                icon = previousIcon,
+                isArtwork = previousIsArtwork,
+                alphaMultiplier = oldAlpha,
+                offsetY = oldOffsetY,
+                left = left,
+                top = top,
+                right = right,
+                bottom = bottom,
+                cornerRadius = cornerRadius,
+                chipHeight = height
+            )
+
+            // Draw incoming slot
+            val currentText = getActiveText()
+            val currentIcon = getActiveIcon()
+            val currentIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
+            drawSlotContent(
+                canvas = canvas,
+                text = currentText,
+                icon = currentIcon,
+                isArtwork = currentIsArtwork,
+                alphaMultiplier = newAlpha,
+                offsetY = newOffsetY,
+                left = left,
+                top = top,
+                right = right,
+                bottom = bottom,
+                cornerRadius = cornerRadius,
+                chipHeight = height
+            )
+        } else {
+            val currentText = getActiveText()
+            val currentIcon = getActiveIcon()
+            val currentIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
+            drawSlotContent(
+                canvas = canvas,
+                text = currentText,
+                icon = currentIcon,
+                isArtwork = currentIsArtwork,
+                alphaMultiplier = 1f,
+                offsetY = 0f,
+                left = left,
+                top = top,
+                right = right,
+                bottom = bottom,
+                cornerRadius = cornerRadius,
+                chipHeight = height
+            )
+        }
+
+        canvas.restoreToCount(saveContainerCount)
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         stopMarquee()
         widthAnimator?.cancel()
         alphaAnimator?.cancel()
         colorAnimator?.cancel()
+        transitionAnimator?.cancel()
     }
 }
-

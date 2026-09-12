@@ -2519,15 +2519,15 @@
     <string name="status_glance_font_size_title">Font size</string>
     <string name="status_glance_section_what_to_show">What to show</string>
     <string name="status_glance_show_flashlight_title">Flashlight</string>
-    <string name="status_glance_show_flashlight_desc">Highest priority indicator when torch is active</string>
+    <string name="status_glance_show_flashlight_desc">Shown when active</string>
     <string name="status_glance_show_calendar_title">Calendar events</string>
-    <string name="status_glance_show_calendar_desc">Upcoming events today; urgent within 15 minutes</string>
+    <string name="status_glance_show_calendar_desc">Upcoming events schedule</string>
     <string name="status_glance_show_media_title">Media playback</string>
-    <string name="status_glance_show_media_desc">Currently playing track with album art tint</string>
+    <string name="status_glance_show_media_desc">Currently playing track with album art</string>
     <string name="status_glance_show_time_title">Time</string>
     <string name="status_glance_show_time_desc">Default fallback clock</string>
     <string name="status_glance_section_appearance">Appearance</string>
     <string name="status_glance_background_pill_title">Background pill</string>
-    <string name="status_glance_background_pill_desc">Surround status with dynamic Material You capsule</string>
+    <string name="status_glance_background_pill_desc">Using material you colors</string>
     <string name="status_glance_slot_flashlight">Flashlight On</string>
 </resources>
