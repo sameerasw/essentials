@@ -2497,6 +2497,7 @@
     <string name="duo_action_horizontal_slide_volume">Volume</string>
     <string name="duo_action_horizontal_slide_brightness">Brightness</string>
     <string name="duo_action_horizontal_slide_track">Change track</string>
+    <string name="duo_action_horizontal_slide_track_desc">Only active while media is playing</string>
     <string name="duo_action_horizontal_slide_sound_mode">Sound mode</string>
     <string name="duo_action_pick_title">Pick action</string>
     <string name="duo_action_none">None</string>

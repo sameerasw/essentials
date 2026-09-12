@@ -802,7 +802,8 @@ class DuoOverlayHandler(
                 settingsRepository.getDuoDoubleTapAction() != null ||
                 settingsRepository.getDuoLongPressAction() != null ||
                 settingsRepository.getDuoSwipeDownAction() != null ||
-                settingsRepository.getDuoSlideMode() != "none"
+                settingsRepository.getDuoSlideMode() != "none" ||
+                settingsRepository.isDuoSlideTrackEnabled()
 
             if (isTouchEnabled) {
                 if (duoTouchHandler == null) {

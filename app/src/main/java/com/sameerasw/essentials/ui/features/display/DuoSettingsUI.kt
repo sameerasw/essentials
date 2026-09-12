@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -523,12 +524,20 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_swipe_down_action"),
             )
 
-            val slideModeDescription = when (viewModel.duoSlideMode.value) {
+            val baseSlideDescription = when (viewModel.duoSlideMode.value) {
                 "volume" -> stringResource(R.string.duo_action_horizontal_slide_volume)
                 "brightness" -> stringResource(R.string.duo_action_horizontal_slide_brightness)
-                "track" -> stringResource(R.string.duo_action_horizontal_slide_track)
                 "sound_mode" -> stringResource(R.string.duo_action_horizontal_slide_sound_mode)
                 else -> stringResource(R.string.duo_action_horizontal_slide_none)
+            }
+            val slideModeDescription = if (viewModel.isDuoSlideTrack.value) {
+                if (viewModel.duoSlideMode.value != "none") {
+                    "$baseSlideDescription • " + stringResource(R.string.duo_action_horizontal_slide_track)
+                } else {
+                    stringResource(R.string.duo_action_horizontal_slide_track)
+                }
+            } else {
+                baseSlideDescription
             }
             IconToggleItem(
                 iconRes = R.drawable.rounded_compare_arrows_24,
@@ -542,7 +551,7 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_slide_mode"),
             )
 
-            val isMirrorableMode = viewModel.duoSlideMode.value == "track" || viewModel.duoSlideMode.value == "sound_mode"
+            val isMirrorableMode = viewModel.isDuoSlideTrack.value || viewModel.duoSlideMode.value == "sound_mode"
             AnimatedVisibility(
                 visible = isMirrorableMode,
                 enter = expandVertically() + fadeIn(),
@@ -584,7 +593,6 @@ fun DuoSettingsUI(
                         Triple("none", R.string.duo_action_horizontal_slide_none, R.drawable.rounded_do_not_disturb_on_24),
                         Triple("volume", R.string.duo_action_horizontal_slide_volume, R.drawable.rounded_volume_up_24),
                         Triple("brightness", R.string.duo_action_horizontal_slide_brightness, R.drawable.rounded_brightness_6_24),
-                        Triple("track", R.string.duo_action_horizontal_slide_track, R.drawable.rounded_skip_next_24),
                         Triple("sound_mode", R.string.duo_action_horizontal_slide_sound_mode, R.drawable.rounded_mobile_sound_24),
                     )
 
@@ -599,6 +607,19 @@ fun DuoSettingsUI(
                             },
                         )
                     }
+                }
+
+                RoundedCardContainer(spacing = 2.dp) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_skip_next_24,
+                        title = stringResource(R.string.duo_action_horizontal_slide_track),
+                        description = stringResource(R.string.duo_action_horizontal_slide_track_desc),
+                        isChecked = viewModel.isDuoSlideTrack.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setDuoSlideTrackEnabled(checked)
+                        },
+                    )
                 }
             }
         }
