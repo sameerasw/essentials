@@ -135,6 +135,8 @@ class MainViewModel : ViewModel() {
     val isDuoShowBattery = mutableStateOf(true)
     val isDuoBatteryChargingColorEnabled = mutableStateOf(true)
     val duoBatteryChargingColor = mutableStateOf("#00E676")
+    val isDuoBatteryPowerSaveColorEnabled = mutableStateOf(true)
+    val duoBatteryPowerSaveColor = mutableStateOf("#FF9800")
     val isDuoBatteryLowColorEnabled = mutableStateOf(true)
     val duoBatteryLowColor = mutableStateOf("#FFEB3B")
     val isDuoBatteryCriticalColorEnabled = mutableStateOf(true)
@@ -568,6 +570,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR ->
                         duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
+
+                    SettingsRepository.KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED ->
+                        isDuoBatteryPowerSaveColorEnabled.value = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_POWER_SAVE_COLOR ->
+                        duoBatteryPowerSaveColor.value = settingsRepository.getDuoBatteryPowerSaveColor()
 
                     SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR_ENABLED ->
                         isDuoBatteryLowColorEnabled.value = settingsRepository.isDuoBatteryLowColorEnabled()
@@ -1864,6 +1872,8 @@ class MainViewModel : ViewModel() {
         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
         isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
         duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
+        isDuoBatteryPowerSaveColorEnabled.value = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
+        duoBatteryPowerSaveColor.value = settingsRepository.getDuoBatteryPowerSaveColor()
         isDuoBatteryLowColorEnabled.value = settingsRepository.isDuoBatteryLowColorEnabled()
         duoBatteryLowColor.value = settingsRepository.getDuoBatteryLowColor()
         isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
@@ -4499,6 +4509,16 @@ class MainViewModel : ViewModel() {
     fun setDuoBatteryChargingColor(colorHex: String) {
         duoBatteryChargingColor.value = colorHex
         settingsRepository.setDuoBatteryChargingColor(colorHex)
+    }
+
+    fun setDuoBatteryPowerSaveColorEnabled(enabled: Boolean) {
+        isDuoBatteryPowerSaveColorEnabled.value = enabled
+        settingsRepository.setDuoBatteryPowerSaveColorEnabled(enabled)
+    }
+
+    fun setDuoBatteryPowerSaveColor(colorHex: String) {
+        duoBatteryPowerSaveColor.value = colorHex
+        settingsRepository.setDuoBatteryPowerSaveColor(colorHex)
     }
 
     fun setDuoBatteryLowColorEnabled(enabled: Boolean) {
