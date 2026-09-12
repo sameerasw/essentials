@@ -416,6 +416,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_BATTERY_SHOW_CHARGING = "status_glance_battery_show_charging"
         const val KEY_STATUS_GLANCE_BATTERY_SHOW_FULL = "status_glance_battery_show_full"
         const val KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE = "status_glance_battery_show_otherwise"
+        const val KEY_STATUS_GLANCE_BATTERY_ICON_SIZE = "status_glance_battery_icon_size"
         const val KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN = "status_glance_hide_when_fullscreen"
         const val KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS = "status_glance_hide_in_quick_settings"
         const val KEY_STATUS_GLANCE_TAP_ACTION = "status_glance_tap_action"
@@ -3308,6 +3309,9 @@ class SettingsRepository(
 
     fun isStatusGlanceBatteryShowOtherwiseEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE, true)
     fun setStatusGlanceBatteryShowOtherwiseEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE, enabled)
+
+    fun getStatusGlanceBatteryIconSize(): Float = getFloat(KEY_STATUS_GLANCE_BATTERY_ICON_SIZE, 16f)
+    fun setStatusGlanceBatteryIconSize(size: Float) = putFloat(KEY_STATUS_GLANCE_BATTERY_ICON_SIZE, size)
 
     fun getStatusGlanceTapAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_TAP_ACTION)
     fun setStatusGlanceTapAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_TAP_ACTION, action)

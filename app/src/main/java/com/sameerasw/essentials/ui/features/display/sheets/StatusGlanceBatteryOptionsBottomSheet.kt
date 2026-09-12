@@ -4,11 +4,16 @@
  *
  * Feature Module: UI Feature - Display
  * File: StatusGlanceBatteryOptionsBottomSheet.kt
- * Description: Bottom sheet for configuring Status Glance battery display mode and dynamic visibility conditions.
+ * Description: Bottom sheet for configuring Status Glance battery display mode, icon size, and dynamic visibility conditions.
  */
 
 package com.sameerasw.essentials.ui.features.display.sheets
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +40,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -73,14 +79,16 @@ fun StatusGlanceBatteryOptionsBottomSheet(
                 modifier = Modifier.padding(start = 8.dp),
             )
 
-            val modes = listOf("icon", "percentage")
+            val modes = listOf("icon", "percentage", "both")
             val icons = listOf(
                 R.drawable.battery_android_frame_full_24px,
                 R.drawable.rounded_numbers_24,
+                R.drawable.battery_android_frame_plus_24px,
             )
             val labels = listOf(
                 stringResource(R.string.status_glance_battery_mode_icon),
                 stringResource(R.string.status_glance_battery_mode_percentage),
+                stringResource(R.string.status_glance_battery_mode_both),
             )
 
             RoundedCardContainer {
@@ -105,7 +113,8 @@ fun StatusGlanceBatteryOptionsBottomSheet(
                                 .semantics { role = Role.RadioButton },
                             shapes = when (index) {
                                 0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                else -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                modes.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                             },
                         ) {
                             Row(
@@ -124,6 +133,27 @@ fun StatusGlanceBatteryOptionsBottomSheet(
                             }
                         }
                     }
+                }
+            }
+
+            AnimatedVisibility(
+                visible = viewModel.statusGlanceBatteryDisplayMode.value != "percentage",
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                RoundedCardContainer(
+                    spacing = 2.dp,
+                    cornerRadius = 24.dp,
+                ) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.status_glance_battery_icon_size_title),
+                        value = viewModel.statusGlanceBatteryIconSize.floatValue,
+                        onValueChange = { viewModel.setStatusGlanceBatteryIconSize(it) },
+                        valueRange = 10f..24f,
+                        increment = 1f,
+                        iconRes = R.drawable.battery_android_frame_full_24px,
+                        valueFormatter = { "${it.toInt()} dp" },
+                    )
                 }
             }
 
@@ -181,3 +211,4 @@ fun StatusGlanceBatteryOptionsBottomSheet(
         }
     }
 }
+
