@@ -648,6 +648,32 @@ object FeatureRegistry {
                 ) = viewModel.setStatusBarIconControlEnabled(enabled, context)
             },
             object : Feature(
+                id = "Status glance",
+                title = R.string.feat_status_glance_title,
+                iconRes = R.drawable.rounded_motion_play_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_status_glance_desc,
+                aboutDescription = R.string.about_desc_status_glance,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                hasMoreSettings = true,
+                showToggle = true,
+                isBeta = true,
+                parentFeatureId = "Display",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isStatusGlanceEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setStatusGlanceEnabled(enabled)
+            },
+            object : Feature(
                 id = "Maps power saving mode",
                 title = R.string.feat_maps_power_saving_title,
                 iconRes = R.drawable.rounded_navigation_24,
