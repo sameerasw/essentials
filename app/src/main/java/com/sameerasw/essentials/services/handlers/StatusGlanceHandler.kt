@@ -224,6 +224,7 @@ class StatusGlanceHandler(
             v.showMedia = settingsRepository.isStatusGlanceShowMediaEnabled()
             v.showTime = settingsRepository.isStatusGlanceShowTimeEnabled()
             v.useBackgroundPill = settingsRepository.isStatusGlanceBackgroundPillEnabled()
+            v.useAlbumArtColors = settingsRepository.isStatusGlanceAlbumArtColorsEnabled()
             v.hideWhenFullscreen = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
             v.hideInQuickSettings = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
             v.hideWhenLocked = settingsRepository.isStatusGlanceHideWhenLockedEnabled()
