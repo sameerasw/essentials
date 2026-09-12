@@ -194,6 +194,13 @@ sealed interface Action {
     }
 
     @Keep
+    data object OpenNowPlayingApp : Action {
+        override val title: Int = R.string.diy_action_open_now_playing_app
+        override val icon: Int = R.drawable.rounded_motion_play_24
+        override val permissions: List<String> = listOf("NOTIFICATION_LISTENER")
+    }
+
+    @Keep
     enum class VolumeChannel {
         @SerializedName("MUSIC")
         MUSIC,

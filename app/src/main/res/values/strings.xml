@@ -1138,6 +1138,7 @@
     <string name="diy_action_toggle_mute">Toggle Mute</string>
     <string name="diy_action_toggle_vibrate">Toggle Vibrate</string>
     <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_open_now_playing_app">Open now playing app</string>
     <string name="diy_action_circle_to_search">Circle to Search</string>
     <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_action_sometimes_essentials">Sometimes Essential</string>
