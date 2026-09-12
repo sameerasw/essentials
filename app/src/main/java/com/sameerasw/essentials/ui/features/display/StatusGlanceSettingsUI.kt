@@ -448,6 +448,18 @@ fun StatusGlanceSettingsUI(
                     )
 
                     IconToggleItem(
+                        title = stringResource(R.string.status_glance_album_art_colors_title),
+                        description = stringResource(R.string.status_glance_album_art_colors_desc),
+                        iconRes = R.drawable.rounded_palette_24,
+                        isChecked = viewModel.isStatusGlanceAlbumArtColors.value,
+                        onCheckedChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setStatusGlanceAlbumArtColors(it)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "status_glance_album_art_colors"),
+                    )
+
+                    IconToggleItem(
                         title = stringResource(R.string.status_glance_hide_in_quick_settings_title),
                         description = stringResource(R.string.status_glance_hide_in_quick_settings_desc),
                         iconRes = R.drawable.rounded_top_panel_close_24,

@@ -407,6 +407,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
+        const val KEY_STATUS_GLANCE_ALBUM_ART_COLORS = "status_glance_album_art_colors"
         const val KEY_STATUS_GLANCE_SHOW_BATTERY = "status_glance_show_battery"
         const val KEY_STATUS_GLANCE_BATTERY_DISPLAY_MODE = "status_glance_battery_display_mode"
         const val KEY_STATUS_GLANCE_BATTERY_SHOW_LOW = "status_glance_battery_show_low"
@@ -3272,6 +3273,9 @@ class SettingsRepository(
 
     fun isStatusGlanceBackgroundPillEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, false)
     fun setStatusGlanceBackgroundPillEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BACKGROUND_PILL, enabled)
+
+    fun isStatusGlanceAlbumArtColorsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ALBUM_ART_COLORS, true)
+    fun setStatusGlanceAlbumArtColorsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_ALBUM_ART_COLORS, enabled)
 
     fun isStatusGlanceHideWhenFullscreenEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN, true)
     fun setStatusGlanceHideWhenFullscreenEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN, enabled)

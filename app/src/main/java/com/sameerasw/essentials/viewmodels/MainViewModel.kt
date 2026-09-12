@@ -174,6 +174,7 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceShowMedia = mutableStateOf(true)
     val isStatusGlanceShowTime = mutableStateOf(true)
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
+    val isStatusGlanceAlbumArtColors = mutableStateOf(true)
     val isStatusGlanceHideWhenFullscreen = mutableStateOf(true)
     val isStatusGlanceHideInQuickSettings = mutableStateOf(true)
     val isStatusGlanceShowBattery = mutableStateOf(false)
@@ -704,6 +705,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_BACKGROUND_PILL ->
                         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_ALBUM_ART_COLORS ->
+                        isStatusGlanceAlbumArtColors.value = settingsRepository.isStatusGlanceAlbumArtColorsEnabled()
 
                     SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN ->
                         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
@@ -2008,6 +2012,7 @@ class MainViewModel : ViewModel() {
         isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
         isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
+        isStatusGlanceAlbumArtColors.value = settingsRepository.isStatusGlanceAlbumArtColorsEnabled()
         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
         isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
         isStatusGlanceShowBattery.value = settingsRepository.isStatusGlanceShowBatteryEnabled()
@@ -4879,6 +4884,11 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceBackgroundPill(enabled: Boolean) {
         isStatusGlanceBackgroundPill.value = enabled
         settingsRepository.setStatusGlanceBackgroundPillEnabled(enabled)
+    }
+
+    fun setStatusGlanceAlbumArtColors(enabled: Boolean) {
+        isStatusGlanceAlbumArtColors.value = enabled
+        settingsRepository.setStatusGlanceAlbumArtColorsEnabled(enabled)
     }
 
     fun setStatusGlanceHideWhenFullscreen(enabled: Boolean) {

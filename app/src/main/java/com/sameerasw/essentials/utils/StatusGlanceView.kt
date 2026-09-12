@@ -151,6 +151,21 @@ class StatusGlanceView(context: Context) : View(context) {
             invalidate()
         }
 
+    var useAlbumArtColors: Boolean = true
+        set(value) {
+            field = value
+            val targetColor = if (value && activeSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
+                paletteMediaColor!!
+            } else {
+                defaultMaterialYouColor
+            }
+            animateColorChange(targetColor)
+            updateTextColor(targetColor)
+            invalidate()
+        }
+
+    private fun isPillActive(): Boolean = useBackgroundPill || (useAlbumArtColors && activeSlot == GlanceSlot.MEDIA)
+
     var maxWidthDp: Float = 180f
         set(value) {
             field = value
@@ -226,7 +241,7 @@ class StatusGlanceView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 resolveColors()
-                if (activeSlot == GlanceSlot.MEDIA && rawArtworkPaletteColor != null) {
+                if (useAlbumArtColors && activeSlot == GlanceSlot.MEDIA && rawArtworkPaletteColor != null) {
                     paletteMediaColor = getThemeAdjustedColor(rawArtworkPaletteColor!!)
                     animateColorChange(paletteMediaColor!!)
                 } else {
@@ -271,7 +286,7 @@ class StatusGlanceView(context: Context) : View(context) {
                     rawArtworkPaletteColor = color
                     val adjustedColor = getThemeAdjustedColor(color)
                     paletteMediaColor = adjustedColor
-                    if (activeSlot == GlanceSlot.MEDIA) {
+                    if (useAlbumArtColors && activeSlot == GlanceSlot.MEDIA) {
                         animateColorChange(adjustedColor)
                     }
                 }
@@ -550,7 +565,7 @@ class StatusGlanceView(context: Context) : View(context) {
 
         if (activeSlot == GlanceSlot.NONE) {
             activeSlot = newSlot
-            val targetColor = if (newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
+            val targetColor = if (useAlbumArtColors && newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
                 paletteMediaColor!!
             } else {
                 defaultMaterialYouColor
@@ -599,7 +614,7 @@ class StatusGlanceView(context: Context) : View(context) {
         activeSlot = newSlot
         isTransitioning = true
 
-        val targetColor = if (newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
+        val targetColor = if (useAlbumArtColors && newSlot == GlanceSlot.MEDIA && paletteMediaColor != null) {
             paletteMediaColor!!
         } else {
             defaultMaterialYouColor
@@ -629,7 +644,7 @@ class StatusGlanceView(context: Context) : View(context) {
     }
 
     private fun updateTextColor(bgColor: Int) {
-        if (!useBackgroundPill) {
+        if (!isPillActive()) {
             currentTextColor = if (isDarkTheme) Color.WHITE else Color.BLACK
             return
         }
@@ -956,7 +971,7 @@ class StatusGlanceView(context: Context) : View(context) {
                 if (clockText.isBlank()) 10f * density else 0f
             }
             val textLeft = if (hasIcon) (iconLeft + iconSize + textSpacing) else (cursorX + textSpacing)
-            val textRight = (if (useBackgroundPill) right else right - 8f * density) - batteryReservedWidth
+            val textRight = (if (isPillActive()) right else right - 8f * density) - batteryReservedWidth
             val maxTextWidth = (textRight - textLeft).coerceAtLeast(0f)
 
             if (!isTransitioning) {
@@ -977,7 +992,7 @@ class StatusGlanceView(context: Context) : View(context) {
                 val marqueeBounds = RectF(fadeStart, top, textRight, bottom)
                 val saveLayerCount = canvas.saveLayer(marqueeBounds, null)
 
-                if (useBackgroundPill && batteryAlpha <= 0f) {
+                if (isPillActive() && batteryAlpha <= 0f) {
                     marqueeClipPath.reset()
                     val radii = floatArrayOf(
                         0f, 0f,
@@ -1121,7 +1136,7 @@ class StatusGlanceView(context: Context) : View(context) {
 
         val alphaInt = (slotAlpha * iconAlpha * 255).toInt().coerceIn(0, 255)
 
-        if (useBackgroundPill) {
+        if (isPillActive()) {
             pillPaint.color = currentPillColor
             pillPaint.alpha = alphaInt
             canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, pillPaint)
