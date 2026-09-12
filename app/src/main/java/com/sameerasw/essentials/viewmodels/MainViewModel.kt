@@ -185,6 +185,9 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceBatteryShowCharging = mutableStateOf(true)
     val isStatusGlanceBatteryShowFull = mutableStateOf(true)
     val isStatusGlanceBatteryShowOtherwise = mutableStateOf(true)
+    val statusGlanceTapAction = mutableStateOf<Action?>(null)
+    val statusGlanceDoubleTapAction = mutableStateOf<Action?>(null)
+    val statusGlanceLongPressAction = mutableStateOf<Action?>(null)
 
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -737,6 +740,15 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE ->
                         isStatusGlanceBatteryShowOtherwise.value = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_TAP_ACTION ->
+                        statusGlanceTapAction.value = settingsRepository.getStatusGlanceTapAction()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_DOUBLE_TAP_ACTION ->
+                        statusGlanceDoubleTapAction.value = settingsRepository.getStatusGlanceDoubleTapAction()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_LONG_PRESS_ACTION ->
+                        statusGlanceLongPressAction.value = settingsRepository.getStatusGlanceLongPressAction()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -2019,6 +2031,9 @@ class MainViewModel : ViewModel() {
         isStatusGlanceBatteryShowCharging.value = settingsRepository.isStatusGlanceBatteryShowChargingEnabled()
         isStatusGlanceBatteryShowFull.value = settingsRepository.isStatusGlanceBatteryShowFullEnabled()
         isStatusGlanceBatteryShowOtherwise.value = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
+        statusGlanceTapAction.value = settingsRepository.getStatusGlanceTapAction()
+        statusGlanceDoubleTapAction.value = settingsRepository.getStatusGlanceDoubleTapAction()
+        statusGlanceLongPressAction.value = settingsRepository.getStatusGlanceLongPressAction()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4936,6 +4951,21 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceBatteryShowOtherwise(enabled: Boolean) {
         isStatusGlanceBatteryShowOtherwise.value = enabled
         settingsRepository.setStatusGlanceBatteryShowOtherwiseEnabled(enabled)
+    }
+
+    fun setStatusGlanceTapAction(action: Action?) {
+        statusGlanceTapAction.value = action
+        settingsRepository.setStatusGlanceTapAction(action)
+    }
+
+    fun setStatusGlanceDoubleTapAction(action: Action?) {
+        statusGlanceDoubleTapAction.value = action
+        settingsRepository.setStatusGlanceDoubleTapAction(action)
+    }
+
+    fun setStatusGlanceLongPressAction(action: Action?) {
+        statusGlanceLongPressAction.value = action
+        settingsRepository.setStatusGlanceLongPressAction(action)
     }
 
     fun setStatusGlanceMaxWidth(value: Float) {

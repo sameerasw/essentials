@@ -2567,4 +2567,13 @@
     <string name="status_glance_calendar_select_calendars_title">Calendars to show</string>
     <string name="status_glance_calendar_no_calendars">No calendars found on device</string>
     <string name="status_glance_calendar_event_in_time">in %1$s</string>
+    <string name="status_glance_section_gestures">Gestures</string>
+    <string name="status_glance_action_tap_title">Single tap</string>
+    <string name="status_glance_action_tap_media_desc">Play / Pause when media is playing</string>
+    <string name="status_glance_action_double_tap_title">Double tap</string>
+    <string name="status_glance_action_long_press_title">Long press</string>
+    <string name="status_glance_action_swipe_right_title">Swipe right</string>
+    <string name="status_glance_action_swipe_right_desc">Skip to next track when media is playing</string>
+    <string name="status_glance_action_pick_title">Pick action</string>
+    <string name="status_glance_action_none">None</string>
 </resources>

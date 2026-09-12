@@ -39,6 +39,7 @@ import android.os.SystemClock
 import android.provider.CalendarContract
 import android.text.format.DateFormat
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
@@ -65,6 +66,9 @@ class StatusGlanceHandler(
     private var windowManager: WindowManager? = null
     private var glanceView: StatusGlanceView? = null
     private var isOverlayAdded = false
+    private var touchAnchorView: View? = null
+    private var isTouchAnchorAdded = false
+    private var touchHandler: StatusGlanceTouchHandler? = null
     private val mainHandler = Handler(Looper.getMainLooper())
 
     private val settingsRepository by lazy { SettingsRepository(service) }
@@ -178,6 +182,7 @@ class StatusGlanceHandler(
             isFullscreen = fullscreen
             mainHandler.post {
                 glanceView?.isFullscreen = fullscreen
+                updateTouchAnchor()
             }
         }
     }
@@ -188,6 +193,7 @@ class StatusGlanceHandler(
                 isShadeExpanded = false
                 mainHandler.post {
                     glanceView?.isShadeExpanded = false
+                    updateTouchAnchor()
                 }
             }
             return
@@ -204,6 +210,7 @@ class StatusGlanceHandler(
             isShadeExpanded = expanded
             mainHandler.post {
                 glanceView?.isShadeExpanded = expanded
+                updateTouchAnchor()
             }
         }
     }
@@ -314,6 +321,82 @@ class StatusGlanceHandler(
         val offsetYPercent = settingsRepository.getStatusGlanceOffsetY()
         view.glanceCenterX = dm.widthPixels * (offsetXPercent / 100f)
         view.glanceCenterY = dm.heightPixels * (offsetYPercent / 100f)
+        updateTouchAnchor()
+    }
+
+    private fun updateTouchAnchor() {
+        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || isLocked || isLandscape || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
+            removeTouchAnchor()
+            return
+        }
+
+        if (touchHandler == null) {
+            touchHandler = StatusGlanceTouchHandler(service)
+        }
+        touchHandler?.apply {
+            this.glanceView = this@StatusGlanceHandler.glanceView
+            this.activeMediaControllerProvider = { activeMediaController }
+        }
+
+        if (touchAnchorView == null) {
+            touchAnchorView = View(service).apply {
+                setOnTouchListener { _, event ->
+                    touchHandler?.onTouchEvent(event) ?: false
+                }
+            }
+        }
+
+        val dm = service.resources.displayMetrics
+        val density = dm.density
+        val maxWidth = settingsRepository.getStatusGlanceMaxWidth() * density
+        val height = 36f * density
+        val width = maxWidth.coerceAtLeast(48f * density).toInt()
+        val heightPx = height.toInt()
+
+        val glanceCenterX = glanceView?.glanceCenterX ?: (dm.widthPixels * (settingsRepository.getStatusGlanceOffsetX() / 100f))
+        val glanceCenterY = glanceView?.glanceCenterY ?: (dm.heightPixels * (settingsRepository.getStatusGlanceOffsetY() / 100f))
+
+        val touchParams = WindowManager.LayoutParams(
+            width,
+            heightPx,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = (glanceCenterX - 8f * density).toInt().coerceAtLeast(0)
+            y = (glanceCenterY - heightPx / 2f).toInt()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
+
+        if (!isTouchAnchorAdded) {
+            try {
+                windowManager?.addView(touchAnchorView, touchParams)
+                isTouchAnchorAdded = true
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } else {
+            try {
+                windowManager?.updateViewLayout(touchAnchorView, touchParams)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun removeTouchAnchor() {
+        if (isTouchAnchorAdded && touchAnchorView != null && windowManager != null) {
+            try {
+                windowManager?.removeView(touchAnchorView)
+            } catch (_: Exception) {}
+            isTouchAnchorAdded = false
+        }
     }
 
     private fun updateTime() {
@@ -862,6 +945,7 @@ class StatusGlanceHandler(
             glanceView?.isScreenOff = true
             glanceView?.isLocked = true
             glanceView?.updateVisibilityState(immediate = true)
+            removeTouchAnchor()
         }
     }
 
@@ -904,10 +988,13 @@ class StatusGlanceHandler(
             isOverlayAdded = false
             glanceView = null
         }
+        removeTouchAnchor()
     }
 
     fun destroy() {
         removeOverlay()
+        touchAnchorView = null
+        touchHandler = null
         unregisterTorchCallback()
         unregisterMediaListener()
         unregisterCalendarObserver()
