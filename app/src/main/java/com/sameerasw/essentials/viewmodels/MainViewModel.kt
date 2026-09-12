@@ -135,7 +135,7 @@ class MainViewModel : ViewModel() {
     val isDuoShowBattery = mutableStateOf(true)
     val isDuoShowBatteryPercentage = mutableStateOf(false)
     val isDuoBatteryChargingColorEnabled = mutableStateOf(true)
-    val duoBatteryChargingColor = mutableStateOf("#00E676")
+    val duoBatteryChargingColor = mutableStateOf("auto")
     val isDuoBatteryPowerSaveColorEnabled = mutableStateOf(true)
     val duoBatteryPowerSaveColor = mutableStateOf("#FF9800")
     val isDuoBatteryLowColorEnabled = mutableStateOf(true)

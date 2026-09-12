@@ -168,6 +168,7 @@ fun DuoBatteryOptionsBottomSheet(
                         onColorSelected = { hex ->
                             viewModel.setDuoBatteryChargingColor(hex)
                         },
+                        allowAuto = true,
                     )
                 }
             }

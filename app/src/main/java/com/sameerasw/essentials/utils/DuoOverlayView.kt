@@ -258,6 +258,16 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var isChargingColorAuto: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                if (isCharging) {
+                    animateThemeChange()
+                }
+            }
+        }
+
     var isBatteryPowerSaveColorEnabled: Boolean = true
         set(value) {
             if (field != value) {
@@ -370,7 +380,14 @@ class DuoOverlayView(context: Context) : View(context) {
         private set
 
     var isFastCharging: Boolean = false
-        private set
+        set(value) {
+            if (field != value) {
+                field = value
+                if (isCharging && isChargingColorAuto) {
+                    animateThemeChange()
+                }
+            }
+        }
 
     var isPowerSaveMode: Boolean = false
         set(value) {
@@ -906,7 +923,11 @@ class DuoOverlayView(context: Context) : View(context) {
                 return Triple(dimTrack, dimProgress, dimProgress)
             }
             if (isCharging && isBatteryChargingColorEnabled) {
-                val chargeAccent = getThemeAdjustedColor(batteryChargingColor)
+                val chargeAccent = if (isChargingColorAuto) {
+                    if (isFastCharging) Color.rgb(0, 229, 255) else Color.rgb(0, 230, 118)
+                } else {
+                    getThemeAdjustedColor(batteryChargingColor)
+                }
                 val dimProgress = Color.argb(160, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
                 val dimTrack = Color.argb(50, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
                 return Triple(dimTrack, dimProgress, dimProgress)
@@ -942,12 +963,24 @@ class DuoOverlayView(context: Context) : View(context) {
         }
 
         if (isCharging && isBatteryChargingColorEnabled) {
-            val chargeAccent = getThemeAdjustedColor(batteryChargingColor)
+            val chargeAccent = if (isChargingColorAuto) {
+                if (isFastCharging) {
+                    if (isDarkTheme) Color.rgb(0, 229, 255) else Color.rgb(0, 151, 167)
+                } else {
+                    if (isDarkTheme) Color.rgb(0, 230, 118) else Color.rgb(10, 144, 66)
+                }
+            } else {
+                getThemeAdjustedColor(batteryChargingColor)
+            }
             val track = if (isDarkTheme) {
                 val trackAlpha = 90
                 Color.argb(trackAlpha, Color.red(chargeAccent), Color.green(chargeAccent), Color.blue(chargeAccent))
             } else {
-                Color.argb(42, 0, 70, 30)
+                if (isChargingColorAuto && isFastCharging) {
+                    Color.argb(42, 0, 70, 80)
+                } else {
+                    Color.argb(42, 0, 70, 30)
+                }
             }
             return Triple(track, chargeAccent, chargeAccent)
         }
@@ -1452,7 +1485,15 @@ class DuoOverlayView(context: Context) : View(context) {
                     canvas.drawArc(arcBounds, tracerStartAngle, tailSpan, false, contrastTracerPaint)
                 }
 
-                val adjustedChargeColor = getThemeAdjustedColor(batteryChargingColor)
+                val adjustedChargeColor = if (isChargingColorAuto) {
+                    if (isFastCharging) {
+                        if (isDarkTheme) Color.rgb(0, 229, 255) else Color.rgb(0, 151, 167)
+                    } else {
+                        if (isDarkTheme) Color.rgb(0, 230, 118) else Color.rgb(10, 144, 66)
+                    }
+                } else {
+                    getThemeAdjustedColor(batteryChargingColor)
+                }
                 val beamAlpha = (245 * tracerAlpha).toInt().coerceIn(0, 255)
                 val beamColor = Color.argb(
                     beamAlpha,
