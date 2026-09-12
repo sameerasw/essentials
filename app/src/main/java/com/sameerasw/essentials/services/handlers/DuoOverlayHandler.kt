@@ -244,16 +244,15 @@ class DuoOverlayHandler(
                 }
 
                 val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-                val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL
-
                 val plugged = batteryIntent?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
                 val isPlugged = plugged > 0
+                val isChargingStatus = isPlugged && (status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL)
 
                 val isNowCharging = when (action) {
                     Intent.ACTION_POWER_DISCONNECTED -> false
                     Intent.ACTION_POWER_CONNECTED -> true
-                    else -> isChargingStatus || isPlugged
+                    else -> isChargingStatus
                 }
 
                 val isFastCharging = isFastCharging(batteryIntent, plugged)
@@ -1101,15 +1100,18 @@ class DuoOverlayHandler(
                         overlayView?.batteryLevel = (level * 100) / scale
                     }
                     val status = it.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-                    val isChargingStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                        status == BatteryManager.BATTERY_STATUS_FULL
                     val plugged = it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
                     val isPlugged = plugged > 0
-                    if (isChargingStatus || isPlugged) {
+                    val isChargingStatus = isPlugged && (status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        status == BatteryManager.BATTERY_STATUS_FULL)
+                    if (isChargingStatus) {
                         isChargingState = true
                         val isFast = isFastCharging(it, plugged)
                         isFastChargingState = isFast
                         overlayView?.setCharging(true, isFast)
+                    } else {
+                        isChargingState = false
+                        overlayView?.setCharging(false)
                     }
                 }
             } catch (e: Exception) {

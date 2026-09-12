@@ -9,6 +9,11 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -26,23 +31,28 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,9 +76,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
+import com.google.gson.GsonBuilder
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.AppBackupItem
+import com.sameerasw.essentials.domain.model.AppListBackup
+import com.sameerasw.essentials.domain.model.DeviceBackupInfo
 import com.sameerasw.essentials.ui.components.AppsActionButtons
 import com.sameerasw.essentials.ui.components.DeviceHeroCard
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
@@ -90,10 +106,107 @@ import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
+import java.io.OutputStreamWriter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class YourAndroidViewModel : ViewModel() {
     var hasRunStartupAnimation = false
+    val isExportingAppList = mutableStateOf(false)
+
+    fun exportAppList(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            isExportingAppList.value = true
+            val success = withContext(Dispatchers.IO) {
+                try {
+                    val pm = context.packageManager
+                    val installedPackages = pm.getInstalledPackages(PackageManager.GET_META_DATA)
+                    val downloadedApps = installedPackages.filter { pkgInfo ->
+                        val appInfo = pkgInfo.applicationInfo
+                        if (appInfo != null) {
+                            val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                            val isUpdatedSystem = (appInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+                            !isSystem || isUpdatedSystem
+                        } else {
+                            false
+                        }
+                    }
+
+                    val backupApps = downloadedApps.map { pkgInfo ->
+                        val appInfo = pkgInfo.applicationInfo
+                        val appLabel = appInfo?.let { pm.getApplicationLabel(it).toString() } ?: pkgInfo.packageName
+                        val installerPackage = try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                pm.getInstallSourceInfo(pkgInfo.packageName).installingPackageName
+                            } else {
+                                @Suppress("DEPRECATION")
+                                pm.getInstallerPackageName(pkgInfo.packageName)
+                            }
+                        } catch (e: Exception) {
+                            null
+                        }
+
+                        val minSdk = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            appInfo?.minSdkVersion
+                        } else {
+                            null
+                        }
+                        val targetSdk = appInfo?.targetSdkVersion
+
+                        AppBackupItem(
+                            name = appLabel,
+                            packageName = pkgInfo.packageName,
+                            versionName = pkgInfo.versionName ?: "",
+                            versionCode = PackageInfoCompat.getLongVersionCode(pkgInfo),
+                            firstInstallTime = pkgInfo.firstInstallTime,
+                            lastUpdateTime = pkgInfo.lastUpdateTime,
+                            installer = installerPackage,
+                            minSdkVersion = minSdk,
+                            targetSdkVersion = targetSdk,
+                        )
+                    }.sortedBy { it.name.lowercase(Locale.getDefault()) }
+
+                    val now = System.currentTimeMillis()
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                    val backup = AppListBackup(
+                        device = DeviceBackupInfo(
+                            manufacturer = Build.MANUFACTURER,
+                            brand = Build.BRAND,
+                            model = Build.MODEL,
+                            device = Build.DEVICE,
+                            product = Build.PRODUCT,
+                            androidVersion = Build.VERSION.RELEASE,
+                            sdkInt = Build.VERSION.SDK_INT,
+                            exportTimestamp = now,
+                            exportDate = dateFormat.format(Date(now)),
+                        ),
+                        appCount = backupApps.size,
+                        apps = backupApps,
+                    )
+
+                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        OutputStreamWriter(outputStream, Charsets.UTF_8).use { writer ->
+                            val gson = GsonBuilder().setPrettyPrinting().create()
+                            gson.toJson(backup, writer)
+                        }
+                    }
+                    true
+                } catch (e: Exception) {
+                    false
+                }
+            }
+            isExportingAppList.value = false
+            Toast.makeText(
+                context,
+                if (success) R.string.msg_backup_app_list_success else R.string.msg_backup_app_list_failed,
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
 }
 
 class YourAndroidActivity : ComponentActivity() {
@@ -144,6 +257,15 @@ class YourAndroidActivity : ComponentActivity() {
                     gitHubAuthViewModel.loadUser(gitHubToken!!, context)
                 }
             }
+
+            val backupAppListLauncher =
+                androidx.activity.compose.rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.CreateDocument("application/json"),
+                ) { uri ->
+                    uri?.let {
+                        viewModel.exportAppList(context, it)
+                    }
+                }
 
             val exportLauncher =
                 androidx.activity.compose.rememberLauncherForActivityResult(
@@ -241,6 +363,8 @@ class YourAndroidActivity : ComponentActivity() {
                         onAnimationRun = { viewModel.hasRunStartupAnimation = true },
                         exportLauncher = exportLauncher,
                         importLauncher = importLauncher,
+                        backupAppListLauncher = backupAppListLauncher,
+                        viewModel = viewModel,
                         onAddRepoClick = { showAddRepoSheet = true },
                         onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
                         modifier = Modifier.fillMaxSize(),
@@ -399,6 +523,8 @@ fun YourAndroidContent(
     onAnimationRun: () -> Unit,
     exportLauncher: androidx.activity.result.ActivityResultLauncher<String>,
     importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>,
+    backupAppListLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+    viewModel: YourAndroidViewModel,
     onAddRepoClick: () -> Unit,
     onShowReleaseNotes: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -757,6 +883,47 @@ fun YourAndroidContent(
                         translationY = contentOffsetState.value.toPx()
                     },
             )
+
+            val isExportingAppList by viewModel.isExportingAppList
+            Button(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    val timeStamp =
+                        SimpleDateFormat(
+                            "yyyyMMdd_HHmmss",
+                            Locale.getDefault(),
+                        ).format(Date())
+                    backupAppListLauncher.launch("app_list_backup_$timeStamp.json")
+                },
+                enabled = !isExportingAppList,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp)
+                        .graphicsLayer {
+                            alpha = contentAlphaState.value
+                            translationY = contentOffsetState.value.toPx()
+                        },
+            ) {
+                if (isExportingAppList) {
+                    LinearWavyProgressIndicator(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(12.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        trackColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.28f),
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_save_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.action_backup_app_list))
+                }
+            }
         }
     }
 }

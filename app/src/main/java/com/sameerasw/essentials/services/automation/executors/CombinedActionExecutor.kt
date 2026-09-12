@@ -10,10 +10,14 @@
 package com.sameerasw.essentials.services.automation.executors
 
 import android.app.ActivityManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.hardware.camera2.CameraManager
 import android.media.AudioManager
+import android.media.session.MediaController
+import android.media.session.MediaSessionManager
+import android.media.session.PlaybackState
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
@@ -22,6 +26,7 @@ import android.widget.Toast
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.DeviceLockUtils
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -407,6 +412,10 @@ object CombinedActionExecutor {
                             context.packageName,
                         ),
                     )
+                }
+
+                is Action.OpenNowPlayingApp -> {
+                    openNowPlayingApp(context)
                 }
 
                 is Action.CircleToSearch -> {
@@ -892,6 +901,36 @@ object CombinedActionExecutor {
                 context,
                 "settings put system screen_brightness_mode $value",
             )
+        }
+    }
+
+    private fun openNowPlayingApp(context: Context) {
+        try {
+            val manager =
+                context.getSystemService(Context.MEDIA_SESSION_SERVICE) as? MediaSessionManager ?: return
+            val componentName = ComponentName(context, NotificationListener::class.java)
+            val sessions = manager.getActiveSessions(componentName)
+            val activeSession =
+                sessions
+                    ?.sortedWith(
+                        compareByDescending<MediaController> {
+                            val state = it.playbackState?.state
+                            state == PlaybackState.STATE_PLAYING || state == PlaybackState.STATE_BUFFERING
+                        }.thenByDescending {
+                            val state = it.playbackState?.state
+                            state == PlaybackState.STATE_PAUSED
+                        },
+                    )?.firstOrNull()
+
+            val packageName = activeSession?.packageName
+            if (!packageName.isNullOrEmpty()) {
+                val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
+                if (launchIntent != null) {
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(launchIntent)
+                }
+            }
+        } catch (_: Exception) {
         }
     }
 }

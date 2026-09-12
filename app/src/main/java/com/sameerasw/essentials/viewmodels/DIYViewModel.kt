@@ -228,6 +228,7 @@ class DIYViewModel(
                     "TakeScreenshot" -> Action.TakeScreenshot
                     "ToggleMediaVolume" -> Action.ToggleMediaVolume
                     "LikeCurrentSong" -> Action.LikeCurrentSong
+                    "OpenNowPlayingApp" -> Action.OpenNowPlayingApp
                     "CircleToSearch" -> Action.CircleToSearch
                     "PinApp" -> Action.PinApp
                     "SometimesEssentials" ->

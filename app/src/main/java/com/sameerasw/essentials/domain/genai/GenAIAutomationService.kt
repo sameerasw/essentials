@@ -98,7 +98,7 @@ object GenAIAutomationService {
                       "title": "Short descriptive title",
                       "triggerType": "ScreenOff" or "ScreenOn" or "DeviceUnlock" or "ChargerConnected" or "ChargerDisconnected" or "PowerSavingOn" or "PowerSavingOff" or "Schedule" or "BluetoothConnected" or "BluetoothDisconnected" or "WifiConnected" or "WifiDisconnected",
                       "stateType": "Charging" or "ScreenOn" or "PowerSaving" or "TimePeriod",
-                      "actionTypes": ["HapticVibration", "ShowNotification", "RemoveNotification", "TurnOnFlashlight", "TurnOffFlashlight", "ToggleFlashlight", "DimWallpaper", "DeviceEffects", "SoundMode", "TurnOnLowPower", "TurnOffLowPower", "ScreenOff", "MediaPlayPause", "MediaNext", "MediaPrevious", "AIAssistant", "TakeScreenshot", "ToggleMediaVolume", "LikeCurrentSong", "CircleToSearch", "PinApp", "SometimesEssentials", "FreezeTag"],
+                      "actionTypes": ["HapticVibration", "ShowNotification", "RemoveNotification", "TurnOnFlashlight", "TurnOffFlashlight", "ToggleFlashlight", "DimWallpaper", "DeviceEffects", "SoundMode", "TurnOnLowPower", "TurnOffLowPower", "ScreenOff", "MediaPlayPause", "MediaNext", "MediaPrevious", "AIAssistant", "TakeScreenshot", "ToggleMediaVolume", "LikeCurrentSong", "OpenNowPlayingApp", "CircleToSearch", "PinApp", "SometimesEssentials", "FreezeTag"],
                       "explanation": "Brief 1-2 sentence description of what this automation does",
                       "hour": null or integer (0-23 for Schedule trigger or start time of TimePeriod state),
                       "minute": null or integer (0-59 for Schedule trigger or start time of TimePeriod state),

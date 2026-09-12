@@ -1138,6 +1138,7 @@
     <string name="diy_action_toggle_mute">Toggle Mute</string>
     <string name="diy_action_toggle_vibrate">Toggle Vibrate</string>
     <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_open_now_playing_app">Open now playing app</string>
     <string name="diy_action_circle_to_search">Circle to Search</string>
     <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_action_sometimes_essentials">Sometimes Essential</string>
@@ -2535,6 +2536,8 @@
     <string name="status_glance_show_time_title">Time</string>
     <string name="status_glance_show_time_desc">Default fallback clock</string>
     <string name="status_glance_section_appearance">Appearance</string>
+    <string name="status_glance_bold_text_title">Bold text</string>
+    <string name="status_glance_bold_text_desc">Make text bolder for improved readability</string>
     <string name="status_glance_background_pill_title">Background pill</string>
     <string name="status_glance_background_pill_desc">Using material you colors</string>
     <string name="status_glance_album_art_colors_title">Album art colors</string>
@@ -2582,4 +2585,7 @@
     <string name="status_glance_action_swipe_right_desc">Skip to next track when media is playing</string>
     <string name="status_glance_action_pick_title">Pick action</string>
     <string name="status_glance_action_none">None</string>
+    <string name="action_backup_app_list">Backup app list</string>
+    <string name="msg_backup_app_list_success">App list backed up successfully</string>
+    <string name="msg_backup_app_list_failed">Failed to back up app list</string>
 </resources>

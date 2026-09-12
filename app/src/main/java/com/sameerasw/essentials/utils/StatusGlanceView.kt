@@ -253,6 +253,17 @@ class StatusGlanceView(context: Context) : View(context) {
             reevaluateSlot()
         }
 
+    var isBoldText: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                val tf = Typeface.create(Typeface.DEFAULT, if (value) Typeface.BOLD else Typeface.NORMAL)
+                textPaint.typeface = tf
+                batteryTextPaint.typeface = tf
+                reevaluateSlot()
+            }
+        }
+
     var isDarkTheme: Boolean = true
         set(value) {
             if (field != value) {
@@ -547,24 +558,27 @@ class StatusGlanceView(context: Context) : View(context) {
                     animateWidth()
                     invalidate()
                 }
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        reevaluateSlot()
+                    }
+                })
                 start()
             }
-        } else {
-            targetContentWidth = calculateTargetWidth()
-            animateWidth()
-            invalidate()
         }
+        reevaluateSlot()
     }
 
     fun reevaluateSlot() {
         val now = System.currentTimeMillis()
         val isEventWithin15Min = isEventToday && (nextEventTimeMillis - now) in 0..(15 * 60 * 1000L)
+        val hasBattery = isBatteryConditionMet()
 
         val newSlot = when {
             showFlashlight && isFlashlightOn -> GlanceSlot.FLASHLIGHT
             showCalendar && isEventWithin15Min && nextEventTitle.isNotBlank() -> GlanceSlot.CALENDAR_URGENT
             showMedia && isMediaPlaying -> GlanceSlot.MEDIA
-            showTime || (showCalendar && isEventToday && nextEventTitle.isNotBlank()) -> GlanceSlot.DEFAULT
+            showTime || (showCalendar && isEventToday && nextEventTitle.isNotBlank()) || hasBattery -> GlanceSlot.DEFAULT
             else -> GlanceSlot.NONE
         }
 
@@ -802,6 +816,25 @@ class StatusGlanceView(context: Context) : View(context) {
         val (clockText, marqueeText) = getSlotTexts(activeSlot)
         val icon = getSlotIcon(activeSlot)
         val isArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
+        val hasOtherContent = clockText.isNotBlank() || marqueeText.isNotBlank() || icon != null
+
+        if (!hasOtherContent) {
+            if (isBatteryConditionMet() || batteryAlpha > 0f) {
+                val iconSizePx = batteryIconSizeDp * density
+                val pctText = "$batteryLevel%"
+                val pctWidth = batteryTextPaint.measureText(pctText)
+                val itemW = when (batteryDisplayMode) {
+                    "icon" -> iconSizePx + 12f * density
+                    "percentage" -> pctWidth + 14f * density
+                    "both" -> iconSizePx + 3f * density + pctWidth + 14f * density
+                    else -> iconSizePx + 12f * density
+                }
+                val minCapsuleWidth = 24f * density
+                return (itemW.coerceAtLeast(minCapsuleWidth) * batteryAlpha).coerceAtMost(maxWidthDp * density)
+            }
+            return 0f
+        }
+
         val iconSize = if (icon != null) {
             if (isArtwork) 22f * density else 14f * density
         } else 0f
@@ -1096,42 +1129,85 @@ class StatusGlanceView(context: Context) : View(context) {
                 val iconSizePx = batteryIconSizeDp * density
                 val pctText = "$batteryLevel%"
                 val pctWidth = batteryTextPaint.measureText(pctText)
+                val hasOtherContent = clockText.isNotBlank() || marqueeText.isNotBlank() || icon != null
 
-                when (batteryDisplayMode) {
-                    "icon" -> {
-                        val batteryIcon = getBatteryBitmap(iconSizePx.toInt())
-                        if (batteryIcon != null) {
-                            iconPaint.alpha = combinedBatteryAlpha
-                            iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
-                            val batteryLeft = right - (5.5f * density) - iconSizePx
-                            val batteryTop = glanceCenterY - iconSizePx / 2f + offsetY
-                            canvas.drawBitmap(batteryIcon, null, RectF(batteryLeft, batteryTop, batteryLeft + iconSizePx, batteryTop + iconSizePx), iconPaint)
+                if (!hasOtherContent) {
+                    val currentWidth = right - left
+                    when (batteryDisplayMode) {
+                        "icon" -> {
+                            val batteryIcon = getBatteryBitmap(iconSizePx.toInt())
+                            if (batteryIcon != null) {
+                                iconPaint.alpha = combinedBatteryAlpha
+                                iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
+                                val batteryLeft = left + (currentWidth - iconSizePx) / 2f
+                                val batteryTop = glanceCenterY - iconSizePx / 2f + offsetY
+                                canvas.drawBitmap(batteryIcon, null, RectF(batteryLeft, batteryTop, batteryLeft + iconSizePx, batteryTop + iconSizePx), iconPaint)
+                            }
+                        }
+                        "percentage" -> {
+                            batteryTextPaint.alpha = combinedBatteryAlpha
+                            batteryTextPaint.color = currentTextColor
+                            batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
+                            val pctX = left + (currentWidth - pctWidth) / 2f
+                            val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
+                            canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
+                        }
+                        "both" -> {
+                            val totalW = iconSizePx + 3f * density + pctWidth
+                            val startX = left + (currentWidth - totalW) / 2f
+                            val batteryIcon = getBatteryBitmap(iconSizePx.toInt())
+                            if (batteryIcon != null) {
+                                iconPaint.alpha = combinedBatteryAlpha
+                                iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
+                                val batteryLeft = startX
+                                val batteryTop = glanceCenterY - iconSizePx / 2f + offsetY
+                                canvas.drawBitmap(batteryIcon, null, RectF(batteryLeft, batteryTop, batteryLeft + iconSizePx, batteryTop + iconSizePx), iconPaint)
+                            }
+                            batteryTextPaint.alpha = combinedBatteryAlpha
+                            batteryTextPaint.color = currentTextColor
+                            batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
+                            val pctX = startX + iconSizePx + 3f * density
+                            val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
+                            canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
                         }
                     }
-                    "percentage" -> {
-                        batteryTextPaint.alpha = combinedBatteryAlpha
-                        batteryTextPaint.color = currentTextColor
-                        batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
-                        val pctX = right - (5.5f * density) - pctWidth
-                        val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
-                        canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
-                    }
-                    "both" -> {
-                        // Draw percentage text first (rightmost), then icon to its left
-                        batteryTextPaint.alpha = combinedBatteryAlpha
-                        batteryTextPaint.color = currentTextColor
-                        batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
-                        val pctX = right - (5.5f * density) - pctWidth
-                        val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
-                        canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
+                } else {
+                    when (batteryDisplayMode) {
+                        "icon" -> {
+                            val batteryIcon = getBatteryBitmap(iconSizePx.toInt())
+                            if (batteryIcon != null) {
+                                iconPaint.alpha = combinedBatteryAlpha
+                                iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
+                                val batteryLeft = right - (5.5f * density) - iconSizePx
+                                val batteryTop = glanceCenterY - iconSizePx / 2f + offsetY
+                                canvas.drawBitmap(batteryIcon, null, RectF(batteryLeft, batteryTop, batteryLeft + iconSizePx, batteryTop + iconSizePx), iconPaint)
+                            }
+                        }
+                        "percentage" -> {
+                            batteryTextPaint.alpha = combinedBatteryAlpha
+                            batteryTextPaint.color = currentTextColor
+                            batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
+                            val pctX = right - (5.5f * density) - pctWidth
+                            val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
+                            canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
+                        }
+                        "both" -> {
+                            // Draw percentage text first (rightmost), then icon to its left
+                            batteryTextPaint.alpha = combinedBatteryAlpha
+                            batteryTextPaint.color = currentTextColor
+                            batteryTextPaint.getTextBounds(pctText, 0, pctText.length, textBounds)
+                            val pctX = right - (5.5f * density) - pctWidth
+                            val pctY = glanceCenterY - textBounds.exactCenterY() + offsetY
+                            canvas.drawText(pctText, pctX, pctY, batteryTextPaint)
 
-                        val batteryIcon = getBatteryBitmap(iconSizePx.toInt())
-                        if (batteryIcon != null) {
-                            iconPaint.alpha = combinedBatteryAlpha
-                            iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
-                            val batteryLeft = pctX - 2f * density - iconSizePx
-                            val batteryTop = glanceCenterY - iconSizePx / 2f + offsetY
-                            canvas.drawBitmap(batteryIcon, null, RectF(batteryLeft, batteryTop, batteryLeft + iconSizePx, batteryTop + iconSizePx), iconPaint)
+                            val batteryIcon = getBatteryBitmap(iconSizePx.toInt())
+                            if (batteryIcon != null) {
+                                iconPaint.alpha = combinedBatteryAlpha
+                                iconPaint.colorFilter = PorterDuffColorFilter(currentTextColor, PorterDuff.Mode.SRC_IN)
+                                val batteryLeft = pctX - 2f * density - iconSizePx
+                                val batteryTop = glanceCenterY - iconSizePx / 2f + offsetY
+                                canvas.drawBitmap(batteryIcon, null, RectF(batteryLeft, batteryTop, batteryLeft + iconSizePx, batteryTop + iconSizePx), iconPaint)
+                            }
                         }
                     }
                 }

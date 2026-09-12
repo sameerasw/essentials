@@ -88,6 +88,7 @@ object ActionRegistry {
                 Action.MediaNext,
                 Action.MediaPrevious,
                 Action.LikeCurrentSong,
+                Action.OpenNowPlayingApp,
             )
 
         val essentialsActions =
