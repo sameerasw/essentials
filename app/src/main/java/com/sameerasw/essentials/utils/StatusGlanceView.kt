@@ -253,6 +253,17 @@ class StatusGlanceView(context: Context) : View(context) {
             reevaluateSlot()
         }
 
+    var isBoldText: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                val tf = Typeface.create(Typeface.DEFAULT, if (value) Typeface.BOLD else Typeface.NORMAL)
+                textPaint.typeface = tf
+                batteryTextPaint.typeface = tf
+                reevaluateSlot()
+            }
+        }
+
     var isDarkTheme: Boolean = true
         set(value) {
             if (field != value) {

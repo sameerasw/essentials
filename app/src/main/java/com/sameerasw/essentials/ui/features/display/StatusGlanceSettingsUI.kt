@@ -436,6 +436,18 @@ fun StatusGlanceSettingsUI(
                     cornerRadius = 24.dp,
                 ) {
                     IconToggleItem(
+                        title = stringResource(R.string.status_glance_bold_text_title),
+                        description = stringResource(R.string.status_glance_bold_text_desc),
+                        iconRes = R.drawable.rounded_mobile_text_24,
+                        isChecked = viewModel.isStatusGlanceBoldText.value,
+                        onCheckedChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setStatusGlanceBoldText(it)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "status_glance_bold_text"),
+                    )
+
+                    IconToggleItem(
                         title = stringResource(R.string.status_glance_background_pill_title),
                         description = stringResource(R.string.status_glance_background_pill_desc),
                         iconRes = R.drawable.rounded_circle_24,

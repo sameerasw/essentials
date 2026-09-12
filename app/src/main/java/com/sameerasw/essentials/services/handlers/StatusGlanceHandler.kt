@@ -230,6 +230,7 @@ class StatusGlanceHandler(
             v.hideWhenLocked = settingsRepository.isStatusGlanceHideWhenLockedEnabled()
             v.maxWidthDp = settingsRepository.getStatusGlanceMaxWidth()
             v.fontSize = settingsRepository.getStatusGlanceFontSize()
+            v.isBoldText = settingsRepository.isStatusGlanceBoldTextEnabled()
             v.isFlashlightOn = isFlashlightOn
 
             v.showBattery = settingsRepository.isStatusGlanceShowBatteryEnabled()
