@@ -45,8 +45,7 @@ class StatusGlanceView(context: Context) : View(context) {
         FLASHLIGHT,
         CALENDAR_URGENT,
         MEDIA,
-        CALENDAR_TODAY,
-        TIME
+        DEFAULT
     }
 
     var glanceCenterX: Float = 0f
@@ -199,7 +198,8 @@ class StatusGlanceView(context: Context) : View(context) {
 
     // Slot transition state for car meter roll / flip animation
     private var previousSlot: GlanceSlot = GlanceSlot.NONE
-    private var previousText: String = ""
+    private var previousClockText: String = ""
+    private var previousMarqueeText: String = ""
     private var previousIcon: Bitmap? = null
     private var previousIsArtwork: Boolean = false
 
@@ -252,7 +252,6 @@ class StatusGlanceView(context: Context) : View(context) {
     private var flashlightIcon: Bitmap? = null
     private var calendarIcon: Bitmap? = null
     private var mediaIcon: Bitmap? = null
-    private var timeIcon: Bitmap? = null
 
     private val textBounds = Rect()
     private val chipRect = RectF()
@@ -324,7 +323,6 @@ class StatusGlanceView(context: Context) : View(context) {
         flashlightIcon = getBitmapFromVector(R.drawable.rounded_flashlight_on_24, (14 * density).toInt())
         calendarIcon = getBitmapFromVector(R.drawable.rounded_calendar_today_24, (14 * density).toInt())
         mediaIcon = getBitmapFromVector(R.drawable.rounded_motion_play_24, (14 * density).toInt())
-        timeIcon = getBitmapFromVector(R.drawable.rounded_schedule_24, (14 * density).toInt())
     }
 
     private fun getBitmapFromVector(drawableId: Int, sizePx: Int): Bitmap? {
@@ -342,11 +340,10 @@ class StatusGlanceView(context: Context) : View(context) {
 
     private fun getSlotPriority(slot: GlanceSlot): Int {
         return when (slot) {
-            GlanceSlot.FLASHLIGHT -> 5
-            GlanceSlot.CALENDAR_URGENT -> 4
-            GlanceSlot.MEDIA -> 3
-            GlanceSlot.CALENDAR_TODAY -> 2
-            GlanceSlot.TIME -> 1
+            GlanceSlot.FLASHLIGHT -> 4
+            GlanceSlot.CALENDAR_URGENT -> 3
+            GlanceSlot.MEDIA -> 2
+            GlanceSlot.DEFAULT -> 1
             GlanceSlot.NONE -> 0
         }
     }
@@ -359,8 +356,7 @@ class StatusGlanceView(context: Context) : View(context) {
             showFlashlight && isFlashlightOn -> GlanceSlot.FLASHLIGHT
             showCalendar && isEventWithin15Min && nextEventTitle.isNotBlank() -> GlanceSlot.CALENDAR_URGENT
             showMedia && isMediaPlaying -> GlanceSlot.MEDIA
-            showCalendar && isEventToday && nextEventTitle.isNotBlank() -> GlanceSlot.CALENDAR_TODAY
-            showTime && currentTimeString.isNotBlank() -> GlanceSlot.TIME
+            showTime || (showCalendar && isEventToday && nextEventTitle.isNotBlank()) -> GlanceSlot.DEFAULT
             else -> GlanceSlot.NONE
         }
 
@@ -415,11 +411,12 @@ class StatusGlanceView(context: Context) : View(context) {
 
         // Snapshot current content before updating
         previousSlot = activeSlot
-        previousText = getActiveText()
-        previousIcon = getActiveIcon()
+        val (prevClock, prevMarquee) = getSlotTexts(activeSlot)
+        previousClockText = prevClock
+        previousMarqueeText = prevMarquee
+        previousIcon = getSlotIcon(activeSlot)
         previousIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
 
-        // Determine counter flip direction: +1 if higher priority incoming (roll up), -1 if lower priority (roll down)
         val oldPriority = getSlotPriority(activeSlot)
         val newPriority = getSlotPriority(newSlot)
         transitionDirection = if (newPriority >= oldPriority) 1 else -1
@@ -433,14 +430,10 @@ class StatusGlanceView(context: Context) : View(context) {
             defaultMaterialYouColor
         }
 
-        // Animate width smoothly
         targetContentWidth = calculateTargetWidth()
         animateWidth()
-
-        // Animate background color change smoothly without affecting container structure
         animateColorChange(targetColor)
 
-        // Animate odometer / meter flip transition inside container
         transitionAnimator?.cancel()
         transitionAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 360L
@@ -546,47 +539,79 @@ class StatusGlanceView(context: Context) : View(context) {
         marqueeOffset = 0f
     }
 
-    private fun getActiveText(): String {
-        return when (activeSlot) {
-            GlanceSlot.FLASHLIGHT -> context.getString(R.string.status_glance_slot_flashlight)
-            GlanceSlot.CALENDAR_URGENT, GlanceSlot.CALENDAR_TODAY -> nextEventTitle
+    /**
+     * Returns Pair(clockText, marqueeText)
+     */
+    private fun getSlotTexts(slot: GlanceSlot): Pair<String, String> {
+        return when (slot) {
+            GlanceSlot.FLASHLIGHT -> Pair("", context.getString(R.string.status_glance_slot_flashlight))
+            GlanceSlot.CALENDAR_URGENT -> Pair("", nextEventTitle)
             GlanceSlot.MEDIA -> {
-                if (mediaArtist.isNotBlank()) "$mediaTitle • $mediaArtist" else mediaTitle
+                val mediaText = if (mediaArtist.isNotBlank()) "$mediaTitle • $mediaArtist" else mediaTitle
+                Pair("", mediaText)
             }
-            GlanceSlot.TIME -> currentTimeString
-            GlanceSlot.NONE -> ""
+            GlanceSlot.DEFAULT -> {
+                val clock = if (showTime) currentTimeString else ""
+                val calendar = if (showCalendar && isEventToday && nextEventTitle.isNotBlank()) nextEventTitle else ""
+                Pair(clock, calendar)
+            }
+            GlanceSlot.NONE -> Pair("", "")
         }
     }
 
-    private fun getActiveIcon(): Bitmap? {
-        return when (activeSlot) {
+    private fun getSlotIcon(slot: GlanceSlot): Bitmap? {
+        return when (slot) {
             GlanceSlot.FLASHLIGHT -> flashlightIcon
-            GlanceSlot.CALENDAR_URGENT, GlanceSlot.CALENDAR_TODAY -> calendarIcon
+            GlanceSlot.CALENDAR_URGENT -> calendarIcon
             GlanceSlot.MEDIA -> mediaArtworkBitmap ?: mediaIcon
-            GlanceSlot.TIME -> timeIcon
+            GlanceSlot.DEFAULT -> {
+                if (showCalendar && isEventToday && nextEventTitle.isNotBlank()) calendarIcon else null
+            }
             GlanceSlot.NONE -> null
         }
     }
 
     private fun calculateTargetWidth(): Float {
         if (activeSlot == GlanceSlot.NONE) return 0f
-        val text = getActiveText()
-        textPaint.getTextBounds(text, 0, text.length, textBounds)
-        val textWidth = textBounds.width().toFloat()
+        val (clockText, marqueeText) = getSlotTexts(activeSlot)
+        val icon = getSlotIcon(activeSlot)
         val isArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
-        val iconSize = if (isArtwork) 22f * density else 14f * density
-        val paddingLeft = if (isArtwork) 1f * density else 8f * density
+        val iconSize = if (icon != null) {
+            if (isArtwork) 22f * density else 14f * density
+        } else 0f
+
+        val paddingLeft = if (icon != null) {
+            if (isArtwork) 1f * density else 8f * density
+        } else 10f * density
+
         val paddingRight = 10f * density
-        val spacing = if (isArtwork) 5f * density else 6f * density
+        val iconSpacing = if (icon != null) {
+            if (isArtwork) 3f * density else 4f * density
+        } else 0f
+
+        var calculated = paddingLeft + iconSize + iconSpacing + paddingRight
+
+        if (clockText.isNotBlank()) {
+            val clockWidth = textPaint.measureText(clockText)
+            calculated += clockWidth
+            if (marqueeText.isNotBlank()) {
+                calculated += 4f * density
+            }
+        }
+
+        if (marqueeText.isNotBlank()) {
+            val marqueeWidth = textPaint.measureText(marqueeText)
+            calculated += marqueeWidth
+        }
 
         val maxAllowedWidth = maxWidthDp * density
-        val calculated = paddingLeft + iconSize + spacing + textWidth + paddingRight
         return calculated.coerceAtMost(maxAllowedWidth)
     }
 
     private fun drawSlotContent(
         canvas: Canvas,
-        text: String,
+        clockText: String,
+        marqueeText: String,
         icon: Bitmap?,
         isArtwork: Boolean,
         alphaMultiplier: Float,
@@ -600,35 +625,58 @@ class StatusGlanceView(context: Context) : View(context) {
     ) {
         if (alphaMultiplier <= 0f) return
 
-        val iconSize = if (isArtwork) 22f * density else 14f * density
-        val paddingLeft = if (isArtwork) 1f * density else 8f * density
-        val iconLeft = left + paddingLeft
-        val iconTop = glanceCenterY - iconSize / 2f + offsetY
-
         val combinedAlpha = (slotAlpha * alphaMultiplier * 255).toInt().coerceIn(0, 255)
         iconPaint.alpha = combinedAlpha
         artworkPaint.alpha = combinedAlpha
+        textPaint.color = currentTextColor
+        textPaint.alpha = combinedAlpha
 
-        // Draw Text
-        if (text.isNotBlank()) {
-            val spacing = if (isArtwork) 5f * density else 6f * density
-            val textLeft = iconLeft + iconSize + spacing
+        var cursorX = left
+
+        if (clockText.isNotBlank()) {
+            val clockPaddingLeft = 10f * density
+            cursorX += clockPaddingLeft
+            textPaint.getTextBounds(clockText, 0, clockText.length, textBounds)
+            val clockY = glanceCenterY - textBounds.exactCenterY() + offsetY
+            canvas.drawText(clockText, cursorX, clockY, textPaint)
+            cursorX += textPaint.measureText(clockText) + (4f * density)
+        }
+
+        val hasIcon = icon != null
+        val iconSize = if (isArtwork) 22f * density else 14f * density
+        val iconPaddingLeft = if (clockText.isBlank()) {
+            if (isArtwork) 1f * density else 8f * density
+        } else 0f
+
+        val iconLeft = cursorX + iconPaddingLeft
+        val iconTop = glanceCenterY - iconSize / 2f + offsetY
+
+        if (marqueeText.isNotBlank()) {
+            val textSpacing = if (hasIcon) {
+                if (isArtwork) 3f * density else 4f * density
+            } else {
+                if (clockText.isBlank()) 10f * density else 0f
+            }
+            val textLeft = if (hasIcon) (iconLeft + iconSize + textSpacing) else (cursorX + textSpacing)
             val textRight = if (useBackgroundPill) right else right - 8f * density
             val maxTextWidth = (textRight - textLeft).coerceAtLeast(0f)
 
             if (!isTransitioning) {
-                checkAndStartMarquee(text, maxTextWidth)
+                checkAndStartMarquee(marqueeText, maxTextWidth)
             }
 
-            textPaint.color = currentTextColor
-            textPaint.alpha = combinedAlpha
-
-            textPaint.getTextBounds(text, 0, text.length, textBounds)
+            textPaint.getTextBounds(marqueeText, 0, marqueeText.length, textBounds)
             val textY = glanceCenterY - textBounds.exactCenterY() + offsetY
 
             if (isMarqueeNeeded && !isTransitioning) {
-                val fadeWidth = 12f * density
-                val marqueeBounds = RectF(textLeft, top, textRight, bottom)
+                val fadeOverlap = if (hasIcon) {
+                    if (isArtwork) 4f * density else 3f * density
+                } else {
+                    4f * density
+                }
+                val fadeStart = (textLeft - fadeOverlap).coerceAtLeast(left)
+                val fadeWidth = 14f * density
+                val marqueeBounds = RectF(fadeStart, top, textRight, bottom)
                 val saveLayerCount = canvas.saveLayer(marqueeBounds, null)
 
                 if (useBackgroundPill) {
@@ -640,38 +688,37 @@ class StatusGlanceView(context: Context) : View(context) {
                         0f, 0f
                     )
                     marqueeClipPath.addRoundRect(
-                        RectF(textLeft, top, right, bottom),
+                        RectF(fadeStart, top, right, bottom),
                         radii,
                         Path.Direction.CW
                     )
                     canvas.clipPath(marqueeClipPath)
                 } else {
-                    canvas.clipRect(textLeft, top, textRight, bottom)
+                    canvas.clipRect(fadeStart, top, textRight, bottom)
                 }
 
                 val marqueeGap = 28f * density
-                val textWidthMeasure = textPaint.measureText(text)
+                val textWidthMeasure = textPaint.measureText(marqueeText)
                 val x1 = textLeft - marqueeOffset
                 val x2 = x1 + textWidthMeasure + marqueeGap
-                canvas.drawText(text, x1, textY, textPaint)
-                canvas.drawText(text, x2, textY, textPaint)
+                canvas.drawText(marqueeText, x1, textY, textPaint)
+                canvas.drawText(marqueeText, x2, textY, textPaint)
 
-                // Left fade gradient
                 marqueeFadePaint.shader = LinearGradient(
-                    textLeft, 0f, textLeft + fadeWidth, 0f,
+                    fadeStart, 0f, fadeStart + fadeWidth, 0f,
                     Color.TRANSPARENT, Color.BLACK,
                     Shader.TileMode.CLAMP
                 )
-                canvas.drawRect(textLeft, top, textLeft + fadeWidth, bottom, marqueeFadePaint)
+                canvas.drawRect(fadeStart, top, fadeStart + fadeWidth, bottom, marqueeFadePaint)
 
                 canvas.restoreToCount(saveLayerCount)
             } else {
-                canvas.drawText(text, textLeft, textY, textPaint)
+                canvas.drawText(marqueeText, textLeft, textY, textPaint)
             }
         }
 
-        // Draw Icon on top of text layer
-        if (icon != null) {
+        
+        if (hasIcon) {
             if (isArtwork) {
                 val artworkRadius = iconSize / 2f
                 val artworkCenterX = iconLeft + artworkRadius
@@ -714,14 +761,12 @@ class StatusGlanceView(context: Context) : View(context) {
 
         val alphaInt = (slotAlpha * 255).toInt().coerceIn(0, 255)
 
-        // 1. Draw background pill container (stays completely intact and morphs width/color smoothly)
         if (useBackgroundPill) {
             pillPaint.color = currentPillColor
             pillPaint.alpha = alphaInt
             canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, pillPaint)
         }
 
-        // 2. Draw content with odometer flip animation inside the container
         val saveContainerCount = canvas.save()
         containerClipPath.reset()
         containerClipPath.addRoundRect(chipRect, cornerRadius, cornerRadius, Path.Direction.CW)
@@ -731,18 +776,17 @@ class StatusGlanceView(context: Context) : View(context) {
             val flipDistance = height * 0.95f
             val p = transitionProgress
 
-            // Direction: +1 means incoming rolls up from bottom (+flipDistance -> 0), outgoing rolls up (0 -> -flipDistance)
-            // -1 means incoming rolls down from top (-flipDistance -> 0), outgoing rolls down (0 -> +flipDistance)
             val oldOffsetY = -transitionDirection * p * flipDistance
             val oldAlpha = (1f - p).coerceIn(0f, 1f)
 
             val newOffsetY = transitionDirection * (1f - p) * flipDistance
             val newAlpha = p.coerceIn(0f, 1f)
 
-            // Draw outgoing slot
+            //  outgoing slot
             drawSlotContent(
                 canvas = canvas,
-                text = previousText,
+                clockText = previousClockText,
+                marqueeText = previousMarqueeText,
                 icon = previousIcon,
                 isArtwork = previousIsArtwork,
                 alphaMultiplier = oldAlpha,
@@ -755,13 +799,14 @@ class StatusGlanceView(context: Context) : View(context) {
                 chipHeight = height
             )
 
-            // Draw incoming slot
-            val currentText = getActiveText()
-            val currentIcon = getActiveIcon()
+            //  incoming slot
+            val (currentClock, currentMarquee) = getSlotTexts(activeSlot)
+            val currentIcon = getSlotIcon(activeSlot)
             val currentIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
             drawSlotContent(
                 canvas = canvas,
-                text = currentText,
+                clockText = currentClock,
+                marqueeText = currentMarquee,
                 icon = currentIcon,
                 isArtwork = currentIsArtwork,
                 alphaMultiplier = newAlpha,
@@ -774,12 +819,13 @@ class StatusGlanceView(context: Context) : View(context) {
                 chipHeight = height
             )
         } else {
-            val currentText = getActiveText()
-            val currentIcon = getActiveIcon()
+            val (currentClock, currentMarquee) = getSlotTexts(activeSlot)
+            val currentIcon = getSlotIcon(activeSlot)
             val currentIsArtwork = activeSlot == GlanceSlot.MEDIA && mediaArtworkBitmap != null
             drawSlotContent(
                 canvas = canvas,
-                text = currentText,
+                clockText = currentClock,
+                marqueeText = currentMarquee,
                 icon = currentIcon,
                 isArtwork = currentIsArtwork,
                 alphaMultiplier = 1f,
