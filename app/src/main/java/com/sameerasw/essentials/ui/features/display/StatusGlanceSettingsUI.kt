@@ -43,6 +43,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceBatteryOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceCalendarOptionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
@@ -61,6 +62,7 @@ fun StatusGlanceSettingsUI(
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
+    var showCalendarOptionsSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.check(context)
@@ -206,7 +208,6 @@ fun StatusGlanceSettingsUI(
                 ) {
                     IconToggleItem(
                         title = stringResource(R.string.status_glance_show_flashlight_title),
-                        description = stringResource(R.string.status_glance_show_flashlight_desc),
                         iconRes = R.drawable.rounded_flashlight_on_24,
                         isChecked = viewModel.isStatusGlanceShowFlashlight.value,
                         onCheckedChange = {
@@ -218,7 +219,6 @@ fun StatusGlanceSettingsUI(
 
                     IconToggleItem(
                         title = stringResource(R.string.status_glance_show_calendar_title),
-                        description = stringResource(R.string.status_glance_show_calendar_desc),
                         iconRes = R.drawable.rounded_calendar_today_24,
                         isChecked = viewModel.isStatusGlanceShowCalendar.value,
                         onCheckedChange = { isChecked ->
@@ -231,12 +231,14 @@ fun StatusGlanceSettingsUI(
                             }
                             viewModel.setStatusGlanceShowCalendar(isChecked)
                         },
+                        onSettingsClick = {
+                            showCalendarOptionsSheet = true
+                        },
                         modifier = Modifier.highlight(highlightSetting == "status_glance_show_calendar"),
                     )
 
                     IconToggleItem(
                         title = stringResource(R.string.status_glance_show_media_title),
-                        description = stringResource(R.string.status_glance_show_media_desc),
                         iconRes = R.drawable.rounded_motion_play_24,
                         isChecked = viewModel.isStatusGlanceShowMedia.value,
                         onCheckedChange = { isChecked ->
@@ -257,7 +259,6 @@ fun StatusGlanceSettingsUI(
 
                     IconToggleItem(
                         title = stringResource(R.string.status_glance_show_time_title),
-                        description = stringResource(R.string.status_glance_show_time_desc),
                         iconRes = R.drawable.rounded_schedule_24,
                         isChecked = viewModel.isStatusGlanceShowTime.value,
                         onCheckedChange = {
@@ -349,6 +350,13 @@ fun StatusGlanceSettingsUI(
         StatusGlanceBatteryOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showBatteryOptionsSheet = false },
+        )
+    }
+
+    if (showCalendarOptionsSheet) {
+        StatusGlanceCalendarOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showCalendarOptionsSheet = false },
         )
     }
 }
