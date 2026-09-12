@@ -299,7 +299,8 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_MEDIA ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_SHOW_TIME ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_BACKGROUND_PILL ||
-                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN
+                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN ||
+                key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS
             ) {
                 statusGlanceHandler.updateState()
             }
@@ -370,6 +371,7 @@ class ScreenOffAccessibilityService :
 
                         Intent.ACTION_USER_PRESENT -> {
                             aodWallpaperOverlayHandler.onScreenOn()
+                            statusGlanceHandler.onUserPresent()
                             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                             if (prefs.getBoolean("pocket_mode_lock_screen_only", false)) {
                                 pocketModeHandler.onScreenOff() // cancel pending timer + remove overlay
@@ -455,7 +457,9 @@ class ScreenOffAccessibilityService :
         super.onServiceConnected()
         serviceInfo =
             serviceInfo.apply {
-                flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
+                flags = flags or
+                    AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS or
+                    AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             }
         updateOmniOverlay()
         duoOverlayHandler.updateState()
@@ -533,6 +537,31 @@ class ScreenOffAccessibilityService :
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
             checkFullscreenState()
+            checkStatusBarExpansion()
+        }
+    }
+
+    private fun checkStatusBarExpansion() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                if (keyguardManager.isKeyguardLocked || !isScreenOn) {
+                    statusGlanceHandler.setShadeExpanded(false)
+                    return
+                }
+                val currentWindows = windows
+                if (currentWindows.isNullOrEmpty()) {
+                    statusGlanceHandler.setShadeExpanded(false)
+                    return
+                }
+
+                val isShadeExpanded = currentWindows.any { window ->
+                    window.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM &&
+                        window.title?.contains("NotificationShade", ignoreCase = true) == true
+                }
+                statusGlanceHandler.setShadeExpanded(isShadeExpanded)
+            } catch (_: Exception) {
+                statusGlanceHandler.setShadeExpanded(false)
+            }
         }
     }
 
@@ -554,6 +583,7 @@ class ScreenOffAccessibilityService :
 
                         val isFullscreen = isCoveringFullDisplay && !hasStatusBar
                         duoOverlayHandler.setFullscreen(isFullscreen)
+                        statusGlanceHandler.setFullscreen(isFullscreen)
                     }
                 }
             } catch (_: Exception) {}

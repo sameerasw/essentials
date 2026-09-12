@@ -409,6 +409,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
         const val KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN = "status_glance_hide_when_fullscreen"
+        const val KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS = "status_glance_hide_in_quick_settings"
 
         // Live Wallpaper
         const val LIVE_WALLPAPER_PREFS_NAME = "live_wallpaper_prefs"
@@ -3254,5 +3255,8 @@ class SettingsRepository(
 
     fun isStatusGlanceHideWhenFullscreenEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN, true)
     fun setStatusGlanceHideWhenFullscreenEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN, enabled)
+
+    fun isStatusGlanceHideInQuickSettingsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS, true)
+    fun setStatusGlanceHideInQuickSettingsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS, enabled)
 }
 

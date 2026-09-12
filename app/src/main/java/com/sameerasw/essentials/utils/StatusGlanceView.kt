@@ -97,6 +97,54 @@ class StatusGlanceView(context: Context) : View(context) {
             reevaluateSlot()
         }
 
+    var hideWhenFullscreen: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
+    var hideInQuickSettings: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
+    var isFullscreen: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
+    var isShadeExpanded: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
+    var isLocked: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
+    var isScreenOff: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
     var fontSize: Float = 13f
         set(value) {
             field = value
@@ -218,6 +266,11 @@ class StatusGlanceView(context: Context) : View(context) {
     private var currentContentWidth: Float = 0f
     private var targetContentWidth: Float = 0f
     private var widthAnimator: ValueAnimator? = null
+
+    // Visibility and reveal animation
+    private var isVisibilityHidden: Boolean = false
+    private var revealProgress: Float = 1f
+    private var revealAnimator: ValueAnimator? = null
 
     private var slotAlpha: Float = 1f
     private var alphaAnimator: ValueAnimator? = null
@@ -608,6 +661,38 @@ class StatusGlanceView(context: Context) : View(context) {
         return calculated.coerceAtMost(maxAllowedWidth)
     }
 
+    fun updateVisibilityState(immediate: Boolean = false) {
+        val shouldHide = isLocked || isScreenOff || (isFullscreen && hideWhenFullscreen) || (isShadeExpanded && hideInQuickSettings)
+        if (isVisibilityHidden == shouldHide && !immediate) return
+        isVisibilityHidden = shouldHide
+
+        revealAnimator?.cancel()
+        val startVal = revealProgress
+        val targetVal = if (shouldHide) 0f else 1f
+
+        if (immediate) {
+            revealProgress = targetVal
+            invalidate()
+            return
+        }
+
+        val durationMs = if (shouldHide) 240L else 380L
+
+        revealAnimator = ValueAnimator.ofFloat(startVal, targetVal).apply {
+            duration = durationMs
+            interpolator = if (shouldHide) {
+                LinearInterpolator()
+            } else {
+                DecelerateInterpolator(1.8f)
+            }
+            addUpdateListener {
+                revealProgress = it.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
     private fun drawSlotContent(
         canvas: Canvas,
         clockText: String,
@@ -621,15 +706,20 @@ class StatusGlanceView(context: Context) : View(context) {
         right: Float,
         bottom: Float,
         cornerRadius: Float,
-        chipHeight: Float
+        chipHeight: Float,
+        revealTextAlpha: Float = 1f,
+        revealIconAlpha: Float = 1f,
+        expandPhase: Float = 1f
     ) {
         if (alphaMultiplier <= 0f) return
 
-        val combinedAlpha = (slotAlpha * alphaMultiplier * 255).toInt().coerceIn(0, 255)
-        iconPaint.alpha = combinedAlpha
-        artworkPaint.alpha = combinedAlpha
+        val combinedTextAlpha = (slotAlpha * alphaMultiplier * revealTextAlpha * 255).toInt().coerceIn(0, 255)
+        val combinedIconAlpha = (slotAlpha * alphaMultiplier * revealIconAlpha * 255).toInt().coerceIn(0, 255)
+
+        iconPaint.alpha = combinedIconAlpha
+        artworkPaint.alpha = combinedIconAlpha
         textPaint.color = currentTextColor
-        textPaint.alpha = combinedAlpha
+        textPaint.alpha = combinedTextAlpha
 
         var cursorX = left
 
@@ -638,7 +728,9 @@ class StatusGlanceView(context: Context) : View(context) {
             cursorX += clockPaddingLeft
             textPaint.getTextBounds(clockText, 0, clockText.length, textBounds)
             val clockY = glanceCenterY - textBounds.exactCenterY() + offsetY
-            canvas.drawText(clockText, cursorX, clockY, textPaint)
+            if (combinedTextAlpha > 0) {
+                canvas.drawText(clockText, cursorX, clockY, textPaint)
+            }
             cursorX += textPaint.measureText(clockText) + (4f * density)
         }
 
@@ -648,10 +740,16 @@ class StatusGlanceView(context: Context) : View(context) {
             if (isArtwork) 1f * density else 8f * density
         } else 0f
 
-        val iconLeft = cursorX + iconPaddingLeft
+        val restingIconLeft = cursorX + iconPaddingLeft
+        val centeredIconLeft = left + (chipHeight - iconSize) / 2f
+        val iconLeft = if (expandPhase < 1f) {
+            centeredIconLeft + (restingIconLeft - centeredIconLeft) * expandPhase
+        } else {
+            restingIconLeft
+        }
         val iconTop = glanceCenterY - iconSize / 2f + offsetY
 
-        if (marqueeText.isNotBlank()) {
+        if (marqueeText.isNotBlank() && combinedTextAlpha > 0) {
             val textSpacing = if (hasIcon) {
                 if (isArtwork) 3f * density else 4f * density
             } else {
@@ -717,8 +815,7 @@ class StatusGlanceView(context: Context) : View(context) {
             }
         }
 
-        
-        if (hasIcon) {
+        if (hasIcon && combinedIconAlpha > 0) {
             if (isArtwork) {
                 val artworkRadius = iconSize / 2f
                 val artworkCenterX = iconLeft + artworkRadius
@@ -745,21 +842,36 @@ class StatusGlanceView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (revealProgress <= 0f) return
         if (activeSlot == GlanceSlot.NONE && currentContentWidth <= 0f) return
 
         val height = 24f * density
-        val width = currentContentWidth
+        val baseCircularWidth = height
+        val fullWidth = currentContentWidth.coerceAtLeast(baseCircularWidth)
+
+        val iconPhase = (revealProgress / 0.35f).coerceIn(0f, 1f)
+        val expandPhase = ((revealProgress - 0.35f) / 0.65f).coerceIn(0f, 1f)
+        val textAlpha = ((revealProgress - 0.45f) / 0.55f).coerceIn(0f, 1f)
+        val iconAlpha = iconPhase
+        val iconScale = 0.5f + 0.5f * iconPhase
+
+        val width = if (revealProgress < 1f) {
+            (baseCircularWidth + (fullWidth - baseCircularWidth) * expandPhase) * (if (expandPhase == 0f) iconScale else 1f)
+        } else {
+            currentContentWidth
+        }
         if (width <= 0f) return
 
+        val currentHeight = if (revealProgress < 1f && expandPhase == 0f) height * iconScale else height
         val left = glanceCenterX
-        val top = glanceCenterY - height / 2f
+        val top = glanceCenterY - currentHeight / 2f
         val right = left + width
-        val bottom = glanceCenterY + height / 2f
-        val cornerRadius = height / 2f
+        val bottom = glanceCenterY + currentHeight / 2f
+        val cornerRadius = currentHeight / 2f
 
         chipRect.set(left, top, right, bottom)
 
-        val alphaInt = (slotAlpha * 255).toInt().coerceIn(0, 255)
+        val alphaInt = (slotAlpha * iconAlpha * 255).toInt().coerceIn(0, 255)
 
         if (useBackgroundPill) {
             pillPaint.color = currentPillColor
@@ -796,7 +908,10 @@ class StatusGlanceView(context: Context) : View(context) {
                 right = right,
                 bottom = bottom,
                 cornerRadius = cornerRadius,
-                chipHeight = height
+                chipHeight = height,
+                revealTextAlpha = textAlpha,
+                revealIconAlpha = iconAlpha,
+                expandPhase = expandPhase
             )
 
             //  incoming slot
@@ -816,7 +931,10 @@ class StatusGlanceView(context: Context) : View(context) {
                 right = right,
                 bottom = bottom,
                 cornerRadius = cornerRadius,
-                chipHeight = height
+                chipHeight = height,
+                revealTextAlpha = textAlpha,
+                revealIconAlpha = iconAlpha,
+                expandPhase = expandPhase
             )
         } else {
             val (currentClock, currentMarquee) = getSlotTexts(activeSlot)
@@ -835,7 +953,10 @@ class StatusGlanceView(context: Context) : View(context) {
                 right = right,
                 bottom = bottom,
                 cornerRadius = cornerRadius,
-                chipHeight = height
+                chipHeight = height,
+                revealTextAlpha = textAlpha,
+                revealIconAlpha = iconAlpha,
+                expandPhase = expandPhase
             )
         }
 
@@ -849,5 +970,6 @@ class StatusGlanceView(context: Context) : View(context) {
         alphaAnimator?.cancel()
         colorAnimator?.cancel()
         transitionAnimator?.cancel()
+        revealAnimator?.cancel()
     }
 }

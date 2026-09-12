@@ -175,6 +175,7 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceShowTime = mutableStateOf(true)
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
     val isStatusGlanceHideWhenFullscreen = mutableStateOf(true)
+    val isStatusGlanceHideInQuickSettings = mutableStateOf(true)
 
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -700,6 +701,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN ->
                         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS ->
+                        isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1973,6 +1977,7 @@ class MainViewModel : ViewModel() {
         isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
+        isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4773,6 +4778,11 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceHideWhenFullscreen(enabled: Boolean) {
         isStatusGlanceHideWhenFullscreen.value = enabled
         settingsRepository.setStatusGlanceHideWhenFullscreenEnabled(enabled)
+    }
+
+    fun setStatusGlanceHideInQuickSettings(enabled: Boolean) {
+        isStatusGlanceHideInQuickSettings.value = enabled
+        settingsRepository.setStatusGlanceHideInQuickSettingsEnabled(enabled)
     }
 
     fun setStatusGlanceMaxWidth(value: Float) {
