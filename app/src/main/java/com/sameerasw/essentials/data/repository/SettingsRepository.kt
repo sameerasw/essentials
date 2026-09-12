@@ -368,6 +368,7 @@ class SettingsRepository(
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
         const val KEY_DUO_SHOW_BATTERY = "duo_show_battery"
+        const val KEY_DUO_SHOW_BATTERY_PERCENTAGE = "duo_show_battery_percentage"
         const val KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED = "duo_battery_charging_color_enabled"
         const val KEY_DUO_BATTERY_CHARGING_COLOR = "duo_battery_charging_color"
         const val KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED = "duo_battery_power_save_color_enabled"
@@ -3119,6 +3120,9 @@ class SettingsRepository(
 
     fun isDuoShowBatteryEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_BATTERY, true)
     fun setDuoShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_BATTERY, enabled)
+
+    fun isDuoShowBatteryPercentageEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_BATTERY_PERCENTAGE, false)
+    fun setDuoShowBatteryPercentageEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_BATTERY_PERCENTAGE, enabled)
 
     fun isDuoBatteryChargingColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, true)
     fun setDuoBatteryChargingColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, enabled)

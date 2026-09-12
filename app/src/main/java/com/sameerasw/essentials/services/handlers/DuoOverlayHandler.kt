@@ -776,6 +776,7 @@ class DuoOverlayHandler(
                 } catch (_: Exception) {}
                 this.isPowerSaveMode = powerManager?.isPowerSaveMode ?: false
                 this.showBattery = settingsRepository.isDuoShowBatteryEnabled()
+                this.showBatteryPercentage = settingsRepository.isDuoShowBatteryPercentageEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
                 this.showTime = settingsRepository.isDuoShowTimeEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
