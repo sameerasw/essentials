@@ -374,6 +374,11 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     )
                                 // Top level checks for other features (rarely hit if they are children, but safe to add)
                                 "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                                "Duo" ->
+                                    !isAccessibilityEnabled ||
+                                        !isNotificationListenerEnabled ||
+                                        (Build.VERSION.SDK_INT >= 34 && !viewModel.isSensitiveNotificationAccessGranted.value) ||
+                                        (!isShizukuPermissionGranted && !viewModel.isRootPermissionGranted.value)
                                 "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
                                 "Maps power saving mode" ->
                                     !isNotificationListenerEnabled ||
@@ -808,6 +813,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                                     !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                                         context,
                                                                     )
+
+                                                            "Duo" ->
+                                                                !isAccessibilityEnabled ||
+                                                                    !isNotificationListenerEnabled ||
+                                                                    (Build.VERSION.SDK_INT >= 34 && !viewModel.isSensitiveNotificationAccessGranted.value) ||
+                                                                    (!isShizukuPermissionGranted && !viewModel.isRootPermissionGranted.value)
 
                                                             "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
                                                             "Battery notification" ->

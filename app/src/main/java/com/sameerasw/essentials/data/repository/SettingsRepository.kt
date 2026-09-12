@@ -395,6 +395,12 @@ class SettingsRepository(
         const val KEY_DUO_SLIDE_MODE = "duo_slide_mode"
         const val KEY_DUO_SLIDE_TRACK = "duo_slide_track"
         const val KEY_DUO_SLIDE_INVERT_DIRECTION = "duo_slide_invert_direction"
+        const val KEY_DUO_SHOW_OTP_GLANCE = "duo_show_otp_glance"
+        const val KEY_DUO_OTP_AUTO_PASTE = "duo_otp_auto_paste"
+        const val KEY_DUO_OTP_AUTO_DISMISS = "duo_otp_auto_dismiss"
+        const val KEY_DUO_OTP_EXPIRY_SECONDS = "duo_otp_expiry_seconds"
+        const val KEY_DUO_OTP_APP_FILTER_ENABLED = "duo_otp_app_filter_enabled"
+        const val KEY_DUO_OTP_SELECTED_APPS = "duo_otp_selected_apps"
 
         // Status Glance
         const val KEY_STATUS_GLANCE_ENABLED = "status_glance_enabled"
@@ -1461,8 +1467,9 @@ class SettingsRepository(
     ): Boolean {
         return try {
             val json = inputStream.bufferedReader().use { it.readText() }
+            val configType = object : com.google.gson.reflect.TypeToken<Map<String, Map<String, Map<String, Any>>>>() {}.type
             val allConfigs: Map<String, Map<String, Map<String, Any>>> =
-                gson.fromJson(json, Map::class.java) as Map<String, Map<String, Map<String, Any>>>
+                gson.fromJson(json, configType)
 
             allConfigs.forEach { (fileName, prefWrapper) ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
@@ -3233,6 +3240,32 @@ class SettingsRepository(
 
     fun isDuoSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, false)
     fun setDuoSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, enabled)
+
+    fun isDuoShowOtpGlanceEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_OTP_GLANCE, false)
+    fun setDuoShowOtpGlanceEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_OTP_GLANCE, enabled)
+
+    fun isDuoOtpAutoPasteEnabled(): Boolean = getBoolean(KEY_DUO_OTP_AUTO_PASTE, true)
+    fun setDuoOtpAutoPasteEnabled(enabled: Boolean) = putBoolean(KEY_DUO_OTP_AUTO_PASTE, enabled)
+
+    fun isDuoOtpAutoDismissEnabled(): Boolean = getBoolean(KEY_DUO_OTP_AUTO_DISMISS, true)
+    fun setDuoOtpAutoDismissEnabled(enabled: Boolean) = putBoolean(KEY_DUO_OTP_AUTO_DISMISS, enabled)
+
+    fun getDuoOtpExpirySeconds(): Int = getInt(KEY_DUO_OTP_EXPIRY_SECONDS, 45)
+    fun setDuoOtpExpirySeconds(seconds: Int) = putInt(KEY_DUO_OTP_EXPIRY_SECONDS, seconds)
+
+    fun isDuoOtpAppFilterEnabled(): Boolean = getBoolean(KEY_DUO_OTP_APP_FILTER_ENABLED, false)
+    fun setDuoOtpAppFilterEnabled(enabled: Boolean) = putBoolean(KEY_DUO_OTP_APP_FILTER_ENABLED, enabled)
+
+    fun loadDuoOtpSelectedApps() = loadAppSelection(KEY_DUO_OTP_SELECTED_APPS)
+    fun saveDuoOtpSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_DUO_OTP_SELECTED_APPS, apps)
+    fun updateDuoOtpAppSelection(
+        packageName: String,
+        enabled: Boolean,
+    ) = updateAppSelection(KEY_DUO_OTP_SELECTED_APPS, packageName, enabled)
+
+    fun getDuoOtpSelectedAppPackages(): Set<String> {
+        return loadDuoOtpSelectedApps().filter { it.isEnabled }.map { it.packageName }.toSet()
+    }
 
     // Status Glance
     fun isStatusGlanceEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ENABLED, false)

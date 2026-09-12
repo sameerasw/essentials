@@ -10,17 +10,26 @@
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
+import android.content.ClipData
+import android.content.ClipDescription
+import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.RectF
 import android.media.AudioManager
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
 import android.os.SystemClock
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.HapticUtil
@@ -40,6 +49,7 @@ class DuoTouchHandler(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     var overlayView: DuoOverlayView? = null
+    var duoOverlayHandler: DuoOverlayHandler? = null
     var cameraCenterX: Float = 0f
     var cameraCenterY: Float = 0f
     var cameraRadiusPx: Float = 36f
@@ -62,6 +72,7 @@ class DuoTouchHandler(
     private var isTrackThresholdReached: Boolean = false
     private var isSoundModeTriggered: Boolean = false
     private var isVolumeOrBrightnessAdjusted: Boolean = false
+    private var hasStretchTicked: Boolean = false
 
     private val density: Float
         get() = service.resources.displayMetrics.density
@@ -105,7 +116,14 @@ class DuoTouchHandler(
             MotionEvent.ACTION_DOWN -> {
                 val effectiveRadius = (cameraRadiusPx + 20f * density) * ringRadiusScale
                 val dist = hypot(x - cameraCenterX, y - cameraCenterY)
-                if (dist > effectiveRadius) {
+                val pillBounds = overlayView?.getPillTouchBounds()
+                val isInsidePill = if (pillBounds != null) {
+                    val expanded = RectF(pillBounds).apply {
+                        inset(-12f * density, -12f * density)
+                    }
+                    expanded.contains(x, y)
+                } else false
+                if (dist > effectiveRadius && !isInsidePill) {
                     isTouchActiveInCutout = false
                     return false
                 }
@@ -121,6 +139,7 @@ class DuoTouchHandler(
                 isTrackThresholdReached = false
                 isSoundModeTriggered = false
                 isVolumeOrBrightnessAdjusted = false
+                hasStretchTicked = false
 
                 overlayView?.triggerTapAnimation()
 
@@ -165,6 +184,7 @@ class DuoTouchHandler(
 
                 val slideMode = getEffectiveSlideMode()
                 val swipeDownAction = settingsRepository.getDuoSwipeDownAction()
+                val isOtpActive = overlayView?.isOtpGlanceActive == true
 
                 val isHorizontalDominant = abs(dx) > abs(dy) * 1.1f
                 val isVerticalDominant = dy > 0f && dy > abs(dx) * 1.1f
@@ -174,12 +194,17 @@ class DuoTouchHandler(
                     return true
                 }
 
-                if (swipeDownAction != null && isVerticalDominant) {
+                if ((swipeDownAction != null || isOtpActive) && isVerticalDominant) {
                     val pullOffset = (dy * 0.4f).coerceAtMost(25f * density)
                     val stretch = 1.0f + (pullOffset / (65f * density)).coerceAtMost(0.22f)
                     overlayView?.setPullDownOffset(pullOffset, stretch)
 
-                    if (!isSwipeDownTriggered && dy >= swipeDownTriggerPx) {
+                    if (!hasStretchTicked && pullOffset >= 10f * density) {
+                        hasStretchTicked = true
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.TICK)
+                    }
+
+                    if (swipeDownAction != null && !isSwipeDownTriggered && dy >= swipeDownTriggerPx) {
                         isSwipeDownTriggered = true
                         HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
                         executeAction(swipeDownAction)
@@ -191,10 +216,10 @@ class DuoTouchHandler(
             }
 
             MotionEvent.ACTION_UP -> {
-                if (!isTouchActiveInCutout) return false
                 handler.removeCallbacks(longPressRunnable)
                 overlayView?.releasePullDown()
                 overlayView?.releaseTrackRotation()
+                hasStretchTicked = false
 
                 val elapsed = SystemClock.uptimeMillis() - downTime
                 val dx = x - downX
@@ -214,6 +239,41 @@ class DuoTouchHandler(
                     dispatchMediaKey(key)
                 }
 
+                val isOtpActive = overlayView?.isOtpGlanceActive == true
+                val otpCode = overlayView?.activeOtpCode
+                val isOtpAction = isOtpActive && !otpCode.isNullOrBlank() &&
+                    (totalDist < touchSlopPx || (dy > 0f && dy < 45f * density && abs(dx) < 30f * density)) &&
+                    elapsed < 650L
+
+                if (isOtpAction) {
+                    val clipboard = service.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                    val clip = ClipData.newPlainText("OTP", otpCode)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        clip.description.extras = PersistableBundle().apply {
+                            putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+                        }
+                    }
+                    clipboard?.setPrimaryClip(clip)
+
+                    if (settingsRepository.isDuoOtpAutoPasteEnabled()) {
+                        autoPasteOtp(otpCode)
+                    }
+
+                    if (settingsRepository.isDuoOtpAutoDismissEnabled()) {
+                        val notifKey = duoOverlayHandler?.activeOtpNotificationKey
+                        NotificationListener.dismissNotification(notifKey)
+                    }
+
+                    HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
+                    overlayView?.triggerOtpCopiedAnimation()
+                    handler.postDelayed({
+                        duoOverlayHandler?.clearOtpGlance()
+                    }, 550L)
+
+                    isTouchActiveInCutout = false
+                    return true
+                }
+
                 val didPerformAnyGesture = isLongPressTriggered ||
                     isSwipeDownTriggered ||
                     isTrackTriggered ||
@@ -221,6 +281,7 @@ class DuoTouchHandler(
                     isVolumeOrBrightnessAdjusted
 
                 if (!didPerformAnyGesture && totalDist < touchSlopPx && elapsed < 350L) {
+
                     val doubleTapAction = settingsRepository.getDuoDoubleTapAction()
                     val tapAction = settingsRepository.getDuoTapAction()
 
@@ -258,6 +319,7 @@ class DuoTouchHandler(
                 handler.removeCallbacks(longPressRunnable)
                 overlayView?.releasePullDown()
                 overlayView?.releaseTrackRotation()
+                hasStretchTicked = false
                 isTouchActiveInCutout = false
                 isTrackThresholdReached = false
                 isDoubleTapPending = false
@@ -384,6 +446,56 @@ class DuoTouchHandler(
             return "track"
         }
         return settingsRepository.getDuoSlideMode()
+    }
+
+    private fun autoPasteOtp(otpCode: String) {
+        val rootNode = service.rootInActiveWindow ?: return
+        try {
+            val focusedNode = rootNode.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+            if (focusedNode != null && (focusedNode.isEditable || focusedNode.className?.toString()?.contains("EditText", ignoreCase = true) == true)) {
+                val args = Bundle().apply {
+                    putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, otpCode)
+                }
+                val success = focusedNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+                if (success) {
+                    return
+                }
+            }
+
+            val editableNodes = mutableListOf<AccessibilityNodeInfo>()
+            fun findEditables(node: AccessibilityNodeInfo) {
+                if (node.isEditable || node.className?.toString()?.contains("EditText", ignoreCase = true) == true) {
+                    editableNodes.add(node)
+                }
+                for (i in 0 until node.childCount) {
+                    node.getChild(i)?.let { findEditables(it) }
+                }
+            }
+            findEditables(rootNode)
+
+            if (editableNodes.isNotEmpty()) {
+                if (editableNodes.size == 1) {
+                    val args = Bundle().apply {
+                        putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, otpCode)
+                    }
+                    editableNodes[0].performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+                } else if (editableNodes.size == otpCode.length) {
+                    for (i in otpCode.indices) {
+                        val digitArgs = Bundle().apply {
+                            putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, otpCode[i].toString())
+                        }
+                        editableNodes[i].performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, digitArgs)
+                    }
+                } else {
+                    val args = Bundle().apply {
+                        putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, otpCode)
+                    }
+                    editableNodes[0].performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+                }
+            }
+        } catch (_: Exception) {
+            // Fail gracefully - clipboard copy acts as primary fallback
+        }
     }
 }
 

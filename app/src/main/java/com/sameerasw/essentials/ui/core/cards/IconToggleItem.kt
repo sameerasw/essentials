@@ -13,6 +13,9 @@ package com.sameerasw.essentials.ui.core.cards
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.padding
+
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,6 +36,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -61,6 +67,7 @@ fun IconToggleItem(
     subtitle: String? = null,
     icon: Int? = null,
     checked: Boolean? = null,
+    isBeta: Boolean = false,
     onCheckedChangeWithPosition: ((Boolean, Offset) -> Unit)? = null,
     onSettingsClick: (() -> Unit)? = null,
 ) {
@@ -114,18 +121,48 @@ fun IconToggleItem(
         }
     }
 
+    val renderTitle: @Composable () -> Unit = {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f, fill = false),
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+            )
+            if (isBeta) {
+                androidx.compose.material3.Card(
+                    colors = androidx.compose.material3.CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    shape = MaterialTheme.shapes.extraSmall,
+                ) {
+                    Text(
+                        text = stringResource(R.string.label_beta),
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+            }
+        }
+        renderMenu()
+    }
+
     if (showToggle) {
         if (onClick != null) {
-            ListItem(
-                onClick = {
-                    if (enabled) {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onClick()
-                    } else if (onDisabledClick != null) {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onDisabledClick()
-                    }
-                },
+            androidx.compose.foundation.layout.Box {
+                ListItem(
+                    onClick = {
+                        if (enabled) {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onClick()
+                        }
+                    },
                 onLongClick = onLongClickAction,
                 enabled = enabled,
                 modifier = modifier.fillMaxWidth(),
@@ -183,30 +220,36 @@ fun IconToggleItem(
                     ListItemDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright,
                     ),
-                content = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
+                content = renderTitle,
+                )
+                if (!enabled && onDisabledClick != null) {
+                    androidx.compose.foundation.layout.Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .zIndex(1f)
+                            .clickable(
+                                interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onDisabledClick()
+                            }
                     )
-                    renderMenu()
-                },
-            )
+                }
+            }
         } else {
             var switchCenterOffset by remember { mutableStateOf(Offset.Zero) }
 
-            ListItem(
-                checked = finalIsChecked,
-                onCheckedChange = { c ->
-                    if (enabled) {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onCheckedChange(c)
-                        onCheckedChangeWithPosition?.invoke(c, switchCenterOffset)
-                    } else if (onDisabledClick != null) {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onDisabledClick()
-                    }
-                },
+            androidx.compose.foundation.layout.Box {
+                ListItem(
+                    checked = finalIsChecked,
+                    onCheckedChange = { c ->
+                        if (enabled) {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onCheckedChange(c)
+                            onCheckedChangeWithPosition?.invoke(c, switchCenterOffset)
+                        }
+                    },
                 onLongClick = onLongClickAction,
                 enabled = enabled,
                 modifier = modifier.fillMaxWidth(),
@@ -283,15 +326,23 @@ fun IconToggleItem(
                     ListItemDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright,
                     ),
-                content = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
+                content = renderTitle,
+                )
+                if (!enabled && onDisabledClick != null) {
+                    androidx.compose.foundation.layout.Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .zIndex(1f)
+                            .clickable(
+                                interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onDisabledClick()
+                            }
                     )
-                    renderMenu()
-                },
-            )
+                }
+            }
         }
     } else {
         ListItem(
@@ -329,14 +380,7 @@ fun IconToggleItem(
                 ListItemDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright,
                 ),
-            content = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                renderMenu()
-            },
+            content = renderTitle,
         )
     }
 

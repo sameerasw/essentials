@@ -680,7 +680,13 @@ object FeatureRegistry {
                 category = R.string.cat_interface,
                 description = R.string.duo_desc,
                 aboutDescription = R.string.duo_desc,
-                permissionKeys = listOf("ACCESSIBILITY"),
+                permissionKeys =
+                    listOf(
+                        "ACCESSIBILITY",
+                        "NOTIFICATION_LISTENER",
+                        "RECEIVE_SENSITIVE_NOTIFICATIONS",
+                        "SHIZUKU",
+                    ),
                 hasMoreSettings = true,
                 showToggle = true,
                 parentFeatureId = "Display",

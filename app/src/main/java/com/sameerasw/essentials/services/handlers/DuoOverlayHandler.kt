@@ -80,6 +80,10 @@ class DuoOverlayHandler(
     private var touchAnchorView: View? = null
     private var isTouchAnchorAdded = false
     private var duoTouchHandler: DuoTouchHandler? = null
+    private var lastCenterX: Float = 0f
+    private var lastCenterY: Float = 0f
+    private var lastCameraRadiusPx: Float = 0f
+    private var lastDensity: Float = 1f
     private val mainHandler = Handler(Looper.getMainLooper())
 
     private val settingsRepository by lazy { SettingsRepository(service) }
@@ -151,6 +155,123 @@ class DuoOverlayHandler(
             mainHandler.post {
                 checkAndApplyProgressNotificationState(data)
             }
+        }
+    }
+
+    private var isOtpListenerRegistered = false
+    private var activeOtpCode: String? = null
+    private var activeOtpSender: String? = null
+    var activeOtpNotificationKey: String? = null
+        private set
+
+    private val otpNotificationListener = object : NotificationListener.OtpNotificationListener {
+        override fun onOtpReceived(data: NotificationListener.OtpNotificationData) {
+            mainHandler.post {
+                handleOtpReceived(data)
+            }
+        }
+    }
+
+    private val otpExpiryRunnable = Runnable {
+        clearOtpGlance()
+    }
+
+    private fun handleOtpReceived(data: NotificationListener.OtpNotificationData) {
+        if (!settingsRepository.isDuoEnabled() || !settingsRepository.isDuoShowOtpGlanceEnabled()) {
+            return
+        }
+        if (isScreenOff) return
+
+        activeOtpCode = data.code
+        activeOtpSender = data.senderOrApp
+        activeOtpNotificationKey = data.notificationKey
+
+        overlayView?.setOtpGlance(
+            isActive = true,
+            otpCode = data.code,
+            sender = data.senderOrApp
+        )
+        updateTouchAnchorForOtp(true)
+
+        val expiryMs = settingsRepository.getDuoOtpExpirySeconds() * 1000L
+        mainHandler.removeCallbacks(otpExpiryRunnable)
+        mainHandler.postDelayed(otpExpiryRunnable, expiryMs)
+    }
+
+    fun clearOtpGlance() {
+        mainHandler.removeCallbacks(otpExpiryRunnable)
+        activeOtpCode = null
+        activeOtpSender = null
+        activeOtpNotificationKey = null
+        overlayView?.setOtpGlance(isActive = false, otpCode = "", sender = "")
+        updateTouchAnchorForOtp(false)
+    }
+
+    fun showClipboardGlance(text: String) {
+        showQuickGlance(text, "", DuoOverlayView.QuickGlanceType.CLIPBOARD)
+    }
+
+    fun showQuickGlance(text: String, sender: String = "", type: DuoOverlayView.QuickGlanceType = DuoOverlayView.QuickGlanceType.OTP) {
+        mainHandler.post {
+            if (!settingsRepository.isDuoEnabled()) return@post
+            if (isScreenOff) return@post
+
+            activeOtpCode = text
+            activeOtpSender = sender
+
+            overlayView?.setQuickGlance(
+                isActive = true,
+                text = text,
+                sender = sender,
+                type = type
+            )
+            updateTouchAnchorForOtp(true)
+
+            val expiryMs = settingsRepository.getDuoOtpExpirySeconds() * 1000L
+            mainHandler.removeCallbacks(otpExpiryRunnable)
+            mainHandler.postDelayed(otpExpiryRunnable, expiryMs)
+        }
+    }
+
+    private fun updateTouchAnchorForOtp(isOtpActive: Boolean) {
+        val wm = windowManager ?: return
+        val anchor = touchAnchorView ?: return
+        if (!isTouchAnchorAdded) return
+
+        try {
+            val diameter = (((lastCameraRadiusPx + 20f * lastDensity) * 2 * settingsRepository.getDuoRingRadius()).toInt())
+                .coerceAtLeast((44f * lastDensity).toInt())
+            val params = anchor.layoutParams as? WindowManager.LayoutParams ?: return
+            if (isOtpActive) {
+                val otpWidth = (220f * lastDensity).toInt()
+                val otpHigherBottom = (diameter + 80f * lastDensity).toInt()
+                params.width = maxOf(diameter, otpWidth)
+                params.height = otpHigherBottom
+                params.x = (lastCenterX - params.width / 2f).toInt()
+                params.y = (lastCenterY - diameter / 2f).toInt()
+            } else {
+                params.width = diameter
+                params.height = diameter
+                params.x = (lastCenterX - diameter / 2f).toInt()
+                params.y = (lastCenterY - diameter / 2f).toInt()
+            }
+            wm.updateViewLayout(anchor, params)
+        } catch (e: Exception) {
+            Log.e("DuoOverlayHandler", "Failed to update touch anchor for OTP", e)
+        }
+    }
+
+    private fun registerOtpListener() {
+        if (!isOtpListenerRegistered) {
+            NotificationListener.addOtpNotificationListener(otpNotificationListener)
+            isOtpListenerRegistered = true
+        }
+    }
+
+    private fun unregisterOtpListener() {
+        if (isOtpListenerRegistered) {
+            NotificationListener.removeOtpNotificationListener(otpNotificationListener)
+            isOtpListenerRegistered = false
         }
     }
 
@@ -351,6 +472,7 @@ class DuoOverlayHandler(
     fun onScreenOff() {
         isScreenOff = true
         overlayView?.isScreenOff = true
+        clearOtpGlance()
         updateState()
     }
 
@@ -778,6 +900,11 @@ class DuoOverlayHandler(
                 }
             }
 
+            lastCenterX = centerX
+            lastCenterY = centerY
+            lastCameraRadiusPx = cameraRadiusPx
+            lastDensity = density
+
             val isNightMode = (service.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
             if (overlayView == null) {
@@ -833,6 +960,7 @@ class DuoOverlayHandler(
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
                 this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
+                this.showOtpGlance = settingsRepository.isDuoShowOtpGlanceEnabled()
                 this.setCharging(this@DuoOverlayHandler.isChargingState, this@DuoOverlayHandler.isFastChargingState)
             }
 
@@ -867,7 +995,8 @@ class DuoOverlayHandler(
                 settingsRepository.getDuoLongPressAction() != null ||
                 settingsRepository.getDuoSwipeDownAction() != null ||
                 settingsRepository.getDuoSlideMode() != "none" ||
-                settingsRepository.isDuoSlideTrackEnabled()
+                settingsRepository.isDuoSlideTrackEnabled() ||
+                settingsRepository.isDuoShowOtpGlanceEnabled()
 
             if (isTouchEnabled) {
                 if (duoTouchHandler == null) {
@@ -875,6 +1004,7 @@ class DuoOverlayHandler(
                 }
                 duoTouchHandler?.apply {
                     this.overlayView = this@DuoOverlayHandler.overlayView
+                    this.duoOverlayHandler = this@DuoOverlayHandler
                     this.cameraCenterX = centerX
                     this.cameraCenterY = centerY
                     this.cameraRadiusPx = cameraRadiusPx
@@ -890,6 +1020,7 @@ class DuoOverlayHandler(
                 }
 
                 val diameter = (((cameraRadiusPx + 20f * density) * 2 * settingsRepository.getDuoRingRadius()).toInt()).coerceAtLeast((44f * density).toInt())
+                @Suppress("DEPRECATION")
                 val touchParams = WindowManager.LayoutParams(
                     diameter,
                     diameter,
@@ -950,6 +1081,13 @@ class DuoOverlayHandler(
                 registerTorchCallback()
             } else {
                 unregisterTorchCallback()
+            }
+
+            if (settingsRepository.isDuoShowOtpGlanceEnabled()) {
+                registerOtpListener()
+            } else {
+                unregisterOtpListener()
+                clearOtpGlance()
             }
         }
     }
@@ -1222,6 +1360,8 @@ class DuoOverlayHandler(
             unregisterMediaSessionListener()
             unregisterProgressNotificationListener()
             unregisterTorchCallback()
+            unregisterOtpListener()
+            clearOtpGlance()
         }
     }
 

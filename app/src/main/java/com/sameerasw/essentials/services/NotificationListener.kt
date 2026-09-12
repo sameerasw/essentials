@@ -22,9 +22,11 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.google.gson.Gson
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
+import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
@@ -41,6 +43,18 @@ import java.io.FileOutputStream
 class NotificationListener : NotificationListenerService() {
     interface ProgressNotificationListener {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
+    }
+
+    data class OtpNotificationData(
+        val code: String,
+        val senderOrApp: String,
+        val timestamp: Long = System.currentTimeMillis(),
+        val packageName: String? = null,
+        val notificationKey: String? = null,
+    )
+
+    interface OtpNotificationListener {
+        fun onOtpReceived(data: OtpNotificationData)
     }
 
     companion object {
@@ -72,6 +86,79 @@ class NotificationListener : NotificationListenerService() {
         fun notifyProgressListeners(data: ProgressNotificationData?) {
             val listenersCopy = synchronized(progressListeners) { progressListeners.toList() }
             listenersCopy.forEach { it.onProgressNotificationUpdated(data) }
+        }
+
+        private val otpListeners = mutableListOf<OtpNotificationListener>()
+
+        fun addOtpNotificationListener(listener: OtpNotificationListener) {
+            synchronized(otpListeners) {
+                if (!otpListeners.contains(listener)) {
+                    otpListeners.add(listener)
+                }
+            }
+        }
+
+        fun removeOtpNotificationListener(listener: OtpNotificationListener) {
+            synchronized(otpListeners) {
+                otpListeners.remove(listener)
+            }
+        }
+
+        fun notifyOtpListeners(data: OtpNotificationData) {
+            val listenersCopy = synchronized(otpListeners) { otpListeners.toList() }
+            listenersCopy.forEach { it.onOtpReceived(data) }
+        }
+
+        fun dismissNotification(key: String?) {
+            if (key.isNullOrBlank()) return
+            try {
+                instance?.cancelNotification(key)
+            } catch (e: Exception) {
+                Log.e("NotificationListener", "Failed to cancel notification: $key", e)
+            }
+        }
+
+        private val LABELED_OTP_REGEX = Regex(
+            """(?i)(?:otp|code|pin|passcode|verification\s*code|security\s*code)(?:\s+is)?[\s:=-]+([0-9]{4,8}|[0-9]{3}[-\s][0-9]{3}|[A-Z0-9]{5,8})\b"""
+        )
+        private val USE_CODE_REGEX = Regex(
+            """(?i)\b(?:use|enter)\s+([0-9]{4,8})\s+(?:as|for|to)\b"""
+        )
+        private val IS_YOUR_CODE_REGEX = Regex(
+            """\b([0-9]{4,8})\b(?=.*(?:is\s*your\s*(?:otp|code|pin|verification)|to\s*verify|for\s*verification))""",
+            RegexOption.IGNORE_CASE
+        )
+        private val GOOGLE_2FA_REGEX = Regex("""\b(G-[0-9]{6})\b""")
+        private val FALLBACK_OTP_REGEX = Regex("""\b([0-9]{4,8})\b""")
+
+        fun extractOtpCode(text: String): String? {
+            LABELED_OTP_REGEX.find(text)?.let { match ->
+                val raw = match.groupValues[1]
+                return raw.replace("-", "").replace(" ", "")
+            }
+
+            GOOGLE_2FA_REGEX.find(text)?.let { match ->
+                return match.groupValues[1]
+            }
+
+            USE_CODE_REGEX.find(text)?.let { match ->
+                return match.groupValues[1]
+            }
+
+            IS_YOUR_CODE_REGEX.find(text)?.let { match ->
+                return match.groupValues[1]
+            }
+
+            val matches = FALLBACK_OTP_REGEX.findAll(text).toList()
+            for (match in matches) {
+                val candidate = match.groupValues[1]
+                val num = candidate.toIntOrNull()
+                if (candidate.length == 4 && num != null && num in 2020..2030) {
+                    continue
+                }
+                return candidate
+            }
+            return null
         }
 
         fun getLatestProgressNotification(): ProgressNotificationData? =
@@ -916,8 +1003,11 @@ class NotificationListener : NotificationListenerService() {
         WatchNotificationSyncManager.onNotificationPosted(applicationContext, sbn, isSilentNotification(sbn, rankingMap))
 
         val extras = sbn.notification.extras
-        if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
-            notifyProgressListeners(extractLatestProgressNotification())
+        if (extras != null) {
+            if (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE)) {
+                notifyProgressListeners(extractLatestProgressNotification())
+            }
+            checkAndNotifyOtp(sbn, extras)
         }
 
         val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -1608,7 +1698,7 @@ class NotificationListener : NotificationListenerService() {
                 if (isLightingOn) {
                     isAppSelectedForNotificationLighting(sbn.packageName)
                 } else {
-                    !sbn.isOngoing && sbn.notification.priority >= Notification.PRIORITY_DEFAULT
+                    !sbn.isOngoing && !isSilentNotification(sbn)
                 }
 
             if (shouldHide) {
@@ -1684,5 +1774,66 @@ class NotificationListener : NotificationListenerService() {
             extractProgressNotification(sbn)
         }
         return progressNotifs.maxByOrNull { it.postTime }
+    }
+
+    private fun checkAndNotifyOtp(sbn: StatusBarNotification, extras: android.os.Bundle) {
+        val listeners = synchronized(otpListeners) { otpListeners.toList() }
+        if (listeners.isEmpty()) return
+
+        val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE)
+        if (prefs.getBoolean(SettingsRepository.KEY_DUO_OTP_APP_FILTER_ENABLED, false)) {
+            val json = prefs.getString(SettingsRepository.KEY_DUO_OTP_SELECTED_APPS, null)
+            if (!json.isNullOrBlank()) {
+                val allowedApps = try {
+                    Gson().fromJson(
+                        json,
+                        Array<AppSelection>::class.java
+                    ).filter { it.isEnabled }.map { it.packageName }.toSet()
+                } catch (_: Exception) {
+                    emptySet()
+                }
+                if (!allowedApps.contains(sbn.packageName)) {
+                    return
+                }
+            } else {
+                return
+            }
+        }
+
+        val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
+        val bigText = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()
+        val title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString() ?: ""
+        val candidateText = when {
+            !bigText.isNullOrBlank() -> bigText
+            !text.isNullOrBlank() -> text
+            else -> return
+        }
+
+        if (candidateText.length < 4) return
+
+        val lower = candidateText.lowercase(java.util.Locale.ROOT)
+        val hasOtpKeyword = lower.contains("otp") ||
+            lower.contains("code") ||
+            lower.contains("pin") ||
+            lower.contains("passcode") ||
+            lower.contains("verification") ||
+            lower.contains("verify") ||
+            lower.contains("one-time") ||
+            lower.contains("2fa") ||
+            lower.contains("security code")
+
+        if (!hasOtpKeyword) return
+
+        val extractedCode = extractOtpCode(candidateText) ?: return
+
+        val otpData = OtpNotificationData(
+            code = extractedCode,
+            senderOrApp = title.ifBlank { sbn.packageName },
+            timestamp = System.currentTimeMillis(),
+            packageName = sbn.packageName,
+            notificationKey = sbn.key,
+        )
+
+        notifyOtpListeners(otpData)
     }
 }
