@@ -2582,4 +2582,7 @@
     <string name="status_glance_action_swipe_right_desc">Skip to next track when media is playing</string>
     <string name="status_glance_action_pick_title">Pick action</string>
     <string name="status_glance_action_none">None</string>
+    <string name="action_backup_app_list">Backup app list</string>
+    <string name="msg_backup_app_list_success">App list backed up successfully</string>
+    <string name="msg_backup_app_list_failed">Failed to back up app list</string>
 </resources>
