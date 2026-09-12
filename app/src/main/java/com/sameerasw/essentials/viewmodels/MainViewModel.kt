@@ -133,6 +133,8 @@ class MainViewModel : ViewModel() {
     val duoDotSize = mutableFloatStateOf(4f)
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowBattery = mutableStateOf(true)
+    val isDuoShowBatteryPercentage = mutableStateOf(false)
+    val isDuoBatteryPercentageOnlyColored = mutableStateOf(false)
     val isDuoBatteryChargingColorEnabled = mutableStateOf(true)
     val duoBatteryChargingColor = mutableStateOf("auto")
     val isDuoBatteryPowerSaveColorEnabled = mutableStateOf(true)
@@ -564,6 +566,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_BATTERY ->
                         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_BATTERY_PERCENTAGE ->
+                        isDuoShowBatteryPercentage.value = settingsRepository.isDuoShowBatteryPercentageEnabled()
+
+                    SettingsRepository.KEY_DUO_BATTERY_PERCENTAGE_ONLY_COLORED ->
+                        isDuoBatteryPercentageOnlyColored.value = settingsRepository.isDuoBatteryPercentageOnlyColoredEnabled()
 
                     SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED ->
                         isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
@@ -1870,6 +1878,8 @@ class MainViewModel : ViewModel() {
         duoDotSize.floatValue = settingsRepository.getDuoDotSize()
         duoRingRadius.floatValue = settingsRepository.getDuoRingRadius()
         isDuoShowBattery.value = settingsRepository.isDuoShowBatteryEnabled()
+        isDuoShowBatteryPercentage.value = settingsRepository.isDuoShowBatteryPercentageEnabled()
+        isDuoBatteryPercentageOnlyColored.value = settingsRepository.isDuoBatteryPercentageOnlyColoredEnabled()
         isDuoBatteryChargingColorEnabled.value = settingsRepository.isDuoBatteryChargingColorEnabled()
         duoBatteryChargingColor.value = settingsRepository.getDuoBatteryChargingColor()
         isDuoBatteryPowerSaveColorEnabled.value = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
@@ -4494,11 +4504,23 @@ class MainViewModel : ViewModel() {
         isDuoShowBattery.value = enabled
         settingsRepository.setDuoShowBatteryEnabled(enabled)
         if (!enabled) {
+            isDuoShowBatteryPercentage.value = false
+            settingsRepository.setDuoShowBatteryPercentageEnabled(false)
             isDuoShowNetworks.value = false
             settingsRepository.setDuoShowNetworksEnabled(false)
             isDuoShowTime.value = false
             settingsRepository.setDuoShowTimeEnabled(false)
         }
+    }
+
+    fun setDuoShowBatteryPercentage(enabled: Boolean) {
+        isDuoShowBatteryPercentage.value = enabled
+        settingsRepository.setDuoShowBatteryPercentageEnabled(enabled)
+    }
+
+    fun setDuoBatteryPercentageOnlyColored(enabled: Boolean) {
+        isDuoBatteryPercentageOnlyColored.value = enabled
+        settingsRepository.setDuoBatteryPercentageOnlyColoredEnabled(enabled)
     }
 
     fun setDuoBatteryChargingColorEnabled(enabled: Boolean) {

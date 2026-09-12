@@ -26,6 +26,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
+import android.view.animation.PathInterpolator
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.R
@@ -98,6 +99,7 @@ class DuoOverlayView(context: Context) : View(context) {
                 if (oldColors != newColors) {
                     animateThemeChange()
                 }
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -154,6 +156,70 @@ class DuoOverlayView(context: Context) : View(context) {
                 updateVisibilityAnimation()
             }
         }
+
+    var showBatteryPercentage: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateBatteryPercentageVisibility()
+            }
+        }
+
+    var isBatteryPercentageOnlyColored: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateBatteryPercentageVisibility()
+            }
+        }
+
+    fun isBatteryColoredInstanceActive(): Boolean {
+        if (isCharging && isBatteryChargingColorEnabled) return true
+        if (isPowerSaveMode && isBatteryPowerSaveColorEnabled) return true
+        if (batteryLevel <= 10 && isBatteryCriticalColorEnabled) return true
+        if (batteryLevel <= 20 && isBatteryLowColorEnabled) return true
+        return false
+    }
+
+    fun isBatteryPercentageActive(): Boolean {
+        if (!showBatteryPercentage) return false
+        if (isBatteryPercentageOnlyColored) {
+            return isBatteryColoredInstanceActive()
+        }
+        return true
+    }
+
+    private fun updateBatteryPercentageVisibility(animate: Boolean = true) {
+        val target = isBatteryPercentageActive()
+        if (animate) {
+            animateBatteryPercentageTransition(target)
+        } else {
+            batteryPercentageAnimator?.cancel()
+            animatedBatteryPercentageFraction = if (target) 1.0f else 0.0f
+            invalidate()
+        }
+    }
+
+    private var animatedBatteryPercentageFraction: Float = 0f
+    private var batteryPercentageAnimator: ValueAnimator? = null
+
+    private fun animateBatteryPercentageTransition(visible: Boolean) {
+        val target = if (visible) 1.0f else 0.0f
+        if (batteryPercentageAnimator?.isRunning == true) {
+            batteryPercentageAnimator?.cancel()
+        }
+        val start = animatedBatteryPercentageFraction
+        if (kotlin.math.abs(start - target) < 0.001f) return
+        batteryPercentageAnimator = ValueAnimator.ofFloat(start, target).apply {
+            duration = 300L
+            interpolator = PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f)
+            addUpdateListener { animation ->
+                animatedBatteryPercentageFraction = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
 
     var showMedia: Boolean = true
         set(value) {
@@ -220,6 +286,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -246,6 +313,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -262,6 +330,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -278,6 +347,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -367,6 +437,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -407,6 +478,7 @@ class DuoOverlayView(context: Context) : View(context) {
         if (isChargingAnnounce) {
             isChargingAnnounce = false
             updateActiveProgressMode()
+            updateBatteryPercentageVisibility()
         }
     }
 
@@ -575,6 +647,7 @@ class DuoOverlayView(context: Context) : View(context) {
         this.isFastCharging = isFastCharging
         this.isChargingAnnounce = true
         this.isChargingThemeActive = false
+        updateBatteryPercentageVisibility()
 
         removeCallbacks(revertChargingRunnable)
         postDelayed(revertChargingRunnable, 4000L)
@@ -634,11 +707,13 @@ class DuoOverlayView(context: Context) : View(context) {
             removeCallbacks(revertChargingRunnable)
             updateActiveProgressMode()
             animateThemeChange()
+            updateBatteryPercentageVisibility()
         } else if (wasCharging != isCharging) {
             if (!isChargingAnnounce) {
                 isChargingThemeActive = true
                 animateThemeChange()
             }
+            updateBatteryPercentageVisibility()
         }
     }
 
@@ -910,13 +985,13 @@ class DuoOverlayView(context: Context) : View(context) {
                 val dimTrack = Color.argb(50, Color.red(saveAccent), Color.green(saveAccent), Color.blue(saveAccent))
                 return Triple(dimTrack, dimProgress, dimProgress)
             }
-            if (showBattery && batteryLevel <= 10 && isBatteryCriticalColorEnabled) {
+            if ((showBattery || showBatteryPercentage) && batteryLevel <= 10 && isBatteryCriticalColorEnabled) {
                 val critAccent = getThemeAdjustedColor(batteryCriticalColor)
                 val dimProgress = Color.argb(160, Color.red(critAccent), Color.green(critAccent), Color.blue(critAccent))
                 val dimTrack = Color.argb(50, Color.red(critAccent), Color.green(critAccent), Color.blue(critAccent))
                 return Triple(dimTrack, dimProgress, dimProgress)
             }
-            if (showBattery && batteryLevel <= 20 && isBatteryLowColorEnabled) {
+            if ((showBattery || showBatteryPercentage) && batteryLevel <= 20 && isBatteryLowColorEnabled) {
                 val lowAccent = getThemeAdjustedColor(batteryLowColor)
                 val dimProgress = Color.argb(160, Color.red(lowAccent), Color.green(lowAccent), Color.blue(lowAccent))
                 val dimTrack = Color.argb(50, Color.red(lowAccent), Color.green(lowAccent), Color.blue(lowAccent))
@@ -964,14 +1039,14 @@ class DuoOverlayView(context: Context) : View(context) {
             return Triple(track, saveAccent, saveAccent)
         }
 
-        if (showBattery && batteryLevel <= 10 && isBatteryCriticalColorEnabled) {
+        if ((showBattery || showBatteryPercentage) && batteryLevel <= 10 && isBatteryCriticalColorEnabled) {
             val critAccent = getThemeAdjustedColor(batteryCriticalColor)
             val trackAlpha = if (isDarkTheme) 90 else 110
             val track = Color.argb(trackAlpha, Color.red(critAccent), Color.green(critAccent), Color.blue(critAccent))
             return Triple(track, critAccent, critAccent)
         }
 
-        if (showBattery && batteryLevel <= 20 && isBatteryLowColorEnabled) {
+        if ((showBattery || showBatteryPercentage) && batteryLevel <= 20 && isBatteryLowColorEnabled) {
             val lowAccent = getThemeAdjustedColor(batteryLowColor)
             val trackAlpha = if (isDarkTheme) 90 else 110
             val track = Color.argb(trackAlpha, Color.red(lowAccent), Color.green(lowAccent), Color.blue(lowAccent))
@@ -1174,6 +1249,17 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
     }
+
+    private val batteryTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        typeface = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
+        letterSpacing = -0.02f
+    }
+    private val contrastBatteryTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        typeface = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
+        letterSpacing = -0.02f
+    }
     private val iconClipPath = Path()
     private val iconRect = RectF()
     private val arcBounds = RectF()
@@ -1191,6 +1277,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
         currentProgressColor = progress
+        animatedBatteryPercentageFraction = if (isBatteryPercentageActive()) 1.0f else 0.0f
         currentDotBaseColor = dot
         trackPaint.color = currentTrackColor
         progressPaint.color = currentProgressColor
@@ -1251,35 +1338,175 @@ class DuoOverlayView(context: Context) : View(context) {
         val baseContrastAlpha = if (isProgressLight) 24 else 28
         val contrastAlpha = (baseContrastAlpha * animatedVisibilityAlpha).toInt()
 
-        if (useUniversalContrast && contrastAlpha > 0) {
-            contrastTrackPaint.color = Color.argb(
-                contrastAlpha,
-                Color.red(contrastColor),
-                Color.green(contrastColor),
-                Color.blue(contrastColor)
-            )
-            canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, contrastTrackPaint)
-        }
+        val bpFraction = animatedBatteryPercentageFraction
+        val isSplitBatteryActive = (bpFraction > 0.001f || isBatteryPercentageActive()) && animatedCustomFraction < 0.5f && showBattery
 
-        val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
-        trackPaint.color = Color.argb(
-            trackAlpha,
-            Color.red(currentTrackColor),
-            Color.green(currentTrackColor),
-            Color.blue(currentTrackColor)
-        )
-        canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
+        if (isSplitBatteryActive) {
+            val batteryText = batteryLevel.toString()
+            val dynamicTextSize = (baseRadius * 0.36f).coerceIn(9.5f * density, 15f * density)
+            batteryTextPaint.textSize = dynamicTextSize
+            contrastBatteryTextPaint.textSize = dynamicTextSize
 
-        val progressSweep = (animatedProgress.coerceIn(0f, 100f) / 100f) * animatedTotalSweep
-        if (progressSweep > 0.5f) {
-            val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
-            progressPaint.color = Color.argb(
-                progAlpha,
-                Color.red(currentProgressColor),
-                Color.green(currentProgressColor),
-                Color.blue(currentProgressColor)
+            val textWidth = batteryTextPaint.measureText(batteryText)
+            val gapArcLength = textWidth + 8f * density
+            val fullGapAngleDeg = Math.toDegrees((gapArcLength / baseRadius).toDouble()).toFloat().coerceIn(44f, 66f)
+            val fullHalfGap = fullGapAngleDeg / 2f
+            val halfGap = fullHalfGap * bpFraction
+
+            if (showNetworks || showTime) {
+                val leftStart = 140f
+                val leftEnd = 270f - halfGap
+                val leftSweep = (leftEnd - leftStart).coerceAtLeast(0f)
+                val rightStart = 270f + halfGap
+                val rightEnd = 400f
+                val rightSweep = (rightEnd - rightStart).coerceAtLeast(0f)
+
+                if (useUniversalContrast && contrastAlpha > 0) {
+                    contrastTrackPaint.color = Color.argb(
+                        contrastAlpha,
+                        Color.red(contrastColor),
+                        Color.green(contrastColor),
+                        Color.blue(contrastColor)
+                    )
+                    if (leftSweep > 0.5f) canvas.drawArc(arcBounds, leftStart, leftSweep, false, contrastTrackPaint)
+                    if (rightSweep > 0.5f) canvas.drawArc(arcBounds, rightStart, rightSweep, false, contrastTrackPaint)
+                }
+
+                val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
+                trackPaint.color = Color.argb(
+                    trackAlpha,
+                    Color.red(currentTrackColor),
+                    Color.green(currentTrackColor),
+                    Color.blue(currentTrackColor)
+                )
+                if (leftSweep > 0.5f) canvas.drawArc(arcBounds, leftStart, leftSweep, false, trackPaint)
+                if (rightSweep > 0.5f) canvas.drawArc(arcBounds, rightStart, rightSweep, false, trackPaint)
+
+                val clampedProg = animatedProgress.coerceIn(0f, 100f)
+                val leftProgSweep = (clampedProg / 50f).coerceIn(0f, 1f) * leftSweep
+                val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
+                progressPaint.color = Color.argb(
+                    progAlpha,
+                    Color.red(currentProgressColor),
+                    Color.green(currentProgressColor),
+                    Color.blue(currentProgressColor)
+                )
+
+                if (leftProgSweep > 0.5f) {
+                    canvas.drawArc(arcBounds, leftStart, leftProgSweep, false, progressPaint)
+                }
+                if (clampedProg > 50f) {
+                    val rightProgSweep = ((clampedProg - 50f) / 50f).coerceIn(0f, 1f) * rightSweep
+                    if (rightProgSweep > 0.5f) {
+                        canvas.drawArc(arcBounds, rightStart, rightProgSweep, false, progressPaint)
+                    }
+                }
+            } else {
+                val effectiveGap = fullGapAngleDeg * bpFraction
+                val trackStart = -90f + effectiveGap / 2f
+                val trackSweep = 360f - effectiveGap
+
+                if (useUniversalContrast && contrastAlpha > 0) {
+                    contrastTrackPaint.color = Color.argb(
+                        contrastAlpha,
+                        Color.red(contrastColor),
+                        Color.green(contrastColor),
+                        Color.blue(contrastColor)
+                    )
+                    canvas.drawArc(arcBounds, trackStart, trackSweep, false, contrastTrackPaint)
+                }
+
+                val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
+                trackPaint.color = Color.argb(
+                    trackAlpha,
+                    Color.red(currentTrackColor),
+                    Color.green(currentTrackColor),
+                    Color.blue(currentTrackColor)
+                )
+                canvas.drawArc(arcBounds, trackStart, trackSweep, false, trackPaint)
+
+                val clampedProg = animatedProgress.coerceIn(0f, 100f)
+                val progSweep = (clampedProg / 100f) * trackSweep
+                val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
+                progressPaint.color = Color.argb(
+                    progAlpha,
+                    Color.red(currentProgressColor),
+                    Color.green(currentProgressColor),
+                    Color.blue(currentProgressColor)
+                )
+
+                if (progSweep > 0.5f) {
+                    canvas.drawArc(arcBounds, trackStart, progSweep, false, progressPaint)
+                }
+            }
+
+            val digitBounds = android.graphics.Rect()
+            batteryTextPaint.getTextBounds(batteryText, 0, batteryText.length, digitBounds)
+            val nominalCenterY = cameraCenterY - baseRadius - 1.5f * density
+            val minSafeCenterY = 1.5f * density + digitBounds.height() / 2f
+            val actualCenterY = nominalCenterY.coerceAtLeast(minSafeCenterY)
+            val baselineY = actualCenterY - digitBounds.exactCenterY()
+            val textAlpha = (bpFraction * (1f - animatedCustomFraction) * animatedVisibilityAlpha).coerceIn(0f, 1f)
+
+            if (textAlpha > 0.01f) {
+                val textScale = 0.85f + 0.15f * bpFraction
+                val saveText = canvas.save()
+                canvas.scale(textScale, textScale, cameraCenterX, actualCenterY)
+
+                if (useUniversalContrast && contrastAlpha > 0) {
+                    contrastBatteryTextPaint.color = Color.argb(
+                        (contrastAlpha * textAlpha).toInt().coerceIn(0, 255),
+                        Color.red(contrastColor),
+                        Color.green(contrastColor),
+                        Color.blue(contrastColor)
+                    )
+                    contrastBatteryTextPaint.style = Paint.Style.STROKE
+                    contrastBatteryTextPaint.strokeWidth = 2.4f * density
+                    canvas.drawText(batteryText, cameraCenterX, baselineY, contrastBatteryTextPaint)
+                }
+
+                val textColor = currentProgressColor
+                batteryTextPaint.style = Paint.Style.FILL
+                batteryTextPaint.color = Color.argb(
+                    (Color.alpha(textColor) * textAlpha).toInt().coerceIn(0, 255),
+                    Color.red(textColor),
+                    Color.green(textColor),
+                    Color.blue(textColor)
+                )
+                canvas.drawText(batteryText, cameraCenterX, baselineY, batteryTextPaint)
+                canvas.restoreToCount(saveText)
+            }
+        } else {
+            if (useUniversalContrast && contrastAlpha > 0) {
+                contrastTrackPaint.color = Color.argb(
+                    contrastAlpha,
+                    Color.red(contrastColor),
+                    Color.green(contrastColor),
+                    Color.blue(contrastColor)
+                )
+                canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, contrastTrackPaint)
+            }
+
+            val trackAlpha = (Color.alpha(currentTrackColor) * animatedVisibilityAlpha).toInt()
+            trackPaint.color = Color.argb(
+                trackAlpha,
+                Color.red(currentTrackColor),
+                Color.green(currentTrackColor),
+                Color.blue(currentTrackColor)
             )
-            canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
+            canvas.drawArc(arcBounds, animatedStartAngle, animatedTotalSweep, false, trackPaint)
+
+            val progressSweep = (animatedProgress.coerceIn(0f, 100f) / 100f) * animatedTotalSweep
+            if (progressSweep > 0.5f) {
+                val progAlpha = (Color.alpha(currentProgressColor) * animatedVisibilityAlpha).toInt()
+                progressPaint.color = Color.argb(
+                    progAlpha,
+                    Color.red(currentProgressColor),
+                    Color.green(currentProgressColor),
+                    Color.blue(currentProgressColor)
+                )
+                canvas.drawArc(arcBounds, animatedStartAngle, progressSweep, false, progressPaint)
+            }
         }
 
         if (tracerFraction in 0f..1f) {
