@@ -720,6 +720,8 @@ class DuoOverlayView(context: Context) : View(context) {
         if (!isCharging) {
             isChargingAnnounce = false
             isChargingThemeActive = false
+            tracerAnimator?.cancel()
+            tracerFraction = -1f
             removeCallbacks(revertChargingRunnable)
             updateActiveProgressMode()
             animateThemeChange()
