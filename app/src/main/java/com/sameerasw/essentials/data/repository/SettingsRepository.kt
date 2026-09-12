@@ -379,6 +379,7 @@ class SettingsRepository(
         const val KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED = "duo_battery_critical_color_enabled"
         const val KEY_DUO_BATTERY_CRITICAL_COLOR = "duo_battery_critical_color"
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
+        const val KEY_DUO_DIFFERENTIATE_WIFI = "duo_differentiate_wifi"
         const val KEY_DUO_SHOW_TIME = "duo_show_time"
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
@@ -3154,6 +3155,9 @@ class SettingsRepository(
 
     fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
     fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)
+
+    fun isDuoDifferentiateWifiEnabled(): Boolean = getBoolean(KEY_DUO_DIFFERENTIATE_WIFI, true)
+    fun setDuoDifferentiateWifiEnabled(enabled: Boolean) = putBoolean(KEY_DUO_DIFFERENTIATE_WIFI, enabled)
 
     fun isDuoShowTimeEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_TIME, false)
     fun setDuoShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_TIME, enabled)

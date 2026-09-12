@@ -264,6 +264,7 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED ||
                 key == SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR ||
                 key == SettingsRepository.KEY_DUO_SHOW_NETWORKS ||
+                key == SettingsRepository.KEY_DUO_DIFFERENTIATE_WIFI ||
                 key == SettingsRepository.KEY_DUO_SHOW_TIME ||
                 key == SettingsRepository.KEY_DUO_SHOW_MEDIA ||
                 key == SettingsRepository.KEY_DUO_SHOW_PROGRESS ||

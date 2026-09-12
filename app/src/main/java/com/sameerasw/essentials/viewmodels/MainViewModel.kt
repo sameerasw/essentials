@@ -144,6 +144,7 @@ class MainViewModel : ViewModel() {
     val isDuoBatteryCriticalColorEnabled = mutableStateOf(true)
     val duoBatteryCriticalColor = mutableStateOf("#F44336")
     val isDuoShowNetworks = mutableStateOf(true)
+    val isDuoDifferentiateWifi = mutableStateOf(true)
     val isDuoShowTime = mutableStateOf(false)
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
@@ -599,6 +600,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+
+                    SettingsRepository.KEY_DUO_DIFFERENTIATE_WIFI ->
+                        isDuoDifferentiateWifi.value = settingsRepository.isDuoDifferentiateWifiEnabled()
 
                     SettingsRepository.KEY_DUO_SHOW_TIME ->
                         isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
@@ -1889,6 +1893,7 @@ class MainViewModel : ViewModel() {
         isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
         duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+        isDuoDifferentiateWifi.value = settingsRepository.isDuoDifferentiateWifiEnabled()
         isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
@@ -4570,6 +4575,11 @@ class MainViewModel : ViewModel() {
             isDuoShowTime.value = false
             settingsRepository.setDuoShowTimeEnabled(false)
         }
+    }
+
+    fun setDuoDifferentiateWifi(enabled: Boolean) {
+        isDuoDifferentiateWifi.value = enabled
+        settingsRepository.setDuoDifferentiateWifiEnabled(enabled)
     }
 
     fun setDuoShowTime(enabled: Boolean) {

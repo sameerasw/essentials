@@ -65,6 +65,7 @@ import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryPercentageOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.DuoNetworkOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.system.LikeSongSettingsSheet
 import com.sameerasw.essentials.ui.features.system.RemapActionItem
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -86,6 +87,7 @@ fun DuoSettingsUI(
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryPercentageOptionsSheet by remember { mutableStateOf(false) }
+    var showNetworkOptionsSheet by remember { mutableStateOf(false) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     var pickingActionForGesture by remember { mutableStateOf<String?>(null) }
@@ -353,6 +355,9 @@ fun DuoSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setDuoShowNetworks(checked)
+                },
+                onSettingsClick = {
+                    showNetworkOptionsSheet = true
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
             )
@@ -1011,6 +1016,13 @@ fun DuoSettingsUI(
         DuoBatteryPercentageOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showBatteryPercentageOptionsSheet = false },
+        )
+    }
+
+    if (showNetworkOptionsSheet) {
+        DuoNetworkOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showNetworkOptionsSheet = false },
         )
     }
 

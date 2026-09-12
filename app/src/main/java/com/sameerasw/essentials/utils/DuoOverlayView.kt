@@ -367,6 +367,22 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
+    var isWifi: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                animateLayoutChange()
+            }
+        }
+
+    var isDifferentiateWifi: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                animateLayoutChange()
+            }
+        }
+
     var showTime: Boolean = false
         set(value) {
             if (field != value) {
@@ -916,6 +932,7 @@ class DuoOverlayView(context: Context) : View(context) {
     private var animatedStartAngle: Float = 140f
     private var animatedTotalSweep: Float = 260f
     private var animatedDotAlpha: Float = 1.0f
+    private var animatedWifiAlpha: Float = 0.0f
     private var animatedTimeAlpha: Float = 0.0f
     private var animatedCustomFraction: Float = 0.0f
     private var animatedScaleBounce: Float = 1.0f
@@ -1177,14 +1194,17 @@ class DuoOverlayView(context: Context) : View(context) {
 
         val isCustom = isCustomProgressActive()
         val targetCustomFraction = if (isCustom) 1.0f else 0.0f
-        val targetStartAngle = if (isCustom) 120f else (if (showTime) 148f else if (showNetworks) 140f else -90f)
-        val targetTotalSweep = if (isCustom) 300f else (if (showTime) 244f else if (showNetworks) 260f else 360f)
-        val targetDotAlpha = if (isCustom) 0.0f else (if (showNetworks) 1.0f else 0.0f)
+        val isWifiMode = isWifi && isDifferentiateWifi
+        val targetStartAngle = if (isCustom) 120f else (if (showTime || (showNetworks && isWifiMode)) 148f else if (showNetworks) 140f else -90f)
+        val targetTotalSweep = if (isCustom) 300f else (if (showTime || (showNetworks && isWifiMode)) 244f else if (showNetworks) 260f else 360f)
+        val targetDotAlpha = if (isCustom) 0.0f else (if (showNetworks && !isWifiMode) 1.0f else 0.0f)
+        val targetWifiAlpha = if (isCustom) 0.0f else (if (showNetworks && isWifiMode) 1.0f else 0.0f)
         val targetTimeAlpha = if (isCustom) 0.0f else (if (showTime) 1.0f else 0.0f)
 
         val startStartAngle = animatedStartAngle
         val startTotalSweep = animatedTotalSweep
         val startDotAlpha = animatedDotAlpha
+        val startWifiAlpha = animatedWifiAlpha
         val startTimeAlpha = animatedTimeAlpha
         val startCustomFraction = animatedCustomFraction
 
@@ -1196,6 +1216,7 @@ class DuoOverlayView(context: Context) : View(context) {
                 animatedStartAngle = startStartAngle + (targetStartAngle - startStartAngle) * fraction
                 animatedTotalSweep = startTotalSweep + (targetTotalSweep - startTotalSweep) * fraction
                 animatedDotAlpha = (startDotAlpha + (targetDotAlpha - startDotAlpha) * fraction).coerceIn(0f, 1f)
+                animatedWifiAlpha = (startWifiAlpha + (targetWifiAlpha - startWifiAlpha) * fraction).coerceIn(0f, 1f)
                 animatedTimeAlpha = (startTimeAlpha + (targetTimeAlpha - startTimeAlpha) * fraction).coerceIn(0f, 1f)
                 animatedCustomFraction = (startCustomFraction + (targetCustomFraction - startCustomFraction) * fraction).coerceIn(0f, 1f)
                 invalidate()
@@ -1278,6 +1299,12 @@ class DuoOverlayView(context: Context) : View(context) {
         currentTrackColor = track
         currentProgressColor = progress
         animatedBatteryPercentageFraction = if (isBatteryPercentageActive()) 1.0f else 0.0f
+        val isWifiMode = isWifi && isDifferentiateWifi
+        animatedDotAlpha = if (showNetworks && !isWifiMode) 1.0f else 0.0f
+        animatedWifiAlpha = if (showNetworks && isWifiMode) 1.0f else 0.0f
+        animatedTimeAlpha = if (showTime) 1.0f else 0.0f
+        animatedStartAngle = if (showTime || (showNetworks && isWifiMode)) 148f else if (showNetworks) 140f else -90f
+        animatedTotalSweep = if (showTime || (showNetworks && isWifiMode)) 244f else if (showNetworks) 260f else 360f
         currentDotBaseColor = dot
         trackPaint.color = currentTrackColor
         progressPaint.color = currentProgressColor
@@ -1354,11 +1381,11 @@ class DuoOverlayView(context: Context) : View(context) {
             val halfGap = fullHalfGap * bpFraction
 
             if (showNetworks || showTime) {
-                val leftStart = 140f
+                val leftStart = animatedStartAngle
                 val leftEnd = 270f - halfGap
                 val leftSweep = (leftEnd - leftStart).coerceAtLeast(0f)
                 val rightStart = 270f + halfGap
-                val rightEnd = 400f
+                val rightEnd = animatedStartAngle + animatedTotalSweep
                 val rightSweep = (rightEnd - rightStart).coerceAtLeast(0f)
 
                 if (useUniversalContrast && contrastAlpha > 0) {
@@ -1563,14 +1590,15 @@ class DuoOverlayView(context: Context) : View(context) {
 
         val effectiveDotAlpha = animatedDotAlpha * (1f - animatedCustomFraction)
         if (effectiveDotAlpha > 0.01f) {
-            val dotAngles = floatArrayOf(120f, 100f, 80f, 60f)
+            val spreadFraction = animatedDotAlpha.coerceIn(0f, 1f)
+            val dotAngleOffsets = floatArrayOf(30f, 10f, -10f, -30f)
             val baseAlpha = Color.alpha(currentDotBaseColor)
             val red = Color.red(currentDotBaseColor)
             val green = Color.green(currentDotBaseColor)
             val blue = Color.blue(currentDotBaseColor)
 
-            for (i in dotAngles.indices) {
-                val angleDeg = dotAngles[i]
+            for (i in dotAngleOffsets.indices) {
+                val angleDeg = 90f + dotAngleOffsets[i] * spreadFraction
                 val angleRad = Math.toRadians(angleDeg.toDouble())
                 val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
                 val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
@@ -1591,6 +1619,62 @@ class DuoOverlayView(context: Context) : View(context) {
                 }
 
                 canvas.drawCircle(dotX, dotY, dotRadiusPx * effectiveDotAlpha, dotPaint)
+            }
+        }
+
+        val effectiveWifiAlpha = animatedWifiAlpha * (1f - animatedCustomFraction)
+        if (effectiveWifiAlpha > 0.01f) {
+            val wifiSpread = animatedWifiAlpha.coerceIn(0f, 1f)
+            val wifiCenterOffsets = floatArrayOf(31f, 0f, -31f)
+            val maxSegmentSweep = 15f
+            val segmentSweep = maxSegmentSweep * wifiSpread
+
+            val baseAlpha = Color.alpha(currentDotBaseColor)
+            val red = Color.red(currentDotBaseColor)
+            val green = Color.green(currentDotBaseColor)
+            val blue = Color.blue(currentDotBaseColor)
+
+            val wifiSignalLevel = (animatedSignalLevel / 4f) * 3f
+
+            for (i in wifiCenterOffsets.indices) {
+                val centerAngle = 90f + wifiCenterOffsets[i] * wifiSpread
+                val segActiveFraction = (wifiSignalLevel - i).coerceIn(0f, 1f)
+                val segOpacity = (0.22f + 0.78f * segActiveFraction) * effectiveWifiAlpha * animatedVisibilityAlpha
+
+                if (segmentSweep > 0.5f) {
+                    val startAngle = centerAngle - segmentSweep / 2f
+                    if (useUniversalContrast && contrastAlpha > 0) {
+                        val shadowAlpha = (contrastAlpha * effectiveWifiAlpha).toInt().coerceIn(0, 255)
+                        contrastTrackPaint.color = Color.argb(
+                            shadowAlpha,
+                            Color.red(contrastColor),
+                            Color.green(contrastColor),
+                            Color.blue(contrastColor)
+                        )
+                        canvas.drawArc(arcBounds, startAngle, segmentSweep, false, contrastTrackPaint)
+                    }
+
+                    trackPaint.color = Color.argb((baseAlpha * segOpacity).toInt(), red, green, blue)
+                    canvas.drawArc(arcBounds, startAngle, segmentSweep, false, trackPaint)
+                } else {
+                    val angleRad = Math.toRadians(centerAngle.toDouble())
+                    val dotX = (cameraCenterX + baseRadius * cos(angleRad)).toFloat()
+                    val dotY = (cameraCenterY + baseRadius * sin(angleRad)).toFloat()
+
+                    if (useUniversalContrast && contrastAlpha > 0) {
+                        val shadowAlpha = (contrastAlpha * effectiveWifiAlpha).toInt().coerceIn(0, 255)
+                        contrastDotPaint.color = Color.argb(
+                            shadowAlpha,
+                            Color.red(contrastColor),
+                            Color.green(contrastColor),
+                            Color.blue(contrastColor)
+                        )
+                        canvas.drawCircle(dotX, dotY, (arcThicknessPx / 2f + 0.5f * density) * effectiveWifiAlpha, contrastDotPaint)
+                    }
+
+                    dotPaint.color = Color.argb((baseAlpha * segOpacity).toInt(), red, green, blue)
+                    canvas.drawCircle(dotX, dotY, (arcThicknessPx / 2f) * effectiveWifiAlpha, dotPaint)
+                }
             }
         }
 

@@ -372,10 +372,12 @@ class DuoOverlayHandler(
     private fun updateCurrentSignal() {
         mainHandler.post {
             var level = -1
+            var isWifi = false
 
             val activeNetwork = connectivityManager?.activeNetwork
             val capabilities = activeNetwork?.let { connectivityManager?.getNetworkCapabilities(it) }
             if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+                isWifi = true
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     val transportInfo = capabilities.transportInfo
                     if (transportInfo is WifiInfo) {
@@ -405,6 +407,7 @@ class DuoOverlayHandler(
             }
 
             if (level == -1) {
+                isWifi = false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     try {
                         val signalStrength = telephonyManager?.signalStrength
@@ -415,6 +418,7 @@ class DuoOverlayHandler(
                 }
             }
 
+            overlayView?.isWifi = isWifi
             if (level >= 0) {
                 overlayView?.signalLevel = level
             }
@@ -825,6 +829,7 @@ class DuoOverlayHandler(
                 this.showBatteryPercentage = settingsRepository.isDuoShowBatteryPercentageEnabled()
                 this.isBatteryPercentageOnlyColored = settingsRepository.isDuoBatteryPercentageOnlyColoredEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
+                this.isDifferentiateWifi = settingsRepository.isDuoDifferentiateWifiEnabled()
                 this.showTime = settingsRepository.isDuoShowTimeEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
