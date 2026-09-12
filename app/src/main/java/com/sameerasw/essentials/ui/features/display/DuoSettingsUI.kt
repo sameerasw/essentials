@@ -340,6 +340,17 @@ fun DuoSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "duo_show_networks"),
             )
             IconToggleItem(
+                iconRes = R.drawable.rounded_schedule_24,
+                title = stringResource(R.string.duo_show_time_title),
+                isChecked = viewModel.isDuoShowTime.value,
+                enabled = viewModel.isDuoShowBattery.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoShowTime(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_time"),
+            )
+            IconToggleItem(
                 iconRes = R.drawable.rounded_motion_play_24,
                 title = stringResource(R.string.duo_show_media_title),
                 isChecked = viewModel.isDuoShowMedia.value,

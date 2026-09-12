@@ -140,6 +140,7 @@ class MainViewModel : ViewModel() {
     val isDuoBatteryCriticalColorEnabled = mutableStateOf(true)
     val duoBatteryCriticalColor = mutableStateOf("#F44336")
     val isDuoShowNetworks = mutableStateOf(true)
+    val isDuoShowTime = mutableStateOf(false)
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
     val isDuoShowFlashlight = mutableStateOf(true)
@@ -581,6 +582,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_TIME ->
+                        isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
 
                     SettingsRepository.KEY_DUO_SHOW_MEDIA ->
                         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
@@ -1861,6 +1865,7 @@ class MainViewModel : ViewModel() {
         isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
         duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
+        isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
@@ -4476,6 +4481,8 @@ class MainViewModel : ViewModel() {
         if (!enabled) {
             isDuoShowNetworks.value = false
             settingsRepository.setDuoShowNetworksEnabled(false)
+            isDuoShowTime.value = false
+            settingsRepository.setDuoShowTimeEnabled(false)
         }
     }
 
@@ -4512,6 +4519,19 @@ class MainViewModel : ViewModel() {
     fun setDuoShowNetworks(enabled: Boolean) {
         isDuoShowNetworks.value = enabled
         settingsRepository.setDuoShowNetworksEnabled(enabled)
+        if (enabled) {
+            isDuoShowTime.value = false
+            settingsRepository.setDuoShowTimeEnabled(false)
+        }
+    }
+
+    fun setDuoShowTime(enabled: Boolean) {
+        isDuoShowTime.value = enabled
+        settingsRepository.setDuoShowTimeEnabled(enabled)
+        if (enabled) {
+            isDuoShowNetworks.value = false
+            settingsRepository.setDuoShowNetworksEnabled(false)
+        }
     }
 
     fun setDuoShowMedia(enabled: Boolean) {

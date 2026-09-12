@@ -2478,6 +2478,7 @@
     <string name="duo_battery_critical_color_title">Critically low battery (&lt;10%)</string>
     <string name="duo_media_skip_apps_title">Select apps to skip</string>
     <string name="duo_show_networks_title">Networks</string>
+    <string name="duo_show_time_title">Time</string>
     <string name="duo_show_media_title">Media playback</string>
     <string name="duo_show_progress_title">Progress notifications</string>
     <string name="duo_show_flashlight_title">Flashlight</string>

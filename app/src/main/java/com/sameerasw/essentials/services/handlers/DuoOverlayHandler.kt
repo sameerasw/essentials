@@ -42,6 +42,7 @@ import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
+import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
@@ -60,6 +61,9 @@ import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.FlashlightUtil
 import com.sameerasw.essentials.utils.OverlayHelper
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -228,6 +232,53 @@ class DuoOverlayHandler(
         }
     }
     private var isBatteryReceiverRegistered = false
+
+    private val timeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            updateCurrentTime()
+        }
+    }
+    private var isTimeReceiverRegistered = false
+
+    private fun updateCurrentTime() {
+        val is24Hour = DateFormat.is24HourFormat(service)
+        val pattern = if (is24Hour) "H:mm" else "h:mm"
+        val formattedTime = SimpleDateFormat(pattern, Locale.getDefault()).format(Date())
+        overlayView?.currentTimeText = formattedTime
+    }
+
+    private fun registerTimeReceiver() {
+        if (!isTimeReceiverRegistered) {
+            val filter = IntentFilter().apply {
+                addAction(Intent.ACTION_TIME_TICK)
+                addAction(Intent.ACTION_TIME_CHANGED)
+                addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            }
+            try {
+                ContextCompat.registerReceiver(
+                    service,
+                    timeReceiver,
+                    filter,
+                    ContextCompat.RECEIVER_NOT_EXPORTED
+                )
+                isTimeReceiverRegistered = true
+            } catch (_: Exception) {
+                try {
+                    service.registerReceiver(timeReceiver, filter)
+                    isTimeReceiverRegistered = true
+                } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private fun unregisterTimeReceiver() {
+        if (isTimeReceiverRegistered) {
+            try {
+                service.unregisterReceiver(timeReceiver)
+            } catch (_: Exception) {}
+            isTimeReceiverRegistered = false
+        }
+    }
 
     private var isScreenOff: Boolean = false
     var isFullscreen: Boolean = false
@@ -714,6 +765,7 @@ class DuoOverlayHandler(
                 } catch (_: Exception) {}
                 this.showBattery = settingsRepository.isDuoShowBatteryEnabled()
                 this.showNetworks = settingsRepository.isDuoShowNetworksEnabled()
+                this.showTime = settingsRepository.isDuoShowTimeEnabled()
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
                 this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
@@ -737,6 +789,13 @@ class DuoOverlayHandler(
                 }
             } else {
                 overlayView?.invalidate()
+            }
+
+            if (settingsRepository.isDuoShowTimeEnabled()) {
+                registerTimeReceiver()
+                updateCurrentTime()
+            } else {
+                unregisterTimeReceiver()
             }
 
             val isTouchEnabled = settingsRepository.getDuoTapAction() != null ||
@@ -1087,6 +1146,7 @@ class DuoOverlayHandler(
                 isTouchAnchorAdded = false
             }
             unregisterBatteryReceiver()
+            unregisterTimeReceiver()
             unregisterSignalListeners()
             unregisterMediaSessionListener()
             unregisterProgressNotificationListener()
