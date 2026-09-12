@@ -458,6 +458,18 @@ fun StatusGlanceSettingsUI(
                         },
                         modifier = Modifier.highlight(highlightSetting == "status_glance_hide_in_quick_settings"),
                     )
+
+                    IconToggleItem(
+                        title = stringResource(R.string.status_glance_hide_when_locked_title),
+                        description = stringResource(R.string.status_glance_hide_when_locked_desc),
+                        iconRes = R.drawable.rounded_lock_24,
+                        isChecked = viewModel.isStatusGlanceHideWhenLocked.value,
+                        onCheckedChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setStatusGlanceHideWhenLocked(it)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "status_glance_hide_when_locked"),
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

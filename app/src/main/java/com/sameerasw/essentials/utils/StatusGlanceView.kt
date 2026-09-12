@@ -182,6 +182,14 @@ class StatusGlanceView(context: Context) : View(context) {
             }
         }
 
+    var hideWhenLocked: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                updateVisibilityState()
+            }
+        }
+
     var isFullscreen: Boolean = false
         set(value) {
             if (field != value) {
@@ -824,7 +832,7 @@ class StatusGlanceView(context: Context) : View(context) {
     }
 
     fun updateVisibilityState(immediate: Boolean = false) {
-        val shouldHide = isLocked || isScreenOff || isLandscape || (isFullscreen && hideWhenFullscreen) || (isShadeExpanded && hideInQuickSettings)
+        val shouldHide = (isLocked && hideWhenLocked) || isScreenOff || isLandscape || (isFullscreen && hideWhenFullscreen) || (isShadeExpanded && hideInQuickSettings)
         if (isVisibilityHidden == shouldHide && !immediate) return
         isVisibilityHidden = shouldHide
 

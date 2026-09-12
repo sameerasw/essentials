@@ -416,6 +416,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_BATTERY_ICON_SIZE = "status_glance_battery_icon_size"
         const val KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN = "status_glance_hide_when_fullscreen"
         const val KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS = "status_glance_hide_in_quick_settings"
+        const val KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED = "status_glance_hide_when_locked"
         const val KEY_STATUS_GLANCE_TAP_ACTION = "status_glance_tap_action"
         const val KEY_STATUS_GLANCE_DOUBLE_TAP_ACTION = "status_glance_double_tap_action"
         const val KEY_STATUS_GLANCE_LONG_PRESS_ACTION = "status_glance_long_press_action"
@@ -3279,6 +3280,9 @@ class SettingsRepository(
 
     fun isStatusGlanceHideInQuickSettingsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS, true)
     fun setStatusGlanceHideInQuickSettingsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS, enabled)
+
+    fun isStatusGlanceHideWhenLockedEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED, true)
+    fun setStatusGlanceHideWhenLockedEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED, enabled)
 
     fun isStatusGlanceShowBatteryEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_BATTERY, false)
     fun setStatusGlanceShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_BATTERY, enabled)
