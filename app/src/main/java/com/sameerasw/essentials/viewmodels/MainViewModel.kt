@@ -179,6 +179,7 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
     val isStatusGlanceHideWhenFullscreen = mutableStateOf(true)
     val isStatusGlanceHideInQuickSettings = mutableStateOf(true)
+    val isStatusGlanceHideWhenLocked = mutableStateOf(true)
     val isStatusGlanceShowBattery = mutableStateOf(false)
     val statusGlanceBatteryDisplayMode = mutableStateOf("icon")
     val isStatusGlanceBatteryShowLow = mutableStateOf(true)
@@ -723,6 +724,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS ->
                         isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED ->
+                        isStatusGlanceHideWhenLocked.value = settingsRepository.isStatusGlanceHideWhenLockedEnabled()
 
                     SettingsRepository.KEY_STATUS_GLANCE_SHOW_BATTERY ->
                         isStatusGlanceShowBattery.value = settingsRepository.isStatusGlanceShowBatteryEnabled()
@@ -2029,6 +2033,7 @@ class MainViewModel : ViewModel() {
         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
         isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
+        isStatusGlanceHideWhenLocked.value = settingsRepository.isStatusGlanceHideWhenLockedEnabled()
         isStatusGlanceShowBattery.value = settingsRepository.isStatusGlanceShowBatteryEnabled()
         statusGlanceBatteryDisplayMode.value = settingsRepository.getStatusGlanceBatteryDisplayMode()
         isStatusGlanceBatteryShowLow.value = settingsRepository.isStatusGlanceBatteryShowLowEnabled()
@@ -4926,6 +4931,11 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceHideInQuickSettings(enabled: Boolean) {
         isStatusGlanceHideInQuickSettings.value = enabled
         settingsRepository.setStatusGlanceHideInQuickSettingsEnabled(enabled)
+    }
+
+    fun setStatusGlanceHideWhenLocked(enabled: Boolean) {
+        isStatusGlanceHideWhenLocked.value = enabled
+        settingsRepository.setStatusGlanceHideWhenLockedEnabled(enabled)
     }
 
     fun setStatusGlanceShowBattery(enabled: Boolean) {

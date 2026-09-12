@@ -226,6 +226,7 @@ class StatusGlanceHandler(
             v.useBackgroundPill = settingsRepository.isStatusGlanceBackgroundPillEnabled()
             v.hideWhenFullscreen = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
             v.hideInQuickSettings = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
+            v.hideWhenLocked = settingsRepository.isStatusGlanceHideWhenLockedEnabled()
             v.maxWidthDp = settingsRepository.getStatusGlanceMaxWidth()
             v.fontSize = settingsRepository.getStatusGlanceFontSize()
             v.isFlashlightOn = isFlashlightOn

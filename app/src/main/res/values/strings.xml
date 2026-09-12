@@ -2539,6 +2539,8 @@
     <string name="status_glance_background_pill_desc">Using material you colors</string>
     <string name="status_glance_hide_in_quick_settings_title">Hide in quick settings</string>
     <string name="status_glance_hide_in_quick_settings_desc">Automatically hide when notification shade or quick settings is expanded</string>
+    <string name="status_glance_hide_when_locked_title">Hide on lock screen</string>
+    <string name="status_glance_hide_when_locked_desc">Hide the chip while the device is locked</string>
     <string name="status_glance_slot_flashlight">Flashlight On</string>
     <string name="status_glance_show_battery_title">Battery</string>
     <string name="status_glance_show_battery_desc">Display battery indicator on the right side of the pill</string>
