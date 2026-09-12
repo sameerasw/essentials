@@ -2472,8 +2472,13 @@
     <string name="duo_section_style">Style</string>
     <string name="duo_section_what_to_show">What to show</string>
     <string name="duo_show_battery_title">Battery</string>
+    <string name="duo_show_battery_percentage_title">Battery percentage</string>
+    <string name="duo_battery_percentage_options_title">Battery percentage options</string>
+    <string name="duo_battery_percentage_only_colored_title">Only for colored instances</string>
+    <string name="duo_battery_percentage_only_colored_desc">Show percentage only when charging, in battery saver, or at low battery levels</string>
     <string name="duo_battery_options_title">Battery options</string>
     <string name="duo_battery_charging_color_title">Charging</string>
+    <string name="duo_battery_charging_color_auto">Auto charging speed</string>
     <string name="duo_battery_power_save_color_title">Battery saver</string>
     <string name="duo_battery_low_color_title">Low battery (&lt;20%)</string>
     <string name="duo_battery_critical_color_title">Critically low battery (&lt;10%)</string>

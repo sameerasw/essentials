@@ -10,7 +10,6 @@
 package com.sameerasw.essentials.ui.core.pickers
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,18 +22,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
-import androidx.compose.ui.draw.clip
 
 val DUO_PRESET_COLORS =
     listOf(
@@ -62,9 +67,13 @@ fun ColorSwatchPicker(
     onColorSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
     colors: List<String> = DUO_PRESET_COLORS,
+    allowAuto: Boolean = false,
 ) {
+    val effectiveColors = remember(colors, allowAuto) {
+        if (allowAuto) listOf("auto") + colors else colors
+    }
     val view = LocalView.current
-    val carouselState = rememberCarouselState { colors.size }
+    val carouselState = rememberCarouselState { effectiveColors.size }
 
     Box(
         modifier =
@@ -86,45 +95,87 @@ fun ColorSwatchPicker(
                     .fillMaxWidth()
                     .height(48.dp),
         ) { index ->
-            val colorHex = colors[index]
+            val colorHex = effectiveColors[index]
+            val isAuto = colorHex.equals("auto", ignoreCase = true)
             val isSelected = colorHex.equals(selectedColorHex, ignoreCase = true)
-            val parsedColor =
-                try {
-                    Color(android.graphics.Color.parseColor(colorHex))
-                } catch (_: Exception) {
-                    MaterialTheme.colorScheme.primary
-                }
 
-            val isLightColor =
-                try {
-                    val c = android.graphics.Color.parseColor(colorHex)
-                    val r = android.graphics.Color.red(c) / 255.0
-                    val g = android.graphics.Color.green(c) / 255.0
-                    val b = android.graphics.Color.blue(c) / 255.0
-                    (0.299 * r + 0.587 * g + 0.114 * b) > 0.5
-                } catch (_: Exception) {
-                    false
-                }
-
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .maskClip(RoundedCornerShape(14.dp))
-                        .background(parsedColor)
-                        .clickable {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onColorSelected(colorHex)
-                        },
-                contentAlignment = Alignment.Center,
-            ) {
-                if (isSelected) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_check_24),
-                        contentDescription = null,
-                        tint = if (isLightColor) Color.Black else Color.White,
-                        modifier = Modifier.size(18.dp),
+            if (isAuto) {
+                val autoGradient =
+                    Brush.linearGradient(
+                        colors =
+                            listOf(
+                                Color(0xFF00E676), // Vibrant Spring Green (Standard)
+                                Color(0xFF00E5FF), // Electric Cyan (Fast)
+                            ),
                     )
+
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .maskClip(RoundedCornerShape(14.dp))
+                            .background(autoGradient)
+                            .clickable {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onColorSelected("auto")
+                            },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (isSelected) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_check_24),
+                            contentDescription = stringResource(R.string.duo_battery_charging_color_auto),
+                            tint = Color(0xFF003822),
+                            modifier = Modifier.size(18.dp),
+                        )
+                    } else {
+                        Text(
+                            text = "A",
+                            color = Color(0xFF003822),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                        )
+                    }
+                }
+            } else {
+                val parsedColor =
+                    try {
+                        Color(android.graphics.Color.parseColor(colorHex))
+                    } catch (_: Exception) {
+                        MaterialTheme.colorScheme.primary
+                    }
+
+                val isLightColor =
+                    try {
+                        val c = android.graphics.Color.parseColor(colorHex)
+                        val r = android.graphics.Color.red(c) / 255.0
+                        val g = android.graphics.Color.green(c) / 255.0
+                        val b = android.graphics.Color.blue(c) / 255.0
+                        (0.299 * r + 0.587 * g + 0.114 * b) > 0.5
+                    } catch (_: Exception) {
+                        false
+                    }
+
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .maskClip(RoundedCornerShape(14.dp))
+                            .background(parsedColor)
+                            .clickable {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onColorSelected(colorHex)
+                            },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (isSelected) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_check_24),
+                            contentDescription = null,
+                            tint = if (isLightColor) Color.Black else Color.White,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
                 }
             }
         }
