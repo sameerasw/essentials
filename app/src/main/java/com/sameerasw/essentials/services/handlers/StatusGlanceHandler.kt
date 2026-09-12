@@ -37,7 +37,10 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.StatusGlanceView
 import java.text.SimpleDateFormat
@@ -99,9 +102,11 @@ class StatusGlanceHandler(
 
     private val activeSessionsListener =
         MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
-            val active = controllers?.firstOrNull {
+            val excludedPackages = getExcludedPackages()
+            val valid = controllers?.filter { !excludedPackages.contains(it.packageName) }
+            val active = valid?.firstOrNull {
                 it.playbackState?.state == PlaybackState.STATE_PLAYING
-            } ?: controllers?.firstOrNull()
+            } ?: valid?.firstOrNull()
 
             if (active?.sessionToken != activeMediaController?.sessionToken) {
                 activeMediaController?.unregisterCallback(mediaCallback)
@@ -410,13 +415,30 @@ class StatusGlanceHandler(
         isMediaSessionRegistered = false
     }
 
+    private fun getExcludedPackages(): Set<String> {
+        val excludedAppsJson = settingsRepository.getString(SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, null)
+        return if (!excludedAppsJson.isNullOrBlank()) {
+            try {
+                val listType = object : TypeToken<List<AppSelection>>() {}.type
+                val apps: List<AppSelection> = Gson().fromJson(excludedAppsJson, listType) ?: emptyList()
+                apps.filter { it.isEnabled }.map { it.packageName }.toSet()
+            } catch (_: Exception) {
+                emptySet()
+            }
+        } else {
+            emptySet()
+        }
+    }
+
     private fun findActiveMediaSession() {
         try {
             val componentName = ComponentName(service, NotificationListener::class.java)
             val controllers = mediaSessionManager?.getActiveSessions(componentName)
-            val active = controllers?.firstOrNull {
+            val excludedPackages = getExcludedPackages()
+            val valid = controllers?.filter { !excludedPackages.contains(it.packageName) }
+            val active = valid?.firstOrNull {
                 it.playbackState?.state == PlaybackState.STATE_PLAYING
-            } ?: controllers?.firstOrNull()
+            } ?: valid?.firstOrNull()
 
             activeMediaController?.unregisterCallback(mediaCallback)
             activeMediaController = active
@@ -428,11 +450,15 @@ class StatusGlanceHandler(
     }
 
     private fun updateMediaState(playbackState: PlaybackState?, metadata: MediaMetadata?) {
-        val isPlaying = playbackState?.state == PlaybackState.STATE_PLAYING
-        val title = metadata?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
-        val artist = metadata?.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: ""
-        val artwork = metadata?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
-            ?: metadata?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+        val excludedPackages = getExcludedPackages()
+        val isExcluded = activeMediaController != null && excludedPackages.contains(activeMediaController?.packageName)
+        val isPlaying = !isExcluded && playbackState?.state == PlaybackState.STATE_PLAYING
+        val title = if (!isExcluded) metadata?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: "" else ""
+        val artist = if (!isExcluded) metadata?.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: "" else ""
+        val artwork = if (!isExcluded) {
+            metadata?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+                ?: metadata?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+        } else null
 
         mainHandler.post {
             glanceView?.let { v ->

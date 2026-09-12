@@ -40,6 +40,7 @@ import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
@@ -57,6 +58,7 @@ fun StatusGlanceSettingsUI(
     val view = LocalView.current
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+    var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.check(context)
@@ -235,9 +237,18 @@ fun StatusGlanceSettingsUI(
                         description = stringResource(R.string.status_glance_show_media_desc),
                         iconRes = R.drawable.rounded_motion_play_24,
                         isChecked = viewModel.isStatusGlanceShowMedia.value,
-                        onCheckedChange = {
+                        onCheckedChange = { isChecked ->
                             HapticUtil.performUIHaptic(view)
-                            viewModel.setStatusGlanceShowMedia(it)
+                            if (isChecked && !viewModel.isNotificationListenerEnabled.value) {
+                                requestingPermissionsFor = Pair(
+                                    R.string.feat_status_glance_title,
+                                    listOf(AppPermission.NOTIFICATION_LISTENER.key)
+                                )
+                            }
+                            viewModel.setStatusGlanceShowMedia(isChecked)
+                        },
+                        onSettingsClick = {
+                            showMediaAppSelectionSheet = true
                         },
                         modifier = Modifier.highlight(highlightSetting == "status_glance_show_media"),
                     )
@@ -282,5 +293,27 @@ fun StatusGlanceSettingsUI(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+    }
+
+    if (showMediaAppSelectionSheet) {
+        AppSelectionSheet(
+            title = stringResource(R.string.duo_media_skip_apps_title),
+            onDismissRequest = { showMediaAppSelectionSheet = false },
+            onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
+            onSaveApps = { ctx, apps ->
+                viewModel.saveAodWallpaperMediaApps(
+                    ctx,
+                    apps,
+                )
+            },
+            onAppToggle = { ctx, pkg, enabled ->
+                viewModel.updateAodWallpaperMediaAppEnabled(
+                    ctx,
+                    pkg,
+                    enabled,
+                )
+            },
+            context = context,
+        )
     }
 }
