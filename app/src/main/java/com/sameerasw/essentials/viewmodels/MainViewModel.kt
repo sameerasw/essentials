@@ -134,7 +134,7 @@ class MainViewModel : ViewModel() {
     val duoRingRadius = mutableFloatStateOf(1.0f)
     val isDuoShowBattery = mutableStateOf(true)
     val isDuoBatteryChargingColorEnabled = mutableStateOf(true)
-    val duoBatteryChargingColor = mutableStateOf("#00E676")
+    val duoBatteryChargingColor = mutableStateOf("auto")
     val isDuoBatteryPowerSaveColorEnabled = mutableStateOf(true)
     val duoBatteryPowerSaveColor = mutableStateOf("#FF9800")
     val isDuoBatteryLowColorEnabled = mutableStateOf(true)

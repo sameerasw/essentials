@@ -3123,7 +3123,7 @@ class SettingsRepository(
     fun isDuoBatteryChargingColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, true)
     fun setDuoBatteryChargingColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED, enabled)
 
-    fun getDuoBatteryChargingColor(): String = getString(KEY_DUO_BATTERY_CHARGING_COLOR, "#00E676") ?: "#00E676"
+    fun getDuoBatteryChargingColor(): String = getString(KEY_DUO_BATTERY_CHARGING_COLOR, "auto") ?: "auto"
     fun setDuoBatteryChargingColor(colorHex: String) = putString(KEY_DUO_BATTERY_CHARGING_COLOR, colorHex)
 
     fun isDuoBatteryPowerSaveColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED, true)

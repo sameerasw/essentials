@@ -178,6 +178,45 @@ class DuoOverlayHandler(
     }
 
     private var isChargingState = false
+    private var isFastChargingState = false
+
+    private fun isFastCharging(intent: Intent?, plugged: Int): Boolean {
+        if (intent == null) return plugged == BatteryManager.BATTERY_PLUGGED_AC
+
+        try {
+            // 1. Samsung One UI specific charging extras (guarded against ClassCastException on non-Samsung OEMs)
+            val chargerType = try { intent.getIntExtra("charger_type", -1) } catch (_: Exception) { -1 }
+            if (chargerType >= 2) return true
+
+            val chargeType = try { intent.getIntExtra("charge_type", -1) } catch (_: Exception) { -1 }
+            if (chargeType >= 3) return true
+
+            val isFastExtra = try {
+                intent.getBooleanExtra("fast_charge", false) || intent.getBooleanExtra("is_fast_charge", false)
+            } catch (_: Exception) { false }
+            if (isFastExtra) return true
+
+            // 2. Standard Android / AOSP charging wattage check (Pixel, Motorola, Xiaomi, Sony, etc.)
+            val maxCurrent = try { intent.getIntExtra("max_charging_current", -1) } catch (_: Exception) { -1 }
+            val maxVoltage = try { intent.getIntExtra("max_charging_voltage", -1) } catch (_: Exception) { -1 }
+            if (maxCurrent > 0 && maxVoltage > 0) {
+                val watts = (maxCurrent.toDouble() / 1_000_000.0) * (maxVoltage.toDouble() / 1_000_000.0)
+                if (watts >= 10.0) return true
+                if (watts > 0 && watts < 7.5) return false
+            } else if (maxCurrent >= 2_000_000) {
+                return true
+            }
+
+            // 3. Fallback based on power source
+            // USB port charging (PC/laptop) is standard/slow charging (green)
+            if (plugged == BatteryManager.BATTERY_PLUGGED_USB) return false
+
+            // AC wall chargers are predominantly fast charging on modern devices (cyan)
+            return plugged == BatteryManager.BATTERY_PLUGGED_AC
+        } catch (_: Exception) {
+            return plugged == BatteryManager.BATTERY_PLUGGED_AC
+        }
+    }
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -217,7 +256,8 @@ class DuoOverlayHandler(
                     else -> isChargingStatus || isPlugged
                 }
 
-                val isFastCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                val isFastCharging = isFastCharging(batteryIntent, plugged)
+                isFastChargingState = isFastCharging
 
                 if (action == Intent.ACTION_POWER_CONNECTED) {
                     isChargingState = true
@@ -759,9 +799,15 @@ class DuoOverlayHandler(
                     this.customColor = Color.parseColor(settingsRepository.getDuoCustomColor())
                 } catch (_: Exception) {}
                 this.isBatteryChargingColorEnabled = settingsRepository.isDuoBatteryChargingColorEnabled()
-                try {
-                    this.batteryChargingColor = Color.parseColor(settingsRepository.getDuoBatteryChargingColor())
-                } catch (_: Exception) {}
+                val chargingColorStr = settingsRepository.getDuoBatteryChargingColor()
+                if (chargingColorStr.equals("auto", ignoreCase = true)) {
+                    this.isChargingColorAuto = true
+                } else {
+                    this.isChargingColorAuto = false
+                    try {
+                        this.batteryChargingColor = Color.parseColor(chargingColorStr)
+                    } catch (_: Exception) {}
+                }
                 this.isBatteryPowerSaveColorEnabled = settingsRepository.isDuoBatteryPowerSaveColorEnabled()
                 try {
                     this.batteryPowerSaveColor = Color.parseColor(settingsRepository.getDuoBatteryPowerSaveColor())
@@ -781,7 +827,7 @@ class DuoOverlayHandler(
                 this.showMedia = settingsRepository.isDuoShowMediaEnabled()
                 this.showProgress = settingsRepository.isDuoShowProgressEnabled()
                 this.showFlashlight = settingsRepository.isDuoShowFlashlightEnabled()
-                this.setCharging(this@DuoOverlayHandler.isChargingState)
+                this.setCharging(this@DuoOverlayHandler.isChargingState, this@DuoOverlayHandler.isFastChargingState)
             }
 
             if (!isOverlayAdded) {
@@ -1054,7 +1100,8 @@ class DuoOverlayHandler(
                     val isPlugged = plugged > 0
                     if (isChargingStatus || isPlugged) {
                         isChargingState = true
-                        val isFast = plugged == BatteryManager.BATTERY_PLUGGED_AC
+                        val isFast = isFastCharging(it, plugged)
+                        isFastChargingState = isFast
                         overlayView?.setCharging(true, isFast)
                     }
                 }
