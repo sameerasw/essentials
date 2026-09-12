@@ -99,6 +99,7 @@ class DuoOverlayView(context: Context) : View(context) {
                 if (oldColors != newColors) {
                     animateThemeChange()
                 }
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -160,17 +161,55 @@ class DuoOverlayView(context: Context) : View(context) {
         set(value) {
             if (field != value) {
                 field = value
-                animateBatteryPercentageTransition(value)
+                updateBatteryPercentageVisibility()
             }
         }
+
+    var isBatteryPercentageOnlyColored: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateBatteryPercentageVisibility()
+            }
+        }
+
+    fun isBatteryColoredInstanceActive(): Boolean {
+        if (isCharging && isBatteryChargingColorEnabled) return true
+        if (isPowerSaveMode && isBatteryPowerSaveColorEnabled) return true
+        if (batteryLevel <= 10 && isBatteryCriticalColorEnabled) return true
+        if (batteryLevel <= 20 && isBatteryLowColorEnabled) return true
+        return false
+    }
+
+    fun isBatteryPercentageActive(): Boolean {
+        if (!showBatteryPercentage) return false
+        if (isBatteryPercentageOnlyColored) {
+            return isBatteryColoredInstanceActive()
+        }
+        return true
+    }
+
+    private fun updateBatteryPercentageVisibility(animate: Boolean = true) {
+        val target = isBatteryPercentageActive()
+        if (animate) {
+            animateBatteryPercentageTransition(target)
+        } else {
+            batteryPercentageAnimator?.cancel()
+            animatedBatteryPercentageFraction = if (target) 1.0f else 0.0f
+            invalidate()
+        }
+    }
 
     private var animatedBatteryPercentageFraction: Float = 0f
     private var batteryPercentageAnimator: ValueAnimator? = null
 
     private fun animateBatteryPercentageTransition(visible: Boolean) {
-        batteryPercentageAnimator?.cancel()
-        val start = animatedBatteryPercentageFraction
         val target = if (visible) 1.0f else 0.0f
+        if (batteryPercentageAnimator?.isRunning == true) {
+            batteryPercentageAnimator?.cancel()
+        }
+        val start = animatedBatteryPercentageFraction
+        if (kotlin.math.abs(start - target) < 0.001f) return
         batteryPercentageAnimator = ValueAnimator.ofFloat(start, target).apply {
             duration = 300L
             interpolator = PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f)
@@ -247,6 +286,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -273,6 +313,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -289,6 +330,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -305,6 +347,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -394,6 +437,7 @@ class DuoOverlayView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 animateThemeChange()
+                updateBatteryPercentageVisibility()
             }
         }
 
@@ -434,6 +478,7 @@ class DuoOverlayView(context: Context) : View(context) {
         if (isChargingAnnounce) {
             isChargingAnnounce = false
             updateActiveProgressMode()
+            updateBatteryPercentageVisibility()
         }
     }
 
@@ -602,13 +647,13 @@ class DuoOverlayView(context: Context) : View(context) {
         this.isFastCharging = isFastCharging
         this.isChargingAnnounce = true
         this.isChargingThemeActive = false
+        updateBatteryPercentageVisibility()
 
         removeCallbacks(revertChargingRunnable)
         postDelayed(revertChargingRunnable, 4000L)
 
         updateActiveProgressMode()
 
-        batteryPercentageAnimator?.cancel()
         tracerAnimator?.cancel()
         tracerAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 800
@@ -662,11 +707,13 @@ class DuoOverlayView(context: Context) : View(context) {
             removeCallbacks(revertChargingRunnable)
             updateActiveProgressMode()
             animateThemeChange()
+            updateBatteryPercentageVisibility()
         } else if (wasCharging != isCharging) {
             if (!isChargingAnnounce) {
                 isChargingThemeActive = true
                 animateThemeChange()
             }
+            updateBatteryPercentageVisibility()
         }
     }
 
@@ -1230,7 +1277,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
         currentProgressColor = progress
-        animatedBatteryPercentageFraction = if (showBatteryPercentage) 1.0f else 0.0f
+        animatedBatteryPercentageFraction = if (isBatteryPercentageActive()) 1.0f else 0.0f
         currentDotBaseColor = dot
         trackPaint.color = currentTrackColor
         progressPaint.color = currentProgressColor
@@ -1292,7 +1339,7 @@ class DuoOverlayView(context: Context) : View(context) {
         val contrastAlpha = (baseContrastAlpha * animatedVisibilityAlpha).toInt()
 
         val bpFraction = animatedBatteryPercentageFraction
-        val isSplitBatteryActive = (bpFraction > 0.001f || showBatteryPercentage) && animatedCustomFraction < 0.5f && showBattery
+        val isSplitBatteryActive = (bpFraction > 0.001f || isBatteryPercentageActive()) && animatedCustomFraction < 0.5f && showBattery
 
         if (isSplitBatteryActive) {
             val batteryText = batteryLevel.toString()
