@@ -232,6 +232,7 @@ class StatusGlanceHandler(
 
             v.showBattery = settingsRepository.isStatusGlanceShowBatteryEnabled()
             v.batteryDisplayMode = settingsRepository.getStatusGlanceBatteryDisplayMode()
+            v.batteryIconSizeDp = settingsRepository.getStatusGlanceBatteryIconSize()
             v.showBatteryWhenLow = settingsRepository.isStatusGlanceBatteryShowLowEnabled()
             v.showBatteryWhileCharging = settingsRepository.isStatusGlanceBatteryShowChargingEnabled()
             v.showBatteryWhileFull = settingsRepository.isStatusGlanceBatteryShowFullEnabled()

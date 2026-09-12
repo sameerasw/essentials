@@ -182,6 +182,7 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceBatteryShowCharging = mutableStateOf(true)
     val isStatusGlanceBatteryShowFull = mutableStateOf(true)
     val isStatusGlanceBatteryShowOtherwise = mutableStateOf(true)
+    val statusGlanceBatteryIconSize = mutableFloatStateOf(16f)
     val statusGlanceTapAction = mutableStateOf<Action?>(null)
     val statusGlanceDoubleTapAction = mutableStateOf<Action?>(null)
     val statusGlanceLongPressAction = mutableStateOf<Action?>(null)
@@ -728,6 +729,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE ->
                         isStatusGlanceBatteryShowOtherwise.value = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BATTERY_ICON_SIZE ->
+                        statusGlanceBatteryIconSize.floatValue = settingsRepository.getStatusGlanceBatteryIconSize()
 
                     SettingsRepository.KEY_STATUS_GLANCE_TAP_ACTION ->
                         statusGlanceTapAction.value = settingsRepository.getStatusGlanceTapAction()
@@ -2016,6 +2020,7 @@ class MainViewModel : ViewModel() {
         isStatusGlanceBatteryShowCharging.value = settingsRepository.isStatusGlanceBatteryShowChargingEnabled()
         isStatusGlanceBatteryShowFull.value = settingsRepository.isStatusGlanceBatteryShowFullEnabled()
         isStatusGlanceBatteryShowOtherwise.value = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
+        statusGlanceBatteryIconSize.floatValue = settingsRepository.getStatusGlanceBatteryIconSize()
         statusGlanceTapAction.value = settingsRepository.getStatusGlanceTapAction()
         statusGlanceDoubleTapAction.value = settingsRepository.getStatusGlanceDoubleTapAction()
         statusGlanceLongPressAction.value = settingsRepository.getStatusGlanceLongPressAction()
@@ -4919,6 +4924,11 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceBatteryShowOtherwise(enabled: Boolean) {
         isStatusGlanceBatteryShowOtherwise.value = enabled
         settingsRepository.setStatusGlanceBatteryShowOtherwiseEnabled(enabled)
+    }
+
+    fun setStatusGlanceBatteryIconSize(size: Float) {
+        statusGlanceBatteryIconSize.floatValue = size
+        settingsRepository.setStatusGlanceBatteryIconSize(size)
     }
 
     fun setStatusGlanceTapAction(action: Action?) {
