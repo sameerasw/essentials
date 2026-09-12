@@ -292,6 +292,7 @@ class StatusGlanceHandler(
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun getOverlayLayoutParams(): WindowManager.LayoutParams {
         val type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
 
@@ -299,7 +300,8 @@ class StatusGlanceHandler(
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
         )
 
         return WindowManager.LayoutParams(
@@ -326,8 +328,9 @@ class StatusGlanceHandler(
         updateTouchAnchor()
     }
 
+    @Suppress("DEPRECATION")
     private fun updateTouchAnchor() {
-        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || isLocked || isLandscape || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
+        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || (isLocked && settingsRepository.isStatusGlanceHideWhenLockedEnabled()) || isLandscape || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
             removeTouchAnchor()
             return
         }
@@ -365,7 +368,8 @@ class StatusGlanceHandler(
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
