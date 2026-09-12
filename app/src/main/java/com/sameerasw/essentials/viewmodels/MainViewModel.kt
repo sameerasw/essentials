@@ -176,6 +176,12 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
     val isStatusGlanceHideWhenFullscreen = mutableStateOf(true)
     val isStatusGlanceHideInQuickSettings = mutableStateOf(true)
+    val isStatusGlanceShowBattery = mutableStateOf(false)
+    val statusGlanceBatteryDisplayMode = mutableStateOf("icon")
+    val isStatusGlanceBatteryShowLow = mutableStateOf(true)
+    val isStatusGlanceBatteryShowCharging = mutableStateOf(true)
+    val isStatusGlanceBatteryShowFull = mutableStateOf(true)
+    val isStatusGlanceBatteryShowOtherwise = mutableStateOf(true)
 
     val snoozeChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
@@ -704,6 +710,24 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS ->
                         isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_SHOW_BATTERY ->
+                        isStatusGlanceShowBattery.value = settingsRepository.isStatusGlanceShowBatteryEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BATTERY_DISPLAY_MODE ->
+                        statusGlanceBatteryDisplayMode.value = settingsRepository.getStatusGlanceBatteryDisplayMode()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BATTERY_SHOW_LOW ->
+                        isStatusGlanceBatteryShowLow.value = settingsRepository.isStatusGlanceBatteryShowLowEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BATTERY_SHOW_CHARGING ->
+                        isStatusGlanceBatteryShowCharging.value = settingsRepository.isStatusGlanceBatteryShowChargingEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BATTERY_SHOW_FULL ->
+                        isStatusGlanceBatteryShowFull.value = settingsRepository.isStatusGlanceBatteryShowFullEnabled()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE ->
+                        isStatusGlanceBatteryShowOtherwise.value = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
 
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED ->
                         isScreenLockedSecurityEnabled.value =
@@ -1978,6 +2002,12 @@ class MainViewModel : ViewModel() {
         isStatusGlanceBackgroundPill.value = settingsRepository.isStatusGlanceBackgroundPillEnabled()
         isStatusGlanceHideWhenFullscreen.value = settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()
         isStatusGlanceHideInQuickSettings.value = settingsRepository.isStatusGlanceHideInQuickSettingsEnabled()
+        isStatusGlanceShowBattery.value = settingsRepository.isStatusGlanceShowBatteryEnabled()
+        statusGlanceBatteryDisplayMode.value = settingsRepository.getStatusGlanceBatteryDisplayMode()
+        isStatusGlanceBatteryShowLow.value = settingsRepository.isStatusGlanceBatteryShowLowEnabled()
+        isStatusGlanceBatteryShowCharging.value = settingsRepository.isStatusGlanceBatteryShowChargingEnabled()
+        isStatusGlanceBatteryShowFull.value = settingsRepository.isStatusGlanceBatteryShowFullEnabled()
+        isStatusGlanceBatteryShowOtherwise.value = settingsRepository.isStatusGlanceBatteryShowOtherwiseEnabled()
         loadSnoozeChannels(context)
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
@@ -4783,6 +4813,36 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceHideInQuickSettings(enabled: Boolean) {
         isStatusGlanceHideInQuickSettings.value = enabled
         settingsRepository.setStatusGlanceHideInQuickSettingsEnabled(enabled)
+    }
+
+    fun setStatusGlanceShowBattery(enabled: Boolean) {
+        isStatusGlanceShowBattery.value = enabled
+        settingsRepository.setStatusGlanceShowBatteryEnabled(enabled)
+    }
+
+    fun setStatusGlanceBatteryDisplayMode(mode: String) {
+        statusGlanceBatteryDisplayMode.value = mode
+        settingsRepository.setStatusGlanceBatteryDisplayMode(mode)
+    }
+
+    fun setStatusGlanceBatteryShowLow(enabled: Boolean) {
+        isStatusGlanceBatteryShowLow.value = enabled
+        settingsRepository.setStatusGlanceBatteryShowLowEnabled(enabled)
+    }
+
+    fun setStatusGlanceBatteryShowCharging(enabled: Boolean) {
+        isStatusGlanceBatteryShowCharging.value = enabled
+        settingsRepository.setStatusGlanceBatteryShowChargingEnabled(enabled)
+    }
+
+    fun setStatusGlanceBatteryShowFull(enabled: Boolean) {
+        isStatusGlanceBatteryShowFull.value = enabled
+        settingsRepository.setStatusGlanceBatteryShowFullEnabled(enabled)
+    }
+
+    fun setStatusGlanceBatteryShowOtherwise(enabled: Boolean) {
+        isStatusGlanceBatteryShowOtherwise.value = enabled
+        settingsRepository.setStatusGlanceBatteryShowOtherwiseEnabled(enabled)
     }
 
     fun setStatusGlanceMaxWidth(value: Float) {

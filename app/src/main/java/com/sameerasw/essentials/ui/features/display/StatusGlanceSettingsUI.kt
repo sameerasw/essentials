@@ -42,6 +42,7 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
@@ -59,6 +60,7 @@ fun StatusGlanceSettingsUI(
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
+    var showBatteryOptionsSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.check(context)
@@ -264,6 +266,20 @@ fun StatusGlanceSettingsUI(
                         },
                         modifier = Modifier.highlight(highlightSetting == "status_glance_show_time"),
                     )
+
+                    IconToggleItem(
+                        title = stringResource(R.string.status_glance_show_battery_title),
+                        iconRes = R.drawable.battery_android_frame_full_24px,
+                        isChecked = viewModel.isStatusGlanceShowBattery.value,
+                        onCheckedChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setStatusGlanceShowBattery(it)
+                        },
+                        onSettingsClick = {
+                            showBatteryOptionsSheet = true
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "status_glance_show_battery"),
+                    )
                 }
 
                 Text(
@@ -326,6 +342,13 @@ fun StatusGlanceSettingsUI(
                 )
             },
             context = context,
+        )
+    }
+
+    if (showBatteryOptionsSheet) {
+        StatusGlanceBatteryOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showBatteryOptionsSheet = false },
         )
     }
 }

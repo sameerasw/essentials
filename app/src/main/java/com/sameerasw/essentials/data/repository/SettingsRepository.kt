@@ -408,6 +408,12 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
+        const val KEY_STATUS_GLANCE_SHOW_BATTERY = "status_glance_show_battery"
+        const val KEY_STATUS_GLANCE_BATTERY_DISPLAY_MODE = "status_glance_battery_display_mode"
+        const val KEY_STATUS_GLANCE_BATTERY_SHOW_LOW = "status_glance_battery_show_low"
+        const val KEY_STATUS_GLANCE_BATTERY_SHOW_CHARGING = "status_glance_battery_show_charging"
+        const val KEY_STATUS_GLANCE_BATTERY_SHOW_FULL = "status_glance_battery_show_full"
+        const val KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE = "status_glance_battery_show_otherwise"
         const val KEY_STATUS_GLANCE_HIDE_WHEN_FULLSCREEN = "status_glance_hide_when_fullscreen"
         const val KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS = "status_glance_hide_in_quick_settings"
 
@@ -3258,5 +3264,23 @@ class SettingsRepository(
 
     fun isStatusGlanceHideInQuickSettingsEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS, true)
     fun setStatusGlanceHideInQuickSettingsEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_HIDE_IN_QUICK_SETTINGS, enabled)
+
+    fun isStatusGlanceShowBatteryEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_SHOW_BATTERY, false)
+    fun setStatusGlanceShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_SHOW_BATTERY, enabled)
+
+    fun getStatusGlanceBatteryDisplayMode(): String = getString(KEY_STATUS_GLANCE_BATTERY_DISPLAY_MODE, "icon") ?: "icon"
+    fun setStatusGlanceBatteryDisplayMode(mode: String) = putString(KEY_STATUS_GLANCE_BATTERY_DISPLAY_MODE, mode)
+
+    fun isStatusGlanceBatteryShowLowEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_LOW, true)
+    fun setStatusGlanceBatteryShowLowEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_LOW, enabled)
+
+    fun isStatusGlanceBatteryShowChargingEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_CHARGING, true)
+    fun setStatusGlanceBatteryShowChargingEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_CHARGING, enabled)
+
+    fun isStatusGlanceBatteryShowFullEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_FULL, true)
+    fun setStatusGlanceBatteryShowFullEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_FULL, enabled)
+
+    fun isStatusGlanceBatteryShowOtherwiseEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE, true)
+    fun setStatusGlanceBatteryShowOtherwiseEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_BATTERY_SHOW_OTHERWISE, enabled)
 }
 
