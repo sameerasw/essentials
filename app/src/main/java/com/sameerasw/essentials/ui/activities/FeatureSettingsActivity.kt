@@ -617,8 +617,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Always on Display",
                                                             "Statusbar icons",
                                                             "Status glance",
-                                                            "Maps power saving mode",
                                                             "Duo",
+                                                            "Maps power saving mode",
                                                             "Lock screen clock",
                                                         ),
                                                         listOf(
