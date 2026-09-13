@@ -36,3 +36,4 @@ build/
 local.properties
 .agents/
 *build.gradle.kts.bak
+gradle/wrapper/gradle-wrapper.jar

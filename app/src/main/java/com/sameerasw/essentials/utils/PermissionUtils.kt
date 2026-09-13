@@ -480,6 +480,7 @@ object PermissionUtils {
      * @param context [Context] Target context.
      * @return The resulting Boolean data.
      */
+    @Suppress("DEPRECATION")
     fun hasUsageStatsPermission(context: Context): Boolean {
         val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
         val mode =
@@ -577,4 +578,28 @@ object PermissionUtils {
     }
 
     fun hasStoragePermission(context: Context): Boolean = hasManageExternalStoragePermission(context)
+
+    /**
+     * Checks if the app has the RECEIVE_SENSITIVE_NOTIFICATIONS AppOp.
+     */
+    @Suppress("DEPRECATION")
+    fun hasSensitiveNotificationPermission(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < 34) return true // Only required on Android 14+
+        
+        try {
+            val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
+            val mode = appOps.unsafeCheckOpNoThrow(
+                "android:receive_sensitive_notifications",
+                android.os.Process.myUid(),
+                context.packageName,
+            )
+            return mode == android.app.AppOpsManager.MODE_ALLOWED
+        } catch (e: Exception) {
+            // Fallback: check via Shizuku if available, else assume false
+            if (ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
+                // We'll rely on the ViewModel state to maintain this if we can't check
+            }
+            return false
+        }
+    }
 }
