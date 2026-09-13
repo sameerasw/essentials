@@ -11,6 +11,7 @@ package com.sameerasw.essentials.services
 
 import android.app.Service
 import android.content.Intent
+import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -298,16 +299,11 @@ class InputEventListenerService : Service() {
     }
 
     private fun isAodShowing(): Boolean =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val display = display
-            display?.state == Display.STATE_DOZE || display?.state == Display.STATE_DOZE_SUSPEND
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            val windowManager =
-                getSystemService(WINDOW_SERVICE) as android.view.WindowManager
-            @Suppress("DEPRECATION")
-            val display = windowManager.defaultDisplay
-            display.state == Display.STATE_DOZE || display.state == Display.STATE_DOZE_SUSPEND
-        } else {
+        try {
+            val displayManager = getSystemService(DISPLAY_SERVICE) as? DisplayManager
+            val defaultDisplay = displayManager?.getDisplay(Display.DEFAULT_DISPLAY)
+            defaultDisplay?.state == Display.STATE_DOZE || defaultDisplay?.state == Display.STATE_DOZE_SUSPEND
+        } catch (_: Exception) {
             false
         }
 

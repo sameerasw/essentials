@@ -742,13 +742,20 @@ class ScreenOffAccessibilityService :
             if (appFlowHandler.isCameraApp(foregroundPackage)) {
                 return false
             }
+        }
 
-            val powerManager = getSystemService(POWER_SERVICE) as android.os.PowerManager
-            if (!powerManager.isInteractive && event.action == KeyEvent.ACTION_DOWN) {
+        val handled = buttonRemapHandler.onKeyEvent(event)
+        if (handled) {
+            return true
+        }
+
+        if (isVolumeKey) {
+            val powerManager = getSystemService(POWER_SERVICE) as? android.os.PowerManager
+            if (powerManager?.isInteractive == false && event.action == KeyEvent.ACTION_DOWN) {
                 triggerAmbientGlanceVolume(keyCode)
             }
         }
-        return buttonRemapHandler.onKeyEvent(event) || super.onKeyEvent(event)
+        return super.onKeyEvent(event)
     }
 
     private fun triggerAmbientGlanceVolume(keyCode: Int) {

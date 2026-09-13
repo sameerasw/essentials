@@ -12,6 +12,7 @@ package com.sameerasw.essentials.services.handlers
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.content.Intent
+import android.hardware.display.DisplayManager
 import android.media.AudioManager
 import android.os.Build
 import android.os.Handler
@@ -19,6 +20,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.view.Display
 import android.view.KeyEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
@@ -203,7 +205,7 @@ class ButtonRemapHandler(
             return true
         }
 
-        return false
+        return true
     }
 
     fun handleExternalVolumeLongPress(intent: Intent) {
@@ -273,15 +275,11 @@ class ButtonRemapHandler(
     }
 
     private fun isAodShowing(): Boolean =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val display = service.display
-            display?.state == android.view.Display.STATE_DOZE || display?.state == android.view.Display.STATE_DOZE_SUSPEND
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            @Suppress("DEPRECATION")
-            val display =
-                (service.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager).defaultDisplay
-            display.state == android.view.Display.STATE_DOZE || display.state == android.view.Display.STATE_DOZE_SUSPEND
-        } else {
+        try {
+            val displayManager = service.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager
+            val display = displayManager?.getDisplay(Display.DEFAULT_DISPLAY)
+            display?.state == Display.STATE_DOZE || display?.state == Display.STATE_DOZE_SUSPEND
+        } catch (_: Exception) {
             false
         }
 }
