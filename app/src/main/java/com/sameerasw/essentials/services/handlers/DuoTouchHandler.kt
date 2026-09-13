@@ -10,17 +10,23 @@
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
+import android.graphics.RectF
 import android.media.AudioManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.HapticUtil
@@ -44,6 +50,9 @@ class DuoTouchHandler(
     var cameraCenterY: Float = 0f
     var cameraRadiusPx: Float = 36f
     var ringRadiusScale: Float = 1.0f
+
+    var onNotificationDismissRequested: (() -> Unit)? = null
+    var onNotificationTouchActive: (() -> Unit)? = null
 
     private var downX: Float = 0f
     private var downY: Float = 0f
@@ -96,13 +105,40 @@ class DuoTouchHandler(
     }
 
     fun onTouchEvent(event: MotionEvent): Boolean {
-        if (cameraCenterX <= 0f && cameraCenterY <= 0f) return false
-
         val x = event.rawX
         val y = event.rawY
+        val isNotifActive = overlayView?.isNotificationAlertActive == true
+
+        if (!isNotifActive && cameraCenterX <= 0f && cameraCenterY <= 0f) return false
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
+                if (isNotifActive) {
+                    val pillBounds = overlayView?.getNotificationPillBounds()
+                    val targetBounds = overlayView?.getNotificationTargetBounds()
+                    val testBounds = if (targetBounds != null && !targetBounds.isEmpty) targetBounds else pillBounds
+                    val hitRect = if (testBounds != null) {
+                        RectF(testBounds).apply { inset(-16f * density, -16f * density) }
+                    } else null
+
+                    if (hitRect == null || hitRect.contains(x, y)) {
+                        isTouchActiveInCutout = true
+                        downX = x
+                        downY = y
+                        lastSlideX = x
+                        downTime = SystemClock.uptimeMillis()
+                        isLongPressTriggered = false
+                        isSwipeDownTriggered = false
+                        isTrackTriggered = false
+                        isTrackThresholdReached = false
+                        isSoundModeTriggered = false
+                        isVolumeOrBrightnessAdjusted = false
+                        onNotificationTouchActive?.invoke()
+                        overlayView?.triggerTapAnimation()
+                        return true
+                    }
+                }
+
                 val effectiveRadius = (cameraRadiusPx + 20f * density) * ringRadiusScale
                 val dist = hypot(x - cameraCenterX, y - cameraCenterY)
                 if (dist > effectiveRadius) {
@@ -163,6 +199,10 @@ class DuoTouchHandler(
 
                 if (isLongPressTriggered) return true
 
+                if (overlayView?.isNotificationAlertActive == true) {
+                    return true
+                }
+
                 val slideMode = getEffectiveSlideMode()
                 val swipeDownAction = settingsRepository.getDuoSwipeDownAction()
 
@@ -212,6 +252,31 @@ class DuoTouchHandler(
                         if (isInverted) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS
                     }
                     dispatchMediaKey(key)
+                }
+
+                val isNotifActive = overlayView?.isNotificationAlertActive == true
+                if (isNotifActive) {
+                    val deltaY = y - downY
+                    val isSwipeUp = deltaY < -touchSlopPx
+                    val isSwipeDown = deltaY > touchSlopPx * 1.5f
+
+                    if (isSwipeUp) {
+                        dismissNotification()
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.SUBTLE)
+                    } else if (isSwipeDown) {
+                        service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+                        dismissNotification()
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.DOUBLE)
+                    } else if (totalDist < touchSlopPx * 2.5f && elapsed < 800L) {
+                        val alert = overlayView?.getActiveNotificationAlert()
+                        if (alert != null) {
+                            launchNotificationApp(alert)
+                        }
+                        dismissNotification()
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
+                    }
+                    isTouchActiveInCutout = false
+                    return true
                 }
 
                 val didPerformAnyGesture = isLongPressTriggered ||
@@ -384,6 +449,49 @@ class DuoTouchHandler(
             return "track"
         }
         return settingsRepository.getDuoSlideMode()
+    }
+
+    private fun dismissNotification() {
+        onNotificationDismissRequested?.invoke() ?: overlayView?.dismissNotificationAlert()
+    }
+
+    private fun launchNotificationApp(alert: ActiveNotificationAlert) {
+        var launched = false
+        if (alert.contentIntent != null) {
+            try {
+                val options = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    ActivityOptions.makeBasic().apply {
+                        pendingIntentBackgroundActivityStartMode =
+                            ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+                    }.toBundle()
+                } else {
+                    null
+                }
+                alert.contentIntent.send(service, 0, null, null, null, null, options)
+                launched = true
+            } catch (e: Exception) {
+                Log.w("DuoTouchHandler", "contentIntent.send failed: ${e.message}")
+            }
+        }
+
+        if (!launched && alert.packageName.isNotBlank()) {
+            try {
+                val pm = service.packageManager
+                val launchIntent = pm.getLaunchIntentForPackage(alert.packageName)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                }
+                if (launchIntent != null) {
+                    service.startActivity(launchIntent)
+                    launched = true
+                }
+            } catch (e: Exception) {
+                Log.e("DuoTouchHandler", "startActivity fallback failed: ${e.message}")
+            }
+        }
+
+        if (!launched) {
+            service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+        }
     }
 }
 

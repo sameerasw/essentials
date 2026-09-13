@@ -285,9 +285,13 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_DUO_SWIPE_DOWN_ACTION ||
                 key == SettingsRepository.KEY_DUO_SLIDE_MODE ||
                 key == SettingsRepository.KEY_DUO_SLIDE_TRACK ||
-                key == SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ||
+                key == SettingsRepository.KEY_DUO_SHOW_NOTIFICATIONS ||
+                key == SettingsRepository.KEY_DUO_SUPPRESS_SYSTEM_HEADS_UP ||
                 key == SettingsRepository.KEY_ENABLE_UNSUPPORTED_FEATURES
             ) {
+                if (key == SettingsRepository.KEY_DUO_SUPPRESS_SYSTEM_HEADS_UP) {
+                    SettingsRepository(this).applyHeadsUpSuppression()
+                }
                 duoOverlayHandler.updateState()
             } else if (key?.startsWith("status_glance_") == true ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_ENABLED ||

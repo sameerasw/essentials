@@ -25,6 +25,7 @@ import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
+import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
@@ -43,6 +44,11 @@ class NotificationListener : NotificationListenerService() {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
     }
 
+    interface NotificationAlertListener {
+        fun onNotificationAlertPosted(alert: ActiveNotificationAlert)
+        fun onNotificationAlertRemoved(key: String)
+    }
+
     companion object {
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
@@ -54,6 +60,31 @@ class NotificationListener : NotificationListenerService() {
         var instance: NotificationListener? = null
 
         private val progressListeners = mutableListOf<ProgressNotificationListener>()
+        private val alertListeners = mutableListOf<NotificationAlertListener>()
+
+        fun addNotificationAlertListener(listener: NotificationAlertListener) {
+            synchronized(alertListeners) {
+                if (!alertListeners.contains(listener)) {
+                    alertListeners.add(listener)
+                }
+            }
+        }
+
+        fun removeNotificationAlertListener(listener: NotificationAlertListener) {
+            synchronized(alertListeners) {
+                alertListeners.remove(listener)
+            }
+        }
+
+        fun notifyAlertPosted(alert: ActiveNotificationAlert) {
+            val listenersCopy = synchronized(alertListeners) { alertListeners.toList() }
+            listenersCopy.forEach { it.onNotificationAlertPosted(alert) }
+        }
+
+        fun notifyAlertRemoved(key: String) {
+            val listenersCopy = synchronized(alertListeners) { alertListeners.toList() }
+            listenersCopy.forEach { it.onNotificationAlertRemoved(key) }
+        }
 
         fun addProgressNotificationListener(listener: ProgressNotificationListener) {
             synchronized(progressListeners) {
@@ -920,6 +951,13 @@ class NotificationListener : NotificationListenerService() {
             notifyProgressListeners(extractLatestProgressNotification())
         }
 
+        if (isHeadsUpNotification(sbn, rankingMap)) {
+            val alert = extractNotificationAlert(sbn)
+            if (alert != null) {
+                notifyAlertPosted(alert)
+            }
+        }
+
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         val isReallyLocked =
             isScreenLocked || !pm.isInteractive || com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
@@ -1274,6 +1312,7 @@ class NotificationListener : NotificationListenerService() {
         }
 
         notifyProgressListeners(extractLatestProgressNotification())
+        notifyAlertRemoved(sbn.key)
 
         // Trigger refresh if something is playing
         try {
@@ -1684,5 +1723,97 @@ class NotificationListener : NotificationListenerService() {
             extractProgressNotification(sbn)
         }
         return progressNotifs.maxByOrNull { it.postTime }
+    }
+
+    fun isHeadsUpNotification(
+        sbn: StatusBarNotification,
+        rankingMap: RankingMap? = null,
+    ): Boolean {
+        if (sbn.isOngoing) return false
+        if (sbn.packageName == packageName) return false
+        if (isMediaNotification(sbn)) return false
+        try {
+            val map = rankingMap ?: currentRanking
+            if (map != null) {
+                val ranking = Ranking()
+                if (map.getRanking(sbn.key, ranking)) {
+                    return ranking.importance >= android.app.NotificationManager.IMPORTANCE_DEFAULT
+                }
+            }
+            @Suppress("DEPRECATION")
+            return sbn.notification.priority >= Notification.PRIORITY_DEFAULT
+        } catch (e: Exception) {
+            android.util.Log.e("NotificationListener", "Error in isHeadsUpNotification", e)
+            return false
+        }
+    }
+
+    fun extractNotificationAlert(sbn: StatusBarNotification): ActiveNotificationAlert? {
+        val notif = sbn.notification ?: return null
+        val extras = notif.extras ?: return null
+
+        val title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString()
+            ?: extras.getCharSequence(Notification.EXTRA_TITLE_BIG)?.toString()
+            ?: return null
+
+        val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
+            ?: extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()
+            ?: ""
+
+        var bitmap: Bitmap? = null
+        try {
+            val largeIcon = notif.getLargeIcon()
+            if (largeIcon != null) {
+                val drawable = largeIcon.loadDrawable(this)
+                if (drawable != null) {
+                    bitmap = AppUtil.drawableToBitmap(drawable)
+                }
+            }
+        } catch (_: Exception) {}
+
+        if (bitmap == null) {
+            try {
+                val smallIcon = notif.smallIcon
+                if (smallIcon != null) {
+                    val drawable = smallIcon.loadDrawable(this)
+                    if (drawable != null) {
+                        bitmap = AppUtil.drawableToBitmap(drawable)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+
+        if (bitmap == null) {
+            try {
+                val appIconDrawable = packageManager.getApplicationIcon(sbn.packageName)
+                bitmap = AppUtil.drawableToBitmap(appIconDrawable)
+            } catch (_: Exception) {}
+        }
+
+        var appColor: Int? = null
+        if (notif.color != 0 && notif.color != android.graphics.Color.TRANSPARENT) {
+            appColor = notif.color
+        } else if (bitmap != null) {
+            try {
+                val palette = androidx.palette.graphics.Palette.from(bitmap).generate()
+                val vibrant = palette.getVibrantColor(0)
+                val dominant = palette.getDominantColor(0)
+                if (vibrant != 0) {
+                    appColor = vibrant
+                } else if (dominant != 0) {
+                    appColor = dominant
+                }
+            } catch (_: Exception) {}
+        }
+
+        return ActiveNotificationAlert(
+            key = sbn.key,
+            packageName = sbn.packageName,
+            title = title,
+            text = text,
+            icon = bitmap,
+            contentIntent = notif.contentIntent,
+            appColor = appColor,
+        )
     }
 }

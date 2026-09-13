@@ -151,6 +151,8 @@ class MainViewModel : ViewModel() {
     val isDuoShowMedia = mutableStateOf(true)
     val isDuoShowProgress = mutableStateOf(true)
     val isDuoShowFlashlight = mutableStateOf(true)
+    val isDuoShowNotifications = mutableStateOf(false)
+    val isDuoSuppressSystemHeadsUp = mutableStateOf(false)
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
@@ -648,6 +650,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ->
                         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
+
+                    SettingsRepository.KEY_DUO_SHOW_NOTIFICATIONS ->
+                        isDuoShowNotifications.value = settingsRepository.isDuoShowNotificationsEnabled()
+
+                    SettingsRepository.KEY_DUO_SUPPRESS_SYSTEM_HEADS_UP ->
+                        isDuoSuppressSystemHeadsUp.value = settingsRepository.isDuoSuppressSystemHeadsUpEnabled()
 
                     SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ->
                         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
@@ -2015,6 +2023,8 @@ class MainViewModel : ViewModel() {
         isDuoShowMedia.value = settingsRepository.isDuoShowMediaEnabled()
         isDuoShowProgress.value = settingsRepository.isDuoShowProgressEnabled()
         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
+        isDuoShowNotifications.value = settingsRepository.isDuoShowNotificationsEnabled()
+        isDuoSuppressSystemHeadsUp.value = settingsRepository.isDuoSuppressSystemHeadsUpEnabled()
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
@@ -4749,6 +4759,16 @@ class MainViewModel : ViewModel() {
     fun setDuoShowFlashlight(enabled: Boolean) {
         isDuoShowFlashlight.value = enabled
         settingsRepository.setDuoShowFlashlightEnabled(enabled)
+    }
+
+    fun setDuoShowNotifications(enabled: Boolean) {
+        isDuoShowNotifications.value = enabled
+        settingsRepository.setDuoShowNotificationsEnabled(enabled)
+    }
+
+    fun setDuoSuppressSystemHeadsUp(enabled: Boolean) {
+        isDuoSuppressSystemHeadsUp.value = enabled
+        settingsRepository.setDuoSuppressSystemHeadsUpEnabled(enabled)
     }
 
     fun setDuoHideWhenScreenOff(enabled: Boolean) {

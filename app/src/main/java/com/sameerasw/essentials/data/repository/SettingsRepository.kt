@@ -384,6 +384,8 @@ class SettingsRepository(
         const val KEY_DUO_SHOW_MEDIA = "duo_show_media"
         const val KEY_DUO_SHOW_PROGRESS = "duo_show_progress"
         const val KEY_DUO_SHOW_FLASHLIGHT = "duo_show_flashlight"
+        const val KEY_DUO_SHOW_NOTIFICATIONS = "duo_show_notifications"
+        const val KEY_DUO_SUPPRESS_SYSTEM_HEADS_UP = "duo_suppress_system_heads_up"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
@@ -3201,6 +3203,31 @@ class SettingsRepository(
 
     fun isDuoShowFlashlightEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_FLASHLIGHT, true)
     fun setDuoShowFlashlightEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_FLASHLIGHT, enabled)
+
+    fun isDuoShowNotificationsEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NOTIFICATIONS, false)
+    fun setDuoShowNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NOTIFICATIONS, enabled)
+
+    fun isDuoSuppressSystemHeadsUpEnabled(): Boolean = getBoolean(KEY_DUO_SUPPRESS_SYSTEM_HEADS_UP, false)
+    fun setDuoSuppressSystemHeadsUpEnabled(enabled: Boolean) {
+        putBoolean(KEY_DUO_SUPPRESS_SYSTEM_HEADS_UP, enabled)
+        applyHeadsUpSuppression(enabled)
+    }
+
+    fun applyHeadsUpSuppression(suppress: Boolean = isDuoSuppressSystemHeadsUpEnabled()) {
+        val targetValue = if (suppress) 0 else 1
+        try {
+            android.provider.Settings.Global.putInt(
+                context.contentResolver,
+                "heads_up_notifications_enabled",
+                targetValue,
+            )
+        } catch (_: SecurityException) {
+            com.sameerasw.essentials.utils.ShellUtils.runCommand(
+                context,
+                "settings put global heads_up_notifications_enabled $targetValue",
+            )
+        } catch (_: Exception) {}
+    }
 
     fun isDuoHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, true)
     fun setDuoHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF, enabled)

@@ -2492,6 +2492,10 @@
     <string name="duo_show_media_title">Media playback</string>
     <string name="duo_show_progress_title">Progress notifications</string>
     <string name="duo_show_flashlight_title">Flashlight</string>
+    <string name="duo_show_notifications_title">Notifications</string>
+    <string name="duo_show_notifications_desc">Show incoming alerts in an island pill around the camera</string>
+    <string name="duo_suppress_system_heads_up_title">Suppress system pop-ups</string>
+    <string name="duo_suppress_system_heads_up_desc">Prevent default Android heads-up banners from dropping down</string>
     <string name="duo_section_behavior">Behavior</string>
     <string name="duo_material_you_title">Use Material You colors</string>
     <string name="duo_hide_when_screen_off_title">Hide when screen off</string>

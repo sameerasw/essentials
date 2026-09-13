@@ -30,6 +30,7 @@ import android.view.animation.PathInterpolator
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
 import com.sameerasw.essentials.services.dreams.AmbientDreamService
 import kotlin.math.cos
 import kotlin.math.sin
@@ -248,15 +249,15 @@ class DuoOverlayView(context: Context) : View(context) {
     private fun updateVisibilityAnimation() {
         val isScreenOffHiding = if (hideWhenScreenOff) {
             if (hideWhenScreenOffOnlyIdle) {
-                !isCustomProgressActive()
+                !isCustomProgressActive() && !isNotificationAlertActive
             } else {
-                true
+                !isNotificationAlertActive
             }
         } else {
             false
         }
-        val isNoActivityHiding = !showBattery && !isCustomProgressActive()
-        val shouldHide = isFullscreen || (isScreenOff && isScreenOffHiding) || isNoActivityHiding
+        val isNoActivityHiding = !showBattery && !isCustomProgressActive() && !isNotificationAlertActive
+        val shouldHide = (isFullscreen && !isNotificationAlertActive) || (isScreenOff && isScreenOffHiding) || isNoActivityHiding
         if (shouldHide) {
             animateScreenOffVisibility(false)
         } else {
@@ -437,6 +438,16 @@ class DuoOverlayView(context: Context) : View(context) {
 
     var isCharging: Boolean = false
         private set
+
+    var showNotifications: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                if (!value && isNotificationAlertActive) {
+                    dismissNotificationAlert()
+                }
+            }
+        }
 
     var isFastCharging: Boolean = false
         set(value) {
@@ -924,6 +935,160 @@ class DuoOverlayView(context: Context) : View(context) {
         }
     }
 
+    private var activeNotificationAlert: ActiveNotificationAlert? = null
+    var isNotificationAlertActive: Boolean = false
+        private set
+    var animatedNotificationFraction: Float = 0f
+        private set
+    private var notificationAnimator: ValueAnimator? = null
+    private val notificationPillRect = RectF()
+    private val notificationIconClipPath = Path()
+
+    fun showNotificationAlert(alert: ActiveNotificationAlert) {
+        if (!showNotifications) return
+        activeNotificationAlert = alert
+        isNotificationAlertActive = true
+
+        notificationAnimator?.cancel()
+        val startVal = animatedNotificationFraction
+        notificationAnimator = ValueAnimator.ofFloat(startVal, 1.0f).apply {
+            duration = 380L
+            interpolator = OvershootInterpolator(1.05f)
+            addUpdateListener { anim ->
+                animatedNotificationFraction = anim.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+        updateVisibilityAnimation()
+    }
+
+    fun dismissNotificationAlert() {
+        if (!isNotificationAlertActive && animatedNotificationFraction <= 0f) return
+        notificationAnimator?.cancel()
+        val startVal = animatedNotificationFraction
+        notificationAnimator = ValueAnimator.ofFloat(startVal, 0.0f).apply {
+            duration = 260L
+            interpolator = DecelerateInterpolator()
+            addUpdateListener { anim ->
+                animatedNotificationFraction = anim.animatedValue as Float
+                invalidate()
+            }
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    isNotificationAlertActive = false
+                    activeNotificationAlert = null
+                    animatedNotificationFraction = 0f
+                    invalidate()
+                    updateVisibilityAnimation()
+                    onDismissAnimationEnd?.invoke()
+                }
+            })
+            start()
+        }
+    }
+
+    var onDismissAnimationEnd: (() -> Unit)? = null
+
+    fun getActiveNotificationAlert(): ActiveNotificationAlert? = activeNotificationAlert
+
+    fun getNotificationPillBounds(): RectF = notificationPillRect
+
+    fun getNotificationTargetBounds(): RectF {
+        val alert = activeNotificationAlert ?: return notificationPillRect
+        return computeNotificationTargetBounds(alert)
+    }
+
+    private fun computeNotificationDisplayText(alert: ActiveNotificationAlert): String {
+        val appName = try {
+            val pm = context.packageManager
+            val appInfo = pm.getApplicationInfo(alert.packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
+        } catch (_: Exception) {
+            ""
+        }
+
+        val cleanTitle = when {
+            appName.isNotBlank() && alert.title.startsWith("$appName: ", ignoreCase = true) ->
+                alert.title.substring(appName.length + 2).trim()
+            appName.isNotBlank() && alert.title.startsWith("$appName - ", ignoreCase = true) ->
+                alert.title.substring(appName.length + 3).trim()
+            appName.isNotBlank() && alert.title.startsWith("$appName • ", ignoreCase = true) ->
+                alert.title.substring(appName.length + 3).trim()
+            else -> alert.title.trim()
+        }
+
+        val isTitleAppName = cleanTitle.isBlank() ||
+            (appName.isNotBlank() && cleanTitle.equals(appName, ignoreCase = true)) ||
+            cleanTitle.equals(alert.packageName, ignoreCase = true) ||
+            cleanTitle.equals("WhatsApp", ignoreCase = true) ||
+            cleanTitle.equals("Messages", ignoreCase = true) ||
+            cleanTitle.equals("Telegram", ignoreCase = true) ||
+            cleanTitle.equals("Gmail", ignoreCase = true) ||
+            cleanTitle.equals("Instagram", ignoreCase = true) ||
+            cleanTitle.equals("Slack", ignoreCase = true) ||
+            cleanTitle.equals("Discord", ignoreCase = true) ||
+            cleanTitle.equals("Essentials", ignoreCase = true)
+
+        return when {
+            alert.text.isBlank() -> cleanTitle
+            isTitleAppName -> alert.text.trim()
+            alert.text.startsWith(cleanTitle, ignoreCase = true) -> alert.text.trim()
+            else -> "$cleanTitle: ${alert.text.trim()}"
+        }
+    }
+
+    private fun computeNotificationTargetBounds(alert: ActiveNotificationAlert): RectF {
+        val screenWidth = resources.displayMetrics.widthPixels.toFloat()
+        val targetPillHeight = (cameraRadiusPx * 2f + 18f * density).coerceIn(38f * density, 44f * density)
+        val targetTop = cameraCenterY - targetPillHeight / 2f
+        val targetBottom = cameraCenterY + targetPillHeight / 2f
+        val iconSize = (targetPillHeight - 16f * density).coerceIn(22f * density, 26f * density)
+
+        val isCenterCamera = kotlin.math.abs(cameraCenterX - screenWidth / 2f) < 50f * density
+
+        if (isCenterCamera) {
+            // Requirement 1: Move icon farther to the left so it is clear of the cutout ring
+            val spaceFromCutoutLeft = 30f * density
+            val leftWingWidth = iconSize + spaceFromCutoutLeft + 12f * density
+            val targetLeft = (cameraCenterX - cameraRadiusPx - leftWingWidth).coerceAtLeast(8f * density)
+
+            // Requirement 3: Space between cutout and icon on right or text
+            val spaceFromCutout = 26f * density
+            val textLeft = cameraCenterX + cameraRadiusPx + spaceFromCutout
+
+            // Requirement 2: Increase text size and lengthen right pill
+            val maxRight = (screenWidth - 66f * density).coerceAtMost(cameraCenterX + 165f * density)
+            val maxAvailableTextWidth = (maxRight - textLeft - 18f * density).coerceAtLeast(50f * density)
+
+            notificationBodyPaint.textSize = (16f * density).coerceIn(14f, 18f)
+
+            val displayText = computeNotificationDisplayText(alert)
+            val textWidth = notificationBodyPaint.measureText(displayText)
+            val neededContentWidth = (textWidth + 12f * density).coerceIn(80f * density, maxAvailableTextWidth)
+            val targetRight = (textLeft + neededContentWidth + 18f * density).coerceAtMost(maxRight)
+
+            return RectF(targetLeft, targetTop, targetRight, targetBottom)
+        } else {
+            val targetLeft = (cameraCenterX - cameraRadiusPx - 8f * density).coerceAtLeast(8f * density)
+            val spaceFromCutout = 24f * density
+            val iconLeft = cameraCenterX + cameraRadiusPx + spaceFromCutout
+            val textLeft = iconLeft + iconSize + 14f * density
+
+            val maxRight = (screenWidth - 48f * density).coerceAtMost(cameraCenterX + 280f * density)
+            val maxAvailableTextWidth = (maxRight - textLeft - 18f * density).coerceAtLeast(50f * density)
+
+            notificationBodyPaint.textSize = (16f * density).coerceIn(14f, 18f)
+
+            val displayText = computeNotificationDisplayText(alert)
+            val textWidth = notificationBodyPaint.measureText(displayText)
+            val neededContentWidth = (textWidth + 12f * density).coerceIn(80f * density, maxAvailableTextWidth)
+            val targetRight = (textLeft + neededContentWidth + 18f * density).coerceAtMost(maxRight)
+
+            return RectF(targetLeft, targetTop, targetRight, targetBottom)
+        }
+    }
+
     private var targetProgress: Float = 100f
     private var animatedProgress: Float = 100f
     private var progressAnimator: ValueAnimator? = null
@@ -1296,6 +1461,29 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.STROKE
     }
 
+    private val notificationPillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.BLACK
+    }
+
+    private val notificationPillBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 1f * density
+        color = Color.argb(45, 255, 255, 255)
+    }
+
+    private val notificationTitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        letterSpacing = -0.01f
+    }
+
+    private val notificationBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        letterSpacing = -0.01f
+    }
+
     init {
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
@@ -1353,19 +1541,27 @@ class DuoOverlayView(context: Context) : View(context) {
             cameraCenterY + baseRadius
         )
 
-        canvas.save()
-        canvas.translate(cameraCenterX, cameraCenterY + pullDownOffsetY)
-        canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
-        canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
-        canvas.translate(-cameraCenterX, -cameraCenterY)
+        val ringFadeAlpha = if (animatedNotificationFraction > 0.001f) {
+            (1f - animatedNotificationFraction * 6f).coerceIn(0f, 1f)
+        } else {
+            1.0f
+        }
+        val effectiveRingAlpha = animatedVisibilityAlpha * ringFadeAlpha
 
-        val r = Color.red(currentProgressColor) / 255.0
-        val g = Color.green(currentProgressColor) / 255.0
-        val b = Color.blue(currentProgressColor) / 255.0
-        val isProgressLight = (0.299 * r + 0.587 * g + 0.114 * b) > 0.45
-        val contrastColor = if (isProgressLight) Color.BLACK else Color.WHITE
-        val baseContrastAlpha = if (isProgressLight) 24 else 28
-        val contrastAlpha = (baseContrastAlpha * animatedVisibilityAlpha).toInt()
+        if (effectiveRingAlpha > 0.005f) {
+            canvas.save()
+            canvas.translate(cameraCenterX, cameraCenterY + pullDownOffsetY)
+            canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
+            canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
+            canvas.translate(-cameraCenterX, -cameraCenterY)
+
+            val r = Color.red(currentProgressColor) / 255.0
+            val g = Color.green(currentProgressColor) / 255.0
+            val b = Color.blue(currentProgressColor) / 255.0
+            val isProgressLight = (0.299 * r + 0.587 * g + 0.114 * b) > 0.45
+            val contrastColor = if (isProgressLight) Color.BLACK else Color.WHITE
+            val baseContrastAlpha = if (isProgressLight) 24 else 28
+            val contrastAlpha = (baseContrastAlpha * effectiveRingAlpha).toInt()
 
         val bpFraction = animatedBatteryPercentageFraction
         val isSplitBatteryActive = (bpFraction > 0.001f || isBatteryPercentageActive()) && animatedCustomFraction < 0.5f && showBattery
@@ -1768,7 +1964,147 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-        canvas.restore()
+            canvas.restore()
+        }
+
+        // Draw Duo Dynamic Island Notification Pill
+        if (animatedNotificationFraction > 0.005f && activeNotificationAlert != null) {
+            val alert = activeNotificationAlert!!
+            val fraction = animatedNotificationFraction.coerceIn(0f, 1f)
+            val screenWidth = resources.displayMetrics.widthPixels.toFloat()
+
+            // Requirement 2: Pick color from the app color or the Duo progress color
+            val appColor = alert.appColor
+            val accentColor = if (appColor != null && appColor != 0 && appColor != Color.TRANSPARENT) {
+                appColor
+            } else {
+                currentProgressColor
+            }
+
+            // Target bounds from geometry calculation
+            val targetBounds = computeNotificationTargetBounds(alert)
+            val targetLeft = targetBounds.left
+            val targetRight = targetBounds.right
+            val targetTop = targetBounds.top
+            val targetBottom = targetBounds.bottom
+
+            // Initial geometry matching Duo ring circle
+            val ringRadius = (cameraRadiusPx + 14f * density) * ringRadiusScale
+            val initialLeft = cameraCenterX - ringRadius
+            val initialRight = cameraCenterX + ringRadius
+            val initialTop = cameraCenterY - ringRadius
+            val initialBottom = cameraCenterY + ringRadius
+
+            // Smooth morphing interpolation
+            val currentLeft = initialLeft + (targetLeft - initialLeft) * fraction
+            val currentRight = initialRight + (targetRight - initialRight) * fraction
+            val currentTop = initialTop + (targetTop - initialTop) * fraction
+            val currentBottom = initialBottom + (targetBottom - initialBottom) * fraction
+            notificationPillRect.set(currentLeft, currentTop, currentRight, currentBottom)
+            val cornerRadius = (currentBottom - currentTop) / 2f
+
+            // OLED black background fill fades in smoothly as pill expands
+            notificationPillPaint.color = Color.BLACK
+            notificationPillPaint.alpha = (255 * animatedVisibilityAlpha * fraction).toInt()
+
+            // Contour border begins from Duo ring stroke and transitions to thin crisp contour
+            val initialStroke = arcThicknessPx
+            val finalStroke = 1.5f * density
+            val currentStroke = initialStroke + (finalStroke - initialStroke) * fraction
+            notificationPillBorderPaint.color = accentColor
+            notificationPillBorderPaint.strokeWidth = currentStroke
+            val borderAlpha = ((180 + 75 * (1f - fraction)) * animatedVisibilityAlpha * fraction.coerceAtLeast(0.15f)).toInt().coerceIn(0, 255)
+            notificationPillBorderPaint.alpha = borderAlpha
+
+            canvas.save()
+            if (tapBounceScale != 1.0f) {
+                canvas.scale(tapBounceScale, tapBounceScale, notificationPillRect.centerX(), notificationPillRect.centerY())
+            }
+
+            canvas.drawRoundRect(notificationPillRect, cornerRadius, cornerRadius, notificationPillPaint)
+            canvas.drawRoundRect(notificationPillRect, cornerRadius, cornerRadius, notificationPillBorderPaint)
+
+            if (fraction > 0.35f) {
+                val contentAlpha = ((fraction - 0.35f) / 0.65f).coerceIn(0f, 1f) * animatedVisibilityAlpha
+                val isCenterCamera = kotlin.math.abs(cameraCenterX - screenWidth / 2f) < 50f * density
+
+                if (isCenterCamera) {
+                    // Requirement 1: Icon farther to left, clear of cutout ring
+                    val iconSize = (currentBottom - currentTop - 16f * density).coerceIn(20f * density, 24f * density)
+                    val iconLeft = currentLeft + 10f * density
+                    val iconTop = cameraCenterY - iconSize / 2f
+                    val iconRect = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
+
+                    if (alert.icon != null) {
+                        iconPaint.alpha = (255 * contentAlpha).toInt()
+                        notificationIconClipPath.reset()
+                        notificationIconClipPath.addRoundRect(iconRect, iconSize * 0.28f, iconSize * 0.28f, Path.Direction.CW)
+                        canvas.save()
+                        canvas.clipPath(notificationIconClipPath)
+                        canvas.drawBitmap(alert.icon, null, iconRect, iconPaint)
+                        canvas.restore()
+                    }
+
+                    // Requirement 3: Space between cutout and icon on right or text
+                    val spaceFromCutout = 26f * density
+                    val textLeft = cameraCenterX + cameraRadiusPx + spaceFromCutout
+                    val maxAvailableTextWidth = (currentRight - textLeft - 18f * density).coerceAtLeast(50f * density)
+
+                    // Requirement 2: Do not display App name at top, single line of text
+                    notificationBodyPaint.textSize = (16f * density).coerceIn(14f, 18f)
+                    notificationBodyPaint.color = Color.WHITE
+                    notificationBodyPaint.alpha = (250 * contentAlpha).toInt()
+
+                    val displayText = computeNotificationDisplayText(alert)
+                    val ellipText = android.text.TextUtils.ellipsize(
+                        displayText,
+                        android.text.TextPaint(notificationBodyPaint),
+                        maxAvailableTextWidth,
+                        android.text.TextUtils.TruncateAt.END
+                    ).toString()
+
+                    val textY = cameraCenterY + notificationBodyPaint.textSize * 0.35f
+                    canvas.drawText(ellipText, textLeft, textY, notificationBodyPaint)
+                } else {
+                    // Corner camera layout: camera on left, icon, then single line of text on right
+                    val iconSize = (currentBottom - currentTop - 16f * density).coerceIn(22f * density, 26f * density)
+                    val spaceFromCutout = 24f * density
+                    val iconLeft = cameraCenterX + cameraRadiusPx + spaceFromCutout
+                    val iconTop = cameraCenterY - iconSize / 2f
+                    val iconRect = RectF(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
+
+                    if (alert.icon != null) {
+                        iconPaint.alpha = (255 * contentAlpha).toInt()
+                        notificationIconClipPath.reset()
+                        notificationIconClipPath.addRoundRect(iconRect, iconSize * 0.28f, iconSize * 0.28f, Path.Direction.CW)
+                        canvas.save()
+                        canvas.clipPath(notificationIconClipPath)
+                        canvas.drawBitmap(alert.icon, null, iconRect, iconPaint)
+                        canvas.restore()
+                    }
+
+                    val textLeft = iconLeft + iconSize + 14f * density
+                    val maxAvailableTextWidth = (currentRight - textLeft - 18f * density).coerceAtLeast(50f * density)
+
+                    notificationBodyPaint.textSize = (16f * density).coerceIn(14f, 18f)
+                    notificationBodyPaint.color = Color.WHITE
+                    notificationBodyPaint.alpha = (250 * contentAlpha).toInt()
+
+                    val displayText = computeNotificationDisplayText(alert)
+                    val ellipText = android.text.TextUtils.ellipsize(
+                        displayText,
+                        android.text.TextPaint(notificationBodyPaint),
+                        maxAvailableTextWidth,
+                        android.text.TextUtils.TruncateAt.END
+                    ).toString()
+
+                    val textY = cameraCenterY + notificationBodyPaint.textSize * 0.35f
+                    canvas.drawText(ellipText, textLeft, textY, notificationBodyPaint)
+                }
+            }
+
+            canvas.restore()
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -1785,6 +2121,7 @@ class DuoOverlayView(context: Context) : View(context) {
         tapAnimator?.cancel()
         pullDownAnimator?.cancel()
         trackRotationAnimator?.cancel()
+        notificationAnimator?.cancel()
     }
 }
 

@@ -413,6 +413,37 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                title = stringResource(R.string.duo_show_notifications_title),
+                description = stringResource(R.string.duo_show_notifications_desc),
+                isChecked = viewModel.isDuoShowNotifications.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !viewModel.isNotificationListenerEnabled.value) {
+                        requestingPermissionsFor = Pair(R.string.duo_title, listOf("NOTIFICATION_LISTENER"))
+                    } else {
+                        viewModel.setDuoShowNotifications(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_notifications"),
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_off_24,
+                title = stringResource(R.string.duo_suppress_system_heads_up_title),
+                description = stringResource(R.string.duo_suppress_system_heads_up_desc),
+                isChecked = viewModel.isDuoSuppressSystemHeadsUp.value,
+                enabled = viewModel.isDuoShowNotifications.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !com.sameerasw.essentials.utils.PermissionUtils.canWriteSecureSettings(context) && !ShellUtils.isAvailable(context)) {
+                        requestingPermissionsFor = Pair(R.string.duo_suppress_system_heads_up_title, listOf("WRITE_SECURE_SETTINGS"))
+                    } else {
+                        viewModel.setDuoSuppressSystemHeadsUp(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_suppress_system_heads_up"),
+            )
         }
 
         Text(

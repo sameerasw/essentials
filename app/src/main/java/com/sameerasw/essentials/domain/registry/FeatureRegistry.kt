@@ -683,6 +683,19 @@ object FeatureRegistry {
                 permissionKeys = listOf("ACCESSIBILITY"),
                 hasMoreSettings = true,
                 showToggle = true,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.duo_show_notifications_title,
+                            R.string.duo_show_notifications_desc,
+                            "duo_show_notifications",
+                        ),
+                        SearchSetting(
+                            R.string.duo_suppress_system_heads_up_title,
+                            R.string.duo_suppress_system_heads_up_desc,
+                            "duo_suppress_system_heads_up",
+                        ),
+                    ),
                 parentFeatureId = "Display",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isDuoEnabled.value
