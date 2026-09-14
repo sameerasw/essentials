@@ -36,7 +36,7 @@
     <string name="setting_use_usage_access_desc">Daripada aksesibilitas (Bekukan, Kunci App, Cahaya Malam Dinamis)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Hidupkan Remap tombol</string>
-    <string name="button_remap_use_shizuku_title">Gunakan Shizuku atau Root</string>
+    <string name="button_remap_use_shizuku_title">Gunakan Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Berfungsi ketika layar mati (Rekomendasi)</string>
     <string name="shizuku_not_running_toast">Shizuku tidak bekerja</string>
     <string name="shizuku_detected_prefix">Terdeteksi %1$s</string>
@@ -396,7 +396,7 @@
     <!-- Categories -->
     <string name="cat_tools">Tools</string>
     <string name="cat_visuals">Visuals</string>
-    <string name="cat_system">System</string>
+    <string name="cat_system">Sistem</string>
     <!-- UI Elements -->
     <string name="search_placeholder">Search Essentials</string>
     <string name="search_no_results">Tidak ditemukan untuk \"%1$s\"</string>
@@ -428,8 +428,8 @@
     <string name="feat_notification_lighting_desc">Nyalakan untuk pemberitahuan</string>
     <string name="feat_flashlight_pulse_desc">Detakkan lampu kilat untuk pemberitahuan</string>
     <string name="feat_sound_mode_tile_title">Sound mode tile</string>
-    <string name="feat_call_vibrations_title">Call vibrations</string>
-    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
+    <string name="feat_call_vibrations_title">Getaran panggilan</string>
+    <string name="feat_call_vibrations_desc">Getarkan untuk aksi panggilan</string>
     <string name="show_bluetooth_devices">Show Bluetooth devices</string>
     <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
     <string name="limit_max_devices">Batas perangkat maksimal</string>
@@ -510,7 +510,7 @@
     <string name="watermark_exif_iso">ISO</string>
     <string name="watermark_exif_shutter_speed">Shutter Speed</string>
     <string name="watermark_exif_date">Date &amp; Time</string>
-    <string name="watermark_move_to_top">Move to Top</string>
+    <string name="watermark_move_to_top">Pindah ke Atas</string>
     <string name="watermark_left_align">Align Left</string>
     <string name="watermark_text_size_brand">Brand Size</string>
     <string name="watermark_text_size_data">Data Size</string>
@@ -523,7 +523,7 @@
     <string name="watermark_border_corners">Round Corners</string>
     <string name="watermark_color_section">Color</string>
     <string name="watermark_logo_section">Logo</string>
-    <string name="watermark_logo_show">Show Logo</string>
+    <string name="watermark_logo_show">Tampilkan Logo</string>
     <string name="watermark_logo_size">Logo Size</string>
     <string name="watermark_edit_texts">Edit Watermark Texts</string>
     <string name="watermark_device_brand">Nama perangkat</string>
@@ -1390,7 +1390,7 @@
     <string name="soundtrigger_mode_allow">Allow</string>
     <string name="soundtrigger_mode_restrict">Restrict</string>
     <string name="soundtrigger_mode_critical">Critical Only</string>
-    <string name="feat_safe_volume_title">Disable safe volume warning</string>
+    <string name="feat_safe_volume_title">Matikan peringatan volume aman</string>
     <string name="feat_safe_volume_desc">Suppress loud volume dialog</string>
     <string name="about_desc_safe_volume">European regulations require smartphones to warn when going above certain volume levels (85dB). This warning must be shown once after every reboot or after 20 hours of continuous music playback. Use this toggle to disable it permanently.</string>
     <string name="instruction_section_safe_volume_title">Why disable safe volume warnings?</string>
@@ -1513,7 +1513,7 @@
     <string name="label_help_guide">Bantuan dan Pedoman</string>
     <string name="tab_your_android">Your Android</string>
     <string name="label_device_storage">Penyimpanan</string>
-    <string name="label_device_ram">Memory</string>
+    <string name="label_device_ram">Memori</string>
     <string name="label_use_blur">Gunakan blur</string>
     <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
@@ -1713,4 +1713,19 @@
     <string name="icon_network_speed">Kecepatan Jaringan</string>
     <string name="icon_glove_mode">Mode Sarung Tangan</string>
     <string name="icon_frame_rate">Rasio Penyegaran / Kisaran Bingkai</string>
+    <string name="feat_networks_title">Jaringan</string>
+    <string name="feat_networks_desc">Kontrol radio dan jaringan</string>
+    <string name="label_device_battery">Baterai</string>
+    <string name="label_battery_health">Kesehatan</string>
+    <string name="label_battery_temperature">Suhu</string>
+    <string name="label_battery_capacity">Kapasitas</string>
+    <string name="diy_category_apps">Aplikasi</string>
+    <string name="label_battery_capacity_health">Kapasitas Kesehatan</string>
+    <string name="label_battery_section_health">Kesehatan</string>
+    <string name="label_battery_section_charging">Mengisi</string>
+    <string name="label_battery_cycle_count">Siklus Terhitung</string>
+    <string name="label_battery_section_specs">Spesifikasi</string>
+    <string name="label_battery_voltage">Voltasi</string>
+    <string name="label_battery_technology">Teknologi</string>
+    <string name="sound_mode_use_shizuku_desc">Gunakan Shizuku untuk mengatur mode suara tanpa mengaktifkan DND</string>
 </resources>
