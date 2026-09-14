@@ -1473,7 +1473,7 @@
     <string name="feat_flashlight_title">Lanterna</string>
     <string name="feat_flashlight_desc">Melhorar o comportamento da lanterna</string>
     <string name="feat_notification_snoozing_title">Adiar notificações</string>
-    <string name="feat_notification_snoozing_desc">Remarcar notificações</string>
+    <string name="feat_notification_snoozing_desc">Re-agendar notificações</string>
     <string name="feat_safe_volume_title">Desativar aviso de volume seguro</string>
     <string name="feat_safe_volume_desc">Suprimir diálogo de volume alto</string>
     <string name="settings_translate_mode">Modo de Tradução</string>
