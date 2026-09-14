@@ -1874,7 +1874,14 @@ class SettingsRepository(
      * Executes the get pixel searchbar type operation.
      * @return The resulting String data.
      */
-    fun getPixelSearchbarType(): String = prefs.getString(KEY_PIXEL_SEARCHBAR_TYPE, "empty") ?: "empty"
+    fun getPixelSearchbarType(): String {
+        val raw = prefs.getString(KEY_PIXEL_SEARCHBAR_TYPE, null)
+        if (raw == null || raw == "empty") {
+            putString(KEY_PIXEL_SEARCHBAR_TYPE, "searchbar")
+            return "searchbar"
+        }
+        return raw
+    }
 
     /**
      * Executes the set pixel searchbar type operation.

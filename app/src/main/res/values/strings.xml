@@ -2241,6 +2241,8 @@
     <string name="perm_external_control_label">control Essentials features</string>
     <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
     <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
+    <string name="pixel_searchbar_style_searchbar">Search</string>
+    <string name="pixel_searchbar_placeholder">Search phone &amp; web…</string>
     <string name="pixel_searchbar_style_empty">Empty</string>
     <string name="pixel_searchbar_style_date">Date</string>
     <string name="pixel_searchbar_background_pill_title">Background pill</string>

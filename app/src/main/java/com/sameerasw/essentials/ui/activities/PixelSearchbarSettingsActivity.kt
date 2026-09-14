@@ -225,9 +225,10 @@ fun PixelSearchbarSettingsUI(
     var requestingPermissionKey by remember { mutableStateOf<String?>(null) }
     val currentType = viewModel.pixelSearchbarType.value
 
-    val options = listOf("empty", "date", "widget", "music")
+    val options = listOf("searchbar", "empty", "date", "widget", "music")
     val labels =
         mapOf(
+            "searchbar" to stringResource(R.string.pixel_searchbar_style_searchbar),
             "empty" to stringResource(R.string.pixel_searchbar_style_empty),
             "date" to stringResource(R.string.pixel_searchbar_style_date),
             "widget" to stringResource(R.string.pixel_searchbar_style_widget),
@@ -240,7 +241,27 @@ fun PixelSearchbarSettingsUI(
     // Track the allocated ID so we can deallocate on cancel
     var pendingWidgetId by remember { mutableStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
 
-    // Single launcher — ACTION_APPWIDGET_PICK handles bind permission internally
+    val bindLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val widgetId = pendingWidgetId
+                if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                    val info = awm.getAppWidgetInfo(widgetId)
+                    val providerName = info?.provider?.flattenToString()
+                    viewModel.setPixelSearchbarType("widget", context)
+                    viewModel.setPixelSearchbarWidgetId(widgetId, providerName, context)
+                    WidgetScraperService.start(context)
+                }
+            } else {
+                if (pendingWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                    widgetHost.deleteAppWidgetId(pendingWidgetId)
+                    pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+                }
+            }
+        }
+
     val pickerLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -254,10 +275,22 @@ fun PixelSearchbarSettingsUI(
                     )
                 if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                     val info = awm.getAppWidgetInfo(widgetId)
-                    val providerName = info?.provider?.flattenToString()
-                    viewModel.setPixelSearchbarType("widget", context)
-                    viewModel.setPixelSearchbarWidgetId(widgetId, providerName, context)
-                    WidgetScraperService.start(context)
+                    val isBound = if (info?.provider != null) {
+                        awm.bindAppWidgetIdIfAllowed(widgetId, info.provider)
+                    } else true
+
+                    if (!isBound && info?.provider != null) {
+                        val bindIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
+                        }
+                        bindLauncher.launch(bindIntent)
+                    } else {
+                        val providerName = info?.provider?.flattenToString()
+                        viewModel.setPixelSearchbarType("widget", context)
+                        viewModel.setPixelSearchbarWidgetId(widgetId, providerName, context)
+                        WidgetScraperService.start(context)
+                    }
                 }
             } else {
                 // Deallocate the ID we pre-allocated if user cancelled

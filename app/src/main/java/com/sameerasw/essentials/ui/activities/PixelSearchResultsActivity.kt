@@ -137,6 +137,7 @@ import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.utils.WindowingUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -381,6 +382,9 @@ fun PixelSearchResultsScreen(
     var shortcutResults by remember { mutableStateOf<List<PixelSearchResultItem.ShortcutItem>>(emptyList()) }
     var isSearching by remember { mutableStateOf(false) }
 
+    var allInstalledApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
+    var searchJob by remember { mutableStateOf<Job?>(null) }
+
     val isAppsEnabled = remember { repository.isPixelSearchResultAppsEnabled() }
     val isContactsEnabled = remember { repository.isPixelSearchResultContactsEnabled() }
     val isSettingsEnabled = remember { repository.isPixelSearchResultSettingsEnabled() }
@@ -390,6 +394,7 @@ fun PixelSearchResultsScreen(
     val searchEngine = remember { repository.getPixelSearchEngine() }
 
     fun performSearch(q: String) {
+        searchJob?.cancel()
         val trimmed = q.trim()
         if (trimmed.isEmpty()) {
             appResults = emptyList()
@@ -403,9 +408,9 @@ fun PixelSearchResultsScreen(
         }
 
         isSearching = true
-        scope.launch(Dispatchers.IO) {
+        searchJob = scope.launch(Dispatchers.IO) {
             if (isAppsEnabled) {
-                val installed = AppUtil.getInstalledApps(context, includeSelf = true)
+                val installed = allInstalledApps.ifEmpty { AppUtil.getInstalledApps(context, includeSelf = true) }
                 val installedPkgs = installed.map { it.packageName }.toSet()
                 val freezeSelections = repository.loadFreezeSelectedApps()
                 val missingFrozenPkgs = freezeSelections
@@ -500,6 +505,18 @@ fun PixelSearchResultsScreen(
     LaunchedEffect(query) {
         userHasScrolled = false
         performSearch(query)
+    }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val installed = AppUtil.getInstalledApps(context, includeSelf = true)
+            withContext(Dispatchers.Main) {
+                allInstalledApps = installed
+                if (query.isNotBlank()) {
+                    performSearch(query)
+                }
+            }
+        }
     }
 
     LaunchedEffect(appResults, contactResults, systemSettingResults, settingResults, shortcutResults) {

@@ -27,13 +27,18 @@ import com.sameerasw.essentials.ui.activities.PixelSearchResultsActivity
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
+import androidx.glance.ColorFilter
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
+import com.sameerasw.essentials.R
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -114,17 +119,37 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                     modifier = GlanceModifier.fillMaxSize(),
                                 )
                             } else {
-                                Text(
-                                    text = "—",
-                                    style =
-                                        TextStyle(
-                                            color = GlanceTheme.colors.onSurface,
-                                            fontSize = 16.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
-                                            textAlign = TextAlign.Center,
-                                        ),
-                                )
+                                val providerName = settingsRepository.getPixelSearchbarWidgetProvider()
+                                val label = providerName?.substringAfterLast(".")?.takeIf { it.isNotEmpty() } ?: "Widget"
+                                Row(
+                                    modifier =
+                                        GlanceModifier
+                                            .fillMaxSize()
+                                            .background(GlanceTheme.colors.surfaceVariant)
+                                            .cornerRadius(28.dp)
+                                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.Vertical.CenterVertically,
+                                    horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
+                                ) {
+                                    Image(
+                                        provider = ImageProvider(R.drawable.rounded_widgets_24),
+                                        contentDescription = null,
+                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                                        modifier = GlanceModifier.size(20.dp),
+                                    )
+                                    Spacer(modifier = GlanceModifier.size(8.dp))
+                                    Text(
+                                        text = label,
+                                        style =
+                                            TextStyle(
+                                                color = GlanceTheme.colors.onSurfaceVariant,
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Medium,
+                                                fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                                textAlign = TextAlign.Center,
+                                            ),
+                                    )
+                                }
                             }
                         }
                     }
@@ -206,7 +231,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                         }
                     }
 
-                    else -> { // "date" (default)
+                    "date" -> {
                         val dateFormat = settingsRepository.getPixelSearchbarDateFormat()
                         val hasPill = settingsRepository.getPixelSearchbarBackgroundPill()
                         val dateStr =
@@ -219,7 +244,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                 Box(
                                     modifier =
                                         GlanceModifier
-                                            .background(GlanceTheme.colors.background)
+                                            .background(GlanceTheme.colors.surfaceVariant)
                                             .cornerRadius(28.dp)
                                             .padding(horizontal = 24.dp, vertical = 12.dp),
                                     contentAlignment = Alignment.Center,
@@ -228,7 +253,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                         text = dateStr,
                                         style =
                                             TextStyle(
-                                                color = GlanceTheme.colors.onSecondaryContainer,
+                                                color = GlanceTheme.colors.onSurfaceVariant,
                                                 fontSize = 20.sp,
                                                 fontWeight = FontWeight.Medium,
                                                 fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
@@ -249,6 +274,42 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                         ),
                                 )
                             }
+                        }
+                    }
+
+                    else -> { // "searchbar" (default)
+                        Row(
+                            modifier =
+                                boxModifier
+                                    .cornerRadius(28.dp)
+                                    .background(GlanceTheme.colors.surfaceVariant)
+                                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.Vertical.CenterVertically,
+                        ) {
+                            Image(
+                                provider = ImageProvider(R.drawable.rounded_search_24),
+                                contentDescription = "Search",
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                                modifier = GlanceModifier.size(24.dp),
+                            )
+                            Spacer(modifier = GlanceModifier.size(12.dp))
+                            Text(
+                                text = context.getString(R.string.pixel_searchbar_placeholder),
+                                style =
+                                    TextStyle(
+                                        color = GlanceTheme.colors.onSurfaceVariant,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
+                                    ),
+                                modifier = GlanceModifier.defaultWeight(),
+                            )
+                            Image(
+                                provider = ImageProvider(R.drawable.rounded_image_search_24),
+                                contentDescription = "Lens",
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurfaceVariant),
+                                modifier = GlanceModifier.size(22.dp),
+                            )
                         }
                     }
                 }

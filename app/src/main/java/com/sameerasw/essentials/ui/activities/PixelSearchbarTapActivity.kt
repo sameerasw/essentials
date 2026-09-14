@@ -33,6 +33,11 @@ class PixelSearchbarTapActivity : ComponentActivity() {
                 finish()
             }
         } else {
+            val resultsIntent =
+                android.content.Intent(this, PixelSearchResultsActivity::class.java).apply {
+                    flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+            startActivity(resultsIntent)
             finish()
         }
     }

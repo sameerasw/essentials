@@ -25,8 +25,14 @@ import android.media.session.PlaybackState
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.graphics.PixelFormat
+import android.os.Build
+import android.provider.Settings
+import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.widget.RemoteViews
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.services.NotificationListener
@@ -118,6 +124,9 @@ class WidgetScraperService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var settingsRepository: SettingsRepository
     private var appWidgetHost: ScrapingWidgetHost? = null
+    private var scrapingHostView: ScrapingHostView? = null
+    private var windowManager: WindowManager? = null
+    private var isViewAttached = false
     private val handler = Handler(Looper.getMainLooper())
 
     // Music playback tracking components
@@ -183,7 +192,41 @@ class WidgetScraperService : Service() {
                 return
             }
 
-        handler.post { host.createView(this, widgetId, info) }
+        handler.post {
+            try {
+                val view = host.createView(this, widgetId, info) as? ScrapingHostView
+                scrapingHostView = view
+
+                if (Settings.canDrawOverlays(this)) {
+                    val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+                    windowManager = wm
+                    val params =
+                        WindowManager.LayoutParams(
+                            1,
+                            1,
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                            } else {
+                                WindowManager.LayoutParams.TYPE_PHONE
+                            },
+                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                            PixelFormat.TRANSLUCENT,
+                        ).apply {
+                            gravity = Gravity.TOP or Gravity.START
+                            x = -100
+                            y = -100
+                        }
+                    if (view != null && wm != null && !isViewAttached) {
+                        wm.addView(view, params)
+                        isViewAttached = true
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("WidgetScraperService", "Failed to create/attach ScrapingHostView", e)
+            }
+        }
     }
 
     private fun listenToMusicSession() {
@@ -312,6 +355,14 @@ class WidgetScraperService : Service() {
     }
 
     private fun cleanupWidgetListener() {
+        if (isViewAttached && scrapingHostView != null && windowManager != null) {
+            try {
+                windowManager?.removeView(scrapingHostView)
+            } catch (_: Exception) {
+            }
+            isViewAttached = false
+        }
+        scrapingHostView = null
         appWidgetHost?.stopListening()
         appWidgetHost = null
         currentRemoteViews = null
