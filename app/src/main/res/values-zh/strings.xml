@@ -1557,7 +1557,7 @@
     <string name="label_auto_reset_battery_stats_title">自动重置</string>
     <string name="label_auto_reset_battery_stats_desc">当电池电量在90%以上且未充电时自动重置电池状态</string>
     <string name="label_ripple_animation">漣漪動畫效果</string>
-    <string name="setting_app_icon_title">App 圖示</string>
+    <string name="setting_app_icon_title">App 图标</string>
     <string name="setting_app_icon_desc">自訂在主畫面啟動器上的圖示</string>
     <string name="feat_power_saving_title">電量節約</string>
     <string name="feat_smart_pixels_desc">熄掉部分像素來節約耗電量</string>
