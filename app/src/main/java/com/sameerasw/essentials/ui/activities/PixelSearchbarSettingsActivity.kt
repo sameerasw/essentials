@@ -712,6 +712,7 @@ fun PixelSearchbarSettingsUI(
                 )
 
                 val appsEnabled = viewModel.pixelSearchResultApps.value
+                val filesEnabled = viewModel.pixelSearchResultFiles.value
                 val contactsEnabled = viewModel.pixelSearchResultContacts.value
                 val settingsEnabled = viewModel.pixelSearchResultSettings.value
                 val shortcutsEnabled = viewModel.pixelSearchResultShortcuts.value
@@ -726,6 +727,17 @@ fun PixelSearchbarSettingsUI(
                         onCheckedChange = { checked ->
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setPixelSearchResultAppsEnabled(checked)
+                        },
+                    )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_description_24,
+                        title = stringResource(R.string.pixel_search_results_files_title),
+                        description = stringResource(R.string.pixel_search_results_files_desc),
+                        isChecked = filesEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchResultFilesEnabled(checked)
                         },
                     )
 

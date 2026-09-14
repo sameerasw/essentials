@@ -9,7 +9,10 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import android.app.DownloadManager
 import android.app.SearchManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,6 +24,7 @@ import android.provider.Settings
 import android.view.WindowInsetsAnimationControlListener
 import android.view.WindowInsetsAnimationController
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -28,11 +32,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,6 +55,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,7 +64,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -64,6 +76,7 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -125,12 +138,14 @@ import com.sameerasw.essentials.ui.activities.YourAndroidActivity
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.ColorUtil
+import com.sameerasw.essentials.utils.FileSearchUtil
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShortcutUtil
@@ -197,7 +212,23 @@ class PixelSearchResultsActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private class Ref<T>(var value: T? = null)
+
+enum class PixelSearchTab(val labelRes: Int, val iconRes: Int? = null) {
+    ALL(R.string.pixel_search_tab_all),
+    APPS(R.string.pixel_search_tab_apps, R.drawable.rounded_apps_24),
+    MEDIA(R.string.pixel_search_tab_media, R.drawable.rounded_image_24),
+    FILES(R.string.pixel_search_tab_files, R.drawable.rounded_description_24),
+    CONTACTS(R.string.pixel_search_tab_contacts, R.drawable.rounded_person_24),
+    SETTINGS(R.string.pixel_search_tab_settings, R.drawable.rounded_settings_24),
+    WEB(R.string.pixel_search_tab_web, R.drawable.rounded_language_24),
+}
+
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3Api::class,
+)
 @Composable
 fun PixelSearchResultsScreen(
     initialQuery: String,
@@ -212,6 +243,10 @@ fun PixelSearchResultsScreen(
 
     var query by remember { mutableStateOf(initialQuery) }
     val focusRequester = remember { FocusRequester() }
+
+    var selectedFileActionItem by remember { mutableStateOf<PixelSearchResultItem.FileItem?>(null) }
+    var selectedAppActionItem by remember { mutableStateOf<PixelSearchResultItem.AppItem?>(null) }
+    var selectedContactActionItem by remember { mutableStateOf<PixelSearchResultItem.ContactItem?>(null) }
 
     var dragOffsetY by remember { mutableFloatStateOf(0f) }
     val dismissThresholdPx = with(density) { 180.dp.toPx() }
@@ -383,32 +418,60 @@ fun PixelSearchResultsScreen(
     var isSearching by remember { mutableStateOf(false) }
 
     var allInstalledApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
-    var searchJob by remember { mutableStateOf<Job?>(null) }
+    val searchJobRef = remember { Ref<Job>() }
+    var mathResult by remember { mutableStateOf<String?>(null) }
+    var selectedTab by remember { mutableStateOf(PixelSearchTab.ALL) }
+    var mediaResults by remember { mutableStateOf<List<PixelSearchResultItem.FileItem>>(emptyList()) }
+    var fileResults by remember { mutableStateOf<List<PixelSearchResultItem.FileItem>>(emptyList()) }
 
     val isAppsEnabled = remember { repository.isPixelSearchResultAppsEnabled() }
     val isContactsEnabled = remember { repository.isPixelSearchResultContactsEnabled() }
     val isSettingsEnabled = remember { repository.isPixelSearchResultSettingsEnabled() }
     val isShortcutsEnabled = remember { repository.isPixelSearchResultShortcutsEnabled() }
+    val isFilesEnabled = remember { repository.isPixelSearchResultFilesEnabled() }
     val isWebEnabled = remember { repository.isPixelSearchResultWebEnabled() }
     val isBubblesWebEnabled = remember { repository.isPixelSearchBubblesWebEnabled() }
     val searchEngine = remember { repository.getPixelSearchEngine() }
 
-    fun performSearch(q: String) {
-        searchJob?.cancel()
+    fun performSearch(q: String, currentTab: PixelSearchTab = selectedTab) {
+        searchJobRef.value?.cancel()
         val trimmed = q.trim()
         if (trimmed.isEmpty()) {
+            mathResult = null
             appResults = emptyList()
             contactResults = emptyList()
             systemSettingResults = emptyList()
             settingResults = emptyList()
             matchingQsTiles = emptyList()
             shortcutResults = emptyList()
-            isSearching = false
+            if (isFilesEnabled && (currentTab == PixelSearchTab.MEDIA || currentTab == PixelSearchTab.FILES)) {
+                isSearching = true
+                searchJobRef.value = scope.launch(Dispatchers.IO) {
+                    val fileSearchResults = FileSearchUtil.searchFiles(context, "", limit = 24)
+                    withContext(Dispatchers.Main) {
+                        mediaResults = fileSearchResults.mediaItems
+                        fileResults = fileSearchResults.documentItems
+                        isSearching = false
+                    }
+                }
+            } else {
+                mediaResults = emptyList()
+                fileResults = emptyList()
+                isSearching = false
+            }
             return
         }
 
+        mathResult = MathEvaluator.evaluate(trimmed)
         isSearching = true
-        searchJob = scope.launch(Dispatchers.IO) {
+        searchJobRef.value = scope.launch(Dispatchers.IO) {
+            if (isFilesEnabled) {
+                val fileSearchResults = FileSearchUtil.searchFiles(context, trimmed, limit = 24)
+                withContext(Dispatchers.Main) {
+                    mediaResults = fileSearchResults.mediaItems
+                    fileResults = fileSearchResults.documentItems
+                }
+            }
             if (isAppsEnabled) {
                 val installed = allInstalledApps.ifEmpty { AppUtil.getInstalledApps(context, includeSelf = true) }
                 val installedPkgs = installed.map { it.packageName }.toSet()
@@ -507,19 +570,23 @@ fun PixelSearchResultsScreen(
         performSearch(query)
     }
 
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            val installed = AppUtil.getInstalledApps(context, includeSelf = true)
-            withContext(Dispatchers.Main) {
-                allInstalledApps = installed
-                if (query.isNotBlank()) {
-                    performSearch(query)
-                }
-            }
+    LaunchedEffect(selectedTab) {
+        if (query.isBlank() && (selectedTab == PixelSearchTab.MEDIA || selectedTab == PixelSearchTab.FILES)) {
+            performSearch(query, selectedTab)
         }
     }
 
-    LaunchedEffect(appResults, contactResults, systemSettingResults, settingResults, shortcutResults) {
+    LaunchedEffect(Unit) {
+        val installed = withContext(Dispatchers.IO) {
+            AppUtil.getInstalledApps(context, includeSelf = true)
+        }
+        allInstalledApps = installed
+        if (query.isNotBlank()) {
+            performSearch(query)
+        }
+    }
+
+    LaunchedEffect(selectedTab, mathResult, appResults, mediaResults, fileResults, contactResults, systemSettingResults, settingResults, shortcutResults) {
         if (!userHasScrolled && (listState.firstVisibleItemIndex != 0 || listState.firstVisibleItemScrollOffset != 0)) {
             listState.scrollToItem(0)
         }
@@ -535,22 +602,43 @@ fun PixelSearchResultsScreen(
     val bottomBlurHeightPx = with(LocalDensity.current) { 140.dp.toPx() }
 
     // Identify which section is topmost
-    val hasApps = isAppsEnabled && appResults.isNotEmpty()
-    val hasContacts = !hasApps && isContactsEnabled && contactResults.isNotEmpty()
-    val hasSystemSettings = !hasApps && !hasContacts && isSettingsEnabled && systemSettingResults.isNotEmpty()
-    val hasEssentials = !hasApps && !hasContacts && !hasSystemSettings && isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())
-    val hasShortcuts = !hasApps && !hasContacts && !hasSystemSettings && !hasEssentials && isShortcutsEnabled && shortcutResults.isNotEmpty()
+    val isAllTab = selectedTab == PixelSearchTab.ALL
+    val hasCalculation = isAllTab && mathResult != null
+    val hasApps = !hasCalculation && (isAllTab || selectedTab == PixelSearchTab.APPS) && isAppsEnabled && appResults.isNotEmpty()
+    val hasMedia = !hasCalculation && !hasApps && (isAllTab || selectedTab == PixelSearchTab.MEDIA) && isFilesEnabled && mediaResults.isNotEmpty()
+    val hasFiles = !hasCalculation && !hasApps && !hasMedia && (isAllTab || selectedTab == PixelSearchTab.FILES) && isFilesEnabled && fileResults.isNotEmpty()
+    val hasContacts = !hasCalculation && !hasApps && !hasMedia && !hasFiles && (isAllTab || selectedTab == PixelSearchTab.CONTACTS) && isContactsEnabled && contactResults.isNotEmpty()
+    val hasSystemSettings = !hasCalculation && !hasApps && !hasMedia && !hasFiles && !hasContacts && (isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isSettingsEnabled && systemSettingResults.isNotEmpty()
+    val hasEssentials = !hasCalculation && !hasApps && !hasMedia && !hasFiles && !hasContacts && !hasSystemSettings && (isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())
+    val hasShortcuts = !hasCalculation && !hasApps && !hasMedia && !hasFiles && !hasContacts && !hasSystemSettings && !hasEssentials && (isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isShortcutsEnabled && shortcutResults.isNotEmpty()
 
     val highlightColor = MaterialTheme.colorScheme.secondaryContainer
     val normalCardColor = MaterialTheme.colorScheme.surfaceBright
 
     fun launchTopmostOrWeb() {
         when {
+            hasCalculation -> {
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Calculation Result", mathResult)
+                clipboard.setPrimaryClip(clip)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    Toast.makeText(context, context.getString(R.string.pixel_search_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                }
+                onFinish()
+            }
             hasApps -> {
                 launchApp(context, appResults.first().packageName)
                 onFinish()
             }
-            isContactsEnabled && contactResults.isNotEmpty() -> {
+            hasMedia -> {
+                launchFile(context, mediaResults.first())
+                onFinish()
+            }
+            hasFiles -> {
+                launchFile(context, fileResults.first())
+                onFinish()
+            }
+            hasContacts -> {
                 contactResults.first().phoneNumber?.let {
                     val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))
                     context.startActivity(dialIntent)
@@ -560,22 +648,24 @@ fun PixelSearchResultsScreen(
                     onFinish()
                 }
             }
-            isSettingsEnabled && systemSettingResults.isNotEmpty() -> {
+            hasSystemSettings -> {
                 context.startActivity(systemSettingResults.first().intent)
                 onFinish()
             }
-            isSettingsEnabled && settingResults.isNotEmpty() -> {
-                val setting = settingResults.first().searchableItem
-                val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
-                    putExtra("feature", setting.featureKey)
-                    setting.targetSettingHighlightKey?.let {
-                        putExtra("highlight_setting", it)
+            hasEssentials -> {
+                val setting = settingResults.firstOrNull()?.searchableItem
+                if (setting != null) {
+                    val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
+                        putExtra("feature", setting.featureKey)
+                        setting.targetSettingHighlightKey?.let {
+                            putExtra("highlight_setting", it)
+                        }
                     }
+                    context.startActivity(intent)
                 }
-                context.startActivity(intent)
                 onFinish()
             }
-            isShortcutsEnabled && shortcutResults.isNotEmpty() -> {
+            hasShortcuts -> {
                 context.startActivity(shortcutResults.first().intent)
                 onFinish()
             }
@@ -586,6 +676,14 @@ fun PixelSearchResultsScreen(
                 onFinish()
             }
         }
+    }
+
+    val quickLaunchApps = remember(allInstalledApps) {
+        allInstalledApps
+            .filter { !it.isSystemApp }
+            .sortedByDescending { it.lastUpdated }
+            .take(5)
+            .ifEmpty { allInstalledApps.take(5) }
     }
 
     val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.55f)
@@ -605,6 +703,61 @@ fun PixelSearchResultsScreen(
                 .fillMaxSize()
                 .offset { IntOffset(0, dragOffsetY.roundToInt()) },
         ) {
+            // Pinned top category filter tabs
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .zIndex(15f)
+                    .padding(top = statusBarHeight),
+            ) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                ) {
+                    items(PixelSearchTab.values()) { tab ->
+                        val isSelected = selectedTab == tab
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                selectedTab = tab
+                                if (query.isBlank() && (tab == PixelSearchTab.MEDIA || tab == PixelSearchTab.FILES)) {
+                                    performSearch(query, tab)
+                                }
+                            },
+                            label = {
+                                Text(
+                                    text = stringResource(tab.labelRes),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                )
+                            },
+                            leadingIcon = tab.iconRes?.let { iconRes ->
+                                {
+                                    Icon(
+                                        painter = painterResource(iconRes),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp),
+                                    )
+                                }
+                            },
+                            shape = CircleShape,
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            ),
+                            border = null,
+                        )
+                    }
+                }
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -622,13 +775,110 @@ fun PixelSearchResultsScreen(
                         .nestedScroll(overscrollNestedScrollConnection)
                         .padding(horizontal = 16.dp),
                     contentPadding = PaddingValues(
-                        top = statusBarHeight + 16.dp,
+                        top = statusBarHeight + 58.dp,
                         bottom = 120.dp,
                     ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
+                // QUICK LAUNCH (Empty state)
+                if ((isAllTab || selectedTab == PixelSearchTab.APPS) && query.isBlank() && quickLaunchApps.isNotEmpty()) {
+                    item(key = "quick_launch_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_quick_launch),
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+                    item(key = "quick_launch_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
+                            quickLaunchApps.forEach { app ->
+                                FeatureCard(
+                                    title = app.appName,
+                                    isEnabled = true,
+                                    onToggle = {},
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        launchApp(context, app.packageName)
+                                        onFinish()
+                                    },
+                                    onLongClick = {
+                                        selectedAppActionItem = PixelSearchResultItem.AppItem(
+                                            appName = app.appName,
+                                            packageName = app.packageName,
+                                            icon = app.icon,
+                                            isSystemApp = app.isSystemApp,
+                                        )
+                                    },
+                                    containerColor = normalCardColor,
+                                    showToggle = false,
+                                    hasMoreSettings = false,
+                                    iconPainter = BitmapPainter(app.icon),
+                                    iconSize = 36.dp,
+                                    hasIconBackground = false,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // CALCULATION RESULT
+                if (isAllTab && mathResult != null) {
+                    item(key = "calculation_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_calculation),
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+                    item(key = "calculation_card") {
+                        val resultText = mathResult ?: ""
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
+                            FeatureCard(
+                                title = "= $resultText",
+                                description = query.trim(),
+                                isEnabled = true,
+                                onToggle = {},
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("Calculation Result", resultText)
+                                    clipboard.setPrimaryClip(clip)
+                                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                        Toast.makeText(context, context.getString(R.string.pixel_search_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                                    }
+                                    onFinish()
+                                },
+                                containerColor = highlightColor,
+                                iconRes = R.drawable.rounded_calculate_24,
+                                hasIconBackground = true,
+                                iconTint = MaterialTheme.colorScheme.primary,
+                                showToggle = false,
+                                hasMoreSettings = false,
+                                customTrailingContent = {
+                                    IconButton(
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                            val clip = ClipData.newPlainText("Calculation Result", resultText)
+                                            clipboard.setPrimaryClip(clip)
+                                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                                Toast.makeText(context, context.getString(R.string.pixel_search_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                                            }
+                                        },
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.rounded_content_copy_24),
+                                            contentDescription = stringResource(R.string.pixel_search_copied_to_clipboard),
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(20.dp),
+                                        )
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
+
                 // APPS
-                if (isAppsEnabled && appResults.isNotEmpty()) {
+                if ((isAllTab || selectedTab == PixelSearchTab.APPS) && isAppsEnabled && appResults.isNotEmpty()) {
                     item(key = "apps_header") {
                         SearchSectionHeader(stringResource(R.string.pixel_search_section_apps), Modifier.animateItem())
                     }
@@ -648,6 +898,9 @@ fun PixelSearchResultsScreen(
                                             launchApp(context, app.packageName)
                                         }
                                         onFinish()
+                                    },
+                                    onLongClick = {
+                                        selectedAppActionItem = app
                                     },
                                     containerColor = if (isTopmost) highlightColor else normalCardColor,
                                     showToggle = false,
@@ -713,8 +966,121 @@ fun PixelSearchResultsScreen(
                     }
                 }
 
+                // PHOTOS & VIDEOS (MEDIA)
+                if ((isAllTab || selectedTab == PixelSearchTab.MEDIA) && isFilesEnabled && mediaResults.isNotEmpty()) {
+                    item(key = "media_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_media),
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+                    item(key = "media_cards") {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItem(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            items(mediaResults, key = { it.id }) { media ->
+                                Box(
+                                    modifier = Modifier
+                                        .size(110.dp)
+                                        .clip(RoundedCornerShape(20.dp))
+                                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                        .combinedClickable(
+                                            onClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                launchFile(context, media)
+                                                onFinish()
+                                            },
+                                            onLongClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                selectedFileActionItem = media
+                                            },
+                                        ),
+                                ) {
+                                    AsyncImage(
+                                        model = media.uri,
+                                        contentDescription = media.displayName,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize(),
+                                    )
+                                    if (media.isGif) {
+                                        Surface(
+                                            shape = RoundedCornerShape(8.dp),
+                                            color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.85f),
+                                            modifier = Modifier
+                                                .align(Alignment.TopStart)
+                                                .padding(6.dp),
+                                        ) {
+                                            Text(
+                                                text = "GIF",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                            )
+                                        }
+                                    } else if (media.isVideo) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.Black.copy(alpha = 0.25f)),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_play_arrow_24),
+                                                contentDescription = null,
+                                                tint = Color.White,
+                                                modifier = Modifier.size(32.dp),
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // FILES & DOCUMENTS
+                if ((isAllTab || selectedTab == PixelSearchTab.FILES) && isFilesEnabled && fileResults.isNotEmpty()) {
+                    item(key = "files_header") {
+                        SearchSectionHeader(
+                            stringResource(R.string.pixel_search_section_files),
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+                    item(key = "files_cards") {
+                        RoundedCardContainer(modifier = Modifier.animateItem()) {
+                            fileResults.forEachIndexed { index, file ->
+                                val isTopmost = index == 0 && hasFiles
+                                FeatureCard(
+                                    title = file.displayName,
+                                    description = FileSearchUtil.formatFileSize(file.sizeBytes),
+                                    isEnabled = true,
+                                    onToggle = {},
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        launchFile(context, file)
+                                        onFinish()
+                                    },
+                                    onLongClick = {
+                                        selectedFileActionItem = file
+                                    },
+                                    containerColor = if (isTopmost) highlightColor else normalCardColor,
+                                    iconRes = file.iconRes,
+                                    hasIconBackground = true,
+                                    iconTint = MaterialTheme.colorScheme.primary,
+                                    showToggle = false,
+                                    hasMoreSettings = false,
+                                )
+                            }
+                        }
+                    }
+                }
+
                 // CONTACTS
-                if (isContactsEnabled && contactResults.isNotEmpty()) {
+                if ((isAllTab || selectedTab == PixelSearchTab.CONTACTS) && isContactsEnabled && contactResults.isNotEmpty()) {
                     item(key = "contacts_header") {
                         SearchSectionHeader(
                             stringResource(R.string.pixel_search_section_contacts),
@@ -733,6 +1099,10 @@ fun PixelSearchResultsScreen(
                                             context.startActivity(dialIntent)
                                             onFinish()
                                         }
+                                    },
+                                    onLongClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        selectedContactActionItem = contact
                                     },
                                     modifier = Modifier.fillMaxWidth(),
                                     leadingContent = {
@@ -821,7 +1191,7 @@ fun PixelSearchResultsScreen(
                 }
 
                 // SETTINGS (System Settings)
-                if (isSettingsEnabled && systemSettingResults.isNotEmpty()) {
+                if ((isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isSettingsEnabled && systemSettingResults.isNotEmpty()) {
                     item(key = "system_settings_header") {
                         SearchSectionHeader(
                             stringResource(R.string.pixel_search_section_system_settings),
@@ -853,7 +1223,7 @@ fun PixelSearchResultsScreen(
                 }
 
                 // ESSENTIALS
-                if (isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())) {
+                if ((isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isSettingsEnabled && (matchingQsTiles.isNotEmpty() || settingResults.isNotEmpty())) {
                     item(key = "essentials_header") {
                         SearchSectionHeader(
                             stringResource(R.string.pixel_search_section_essentials),
@@ -940,7 +1310,7 @@ fun PixelSearchResultsScreen(
                 }
 
                 // SHORTCUTS
-                if (isShortcutsEnabled && shortcutResults.isNotEmpty()) {
+                if ((isAllTab || selectedTab == PixelSearchTab.SETTINGS) && isShortcutsEnabled && shortcutResults.isNotEmpty()) {
                     item(key = "shortcuts_header") {
                         SearchSectionHeader(
                             stringResource(R.string.pixel_search_section_shortcuts),
@@ -972,8 +1342,8 @@ fun PixelSearchResultsScreen(
                 }
 
                 // WEB SEARCH
-                if (isWebEnabled && query.isNotBlank()) {
-                    val isTopmost = !hasApps && !hasContacts && !hasSystemSettings && !hasEssentials && !hasShortcuts
+                if ((isAllTab || selectedTab == PixelSearchTab.WEB) && isWebEnabled && query.isNotBlank()) {
+                    val isTopmost = !hasCalculation && !hasApps && !hasMedia && !hasFiles && !hasContacts && !hasSystemSettings && !hasEssentials && !hasShortcuts
                     item(key = "web_header") {
                         SearchSectionHeader(
                             stringResource(R.string.pixel_search_section_web),
@@ -1086,7 +1456,503 @@ fun PixelSearchResultsScreen(
             }
         }
     }
-}
+
+    }
+
+    val activeFile = selectedFileActionItem
+    if (activeFile != null) {
+        EssentialsBottomSheet(
+            onDismissRequest = { selectedFileActionItem = null },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                ) {
+                    if (activeFile.isImage || activeFile.isVideo || activeFile.isGif) {
+                        AsyncImage(
+                            model = activeFile.uri,
+                            contentDescription = activeFile.displayName,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(52.dp)
+                                .clip(RoundedCornerShape(14.dp)),
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(52.dp)
+                                .background(
+                                    color = ColorUtil.getPastelColorFor(activeFile.displayName),
+                                    shape = CircleShape,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(activeFile.iconRes),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(26.dp),
+                            )
+                        }
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = activeFile.displayName,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        val details = buildString {
+                            append(FileSearchUtil.formatFileSize(activeFile.sizeBytes))
+                            activeFile.path?.let { p ->
+                                append(" • ")
+                                append(p)
+                            }
+                        }
+                        Text(
+                            text = details,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+
+                RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_open),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedFileActionItem
+                            selectedFileActionItem = null
+                            if (target != null) {
+                                launchFile(context, target)
+                                onFinish()
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_open_in_new_24,
+                        hasIconBackground = true,
+                    )
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_open_with),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedFileActionItem
+                            selectedFileActionItem = null
+                            if (target != null) {
+                                openWithFile(context, target)
+                                onFinish()
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_apps_24,
+                        hasIconBackground = true,
+                    )
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_show_in_folder),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedFileActionItem
+                            selectedFileActionItem = null
+                            if (target != null) {
+                                openFileFolder(context, target)
+                                onFinish()
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_folder_24,
+                        hasIconBackground = true,
+                    )
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_share),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedFileActionItem
+                            selectedFileActionItem = null
+                            if (target != null) {
+                                shareFile(context, target)
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_share_24,
+                        hasIconBackground = true,
+                    )
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_copy_path),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedFileActionItem
+                            selectedFileActionItem = null
+                            if (target != null) {
+                                copyFilePath(context, target)
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_content_copy_24,
+                        hasIconBackground = true,
+                    )
+                }
+            }
+        }
+    }
+
+    val activeApp = selectedAppActionItem
+    if (activeApp != null) {
+        EssentialsBottomSheet(
+            onDismissRequest = { selectedAppActionItem = null },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                ) {
+                    if (activeApp.icon != null) {
+                        Image(
+                            painter = BitmapPainter(activeApp.icon),
+                            contentDescription = activeApp.appName,
+                            modifier = Modifier.size(52.dp),
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(52.dp)
+                                .background(
+                                    color = ColorUtil.getPastelColorFor(activeApp.appName),
+                                    shape = CircleShape,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_apps_24),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(26.dp),
+                            )
+                        }
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = activeApp.appName,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Text(
+                            text = activeApp.packageName,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+
+                RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_open),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedAppActionItem
+                            selectedAppActionItem = null
+                            if (target != null) {
+                                if (target.isFrozen) {
+                                    viewModel.launchAndUnfreezeApp(context, target.packageName)
+                                } else {
+                                    launchApp(context, target.packageName)
+                                }
+                                onFinish()
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_open_in_new_24,
+                        hasIconBackground = true,
+                    )
+                    if (activeApp.isFrozen) {
+                        FeatureCard(
+                            title = stringResource(R.string.action_unfreeze),
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                val target = selectedAppActionItem
+                                selectedAppActionItem = null
+                                if (target != null) {
+                                    scope.launch(Dispatchers.IO) {
+                                        FreezeManager.unfreezeApp(context, target.packageName)
+                                        viewModel.refreshFreezePickedApps(context, silent = true)
+                                        performSearch(query)
+                                    }
+                                }
+                            },
+                            showToggle = false,
+                            hasMoreSettings = false,
+                            iconRes = R.drawable.rounded_mode_cool_off_24,
+                            hasIconBackground = true,
+                        )
+                    }
+                    FeatureCard(
+                        title = stringResource(R.string.action_app_info),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedAppActionItem
+                            selectedAppActionItem = null
+                            if (target != null) {
+                                val infoIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", target.packageName, null)
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(infoIntent)
+                                onFinish()
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_info_24,
+                        hasIconBackground = true,
+                    )
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_play_store),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedAppActionItem
+                            selectedAppActionItem = null
+                            if (target != null) {
+                                openAppInPlayStore(context, target.packageName)
+                                onFinish()
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_storefront_24,
+                        hasIconBackground = true,
+                    )
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_share_app),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedAppActionItem
+                            selectedAppActionItem = null
+                            if (target != null) {
+                                shareApp(context, target.appName, target.packageName)
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_share_24,
+                        hasIconBackground = true,
+                    )
+                }
+            }
+        }
+    }
+
+    val activeContact = selectedContactActionItem
+    if (activeContact != null) {
+        EssentialsBottomSheet(
+            onDismissRequest = { selectedContactActionItem = null },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                ) {
+                    if (!activeContact.photoUri.isNullOrBlank()) {
+                        AsyncImage(
+                            model = activeContact.photoUri,
+                            contentDescription = activeContact.name,
+                            modifier = Modifier
+                                .size(52.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop,
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(52.dp)
+                                .clip(CircleShape)
+                                .background(ColorUtil.getPastelColorFor(activeContact.name)),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = activeContact.name.take(1).uppercase(),
+                                style = MaterialTheme.typography.titleLarge,
+                                color = ColorUtil.getVibrantColorFor(activeContact.name),
+                            )
+                        }
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = activeContact.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        activeContact.phoneNumber?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                }
+
+                RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
+                    if (activeContact.phoneNumber != null) {
+                        FeatureCard(
+                            title = stringResource(R.string.pixel_search_action_call),
+                            description = activeContact.phoneNumber,
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                val target = selectedContactActionItem
+                                selectedContactActionItem = null
+                                if (target?.phoneNumber != null) {
+                                    val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${target.phoneNumber}"))
+                                    context.startActivity(dialIntent)
+                                    onFinish()
+                                }
+                            },
+                            showToggle = false,
+                            hasMoreSettings = false,
+                            iconRes = R.drawable.rounded_call_24,
+                            hasIconBackground = true,
+                        )
+                        FeatureCard(
+                            title = stringResource(R.string.pixel_search_action_sms),
+                            description = activeContact.phoneNumber,
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                val target = selectedContactActionItem
+                                selectedContactActionItem = null
+                                if (target?.phoneNumber != null) {
+                                    val smsIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:${target.phoneNumber}"))
+                                    context.startActivity(smsIntent)
+                                    onFinish()
+                                }
+                            },
+                            showToggle = false,
+                            hasMoreSettings = false,
+                            iconRes = R.drawable.rounded_chat_bubble_24,
+                            hasIconBackground = true,
+                        )
+                        FeatureCard(
+                            title = stringResource(R.string.pixel_search_action_copy_phone),
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                val target = selectedContactActionItem
+                                selectedContactActionItem = null
+                                if (target?.phoneNumber != null) {
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("Phone Number", target.phoneNumber)
+                                    clipboard.setPrimaryClip(clip)
+                                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                        Toast.makeText(context, context.getString(R.string.pixel_search_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            },
+                            showToggle = false,
+                            hasMoreSettings = false,
+                            iconRes = R.drawable.rounded_content_copy_24,
+                            hasIconBackground = true,
+                        )
+                    }
+                    FeatureCard(
+                        title = stringResource(R.string.pixel_search_action_view_contact),
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            val target = selectedContactActionItem
+                            selectedContactActionItem = null
+                            if (target != null) {
+                                try {
+                                    val contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, target.id)
+                                    val intent = Intent(Intent.ACTION_VIEW, contactUri).apply {
+                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    }
+                                    context.startActivity(intent)
+                                    onFinish()
+                                } catch (_: Exception) {
+                                }
+                            }
+                        },
+                        showToggle = false,
+                        hasMoreSettings = false,
+                        iconRes = R.drawable.rounded_person_24,
+                        hasIconBackground = true,
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -1301,6 +2167,140 @@ private fun loadSystemSettings(query: String): List<PixelSearchResultItem.System
     }.take(4)
 }
 
+private fun launchFile(context: Context, item: PixelSearchResultItem.FileItem) {
+    try {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(item.uri, item.mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    } catch (_: Exception) {
+        try {
+            val fallbackIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(item.uri, "*/*")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(fallbackIntent)
+        } catch (_: Exception) {
+            Toast.makeText(context, item.displayName, Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+private fun openWithFile(context: Context, item: PixelSearchResultItem.FileItem) {
+    try {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(item.uri, item.mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        val chooser = Intent.createChooser(intent, context.getString(R.string.pixel_search_action_open_with)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(chooser)
+    } catch (_: Exception) {
+        launchFile(context, item)
+    }
+}
+
+private fun shareFile(context: Context, item: PixelSearchResultItem.FileItem) {
+    try {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = item.mimeType
+            putExtra(Intent.EXTRA_STREAM, item.uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        val chooser = Intent.createChooser(shareIntent, context.getString(R.string.pixel_search_action_share)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(chooser)
+    } catch (_: Exception) {
+        Toast.makeText(context, item.displayName, Toast.LENGTH_SHORT).show()
+    }
+}
+
+private fun openFileFolder(context: Context, item: PixelSearchResultItem.FileItem) {
+    try {
+        val parentPath = item.path?.let { java.io.File(it).parent }
+        if (parentPath != null) {
+            val relativePath = parentPath.removePrefix("/storage/emulated/0/").removePrefix("/")
+            val folderUri = Uri.parse("content://com.android.externalstorage.documents/document/primary%3A" + Uri.encode(relativePath))
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(folderUri, "vnd.android.document/directory")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+            return
+        }
+    } catch (_: Exception) {
+    }
+
+    try {
+        item.path?.let { p ->
+            val parentFile = java.io.File(p).parentFile
+            if (parentFile != null && parentFile.exists()) {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(Uri.fromFile(parentFile), "resource/folder")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                return
+            }
+        }
+    } catch (_: Exception) {
+    }
+
+    try {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            val uri = Uri.parse("content://com.android.externalstorage.documents/root/primary")
+            setDataAndType(uri, "vnd.android.document/root")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    } catch (_: Exception) {
+        copyFilePath(context, item)
+    }
+}
+
+private fun copyFilePath(context: Context, item: PixelSearchResultItem.FileItem) {
+    val path = item.path ?: item.displayName
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("File Path", path)
+    clipboard.setPrimaryClip(clip)
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        Toast.makeText(context, context.getString(R.string.pixel_search_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+    }
+}
+
+private fun openAppInPlayStore(context: Context, packageName: String) {
+    try {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    } catch (_: Exception) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    }
+}
+
+private fun shareApp(context: Context, appName: String, packageName: String) {
+    try {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, appName)
+            putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=$packageName")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        val chooser = Intent.createChooser(shareIntent, context.getString(R.string.pixel_search_action_share_app)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(chooser)
+    } catch (_: Exception) {
+    }
+}
+
 private fun loadShortcuts(context: Context, query: String): List<PixelSearchResultItem.ShortcutItem> {
     val items = mutableListOf<PixelSearchResultItem.ShortcutItem>()
     val q = query.lowercase()
@@ -1336,3 +2336,140 @@ private fun loadShortcuts(context: Context, query: String): List<PixelSearchResu
 
     return items
 }
+
+internal object MathEvaluator {
+    private val PERCENT_OF_REGEX = Regex("""^(\d+(?:\.\d+)?)\s*%\s*of\s*(\d+(?:\.\d+)?)$""", RegexOption.IGNORE_CASE)
+
+    fun evaluate(expression: String): String? {
+        val trimmed = expression.trim()
+        if (trimmed.isEmpty()) return null
+
+        // Exclude inputs that are phone numbers or dates
+        if (trimmed.startsWith('+') && !trimmed.drop(1).any { it in "+-*x×/÷^%" }) return null
+        if (trimmed.matches(Regex("""^\d{2,4}-\d{1,4}-\d{1,4}$"""))) return null
+
+        // Handle "X% of Y"
+        val percentMatch = PERCENT_OF_REGEX.matchEntire(trimmed)
+        if (percentMatch != null) {
+            val (pStr, baseStr) = percentMatch.destructured
+            val p = pStr.toDoubleOrNull() ?: return null
+            val base = baseStr.toDoubleOrNull() ?: return null
+            return formatResult((p / 100.0) * base)
+        }
+
+        // Must contain at least one math operator
+        val hasOperator = trimmed.any { it in "+-*x×/÷^%" }
+        if (!hasOperator) return null
+
+        // Must contain at least one digit
+        if (!trimmed.any { it.isDigit() }) return null
+
+        val normalized = trimmed
+            .replace('×', '*')
+            .replace('x', '*')
+            .replace('÷', '/')
+
+        if (!normalized.all { it.isDigit() || it in ".+-*/%^() \t" }) return null
+
+        return try {
+            val result = Parser(normalized).parse()
+            if (result.isNaN() || result.isInfinite()) null else formatResult(result)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun formatResult(value: Double): String {
+        return if (value == kotlin.math.floor(value) && !value.isInfinite() && kotlin.math.abs(value) < 1e15) {
+            value.toLong().toString()
+        } else {
+            val symbols = java.text.DecimalFormatSymbols(java.util.Locale.US)
+            val df = java.text.DecimalFormat("0.######", symbols)
+            df.format(value)
+        }
+    }
+
+    private class Parser(private val input: String) {
+        private var pos = -1
+        private var ch = ' '
+
+        private fun nextChar() {
+            pos++
+            ch = if (pos < input.length) input[pos] else '\u0000'
+        }
+
+        private fun eat(charToEat: Char): Boolean {
+            while (ch == ' ' || ch == '\t') nextChar()
+            if (ch == charToEat) {
+                nextChar()
+                return true
+            }
+            return false
+        }
+
+        fun parse(): Double {
+            nextChar()
+            val x = parseExpression()
+            while (ch == ' ' || ch == '\t') nextChar()
+            if (pos < input.length) throw IllegalArgumentException("Unexpected char: $ch")
+            return x
+        }
+
+        private fun parseExpression(): Double {
+            var x = parseTerm()
+            while (true) {
+                when {
+                    eat('+') -> x += parseTerm()
+                    eat('-') -> x -= parseTerm()
+                    else -> return x
+                }
+            }
+        }
+
+        private fun parseTerm(): Double {
+            var x = parseFactor()
+            while (true) {
+                when {
+                    eat('*') -> x *= parseFactor()
+                    eat('/') -> {
+                        val divisor = parseFactor()
+                        if (divisor == 0.0) throw ArithmeticException("Division by zero")
+                        x /= divisor
+                    }
+                    eat('%') -> {
+                        val divisor = parseFactor()
+                        if (divisor == 0.0) throw ArithmeticException("Modulo by zero")
+                        x %= divisor
+                    }
+                    else -> return x
+                }
+            }
+        }
+
+        private fun parseFactor(): Double {
+            while (ch == ' ' || ch == '\t') nextChar()
+            when {
+                eat('+') -> return parseFactor()
+                eat('-') -> return -parseFactor()
+            }
+
+            var x: Double
+            val startPos = pos
+            if (eat('(')) {
+                x = parseExpression()
+                if (!eat(')')) throw IllegalArgumentException("Missing ')'")
+            } else if ((ch in '0'..'9') || ch == '.') {
+                while ((ch in '0'..'9') || ch == '.') nextChar()
+                val numStr = input.substring(startPos, pos)
+                x = numStr.toDoubleOrNull() ?: throw IllegalArgumentException("Invalid number: $numStr")
+            } else {
+                throw IllegalArgumentException("Unexpected token: $ch")
+            }
+
+            if (eat('^')) x = Math.pow(x, parseFactor())
+
+            return x
+        }
+    }
+}
+

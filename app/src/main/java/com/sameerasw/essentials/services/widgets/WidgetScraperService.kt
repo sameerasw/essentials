@@ -204,11 +204,7 @@ class WidgetScraperService : Service() {
                         WindowManager.LayoutParams(
                             1,
                             1,
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                            } else {
-                                WindowManager.LayoutParams.TYPE_PHONE
-                            },
+                            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
