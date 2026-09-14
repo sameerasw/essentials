@@ -441,7 +441,7 @@
     <string name="feat_watermark_desc">Fotoğraflara EXIF ​​verileri ve logolar ekleme</string>
     <string name="feat_always_on_display_title">Her Zaman Açık Ekran</string>
     <string name="feat_always_on_display_desc">Ekran kapalıyken saati ve bilgileri göster</string>
-    <string name="feat_calendar_sync_title">Takvim Senkronizasyonu</string>
+    <string name="feat_calendar_sync_title">Takvim</string>
     <string name="feat_calendar_sync_desc">Telefonunuzun takvimini saatinizle senkronize edin</string>
     <string name="feat_lock_from_watch_title">Saatten Kilit</string>
     <string name="feat_lock_from_watch_desc">Telefonunuzu uzaktan kilitler</string>
@@ -1482,11 +1482,11 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="feat_sync_location_reached_desc">Cihaz kutucuğunda gösterilecek</string>
     <string name="feat_watch_wireless_debugging_title">Kablosuz Hata Ayıklama</string>
     <string name="feat_watch_wireless_debugging_desc">Uzaktan etkinleştirin</string>
-    <string name="feat_sync_sound_mode_title">Ses modunu senkronize et</string>
+    <string name="feat_sync_sound_mode_title">Ses modu</string>
     <string name="feat_sync_sound_mode_desc">Saatle otomatik olarak senkronize et</string>
     <string name="about_desc_safe_volume">Avrupa yönetmelikleri, akıllı telefonlarının belirli ses seviyesinin (85 dB) üzerine çıktığında uyarı vermesini zorunlu kılıyor. Bu uyarı, her yeniden başlatmanın ardından veya 20 saatlik kesintisiz müzik çalmanın ardından bir kez gösterilmelidir. Bu düğmeyi kullanarak bu özelliği kalıcı olarak devre dışı bırakabilirsiniz.</string>
     <string name="tile_lockdown_mode">Karantina</string>
-    <string name="tile_lockdown_mode_desc">Ekran kapama QS kutucuğu</string>
+    <string name="tile_lockdown_mode_desc">Ekran kapama hızlı ayar kutucuğu</string>
     <string name="tile_lockdown_mode_about_desc">Telefonunuzu kilitleyin veya karantina modu açıksa karantinaya alın.
 
 Karantina modu, yüz tanıma/parmak izi gibi zayıf kilit açma yöntemlerini devre dışı bırakır ve telefonunuzun kilidini açmak için desen veya PIN kodunu güvenli bir şekilde girmenizi gerektirir.
@@ -1557,9 +1557,9 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="label_auto_reset_battery_stats_desc">Cihazın şarj seviyesi şarjda değilken %90\'ın üzerinde olduğunda pil istatistikleri otomatik olarak sıfırlanır.</string>
     <string name="label_auto_reset_battery_stats_title">Otomatik sıfırlama</string>
     <string name="about_desc_networks">Ağ indirme hızı sınırlarını yapılandırın, Wi-Fi\'a bağlıyken bile mobil veriyi sürekli aktif tutun ve kablosuz ekran sertifikasyon ayarlarını etkinleştirin.</string>
-    <string name="watch_call_sync_title">Çağrıları senkronize et</string>
+    <string name="watch_call_sync_title">Çağrılar</string>
     <string name="watch_call_sync_desc">Aramalarınızı saatinizden senkronize edin ve kontrol edin</string>
-    <string name="watch_notif_sync_title">Bildirim Senkronizasyonu</string>
+    <string name="watch_notif_sync_title">Bildirimler</string>
     <string name="watch_notif_sync_desc">Essentials başlatıcısına</string>
     <string name="watch_notif_sync_choose_apps">Uygulamaları seçin</string>
     <string name="watch_notif_sync_choose_apps_desc">Yalnızca seçili uygulamalar saate senkronize edilecektir</string>
@@ -1630,4 +1630,15 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="watchface_glance_comp_alarm_title">Sonraki alarm</string>
     <string name="watchface_glance_comp_travel_title">Orada mıyız? (Tahmini Varış Süresi)</string>
     <string name="watchface_glance_comp_travel_desc">Hedefe kalan süre/mesafeyi göster</string>
+    <string name="label_online_help_media">Çevrimiçi yardım medyası</string>
+    <string name="qs_secure_sensitive_tiles_desc">Kilitliyken hassas hızlı ayar kutucuklarını tetiklemeden önce kilit açmayı ister</string>
+    <string name="qs_secure_sensitive_tiles_title">Güvenli hassas kutucuklar</string>
+    <string name="status_glance_enable_title">Durum önizlemesini etkinleştir</string>
+    <string name="status_glance_enable_desc">Durum önizlemesini görüntüle</string>
+    <string name="feat_status_glance_title">Durum önizlemesi</string>
+    <string name="feat_status_glance_desc">Genel bakış katmanında</string>
+    <string name="duo_desc">Bu katlanmıyor</string>
+    <string name="duo_enable_title">Duo\'yu etkinleştir</string>
+    <string name="duo_enable_desc">Bu katlanmıyor ama havalı şeyler yapıyor</string>
+    <string name="about_desc_status_glance">Durum önizlemesi, ön kamera deliğinin hemen yanında, öncelik odaklı bir ortam çipi görüntüler. Bu özellik; aktif el fenerini, yaklaşan takvim etkinliklerini, o anda oynatılan medyayı ve geçerli saati dinamik bir şekilde gösterir.</string>
 </resources>
