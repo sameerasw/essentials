@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Sperre Apps mit Biometrie</string>
     <string name="app_lock_auto_lock_delay_title">Automatische Sperrverzögerung</string>
     <string name="app_lock_auto_lock_delay_desc">Nach dem schließen der App</string>
-    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_none">Keine</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -733,7 +733,11 @@ Auf alle stummgeschalteten Benachrichtigungen kannst weiterhin über den Benachr
     <string name="about_desc_quick_settings_tiles">Füge den Schnelleinstellungen benutzerdefinierte Kacheln hinzu.\n\nDrücke lange auf eine beliebige Kachel, um zu erfahren, welche Funktion sie hat.</string>
     <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
     <string name="about_desc_dynamic_night_light">Schalte den Blaulichtfilter deines Bildschirms automatisch je nach der aktuell geöffneten App ein oder aus.</string>
-    <string name="about_desc_screen_locked_security">Enhance security when your device is locked.\n\nRestrict access to some sensitive QS tiles preventing unauthorized network modifications and further preventing them re-attempting to do so by increasing the animation speed to prevent touch spam.\n\nThis feature is not robust and may have flaws such as some tiles which allow toggling directly such as bluetooth or flight mode not being able to be prevented.</string>
+    <string name="about_desc_screen_locked_security">Erhöhen Sie die Sicherheit, wenn Ihr Gerät gesperrt ist.
+
+Beschränken Sie den Zugriff auf einige sensible QS-Kacheln, um unbefugte Netzwerkänderungen zu verhindern und weitere Versuche zu unterbinden, indem die Animationsgeschwindigkeit erhöht wird, um Touch-Spam zu verhindern.
+
+Diese Funktion ist nicht robust und kann Fehler aufweisen, z. B. dass einige Kacheln, die ein direktes Umschalten ermöglichen, wie Bluetooth oder Flugmodus, nicht verhindert werden können</string>
     <string name="about_desc_app_lock">Sichere deine Apps mit einer zusätzlichen Authentifizierungsebene.\n\nDie Authentifizierungsmethode deines Gerätesperrbildschirms wird verwendet, sofern sie den biometrischen Sicherheitsstandards der Klasse 3 gemäß den Android-Richtlinien entspricht.</string>
     <string name="about_desc_location_reached">Lass dich benachrichtigen, wenn du dich deinem Ziel näherst, damit du niemals mehr eine Haltestelle verpasst.\n\nÖffne Google Maps, drücke lange in der Nähe deines Ziels um einen Marker zu setzen und vergewissere dich, dass dort „Gesetzte Markierung“ angezeigt wird (ansonsten ist die Entfernungsberechnung möglicherweise ungenau). Teile den Standort anschließend mit der Essentials-App und starte die Verfolgung.</string>
     <string name="location_reached_add_title">Ziel hinzufügen</string>
@@ -764,7 +768,9 @@ Auf alle stummgeschalteten Benachrichtigungen kannst weiterhin über den Benachr
     <string name="about_desc_freeze">Friere Apps ein, um zu verhindern, dass sie im Hintergrund ausgeführt werden.
 
 Verhindere Akku- und Datenverbrauch, indem du Apps vollständig einfrierst, wenn du sie nicht verwendest. Sie werden sofort wieder aktiviert, wenn du sie startest. Die Apps werden nicht in der App-Übersicht angezeigt und sind auch nicht im Play Store für App-Updates verfügbar, solange sie eingefroren sind</string>
-    <string name="about_desc_system_keyboard">A custom input method no-one asked for.\n\nIt is just an experiment. Multiple languages may not get support as it is a very complex and time consuming implementation.</string>
+    <string name="about_desc_system_keyboard">Eine benutzerdefinierte Eingabemethode, nach der niemand gefragt hat.
+
+Es ist nur ein Experiment. Mehrere Sprachen werden möglicherweise nicht unterstützt, da es sich um eine sehr komplexe und zeitaufwändige Implementierung handelt</string>
     <string name="about_desc_batteries">Überwache den Akkustand all deiner verbundenen Geräte.
 
 Sehe dir den Akkustatus deiner Bluetooth-Kopfhörer, deiner Smartwatch und anderem Zubehör an einem Ort an. Verbinde dich mit der AirSync-App, um auch den Akkustand deines Mac anzuzeigen.</string>
@@ -824,7 +830,7 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="diy_start_time_label">Start Zeit</string>
     <string name="diy_end_time_label">End Time</string>
     <string name="diy_repeat_days_label">Repeat on</string>
-    <string name="diy_state_charging">Lädt auf</string>
+    <string name="diy_state_charging">Laden</string>
     <string name="diy_state_screen_on">Display an</string>
     <string name="diy_action_haptic">Vibrieren</string>
     <string name="diy_action_notification">Benachrichtigung anzeigen</string>
@@ -1207,7 +1213,9 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="feat_battery_notification_title">Batterie-Benachrichtigung</string>
     <string name="feat_battery_notification_desc">Dauerhafte Benachrichtigung zum Akkustatus</string>
     <string name="battery_notification_hint">Diese Benachrichtigung zeigt den Akkustand deines angeschlossenen Macs und deiner Bluetooth-Geräte an. In den Einstellungen des Akku-Widgets kannst du festlegen, welche Geräte angezeigt werden sollen.</string>
-    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
+    <string name="about_desc_battery_notification">Übertragen Sie die Akku-Widget-Funktion in Ihre Benachrichtigungsleiste.
+
+Es zeigt den Akkustand all Ihrer verbundenen Geräte in einer einzigen, permanenten Benachrichtigung an, die in Echtzeit aktualisiert wird. Dies umfasst Ihren Mac (über AirSync) und Bluetooth-Zubehör</string>
     <string name="battery_notification_channel_name">Batteriestatus-Benachrichtigung</string>
     <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
     <string name="perm_nearby_devices_title">Geräte in der Nähe</string>
@@ -1428,7 +1436,9 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Halt die Klappe!</string>
     <string name="feat_shut_up_desc">Ich weiß, was ich tue</string>
-    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_description">Shut-Up! umgeht App-Beschränkungen und prüft Entwickleroptionen, Barrierefreiheit und Debugging, indem diese beim Starten sensibler Apps dynamisch ausgeblendet werden.
+
+Verwenden Sie die benutzerdefinierten Tastenkombinationen, um sicherzustellen, dass die Einstellungen vor dem Start der App ausgeblendet werden</string>
     <string name="shut_up_select_apps_title">Apps auswählen </string>
     <string name="shut_up_select_apps_desc">Wähle Apps, auf welche die Halt-die-Klappe!-Logik angewendet werden sollen</string>
     <string name="shut_up_settings_title">Shut-Up! Settings</string>
@@ -1681,4 +1691,91 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watchface_left_complication_title">Linke Komplikation</string>
     <string name="watchface_right_complication_title">Rechte Komplikation</string>
     <string name="watchface_clock_outline_thickness">Konturstärke</string>
+    <string name="feat_status_glance_title">Statusübersicht</string>
+    <string name="feat_status_glance_desc">Overlay Auf einen Blick</string>
+    <string name="status_glance_enable_title">Statusübersicht aktivieren</string>
+    <string name="status_glance_enable_desc">Statusübersicht anzeigen</string>
+    <string name="status_glance_auto_detect_button_title">Kameraposition erkennen</string>
+    <string name="status_glance_auto_detect_button_desc">Koordinaten neben Ihrer Frontkamera automatisch festlegen</string>
+    <string name="duo_camera_offset_x_title">Horizontale Position</string>
+    <string name="duo_camera_offset_y_title">Vertikale Position</string>
+    <string name="status_glance_max_width_title">Maximale Breite</string>
+    <string name="status_glance_font_size_title">Schriftgröße</string>
+    <string name="duo_show_flashlight_title">Taschenlampe</string>
+    <string name="status_glance_show_calendar_title">Kalenderereignisse</string>
+    <string name="duo_show_media_title">Medienwiedergabe</string>
+    <string name="duo_show_time_title">Uhrzeit</string>
+    <string name="duo_show_battery_title">Akku</string>
+    <string name="status_glance_calendar_timeframe_title">Anstehende Ereignisse anzeigen in</string>
+    <string name="status_glance_battery_icon_size_title">Größe des Akkusymbols</string>
+    <string name="status_glance_battery_show_otherwise_title">Andernfalls anzeigen</string>
+    <string name="status_glance_battery_show_full_title">Anzeige bei vollem Akku</string>
+    <string name="status_glance_battery_show_charging_title">Anzeige während des Ladevorgangs</string>
+    <string name="status_glance_battery_show_low_title">Anzeige bei niedrigem Akkustand</string>
+    <string name="status_glance_action_tap_title">Einmal tippen</string>
+    <string name="status_glance_action_tap_media_desc">Wiedergabe/Pause bei laufender Medienwiedergabe</string>
+    <string name="duo_action_double_tap_title">Doppeltippen</string>
+    <string name="duo_action_long_press_title">Langes Drücken</string>
+    <string name="status_glance_action_swipe_right_title">Nach rechts wischen</string>
+    <string name="status_glance_action_swipe_right_desc">Zum nächsten Titel springen bei Medienwiedergabe</string>
+    <string name="status_glance_background_pill_desc">Materialfarben verwenden</string>
+    <string name="status_glance_bold_text_title">Fettdruck</string>
+    <string name="status_glance_bold_text_desc">Text fetter machen für bessere Lesbarkeit</string>
+    <string name="status_glance_album_art_colors_title">Albumcover-Farben</string>
+    <string name="status_glance_album_art_colors_desc">Mediencover-Farben für die Hintergrund-Pille während der Wiedergabe verwenden</string>
+    <string name="status_glance_hide_in_quick_settings_title">In Schnelleinstellungen ausblenden</string>
+    <string name="status_glance_hide_in_quick_settings_desc">Automatisch ausblenden, wenn die Benachrichtigungsleiste oder die Schnelleinstellungen erweitert werden</string>
+    <string name="status_glance_hide_when_locked_title">Auf dem Sperrbildschirm ausblenden</string>
+    <string name="status_glance_hide_when_locked_desc">Chip ausblenden, während das Gerät gesperrt ist</string>
+    <string name="about_desc_status_glance">Der Status-Blick zeigt einen priorisierten Ambient-Chip neben der Aussparung für Ihre Frontkamera an. Er zeigt dynamisch die aktive Taschenlampe, anstehende Kalenderereignisse, aktuell abgespielte Medien und die aktuelle Uhrzeit an</string>
+    <string name="duo_enable_title">Duo aktivieren</string>
+    <string name="duo_enable_desc">Es lässt sich nicht zusammenklappen, kann aber coole Sachen</string>
+    <string name="duo_auto_detect_title">Kamera automatisch erkennen</string>
+    <string name="duo_auto_detect_desc">Die Aussparung für die Frontkamera wird automatisch lokalisiert</string>
+    <string name="duo_camera_size_title">Kameragröße</string>
+    <string name="duo_ring_radius_title">Ringradius</string>
+    <string name="duo_arc_thickness_title">Ringdicke</string>
+    <string name="duo_dot_size_title">Statuspunktgröße</string>
+    <string name="duo_show_battery_percentage_title">Akkuprozentsatz</string>
+    <string name="cat_networks">Netzwerke</string>
+    <string name="duo_battery_low_color_title">Niedriger Akkustand (&lt;20%)</string>
+    <string name="duo_battery_critical_color_title">Kritisch niedriger Akkustand (&lt;10%)</string>
+    <string name="duo_battery_power_save_color_title">Energiesparmodus</string>
+    <string name="duo_show_progress_title">Fortschrittsbenachrichtigungen</string>
+    <string name="duo_material_you_title">Material You-Farben verwenden</string>
+    <string name="duo_action_tap_title">Tippen</string>
+    <string name="duo_action_swipe_down_title">Nach unten wischen</string>
+    <string name="duo_action_horizontal_slide_title">Horizontal wischen</string>
+    <string name="duo_desc">Lässt sich nicht zusammenklappen</string>
+    <string name="pocket_mode_use_light_title">Lichtsensor verwenden</string>
+    <string name="pocket_mode_use_light_desc">Umgebungslicht zusätzlich zur Nähe für bessere Genauigkeit verwenden</string>
+    <string name="pocket_mode_trigger_delay_title">Auslöseverzögerung</string>
+    <string name="pocket_mode_lock_screen_only_title">Nur Sperrbildschirm</string>
+    <string name="pocket_mode_lock_screen_only_desc">Taschenmodus nur aktivieren, wenn das Gerät gesperrt ist</string>
+    <string name="about_desc_power_battery">Optimieren Sie die internen Akkusparrichtlinien von Android. Passen Sie das Verhalten an, z. B. Helligkeitsbegrenzung, Standortdrosselung, Vibrationsfunktion, Verzögerung der Hintergrundsynchronisierung und Sensorzustände, wenn der Akkusparmodus aktiviert ist</string>
+    <string name="label_apply_after_reboot">Nach Neustart anwenden</string>
+    <string name="watch_complications_title">Komplikationen</string>
+    <string name="watchface_glance_complications_desc">Wählen Sie aus, was angezeigt werden soll</string>
+    <string name="watchface_show_glow_title">Leuchten anzeigen</string>
+    <string name="watchface_show_glow_desc">Dynamischer Farbverlauf am oberen Rand für bevorstehende Ereignisse und Reisen</string>
+    <string name="watch_complications_desc">Komplikations-Widgets anpassen</string>
+    <string name="watchface_glance_comp_battery_alerts_title">Warnung bei niedrigem Akkustand</string>
+    <string name="watchface_glance_comp_battery_alerts_desc">Warnung anzeigen, wenn der Akku der Uhr oder des Telefons unter 20 % liegt</string>
+    <string name="watchface_glance_comp_travel_title">Sind wir da (Reise-ETA)</string>
+    <string name="watchface_glance_comp_travel_desc">Verbleibende Zeit/Entfernung zum Ziel anzeigen</string>
+    <string name="watchface_glance_comp_alarm_title">Nächster Alarm</string>
+    <string name="watchface_glance_comp_alarm_desc">Die nächste Alarmzeit anzeigen, wenn keine Ereignisse anstehen</string>
+    <string name="watchface_glance_comp_events_desc">Die heutigen anstehenden Termine anzeigen</string>
+    <string name="watch_notif_sync_silent_title">Benachrichtigung für stumme Benachrichtigungen</string>
+    <string name="watch_notif_sync_silent_desc">Stumme und niedrigpriorisierte Benachrichtigungen mit der Uhr synchronisieren</string>
+    <string name="watch_notif_sync_media_title">Medienwiedergabe synchronisieren</string>
+    <string name="watch_notif_sync_media_desc">Medienwiedergabesteuerung und Benachrichtigungen mit der Uhr synchronisieren</string>
+    <string name="watch_notif_sound_title">Benachrichtigungston</string>
+    <string name="watch_notif_sound_desc">Den auf der Uhr abgespielten Ton ändern</string>
+    <string name="watch_notif_sync_now">Aktive Benachrichtigungen jetzt synchronisieren</string>
+    <string name="watch_notif_sync_now_desc">Alle aktiven Telefonbenachrichtigungen mit dem Launcher der Uhr synchronisieren</string>
+    <string name="watch_notif_sync_icons">SApp-Symbole synchronisieren</string>
+    <string name="watch_notif_sync_icons_desc">App-Symbole mit dem Launcher der Uhr für die Benachrichtigungsanzeige synchronisieren</string>
+    <string name="watch_wireless_debugging_ip_title">IP-Addresse</string>
+    <string name="diy_genai_lazy_title">Ich bin faul, mach es für mich</string>
 </resources>
