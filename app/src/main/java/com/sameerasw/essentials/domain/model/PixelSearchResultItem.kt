@@ -51,4 +51,20 @@ sealed class PixelSearchResultItem {
     data class WebItem(
         val query: String,
     ) : PixelSearchResultItem()
+
+    data class FileItem(
+        val id: Long,
+        val uri: android.net.Uri,
+        val displayName: String,
+        val mimeType: String,
+        val sizeBytes: Long,
+        val dateModified: Long,
+        val isMedia: Boolean,
+        val isImage: Boolean = mimeType.startsWith("image/", ignoreCase = true),
+        val isGif: Boolean = mimeType.equals("image/gif", ignoreCase = true),
+        val isVideo: Boolean = mimeType.startsWith("video/", ignoreCase = true),
+        val durationMs: Long = 0L,
+        val path: String? = null,
+        @DrawableRes val iconRes: Int = com.sameerasw.essentials.R.drawable.rounded_description_24,
+    ) : PixelSearchResultItem()
 }

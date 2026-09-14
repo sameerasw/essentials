@@ -80,6 +80,7 @@ fun FeatureCard(
     isPinned: Boolean = false,
     onPinToggle: (() -> Unit)? = null,
     onHelpClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
     additionalMenuItems: (@Composable (onDismiss: () -> Unit) -> Unit)? = null,
     customTrailingContent: (@Composable () -> Unit)? = null,
     iconPainter: androidx.compose.ui.graphics.painter.Painter? = null,
@@ -139,7 +140,11 @@ fun FeatureCard(
         },
         onLongClick = {
             HapticUtil.performVirtualKeyHaptic(view)
-            showMenu = true
+            if (onLongClick != null) {
+                onLongClick()
+            } else {
+                showMenu = true
+            }
         },
         verticalAlignment = Alignment.CenterVertically,
         modifier =
