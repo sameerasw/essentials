@@ -1486,4 +1486,12 @@
     <string name="setting_swipe_tabs_title">Σάρωση μεταξύ καρτελών</string>
     <string name="feat_standby_apps_title">Εφαρμογές σε αναμονή </string>
     <string name="tile_lockdown_mode_desc">QS tile απενεργοποίησης οθόνης</string>
+    <string name="label_battery_health">Υγεία </string>
+    <string name="label_battery_temperature">θερμοκρασία </string>
+    <string name="label_battery_capacity">χωρητικότητα </string>
+    <string name="label_battery_capacity_health">Ποσοστό υγείας </string>
+    <string name="label_battery_cycle_count">Κύκλοι φόρτισης </string>
+    <string name="label_battery_mode">κατάσταση </string>
+    <string name="label_battery_voltage">βόλτ</string>
+    <string name="label_battery_technology">τεχνολογία </string>
 </resources>
