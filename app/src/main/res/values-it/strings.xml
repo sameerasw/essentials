@@ -1482,4 +1482,8 @@
     <string name="feat_network_download_rate_limit_desc">Limita la velocità di download a livello di sistema</string>
     <string name="feat_sim_names_title">Nomi delle SIM</string>
     <string name="feat_sim_names_desc">Rinomina il nome visualizzato dell\'operatore per le schede SIM attive</string>
+    <string name="settings_translate_mode_desc">Premi a lungo qualunque testo per tradurlo e contribuire alla community</string>
+    <string name="settings_genai_automation_title">Abilità GenAI</string>
+    <string name="setting_app_icon_desc">Personalizza l\'icona nella home screen del launcher</string>
+    <string name="setting_app_icon_title">Icona dell\'app</string>
 </resources>
