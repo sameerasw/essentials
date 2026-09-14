@@ -28,7 +28,7 @@
     <string name="app_lock_description">Proteggi le tue app con l\'autenticazione biometrica. Le app bloccate richiedono l\'autenticazione all\'avvio e rimangono sbloccate fino allo spegnimento dello schermo.</string>
     <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
-    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_title">Usa l\'accesso all\'utilizzo</string>
     <string name="setting_use_usage_access_desc">Invece di Accessibilità (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
@@ -1468,7 +1468,7 @@
     <string name="setting_swipe_tabs_desc">Nella schermata home</string>
     <string name="settings_translated_texts_desc">%d modifiche salvate — tocca per inviarle o scartarle</string>
     <string name="cat_navigation">Navigazione</string>
-    <string name="feat_smart_pixels_title">Pixel samrt</string>
+    <string name="feat_smart_pixels_title">Pixel smart</string>
     <string name="settings_translate_mode">Modalità di Traduzione</string>
     <string name="feat_power_battery_title">Alimentazione e Batteria</string>
     <string name="feat_power_battery_desc">Ottimizza il consumo energetico</string>
@@ -1482,4 +1482,15 @@
     <string name="feat_network_download_rate_limit_desc">Limita la velocità di download a livello di sistema</string>
     <string name="feat_sim_names_title">Nomi delle SIM</string>
     <string name="feat_sim_names_desc">Rinomina il nome visualizzato dell\'operatore per le schede SIM attive</string>
+    <string name="duo_desc">Non si piega</string>
+    <string name="feat_power_saving_title">Risparmio energetico</string>
+    <string name="feat_standby_apps_title">App in standby</string>
+    <string name="feat_mobile_data_always_on_title">Dati mobili sempre attivi</string>
+    <string name="setting_location_reached_full_screen_alarm_title">Allarme a schermo intero</string>
+    <string name="feat_watch_controls_title">Personalizza</string>
+    <string name="feat_watch_controls_desc">Personalizza i controlli</string>
+    <string name="watch_call_sync_title">Chiamate</string>
+    <string name="watch_notif_sync_title">Notifiche</string>
+    <string name="setting_app_icon_title">Icona dell\'app</string>
+    <string name="setting_app_icon_desc">Personalizza l\'icona del launcher</string>
 </resources>
