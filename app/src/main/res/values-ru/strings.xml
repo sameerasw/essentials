@@ -1558,7 +1558,7 @@
     <string name="tile_lockdown_mode_desc">Выключает на Блок. экране быстрые плитки</string>
     <string name="watch_notif_sync_title">Синхронизация уведомлений </string>
     <string name="watch_notif_sync_desc">В Essential Launcher </string>
-    <string name="watch_call_sync_title">Синхронизироваьь звонки </string>
+    <string name="watch_call_sync_title">Синхронизировать звонки</string>
     <string name="watch_call_sync_desc">Синхронизируйте и управляйте звонками через часы</string>
     <string name="watch_notif_sync_choose_apps">Вы берете приложения</string>
     <string name="watch_notif_sync_choose_apps_desc">Только выбранные приложения будут синхронизированы с часами</string>
