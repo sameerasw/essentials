@@ -1778,4 +1778,14 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watch_notif_sync_icons_desc">App-Symbole mit dem Launcher der Uhr für die Benachrichtigungsanzeige synchronisieren</string>
     <string name="watch_wireless_debugging_ip_title">IP-Addresse</string>
     <string name="diy_genai_lazy_title">Ich bin faul, mach es für mich</string>
+    <string name="conscious_gate_enable_title">Aktiviere Achtsamkeits-Sperre</string>
+    <string name="conscious_gate_select_apps_title">gesperrte apps auswählen </string>
+    <string name="conscious_gate_delay_title">Wartezeit</string>
+    <string name="conscious_gate_delay_desc">Wie lange die Weiter-Taste blockiert bleibt</string>
+    <string name="conscious_gate_reappear_title">Nach Nutzung wieder sperren</string>
+    <string name="conscious_gate_reappear_desc">Den Sperrbildschirm nach fortlaufender Nutzung erneut anzeigen</string>
+    <string name="conscious_gate_preview_button">Vorschau der Sperrbildschirms</string>
+    <string name="duo_hide_when_screen_off_title">Ausblenden bei ausgeschaltetem Display</string>
+    <string name="duo_hide_when_screen_off_only_idle_title">Auf dem Always-On-Display nur im Ruhezustand ausblenden</string>
+    <string name="icon_no_sim">Keine SIM</string>
 </resources>
