@@ -1582,4 +1582,6 @@
     <string name="label_device_battery">Батарея</string>
     <string name="label_online_help_media">Онлайн-справка Медиа</string>
     <string name="label_ripple_animation">Волновой эффект</string>
+    <string name="feat_sim_names_title">Название SIM-карты</string>
+    <string name="feat_sim_names_desc">Изменить отображаемое имя оператора для активных SIM-карт</string>
 </resources>
