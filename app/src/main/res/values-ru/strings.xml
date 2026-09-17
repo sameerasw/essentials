@@ -424,7 +424,7 @@
     <string name="feat_button_remap_desc">Переназначение действий аппаратных кнопок</string>
     <string name="feat_dynamic_night_light_title">Фильтр синего</string>
     <string name="feat_dynamic_night_light_desc">Для конкретных приложений</string>
-    <string name="feat_screen_locked_security_title">Блокировка настроек</string>
+    <string name="feat_screen_locked_security_title">Блокировка быстрых настроек</string>
     <string name="feat_app_lock_title">Блокировка приложений</string>
     <string name="feat_app_lock_desc">Защитите приложения с помощью биометрии</string>
     <string name="app_lock_auto_lock_delay_title">Задержка автоматической блокировки</string>
@@ -1584,4 +1584,15 @@
     <string name="label_ripple_animation">Волновой эффект</string>
     <string name="feat_sim_names_title">Название SIM-карты</string>
     <string name="feat_sim_names_desc">Изменить отображаемое имя оператора для активных SIM-карт</string>
+    <string name="watch_watchface_title">Циферблаты</string>
+    <string name="watch_watchface_desc">Настройка циферблатов </string>
+    <string name="watchface_hide_battery_title">Скрыть батарею</string>
+    <string name="watchface_hide_battery_desc">Скрыть индикацию заряда аккумулятора</string>
+    <string name="status_glance_font_size_title">Размер шрифта</string>
+    <string name="watchface_clock_dual_tone_title">Двойной цвет</string>
+    <string name="watchface_clock_dual_tone_desc">Часы — белым цветом, минуты — акцентным цветом</string>
+    <string name="watchface_clock_outline_title">Только контур</string>
+    <string name="watchface_clock_outline_desc">Отображать только контуры шрифта вместо закрашенного текста</string>
+    <string name="watchface_hide_device_icons_title">Скрыть значки устройств </string>
+    <string name="watchface_hide_device_icons_desc">Скрывает нижние значки часов и телефона </string>
 </resources>
