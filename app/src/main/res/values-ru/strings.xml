@@ -196,7 +196,7 @@
     <string name="notification_lighting_sweep_random_shapes_title">Случайные фигуры</string>
     <string name="notification_lighting_sweep_thickness_title">Толщина фигуры</string>
     <string name="notification_lighting_sweep_pos_left">Слева</string>
-    <string name="notification_lighting_sweep_pos_center">Центр</string>
+    <string name="notification_lighting_sweep_pos_center">По центру</string>
     <string name="notification_lighting_sweep_pos_right">Справа</string>
     <string name="settings_section_animation">Анимация</string>
     <string name="notification_lighting_pulse_count_title">Количество импульсов</string>
@@ -1595,4 +1595,6 @@
     <string name="watchface_clock_outline_desc">Отображать только контуры шрифта вместо закрашенного текста</string>
     <string name="watchface_hide_device_icons_title">Скрыть значки устройств </string>
     <string name="watchface_hide_device_icons_desc">Скрывает нижние значки часов и телефона </string>
+    <string name="icon_glove_mode">Режим \"В перчатках\"</string>
+    <string name="icon_frame_rate">Частота обновления / Частота кадров</string>
 </resources>
