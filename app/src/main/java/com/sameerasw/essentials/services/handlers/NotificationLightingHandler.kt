@@ -202,15 +202,7 @@ class NotificationLightingHandler(
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
 
         val overlayType =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                try {
-                    WindowManager.LayoutParams::class.java
-                        .getField("TYPE_ACCESSIBILITY_OVERLAY")
-                        .getInt(null)
-                } catch (_: Exception) {
-                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             } else {
                 @Suppress("DEPRECATION")
