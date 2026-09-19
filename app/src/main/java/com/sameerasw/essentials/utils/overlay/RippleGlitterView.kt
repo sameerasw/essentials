@@ -25,6 +25,7 @@ import com.sameerasw.essentials.domain.model.RippleConfig
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -70,7 +71,10 @@ internal class RippleGlitterView(
     private var twinkleRate = FloatArray(0)
     private var peakAlpha = FloatArray(0)
 
-    var progress: Float = 0f
+    var pulses: Int = 1
+    var overlapFraction: Float = 0f
+
+    var time: Float = 0f
         set(value) {
             field = value
             invalidate()
@@ -208,9 +212,26 @@ internal class RippleGlitterView(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (progress <= 0f || maxRadius <= 0f) return
+        if (time <= 0f || maxRadius <= 0f) return
 
-        val radius = progress * maxRadius
+        val count = pulses.coerceAtLeast(1)
+        val stride = (1f - overlapFraction).coerceIn(MIN_STRIDE, 1f)
+        val elapsed = time * (1f + (count - 1) * stride)
+
+        for (instance in 0 until count) {
+            val local = elapsed - instance * stride
+            if (local <= 0f || local >= 1f) continue
+            drawWave(canvas, decelerate(local), local, instance)
+        }
+    }
+
+    private fun drawWave(
+        canvas: Canvas,
+        eased: Float,
+        progress: Float,
+        instance: Int,
+    ) {
+        val radius = eased * maxRadius
         if (radius < 1f) return
 
         val fadeIn = (progress / FADE_IN_FRACTION).coerceAtMost(1f)
@@ -232,7 +253,8 @@ internal class RippleGlitterView(
             val distance = radius * distanceFactor[i]
             if (distance > maxRadius) continue
 
-            val twinkle = abs(sin(progress * twinkleRate[i] + phase[i]))
+            val twinkle =
+                abs(sin(progress * twinkleRate[i] + phase[i] + instance * INSTANCE_PHASE_STEP))
             val sparkleAlpha = sparkleBase * twinkle * peakAlpha[i]
             if (sparkleAlpha <= MIN_VISIBLE_ALPHA) continue
 
@@ -253,6 +275,9 @@ internal class RippleGlitterView(
 
     private companion object {
         const val TWO_PI = 6.2831855f
+        const val MIN_STRIDE = 0.1f
+        const val INSTANCE_PHASE_STEP = 1.7f
+        const val DECELERATE_POWER = 3.2f
         const val FADE_IN_FRACTION = 0.08f
         const val MIN_VISIBLE_ALPHA = 0.01f
         const val EDGE_ALPHA = 0.55f
@@ -263,6 +288,8 @@ internal class RippleGlitterView(
         const val EDGE_STOP_PER_WAVE = 0.07f
         const val INTERIOR_ALPHA_BASE = 0.10f
         const val INTERIOR_ALPHA_PER_WAVE = 0.04f
+
+        fun decelerate(t: Float): Float = 1f - (1f - t).pow(DECELERATE_POWER)
 
         fun fadeOutCurve(x: Float): Float {
             val clamped = x.coerceIn(0f, 1f)

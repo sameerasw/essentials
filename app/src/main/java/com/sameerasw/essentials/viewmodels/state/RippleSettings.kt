@@ -30,6 +30,7 @@ class RippleSettings(
     val position = mutableStateOf(NotificationLightingRipplePosition.AUTO)
     val positionX = mutableFloatStateOf(RippleConfig.DEFAULT_POSITION_PERCENT)
     val positionY = mutableFloatStateOf(RippleConfig.DEFAULT_POSITION_PERCENT)
+    val overlap = mutableFloatStateOf(RippleConfig.DEFAULT_OVERLAP_PERCENT)
 
     fun load() {
         val repo = repository()
@@ -48,6 +49,7 @@ class RippleSettings(
             )
         positionX.floatValue = repo.getFloat(KEY_POSITION_X, RippleConfig.DEFAULT_POSITION_PERCENT)
         positionY.floatValue = repo.getFloat(KEY_POSITION_Y, RippleConfig.DEFAULT_POSITION_PERCENT)
+        overlap.floatValue = repo.getFloat(KEY_OVERLAP, RippleConfig.DEFAULT_OVERLAP_PERCENT)
     }
 
     fun toConfig(): RippleConfig =
@@ -62,6 +64,7 @@ class RippleSettings(
             position = position.value,
             positionX = positionX.floatValue,
             positionY = positionY.floatValue,
+            overlapPercent = overlap.floatValue,
         )
 
     fun saveSpeed(value: Float) = putFloat(speed, KEY_SPEED, value)
@@ -75,6 +78,8 @@ class RippleSettings(
     fun saveSparkleCount(value: Float) = putFloat(sparkleCount, KEY_SPARKLE_COUNT, value)
 
     fun saveSparkleSize(value: Float) = putFloat(sparkleSize, KEY_SPARKLE_SIZE, value)
+
+    fun saveOverlap(value: Float) = putFloat(overlap, KEY_OVERLAP, value)
 
     fun saveSparklesEnabled(enabled: Boolean) {
         sparklesEnabled.value = enabled
@@ -118,5 +123,6 @@ class RippleSettings(
         const val KEY_POSITION = SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_POSITION
         const val KEY_POSITION_X = SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_POSITION_X
         const val KEY_POSITION_Y = SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_POSITION_Y
+        const val KEY_OVERLAP = SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_OVERLAP
     }
 }

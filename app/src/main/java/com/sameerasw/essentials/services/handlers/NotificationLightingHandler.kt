@@ -357,6 +357,7 @@ class NotificationLightingHandler(
                             randomShapes = randomShapes,
                             pulseDurationMillis = pulseDuration,
                             rippleConfig = rippleConfig,
+                            dashConfig = dashConfig,
                         ) {
                             currentPackageShowing = null
                             processQueue()
@@ -395,6 +396,7 @@ class NotificationLightingHandler(
             indicatorScale = indicatorScale,
             randomShapes = randomShapes,
             rippleConfig = rippleConfig,
+            dashConfig = dashConfig,
         ) {
             OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
                 currentPackageShowing = null

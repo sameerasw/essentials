@@ -14,6 +14,7 @@ data class DashConfig(
     val lengthPercent: Float = DEFAULT_LENGTH_PERCENT,
     val glow: Float = DEFAULT_GLOW,
     val glowLengthRatio: Float = DEFAULT_GLOW_LENGTH_RATIO,
+    val overlapPercent: Float = DEFAULT_OVERLAP_PERCENT,
 ) {
     val lengthFraction: Float
         get() = (lengthPercent / 100f).coerceIn(0.02f, 1f)
@@ -21,10 +22,14 @@ data class DashConfig(
     val glowLength: Float
         get() = glowLengthRatio.coerceIn(1f, 4f)
 
+    val overlapFraction: Float
+        get() = (overlapPercent / 100f).coerceIn(0f, 0.9f)
+
     companion object {
         const val DEFAULT_THICKNESS = 8f
         const val DEFAULT_LENGTH_PERCENT = 32f
         const val DEFAULT_GLOW = 1f
         const val DEFAULT_GLOW_LENGTH_RATIO = 1.2f
+        const val DEFAULT_OVERLAP_PERCENT = 0f
     }
 }

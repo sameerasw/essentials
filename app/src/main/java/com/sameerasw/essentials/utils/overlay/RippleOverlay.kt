@@ -16,13 +16,12 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import com.sameerasw.essentials.domain.model.RippleConfig
 
 object RippleOverlay {
     private const val VIEW_TAG = "ripple_view"
-    private const val EXPANSION_TENSION = 1.6f
 
     fun createOverlay(
         context: Context,
@@ -62,37 +61,29 @@ object RippleOverlay {
             return
         }
 
-        val maxPulses = config.pulses
-        val duration = config.durationMillis
-        var completed = 0
+        val count = config.pulses
+        val stride = (1f - config.overlapFraction).coerceIn(0.1f, 1f)
+        val totalUnits = 1f + (count - 1) * stride
 
-        fun startPulse() {
-            if (completed >= maxPulses) {
-                onAnimationEnd?.invoke()
-                return
-            }
-            completed++
+        rippleView.pulses = count
+        rippleView.overlapFraction = config.overlapFraction
+        rippleView.newSeed()
+        rippleView.time = 0f
 
-            rippleView.newSeed()
-            rippleView.progress = 0f
-
-            ValueAnimator
-                .ofFloat(0f, 1f)
-                .apply {
-                    this.duration = duration
-                    interpolator = DecelerateInterpolator(EXPANSION_TENSION)
-                    addUpdateListener { anim -> rippleView.progress = anim.animatedValue as Float }
-                    addListener(
-                        object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                rippleView.progress = 0f
-                                startPulse()
-                            }
-                        },
-                    )
-                }.start()
-        }
-
-        startPulse()
+        ValueAnimator
+            .ofFloat(0f, 1f)
+            .apply {
+                duration = (config.durationMillis * totalUnits).toLong().coerceAtLeast(1L)
+                interpolator = LinearInterpolator()
+                addUpdateListener { anim -> rippleView.time = anim.animatedValue as Float }
+                addListener(
+                    object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            rippleView.time = 0f
+                            onAnimationEnd?.invoke()
+                        }
+                    },
+                )
+            }.start()
     }
 }

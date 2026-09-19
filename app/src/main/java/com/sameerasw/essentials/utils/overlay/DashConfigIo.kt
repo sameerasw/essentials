@@ -18,12 +18,14 @@ private const val EXTRA_THICKNESS = "dash_thickness"
 private const val EXTRA_LENGTH = "dash_length"
 private const val EXTRA_GLOW = "dash_glow"
 private const val EXTRA_GLOW_LENGTH = "dash_glow_length"
+private const val EXTRA_OVERLAP = "dash_overlap"
 
 fun DashConfig.writeTo(intent: Intent) {
     intent.putExtra(EXTRA_THICKNESS, thickness)
     intent.putExtra(EXTRA_LENGTH, lengthPercent)
     intent.putExtra(EXTRA_GLOW, glow)
     intent.putExtra(EXTRA_GLOW_LENGTH, glowLengthRatio)
+    intent.putExtra(EXTRA_OVERLAP, overlapPercent)
 }
 
 fun DashConfig.Companion.fromIntent(intent: Intent): DashConfig =
@@ -32,6 +34,7 @@ fun DashConfig.Companion.fromIntent(intent: Intent): DashConfig =
         lengthPercent = intent.getFloatExtra(EXTRA_LENGTH, DEFAULT_LENGTH_PERCENT),
         glow = intent.getFloatExtra(EXTRA_GLOW, DEFAULT_GLOW),
         glowLengthRatio = intent.getFloatExtra(EXTRA_GLOW_LENGTH, DEFAULT_GLOW_LENGTH_RATIO),
+        overlapPercent = intent.getFloatExtra(EXTRA_OVERLAP, DEFAULT_OVERLAP_PERCENT),
     )
 
 fun DashConfig.Companion.fromPrefs(prefs: SharedPreferences): DashConfig =
@@ -45,6 +48,11 @@ fun DashConfig.Companion.fromPrefs(prefs: SharedPreferences): DashConfig =
             prefs.dashFloat(
                 SettingsRepository.KEY_EDGE_LIGHTING_DASH_GLOW_LENGTH,
                 DEFAULT_GLOW_LENGTH_RATIO,
+            ),
+        overlapPercent =
+            prefs.dashFloat(
+                SettingsRepository.KEY_EDGE_LIGHTING_DASH_OVERLAP,
+                DEFAULT_OVERLAP_PERCENT,
             ),
     )
 

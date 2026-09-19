@@ -25,6 +25,7 @@ private const val EXTRA_SPARKLE_SIZE = "ripple_sparkle_size"
 private const val EXTRA_POSITION = "ripple_position"
 private const val EXTRA_POSITION_X = "ripple_position_x"
 private const val EXTRA_POSITION_Y = "ripple_position_y"
+private const val EXTRA_OVERLAP = "ripple_overlap"
 
 fun RippleConfig.writeTo(intent: Intent) {
     intent.putExtra(EXTRA_SPEED, speed)
@@ -37,6 +38,7 @@ fun RippleConfig.writeTo(intent: Intent) {
     intent.putExtra(EXTRA_POSITION, position.name)
     intent.putExtra(EXTRA_POSITION_X, positionX)
     intent.putExtra(EXTRA_POSITION_Y, positionY)
+    intent.putExtra(EXTRA_OVERLAP, overlapPercent)
 }
 
 fun RippleConfig.Companion.fromIntent(intent: Intent): RippleConfig =
@@ -51,6 +53,7 @@ fun RippleConfig.Companion.fromIntent(intent: Intent): RippleConfig =
         position = parsePosition(intent.getStringExtra(EXTRA_POSITION)),
         positionX = intent.getFloatExtra(EXTRA_POSITION_X, DEFAULT_POSITION_PERCENT),
         positionY = intent.getFloatExtra(EXTRA_POSITION_Y, DEFAULT_POSITION_PERCENT),
+        overlapPercent = intent.getFloatExtra(EXTRA_OVERLAP, DEFAULT_OVERLAP_PERCENT),
     )
 
 fun RippleConfig.Companion.fromPrefs(prefs: SharedPreferences): RippleConfig =
@@ -90,6 +93,11 @@ fun RippleConfig.Companion.fromPrefs(prefs: SharedPreferences): RippleConfig =
             prefs.float(
                 SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_POSITION_Y,
                 DEFAULT_POSITION_PERCENT,
+            ),
+        overlapPercent =
+            prefs.float(
+                SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_OVERLAP,
+                DEFAULT_OVERLAP_PERCENT,
             ),
     )
 

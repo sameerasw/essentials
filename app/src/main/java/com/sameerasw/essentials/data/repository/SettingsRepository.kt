@@ -189,6 +189,8 @@ class SettingsRepository(
         const val KEY_EDGE_LIGHTING_DASH_LENGTH = "edge_lighting_dash_length"
         const val KEY_EDGE_LIGHTING_DASH_GLOW = "edge_lighting_dash_glow"
         const val KEY_EDGE_LIGHTING_DASH_GLOW_LENGTH = "edge_lighting_dash_glow_length"
+        const val KEY_EDGE_LIGHTING_DASH_OVERLAP = "edge_lighting_dash_overlap"
+        const val KEY_EDGE_LIGHTING_RIPPLE_OVERLAP = "edge_lighting_ripple_overlap"
         const val KEY_LOCK_SCREEN_WALLPAPER_SOURCE = "lock_screen_wallpaper_source"
 
         const val KEY_CALL_VIBRATIONS_ENABLED = "call_vibrations_enabled"

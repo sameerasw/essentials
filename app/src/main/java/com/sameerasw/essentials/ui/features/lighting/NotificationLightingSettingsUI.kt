@@ -445,6 +445,23 @@ fun NotificationLightingSettingsUI(
                         previewDash()
                     },
                 )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_pulse_overlap_title),
+                    value = viewModel.dash.overlap.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.dash.overlap.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 0f..90f,
+                    increment = 5f,
+                    valueFormatter = { "%.0f%%".format(it) },
+                    enabled = viewModel.notificationLightingPulseCount.value > 1f,
+                    onValueChangeFinished = {
+                        viewModel.dash.saveOverlap(viewModel.dash.overlap.floatValue)
+                        previewDash()
+                    },
+                )
             }
         }
 
@@ -712,6 +729,23 @@ fun NotificationLightingSettingsUI(
                     valueFormatter = { "%.0f".format(it) },
                     onValueChangeFinished = {
                         viewModel.ripple.saveRepeatCount(viewModel.ripple.repeatCount.floatValue)
+                        previewRipple()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_pulse_overlap_title),
+                    value = viewModel.ripple.overlap.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.ripple.overlap.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 0f..90f,
+                    increment = 5f,
+                    valueFormatter = { "%.0f%%".format(it) },
+                    enabled = viewModel.ripple.repeatCount.floatValue > 1f,
+                    onValueChangeFinished = {
+                        viewModel.ripple.saveOverlap(viewModel.ripple.overlap.floatValue)
                         previewRipple()
                     },
                 )

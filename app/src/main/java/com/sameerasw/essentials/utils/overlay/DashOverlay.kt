@@ -22,14 +22,12 @@ import android.graphics.PathMeasure
 import android.graphics.RectF
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import com.sameerasw.essentials.domain.model.DashConfig
+import kotlin.math.PI
+import kotlin.math.cos
 
-/**
- * Builds and drives the edge dash overlay: a glowing dash that runs from the top centre
- * down both sides of the stroke and meets again at the bottom centre.
- */
 object DashOverlay {
     private const val VIEW_TAG = "dash_view"
 
@@ -63,6 +61,7 @@ object DashOverlay {
         view: View,
         maxPulses: Int,
         durationMillis: Long,
+        config: DashConfig,
         onAnimationEnd: (() -> Unit)? = null,
     ) {
         view.alpha = 1f
@@ -72,36 +71,29 @@ object DashOverlay {
             return
         }
 
-        val pulses = maxPulses.coerceAtLeast(1)
-        var completed = 0
+        val count = maxPulses.coerceAtLeast(1)
+        val stride = (1f - config.overlapFraction).coerceIn(0.1f, 1f)
+        val totalUnits = 1f + (count - 1) * stride
 
-        fun startPulse() {
-            if (completed >= pulses) {
-                onAnimationEnd?.invoke()
-                return
-            }
-            completed++
+        dashView.pulses = count
+        dashView.overlapFraction = config.overlapFraction
+        dashView.time = 0f
 
-            dashView.progress = 0f
-
-            ValueAnimator
-                .ofFloat(0f, 1f)
-                .apply {
-                    duration = durationMillis
-                    interpolator = AccelerateDecelerateInterpolator()
-                    addUpdateListener { anim -> dashView.progress = anim.animatedValue as Float }
-                    addListener(
-                        object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                dashView.progress = 0f
-                                startPulse()
-                            }
-                        },
-                    )
-                }.start()
-        }
-
-        startPulse()
+        ValueAnimator
+            .ofFloat(0f, 1f)
+            .apply {
+                duration = (durationMillis * totalUnits).toLong().coerceAtLeast(1L)
+                interpolator = LinearInterpolator()
+                addUpdateListener { anim -> dashView.time = anim.animatedValue as Float }
+                addListener(
+                    object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            dashView.time = 0f
+                            onAnimationEnd?.invoke()
+                        }
+                    },
+                )
+            }.start()
     }
 }
 
@@ -155,7 +147,10 @@ internal class DashGlowView(
     private val cornerRect = RectF()
     private var pathLength = 0f
 
-    var progress: Float = 0f
+    var pulses: Int = 1
+    var overlapFraction: Float = 0f
+
+    var time: Float = 0f
         set(value) {
             field = value
             invalidate()
@@ -220,12 +215,27 @@ internal class DashGlowView(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (pathLength <= 0f || progress <= 0f) return
+        if (pathLength <= 0f || time <= 0f) return
 
+        val count = pulses.coerceAtLeast(1)
+        val stride = (1f - overlapFraction).coerceIn(MIN_STRIDE, 1f)
+        val elapsed = time * (1f + (count - 1) * stride)
+
+        for (instance in 0 until count) {
+            val local = elapsed - instance * stride
+            if (local <= 0f || local >= 1f) continue
+            drawDash(canvas, local)
+        }
+    }
+
+    private fun drawDash(
+        canvas: Canvas,
+        progress: Float,
+    ) {
         val barLength = pathLength * config.lengthFraction
         val glowLength = barLength * config.glowLength
 
-        val head = progress * (pathLength + glowLength)
+        val head = accelerateDecelerate(progress) * (pathLength + glowLength)
         val headAt = head.coerceIn(0f, pathLength)
         val barAt = (head - barLength).coerceIn(0f, pathLength)
         val glowAt = (head - glowLength).coerceIn(0f, pathLength)
@@ -274,6 +284,7 @@ internal class DashGlowView(
 
         const val BAR_BLUR_SCALE = 0.18f
         const val MIN_BLUR_PX = 0.5f
+        const val MIN_STRIDE = 0.1f
 
         const val GLOW_ALPHA = 0.7f
 
@@ -286,6 +297,8 @@ internal class DashGlowView(
                 progress > FADE_OUT_FROM -> ((1f - progress) / (1f - FADE_OUT_FROM)).coerceAtLeast(0f)
                 else -> 1f
             }
+
+        fun accelerateDecelerate(t: Float): Float = (cos((t + 1f) * PI).toFloat() / 2f) + 0.5f
 
         fun toAlphaByte(fraction: Float): Int = (fraction * 255f).toInt().coerceIn(0, 255)
 

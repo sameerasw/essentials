@@ -20,12 +20,16 @@ data class RippleConfig(
     val position: NotificationLightingRipplePosition = NotificationLightingRipplePosition.AUTO,
     val positionX: Float = DEFAULT_POSITION_PERCENT,
     val positionY: Float = DEFAULT_POSITION_PERCENT,
+    val overlapPercent: Float = DEFAULT_OVERLAP_PERCENT,
 ) {
     val durationMillis: Long
         get() = (BASE_DURATION_MS / speed.coerceAtLeast(MIN_SPEED)).toLong()
 
     val pulses: Int
         get() = repeatCount.coerceAtLeast(1)
+
+    val overlapFraction: Float
+        get() = (overlapPercent / 100f).coerceIn(0f, 0.9f)
 
     val effectiveSparkleCount: Int
         get() = if (sparklesEnabled) sparkleCount.coerceAtLeast(0) else 0
@@ -41,5 +45,6 @@ data class RippleConfig(
         const val DEFAULT_SPARKLE_COUNT = 110
         const val DEFAULT_SPARKLE_SIZE = 1f
         const val DEFAULT_POSITION_PERCENT = 50f
+        const val DEFAULT_OVERLAP_PERCENT = 0f
     }
 }

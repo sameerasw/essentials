@@ -390,6 +390,7 @@ class NotificationLightingService : Service() {
                         randomShapes = randomShapes,
                         pulseDurationMillis = pulseDuration,
                         rippleConfig = rippleConfig,
+                        dashConfig = dashConfig,
                     )
                 } else {
                     // Normal mode
@@ -413,6 +414,7 @@ class NotificationLightingService : Service() {
                         indicatorScale = indicatorScale,
                         randomShapes = randomShapes,
                         rippleConfig = rippleConfig,
+                        dashConfig = dashConfig,
                     ) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(

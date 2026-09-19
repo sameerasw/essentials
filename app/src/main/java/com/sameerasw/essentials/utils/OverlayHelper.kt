@@ -587,6 +587,7 @@ object OverlayHelper {
         randomShapes: Boolean = false,
         pulseDurationMillis: Long = 3000L,
         rippleConfig: RippleConfig = RippleConfig(),
+        dashConfig: DashConfig = DashConfig(),
         onAnimationEnd: (() -> Unit)? = null,
     ) {
         if (style == NotificationLightingStyle.RIPPLE) {
@@ -595,7 +596,7 @@ object OverlayHelper {
         }
 
         if (style == NotificationLightingStyle.DASH) {
-            DashOverlay.pulse(view, 1, pulseDurationMillis, onAnimationEnd)
+            DashOverlay.pulse(view, 1, pulseDurationMillis, dashConfig, onAnimationEnd)
             return
         }
 
@@ -714,6 +715,7 @@ object OverlayHelper {
         indicatorScale: Float = 1.0f,
         randomShapes: Boolean = false,
         rippleConfig: RippleConfig = RippleConfig(),
+        dashConfig: DashConfig = DashConfig(),
         onAnimationEnd: (() -> Unit)? = null,
     ) {
         if (style == NotificationLightingStyle.RIPPLE) {
@@ -722,7 +724,7 @@ object OverlayHelper {
         }
 
         if (style == NotificationLightingStyle.DASH) {
-            DashOverlay.pulse(view, maxPulses, pulseDurationMillis, onAnimationEnd)
+            DashOverlay.pulse(view, maxPulses, pulseDurationMillis, dashConfig, onAnimationEnd)
             return
         }
 

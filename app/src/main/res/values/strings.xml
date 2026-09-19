@@ -380,6 +380,7 @@
     <string name="notification_lighting_dash_length_title">Length</string>
     <string name="notification_lighting_dash_glow_title">Glow</string>
     <string name="notification_lighting_dash_glow_length_title">Glow length</string>
+    <string name="notification_lighting_pulse_overlap_title">Pulse overlap</string>
     <string name="notification_lighting_ripple_sparkle_title">Sparkle</string>
     <string name="notification_lighting_ripple_opacity_title">Opacity</string>
     <string name="notification_lighting_ripple_position_section">Position</string>
