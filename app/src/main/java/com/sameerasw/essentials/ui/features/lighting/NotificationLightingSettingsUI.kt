@@ -126,6 +126,14 @@ fun NotificationLightingSettingsUI(
         }
     }
 
+    val previewDash: () -> Unit = {
+        viewModel.triggerNotificationLightingForDash(context)
+        coroutineScope.launch {
+            delay(5000)
+            viewModel.removePreviewOverlay(context)
+        }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.removePreviewOverlay(context)
@@ -220,7 +228,7 @@ fun NotificationLightingSettingsUI(
                     return@NotificationLightingStylePicker
                 }
                 viewModel.setNotificationLightingStyle(style, context)
-                if (style == NotificationLightingStyle.RIPPLE &&
+                if (style.usesRestrictedColorModes &&
                     viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM
                 ) {
                     viewModel.setNotificationLightingColorMode(
@@ -294,8 +302,8 @@ fun NotificationLightingSettingsUI(
             }
         }
 
-        // Stroke Adjustment Section (For STROKE style)
-        if (style == NotificationLightingStyle.STROKE) {
+        // Stroke Adjustment Section (For STROKE and DASH styles, which share the outline)
+        if (style == NotificationLightingStyle.STROKE || style == NotificationLightingStyle.DASH) {
             Text(
                 text = stringResource(R.string.notification_lighting_stroke_adjustment_section),
                 style = MaterialTheme.typography.titleMedium,
@@ -331,33 +339,110 @@ fun NotificationLightingSettingsUI(
                     modifier = Modifier.highlight(highlightSetting == "corner_radius"),
                 )
 
+                if (style == NotificationLightingStyle.STROKE) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.notification_lighting_stroke_thickness_title),
+                        value = strokeThicknessDp,
+                        onValueChange = { newValue ->
+                            strokeThicknessDp = newValue
+                            HapticUtil.performSliderHaptic(view)
+                            // Show preview overlay while dragging
+                            viewModel.triggerNotificationLightingWithRadiusAndThickness(
+                                context,
+                                cornerRadiusDp,
+                                newValue,
+                            )
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "stroke_thickness"),
+                        valueRange = 1f..20f,
+                        valueFormatter = { "%.1f".format(it) },
+                        onValueChangeFinished = {
+                            // Save the stroke thickness
+                            viewModel.saveNotificationLightingStrokeThickness(
+                                context,
+                                strokeThicknessDp,
+                            )
+                            // Wait 5 seconds then remove preview overlay
+                            coroutineScope.launch {
+                                delay(5000)
+                                viewModel.removePreviewOverlay(context)
+                            }
+                        },
+                    )
+                }
+            }
+        }
+
+        if (style == NotificationLightingStyle.DASH) {
+            Text(
+                text = stringResource(R.string.notification_lighting_dash_adjustment_section),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            RoundedCardContainer(modifier = Modifier) {
                 ConfigSliderItem(
                     title = stringResource(R.string.notification_lighting_stroke_thickness_title),
-                    value = strokeThicknessDp,
+                    value = viewModel.dash.thickness.floatValue,
                     onValueChange = { newValue ->
-                        strokeThicknessDp = newValue
+                        viewModel.dash.thickness.floatValue = newValue
                         HapticUtil.performSliderHaptic(view)
-                        // Show preview overlay while dragging
-                        viewModel.triggerNotificationLightingWithRadiusAndThickness(
-                            context,
-                            cornerRadiusDp,
-                            newValue,
-                        )
                     },
-                    modifier = Modifier.highlight(highlightSetting == "stroke_thickness"),
                     valueRange = 1f..20f,
+                    increment = 0.5f,
                     valueFormatter = { "%.1f".format(it) },
                     onValueChangeFinished = {
-                        // Save the stroke thickness
-                        viewModel.saveNotificationLightingStrokeThickness(
-                            context,
-                            strokeThicknessDp,
-                        )
-                        // Wait 5 seconds then remove preview overlay
-                        coroutineScope.launch {
-                            delay(5000)
-                            viewModel.removePreviewOverlay(context)
-                        }
+                        viewModel.dash.saveThickness(viewModel.dash.thickness.floatValue)
+                        previewDash()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_dash_length_title),
+                    value = viewModel.dash.length.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.dash.length.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 5f..100f,
+                    increment = 1f,
+                    valueFormatter = { "%.0f%%".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.dash.saveLength(viewModel.dash.length.floatValue)
+                        previewDash()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_dash_glow_title),
+                    value = viewModel.dash.glow.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.dash.glow.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 0f..3f,
+                    increment = 0.1f,
+                    valueFormatter = { "%.1fx".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.dash.saveGlow(viewModel.dash.glow.floatValue)
+                        previewDash()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_dash_glow_length_title),
+                    value = viewModel.dash.glowLength.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.dash.glowLength.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 1f..3f,
+                    increment = 0.1f,
+                    valueFormatter = { "%.1fx".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.dash.saveGlowLength(viewModel.dash.glowLength.floatValue)
+                        previewDash()
                     },
                 )
             }
@@ -771,10 +856,11 @@ fun NotificationLightingSettingsUI(
             }
         }
 
-        // Animation Settings (Only for STROKE, GLOW and SWEEP)
+        // Animation Settings (Only for STROKE, GLOW, SWEEP and DASH)
         if (style == NotificationLightingStyle.STROKE ||
             style == NotificationLightingStyle.GLOW ||
-            style == NotificationLightingStyle.SWEEP
+            style == NotificationLightingStyle.SWEEP ||
+            style == NotificationLightingStyle.DASH
         ) {
             Text(
                 text = stringResource(R.string.settings_section_animation),
@@ -833,7 +919,7 @@ fun NotificationLightingSettingsUI(
                         viewModel.triggerNotificationLighting(context)
                     },
                     options =
-                        if (style == NotificationLightingStyle.RIPPLE) {
+                        if (style.usesRestrictedColorModes) {
                             listOf(
                                 R.string.color_mode_material_you to NotificationLightingColorMode.SYSTEM,
                                 R.string.color_mode_app_specific to NotificationLightingColorMode.APP_SPECIFIC,

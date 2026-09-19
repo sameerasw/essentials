@@ -29,6 +29,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
+import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
@@ -1189,6 +1190,7 @@ class NotificationListener : NotificationListenerService() {
                             prefs.getBoolean("edge_lighting_sweep_random_shapes", true)
                         val systemLightingMode = prefs.getInt("edge_lighting_system_mode", 0)
                         val rippleConfig = RippleConfig.fromPrefs(prefs)
+                        val dashConfig = DashConfig.fromPrefs(prefs)
 
                         fun startNotificationLighting(resolvedColor: Int? = null) {
                             val intent =
@@ -1233,6 +1235,7 @@ class NotificationListener : NotificationListenerService() {
                                     putExtra("random_shapes", randomShapes)
                                     putExtra("system_lighting_mode", systemLightingMode)
                                     rippleConfig.writeTo(this)
+                                    dashConfig.writeTo(this)
                                     putExtra("package_name", sbn.packageName)
                                 }
                             if (PermissionUtils.isAccessibilityServiceEnabled(applicationContext)) {

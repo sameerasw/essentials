@@ -16,4 +16,9 @@ enum class NotificationLightingStyle {
     SWEEP,
     SYSTEM,
     RIPPLE,
+    DASH,
+    ;
+
+    val usesRestrictedColorModes: Boolean
+        get() = this == RIPPLE || this == DASH
 }

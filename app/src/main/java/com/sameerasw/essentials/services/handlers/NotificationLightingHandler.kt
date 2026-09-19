@@ -19,6 +19,7 @@ import android.os.PowerManager
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
@@ -56,6 +57,7 @@ class NotificationLightingHandler(
     private var randomShapes: Boolean = true
     private var systemLightingMode: Int = 0
     private var rippleConfig: RippleConfig = RippleConfig()
+    private var dashConfig: DashConfig = DashConfig()
 
     private var isAmbientShowLockScreen: Boolean = false
     private var isAmbientDisplayRequested: Boolean = false
@@ -147,6 +149,7 @@ class NotificationLightingHandler(
         randomShapes = intent.getBooleanExtra("random_shapes", false)
         systemLightingMode = intent.getIntExtra("system_lighting_mode", 0)
         rippleConfig = RippleConfig.fromIntent(intent)
+        dashConfig = DashConfig.fromIntent(intent)
         isInterrupted = false
     }
 
@@ -234,6 +237,7 @@ class NotificationLightingHandler(
                     randomShapes = randomShapes,
                     strokeDp = if (edgeLightingStyle == NotificationLightingStyle.SWEEP) sweepThickness else strokeThicknessDp,
                     rippleConfig = rippleConfig,
+                    dashConfig = dashConfig,
                 )
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 
@@ -255,6 +259,7 @@ class NotificationLightingHandler(
                             randomShapes = randomShapes,
                             showBackground = true,
                             rippleConfig = rippleConfig,
+                            dashConfig = dashConfig,
                         )
                     val ambientParams =
                         OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)

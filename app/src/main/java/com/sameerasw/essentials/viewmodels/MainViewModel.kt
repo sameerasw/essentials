@@ -83,6 +83,7 @@ import com.sameerasw.essentials.utils.SurfaceFlingerControl
 import com.sameerasw.essentials.utils.TestNotificationUtil
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import com.sameerasw.essentials.utils.overlay.writeTo
+import com.sameerasw.essentials.viewmodels.state.DashSettings
 import com.sameerasw.essentials.viewmodels.state.RippleSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -371,6 +372,7 @@ class MainViewModel : ViewModel() {
     val notificationLightingSweepRandomShapes = mutableStateOf(false)
     val notificationLightingSystemMode = mutableIntStateOf(0) // 0: Charging ripple, 1: Auth ripple
     val ripple = RippleSettings { settingsRepository }
+    val dash = DashSettings { settingsRepository }
     val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
     val appLockAutoLockDelayIndex = mutableIntStateOf(0)
@@ -2013,6 +2015,7 @@ class MainViewModel : ViewModel() {
                 true,
             )
         ripple.load()
+        dash.load()
 
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
@@ -6448,6 +6451,7 @@ class MainViewModel : ViewModel() {
         putExtra("random_shapes", notificationLightingSweepRandomShapes.value)
         putExtra("system_lighting_mode", notificationLightingSystemMode.intValue)
         ripple.toConfig().writeTo(this)
+        dash.toConfig().writeTo(this)
     }
 
     /**
@@ -6625,6 +6629,18 @@ class MainViewModel : ViewModel() {
             val intent =
                 Intent(context, NotificationLightingService::class.java).apply {
                     addLightingExtras(styleOverride = NotificationLightingStyle.INDICATOR)
+                }
+            context.startService(intent)
+        } catch (e: Exception) {
+            // ignore
+        }
+    }
+
+    fun triggerNotificationLightingForDash(context: Context) {
+        try {
+            val intent =
+                Intent(context, NotificationLightingService::class.java).apply {
+                    addLightingExtras(styleOverride = NotificationLightingStyle.DASH)
                 }
             context.startService(intent)
         } catch (e: Exception) {

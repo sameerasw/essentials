@@ -26,6 +26,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
+import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
@@ -62,6 +63,7 @@ class NotificationLightingService : Service() {
     private var randomShapes: Boolean = true
     private var systemLightingMode: Int = 0
     private var rippleConfig: RippleConfig = RippleConfig()
+    private var dashConfig: DashConfig = DashConfig()
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -184,6 +186,7 @@ class NotificationLightingService : Service() {
         randomShapes = intent.getBooleanExtra("random_shapes", false)
         systemLightingMode = intent.getIntExtra("system_lighting_mode", 0)
         rippleConfig = RippleConfig.fromIntent(intent)
+        dashConfig = DashConfig.fromIntent(intent)
         val ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
         val removePreview = intent.getBooleanExtra("remove_preview", false)
 
@@ -253,6 +256,7 @@ class NotificationLightingService : Service() {
                         putExtra("random_shapes", randomShapes)
                         putExtra("system_lighting_mode", systemLightingMode)
                         rippleConfig.writeTo(this)
+                        dashConfig.writeTo(this)
                         putExtra("package_name", intent.getStringExtra("package_name"))
                     }
                 // Use startService to request the accessibility service perform the elevated overlay.
@@ -367,6 +371,7 @@ class NotificationLightingService : Service() {
                     randomShapes = randomShapes,
                     showBackground = isAmbientDisplay,
                     rippleConfig = rippleConfig,
+                    dashConfig = dashConfig,
                 )
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 
