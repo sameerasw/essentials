@@ -378,6 +378,14 @@
     <string name="notification_lighting_ripple_repeat_count_title">Repeat count</string>
     <string name="notification_lighting_ripple_sparkle_title">Sparkle</string>
     <string name="notification_lighting_ripple_opacity_title">Opacity</string>
+    <string name="notification_lighting_ripple_position_section">Position</string>
+    <string name="notification_lighting_ripple_position_auto">Auto</string>
+    <string name="notification_lighting_ripple_position_center">Center</string>
+    <string name="notification_lighting_ripple_position_manual">Manual</string>
+    <string name="notification_lighting_ripple_position_pick_title">Pick position</string>
+    <string name="notification_lighting_ripple_position_pick_desc">Tap anywhere on screen to set where the ripple starts</string>
+    <string name="notification_lighting_ripple_position_picker_title">Ripple origin</string>
+    <string name="notification_lighting_ripple_position_picker_desc">Tap or drag anywhere to place the ripple origin.</string>
     <string name="color_mode_material_you">Material You</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>

@@ -29,8 +29,11 @@ import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.RippleConfig
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.OverlayHelper
+import com.sameerasw.essentials.utils.overlay.fromIntent
+import com.sameerasw.essentials.utils.overlay.writeTo
 
 /**
  * Overlay service that shows a light pulse for notifications.
@@ -58,13 +61,7 @@ class NotificationLightingService : Service() {
     private var sweepThickness: Float = 8f
     private var randomShapes: Boolean = true
     private var systemLightingMode: Int = 0
-    private var rippleSpeed: Float = 1f
-    private var rippleSparkleCount: Int = OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT
-    private var rippleSparkleSize: Float = 1f
-    private var rippleWaveSize: Float = 1f
-    private var rippleRepeatCount: Int = 1
-    private var rippleSparklesEnabled: Boolean = true
-    private var rippleOpacity: Float = 1f
+    private var rippleConfig: RippleConfig = RippleConfig()
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -186,14 +183,7 @@ class NotificationLightingService : Service() {
         sweepThickness = intent.getFloatExtra("sweep_thickness", 8f)
         randomShapes = intent.getBooleanExtra("random_shapes", false)
         systemLightingMode = intent.getIntExtra("system_lighting_mode", 0)
-        rippleSpeed = intent.getFloatExtra("ripple_speed", 1f)
-        rippleSparkleCount =
-            intent.getIntExtra("ripple_sparkle_count", OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT)
-        rippleSparkleSize = intent.getFloatExtra("ripple_sparkle_size", 1f)
-        rippleWaveSize = intent.getFloatExtra("ripple_wave_size", 1f)
-        rippleRepeatCount = intent.getIntExtra("ripple_repeat_count", 1)
-        rippleSparklesEnabled = intent.getBooleanExtra("ripple_sparkles_enabled", true)
-        rippleOpacity = intent.getFloatExtra("ripple_opacity", 1f)
+        rippleConfig = RippleConfig.fromIntent(intent)
         val ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
         val removePreview = intent.getBooleanExtra("remove_preview", false)
 
@@ -263,13 +253,7 @@ class NotificationLightingService : Service() {
                         )
                         putExtra("random_shapes", randomShapes)
                         putExtra("system_lighting_mode", systemLightingMode)
-                        putExtra("ripple_speed", rippleSpeed)
-                        putExtra("ripple_sparkle_count", rippleSparkleCount)
-                        putExtra("ripple_sparkle_size", rippleSparkleSize)
-                        putExtra("ripple_wave_size", rippleWaveSize)
-                        putExtra("ripple_repeat_count", rippleRepeatCount)
-                        putExtra("ripple_sparkles_enabled", rippleSparklesEnabled)
-                        putExtra("ripple_opacity", rippleOpacity)
+                        rippleConfig.writeTo(this)
                         putExtra("package_name", intent.getStringExtra("package_name"))
                     }
                 // Use startService to request the accessibility service perform the elevated overlay.
@@ -383,11 +367,7 @@ class NotificationLightingService : Service() {
                     indicatorScale = indicatorScale,
                     randomShapes = randomShapes,
                     showBackground = isAmbientDisplay,
-                    rippleSparkleCount = rippleSparkleCount,
-                    rippleSparkleSize = rippleSparkleSize,
-                    rippleWaveSize = rippleWaveSize,
-                    rippleSparklesEnabled = rippleSparklesEnabled,
-                    rippleOpacity = rippleOpacity,
+                    rippleConfig = rippleConfig,
                 )
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 
@@ -404,8 +384,7 @@ class NotificationLightingService : Service() {
                         indicatorScale,
                         randomShapes = randomShapes,
                         pulseDurationMillis = pulseDuration,
-                        rippleSpeed = rippleSpeed,
-                        rippleRepeatCount = rippleRepeatCount,
+                        rippleConfig = rippleConfig,
                     )
                 } else {
                     // Normal mode
@@ -428,8 +407,7 @@ class NotificationLightingService : Service() {
                         indicatorY = indicatorY,
                         indicatorScale = indicatorScale,
                         randomShapes = randomShapes,
-                        rippleSpeed = rippleSpeed,
-                        rippleRepeatCount = rippleRepeatCount,
+                        rippleConfig = rippleConfig,
                     ) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(

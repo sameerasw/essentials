@@ -56,8 +56,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingRipplePosition
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.ui.activities.RipplePositionPickerActivity
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -501,6 +503,49 @@ fun NotificationLightingSettingsUI(
 
         if (style == NotificationLightingStyle.RIPPLE) {
             Text(
+                text = stringResource(R.string.notification_lighting_ripple_position_section),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            RoundedCardContainer(modifier = Modifier) {
+                RipplePositionPicker(
+                    selectedPosition = viewModel.ripple.position.value,
+                    onPositionSelected = { position ->
+                        viewModel.ripple.savePosition(position)
+                        if (position == NotificationLightingRipplePosition.MANUAL) {
+                            context.startActivity(
+                                Intent(context, RipplePositionPickerActivity::class.java),
+                            )
+                        } else {
+                            previewRipple()
+                        }
+                    },
+                )
+
+                if (viewModel.ripple.position.value ==
+                    NotificationLightingRipplePosition.MANUAL
+                ) {
+                    FeatureCard(
+                        title = stringResource(R.string.notification_lighting_ripple_position_pick_title),
+                        description = stringResource(R.string.notification_lighting_ripple_position_pick_desc),
+                        iconRes = R.drawable.rounded_target_24,
+                        isEnabled = true,
+                        showToggle = false,
+                        hasMoreSettings = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            context.startActivity(
+                                Intent(context, RipplePositionPickerActivity::class.java),
+                            )
+                        },
+                    )
+                }
+            }
+
+            Text(
                 text = stringResource(R.string.notification_lighting_ripple_adjustment_section),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
@@ -511,49 +556,43 @@ fun NotificationLightingSettingsUI(
                 IconToggleItem(
                     iconRes = R.drawable.rounded_auto_awesome_24,
                     title = stringResource(R.string.notification_lighting_ripple_sparkle_title),
-                    isChecked = viewModel.notificationLightingRippleSparklesEnabled.value,
+                    isChecked = viewModel.ripple.sparklesEnabled.value,
                     onCheckedChange = { checked ->
-                        viewModel.saveNotificationLightingRippleSparklesEnabled(context, checked)
+                        viewModel.ripple.saveSparklesEnabled(checked)
                         HapticUtil.performSliderHaptic(view)
                         previewRipple()
                     },
                 )
 
-                if (viewModel.notificationLightingRippleSparklesEnabled.value) {
+                if (viewModel.ripple.sparklesEnabled.value) {
                     ConfigSliderItem(
                         title = stringResource(R.string.notification_lighting_ripple_sparkle_count_title),
-                        value = viewModel.notificationLightingRippleSparkleCount.floatValue,
+                        value = viewModel.ripple.sparkleCount.floatValue,
                         onValueChange = { newValue ->
-                            viewModel.notificationLightingRippleSparkleCount.floatValue = newValue
+                            viewModel.ripple.sparkleCount.floatValue = newValue
                             HapticUtil.performSliderHaptic(view)
                         },
                         valueRange = 0f..1000f,
                         increment = 10f,
                         valueFormatter = { "%.0f".format(it) },
                         onValueChangeFinished = {
-                            viewModel.saveNotificationLightingRippleSparkleCount(
-                                context,
-                                viewModel.notificationLightingRippleSparkleCount.floatValue,
-                            )
+                            viewModel.ripple.saveSparkleCount(viewModel.ripple.sparkleCount.floatValue)
                             previewRipple()
                         },
                     )
 
                     ConfigSliderItem(
                         title = stringResource(R.string.notification_lighting_ripple_sparkle_size_title),
-                        value = viewModel.notificationLightingRippleSparkleSize.floatValue,
+                        value = viewModel.ripple.sparkleSize.floatValue,
                         onValueChange = { newValue ->
-                            viewModel.notificationLightingRippleSparkleSize.floatValue = newValue
+                            viewModel.ripple.sparkleSize.floatValue = newValue
                             HapticUtil.performSliderHaptic(view)
                         },
                         valueRange = 0.1f..3f,
                         increment = 0.1f,
                         valueFormatter = { "%.1fx".format(it) },
                         onValueChangeFinished = {
-                            viewModel.saveNotificationLightingRippleSparkleSize(
-                                context,
-                                viewModel.notificationLightingRippleSparkleSize.floatValue,
-                            )
+                            viewModel.ripple.saveSparkleSize(viewModel.ripple.sparkleSize.floatValue)
                             previewRipple()
                         },
                     )
@@ -561,28 +600,25 @@ fun NotificationLightingSettingsUI(
 
                 ConfigSliderItem(
                     title = stringResource(R.string.notification_lighting_ripple_speed_title),
-                    value = viewModel.notificationLightingRippleSpeed.floatValue,
+                    value = viewModel.ripple.speed.floatValue,
                     onValueChange = { newValue ->
-                        viewModel.notificationLightingRippleSpeed.floatValue = newValue
+                        viewModel.ripple.speed.floatValue = newValue
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 0.5f..3f,
                     increment = 0.1f,
                     valueFormatter = { "%.1fx".format(it) },
                     onValueChangeFinished = {
-                        viewModel.saveNotificationLightingRippleSpeed(
-                            context,
-                            viewModel.notificationLightingRippleSpeed.floatValue,
-                        )
+                        viewModel.ripple.saveSpeed(viewModel.ripple.speed.floatValue)
                         previewRipple()
                     },
                 )
 
                 ConfigSliderItem(
                     title = stringResource(R.string.notification_lighting_ripple_repeat_count_title),
-                    value = viewModel.notificationLightingRippleRepeatCount.floatValue,
+                    value = viewModel.ripple.repeatCount.floatValue,
                     onValueChange = { newValue ->
-                        viewModel.notificationLightingRippleRepeatCount.floatValue = newValue
+                        viewModel.ripple.repeatCount.floatValue = newValue
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 1f..10f,
@@ -590,48 +626,39 @@ fun NotificationLightingSettingsUI(
                     increment = 1f,
                     valueFormatter = { "%.0f".format(it) },
                     onValueChangeFinished = {
-                        viewModel.saveNotificationLightingRippleRepeatCount(
-                            context,
-                            viewModel.notificationLightingRippleRepeatCount.floatValue,
-                        )
+                        viewModel.ripple.saveRepeatCount(viewModel.ripple.repeatCount.floatValue)
                         previewRipple()
                     },
                 )
 
                 ConfigSliderItem(
                     title = stringResource(R.string.notification_lighting_ripple_wave_size_title),
-                    value = viewModel.notificationLightingRippleWaveSize.floatValue,
+                    value = viewModel.ripple.waveSize.floatValue,
                     onValueChange = { newValue ->
-                        viewModel.notificationLightingRippleWaveSize.floatValue = newValue
+                        viewModel.ripple.waveSize.floatValue = newValue
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 0.5f..8f,
                     increment = 0.1f,
                     valueFormatter = { "%.1fx".format(it) },
                     onValueChangeFinished = {
-                        viewModel.saveNotificationLightingRippleWaveSize(
-                            context,
-                            viewModel.notificationLightingRippleWaveSize.floatValue,
-                        )
+                        viewModel.ripple.saveWaveSize(viewModel.ripple.waveSize.floatValue)
                         previewRipple()
                     },
                 )
 
                 ConfigSliderItem(
                     title = stringResource(R.string.notification_lighting_ripple_opacity_title),
-                    value = viewModel.notificationLightingRippleOpacity.floatValue,
+                    value = viewModel.ripple.opacity.floatValue,
                     onValueChange = { newValue ->
-                        viewModel.notificationLightingRippleOpacity.floatValue = newValue
+                        viewModel.ripple.opacity.floatValue = newValue
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 0.2f..2f,
                     increment = 0.1f,
                     valueFormatter = { "%.1fx".format(it) },
                     onValueChangeFinished = {
-                        viewModel.saveNotificationLightingRippleOpacity(
-                            context,
-                            viewModel.notificationLightingRippleOpacity.floatValue,
-                        )
+                        viewModel.ripple.saveOpacity(viewModel.ripple.opacity.floatValue)
                         previewRipple()
                     },
                 )
@@ -1097,6 +1124,63 @@ fun ColorCircle(
                         .clip(CircleShape)
                         .background(Color.White.copy(alpha = 0.8f)),
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun RipplePositionPicker(
+    selectedPosition: NotificationLightingRipplePosition,
+    onPositionSelected: (NotificationLightingRipplePosition) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val positions =
+        listOf(
+            NotificationLightingRipplePosition.AUTO,
+            NotificationLightingRipplePosition.CENTER,
+            NotificationLightingRipplePosition.MANUAL,
+        )
+    val labels =
+        listOf(
+            stringResource(R.string.notification_lighting_ripple_position_auto),
+            stringResource(R.string.notification_lighting_ripple_position_center),
+            stringResource(R.string.notification_lighting_ripple_position_manual),
+        )
+    val view = LocalView.current
+
+    val selectedIndex = positions.indexOf(selectedPosition).coerceAtLeast(0)
+
+    Row(
+        modifier =
+            modifier
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceBright,
+                ).padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+    ) {
+        val modifiers = List(positions.size) { Modifier.weight(1f) }
+
+        positions.forEachIndexed { index, pos ->
+            ToggleButton(
+                checked = selectedIndex == index,
+                onCheckedChange = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onPositionSelected(pos)
+                },
+                modifier = modifiers[index].semantics { role = Role.RadioButton },
+                shapes =
+                    when (index) {
+                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        positions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                    },
+            ) {
+                Text(
+                    text = labels[index],
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
         }
     }
 }

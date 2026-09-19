@@ -33,13 +33,15 @@ import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
+import com.sameerasw.essentials.domain.model.RippleConfig
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.widgets.PixelSearchbarWidget
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.OverlayHelper
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.overlay.fromPrefs
+import com.sameerasw.essentials.utils.overlay.writeTo
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -1186,51 +1188,7 @@ class NotificationListener : NotificationListenerService() {
                         val randomShapes =
                             prefs.getBoolean("edge_lighting_sweep_random_shapes", true)
                         val systemLightingMode = prefs.getInt("edge_lighting_system_mode", 0)
-                        val rippleSpeed =
-                            try {
-                                prefs.getFloat("edge_lighting_ripple_speed", 1f)
-                            } catch (e: ClassCastException) {
-                                prefs.getInt("edge_lighting_ripple_speed", 1).toFloat()
-                            }
-                        val rippleSparkleCount =
-                            try {
-                                prefs
-                                    .getFloat(
-                                        "edge_lighting_ripple_sparkle_count",
-                                        OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT.toFloat(),
-                                    ).toInt()
-                            } catch (e: ClassCastException) {
-                                prefs.getInt(
-                                    "edge_lighting_ripple_sparkle_count",
-                                    OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT,
-                                )
-                            }
-                        val rippleSparkleSize =
-                            try {
-                                prefs.getFloat("edge_lighting_ripple_sparkle_size", 1f)
-                            } catch (e: ClassCastException) {
-                                prefs.getInt("edge_lighting_ripple_sparkle_size", 1).toFloat()
-                            }
-                        val rippleWaveSize =
-                            try {
-                                prefs.getFloat("edge_lighting_ripple_wave_size", 1f)
-                            } catch (e: ClassCastException) {
-                                prefs.getInt("edge_lighting_ripple_wave_size", 1).toFloat()
-                            }
-                        val rippleRepeatCount =
-                            try {
-                                prefs.getFloat("edge_lighting_ripple_repeat_count", 1f).toInt()
-                            } catch (e: ClassCastException) {
-                                prefs.getInt("edge_lighting_ripple_repeat_count", 1)
-                            }
-                        val rippleSparklesEnabled =
-                            prefs.getBoolean("edge_lighting_ripple_sparkles_enabled", true)
-                        val rippleOpacity =
-                            try {
-                                prefs.getFloat("edge_lighting_ripple_opacity", 1f)
-                            } catch (e: ClassCastException) {
-                                prefs.getInt("edge_lighting_ripple_opacity", 1).toFloat()
-                            }
+                        val rippleConfig = RippleConfig.fromPrefs(prefs)
 
                         fun startNotificationLighting(resolvedColor: Int? = null) {
                             val intent =
@@ -1274,13 +1232,7 @@ class NotificationListener : NotificationListenerService() {
                                     putExtra("sweep_thickness", sweepThickness)
                                     putExtra("random_shapes", randomShapes)
                                     putExtra("system_lighting_mode", systemLightingMode)
-                                    putExtra("ripple_speed", rippleSpeed)
-                                    putExtra("ripple_sparkle_count", rippleSparkleCount)
-                                    putExtra("ripple_sparkle_size", rippleSparkleSize)
-                                    putExtra("ripple_wave_size", rippleWaveSize)
-                                    putExtra("ripple_repeat_count", rippleRepeatCount)
-                                    putExtra("ripple_sparkles_enabled", rippleSparklesEnabled)
-                                    putExtra("ripple_opacity", rippleOpacity)
+                                    rippleConfig.writeTo(this)
                                     putExtra("package_name", sbn.packageName)
                                 }
                             if (PermissionUtils.isAccessibilityServiceEnabled(applicationContext)) {

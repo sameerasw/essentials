@@ -182,6 +182,9 @@ class SettingsRepository(
         const val KEY_EDGE_LIGHTING_RIPPLE_REPEAT_COUNT = "edge_lighting_ripple_repeat_count"
         const val KEY_EDGE_LIGHTING_RIPPLE_SPARKLES_ENABLED = "edge_lighting_ripple_sparkles_enabled"
         const val KEY_EDGE_LIGHTING_RIPPLE_OPACITY = "edge_lighting_ripple_opacity"
+        const val KEY_EDGE_LIGHTING_RIPPLE_POSITION = "edge_lighting_ripple_position"
+        const val KEY_EDGE_LIGHTING_RIPPLE_POSITION_X = "edge_lighting_ripple_position_x"
+        const val KEY_EDGE_LIGHTING_RIPPLE_POSITION_Y = "edge_lighting_ripple_position_y"
         const val KEY_LOCK_SCREEN_WALLPAPER_SOURCE = "lock_screen_wallpaper_source"
 
         const val KEY_CALL_VIBRATIONS_ENABLED = "call_vibrations_enabled"

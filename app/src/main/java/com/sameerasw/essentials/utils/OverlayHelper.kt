@@ -14,21 +14,14 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RadialGradient
-import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
@@ -50,7 +43,8 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
-import kotlin.random.Random
+import com.sameerasw.essentials.domain.model.RippleConfig
+import com.sameerasw.essentials.utils.overlay.RippleOverlay
 import androidx.compose.ui.graphics.Color as ComposeColor
 
 /**
@@ -62,11 +56,6 @@ object OverlayHelper {
     const val STROKE_DP = 8
     const val CORNER_RADIUS_DP = 20
     const val INDICATOR_SIZE_DP = 48
-
-    const val RIPPLE_BASE_DURATION_MS = 1800L
-    const val RIPPLE_SPARKLE_COUNT_DEFAULT = 110
-
-    fun rippleDurationMillis(speed: Float): Long = (RIPPLE_BASE_DURATION_MS / speed.coerceAtLeast(0.1f)).toLong()
 
     /**
      * Creates a rounded rectangle overlay view with stroke.
@@ -91,11 +80,7 @@ object OverlayHelper {
         indicatorScale: Float = 1.0f,
         randomShapes: Boolean = false,
         showBackground: Boolean = false,
-        rippleSparkleCount: Int = RIPPLE_SPARKLE_COUNT_DEFAULT,
-        rippleSparkleSize: Float = 1f,
-        rippleWaveSize: Float = 1f,
-        rippleSparklesEnabled: Boolean = true,
-        rippleOpacity: Float = 1f,
+        rippleConfig: RippleConfig = RippleConfig(),
     ): FrameLayout {
         if (style == NotificationLightingStyle.GLOW) {
             return createGlowOverlayView(context, color, glowSides, showBackground)
@@ -107,16 +92,7 @@ object OverlayHelper {
             return createSweepOverlayView(context, color, strokeDp, randomShapes, showBackground)
         }
         if (style == NotificationLightingStyle.RIPPLE) {
-            return createRippleOverlayView(
-                context,
-                color,
-                showBackground,
-                rippleSparkleCount,
-                rippleSparkleSize,
-                rippleWaveSize,
-                rippleSparklesEnabled,
-                rippleOpacity,
-            )
+            return RippleOverlay.createOverlay(context, color, showBackground, rippleConfig)
         }
 
         val overlay = FrameLayout(context)
@@ -367,250 +343,6 @@ object OverlayHelper {
         }
     }
 
-    private fun createRippleOverlayView(
-        context: Context,
-        color: Int,
-        showBackground: Boolean,
-        sparkleCount: Int,
-        sparkleSize: Float,
-        waveSize: Float,
-        sparklesEnabled: Boolean,
-        opacity: Float,
-    ): FrameLayout {
-        val overlay = FrameLayout(context)
-        if (showBackground) {
-            overlay.setBackgroundColor(Color.BLACK)
-        }
-
-        val rippleView =
-            RippleGlitterView(
-                context,
-                color,
-                sparkleCount,
-                sparkleSize,
-                waveSize,
-                sparklesEnabled,
-                opacity,
-            ).apply {
-                tag = "ripple_view"
-                layoutParams =
-                    FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                    )
-            }
-        overlay.addView(rippleView)
-
-        return overlay
-    }
-
-    private class RippleGlitterView(
-        context: Context,
-        val color: Int,
-        val sparkleCount: Int,
-        val sparkleSize: Float,
-        val waveSize: Float,
-        val sparklesEnabled: Boolean,
-        val opacity: Float,
-    ) : View(context) {
-        private class Sparkle(
-            val angle: Float,
-            val distanceFactor: Float,
-            val sizeDp: Float,
-            val phase: Float,
-            val rotation: Float,
-            val twinkleCycles: Float,
-            val peakAlpha: Float,
-        )
-
-        private var originX = 0f
-        private var originY = 0f
-        private var maxRadius = 0f
-
-        private val wavePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
-
-        private val sparklePaint =
-            Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                style = Paint.Style.FILL
-                color = blendWithWhite(this@RippleGlitterView.color, 0.45f)
-            }
-
-        private val sparklePath =
-            Path().apply {
-                moveTo(0f, -1f)
-                quadTo(0.16f, -0.16f, 1f, 0f)
-                quadTo(0.16f, 0.16f, 0f, 1f)
-                quadTo(-0.16f, 0.16f, -1f, 0f)
-                quadTo(-0.16f, -0.16f, 0f, -1f)
-                close()
-            }
-
-        private var sparkles: List<Sparkle> = buildSparkles()
-
-        var progress: Float = 0f
-            set(value) {
-                field = value
-                invalidate()
-            }
-
-        fun newSeed() {
-            sparkles = buildSparkles()
-        }
-
-        private fun buildSparkles(): List<Sparkle> {
-            if (!sparklesEnabled) return emptyList()
-            return List(sparkleCount.coerceAtLeast(0)) {
-                Sparkle(
-                    angle = Random.nextFloat() * TWO_PI,
-                    distanceFactor = 0.45f + Random.nextFloat() * 0.58f,
-                    sizeDp = 1.2f + Random.nextFloat() * 3.4f,
-                    phase = Random.nextFloat() * TWO_PI,
-                    rotation = Random.nextFloat() * 90f,
-                    twinkleCycles = 2f + Random.nextFloat() * 4f,
-                    peakAlpha = 0.45f + Random.nextFloat() * 0.55f,
-                )
-            }
-        }
-
-        override fun onSizeChanged(
-            w: Int,
-            h: Int,
-            oldw: Int,
-            oldh: Int,
-        ) {
-            super.onSizeChanged(w, h, oldw, oldh)
-            updateGeometry(w, h)
-        }
-
-        override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
-            if (width > 0 && height > 0) {
-                updateGeometry(width, height)
-            }
-            return super.onApplyWindowInsets(insets)
-        }
-
-        private fun updateGeometry(
-            w: Int,
-            h: Int,
-        ) {
-            resolveOrigin(w)
-
-            val farX = Math.max(originX, w - originX)
-            val farY = Math.max(originY, h - originY)
-            maxRadius = Math.sqrt((farX * farX + farY * farY).toDouble()).toFloat()
-        }
-
-        private fun resolveOrigin(w: Int) {
-            val cutoutRect =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    try {
-                        rootWindowInsets
-                            ?.displayCutout
-                            ?.boundingRects
-                            ?.filter { !it.isEmpty }
-                            ?.minByOrNull { it.top }
-                    } catch (_: Exception) {
-                        null
-                    }
-                } else {
-                    null
-                }
-
-            if (cutoutRect != null) {
-                originX = cutoutRect.exactCenterX()
-                originY = cutoutRect.exactCenterY()
-            } else {
-                originX = w / 2f
-                originY = 24f * resources.displayMetrics.density
-            }
-        }
-
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-            if (progress <= 0f || maxRadius <= 0f) return
-
-            val radius = progress * maxRadius
-            if (radius < 1f) return
-
-            val fadeIn = (progress / 0.08f).coerceAtMost(1f)
-            val fadeOut = Math.pow((1f - progress).coerceIn(0f, 1f).toDouble(), 0.55).toFloat()
-            val alpha = fadeIn * fadeOut * opacity
-            if (alpha <= 0.01f) return
-
-            val innerStop = (1f - 0.40f * waveSize).coerceIn(0.02f, 0.95f)
-            val edgeStop = (1f - 0.07f * waveSize).coerceIn(innerStop + 0.01f, 0.99f)
-            val interiorAlpha = (0.10f + 0.04f * (waveSize - 1f)).coerceIn(0.05f, 0.32f)
-
-            wavePaint.shader =
-                RadialGradient(
-                    originX,
-                    originY,
-                    radius,
-                    intArrayOf(
-                        withAlpha(color, 0f),
-                        withAlpha(color, interiorAlpha * alpha),
-                        withAlpha(color, 0.55f * alpha),
-                        withAlpha(color, 0f),
-                    ),
-                    floatArrayOf(0f, innerStop, edgeStop, 1f),
-                    Shader.TileMode.CLAMP,
-                )
-            canvas.drawCircle(originX, originY, radius, wavePaint)
-
-            val density = resources.displayMetrics.density
-            sparkles.forEach { sparkle ->
-                val distance = radius * sparkle.distanceFactor
-                if (distance > maxRadius) return@forEach
-
-                val twinkle =
-                    Math
-                        .abs(
-                            Math.sin((progress * sparkle.twinkleCycles * TWO_PI + sparkle.phase).toDouble()),
-                        ).toFloat()
-                val sparkleAlpha = alpha * twinkle * sparkle.peakAlpha
-                if (sparkleAlpha <= 0.01f) return@forEach
-
-                sparklePaint.alpha = (sparkleAlpha * 255f).toInt().coerceIn(0, 255)
-                val size = sparkle.sizeDp * density * sparkleSize * (0.55f + 0.45f * twinkle)
-
-                canvas.save()
-                canvas.translate(
-                    originX + Math.cos(sparkle.angle.toDouble()).toFloat() * distance,
-                    originY + Math.sin(sparkle.angle.toDouble()).toFloat() * distance,
-                )
-                canvas.rotate(sparkle.rotation)
-                canvas.scale(size, size)
-                canvas.drawPath(sparklePath, sparklePaint)
-                canvas.restore()
-            }
-        }
-
-        private companion object {
-            const val TWO_PI = 6.2831855f
-
-            fun withAlpha(
-                color: Int,
-                fraction: Float,
-            ): Int =
-                Color.argb(
-                    (fraction.coerceIn(0f, 1f) * 255f).toInt(),
-                    Color.red(color),
-                    Color.green(color),
-                    Color.blue(color),
-                )
-
-            fun blendWithWhite(
-                color: Int,
-                fraction: Float,
-            ): Int =
-                Color.rgb(
-                    (Color.red(color) + (255 - Color.red(color)) * fraction).toInt(),
-                    (Color.green(color) + (255 - Color.green(color)) * fraction).toInt(),
-                    (Color.blue(color) + (255 - Color.blue(color)) * fraction).toInt(),
-                )
-        }
-    }
-
     private class GlowSideView(
         context: Context,
         val color: Int,
@@ -842,18 +574,11 @@ object OverlayHelper {
         indicatorScale: Float = 1.0f,
         randomShapes: Boolean = false,
         pulseDurationMillis: Long = 3000L,
-        rippleSpeed: Float = 1f,
-        rippleRepeatCount: Int = 1,
+        rippleConfig: RippleConfig = RippleConfig(),
         onAnimationEnd: (() -> Unit)? = null,
     ) {
         if (style == NotificationLightingStyle.RIPPLE) {
-            view.alpha = 1f
-            pulseRippleOverlay(
-                view as ViewGroup,
-                maxPulses = rippleRepeatCount.coerceAtLeast(1),
-                durationMillis = rippleDurationMillis(rippleSpeed),
-                onAnimationEnd = onAnimationEnd,
-            )
+            RippleOverlay.pulse(view, rippleConfig, onAnimationEnd)
             return
         }
 
@@ -971,18 +696,11 @@ object OverlayHelper {
         indicatorY: Float = 2f,
         indicatorScale: Float = 1.0f,
         randomShapes: Boolean = false,
-        rippleSpeed: Float = 1f,
-        rippleRepeatCount: Int = 1,
+        rippleConfig: RippleConfig = RippleConfig(),
         onAnimationEnd: (() -> Unit)? = null,
     ) {
         if (style == NotificationLightingStyle.RIPPLE) {
-            view.alpha = 1f
-            pulseRippleOverlay(
-                view as ViewGroup,
-                rippleRepeatCount.coerceAtLeast(1),
-                rippleDurationMillis(rippleSpeed),
-                onAnimationEnd,
-            )
+            RippleOverlay.pulse(view, rippleConfig, onAnimationEnd)
             return
         }
 
@@ -1194,48 +912,6 @@ object OverlayHelper {
                     }
                 },
             ).start()
-    }
-
-    private fun pulseRippleOverlay(
-        view: ViewGroup,
-        maxPulses: Int,
-        durationMillis: Long,
-        onAnimationEnd: (() -> Unit)? = null,
-    ) {
-        val rippleView = view.findViewWithTag<View>("ripple_view") as? RippleGlitterView ?: return
-
-        var pulseCount = 0
-
-        fun startPulse() {
-            if (pulseCount >= maxPulses) {
-                onAnimationEnd?.invoke()
-                return
-            }
-            pulseCount++
-
-            rippleView.newSeed()
-            rippleView.progress = 0f
-
-            ValueAnimator
-                .ofFloat(0f, 1f)
-                .apply {
-                    duration = durationMillis
-                    interpolator = DecelerateInterpolator(1.6f)
-                    addUpdateListener { anim ->
-                        rippleView.progress = anim.animatedValue as Float
-                    }
-                    addListener(
-                        object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                rippleView.progress = 0f
-                                startPulse()
-                            }
-                        },
-                    )
-                }.start()
-        }
-
-        startPulse()
     }
 
     private fun pulseSweepOverlay(
