@@ -15,4 +15,5 @@ enum class NotificationLightingStyle {
     INDICATOR,
     SWEEP,
     SYSTEM,
+    RIPPLE,
 }

@@ -53,6 +53,13 @@ class NotificationLightingHandler(
     private var sweepThickness: Float = 8f
     private var randomShapes: Boolean = true
     private var systemLightingMode: Int = 0
+    private var rippleSpeed: Float = 1f
+    private var rippleSparkleCount: Int = OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT
+    private var rippleSparkleSize: Float = 1f
+    private var rippleWaveSize: Float = 1f
+    private var rippleRepeatCount: Int = 1
+    private var rippleSparklesEnabled: Boolean = true
+    private var rippleOpacity: Float = 1f
 
     private var isAmbientShowLockScreen: Boolean = false
     private var isAmbientDisplayRequested: Boolean = false
@@ -143,6 +150,14 @@ class NotificationLightingHandler(
         sweepThickness = intent.getFloatExtra("sweep_thickness", 8f)
         randomShapes = intent.getBooleanExtra("random_shapes", false)
         systemLightingMode = intent.getIntExtra("system_lighting_mode", 0)
+        rippleSpeed = intent.getFloatExtra("ripple_speed", 1f)
+        rippleSparkleCount =
+            intent.getIntExtra("ripple_sparkle_count", OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT)
+        rippleSparkleSize = intent.getFloatExtra("ripple_sparkle_size", 1f)
+        rippleWaveSize = intent.getFloatExtra("ripple_wave_size", 1f)
+        rippleRepeatCount = intent.getIntExtra("ripple_repeat_count", 1)
+        rippleSparklesEnabled = intent.getBooleanExtra("ripple_sparkles_enabled", true)
+        rippleOpacity = intent.getFloatExtra("ripple_opacity", 1f)
         isInterrupted = false
     }
 
@@ -237,6 +252,11 @@ class NotificationLightingHandler(
                     indicatorScale = indicatorScale,
                     randomShapes = randomShapes,
                     strokeDp = if (edgeLightingStyle == NotificationLightingStyle.SWEEP) sweepThickness else strokeThicknessDp,
+                    rippleSparkleCount = rippleSparkleCount,
+                    rippleSparkleSize = rippleSparkleSize,
+                    rippleWaveSize = rippleWaveSize,
+                    rippleSparklesEnabled = rippleSparklesEnabled,
+                    rippleOpacity = rippleOpacity,
                 )
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 
@@ -257,6 +277,11 @@ class NotificationLightingHandler(
                             indicatorScale = indicatorScale,
                             randomShapes = randomShapes,
                             showBackground = true,
+                            rippleSparkleCount = rippleSparkleCount,
+                            rippleSparkleSize = rippleSparkleSize,
+                            rippleWaveSize = rippleWaveSize,
+                            rippleSparklesEnabled = rippleSparklesEnabled,
+                            rippleOpacity = rippleOpacity,
                         )
                     val ambientParams =
                         OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)
@@ -345,6 +370,8 @@ class NotificationLightingHandler(
                             indicatorScale,
                             randomShapes = randomShapes,
                             pulseDurationMillis = pulseDuration,
+                            rippleSpeed = rippleSpeed,
+                            rippleRepeatCount = rippleRepeatCount,
                         ) {
                             currentPackageShowing = null
                             processQueue()
@@ -382,6 +409,8 @@ class NotificationLightingHandler(
             indicatorY = indicatorY,
             indicatorScale = indicatorScale,
             randomShapes = randomShapes,
+            rippleSpeed = rippleSpeed,
+            rippleRepeatCount = rippleRepeatCount,
         ) {
             OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
                 currentPackageShowing = null

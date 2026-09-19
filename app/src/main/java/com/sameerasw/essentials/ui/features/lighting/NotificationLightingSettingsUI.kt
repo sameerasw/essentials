@@ -116,7 +116,14 @@ fun NotificationLightingSettingsUI(
 
     val coroutineScope = rememberCoroutineScope()
 
-    // Cleanup overlay when composable is destroyed
+    val previewRipple: () -> Unit = {
+        viewModel.triggerNotificationLightingForRipple(context)
+        coroutineScope.launch {
+            delay(5000)
+            viewModel.removePreviewOverlay(context)
+        }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.removePreviewOverlay(context)
@@ -211,6 +218,14 @@ fun NotificationLightingSettingsUI(
                     return@NotificationLightingStylePicker
                 }
                 viewModel.setNotificationLightingStyle(style, context)
+                if (style == NotificationLightingStyle.RIPPLE &&
+                    viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM
+                ) {
+                    viewModel.setNotificationLightingColorMode(
+                        NotificationLightingColorMode.SYSTEM,
+                        context,
+                    )
+                }
                 viewModel.triggerNotificationLighting(context)
             },
         )
@@ -484,6 +499,145 @@ fun NotificationLightingSettingsUI(
             }
         }
 
+        if (style == NotificationLightingStyle.RIPPLE) {
+            Text(
+                text = stringResource(R.string.notification_lighting_ripple_adjustment_section),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            RoundedCardContainer(modifier = Modifier) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_auto_awesome_24,
+                    title = stringResource(R.string.notification_lighting_ripple_sparkle_title),
+                    isChecked = viewModel.notificationLightingRippleSparklesEnabled.value,
+                    onCheckedChange = { checked ->
+                        viewModel.saveNotificationLightingRippleSparklesEnabled(context, checked)
+                        HapticUtil.performSliderHaptic(view)
+                        previewRipple()
+                    },
+                )
+
+                if (viewModel.notificationLightingRippleSparklesEnabled.value) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.notification_lighting_ripple_sparkle_count_title),
+                        value = viewModel.notificationLightingRippleSparkleCount.floatValue,
+                        onValueChange = { newValue ->
+                            viewModel.notificationLightingRippleSparkleCount.floatValue = newValue
+                            HapticUtil.performSliderHaptic(view)
+                        },
+                        valueRange = 0f..1000f,
+                        increment = 10f,
+                        valueFormatter = { "%.0f".format(it) },
+                        onValueChangeFinished = {
+                            viewModel.saveNotificationLightingRippleSparkleCount(
+                                context,
+                                viewModel.notificationLightingRippleSparkleCount.floatValue,
+                            )
+                            previewRipple()
+                        },
+                    )
+
+                    ConfigSliderItem(
+                        title = stringResource(R.string.notification_lighting_ripple_sparkle_size_title),
+                        value = viewModel.notificationLightingRippleSparkleSize.floatValue,
+                        onValueChange = { newValue ->
+                            viewModel.notificationLightingRippleSparkleSize.floatValue = newValue
+                            HapticUtil.performSliderHaptic(view)
+                        },
+                        valueRange = 0.1f..3f,
+                        increment = 0.1f,
+                        valueFormatter = { "%.1fx".format(it) },
+                        onValueChangeFinished = {
+                            viewModel.saveNotificationLightingRippleSparkleSize(
+                                context,
+                                viewModel.notificationLightingRippleSparkleSize.floatValue,
+                            )
+                            previewRipple()
+                        },
+                    )
+                }
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_ripple_speed_title),
+                    value = viewModel.notificationLightingRippleSpeed.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.notificationLightingRippleSpeed.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 0.5f..3f,
+                    increment = 0.1f,
+                    valueFormatter = { "%.1fx".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.saveNotificationLightingRippleSpeed(
+                            context,
+                            viewModel.notificationLightingRippleSpeed.floatValue,
+                        )
+                        previewRipple()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_ripple_repeat_count_title),
+                    value = viewModel.notificationLightingRippleRepeatCount.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.notificationLightingRippleRepeatCount.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 1f..10f,
+                    steps = 8,
+                    increment = 1f,
+                    valueFormatter = { "%.0f".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.saveNotificationLightingRippleRepeatCount(
+                            context,
+                            viewModel.notificationLightingRippleRepeatCount.floatValue,
+                        )
+                        previewRipple()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_ripple_wave_size_title),
+                    value = viewModel.notificationLightingRippleWaveSize.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.notificationLightingRippleWaveSize.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 0.5f..8f,
+                    increment = 0.1f,
+                    valueFormatter = { "%.1fx".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.saveNotificationLightingRippleWaveSize(
+                            context,
+                            viewModel.notificationLightingRippleWaveSize.floatValue,
+                        )
+                        previewRipple()
+                    },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.notification_lighting_ripple_opacity_title),
+                    value = viewModel.notificationLightingRippleOpacity.floatValue,
+                    onValueChange = { newValue ->
+                        viewModel.notificationLightingRippleOpacity.floatValue = newValue
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 0.2f..2f,
+                    increment = 0.1f,
+                    valueFormatter = { "%.1fx".format(it) },
+                    onValueChangeFinished = {
+                        viewModel.saveNotificationLightingRippleOpacity(
+                            context,
+                            viewModel.notificationLightingRippleOpacity.floatValue,
+                        )
+                        previewRipple()
+                    },
+                )
+            }
+        }
+
         // Indicator Adjustment Section (For INDICATOR style)
         if (style == NotificationLightingStyle.INDICATOR) {
             Text(
@@ -651,6 +805,19 @@ fun NotificationLightingSettingsUI(
                         viewModel.setNotificationLightingColorMode(mode, context)
                         viewModel.triggerNotificationLighting(context)
                     },
+                    options =
+                        if (style == NotificationLightingStyle.RIPPLE) {
+                            listOf(
+                                R.string.color_mode_material_you to NotificationLightingColorMode.SYSTEM,
+                                R.string.color_mode_app_specific to NotificationLightingColorMode.APP_SPECIFIC,
+                            )
+                        } else {
+                            listOf(
+                                R.string.color_mode_system to NotificationLightingColorMode.SYSTEM,
+                                R.string.color_mode_custom to NotificationLightingColorMode.CUSTOM,
+                                R.string.color_mode_app_specific to NotificationLightingColorMode.APP_SPECIFIC,
+                            )
+                        },
                 )
 
                 if (viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM) {

@@ -74,6 +74,7 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.OverlayHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
@@ -368,6 +369,14 @@ class MainViewModel : ViewModel() {
     val notificationLightingSweepThickness = mutableFloatStateOf(8f)
     val notificationLightingSweepRandomShapes = mutableStateOf(false)
     val notificationLightingSystemMode = mutableIntStateOf(0) // 0: Charging ripple, 1: Auth ripple
+    val notificationLightingRippleSpeed = mutableFloatStateOf(1f)
+    val notificationLightingRippleSparkleCount =
+        mutableFloatStateOf(OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT.toFloat())
+    val notificationLightingRippleSparkleSize = mutableFloatStateOf(1f)
+    val notificationLightingRippleWaveSize = mutableFloatStateOf(1f)
+    val notificationLightingRippleRepeatCount = mutableFloatStateOf(1f)
+    val notificationLightingRippleSparklesEnabled = mutableStateOf(true)
+    val notificationLightingRippleOpacity = mutableFloatStateOf(1f)
     val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
     val appLockAutoLockDelayIndex = mutableIntStateOf(0)
@@ -2009,6 +2018,26 @@ class MainViewModel : ViewModel() {
                 SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES,
                 true,
             )
+        notificationLightingRippleSpeed.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPEED, 1f)
+        notificationLightingRippleSparkleCount.floatValue =
+            settingsRepository.getFloat(
+                SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPARKLE_COUNT,
+                OverlayHelper.RIPPLE_SPARKLE_COUNT_DEFAULT.toFloat(),
+            )
+        notificationLightingRippleSparkleSize.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPARKLE_SIZE, 1f)
+        notificationLightingRippleWaveSize.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_WAVE_SIZE, 1f)
+        notificationLightingRippleRepeatCount.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_REPEAT_COUNT, 1f)
+        notificationLightingRippleSparklesEnabled.value =
+            settingsRepository.getBoolean(
+                SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPARKLES_ENABLED,
+                true,
+            )
+        notificationLightingRippleOpacity.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_OPACITY, 1f)
 
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
@@ -6443,6 +6472,16 @@ class MainViewModel : ViewModel() {
         putExtra("sweep_thickness", notificationLightingSweepThickness.floatValue)
         putExtra("random_shapes", notificationLightingSweepRandomShapes.value)
         putExtra("system_lighting_mode", notificationLightingSystemMode.intValue)
+        putExtra("ripple_speed", notificationLightingRippleSpeed.floatValue)
+        putExtra(
+            "ripple_sparkle_count",
+            notificationLightingRippleSparkleCount.floatValue.toInt(),
+        )
+        putExtra("ripple_sparkle_size", notificationLightingRippleSparkleSize.floatValue)
+        putExtra("ripple_wave_size", notificationLightingRippleWaveSize.floatValue)
+        putExtra("ripple_repeat_count", notificationLightingRippleRepeatCount.floatValue.toInt())
+        putExtra("ripple_sparkles_enabled", notificationLightingRippleSparklesEnabled.value)
+        putExtra("ripple_opacity", notificationLightingRippleOpacity.floatValue)
     }
 
     /**
@@ -6620,6 +6659,18 @@ class MainViewModel : ViewModel() {
             val intent =
                 Intent(context, NotificationLightingService::class.java).apply {
                     addLightingExtras(styleOverride = NotificationLightingStyle.INDICATOR)
+                }
+            context.startService(intent)
+        } catch (e: Exception) {
+            // ignore
+        }
+    }
+
+    fun triggerNotificationLightingForRipple(context: Context) {
+        try {
+            val intent =
+                Intent(context, NotificationLightingService::class.java).apply {
+                    addLightingExtras(styleOverride = NotificationLightingStyle.RIPPLE)
                 }
             context.startService(intent)
         } catch (e: Exception) {
@@ -8041,6 +8092,113 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES,
             enabled,
         )
+    }
+
+    /**
+     * Executes the save notification lighting ripple speed operation.
+     *
+     * @param context [Context] Target context.
+     * @param speed [Float] Target speed multiplier.
+     */
+    fun saveNotificationLightingRippleSpeed(
+        context: Context,
+        speed: Float,
+    ) {
+        notificationLightingRippleSpeed.floatValue = speed
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPEED, speed)
+    }
+
+    /**
+     * Executes the save notification lighting ripple sparkle count operation.
+     *
+     * @param context [Context] Target context.
+     * @param count [Float] Target sparkle count.
+     */
+    fun saveNotificationLightingRippleSparkleCount(
+        context: Context,
+        count: Float,
+    ) {
+        notificationLightingRippleSparkleCount.floatValue = count
+        settingsRepository.putFloat(
+            SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPARKLE_COUNT,
+            count,
+        )
+    }
+
+    /**
+     * Executes the save notification lighting ripple sparkle size operation.
+     *
+     * @param context [Context] Target context.
+     * @param size [Float] Target sparkle size multiplier.
+     */
+    fun saveNotificationLightingRippleSparkleSize(
+        context: Context,
+        size: Float,
+    ) {
+        notificationLightingRippleSparkleSize.floatValue = size
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPARKLE_SIZE, size)
+    }
+
+    /**
+     * Executes the save notification lighting ripple wave size operation.
+     *
+     * @param context [Context] Target context.
+     * @param size [Float] Target wave thickness multiplier.
+     */
+    fun saveNotificationLightingRippleWaveSize(
+        context: Context,
+        size: Float,
+    ) {
+        notificationLightingRippleWaveSize.floatValue = size
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_WAVE_SIZE, size)
+    }
+
+    /**
+     * Executes the save notification lighting ripple repeat count operation.
+     *
+     * @param context [Context] Target context.
+     * @param count [Float] Target repeat count.
+     */
+    fun saveNotificationLightingRippleRepeatCount(
+        context: Context,
+        count: Float,
+    ) {
+        notificationLightingRippleRepeatCount.floatValue = count
+        settingsRepository.putFloat(
+            SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_REPEAT_COUNT,
+            count,
+        )
+    }
+
+    /**
+     * Executes the save notification lighting ripple sparkles enabled operation.
+     *
+     * @param context [Context] Target context.
+     * @param enabled [Boolean] Target enabled.
+     */
+    fun saveNotificationLightingRippleSparklesEnabled(
+        context: Context,
+        enabled: Boolean,
+    ) {
+        notificationLightingRippleSparklesEnabled.value = enabled
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_SPARKLES_ENABLED,
+            enabled,
+        )
+    }
+
+    /**
+     * Executes the save notification lighting ripple opacity operation.
+     *
+     * @param context [Context] Target context.
+     * @param opacity [Float] Target opacity multiplier.
+     */
+    fun saveNotificationLightingRippleOpacity(
+        context: Context,
+        opacity: Float,
+    ) {
+        notificationLightingRippleOpacity.floatValue = opacity
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_RIPPLE_OPACITY, opacity)
     }
 
     /**

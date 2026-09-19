@@ -370,6 +370,15 @@
     <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="notification_lighting_sweep_select_shapes_title">Select Shapes</string>
     <string name="notification_lighting_sweep_select_shapes_desc">Choose which shapes are used in the sweep animation</string>
+    <string name="notification_lighting_ripple_adjustment_section">Ripple adjustment</string>
+    <string name="notification_lighting_ripple_speed_title">Speed</string>
+    <string name="notification_lighting_ripple_sparkle_count_title">Sparkle count</string>
+    <string name="notification_lighting_ripple_sparkle_size_title">Sparkle size</string>
+    <string name="notification_lighting_ripple_wave_size_title">Wave size</string>
+    <string name="notification_lighting_ripple_repeat_count_title">Repeat count</string>
+    <string name="notification_lighting_ripple_sparkle_title">Sparkle</string>
+    <string name="notification_lighting_ripple_opacity_title">Opacity</string>
+    <string name="color_mode_material_you">Material You</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>
     <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
