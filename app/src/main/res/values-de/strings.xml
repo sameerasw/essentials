@@ -1791,4 +1791,44 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
 Die Schaltfläche \"Weiter\" bleibt für einige Sekunden deaktiviert, damit Sie einen Moment Zeit zum Überlegen haben. Die Pause kann optional wieder angezeigt werden, wenn Sie die App nach einer festgelegten Zeit weiter verwenden</string>
     <string name="qs_secure_sensitive_tiles_title">Sichere sensible Kacheln</string>
     <string name="qs_secure_sensitive_tiles_desc">Anforderung zum Entsperren vor dem Auslösen sensibler QS-Kacheln im gesperrten Zustand</string>
+    <string name="feat_aod_wallpaper_title">Hintergrundbild auf AOD</string>
+    <string name="feat_aod_wallpaper_desc">Überlagerung verwenden</string>
+    <string name="feat_aod_wallpaper_use_album_art">Albumcover verwenden</string>
+    <string name="about_desc_aod_wallpaper">Zeigt Ihr Hintergrundbild hinter der Uhr auf dem Always On Display mithilfe einer Überlagerung an, mit einstellbarer Deckkraft, Unschärfe, Vignette und Schwarzwert. Sie können auch ein benutzerdefiniertes Bild auswählen oder das Albumcover der aktuell abgespielten Musik anzeigen.
+
+Dies funktioniert nur mit statischen Hintergrundbildern. Live- und Videohintergründe werden nicht unterstützt.
+
+Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeichnen, und Speicherzugriff ist erforderlich, um Ihr aktuelles Hintergrundbild zu lesen. Benachrichtigungszugriff ist nur erforderlich, wenn Sie Albumcover aktivieren.</string>
+    <string name="feat_aod_wallpaper_opacity">Deckkraft</string>
+    <string name="feat_aod_wallpaper_blur">Unschärfe</string>
+    <string name="feat_aod_wallpaper_black_threshold">Schwarzwert</string>
+    <string name="feat_aod_wallpaper_timeout">Hintergrundbild-Timeout</string>
+    <string name="feat_aod_wallpaper_keep_on_media">Bei Medienwiedergabe aktiviert lassen</string>
+    <string name="feat_aod_wallpaper_media_apps">Medien-Apps überspringen</string>
+    <string name="duo_rotate_album_art_title">Albumcover drehen</string>
+    <string name="duo_differentiate_wifi_title">WLAN unterscheiden</string>
+    <string name="duo_differentiate_wifi_desc">Deutliche gebogene Segmente anstelle von Punkten anzeigen, wenn eine WLAN-Verbindung besteht</string>
+    <string name="duo_battery_percentage_only_colored_title">Nur für farbige Instanzen</string>
+    <string name="duo_battery_percentage_only_colored_desc">Prozent nur beim Laden, im Energiesparmodus oder bei niedrigem Akkustand anzeigen</string>
+    <string name="island_title">Insel</string>
+    <string name="island_desc">Dynamische Insel</string>
+    <string name="island_enable_title">Aktiviere Insel</string>
+    <string name="island_enable_desc">Dynamische Insel anzeigen</string>
+    <string name="island_max_width_title">Maximale Breite</string>
+    <string name="island_expanded_width_title">Erweiterte Breite</string>
+    <string name="island_cutout_gap_title">Kamera Lücke</string>
+    <string name="island_expanded_roundness_title">Erweiterter Eckradius</string>
+    <string name="island_expanded_padding_title">Erweiterter Abstand</string>
+    <string name="island_expanded_top_padding_title">Erweiterter oberer Abstand</string>
+    <string name="island_timeout_title">Anzeigedauer</string>
+    <string name="island_expanded_timeout_title">Erweitertes Timeout</string>
+    <string name="island_expanded_timeout_desc">Dauer vor Rückkehr zur reduzierten Pille (0 für Unendlich)</string>
+    <string name="duo_hide_when_screen_off_title">Ausblenden, wenn Bildschirm aus</string>
+    <string name="island_tap_action_title">Tippaktion</string>
+    <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
+    <string name="island_suppress_system_heads_up_title">System-Headsup ausblenden</string>
+    <string name="island_catch_up_title">Aufholen</string>
+    <string name="island_catch_up_desc">Letzte Benachrichtigung länger auf der Insel anzeigen</string>
+    <string name="conscious_gate_feel_every_second_title">Spüre jede verschwendete Sekunde</string>
+    <string name="island_show_time_battery_title">Uhrzeit und Akku</string>
 </resources>
