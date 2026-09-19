@@ -83,6 +83,10 @@ fun DuoSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val displayConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
+    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp) {
+        viewModel.refreshDuoCameraPlacement()
+    }
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
@@ -244,6 +248,19 @@ fun DuoSettingsUI(
                         valueFormatter = { "%.1f%%".format(it) },
                     )
                 }
+            }
+
+            AnimatedVisibility(
+                visible = viewModel.hasMultipleDuoDisplays.value,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                Text(
+                    text = stringResource(R.string.duo_per_display_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
             }
 
             ConfigSliderItem(

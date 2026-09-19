@@ -47,6 +47,8 @@ class EssentialsApp : Application() {
         }
 
         ShizukuUtils.initialize()
+        com.sameerasw.essentials.utils.CarConnectionMonitor
+            .initialize(this)
         com.sameerasw.essentials.utils.LogManager
             .init(this)
 

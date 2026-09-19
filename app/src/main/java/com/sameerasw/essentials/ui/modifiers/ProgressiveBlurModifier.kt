@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
@@ -38,6 +39,7 @@ fun Modifier.progressiveBlur(
     height: Float,
     direction: BlurDirection = BlurDirection.TOP,
     showGradientOverlay: Boolean = true,
+    edgeTreatment: BlurredEdgeTreatment = BlurredEdgeTreatment.Rectangle,
 ): Modifier =
     composed {
         val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
@@ -50,6 +52,7 @@ fun Modifier.progressiveBlur(
         val blurModifier =
             if (blurRadius > 0f && !isPowerSave) {
                 Modifier.blur {
+                    this.edgeTreatment = edgeTreatment
                     val sizeHeightPx = size.height.toPx()
                     if (sizeHeightPx > 0f && height > 0f) {
                         val fraction = (height / sizeHeightPx).coerceIn(0f, 1f)
@@ -126,6 +129,7 @@ fun Modifier.progressiveBlur(
     maxRadius: Dp = 24.dp,
     direction: BlurDirection = BlurDirection.TOP,
     showGradientOverlay: Boolean = false,
+    edgeTreatment: BlurredEdgeTreatment = BlurredEdgeTreatment.Rectangle,
 ): Modifier =
     composed {
         val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
@@ -135,6 +139,7 @@ fun Modifier.progressiveBlur(
         val blurModifier =
             if (maxRadius > 0.dp && !isPowerSave) {
                 Modifier.blur {
+                    this.edgeTreatment = edgeTreatment
                     radius =
                         when (direction) {
                             BlurDirection.TOP ->

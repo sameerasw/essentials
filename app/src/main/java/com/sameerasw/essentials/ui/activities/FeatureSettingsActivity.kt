@@ -71,7 +71,10 @@ import com.sameerasw.essentials.ui.features.system.BatteryNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.system.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.features.system.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.features.system.CalendarSyncSettingsUI
+import com.sameerasw.essentials.ui.features.display.AodWallpaperPreviewCard
+import com.sameerasw.essentials.ui.features.display.AodWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.display.DuoSettingsUI
+import com.sameerasw.essentials.ui.features.display.IslandSettingsUI
 import com.sameerasw.essentials.ui.features.display.StatusGlanceSettingsUI
 import com.sameerasw.essentials.ui.features.system.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.features.system.EssentialsOnDisplaySettingsUI
@@ -145,7 +148,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
             (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
                 android.content.res.Configuration.UI_MODE_NIGHT_YES
         window.setBackgroundDrawableResource(if (isDarkMode) android.R.color.black else R.color.app_window_background)
-        val featureId = intent.getStringExtra("feature") ?: ""
+        val featureId = intent.getStringExtra("feature") ?: intent.getStringExtra("FEATURE_ID") ?: ""
         val featureObj = FeatureRegistry.ALL_FEATURES.find { it.id == featureId }
         val highlightSetting = intent.getStringExtra("highlight_setting")
 
@@ -267,7 +270,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         mutableStateOf(
                             prefs.getBoolean(
                                 "watch_sync_location_reached_enabled",
-                                true,
+                                false,
                             ),
                         )
                     }
@@ -279,7 +282,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 } else if (key == "watch_sync_sound_mode_enabled") {
                                     watchSyncSoundModeEnabled = p.getBoolean(key, false)
                                 } else if (key == "watch_sync_location_reached_enabled") {
-                                    watchSyncLocationReachedEnabled = p.getBoolean(key, true)
+                                    watchSyncLocationReachedEnabled = p.getBoolean(key, false)
                                 }
                             }
                         prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -352,6 +355,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
                                         !isWriteSecureSettingsEnabled
                                 "Smart pixels" -> !isAccessibilityEnabled
+                                "Duo", "Status glance" -> !isAccessibilityEnabled
+                                "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                                 "Snooze system notifications" -> !isNotificationListenerEnabled
                                 "Screen locked security" ->
                                     !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
@@ -583,6 +588,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 )
                             }
 
+                            if (featureId == "AOD wallpaper") {
+                                AodWallpaperPreviewCard(
+                                    viewModel = viewModel,
+                                    height = headerHeight - 16.dp,
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                )
+                            }
+
                             if (featureObj != null && featureObj.animationRes != 0) {
                                 LottieFeatureAnimation(
                                     resId = featureObj.animationRes,
@@ -618,13 +631,17 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Display" ->
                                                     listOf(
                                                         listOf(
-                                                            "Essentials On Display",
                                                             "Always on Display",
-                                                            "Statusbar icons",
-                                                            "Status glance",
-                                                            "Duo",
-                                                            "Maps power saving mode",
+                                                            "AOD wallpaper",
+                                                            "Essentials On Display",
                                                             "Lock screen clock",
+                                                            "Maps power saving mode",
+                                                        ),
+                                                        listOf(
+                                                            "Statusbar icons",
+                                                            "Duo",
+                                                            "Island",
+                                                            "Status glance",
                                                         ),
                                                         listOf(
                                                             "Text and animations",
@@ -772,6 +789,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                                 (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
                                                                     !isWriteSecureSettingsEnabled
                                                             "Smart pixels" -> !isAccessibilityEnabled
+                                                            "Duo", "Status glance" -> !isAccessibilityEnabled
+                                                            "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                                                             "Snooze system notifications" -> !isNotificationListenerEnabled
                                                             "Screen locked security" ->
                                                                 !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
@@ -827,6 +846,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Text and animations" ->
                                                                 !viewModel.isWriteSettingsEnabled.value ||
                                                                     !isWriteSecureSettingsEnabled
+                                                            "Always on Display" -> !isWriteSecureSettingsEnabled
                                                             "Lock screen clock" -> !isWriteSecureSettingsEnabled
                                                             "Screen refresh rate" ->
                                                                 !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
@@ -1175,6 +1195,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    "Island" -> {
+                                        IslandSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
                                     "Status glance" -> {
                                         StatusGlanceSettingsUI(
                                             viewModel = viewModel,
@@ -1201,6 +1229,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Screen refresh rate" -> {
                                         RefreshRateSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "AOD wallpaper" -> {
+                                        AodWallpaperSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
@@ -1311,20 +1347,34 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     finish()
                                 }
                             },
-                            fabIconRes = if (isStandbyMultiSelecting) R.drawable.rounded_mobiledata_arrows_24 else null,
-                            fabAction =
-                                if (isStandbyMultiSelecting) {
-                                    { isStandbyMoveSheetVisible = true }
-                                } else {
-                                    null
+                            fabIconRes =
+                                when {
+                                    isStandbyMultiSelecting -> R.drawable.rounded_mobiledata_arrows_24
+                                    featureId == "Island" -> R.drawable.rounded_play_arrow_24
+                                    else -> null
                                 },
-                            fabContentDescription = if (isStandbyMultiSelecting) stringResource(R.string.action_move_bucket) else null,
+                            fabAction =
+                                when {
+                                    isStandbyMultiSelecting -> { { isStandbyMoveSheetVisible = true } }
+                                    featureId == "Island" -> {
+                                        {
+                                            viewModel.triggerIslandPreview(context)
+                                        }
+                                    }
+                                    else -> null
+                                },
+                            fabContentDescription =
+                                when {
+                                    isStandbyMultiSelecting -> stringResource(R.string.action_move_bucket)
+                                    featureId == "Island" -> stringResource(R.string.action_preview)
+                                    else -> null
+                                },
                             modifier =
                                 Modifier
                                     .align(Alignment.BottomCenter)
                                     .zIndex(1f),
                             onHelpClick =
-                                if (isStandbyMultiSelecting) {
+                                if (isStandbyMultiSelecting || featureId == "Island") {
                                     null
                                 } else {
                                     {

@@ -1296,6 +1296,29 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.STROKE
     }
 
+    private val notificationPillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.BLACK
+    }
+
+    private val notificationPillBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 1f * density
+        color = Color.argb(45, 255, 255, 255)
+    }
+
+    private val notificationTitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        letterSpacing = -0.01f
+    }
+
+    private val notificationBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        letterSpacing = -0.01f
+    }
+
     init {
         val (track, progress, dot) = getTargetColors()
         currentTrackColor = track
@@ -1353,19 +1376,22 @@ class DuoOverlayView(context: Context) : View(context) {
             cameraCenterY + baseRadius
         )
 
-        canvas.save()
-        canvas.translate(cameraCenterX, cameraCenterY + pullDownOffsetY)
-        canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
-        canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
-        canvas.translate(-cameraCenterX, -cameraCenterY)
+        val effectiveRingAlpha = animatedVisibilityAlpha
 
-        val r = Color.red(currentProgressColor) / 255.0
-        val g = Color.green(currentProgressColor) / 255.0
-        val b = Color.blue(currentProgressColor) / 255.0
-        val isProgressLight = (0.299 * r + 0.587 * g + 0.114 * b) > 0.45
-        val contrastColor = if (isProgressLight) Color.BLACK else Color.WHITE
-        val baseContrastAlpha = if (isProgressLight) 24 else 28
-        val contrastAlpha = (baseContrastAlpha * animatedVisibilityAlpha).toInt()
+        if (effectiveRingAlpha > 0.005f) {
+            canvas.save()
+            canvas.translate(cameraCenterX, cameraCenterY + pullDownOffsetY)
+            canvas.rotate(animatedVisibilityRotation + interactiveTrackRotation)
+            canvas.scale(animatedVisibilityScale, animatedVisibilityScale * pullDownStretchY)
+            canvas.translate(-cameraCenterX, -cameraCenterY)
+
+            val r = Color.red(currentProgressColor) / 255.0
+            val g = Color.green(currentProgressColor) / 255.0
+            val b = Color.blue(currentProgressColor) / 255.0
+            val isProgressLight = (0.299 * r + 0.587 * g + 0.114 * b) > 0.45
+            val contrastColor = if (isProgressLight) Color.BLACK else Color.WHITE
+            val baseContrastAlpha = if (isProgressLight) 24 else 28
+            val contrastAlpha = (baseContrastAlpha * effectiveRingAlpha).toInt()
 
         val bpFraction = animatedBatteryPercentageFraction
         val isSplitBatteryActive = (bpFraction > 0.001f || isBatteryPercentageActive()) && animatedCustomFraction < 0.5f && showBattery
@@ -1768,7 +1794,8 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-        canvas.restore()
+            canvas.restore()
+        }
     }
 
     override fun onDetachedFromWindow() {

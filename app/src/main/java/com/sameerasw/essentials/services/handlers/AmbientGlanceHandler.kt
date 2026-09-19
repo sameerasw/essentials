@@ -109,6 +109,45 @@ class AmbientGlanceHandler(
     private var titleView: TextView? = null
     private var artistView: TextView? = null
 
+    // Detect AA virtual display
+    private val displayListener =
+        object : android.hardware.display.DisplayManager.DisplayListener {
+            override fun onDisplayAdded(displayId: Int) = checkAndroidAutoNow()
+
+            override fun onDisplayChanged(displayId: Int) = checkAndroidAutoNow()
+
+            override fun onDisplayRemoved(displayId: Int) {}
+        }
+
+    private var isDisplayListenerRegistered = false
+
+    private fun registerDisplayListener() {
+        if (isDisplayListenerRegistered) return
+        val displayManager =
+            service.getSystemService(Context.DISPLAY_SERVICE) as? android.hardware.display.DisplayManager
+        displayManager?.registerDisplayListener(displayListener, handler)
+        isDisplayListenerRegistered = true
+    }
+
+    private fun unregisterDisplayListener() {
+        if (!isDisplayListenerRegistered) return
+        val displayManager =
+            service.getSystemService(Context.DISPLAY_SERVICE) as? android.hardware.display.DisplayManager
+        displayManager?.unregisterDisplayListener(displayListener)
+        isDisplayListenerRegistered = false
+    }
+
+    private val carConnectionListener: (Boolean) -> Unit = { checkAndroidAutoNow() }
+
+    private fun checkAndroidAutoNow() {
+        if (overlayView == null || !isDockedMode) return
+        if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
+            fadeOutAndRemove()
+        }
+    }
+
+    fun onConfigurationChanged() = checkAndroidAutoNow()
+
     private val burnInProtectionRunnable =
         object : Runnable {
             override fun run() {
@@ -1144,6 +1183,9 @@ class AmbientGlanceHandler(
                         handler.postDelayed(hideRunnable, DISPLAY_DURATION)
                     } else {
                         handler.post(burnInProtectionRunnable)
+                        registerDisplayListener()
+                        com.sameerasw.essentials.utils.CarConnectionMonitor.addListener(carConnectionListener)
+                        checkAndroidAutoNow()
                     }
                 }?.start()
         } catch (e: Exception) {
@@ -1277,6 +1319,8 @@ class AmbientGlanceHandler(
         handler.removeCallbacks(progressUpdateRunnable)
         handler.removeCallbacks(revertToMusicRunnable)
         handler.removeCallbacks(burnInProtectionRunnable)
+        unregisterDisplayListener()
+        com.sameerasw.essentials.utils.CarConnectionMonitor.removeListener(carConnectionListener)
 
         // Clear active unread notifications from the overlay on dismissal
         NotificationListener.clearUnreadNotifications()

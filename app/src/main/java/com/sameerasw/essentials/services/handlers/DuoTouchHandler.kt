@@ -11,11 +11,14 @@ package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
+import android.graphics.RectF
 import android.media.AudioManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -96,10 +99,10 @@ class DuoTouchHandler(
     }
 
     fun onTouchEvent(event: MotionEvent): Boolean {
-        if (cameraCenterX <= 0f && cameraCenterY <= 0f) return false
-
         val x = event.rawX
         val y = event.rawY
+
+        if (cameraCenterX <= 0f && cameraCenterY <= 0f) return false
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -378,12 +381,9 @@ class DuoTouchHandler(
     }
 
     private fun getEffectiveSlideMode(): String {
-        val isTrackEnabled = settingsRepository.isDuoSlideTrackEnabled()
-        val isMediaActive = overlayView?.isMediaPlaying == true || audioManager.isMusicActive
-        if (isTrackEnabled && isMediaActive) {
+        if (settingsRepository.isDuoSlideTrackEnabled() && overlayView?.isMediaPlaying == true) {
             return "track"
         }
         return settingsRepository.getDuoSlideMode()
     }
 }
-

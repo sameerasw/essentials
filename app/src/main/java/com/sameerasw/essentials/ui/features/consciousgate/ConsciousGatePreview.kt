@@ -20,25 +20,19 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle
-import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateIcons
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 
 @Composable
 fun ConsciousGatePreview(
-    iconName: String,
     title: String,
     message: String,
     targetAppLabel: String,
-    countdownStyle: ConsciousGateCountdownStyle,
+    targetAppPackage: String?,
     delaySeconds: Int,
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconResId = remember(iconName) { ConsciousGateIcons.resolve(iconName) }
-
     val loopSeconds = delaySeconds.coerceIn(1, 30)
     val infiniteTransition = rememberInfiniteTransition(label = "ConsciousGatePreviewProgress")
     val progress by
@@ -55,13 +49,11 @@ fun ConsciousGatePreview(
 
     EssentialsTheme {
         ConsciousGatePauseScreen(
-            iconResId = iconResId,
             title = title,
             message = message,
             targetAppLabel = targetAppLabel,
-            countdownStyle = countdownStyle,
+            targetAppPackage = targetAppPackage,
             progress = { progress },
-            isContinueEnabled = progress >= 1f,
             onClose = onExit,
             onContinue = onExit,
             modifier = modifier.fillMaxSize(),

@@ -44,9 +44,6 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
-import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateCountdownStylePicker
-import com.sameerasw.essentials.ui.features.consciousgate.components.ConsciousGateIconPicker
-import com.sameerasw.essentials.ui.features.consciousgate.components.SettingsRowSurface
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -69,6 +66,7 @@ fun ConsciousGateSettingsUI(
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
     var appsReloadTrigger by remember { mutableStateOf(0) }
     var selectedAppLabels by remember { mutableStateOf<List<String>>(emptyList()) }
+    var selectedAppPackages by remember { mutableStateOf<List<String>>(emptyList()) }
     var isPreviewOpen by remember { mutableStateOf(false) }
     var showPermissionSheet by remember { mutableStateOf(false) }
 
@@ -80,20 +78,21 @@ fun ConsciousGateSettingsUI(
         if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
     val delaySeconds by viewModel.consciousGateDelaySeconds
     val reappearMinutes by viewModel.consciousGateReappearMinutes
-    val iconName by viewModel.consciousGateIconName
+    val isConsciousGateFeelEverySecondEnabled by viewModel.isConsciousGateFeelEverySecondEnabled
     val title by viewModel.consciousGateTitle
     val message by viewModel.consciousGateMessage
-    val countdownStyle by viewModel.consciousGateCountdownStyle
 
     LaunchedEffect(appsReloadTrigger) {
         withContext(Dispatchers.IO) {
-            val labels =
+            val apps =
                 viewModel
                     .loadConsciousGateSelectedApps(context)
                     .filter { it.isEnabled }
-                    .map { AppUtil.getAppLabel(context, it.packageName) }
+            val labels = apps.map { AppUtil.getAppLabel(context, it.packageName) }
+            val packages = apps.map { it.packageName }
             withContext(Dispatchers.Main) {
                 selectedAppLabels = labels
+                selectedAppPackages = packages
             }
         }
     }
@@ -272,6 +271,17 @@ fun ConsciousGateSettingsUI(
                     enabled = isConsciousGateEnabled,
                 )
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_vibrate_24,
+                title = stringResource(R.string.conscious_gate_feel_every_second_title),
+                isChecked = isConsciousGateFeelEverySecondEnabled,
+                onCheckedChange = { enabled ->
+                    viewModel.setConsciousGateFeelEverySecondEnabled(enabled)
+                },
+                enabled = isConsciousGateEnabled,
+                modifier = Modifier.highlight(highlightKey == "conscious_gate_feel_every_second"),
+            )
         }
 
         Text(
@@ -282,29 +292,6 @@ fun ConsciousGateSettingsUI(
         )
 
         RoundedCardContainer(modifier = Modifier) {
-            SettingsRowSurface(
-                modifier = Modifier.highlight(highlightKey == "conscious_gate_countdown_style"),
-            ) {
-                Text(
-                    text = stringResource(R.string.conscious_gate_countdown_style_title),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                )
-
-                ConsciousGateCountdownStylePicker(
-                    selectedStyle = countdownStyle,
-                    onStyleSelected = { viewModel.setConsciousGateCountdownStyle(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
-            ConsciousGateIconPicker(
-                selectedIconName = iconName,
-                onIconSelected = { viewModel.setConsciousGateIconName(it) },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
             ConsciousGateTextFieldRow(
                 value = title,
                 onValueChange = { viewModel.setConsciousGateTitle(it) },
@@ -349,11 +336,10 @@ fun ConsciousGateSettingsUI(
                     ),
             ) {
                 ConsciousGatePreview(
-                    iconName = iconName,
                     title = title.takeIf { it.isNotBlank() } ?: stringResource(R.string.conscious_gate_default_title),
                     message = message.takeIf { it.isNotBlank() } ?: stringResource(R.string.conscious_gate_default_message),
                     targetAppLabel = selectedAppLabels.firstOrNull() ?: stringResource(R.string.conscious_gate_preview_placeholder_app),
-                    countdownStyle = countdownStyle,
+                    targetAppPackage = selectedAppPackages.firstOrNull(),
                     delaySeconds = delaySeconds,
                     onExit = { isPreviewOpen = false },
                 )

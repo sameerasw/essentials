@@ -40,6 +40,7 @@ import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
 import com.sameerasw.essentials.services.handlers.DuoOverlayHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
+import com.sameerasw.essentials.services.handlers.IslandOverlayHandler
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -74,6 +75,7 @@ class ScreenOffAccessibilityService :
     private lateinit var pocketModeHandler: PocketModeHandler
     private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
     private lateinit var duoOverlayHandler: DuoOverlayHandler
+    lateinit var islandOverlayHandler: IslandOverlayHandler
     private lateinit var statusGlanceHandler: StatusGlanceHandler
 
     private var lightSensor: Sensor? = null
@@ -252,43 +254,13 @@ class ScreenOffAccessibilityService :
                     duoOverlayHandler.updateState()
                     statusGlanceHandler.updateState()
                 }
-            } else if (key == SettingsRepository.KEY_DUO_ENABLED ||
-                key == SettingsRepository.KEY_DUO_USE_AUTO_DETECT ||
-                key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_X ||
-                key == SettingsRepository.KEY_DUO_CAMERA_OFFSET_Y ||
-                key == SettingsRepository.KEY_DUO_CAMERA_SIZE ||
-                key == SettingsRepository.KEY_DUO_ARC_THICKNESS ||
-                key == SettingsRepository.KEY_DUO_DOT_SIZE ||
-                key == SettingsRepository.KEY_DUO_RING_RADIUS ||
-                key == SettingsRepository.KEY_DUO_SHOW_BATTERY ||
-                key == SettingsRepository.KEY_DUO_SHOW_BATTERY_PERCENTAGE ||
-                key == SettingsRepository.KEY_DUO_BATTERY_PERCENTAGE_ONLY_COLORED ||
-                key == SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED ||
-                key == SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR ||
-                key == SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR_ENABLED ||
-                key == SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR ||
-                key == SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED ||
-                key == SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR ||
-                key == SettingsRepository.KEY_DUO_SHOW_NETWORKS ||
-                key == SettingsRepository.KEY_DUO_DIFFERENTIATE_WIFI ||
-                key == SettingsRepository.KEY_DUO_SHOW_TIME ||
-                key == SettingsRepository.KEY_DUO_SHOW_MEDIA ||
-                key == SettingsRepository.KEY_DUO_SHOW_PROGRESS ||
-                key == SettingsRepository.KEY_DUO_SHOW_FLASHLIGHT ||
-                key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF ||
-                key == SettingsRepository.KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE ||
-                key == SettingsRepository.KEY_DUO_USE_MATERIAL_YOU ||
-                key == SettingsRepository.KEY_DUO_CUSTOM_COLOR ||
-                key == SettingsRepository.KEY_DUO_TAP_ACTION ||
-                key == SettingsRepository.KEY_DUO_DOUBLE_TAP_ACTION ||
-                key == SettingsRepository.KEY_DUO_LONG_PRESS_ACTION ||
-                key == SettingsRepository.KEY_DUO_SWIPE_DOWN_ACTION ||
-                key == SettingsRepository.KEY_DUO_SLIDE_MODE ||
-                key == SettingsRepository.KEY_DUO_SLIDE_TRACK ||
-                key == SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ||
+            } else if (key?.startsWith("duo_") == true ||
+                key == SettingsRepository.KEY_DUO_ENABLED ||
                 key == SettingsRepository.KEY_ENABLE_UNSUPPORTED_FEATURES
             ) {
                 duoOverlayHandler.updateState()
+            } else if (key == SettingsRepository.KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP) {
+                SettingsRepository(this).applyHeadsUpSuppression()
             } else if (key?.startsWith("status_glance_") == true ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_ENABLED ||
                 key == SettingsRepository.KEY_STATUS_GLANCE_USE_AUTO_DETECT ||
@@ -329,6 +301,7 @@ class ScreenOffAccessibilityService :
             com.sameerasw.essentials.services.handlers
                 .SmartPixelsHandler(this)
         duoOverlayHandler = DuoOverlayHandler(this)
+        islandOverlayHandler = IslandOverlayHandler(this)
         statusGlanceHandler = StatusGlanceHandler(this)
 
         flashlightHandler.register()
@@ -336,8 +309,13 @@ class ScreenOffAccessibilityService :
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
+        setupReceivers()
+    }
 
-        // Screen Receiver
+    fun getActiveConsciousGateSession(): AppFlowHandler.ConsciousGateSession? =
+        if (::appFlowHandler.isInitialized) appFlowHandler.getActiveConsciousGateSession() else null
+
+    private fun setupReceivers() {
         screenReceiver =
             object : BroadcastReceiver() {
                 override fun onReceive(
@@ -362,6 +340,7 @@ class ScreenOffAccessibilityService :
                         Intent.ACTION_SCREEN_OFF -> {
                             isScreenOn = false
                             appFlowHandler.clearAuthenticated()
+                            appFlowHandler.clearConsciousGate()
                             scheduleFreeze()
                             startInputEventListenerIfEnabled()
                             ambientGlanceHandler.checkAndShowOnScreenOff()
@@ -397,6 +376,16 @@ class ScreenOffAccessibilityService :
                             aodForceTurnOffHandler.forceTurnOff()
                         }
 
+                        "CONSCIOUS_GATE_CONFIRMED" -> {
+                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
+                            islandOverlayHandler.updateConsciousGateState()
+                        }
+
+                        "CONSCIOUS_GATE_CLOSED" -> {
+                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
+                            islandOverlayHandler.updateConsciousGateState()
+                        }
+
                         FlashlightActionReceiver.ACTION_TOGGLE,
                         FlashlightActionReceiver.ACTION_OFF,
                         FlashlightActionReceiver.ACTION_SET_INTENSITY,
@@ -417,6 +406,8 @@ class ScreenOffAccessibilityService :
                 addAction("SHOW_AMBIENT_GLANCE")
                 addAction("HIDE_AMBIENT_GLANCE_TEMPORARILY")
                 addAction("FORCE_TURN_OFF_AOD")
+                addAction("CONSCIOUS_GATE_CONFIRMED")
+                addAction("CONSCIOUS_GATE_CLOSED")
                 addAction(FlashlightActionReceiver.ACTION_TOGGLE)
                 addAction(FlashlightActionReceiver.ACTION_OFF)
                 addAction(FlashlightActionReceiver.ACTION_SET_INTENSITY)
@@ -505,6 +496,7 @@ class ScreenOffAccessibilityService :
         omniGestureOverlayHandler.removeOverlay()
         smartPixelsHandler.destroy()
         duoOverlayHandler.destroy()
+        islandOverlayHandler.onDestroy()
         statusGlanceHandler.destroy()
         statusBarIconHandler.unregister()
         stopInputEventListener()
@@ -531,11 +523,20 @@ class ScreenOffAccessibilityService :
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
-        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            val packageName = event.packageName?.toString()
-            if (packageName != null) {
-                appFlowHandler.onPackageChanged(packageName)
-            }
+        var detectedPackage = event.packageName?.toString()
+        if (detectedPackage == null || detectedPackage == "android") {
+            try {
+                val activePkg = rootInActiveWindow?.packageName?.toString()
+                    ?: windows?.firstOrNull { it.isFocused }?.root?.packageName?.toString()
+                if (activePkg != null) {
+                    detectedPackage = activePkg
+                }
+            } catch (_: Exception) {}
+        }
+
+        if (detectedPackage != null) {
+            appFlowHandler.onPackageChanged(detectedPackage)
+            islandOverlayHandler.updateConsciousGateState()
         }
 
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
@@ -609,6 +610,7 @@ class ScreenOffAccessibilityService :
                         val isFullscreen = isCoveringFullDisplay && !hasStatusBar
                         duoOverlayHandler.setFullscreen(isFullscreen)
                         statusGlanceHandler.setFullscreen(isFullscreen)
+                        islandOverlayHandler.setFullscreen(isFullscreen)
                     }
                 }
             } catch (_: Exception) {}
@@ -737,7 +739,9 @@ class ScreenOffAccessibilityService :
         super.onConfigurationChanged(newConfig)
         updateOmniOverlay() // Force refresh overlay on rotation
         duoOverlayHandler.onConfigurationChanged(newConfig)
+        islandOverlayHandler.onConfigurationChanged()
         statusGlanceHandler.onConfigurationChanged(newConfig)
+        ambientGlanceHandler.onConfigurationChanged()
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
@@ -863,15 +867,18 @@ class ScreenOffAccessibilityService :
 
             "APP_AUTHENTICATION_FAILED" -> performGlobalAction(GLOBAL_ACTION_HOME)
 
-            "CONSCIOUS_GATE_CONFIRMED" ->
+            "CONSCIOUS_GATE_CONFIRMED" -> {
                 intent
                     .getStringExtra("package_name")
                     ?.let { appFlowHandler.onConsciousGateConfirmed(it) }
+                islandOverlayHandler.updateConsciousGateState()
+            }
 
             "CONSCIOUS_GATE_CLOSED" -> {
                 intent
                     .getStringExtra("package_name")
                     ?.let { appFlowHandler.onConsciousGateClosed(it) }
+                islandOverlayHandler.updateConsciousGateState()
                 performGlobalAction(GLOBAL_ACTION_HOME)
             }
 

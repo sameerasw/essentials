@@ -97,6 +97,16 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                         )
                     }
                 }
+
+                IconToggleItem(
+                    title = stringResource(R.string.status_glance_calendar_show_all_day_title),
+                    iconRes = R.drawable.rounded_calendar_today_24,
+                    isChecked = viewModel.statusGlanceCalendarShowAllDay.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setStatusGlanceCalendarShowAllDay(checked)
+                    },
+                )
             }
 
             Text(

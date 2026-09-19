@@ -31,7 +31,7 @@ object WatchCallSyncManager {
 
     fun isCallSyncEnabled(context: Context): Boolean {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        return prefs.getBoolean("watch_call_sync_enabled", true)
+        return prefs.getBoolean("watch_call_sync_enabled", false)
     }
 
     fun onCallStateChanged(

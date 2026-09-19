@@ -54,6 +54,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
@@ -158,6 +159,7 @@ fun GenAIFloatingPill(
                             height = 150f,
                             direction = BlurDirection.TOP,
                             showGradientOverlay = false,
+                            edgeTreatment = BlurredEdgeTreatment.Unbounded,
                         ).background(
                             color = MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(32.dp),

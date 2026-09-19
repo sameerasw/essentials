@@ -9,26 +9,14 @@
 
 package com.sameerasw.essentials.ui.features.system
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,40 +25,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.center
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.text.font.FontWeight
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
-import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
-import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -91,11 +51,9 @@ fun AlwaysOnDisplaySettingsUI(
     val view = LocalView.current
 
     var showAppSelectionSheet by remember { mutableStateOf(false) }
-    var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
 
     val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
-    val isStoragePermissionGranted = viewModel.isStoragePermissionGranted.value
 
     LaunchedEffect(Unit) {
         viewModel.check(context)
@@ -132,400 +90,15 @@ fun AlwaysOnDisplaySettingsUI(
                 isChecked = viewModel.isAodEnabled.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setAodEnabled(checked)
+                    if (checked && !viewModel.isWriteSecureSettingsEnabled.value) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_always_on_display_title, listOf("WRITE_SECURE_SETTINGS"))
+                    } else {
+                        viewModel.setAodEnabled(checked)
+                    }
                 },
                 modifier = Modifier.highlight(highlightSetting == "aod_toggle"),
             )
-        }
-
-        Text(
-            text = stringResource(R.string.feat_aod_wallpaper_section_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        val wallpaperBitmap = viewModel.currentWallpaperBitmap.value
-        val opacity = viewModel.aodWallpaperOpacity.floatValue
-
-        LaunchedEffect(isStoragePermissionGranted) {
-            if (isStoragePermissionGranted) {
-                viewModel.loadCurrentWallpaperBitmap(context)
-            }
-        }
-
-        val isWallpaperEnabled = viewModel.isAodWallpaperEnabled.value
-        val blurRadius = viewModel.aodWallpaperBlur.floatValue
-        val vignetteIntensity = viewModel.aodWallpaperVignette.floatValue
-        val blackThreshold = viewModel.aodWallpaperBlackThreshold.floatValue
-
-        val animatedPreviewAlpha by animateFloatAsState(
-            targetValue = if (isWallpaperEnabled) opacity else 0f,
-            animationSpec = tween(durationMillis = 300),
-            label = "aodWallpaperPreviewAlpha",
-        )
-
-        @OptIn(ExperimentalTextApi::class)
-        val aodClockFont = remember {
-            FontFamily(
-                Font(
-                    R.font.google_sans_flex,
-                    weight = FontWeight.Thin,
-                    variationSettings = FontVariation.Settings(
-                        FontVariation.Setting("wght", 100f),
-                        FontVariation.Setting("ROND", 100f),
-                        FontVariation.Setting("wdth", 150f),
-                    ),
-                )
-            )
-        }
-
-        val timeText = remember {
-            val cal = java.util.Calendar.getInstance()
-            val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
-            val pattern = if (is24Hour) "HH mm" else "hh mm"
-            java.text.SimpleDateFormat(pattern, java.util.Locale.getDefault()).format(cal.time)
-        }
-
-        var isPreviewMenuExpanded by remember { mutableStateOf(false) }
-        val hasCustomImage = viewModel.hasAodWallpaperCustomImage.value
-
-        val photoPickerLauncher =
-            rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.GetContent(),
-            ) { uri ->
-                uri?.let {
-                    viewModel.setCustomAodWallpaper(context, it)
-                }
-            }
-
-        RoundedCardContainer {
-            AnimatedVisibility(
-                visible = isWallpaperEnabled,
-                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(Color.Black)
-                        .clickable {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            isPreviewMenuExpanded = true
-                        },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-                            .drawWithContent {
-                                drawContent()
-                                if (vignetteIntensity > 0f && isWallpaperEnabled) {
-                                    val edgeAlpha = (1f - vignetteIntensity / 100f).coerceIn(0f, 1f)
-                                    drawRect(
-                                        brush = Brush.radialGradient(
-                                            colorStops = arrayOf(
-                                                0.0f to Color.Black,
-                                                0.45f to Color.Black,
-                                                1.0f to Color.Black.copy(alpha = edgeAlpha),
-                                            ),
-                                            center = center,
-                                            radius = maxOf(size.width, size.height) * 0.75f,
-                                        ),
-                                        blendMode = BlendMode.DstIn,
-                                    )
-                                }
-                            },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = timeText,
-                            style = TextStyle(
-                                fontFamily = aodClockFont,
-                                fontWeight = FontWeight.Thin,
-                                fontSize = 52.sp,
-                                letterSpacing = 4.sp,
-                                color = MaterialTheme.colorScheme.primary,
-                            ),
-                            textAlign = TextAlign.Center,
-                        )
-
-                        if (wallpaperBitmap != null) {
-                            val luminanceFilter = remember(blackThreshold) {
-                                androidx.compose.ui.graphics.ColorFilter.colorMatrix(
-                                    androidx.compose.ui.graphics.ColorMatrix(
-                                        floatArrayOf(
-                                            1.2f, 0f, 0f, 0f, 0f,
-                                            0f, 1.2f, 0f, 0f, 0f,
-                                            0f, 0f, 1.2f, 0f, 0f,
-                                            0.5f, 1.5f, 0.2f, 0f, -blackThreshold,
-                                        )
-                                    )
-                                )
-                            }
-
-                            Image(
-                                bitmap = wallpaperBitmap.asImageBitmap(),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                colorFilter = luminanceFilter,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .alpha(animatedPreviewAlpha)
-                                    .then(
-                                        if (blurRadius > 0f) Modifier.blur(blurRadius.dp) else Modifier
-                                    ),
-                            )
-                        }
-                    }
-
-                    SegmentedDropdownMenu(
-                        expanded = isPreviewMenuExpanded,
-                        onDismissRequest = { isPreviewMenuExpanded = false },
-                    ) {
-                        SegmentedDropdownMenuItem(
-                            text = { Text(stringResource(R.string.feat_aod_wallpaper_pick_image)) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                isPreviewMenuExpanded = false
-                                photoPickerLauncher.launch("image/*")
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_image_24),
-                                    contentDescription = null,
-                                )
-                            },
-                        )
-
-                        if (hasCustomImage) {
-                            SegmentedDropdownMenuItem(
-                                text = { Text(stringResource(R.string.feat_aod_wallpaper_remove_custom_image)) },
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    isPreviewMenuExpanded = false
-                                    viewModel.removeCustomAodWallpaper(context)
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.rounded_delete_24),
-                                        contentDescription = null,
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
-            }
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_wallpaper_24,
-                title = stringResource(R.string.feat_aod_wallpaper_title),
-                isChecked = isWallpaperEnabled,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked) {
-                        if (!isAccessibilityEnabled || !isStoragePermissionGranted) {
-                            val missing = mutableListOf<String>()
-                            if (!isAccessibilityEnabled) missing.add("ACCESSIBILITY")
-                            if (!isStoragePermissionGranted) missing.add("STORAGE")
-                            requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_title, missing)
-                        } else {
-                            viewModel.toggleAodWallpaperEnabled(true)
-                            viewModel.loadCurrentWallpaperBitmap(context)
-                        }
-                    } else {
-                        viewModel.toggleAodWallpaperEnabled(false)
-                    }
-                },
-                enabled = true,
-                onDisabledClick = {
-                    if (!isAccessibilityEnabled || !isStoragePermissionGranted) {
-                        val missing = mutableListOf<String>()
-                        if (!isAccessibilityEnabled) missing.add("ACCESSIBILITY")
-                        if (!isStoragePermissionGranted) missing.add("STORAGE")
-                        requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_title, missing)
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper"),
-            )
-
-            AnimatedVisibility(
-                visible = isWallpaperEnabled,
-                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
-            ) {
-                ConfigSliderItem(
-                    title = stringResource(R.string.feat_aod_wallpaper_opacity),
-                    value = (opacity * 100f).coerceIn(10f, 75f),
-                    onValueChange = {
-                        viewModel.setAodWallpaperOpacity(it / 100f)
-                    },
-                    valueRange = 10f..75f,
-                    increment = 5f,
-                    valueFormatter = { "${it.toInt()}%" },
-                    iconRes = R.drawable.rounded_visibility_24,
-                )
-            }
-
-            AnimatedVisibility(
-                visible = isWallpaperEnabled,
-                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
-            ) {
-                ConfigSliderItem(
-                    title = stringResource(R.string.feat_aod_wallpaper_blur),
-                    value = blurRadius,
-                    onValueChange = { viewModel.setAodWallpaperBlur(it) },
-                    valueRange = 0f..25f,
-                    increment = 1f,
-                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
-                    iconRes = R.drawable.rounded_blur_on_24,
-                )
-            }
-
-            AnimatedVisibility(
-                visible = isWallpaperEnabled,
-                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
-            ) {
-                ConfigSliderItem(
-                    title = stringResource(R.string.feat_aod_wallpaper_vignette),
-                    value = vignetteIntensity,
-                    onValueChange = { viewModel.setAodWallpaperVignette(it) },
-                    valueRange = 0f..100f,
-                    increment = 5f,
-                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}%" },
-                    iconRes = R.drawable.rounded_grain_24,
-                )
-            }
-
-            AnimatedVisibility(
-                visible = isWallpaperEnabled,
-                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
-            ) {
-                ConfigSliderItem(
-                    title = stringResource(R.string.feat_aod_wallpaper_black_threshold),
-                    value = blackThreshold,
-                    onValueChange = { viewModel.setAodWallpaperBlackThreshold(it) },
-                    valueRange = 0f..50f,
-                    increment = 1f,
-                    valueFormatter = { if (it == 0f) "Off" else "${it.toInt()}" },
-                    iconRes = R.drawable.rounded_invert_colors_24,
-                )
-            }
-
-            AnimatedVisibility(
-                visible = isWallpaperEnabled,
-                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300)),
-            ) {
-                val timeoutOptions = listOf(
-                    0 to stringResource(R.string.feat_aod_wallpaper_timeout_never),
-                    1 to stringResource(R.string.feat_aod_wallpaper_timeout_1m),
-                    3 to stringResource(R.string.feat_aod_wallpaper_timeout_3m),
-                    5 to stringResource(R.string.feat_aod_wallpaper_timeout_5m),
-                    10 to stringResource(R.string.feat_aod_wallpaper_timeout_10m),
-                )
-                val currentTimeout = viewModel.aodWallpaperTimeout.intValue
-                val selectedLabel = timeoutOptions.firstOrNull { it.first == currentTimeout }?.second
-                    ?: stringResource(R.string.feat_aod_wallpaper_timeout_3m)
-                ConfigPickerItem(
-                    title = stringResource(R.string.feat_aod_wallpaper_timeout),
-                    selectedValue = selectedLabel,
-                    iconRes = R.drawable.rounded_timer_24,
-                ) {
-                    timeoutOptions.forEach { (minutes, label) ->
-                        SegmentedDropdownMenuItem(
-                            text = { Text(label) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                viewModel.setAodWallpaperTimeout(minutes)
-                            },
-                        )
-                    }
-                }
-            }
-        }
-
-        val isNotificationListenerGranted = viewModel.isNotificationListenerEnabled.value
-        val isAlbumArtEnabled = viewModel.isAodWallpaperUseAlbumArt.value
-
-        Text(
-            text = stringResource(R.string.feat_aod_wallpaper_media_section_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
-        val isKeepOnMedia = viewModel.isAodWallpaperKeepOnMedia.value
-        val isTimeoutNever = viewModel.aodWallpaperTimeout.intValue == 0
-
-        RoundedCardContainer {
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_music_note_24,
-                title = stringResource(R.string.feat_aod_wallpaper_use_album_art),
-                isChecked = isAlbumArtEnabled,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked) {
-                        if (!isNotificationListenerGranted) {
-                            requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
-                        } else {
-                            viewModel.setAodWallpaperUseAlbumArt(true)
-                        }
-                    } else {
-                        viewModel.setAodWallpaperUseAlbumArt(false)
-                    }
-                },
-                enabled = true,
-                onDisabledClick = {
-                    if (!isNotificationListenerGranted) {
-                        requestingPermissionsFor = Pair(R.string.feat_aod_wallpaper_use_album_art, listOf("NOTIFICATION_LISTENER"))
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_album_art"),
-            )
-
-
-            AnimatedVisibility(
-                visible = isAlbumArtEnabled,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_timer_24,
-                    title = stringResource(R.string.feat_aod_wallpaper_keep_on_media),
-                    isChecked = if (isTimeoutNever) true else isKeepOnMedia,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setAodWallpaperKeepOnMedia(checked)
-                    },
-                    enabled = !isTimeoutNever,
-                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_keep_on_media"),
-                )
-
-            }
-
-            AnimatedVisibility(
-                visible = isAlbumArtEnabled,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_apps_24,
-                    title = stringResource(R.string.feat_aod_wallpaper_media_apps),
-                    showToggle = false,
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        showMediaAppSelectionSheet = true
-                    },
-                )
-            }
         }
 
         Text(
@@ -623,27 +196,6 @@ fun AlwaysOnDisplaySettingsUI(
                 },
                 onAppToggle = { ctx, pkg, enabled ->
                     viewModel.updateNotificationGlanceAppEnabled(
-                        ctx,
-                        pkg,
-                        enabled,
-                    )
-                },
-                context = context,
-            )
-        }
-
-        if (showMediaAppSelectionSheet) {
-            AppSelectionSheet(
-                onDismissRequest = { showMediaAppSelectionSheet = false },
-                onLoadApps = { viewModel.loadAodWallpaperMediaApps(it) },
-                onSaveApps = { ctx, apps ->
-                    viewModel.saveAodWallpaperMediaApps(
-                        ctx,
-                        apps,
-                    )
-                },
-                onAppToggle = { ctx, pkg, enabled ->
-                    viewModel.updateAodWallpaperMediaAppEnabled(
                         ctx,
                         pkg,
                         enabled,

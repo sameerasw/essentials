@@ -67,7 +67,7 @@ fun WatchNotificationSettingsUI(
         mutableStateOf(prefs.getBoolean("watch_notif_media_enabled", true))
     }
     var isCallSyncEnabled by remember {
-        mutableStateOf(prefs.getBoolean("watch_call_sync_enabled", true))
+        mutableStateOf(prefs.getBoolean("watch_call_sync_enabled", false))
     }
     var showAppPicker by remember { mutableStateOf(false) }
     var showCallPermissionSheet by remember { mutableStateOf(false) }

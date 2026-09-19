@@ -10,12 +10,15 @@
 package com.sameerasw.essentials.services
 
 import android.app.Notification
+import android.app.Person
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.service.notification.NotificationListenerService
@@ -25,6 +28,8 @@ import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
+import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
+import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
@@ -43,6 +48,11 @@ class NotificationListener : NotificationListenerService() {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
     }
 
+    interface NotificationAlertListener {
+        fun onNotificationAlertPosted(alert: ActiveNotificationAlert)
+        fun onNotificationAlertRemoved(key: String)
+    }
+
     companion object {
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
@@ -54,6 +64,37 @@ class NotificationListener : NotificationListenerService() {
         var instance: NotificationListener? = null
 
         private val progressListeners = mutableListOf<ProgressNotificationListener>()
+        private val alertListeners = mutableListOf<NotificationAlertListener>()
+
+        fun addNotificationAlertListener(listener: NotificationAlertListener) {
+            synchronized(alertListeners) {
+                if (!alertListeners.contains(listener)) {
+                    alertListeners.add(listener)
+                }
+            }
+        }
+
+        fun removeNotificationAlertListener(listener: NotificationAlertListener) {
+            synchronized(alertListeners) {
+                alertListeners.remove(listener)
+            }
+        }
+
+        fun notifyAlertPosted(alert: ActiveNotificationAlert) {
+            val listenersCopy = synchronized(alertListeners) { alertListeners.toList() }
+            listenersCopy.forEach { it.onNotificationAlertPosted(alert) }
+        }
+
+        fun notifyAlertRemoved(key: String) {
+            val listenersCopy = synchronized(alertListeners) { alertListeners.toList() }
+            listenersCopy.forEach { it.onNotificationAlertRemoved(key) }
+        }
+
+        fun dismissNotification(key: String) {
+            try {
+                instance?.cancelNotification(key)
+            } catch (_: Exception) {}
+        }
 
         fun addProgressNotificationListener(listener: ProgressNotificationListener) {
             synchronized(progressListeners) {
@@ -803,45 +844,50 @@ class NotificationListener : NotificationListenerService() {
                 val isPlaying =
                     playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
 
-                // Extract and save album art
-                val artwork =
-                    metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
-                        ?: metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
-                        ?: metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_DISPLAY_ICON)
-
-                val filesDirFile = File(filesDir, "music_artwork.png")
-                if (artwork != null) {
-                    try {
-                        FileOutputStream(filesDirFile).use { out ->
-                            artwork.compress(Bitmap.CompressFormat.PNG, 100, out)
-                        }
-                    } catch (_: Exception) {
-                    }
-                } else {
-                    if (filesDirFile.exists()) filesDirFile.delete()
-                }
-
-                // Update settings and trigger Glance widget
-                val settingsRepo = SettingsRepository(this)
-                settingsRepo.setPixelSearchbarMusicTitle(title)
-                settingsRepo.setPixelSearchbarMusicArtist(artist)
-                settingsRepo.setPixelSearchbarMusicPackage(sbn.packageName)
-                settingsRepo.incrementPixelSearchbarWidgetRevision()
-
-                kotlinx.coroutines.MainScope().launch {
-                    try {
-                        val managerGlance =
-                            androidx.glance.appwidget.GlanceAppWidgetManager(this@NotificationListener)
-                        val widgetGlance = PixelSearchbarWidget()
-                        val glanceIds = managerGlance.getGlanceIds(PixelSearchbarWidget::class.java)
-                        for (glanceId in glanceIds) {
-                            widgetGlance.update(this@NotificationListener, glanceId)
-                        }
-                    } catch (_: Exception) {
-                    }
-                }
-
                 val lastState = lastMediaStates[sbn.packageName]
+                val mediaContentChanged = lastState == null ||
+                    title != lastState.title ||
+                    artist != lastState.artist
+
+                // Extract and save album art
+                if (mediaContentChanged) {
+                    val artwork =
+                        metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+                            ?: metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+                            ?: metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_DISPLAY_ICON)
+
+                    val filesDirFile = File(filesDir, "music_artwork.png")
+                    if (artwork != null) {
+                        try {
+                            FileOutputStream(filesDirFile).use { out ->
+                                artwork.compress(Bitmap.CompressFormat.PNG, 100, out)
+                            }
+                        } catch (_: Exception) {
+                        }
+                    } else if (filesDirFile.exists()) {
+                        filesDirFile.delete()
+                    }
+
+                    // Update settings and trigger the Glance widget only for new media content.
+                    val settingsRepo = SettingsRepository(this)
+                    settingsRepo.setPixelSearchbarMusicTitle(title)
+                    settingsRepo.setPixelSearchbarMusicArtist(artist)
+                    settingsRepo.setPixelSearchbarMusicPackage(sbn.packageName)
+                    settingsRepo.incrementPixelSearchbarWidgetRevision()
+
+                    kotlinx.coroutines.MainScope().launch {
+                        try {
+                            val managerGlance =
+                                androidx.glance.appwidget.GlanceAppWidgetManager(this@NotificationListener)
+                            val widgetGlance = PixelSearchbarWidget()
+                            val glanceIds = managerGlance.getGlanceIds(PixelSearchbarWidget::class.java)
+                            for (glanceId in glanceIds) {
+                                widgetGlance.update(this@NotificationListener, glanceId)
+                            }
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
 
                 var eventType: String? = null
 
@@ -918,6 +964,13 @@ class NotificationListener : NotificationListenerService() {
         val extras = sbn.notification.extras
         if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
             notifyProgressListeners(extractLatestProgressNotification())
+        }
+
+        if (isHeadsUpNotification(sbn, rankingMap)) {
+            val alert = extractNotificationAlert(sbn)
+            if (alert != null) {
+                notifyAlertPosted(alert)
+            }
         }
 
         val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -1274,6 +1327,7 @@ class NotificationListener : NotificationListenerService() {
         }
 
         notifyProgressListeners(extractLatestProgressNotification())
+        notifyAlertRemoved(sbn.key)
 
         // Trigger refresh if something is playing
         try {
@@ -1684,5 +1738,284 @@ class NotificationListener : NotificationListenerService() {
             extractProgressNotification(sbn)
         }
         return progressNotifs.maxByOrNull { it.postTime }
+    }
+
+    fun isHeadsUpNotification(
+        sbn: StatusBarNotification,
+        rankingMap: RankingMap? = null,
+    ): Boolean {
+        if (sbn.isOngoing) return false
+        if (sbn.packageName == packageName) return false
+        if (isMediaNotification(sbn)) return false
+
+        val notif = sbn.notification
+        val isGroupSummary = (notif.flags and Notification.FLAG_GROUP_SUMMARY) != 0
+        if (isGroupSummary) return false
+
+        try {
+            val map = rankingMap ?: currentRanking
+            if (map != null) {
+                val ranking = Ranking()
+                if (map.getRanking(sbn.key, ranking)) {
+                    return ranking.importance >= android.app.NotificationManager.IMPORTANCE_DEFAULT
+                }
+            }
+            @Suppress("DEPRECATION")
+            return sbn.notification.priority >= Notification.PRIORITY_DEFAULT
+        } catch (e: Exception) {
+            android.util.Log.e("NotificationListener", "Error in isHeadsUpNotification", e)
+            return false
+        }
+    }
+
+    fun extractNotificationAlert(sbn: StatusBarNotification): ActiveNotificationAlert? {
+        val notif = sbn.notification ?: return null
+        val extras = notif.extras ?: return null
+
+        val rawTitle = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString()?.trim()
+        val rawTitleBig = extras.getCharSequence(Notification.EXTRA_TITLE_BIG)?.toString()?.trim()
+        val title = when {
+            !rawTitle.isNullOrBlank() -> rawTitle
+            !rawTitleBig.isNullOrBlank() -> rawTitleBig
+            else -> return null
+        }
+
+        val subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString()?.trim()
+        val summaryText = extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT)?.toString()?.trim()
+
+        var body: String? = null
+
+        val standardText = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()?.trim()
+        if (!standardText.isNullOrBlank()) {
+            body = standardText
+        }
+
+
+        if (body.isNullOrBlank()) {
+            @Suppress("DEPRECATION")
+            val rawMessages = extras.getParcelableArray(Notification.EXTRA_MESSAGES)
+            if (!rawMessages.isNullOrEmpty()) {
+                val lastMsg = rawMessages.lastOrNull() as? Bundle
+                if (lastMsg != null) {
+                    val msgText = lastMsg.getCharSequence("text")?.toString()?.trim()
+                    val msgSender = lastMsg.getCharSequence("sender")?.toString()?.trim()
+                    if (!msgText.isNullOrBlank()) {
+                        body = if (!msgSender.isNullOrBlank() && !msgSender.equals("You", ignoreCase = true) && !msgSender.equals(title, ignoreCase = true)) {
+                            "$msgSender: $msgText"
+                        } else {
+                            msgText
+                        }
+                    }
+                }
+            }
+        }
+
+        if (body.isNullOrBlank()) {
+            body = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()?.trim()
+        }
+
+        if (body.isNullOrBlank()) {
+            val textLines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
+            if (!textLines.isNullOrEmpty()) {
+                body = textLines.filterNotNull().map { it.toString().trim() }.lastOrNull { it.isNotBlank() }
+            }
+        }
+
+        val textParts = mutableListOf<String>()
+
+        if (!rawTitleBig.isNullOrBlank() && !rawTitleBig.equals(title, ignoreCase = true)) {
+            textParts.add(rawTitleBig)
+        }
+
+        // if (!subText.isNullOrBlank() && !subText.equals(title, ignoreCase = true) && !subText.equals(rawTitleBig, ignoreCase = true)) {
+        //     textParts.add(subText)
+        // }
+
+        if (!body.isNullOrBlank()) {
+            if (!body.equals(title, ignoreCase = true) && !body.equals(rawTitleBig, ignoreCase = true)) {
+                textParts.add(body)
+            }
+        }
+
+        if (textParts.isEmpty() && !summaryText.isNullOrBlank() && !summaryText.equals(title, ignoreCase = true)) {
+            textParts.add(summaryText)
+        }
+
+        var text = textParts.joinToString("\n")
+
+        val appName = try {
+            val appInfo = packageManager.getApplicationInfo(sbn.packageName, 0)
+            packageManager.getApplicationLabel(appInfo).toString()
+        } catch (_: Exception) {
+            null
+        }
+
+        var senderName: String? = null
+        var personAvatar: Bitmap? = null
+
+        // In MessagingStyle notifications, EXTRA_MESSAGING_PERSON is the local user ("You").
+        // The actual incoming sender is in EXTRA_MESSAGES or EXTRA_CONVERSATION_TITLE / title.
+        @Suppress("DEPRECATION")
+        val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES)
+        if (!messages.isNullOrEmpty()) {
+            val lastMsg = messages.lastOrNull() as? Bundle
+            if (lastMsg != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val senderPerson = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        lastMsg.getParcelable("sender_person", Person::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        lastMsg.getParcelable<Person>("sender_person")
+                    }
+                    if (senderPerson != null) {
+                        if (!senderPerson.name.isNullOrBlank()) {
+                            val name = senderPerson.name.toString()
+                            if (!name.equals("You", ignoreCase = true)) {
+                                senderName = name
+                            }
+                        }
+                        val pIcon = senderPerson.icon
+                        if (pIcon != null) {
+                            try {
+                                val d = pIcon.loadDrawable(this)
+                                if (d != null) {
+                                    personAvatar = AppUtil.drawableToBitmap(d)
+                                }
+                            } catch (_: Exception) {}
+                        }
+                    }
+                }
+                if (senderName.isNullOrBlank()) {
+                    val senderCharSeq = lastMsg.getCharSequence("sender")?.toString()
+                    if (!senderCharSeq.isNullOrBlank() && !senderCharSeq.equals("You", ignoreCase = true)) {
+                        senderName = senderCharSeq
+                    }
+                }
+            }
+        }
+
+        if (senderName.isNullOrBlank()) {
+            val convTitle = extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)?.toString()
+            if (!convTitle.isNullOrBlank() && !convTitle.equals("You", ignoreCase = true)) {
+                senderName = convTitle
+            }
+        }
+
+        if (senderName.isNullOrBlank() && title.isNotBlank() && !title.equals("You", ignoreCase = true)) {
+            senderName = title
+        }
+
+        var appIcon: Bitmap? = null
+        try {
+            val appIconDrawable = packageManager.getApplicationIcon(sbn.packageName)
+            appIcon = AppUtil.drawableToBitmap(appIconDrawable)
+        } catch (_: Exception) {}
+
+        var bitmap: Bitmap? = personAvatar
+        if (bitmap == null) {
+            try {
+                val largeIcon = notif.getLargeIcon()
+                if (largeIcon != null) {
+                    val drawable = largeIcon.loadDrawable(this)
+                    if (drawable != null) {
+                        bitmap = AppUtil.drawableToBitmap(drawable)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+
+        if (bitmap == null) {
+            try {
+                val smallIcon = notif.smallIcon
+                if (smallIcon != null) {
+                    val drawable = smallIcon.loadDrawable(this)
+                    if (drawable != null) {
+                        bitmap = AppUtil.drawableToBitmap(drawable)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+
+        if (bitmap == null) {
+            bitmap = appIcon
+        }
+
+        var appColor: Int? = null
+        if (notif.color != 0 && notif.color != android.graphics.Color.TRANSPARENT) {
+            appColor = notif.color
+        } else if (bitmap != null) {
+            try {
+                val palette = androidx.palette.graphics.Palette.from(bitmap).generate()
+                val vibrant = palette.getVibrantColor(0)
+                val dominant = palette.getDominantColor(0)
+                if (vibrant != 0) {
+                    appColor = vibrant
+                } else if (dominant != 0) {
+                    appColor = dominant
+                }
+            } catch (_: Exception) {}
+        }
+
+        val actionList = mutableListOf<NotificationActionItem>()
+        val actions = notif.actions
+        if (actions != null) {
+            for (action in actions) {
+                val actionTitle = action.title?.toString()
+                if (!actionTitle.isNullOrBlank()) {
+                    val remoteInputs = action.remoteInputs
+                    val hasReply = !remoteInputs.isNullOrEmpty()
+                    actionList.add(
+                        NotificationActionItem(
+                            title = actionTitle,
+                            isQuickReply = hasReply,
+                            pendingIntent = action.actionIntent,
+                            remoteInputs = remoteInputs,
+                            actionKey = "${sbn.key}_${actionTitle}"
+                        )
+                    )
+                }
+            }
+        }
+
+        return ActiveNotificationAlert(
+            key = sbn.key,
+            packageName = sbn.packageName,
+            title = title,
+            text = text,
+            icon = bitmap,
+            contentIntent = notif.contentIntent,
+            appColor = appColor,
+            senderName = senderName,
+            appName = appName,
+            appIcon = appIcon,
+            actions = actionList,
+        )
+    }
+
+    fun performNotificationAction(
+        actionItem: NotificationActionItem,
+        replyText: String? = null
+    ): Boolean {
+        return try {
+            val pendingIntent = actionItem.pendingIntent ?: return false
+            if (actionItem.isQuickReply && !replyText.isNullOrBlank()) {
+                val remoteInputs = actionItem.remoteInputs
+                if (!remoteInputs.isNullOrEmpty()) {
+                    val intent = Intent()
+                    val results = Bundle()
+                    remoteInputs.forEach { ri ->
+                        results.putCharSequence(ri.resultKey, replyText)
+                    }
+                    android.app.RemoteInput.addResultsToIntent(remoteInputs, intent, results)
+                    pendingIntent.send(this, 0, intent)
+                    return true
+                }
+            }
+            pendingIntent.send()
+            true
+        } catch (e: Exception) {
+            Log.e("NotificationListener", "Error performing notification action: ${e.message}")
+            false
+        }
     }
 }

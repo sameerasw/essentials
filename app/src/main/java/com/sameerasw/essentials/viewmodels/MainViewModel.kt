@@ -35,6 +35,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
@@ -78,6 +79,7 @@ import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.SurfaceFlingerControl
+import com.sameerasw.essentials.utils.TestNotificationUtil
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -129,6 +131,7 @@ class MainViewModel : ViewModel() {
 
     val isDuoEnabled = mutableStateOf(false)
     val isDuoAutoDetect = mutableStateOf(true)
+    val hasMultipleDuoDisplays = mutableStateOf(false)
     val duoCameraOffsetX = mutableFloatStateOf(50f)
     val duoCameraOffsetY = mutableFloatStateOf(3f)
     val duoCameraSize = mutableFloatStateOf(1.0f)
@@ -164,6 +167,34 @@ class MainViewModel : ViewModel() {
     val isDuoSlideTrack = mutableStateOf(false)
     val isDuoSlideInvertDirection = mutableStateOf(false)
 
+    val isIslandEnabled = mutableStateOf(false)
+    val isIslandAutoDetect = mutableStateOf(true)
+    val islandCameraOffsetX = mutableFloatStateOf(50f)
+    val islandCameraOffsetY = mutableFloatStateOf(3f)
+    val islandCameraSize = mutableFloatStateOf(1.0f)
+    val islandMaxWidth = mutableFloatStateOf(360f)
+    val islandCutoutGap = mutableFloatStateOf(6f)
+    val islandExpandedWidth = mutableFloatStateOf(360f)
+    val islandExpandedRoundness = mutableFloatStateOf(24f)
+    val islandExpandedPadding = mutableFloatStateOf(16f)
+    val islandExpandedTopPadding = mutableFloatStateOf(0f)
+    val islandExpandedTimeoutMs = mutableLongStateOf(0L)
+    val isIslandSuppressSystemHeadsUp = mutableStateOf(false)
+    val isIslandHideWhenScreenOff = mutableStateOf(true)
+    val islandTimeoutMs = mutableLongStateOf(4500L)
+    val isIslandTapActionEnabled = mutableStateOf(true)
+    val islandTapAction = mutableStateOf(SettingsRepository.ISLAND_TAP_ACTION_OPEN)
+    val isIslandSwipeUpActionEnabled = mutableStateOf(true)
+    val isIslandCatchUpEnabled = mutableStateOf(false)
+    val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
+    val isIslandShowGlow = mutableStateOf(true)
+    val isIslandShowMedia = mutableStateOf(true)
+    val isIslandShowCalendar = mutableStateOf(false)
+    val isIslandShowConsciousGate = mutableStateOf(true)
+    val isIslandShowTimeBattery = mutableStateOf(false)
+    val isIslandShowFlashlight = mutableStateOf(true)
+    val islandBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
+
     val isStatusGlanceEnabled = mutableStateOf(false)
     val isStatusGlanceAutoDetect = mutableStateOf(true)
     val statusGlanceOffsetX = mutableFloatStateOf(60f)
@@ -173,6 +204,7 @@ class MainViewModel : ViewModel() {
     val isStatusGlanceShowFlashlight = mutableStateOf(true)
     val isStatusGlanceShowCalendar = mutableStateOf(true)
     val statusGlanceCalendarTimeframe = mutableStateOf("today")
+    val statusGlanceCalendarShowAllDay = mutableStateOf(false)
     val statusGlanceSelectedCalendarIds = mutableStateOf<Set<String>>(emptySet())
     val statusGlanceAvailableCalendars = mutableStateListOf<CalendarAccount>()
     val isStatusGlanceShowMedia = mutableStateOf(true)
@@ -224,7 +256,7 @@ class MainViewModel : ViewModel() {
     val isCallVibrationsEnabled = mutableStateOf(false)
     val isCalendarSyncEnabled = mutableStateOf(false)
     val isNotificationSyncEnabled = mutableStateOf(false)
-    val isCallSyncEnabled = mutableStateOf(true)
+    val isCallSyncEnabled = mutableStateOf(false)
     val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
     val isBatteryNotificationEnabled = mutableStateOf(false)
     val isAodEnabled = mutableStateOf(false)
@@ -340,11 +372,9 @@ class MainViewModel : ViewModel() {
     val isConsciousGateEnabled = mutableStateOf(false)
     val consciousGateDelaySeconds = mutableIntStateOf(5)
     val consciousGateReappearMinutes = mutableIntStateOf(0)
-    val consciousGateIconName = mutableStateOf("rounded_pause_24")
+    val isConsciousGateFeelEverySecondEnabled = mutableStateOf(false)
     val consciousGateTitle = mutableStateOf("")
     val consciousGateMessage = mutableStateOf("")
-    val consciousGateCountdownStyle =
-        mutableStateOf(com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle.CIRCULAR_WAVY)
     val isUseUsageAccess = mutableStateOf(false)
     val isFreezeWhenLockedEnabled = mutableStateOf(false)
     val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
@@ -692,6 +722,51 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_DUO_SLIDE_INVERT_DIRECTION ->
                         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
 
+                    SettingsRepository.KEY_ISLAND_ENABLED ->
+                        isIslandEnabled.value = settingsRepository.isIslandEnabled()
+
+                    SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT ->
+                        isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
+
+                    SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_X ->
+                        islandCameraOffsetX.floatValue = settingsRepository.getIslandCameraOffsetX()
+
+                    SettingsRepository.KEY_ISLAND_CAMERA_OFFSET_Y ->
+                        islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
+
+                    SettingsRepository.KEY_ISLAND_CAMERA_SIZE ->
+                        islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
+
+                    SettingsRepository.KEY_ISLAND_MAX_WIDTH ->
+                        islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
+
+                    SettingsRepository.KEY_ISLAND_CUTOUT_GAP ->
+                        islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+
+                    SettingsRepository.KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP ->
+                        isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF ->
+                        isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
+
+                    SettingsRepository.KEY_ISLAND_TIMEOUT_MS ->
+                        islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
+
+                    SettingsRepository.KEY_ISLAND_TAP_ACTION_ENABLED ->
+                        isIslandTapActionEnabled.value = settingsRepository.isIslandTapActionEnabled()
+
+                    SettingsRepository.KEY_ISLAND_TAP_ACTION ->
+                        islandTapAction.value = settingsRepository.getIslandTapAction()
+
+                    SettingsRepository.KEY_ISLAND_SWIPE_UP_ACTION_ENABLED ->
+                        isIslandSwipeUpActionEnabled.value = settingsRepository.isIslandSwipeUpActionEnabled()
+
+                    SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
+                        isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_CATCH_UP_TIMEOUT_MS ->
+                        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+
                     SettingsRepository.KEY_STATUS_GLANCE_ENABLED ->
                         isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
 
@@ -718,6 +793,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME ->
                         statusGlanceCalendarTimeframe.value = settingsRepository.getStatusGlanceCalendarTimeframe()
+
+                    SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY ->
+                        statusGlanceCalendarShowAllDay.value = settingsRepository.isStatusGlanceCalendarShowAllDayEnabled()
 
                     SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS ->
                         statusGlanceSelectedCalendarIds.value = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
@@ -2038,6 +2116,33 @@ class MainViewModel : ViewModel() {
         duoSlideMode.value = settingsRepository.getDuoSlideMode()
         isDuoSlideTrack.value = settingsRepository.isDuoSlideTrackEnabled()
         isDuoSlideInvertDirection.value = settingsRepository.isDuoSlideInvertDirectionEnabled()
+        isIslandEnabled.value = settingsRepository.isIslandEnabled()
+        isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
+        islandCameraOffsetX.floatValue = settingsRepository.getIslandCameraOffsetX()
+        islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
+        islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
+        islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
+        islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
+        islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
+        islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
+        islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
+        isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
+        isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
+        islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
+        isIslandTapActionEnabled.value = settingsRepository.isIslandTapActionEnabled()
+        islandTapAction.value = settingsRepository.getIslandTapAction()
+        isIslandSwipeUpActionEnabled.value = settingsRepository.isIslandSwipeUpActionEnabled()
+        isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
+        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+        isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
+        isIslandShowMedia.value = settingsRepository.isIslandShowMediaEnabled()
+        isIslandShowCalendar.value = settingsRepository.isIslandShowCalendarEnabled()
+        isIslandShowConsciousGate.value = settingsRepository.isIslandShowConsciousGateEnabled()
+        isIslandShowTimeBattery.value = settingsRepository.isIslandShowTimeBatteryEnabled()
+        isIslandShowFlashlight.value = settingsRepository.isIslandShowFlashlightEnabled()
+        islandBatteryStyle.value = settingsRepository.getIslandBatteryStyle()
         isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
         isStatusGlanceAutoDetect.value = settingsRepository.isStatusGlanceAutoDetectEnabled()
         statusGlanceOffsetX.floatValue = settingsRepository.getStatusGlanceOffsetX()
@@ -2047,6 +2152,7 @@ class MainViewModel : ViewModel() {
         isStatusGlanceShowFlashlight.value = settingsRepository.isStatusGlanceShowFlashlightEnabled()
         isStatusGlanceShowCalendar.value = settingsRepository.isStatusGlanceShowCalendarEnabled()
         statusGlanceCalendarTimeframe.value = settingsRepository.getStatusGlanceCalendarTimeframe()
+        statusGlanceCalendarShowAllDay.value = settingsRepository.isStatusGlanceCalendarShowAllDayEnabled()
         statusGlanceSelectedCalendarIds.value = settingsRepository.getStatusGlanceCalendarSelectedCalendars()
         isStatusGlanceShowMedia.value = settingsRepository.isStatusGlanceShowMediaEnabled()
         isStatusGlanceShowTime.value = settingsRepository.isStatusGlanceShowTimeEnabled()
@@ -2209,10 +2315,9 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_CONSCIOUS_GATE_ENABLED)
         consciousGateDelaySeconds.intValue = settingsRepository.getConsciousGateDelaySeconds()
         consciousGateReappearMinutes.intValue = settingsRepository.getConsciousGateReappearMinutes()
-        consciousGateIconName.value = settingsRepository.getConsciousGateIconName()
+        isConsciousGateFeelEverySecondEnabled.value = settingsRepository.getConsciousGateFeelEverySecond()
         consciousGateTitle.value = settingsRepository.getConsciousGateTitle(context)
         consciousGateMessage.value = settingsRepository.getConsciousGateMessage(context)
-        consciousGateCountdownStyle.value = settingsRepository.getConsciousGateCountdownStyle()
         isFreezeWhenLockedEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED)
         isFreezeDontFreezeActiveAppsEnabled.value =
@@ -2297,7 +2402,7 @@ class MainViewModel : ViewModel() {
         isNotificationSyncEnabled.value =
             settingsRepository.getBoolean("watch_notif_sync_enabled", false)
         isCallSyncEnabled.value =
-            settingsRepository.getBoolean("watch_call_sync_enabled", true)
+            settingsRepository.getBoolean("watch_call_sync_enabled", false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
         isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
@@ -4684,6 +4789,14 @@ class MainViewModel : ViewModel() {
         settingsRepository.setDuoCameraSize(value)
     }
 
+    fun refreshDuoCameraPlacement() {
+        settingsRepository.markDisplayProfileSeen()
+        duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
+        duoCameraOffsetY.floatValue = settingsRepository.getDuoCameraOffsetY()
+        duoCameraSize.floatValue = settingsRepository.getDuoCameraSize()
+        hasMultipleDuoDisplays.value = settingsRepository.getKnownDisplayProfileCount() > 1
+    }
+
     fun setDuoArcThickness(value: Float) {
         duoArcThickness.floatValue = value
         settingsRepository.setDuoArcThickness(value)
@@ -4800,6 +4913,156 @@ class MainViewModel : ViewModel() {
         settingsRepository.setDuoShowFlashlightEnabled(enabled)
     }
 
+    fun setIslandEnabled(enabled: Boolean) {
+        isIslandEnabled.value = enabled
+        settingsRepository.setIslandEnabled(enabled)
+    }
+
+    fun setIslandAutoDetect(enabled: Boolean) {
+        isIslandAutoDetect.value = enabled
+        settingsRepository.setIslandAutoDetectEnabled(enabled)
+    }
+
+    fun setIslandCameraOffsetX(value: Float) {
+        islandCameraOffsetX.floatValue = value
+        settingsRepository.setIslandCameraOffsetX(value)
+    }
+
+    fun setIslandCameraOffsetY(value: Float) {
+        islandCameraOffsetY.floatValue = value
+        settingsRepository.setIslandCameraOffsetY(value)
+    }
+
+    fun setIslandCameraSize(value: Float) {
+        islandCameraSize.floatValue = value
+        settingsRepository.setIslandCameraSize(value)
+    }
+
+    fun setIslandMaxWidth(value: Float) {
+        islandMaxWidth.floatValue = value
+        settingsRepository.setIslandMaxWidth(value)
+    }
+
+    fun setIslandCutoutGap(value: Float) {
+        islandCutoutGap.floatValue = value
+        settingsRepository.setIslandCutoutGap(value)
+    }
+
+    fun setIslandExpandedWidth(value: Float) {
+        islandExpandedWidth.floatValue = value
+        settingsRepository.setIslandExpandedWidth(value)
+    }
+
+    fun setIslandExpandedRoundness(value: Float) {
+        islandExpandedRoundness.floatValue = value
+        settingsRepository.setIslandExpandedRoundness(value)
+    }
+
+    fun setIslandExpandedPadding(value: Float) {
+        islandExpandedPadding.floatValue = value
+        settingsRepository.setIslandExpandedPadding(value)
+    }
+
+    fun setIslandExpandedTopPadding(value: Float) {
+        islandExpandedTopPadding.floatValue = value
+        settingsRepository.setIslandExpandedTopPadding(value)
+    }
+
+    fun setIslandExpandedTimeoutMs(value: Long) {
+        islandExpandedTimeoutMs.longValue = value
+        settingsRepository.setIslandExpandedTimeoutMs(value)
+    }
+
+    fun setIslandSuppressSystemHeadsUp(enabled: Boolean) {
+        isIslandSuppressSystemHeadsUp.value = enabled
+        settingsRepository.setIslandSuppressSystemHeadsUpEnabled(enabled)
+    }
+
+    fun setIslandHideWhenScreenOff(enabled: Boolean) {
+        isIslandHideWhenScreenOff.value = enabled
+        settingsRepository.setIslandHideWhenScreenOffEnabled(enabled)
+    }
+
+    fun setIslandTimeoutMs(value: Long) {
+        islandTimeoutMs.longValue = value
+        settingsRepository.setIslandTimeoutMs(value)
+    }
+
+    fun setIslandTapActionEnabled(enabled: Boolean) {
+        isIslandTapActionEnabled.value = enabled
+        settingsRepository.setIslandTapActionEnabled(enabled)
+    }
+
+    fun setIslandTapAction(value: String) {
+        islandTapAction.value = value
+        settingsRepository.setIslandTapAction(value)
+    }
+
+    fun setIslandSwipeUpActionEnabled(enabled: Boolean) {
+        isIslandSwipeUpActionEnabled.value = enabled
+        settingsRepository.setIslandSwipeUpActionEnabled(enabled)
+    }
+
+    fun setIslandCatchUpEnabled(enabled: Boolean) {
+        isIslandCatchUpEnabled.value = enabled
+        settingsRepository.setIslandCatchUpEnabled(enabled)
+    }
+
+    fun setIslandCatchUpTimeoutMs(value: Long) {
+        islandCatchUpTimeoutMs.longValue = value
+        settingsRepository.setIslandCatchUpTimeoutMs(value)
+    }
+
+    fun setIslandShowGlow(enabled: Boolean) {
+        isIslandShowGlow.value = enabled
+        settingsRepository.setIslandShowGlowEnabled(enabled)
+    }
+
+    fun setIslandShowMedia(enabled: Boolean) {
+        isIslandShowMedia.value = enabled
+        settingsRepository.setIslandShowMediaEnabled(enabled)
+    }
+
+    fun setIslandShowCalendar(enabled: Boolean) {
+        isIslandShowCalendar.value = enabled
+        settingsRepository.setIslandShowCalendarEnabled(enabled)
+    }
+
+    fun setIslandShowConsciousGate(enabled: Boolean) {
+        isIslandShowConsciousGate.value = enabled
+        settingsRepository.setIslandShowConsciousGateEnabled(enabled)
+    }
+
+    fun setIslandShowFlashlight(enabled: Boolean) {
+        isIslandShowFlashlight.value = enabled
+        settingsRepository.setIslandShowFlashlightEnabled(enabled)
+    }
+
+    fun setIslandShowTimeBattery(enabled: Boolean) {
+        isIslandShowTimeBattery.value = enabled
+        settingsRepository.setIslandShowTimeBatteryEnabled(enabled)
+    }
+
+    fun setIslandBatteryStyle(value: String) {
+        islandBatteryStyle.value = value
+        settingsRepository.setIslandBatteryStyle(value)
+    }
+
+    fun loadIslandMediaApps(context: Context): List<AppSelection> = settingsRepository.loadIslandMediaExcludedApps()
+
+    fun saveIslandMediaApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveIslandMediaExcludedApps(apps)
+    }
+
+    fun updateIslandMediaAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateIslandMediaExcludedAppSelection(packageName, enabled)
+    }
+
+    fun triggerIslandPreview(context: Context) {
+        val alert = TestNotificationUtil.generateRandomNotification(context)
+        com.sameerasw.essentials.services.NotificationListener.notifyAlertPosted(alert)
+    }
+
     fun setDuoHideWhenScreenOff(enabled: Boolean) {
         isDuoHideWhenScreenOff.value = enabled
         settingsRepository.setDuoHideWhenScreenOffEnabled(enabled)
@@ -4888,6 +5151,11 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceCalendarTimeframe(timeframe: String) {
         statusGlanceCalendarTimeframe.value = timeframe
         settingsRepository.setStatusGlanceCalendarTimeframe(timeframe)
+    }
+
+    fun setStatusGlanceCalendarShowAllDay(enabled: Boolean) {
+        statusGlanceCalendarShowAllDay.value = enabled
+        settingsRepository.setStatusGlanceCalendarShowAllDayEnabled(enabled)
     }
 
     fun fetchStatusGlanceCalendars(context: Context) {
@@ -5148,9 +5416,9 @@ class MainViewModel : ViewModel() {
         settingsRepository.setConsciousGateReappearMinutes(minutes)
     }
 
-    fun setConsciousGateIconName(iconName: String) {
-        consciousGateIconName.value = iconName
-        settingsRepository.setConsciousGateIconName(iconName)
+    fun setConsciousGateFeelEverySecondEnabled(enabled: Boolean) {
+        isConsciousGateFeelEverySecondEnabled.value = enabled
+        settingsRepository.setConsciousGateFeelEverySecond(enabled)
     }
 
     fun setConsciousGateTitle(title: String) {
@@ -5161,11 +5429,6 @@ class MainViewModel : ViewModel() {
     fun setConsciousGateMessage(message: String) {
         consciousGateMessage.value = message
         settingsRepository.setConsciousGateMessage(message)
-    }
-
-    fun setConsciousGateCountdownStyle(style: com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle) {
-        consciousGateCountdownStyle.value = style
-        settingsRepository.setConsciousGateCountdownStyle(style)
     }
 
     /**

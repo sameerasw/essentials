@@ -203,7 +203,7 @@ class LocationReachedService : Service() {
         // Periodic sync once a minute (60000 ms)
         val now = System.currentTimeMillis()
         if (shouldSync || (now - lastSyncTime >= 60000)) {
-            val isSyncEnabled = prefs.getBoolean("watch_sync_location_reached_enabled", true)
+            val isSyncEnabled = prefs.getBoolean("watch_sync_location_reached_enabled", false)
             if (isSyncEnabled) {
                 lastSyncTime = now
                 DeviceInfoSyncManager.forceSync(this)

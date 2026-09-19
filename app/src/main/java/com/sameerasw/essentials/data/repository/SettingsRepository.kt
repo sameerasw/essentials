@@ -19,7 +19,6 @@ import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppTag
-import com.sameerasw.essentials.domain.model.ConsciousGateCountdownStyle
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
@@ -232,10 +231,9 @@ class SettingsRepository(
         const val KEY_CONSCIOUS_GATE_SELECTED_APPS = "conscious_gate_selected_apps"
         const val KEY_CONSCIOUS_GATE_DELAY_SECONDS = "conscious_gate_delay_seconds"
         const val KEY_CONSCIOUS_GATE_REAPPEAR_MINUTES = "conscious_gate_reappear_minutes"
-        const val KEY_CONSCIOUS_GATE_ICON_NAME = "conscious_gate_icon_name"
+        const val KEY_CONSCIOUS_GATE_FEEL_EVERY_SECOND = "conscious_gate_feel_every_second"
         const val KEY_CONSCIOUS_GATE_TITLE = "conscious_gate_title"
         const val KEY_CONSCIOUS_GATE_MESSAGE = "conscious_gate_message"
-        const val KEY_CONSCIOUS_GATE_COUNTDOWN_STYLE = "conscious_gate_countdown_style"
         const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
@@ -377,6 +375,7 @@ class SettingsRepository(
         const val KEY_DUO_CAMERA_OFFSET_X = "duo_camera_offset_x"
         const val KEY_DUO_CAMERA_OFFSET_Y = "duo_camera_offset_y"
         const val KEY_DUO_CAMERA_SIZE = "duo_camera_size"
+        const val KEY_DUO_KNOWN_DISPLAY_PROFILES = "duo_known_display_profiles"
         const val KEY_DUO_ARC_THICKNESS = "duo_arc_thickness"
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
         const val KEY_DUO_RING_RADIUS = "duo_ring_radius"
@@ -409,6 +408,40 @@ class SettingsRepository(
         const val KEY_DUO_SLIDE_TRACK = "duo_slide_track"
         const val KEY_DUO_SLIDE_INVERT_DIRECTION = "duo_slide_invert_direction"
 
+        // Island
+        const val KEY_ISLAND_ENABLED = "island_enabled"
+        const val KEY_ISLAND_USE_AUTO_DETECT = "island_use_auto_detect"
+        const val KEY_ISLAND_CAMERA_OFFSET_X = "island_camera_offset_x"
+        const val KEY_ISLAND_CAMERA_OFFSET_Y = "island_camera_offset_y"
+        const val KEY_ISLAND_CAMERA_SIZE = "island_camera_size"
+        const val KEY_ISLAND_MAX_WIDTH = "island_max_width"
+        const val KEY_ISLAND_CUTOUT_GAP = "island_cutout_gap"
+        const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
+        const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
+        const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
+        const val KEY_ISLAND_TAP_ACTION_ENABLED = "island_tap_action_enabled"
+        const val KEY_ISLAND_TAP_ACTION = "island_tap_action"
+        const val ISLAND_TAP_ACTION_OPEN = "open"
+        const val ISLAND_TAP_ACTION_EXPAND = "expand"
+        const val KEY_ISLAND_SWIPE_UP_ACTION_ENABLED = "island_swipe_up_action_enabled"
+        const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
+        const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
+        const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
+        const val KEY_ISLAND_EXPANDED_PADDING = "island_expanded_padding"
+        const val KEY_ISLAND_EXPANDED_TOP_PADDING = "island_expanded_top_padding"
+        const val KEY_ISLAND_EXPANDED_TIMEOUT_MS = "island_expanded_timeout_ms"
+        const val KEY_ISLAND_CATCH_UP_ENABLED = "island_catch_up_enabled"
+        const val KEY_ISLAND_CATCH_UP_TIMEOUT_MS = "island_catch_up_timeout_ms"
+        const val KEY_ISLAND_SHOW_MEDIA = "island_show_media"
+        const val KEY_ISLAND_MEDIA_EXCLUDED_APPS = "island_media_excluded_apps"
+        const val KEY_ISLAND_SHOW_CALENDAR = "island_show_calendar"
+        const val KEY_ISLAND_SHOW_CONSCIOUS_GATE = "island_show_conscious_gate"
+        const val KEY_ISLAND_SHOW_TIME_BATTERY = "island_show_time_battery"
+        const val KEY_ISLAND_SHOW_FLASHLIGHT = "island_show_flashlight"
+        const val KEY_ISLAND_BATTERY_STYLE = "island_battery_style"
+        const val ISLAND_BATTERY_STYLE_RING = "ring"
+        const val ISLAND_BATTERY_STYLE_ICON = "icon"
+
         // Status Glance
         const val KEY_STATUS_GLANCE_ENABLED = "status_glance_enabled"
         const val KEY_STATUS_GLANCE_USE_AUTO_DETECT = "status_glance_use_auto_detect"
@@ -420,6 +453,7 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_SHOW_CALENDAR = "status_glance_show_calendar"
         const val KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME = "status_glance_calendar_timeframe"
         const val KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS = "status_glance_calendar_selected_calendars"
+        const val KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY = "status_glance_calendar_show_all_day"
         const val KEY_STATUS_GLANCE_SHOW_MEDIA = "status_glance_show_media"
         const val KEY_STATUS_GLANCE_SHOW_TIME = "status_glance_show_time"
         const val KEY_STATUS_GLANCE_BACKGROUND_PILL = "status_glance_background_pill"
@@ -1106,9 +1140,9 @@ class SettingsRepository(
 
     fun setConsciousGateReappearMinutes(minutes: Int) = putInt(KEY_CONSCIOUS_GATE_REAPPEAR_MINUTES, minutes)
 
-    fun getConsciousGateIconName(): String = prefs.getString(KEY_CONSCIOUS_GATE_ICON_NAME, "rounded_pause_24") ?: "rounded_pause_24"
+    fun getConsciousGateFeelEverySecond(): Boolean = prefs.getBoolean(KEY_CONSCIOUS_GATE_FEEL_EVERY_SECOND, false)
 
-    fun setConsciousGateIconName(iconName: String) = putString(KEY_CONSCIOUS_GATE_ICON_NAME, iconName)
+    fun setConsciousGateFeelEverySecond(enabled: Boolean) = putBoolean(KEY_CONSCIOUS_GATE_FEEL_EVERY_SECOND, enabled)
 
     fun getConsciousGateTitle(context: Context = this.context): String =
         prefs.getString(KEY_CONSCIOUS_GATE_TITLE, null) ?: context.getString(com.sameerasw.essentials.R.string.conscious_gate_default_title)
@@ -1119,18 +1153,6 @@ class SettingsRepository(
         prefs.getString(KEY_CONSCIOUS_GATE_MESSAGE, null) ?: context.getString(com.sameerasw.essentials.R.string.conscious_gate_default_message)
 
     fun setConsciousGateMessage(message: String) = putString(KEY_CONSCIOUS_GATE_MESSAGE, message)
-
-    fun getConsciousGateCountdownStyle(): ConsciousGateCountdownStyle {
-        val styleName =
-            prefs.getString(KEY_CONSCIOUS_GATE_COUNTDOWN_STYLE, ConsciousGateCountdownStyle.CIRCULAR_WAVY.name)
-        return try {
-            ConsciousGateCountdownStyle.valueOf(styleName ?: ConsciousGateCountdownStyle.CIRCULAR_WAVY.name)
-        } catch (e: Exception) {
-            ConsciousGateCountdownStyle.CIRCULAR_WAVY
-        }
-    }
-
-    fun setConsciousGateCountdownStyle(style: ConsciousGateCountdownStyle) = putString(KEY_CONSCIOUS_GATE_COUNTDOWN_STYLE, style.name)
 
     /**
      * Executes the load freeze selected apps operation.
@@ -3221,14 +3243,44 @@ class SettingsRepository(
     fun isDuoAutoDetectEnabled(): Boolean = getBoolean(KEY_DUO_USE_AUTO_DETECT, true)
     fun setDuoAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_AUTO_DETECT, enabled)
 
-    fun getDuoCameraOffsetX(): Float = getFloat(KEY_DUO_CAMERA_OFFSET_X, 50f)
-    fun setDuoCameraOffsetX(value: Float) = putFloat(KEY_DUO_CAMERA_OFFSET_X, value)
+    fun getDisplayProfileId(): String {
+        val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as? android.hardware.display.DisplayManager
+        val display = displayManager?.getDisplay(android.view.Display.DEFAULT_DISPLAY) ?: return "default"
+        val size = android.graphics.Point()
+        @Suppress("DEPRECATION")
+        display.getRealSize(size)
+        if (size.x <= 0 || size.y <= 0) return "default"
+        return "${minOf(size.x, size.y)}x${maxOf(size.x, size.y)}"
+    }
 
-    fun getDuoCameraOffsetY(): Float = getFloat(KEY_DUO_CAMERA_OFFSET_Y, 3f)
-    fun setDuoCameraOffsetY(value: Float) = putFloat(KEY_DUO_CAMERA_OFFSET_Y, value)
+    fun markDisplayProfileSeen() {
+        val seen = prefs.getStringSet(KEY_DUO_KNOWN_DISPLAY_PROFILES, emptySet()) ?: emptySet()
+        val id = getDisplayProfileId()
+        if (!seen.contains(id)) {
+            prefs.edit().putStringSet(KEY_DUO_KNOWN_DISPLAY_PROFILES, seen + id).apply()
+        }
+    }
 
-    fun getDuoCameraSize(): Float = getFloat(KEY_DUO_CAMERA_SIZE, 1.0f)
-    fun setDuoCameraSize(value: Float) = putFloat(KEY_DUO_CAMERA_SIZE, value)
+    fun getKnownDisplayProfileCount(): Int = prefs.getStringSet(KEY_DUO_KNOWN_DISPLAY_PROFILES, emptySet())?.size ?: 0
+
+    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float {
+        val profileKey = "$baseKey@${getDisplayProfileId()}"
+        return if (contains(profileKey)) getFloat(profileKey, default) else getFloat(baseKey, default)
+    }
+
+    private fun setDuoPlacementFloat(baseKey: String, value: Float) {
+        putFloat("$baseKey@${getDisplayProfileId()}", value)
+        putFloat(baseKey, value)
+    }
+
+    fun getDuoCameraOffsetX(): Float = getDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_X, 50f)
+    fun setDuoCameraOffsetX(value: Float) = setDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_X, value)
+
+    fun getDuoCameraOffsetY(): Float = getDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_Y, 3f)
+    fun setDuoCameraOffsetY(value: Float) = setDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_Y, value)
+
+    fun getDuoCameraSize(): Float = getDuoPlacementFloat(KEY_DUO_CAMERA_SIZE, 1.0f)
+    fun setDuoCameraSize(value: Float) = setDuoPlacementFloat(KEY_DUO_CAMERA_SIZE, value)
 
     fun getDuoArcThickness(): Float = getFloat(KEY_DUO_ARC_THICKNESS, 4f)
     fun setDuoArcThickness(value: Float) = putFloat(KEY_DUO_ARC_THICKNESS, value)
@@ -3323,6 +3375,114 @@ class SettingsRepository(
     fun isDuoSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, false)
     fun setDuoSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_DUO_SLIDE_INVERT_DIRECTION, enabled)
 
+    // Island
+    fun isIslandEnabled(): Boolean = getBoolean(KEY_ISLAND_ENABLED, false)
+    fun setIslandEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ENABLED, enabled)
+
+    fun isIslandAutoDetectEnabled(): Boolean = getBoolean(KEY_ISLAND_USE_AUTO_DETECT, true)
+    fun setIslandAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_USE_AUTO_DETECT, enabled)
+
+    fun getIslandCameraOffsetX(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f)
+    fun setIslandCameraOffsetX(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_X, value)
+
+    fun getIslandCameraOffsetY(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f)
+    fun setIslandCameraOffsetY(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value)
+
+    fun getIslandCameraSize(): Float = getFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f)
+    fun setIslandCameraSize(value: Float) = putFloat(KEY_ISLAND_CAMERA_SIZE, value)
+
+    fun getIslandMaxWidth(): Float = getFloat(KEY_ISLAND_MAX_WIDTH, 360f)
+    fun setIslandMaxWidth(value: Float) = putFloat(KEY_ISLAND_MAX_WIDTH, value)
+
+    fun getIslandCutoutGap(): Float = getFloat(KEY_ISLAND_CUTOUT_GAP, 6f)
+    fun setIslandCutoutGap(value: Float) = putFloat(KEY_ISLAND_CUTOUT_GAP, value)
+
+    fun isIslandSuppressSystemHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP, false)
+    fun setIslandSuppressSystemHeadsUpEnabled(enabled: Boolean) {
+        putBoolean(KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP, enabled)
+        applyHeadsUpSuppression(enabled)
+    }
+
+    fun isIslandHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, true)
+    fun setIslandHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, enabled)
+
+    fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
+    fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
+
+    fun isIslandTapActionEnabled(): Boolean = getBoolean(KEY_ISLAND_TAP_ACTION_ENABLED, true)
+    fun setIslandTapActionEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TAP_ACTION_ENABLED, enabled)
+
+    fun getIslandTapAction(): String = getString(KEY_ISLAND_TAP_ACTION, ISLAND_TAP_ACTION_OPEN) ?: ISLAND_TAP_ACTION_OPEN
+    fun setIslandTapAction(value: String) = putString(KEY_ISLAND_TAP_ACTION, value)
+
+    fun isIslandSwipeUpActionEnabled(): Boolean = getBoolean(KEY_ISLAND_SWIPE_UP_ACTION_ENABLED, true)
+    fun setIslandSwipeUpActionEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SWIPE_UP_ACTION_ENABLED, enabled)
+
+    fun isIslandShowGlowEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_GLOW, true)
+    fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
+
+    fun getIslandExpandedWidth(): Float = getFloat(KEY_ISLAND_EXPANDED_WIDTH, 360f)
+    fun setIslandExpandedWidth(value: Float) = putFloat(KEY_ISLAND_EXPANDED_WIDTH, value)
+
+    fun getIslandExpandedRoundness(): Float = getFloat(KEY_ISLAND_EXPANDED_ROUNDNESS, 24f)
+    fun setIslandExpandedRoundness(value: Float) = putFloat(KEY_ISLAND_EXPANDED_ROUNDNESS, value)
+
+    fun getIslandExpandedPadding(): Float = getFloat(KEY_ISLAND_EXPANDED_PADDING, 16f)
+    fun setIslandExpandedPadding(value: Float) = putFloat(KEY_ISLAND_EXPANDED_PADDING, value)
+
+    fun getIslandExpandedTopPadding(): Float = getFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, 0f)
+    fun setIslandExpandedTopPadding(value: Float) = putFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, value)
+
+    fun getIslandExpandedTimeoutMs(): Long = getLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, 0L)
+    fun setIslandExpandedTimeoutMs(value: Long) = putLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, value)
+
+    fun isIslandCatchUpEnabled(): Boolean = getBoolean(KEY_ISLAND_CATCH_UP_ENABLED, false)
+    fun setIslandCatchUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_CATCH_UP_ENABLED, enabled)
+
+    fun getIslandCatchUpTimeoutMs(): Long = getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
+    fun setIslandCatchUpTimeoutMs(value: Long) = putLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, value)
+
+    fun isIslandShowMediaEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_MEDIA, true)
+    fun setIslandShowMediaEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_MEDIA, enabled)
+
+    fun loadIslandMediaExcludedApps() = loadAppSelection(KEY_ISLAND_MEDIA_EXCLUDED_APPS)
+    fun saveIslandMediaExcludedApps(apps: List<AppSelection>) = saveAppSelection(KEY_ISLAND_MEDIA_EXCLUDED_APPS, apps)
+    fun updateIslandMediaExcludedAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_ISLAND_MEDIA_EXCLUDED_APPS, packageName, enabled)
+
+    fun isIslandShowCalendarEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_CALENDAR, false)
+    fun setIslandShowCalendarEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_CALENDAR, enabled)
+
+    fun isIslandShowConsciousGateEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_CONSCIOUS_GATE, true)
+    fun setIslandShowConsciousGateEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_CONSCIOUS_GATE, enabled)
+
+    fun isIslandShowFlashlightEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_FLASHLIGHT, true)
+    fun setIslandShowFlashlightEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_FLASHLIGHT, enabled)
+
+    fun isIslandShowTimeBatteryEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIME_BATTERY, false)
+    fun setIslandShowTimeBatteryEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIME_BATTERY, enabled)
+
+    fun getIslandBatteryStyle(): String =
+        getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING
+    fun setIslandBatteryStyle(value: String) = putString(KEY_ISLAND_BATTERY_STYLE, value)
+
+    fun applyHeadsUpSuppression(suppress: Boolean = isIslandSuppressSystemHeadsUpEnabled()) {
+        val targetValue = if (suppress) 0 else 1
+        try {
+            android.provider.Settings.Global.putInt(
+                context.contentResolver,
+                "heads_up_notifications_enabled",
+                targetValue,
+            )
+        } catch (_: SecurityException) {
+            com.sameerasw.essentials.utils.ShellUtils.runCommand(
+                context,
+                "settings put global heads_up_notifications_enabled $targetValue",
+                featureName = context.getString(com.sameerasw.essentials.R.string.island_suppress_system_heads_up_title),
+            )
+        } catch (_: Exception) {}
+    }
+
     // Status Glance
     fun isStatusGlanceEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ENABLED, false)
     fun setStatusGlanceEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_ENABLED, enabled)
@@ -3350,6 +3510,9 @@ class SettingsRepository(
 
     fun getStatusGlanceCalendarTimeframe(): String = getString(KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME, "today") ?: "today"
     fun setStatusGlanceCalendarTimeframe(timeframe: String) = putString(KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME, timeframe)
+
+    fun isStatusGlanceCalendarShowAllDayEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY, false)
+    fun setStatusGlanceCalendarShowAllDayEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY, enabled)
 
     fun getStatusGlanceCalendarSelectedCalendars(): Set<String> {
         val json = prefs.getString(KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS, null)

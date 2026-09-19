@@ -382,6 +382,8 @@ object AppUtil {
      * Checks if the device is currently in Car Mode or projecting Android Auto
      */
     fun isAndroidAutoRunning(context: Context): Boolean {
+        if (CarConnectionMonitor.isProjecting) return true
+
         // 1. Check UiModeManager
         val uiModeManager =
             context.getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager

@@ -224,7 +224,7 @@ object DeviceInfoSyncManager {
 
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val syncLocationReachedEnabled =
-            prefs.getBoolean("watch_sync_location_reached_enabled", true)
+            prefs.getBoolean("watch_sync_location_reached_enabled", false)
 
         val travelActive =
             if (syncLocationReachedEnabled) prefs.getBoolean("travel_active", false) else false

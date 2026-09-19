@@ -3,6 +3,7 @@ agp = "9.3.1"
 api = "13.1.5"
 autoupdater = "1.0.1"
 biometric = "1.2.0-alpha05"
+carApp = "1.7.0"
 coilGif = "2.7.0"
 coreSplashscreen = "1.2.0"
 exifinterface = "1.4.2"
@@ -51,6 +52,7 @@ appfunctions = "1.0.0-alpha10"
 zxing = "3.5.3"
 
 [libraries]
+androidx-car-app = { module = "androidx.car.app:app", version.ref = "carApp" }
 androidx-appfunctions = { module = "androidx.appfunctions:appfunctions", version.ref = "appfunctions" }
 androidx-appfunctions-compiler = { module = "androidx.appfunctions:appfunctions-compiler", version.ref = "appfunctions" }
 

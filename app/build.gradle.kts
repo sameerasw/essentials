@@ -89,9 +89,9 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 64
-        versionName = "18.1"
+        versionName = "18.2-beta.2"
 
-        val whatsNewCounter = 2
+        val whatsNewCounter = 3
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
         buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "7")
 
@@ -176,6 +176,7 @@ dependencies {
     // Shizuku
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
+    implementation(libs.androidx.car.app)
 
     // Hidden API Bypass
     implementation(libs.hiddenapibypass)

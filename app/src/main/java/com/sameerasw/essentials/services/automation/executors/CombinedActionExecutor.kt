@@ -29,6 +29,7 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.DeviceLockUtils
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.performHapticFeedback
@@ -48,27 +49,7 @@ object CombinedActionExecutor {
                     com.sameerasw.essentials.utils.battery.ChargingModeUtil
                         .setMode(context, action.mode)
                 is Action.HapticVibration -> {
-                    val vibrator =
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            val manager =
-                                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager
-                            manager.defaultVibrator
-                        } else {
-                            @Suppress("DEPRECATION")
-                            context.getSystemService(Context.VIBRATOR_SERVICE) as android.os.Vibrator
-                        }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        vibrator.vibrate(
-                            android.os.VibrationEffect.createOneShot(
-                                50,
-                                android.os.VibrationEffect.DEFAULT_AMPLITUDE,
-                            ),
-                        )
-                    } else {
-                        @Suppress("DEPRECATION")
-                        vibrator.vibrate(50)
-                    }
+                    HapticUtil.performCustomHaptic(context, 0.6f)
                 }
 
                 is Action.TurnOnFlashlight -> toggleFlashlight(context, true)
