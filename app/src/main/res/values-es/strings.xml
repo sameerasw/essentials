@@ -1641,4 +1641,8 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="perm_install_packages_title">Instalar aplicaciones desconocidas</string>
     <string name="perm_install_packages_desc">Requerido para descargar e instalar automáticamente actualizaciones de la aplicación.</string>
     <string name="perm_storage_title">Acceso a todos los archivos</string>
+    <string name="island_title">Isla</string>
+    <string name="island_desc">Isla dinamica</string>
+    <string name="island_enable_title">Activar Isla</string>
+    <string name="island_enable_desc">Muestra la isla dinamica</string>
 </resources>
