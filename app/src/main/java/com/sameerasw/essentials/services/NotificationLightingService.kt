@@ -222,6 +222,7 @@ class NotificationLightingService : Service() {
             }
         }
 
+        // If accessibility service is enabled, delegate showing to it for higher elevation
         if (isAccessibilityServiceEnabled()) {
             try {
                 val ai =
