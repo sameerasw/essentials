@@ -1643,4 +1643,6 @@
     <string name="settings_genai_automation_desc">Использовать Gemini Nano на устройстве для создания сценариев автоматизации на основе задач</string>
     <string name="icon_no_sim">Нет SIM-карты</string>
     <string name="icon_frame_rate">Частота обновления / Частота кадров</string>
+    <string name="island_title">Остров </string>
+    <string name="island_desc">Динамичный остров </string>
 </resources>
