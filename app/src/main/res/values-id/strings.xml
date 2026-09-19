@@ -68,7 +68,7 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="feat_statusbar_icons_title">Ikon statusbar</string>
     <string name="feat_always_on_display_title">Always on Display </string>
     <string name="cat_navigation">Navigasi</string>
-    <string name="feat_caffeinate_desc">Biarkan layar tetap terbangun</string>
+    <string name="feat_caffeinate_desc">Layar tetap menyala</string>
     <string name="feat_smart_pixels_title">Pixel pintar </string>
     <string name="feat_smart_pixels_desc">Matikan piksel untuk menghemat daya.</string>
     <string name="feat_pocket_mode_desc">Cegah sentuhan yang tidak disengaja saat berada di dalam saku.</string>
