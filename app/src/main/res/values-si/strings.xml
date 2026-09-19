@@ -1459,4 +1459,5 @@
     <string name="feat_flashlight_title">පන්දම</string>
     <string name="feat_power_battery_title">බැටරි සුරැකුම්</string>
     <string name="feat_notification_snoozing_title">දැන්වීම් කල්දැමීම </string>
+    <string name="feat_power_battery_desc">රෆය</string>
 </resources>
