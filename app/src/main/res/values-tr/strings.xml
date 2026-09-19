@@ -1569,7 +1569,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="label_thermal_system_thermals">Sistem Sıcaklıkları</string>
     <string name="setting_location_reached_full_screen_alarm_title">Tam ekran alarm</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Varıldığında alarm zil sesini çal ve tam ekran uyarısı göster</string>
-    <string name="feat_sim_names_desc">Aktif SIM kartlar için operatör görüntüleme ismini yeniden adlandırın</string>
+    <string name="feat_sim_names_desc">Aktif SIM kartlar için operatör görüntüleme ismini yeniden isimlendirin</string>
     <string name="feat_sim_names_title">SIM isimleri</string>
     <string name="desc_advertise_is_enabled">Pil tasarrufu modunun etkinleştirildiğini uygulamalara bildirin.</string>
     <string name="label_advertise_is_enabled">İlan Etkinleştirildi</string>
@@ -1633,14 +1633,14 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="label_online_help_media">Çevrimiçi yardım medyası</string>
     <string name="qs_secure_sensitive_tiles_desc">Kilitliyken hassas hızlı ayar kutucuklarını tetiklemeden önce kilit açmayı ister</string>
     <string name="qs_secure_sensitive_tiles_title">Güvenli hassas kutucuklar</string>
-    <string name="status_glance_enable_title">Durum önizlemesini etkinleştir</string>
-    <string name="status_glance_enable_desc">Durum önizlemesini görüntüle</string>
+    <string name="status_glance_enable_title">Durum ön izlemesini etkinleştir</string>
+    <string name="status_glance_enable_desc">Durum ön izlemesini görüntüle</string>
     <string name="feat_status_glance_title">Durum ön izlemesi</string>
     <string name="feat_status_glance_desc">Genel bakış katmanında</string>
     <string name="duo_desc">Bu katlanmıyor</string>
     <string name="duo_enable_title">Duo\'yu etkinleştir</string>
     <string name="duo_enable_desc">Bu katlanmıyor ama havalı şeyler yapıyor</string>
-    <string name="about_desc_status_glance">Durum önizlemesi, ön kamera deliğinin hemen yanında, öncelik odaklı bir ortam çipi görüntüler. Bu özellik; aktif el fenerini, yaklaşan takvim etkinliklerini, o anda oynatılan medyayı ve geçerli saati dinamik bir şekilde gösterir.</string>
+    <string name="about_desc_status_glance">Durum ön izlemesi, ön kamera deliğinin hemen yanında, öncelik odaklı bir ortam çipi görüntüler. Bu özellik; aktif el fenerini, yaklaşan takvim etkinliklerini, o anda oynatılan medyayı ve geçerli saati dinamik bir şekilde gösterir.</string>
     <string name="pixel_searchbar_settings_title">Pixel Arama Çubuğu Özelleştirmesi</string>
     <string name="setting_show_legacy_features_title">Eski özellikleri göster</string>
     <string name="setting_show_legacy_features_desc">Bu özellikler, teknik kısıtlamalar veya zorunlu olmamaları nedeniyle gelecekte güncelleme almayabilir.</string>
@@ -1653,4 +1653,26 @@ Devam et düğmesi birkaç saniyeliğine devre dışı kalır; böylece karar ve
     <string name="conscious_gate_select_apps_desc">Açılmadan önce bilinçli farkındalık ekranı gösterecek uygulamaları seçin</string>
     <string name="conscious_gate_select_apps_title">Kısıtlı uygulamaları seçin</string>
     <string name="conscious_gate_preview_button">Bilinçli kapı ekranı ön izlemesi</string>
+    <string name="pocket_mode_use_light_title">Işık sensörü kullan</string>
+    <string name="pocket_mode_use_light_desc">Daha yüksek doğruluk için yakınlık bilgisinin yanı sıra ortam ışığı seviyesini de kullanın</string>
+    <string name="pocket_mode_lock_screen_only_title">Yalnızca kilit ekranında</string>
+    <string name="pocket_mode_lock_screen_only_desc">Cep modunu yalnızca cihaz kilitliyken etkinleştir</string>
+    <string name="label_apply_after_reboot">Yeniden başlatmadan sonra uygula</string>
+    <string name="conscious_gate_delay_title">Duraklatma gecikmesi</string>
+    <string name="conscious_gate_delay_desc">Devam\'ın ne kadar süreyle devre dışı kalacağı</string>
+    <string name="conscious_gate_reappear_title">Kullanımdan sonra tekrar ortaya çıkar</string>
+    <string name="conscious_gate_reappear_desc">Kesintisiz kullanımdan sonra bilinçli geçiş ekranını tekrar gösterir</string>
+    <string name="conscious_gate_feel_every_second_title">Boşa harcanan her saniyeyi hisset</string>
+    <string name="feat_aod_wallpaper_title">AOD\'de duvar kağıdı</string>
+    <string name="feat_aod_wallpaper_desc">Katman kullanarak</string>
+    <string name="feat_aod_wallpaper_use_album_art">Albüm görselini kullan</string>
+    <string name="island_title">Ada</string>
+    <string name="island_desc">Dinamik ada</string>
+    <string name="island_enable_title">Ada\'yı Etkinleştir</string>
+    <string name="island_enable_desc">Dinamik adayı göster</string>
+    <string name="about_desc_aod_wallpaper">Ayarlanabilir opaklık, bulanıklık, vinyet ve siyah eşiği seçenekleriyle, Her Zaman Açık Ekran\'da saatin arkasında duvar kağıdınızı bir katman olarak gösterir. Ayrıca özel bir görsel seçebilir veya o sırada çalan müziğin albüm kapağını görüntüleyebilirsiniz.
+
+Bu özellik yalnızca hareketsiz duvar kağıtlarıyla çalışır. Canlı duvar kağıtları ve video duvar kağıtları desteklenmez.
+
+Katmanı görüntüleyebilmek için erişilebilirlik izni, mevcut duvar kağıdınızı okuyabilmek içinse depolama erişimi gereklidir. Bildirim erişimi izni ise yalnızca albüm kapağı özelliğini açtığınızda gereklidir.</string>
 </resources>
