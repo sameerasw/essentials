@@ -1754,4 +1754,16 @@
     <string name="feat_aod_wallpaper_title">AODに壁紙を表示する</string>
     <string name="feat_aod_wallpaper_use_album_art">アルバムアートを使用する</string>
     <string name="label_apply_after_reboot">再起動後に適用</string>
+    <string name="feat_conscious_gate_title">コンシャス・ゲート</string>
+    <string name="feat_conscious_gate_desc">選択したアプリを開く前に一時停止する</string>
+    <string name="conscious_gate_enable_title">コンシャスゲートを有効にする</string>
+    <string name="conscious_gate_select_apps_title">アクセス制限付きアプリを選択</string>
+    <string name="conscious_gate_select_apps_desc">アプリを開く前に「マインドフル・コンシャス・ゲート」画面を表示するアプリを選択してください。</string>
+    <string name="conscious_gate_delay_title">一時停止の遅延</string>
+    <string name="conscious_gate_delay_desc">「続行」が無効のままになる期間</string>
+    <string name="conscious_gate_reappear_title">使用後に再び表示されます</string>
+    <string name="conscious_gate_reappear_desc">継続使用後、コンシャスゲート画面を再度表示する</string>
+    <string name="conscious_gate_feel_every_second_title">無駄にしたすべての秒を感じてください</string>
+    <string name="feat_aod_wallpaper_desc">オーバーレイを使用する</string>
+    <string name="island_title">アイランド</string>
 </resources>
