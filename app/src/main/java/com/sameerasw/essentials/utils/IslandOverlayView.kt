@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
+import com.sameerasw.essentials.domain.model.IslandState
 import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.services.handlers.IslandTouchHandler
 import com.sameerasw.essentials.utils.island.AnimatedFloatProperty
@@ -1499,6 +1500,25 @@ class IslandOverlayView(context: Context) : View(context) {
         idleIndicator.colorConfig = config
     }
 
+    var onIslandStateChanged: ((IslandState) -> Unit)? = null
+    private var lastIslandState: IslandState = IslandState.HIDDEN
+
+    val currentIslandState: IslandState
+        get() {
+            if (!isIslandEnabled) return IslandState.HIDDEN
+            if (expandedFraction > 0.5f) return IslandState.EXPANDED
+            val content = currentContentState() ?: return IslandState.HIDDEN
+            if (content.visible <= 0.01f) return IslandState.HIDDEN
+            return if (content.compact > 0.5f) IslandState.COMPACT else IslandState.NORMAL
+        }
+
+    private fun emitIslandStateIfChanged() {
+        val state = currentIslandState
+        if (state == lastIslandState) return
+        lastIslandState = state
+        onIslandStateChanged?.let { post { it(state) } }
+    }
+
     // (visible fraction, compact fraction) of whatever content onDraw currently renders, by priority.
     private fun currentContentState(): IslandContentState? = when {
         flashlightPill.isActive -> IslandContentState(flashlightPill.showFraction, 0f)
@@ -2686,6 +2706,7 @@ class IslandOverlayView(context: Context) : View(context) {
     }
 
     override fun onDraw(canvas: Canvas) {
+        emitIslandStateIfChanged()
         super.onDraw(canvas)
         idleIndicator.drawBackground(canvas)
         if (flashlightPill.showFraction < 0.5f) drawIslandContent(canvas)

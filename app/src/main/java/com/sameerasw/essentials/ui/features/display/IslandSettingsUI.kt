@@ -144,6 +144,13 @@ fun IslandSettingsUI(
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showTimeBatteryOptionsSheet by remember { mutableStateOf(false) }
 
+    val hasShellPermission =
+        if (ShellUtils.isRootEnabled(context)) {
+            viewModel.isRootPermissionGranted.value
+        } else {
+            viewModel.isShizukuPermissionGranted.value
+        }
+
     if (requestingPermissionsFor != null) {
         val (titleRes, permKeys) = requestingPermissionsFor!!
         val permissionItems = PermissionUIHelper.getPermissionItems(permKeys, context, viewModel)
@@ -476,10 +483,10 @@ fun IslandSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_visibility_off_24,
                 title = stringResource(R.string.island_dynamic_hide_status_bar_title),
-                isChecked = viewModel.isIslandDynamicHideStatusBar.value,
+                isChecked = viewModel.isIslandDynamicHideStatusBar.value && hasShellPermission,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked && !ShellUtils.hasPermission(context)) {
+                    if (checked && !hasShellPermission) {
                         requestingPermissionsFor =
                             Pair(
                                 R.string.island_dynamic_hide_status_bar_title,

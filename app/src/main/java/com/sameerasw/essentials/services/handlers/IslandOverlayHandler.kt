@@ -50,6 +50,7 @@ import android.graphics.drawable.Drawable
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
+import com.sameerasw.essentials.domain.model.IslandState
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
@@ -58,6 +59,7 @@ import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.IslandOverlayView
 import com.sameerasw.essentials.utils.OverlayHelper
 import com.sameerasw.essentials.utils.FlashlightUtil
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.island.IslandBatteryColorConfig
 import com.sameerasw.essentials.utils.island.IslandStatusBarHider
 import java.io.File
@@ -501,7 +503,6 @@ class IslandOverlayHandler(
     }
 
     private fun handleMediaBackgroundTap() {
-        mainHandler.post { syncStatusBarVisibility() }
         val controller = activeMediaController ?: return
 
         if (overlayView?.isMediaFullPlayerActive == true) {
@@ -735,7 +736,6 @@ class IslandOverlayHandler(
 
         touchHandler.onNotificationExpandToggled = { isExpanded ->
             expandTouchAnchorForNotification()
-            syncStatusBarVisibility()
             mainHandler.removeCallbacks(dismissNotificationRunnable)
             mainHandler.removeCallbacks(revertExpansionRunnable)
 
@@ -751,7 +751,6 @@ class IslandOverlayHandler(
 
         touchHandler.onCalendarToggled = {
             expandTouchAnchorForNotification()
-            syncStatusBarVisibility()
             mainHandler.removeCallbacks(revertCalendarExpansionRunnable)
             if (overlayView?.isCalendarCompact == false) {
                 val expTimeout = settingsRepository.getIslandExpandedTimeoutMs().takeIf { it > 0L } ?: CALENDAR_DEFAULT_EXPANDED_MS
@@ -761,7 +760,6 @@ class IslandOverlayHandler(
 
         touchHandler.onConsciousGateToggled = {
             expandTouchAnchorForNotification()
-            syncStatusBarVisibility()
             mainHandler.removeCallbacks(revertConsciousGateExpansionRunnable)
             if (overlayView?.isConsciousGateCompact == false) {
                 val expTimeout = settingsRepository.getIslandExpandedTimeoutMs().takeIf { it > 0L } ?: 8000L
@@ -1052,13 +1050,12 @@ class IslandOverlayHandler(
                 this.touchHandler = this@IslandOverlayHandler.touchHandler
                 this.onAlertsChanged = {
                     if (hasActiveContent()) expandTouchAnchorForNotification()
-                    syncStatusBarVisibility()
                 }
                 this.onDismissAnimationEnd = {
                     if (hasActiveContent()) expandTouchAnchorForNotification() else restoreTouchAnchor()
                     pollCalendarEvent()
-                    syncStatusBarVisibility()
                 }
+                this.onIslandStateChanged = { state -> syncStatusBarVisibility(state) }
             }
         } else {
             overlayView?.isIslandEnabled = settingsRepository.isIslandEnabled()
@@ -1219,26 +1216,17 @@ class IslandOverlayHandler(
             ov.isConsciousGateActive || ov.isFlashlightActive
     }
 
-    private fun isIslandLarge(): Boolean {
-        val ov = overlayView ?: return false
-        return ov.isExpanded ||
-            ov.isCatchUpMode ||
-            ov.isNotificationAlertActive ||
-            (ov.isMediaPlaybackActive && !ov.isMediaCompact) ||
-            (ov.isCalendarActive && !ov.isCalendarCompact) ||
-            (ov.isConsciousGateActive && !ov.isConsciousGateCompact)
-    }
-
-    private fun syncStatusBarVisibility() {
-        if (!settingsRepository.getBoolean(
+    private fun syncStatusBarVisibility(state: IslandState = overlayView?.currentIslandState ?: IslandState.HIDDEN) {
+        val enabled =
+            settingsRepository.getBoolean(
                 SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR,
                 false,
             )
-        ) {
+        if (!enabled || !ShellUtils.hasPermission(service)) {
             IslandStatusBarHider.restore(service)
             return
         }
-        IslandStatusBarHider.apply(service, isIslandLarge())
+        IslandStatusBarHider.apply(service, state.isLarge)
     }
 
     private fun restoreTouchAnchor() {
@@ -1291,6 +1279,7 @@ class IslandOverlayHandler(
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
             SettingsRepository.KEY_ISLAND_ENABLED -> updateOverlay()
+            SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR -> syncStatusBarVisibility()
             SettingsRepository.KEY_ISLAND_SHOW_GLOW -> {
                 overlayView?.isShowGlow = settingsRepository.isIslandShowGlowEnabled()
             }
