@@ -1622,7 +1622,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="duo_ring_radius_title">Radio del anillo</string>
     <string name="duo_show_battery_title">Bateria</string>
     <string name="duo_show_battery_percentage_title">Porcentaje de Bateria</string>
-    <string name="cat_networks">Conexiones</string>
+    <string name="cat_networks">Internet</string>
     <string name="duo_battery_low_color_title">Bateria baja (&lt;20%)</string>
     <string name="duo_battery_critical_color_title">Bateria baja critica (&lt;10%)</string>
     <string name="duo_battery_power_save_color_title">Ahorro de bateria</string>
@@ -1645,4 +1645,11 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_desc">Isla dinamica</string>
     <string name="island_enable_title">Activar Isla</string>
     <string name="island_enable_desc">Muestra la isla dinamica</string>
+    <string name="feat_aod_wallpaper_desc">Usando una superposicion</string>
+    <string name="duo_desc">Esto no se pliega</string>
+    <string name="duo_enable_desc">Esto no se pliega, pero hace cosas geniales</string>
+    <string name="duo_arc_thickness_title">Grosor del anillo</string>
+    <string name="duo_dot_size_title">Tamaño del punto de estado</string>
+    <string name="duo_rotate_album_art_title">Girar caratula del album</string>
+    <string name="duo_hide_when_screen_off_only_idle_title">Ocultar solo en AOD mientras está inactivo</string>
 </resources>
