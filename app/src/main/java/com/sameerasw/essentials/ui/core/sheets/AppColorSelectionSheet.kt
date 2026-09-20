@@ -22,12 +22,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -101,17 +104,23 @@ fun AppColorSelectionSheet(
     }
 
     val filteredApps =
-        apps
-            .filter {
-                val matchesSearch =
-                    searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true)
-                val hasOverride = overrides.containsKey(it.packageName)
-                val isVisible = !it.isSystemApp || showSystemApps || hasOverride
-                matchesSearch && isVisible
-            }.sortedWith(
-                compareByDescending<NotificationApp> { overrides.containsKey(it.packageName) }
-                    .thenBy { it.appName.lowercase() },
-            )
+        apps.filter {
+            val matchesSearch =
+                searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true)
+            val hasOverride = overrides.containsKey(it.packageName)
+            val isVisible = !it.isSystemApp || showSystemApps || hasOverride
+            matchesSearch && isVisible
+        }
+
+    val customApps =
+        filteredApps
+            .filter { overrides.containsKey(it.packageName) }
+            .sortedBy { it.appName.lowercase() }
+
+    val otherApps =
+        filteredApps
+            .filterNot { overrides.containsKey(it.packageName) }
+            .sortedBy { it.appName.lowercase() }
 
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -210,17 +219,47 @@ fun AppColorSelectionSheet(
                 }
             } else {
                 LazyColumn(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(24.dp)),
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    items(filteredApps, key = { it.packageName }) { app ->
+                    itemsIndexed(customApps, key = { _, app -> app.packageName }) { index, app ->
                         AppColorRow(
                             app = app,
                             selectedColor = overrides[app.packageName],
                             isExpanded = expandedPackage == app.packageName,
+                            shape = groupItemShape(index, customApps.size),
+                            modifier = Modifier.animateItem(),
+                            onToggleExpanded = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                expandedPackage =
+                                    if (expandedPackage == app.packageName) null else app.packageName
+                            },
+                            onColorSelected = { color ->
+                                AppColorUtil.setOverride(context, app.packageName, color)
+                                overrides = AppColorUtil.getOverrides(context)
+                                onColorsChanged?.invoke()
+                            },
+                        )
+                    }
+
+                    if (customApps.isNotEmpty() && otherApps.isNotEmpty()) {
+                        item(key = "group_gap") {
+                            Spacer(
+                                modifier =
+                                    Modifier
+                                        .height(20.dp)
+                                        .animateItem(),
+                            )
+                        }
+                    }
+
+                    itemsIndexed(otherApps, key = { _, app -> app.packageName }) { index, app ->
+                        AppColorRow(
+                            app = app,
+                            selectedColor = overrides[app.packageName],
+                            isExpanded = expandedPackage == app.packageName,
+                            shape = groupItemShape(index, otherApps.size),
+                            modifier = Modifier.animateItem(),
                             onToggleExpanded = {
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 expandedPackage =
@@ -246,6 +285,8 @@ private fun AppColorRow(
     isExpanded: Boolean,
     onToggleExpanded: () -> Unit,
     onColorSelected: (Int?) -> Unit,
+    shape: Shape,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     var brandColor by remember(app.packageName) { mutableStateOf<Int?>(null) }
@@ -258,9 +299,10 @@ private fun AppColorRow(
 
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceContainerLow),
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceBright),
     ) {
         Row(
             modifier =
@@ -317,7 +359,7 @@ private fun AppColorRow(
             enter = expandVertically() + fadeIn(),
             exit = shrinkVertically() + fadeOut(),
         ) {
-            Box(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+            Box(modifier = Modifier.padding(bottom = 8.dp)) {
                 ColorSwatchPicker(
                     selectedColorHex =
                         selectedColor?.let { String.format("#%06X", 0xFFFFFF and it) } ?: "auto",
@@ -334,4 +376,15 @@ private fun AppColorRow(
             }
         }
     }
+}
+
+private fun groupItemShape(
+    index: Int,
+    size: Int,
+): RoundedCornerShape {
+    val outer = 24.dp
+    val inner = 4.dp
+    val top = if (index == 0) outer else inner
+    val bottom = if (index == size - 1) outer else inner
+    return RoundedCornerShape(topStart = top, topEnd = top, bottomStart = bottom, bottomEnd = bottom)
 }
