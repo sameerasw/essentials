@@ -1652,4 +1652,14 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="duo_dot_size_title">Tamaño del punto de estado</string>
     <string name="duo_rotate_album_art_title">Girar caratula del album</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Ocultar solo en AOD mientras está inactivo</string>
+    <string name="conscious_gate_delay_title">Tiempo de pausa</string>
+    <string name="conscious_gate_delay_desc">Cuánto tiempo permanece desactivada la opción Continuar</string>
+    <string name="conscious_gate_reappear_title">Reaparecer después de su uso</string>
+    <string name="conscious_gate_reappear_desc">Muestre nuevamente la pantalla de la puerta consciente después de un uso continuo.</string>
+    <string name="conscious_gate_feel_every_second_title">Vibra cada segundo perdido</string>
+    <string name="conscious_gate_preview_button">Vista previa de la puerta consciente</string>
+    <string name="conscious_gate_select_apps_title">Seleccione aplicaciones restringidas</string>
+    <string name="conscious_gate_enable_title">Habilitar puerta consciente</string>
+    <string name="feat_conscious_gate_title">Puerta consciente</string>
+    <string name="feat_conscious_gate_desc">Pausa antes de abrir las apps seleccionadas</string>
 </resources>
