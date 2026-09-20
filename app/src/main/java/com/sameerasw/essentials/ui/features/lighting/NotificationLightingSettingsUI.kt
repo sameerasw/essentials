@@ -68,6 +68,7 @@ import com.sameerasw.essentials.ui.core.pickers.GlowSidesPicker
 import com.sameerasw.essentials.ui.core.pickers.NotificationLightingColorModePicker
 import com.sameerasw.essentials.ui.core.pickers.NotificationLightingStylePicker
 import com.sameerasw.essentials.ui.core.pickers.NotificationLightingSystemModePicker
+import com.sameerasw.essentials.ui.core.sheets.AppColorSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
@@ -93,6 +94,7 @@ fun NotificationLightingSettingsUI(
     var showAppSelectionSheet by remember { mutableStateOf(false) }
     var showPermissionsSheet by remember { mutableStateOf(false) }
     var showSweepShapesSheet by remember { mutableStateOf(false) }
+    var showAppColorsSheet by remember { mutableStateOf(false) }
 
     // Corner radius state
 
@@ -967,6 +969,24 @@ fun NotificationLightingSettingsUI(
                         },
                 )
 
+                if (viewModel.notificationLightingColorMode.value ==
+                    NotificationLightingColorMode.APP_SPECIFIC
+                ) {
+                    FeatureCard(
+                        title = stringResource(R.string.app_colors_card_title),
+                        description = stringResource(R.string.app_colors_card_desc),
+                        iconRes = R.drawable.rounded_palette_24,
+                        isEnabled = true,
+                        showToggle = false,
+                        hasMoreSettings = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            showAppColorsSheet = true
+                        },
+                    )
+                }
+
                 if (viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM) {
                     Column(
                         modifier =
@@ -1168,6 +1188,12 @@ fun NotificationLightingSettingsUI(
                     )
                 },
                 context = context,
+            )
+        }
+
+        if (showAppColorsSheet) {
+            AppColorSelectionSheet(
+                onDismissRequest = { showAppColorsSheet = false },
             )
         }
 

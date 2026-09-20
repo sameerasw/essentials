@@ -392,6 +392,12 @@
     <string name="notification_lighting_ripple_position_picker_title">Ripple origin</string>
     <string name="notification_lighting_ripple_position_picker_desc">Tap or drag anywhere to place the ripple origin.</string>
     <string name="color_mode_material_you">Material You</string>
+    <string name="app_colors_title">Custom app colors</string>
+    <string name="app_colors_card_title">Set custom colors</string>
+    <string name="app_colors_card_desc">Override the color picked for each app</string>
+    <string name="app_colors_reset_all">Reset all to auto</string>
+    <string name="app_colors_auto">Auto</string>
+    <string name="app_colors_custom">Custom</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>
     <string name="notification_lighting_pulse_duration_title">Pulse duration</string>

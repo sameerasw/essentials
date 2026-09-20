@@ -38,6 +38,7 @@ import com.sameerasw.essentials.domain.model.RippleConfig
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.widgets.PixelSearchbarWidget
+import com.sameerasw.essentials.utils.AppColorUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -1246,11 +1247,11 @@ class NotificationListener : NotificationListenerService() {
                         }
 
                         if (colorMode == NotificationLightingColorMode.APP_SPECIFIC) {
-                            AppUtil.getAppBrandColor(
+                            AppColorUtil.resolveColor(
                                 applicationContext,
                                 sbn.packageName,
-                            ) { brandColor ->
-                                startNotificationLighting(brandColor)
+                            ) { appColor ->
+                                startNotificationLighting(appColor)
                             }
                         } else {
                             startNotificationLighting()

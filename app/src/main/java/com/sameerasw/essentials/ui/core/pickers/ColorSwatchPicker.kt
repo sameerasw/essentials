@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -68,6 +69,7 @@ fun ColorSwatchPicker(
     modifier: Modifier = Modifier,
     colors: List<String> = DUO_PRESET_COLORS,
     allowAuto: Boolean = false,
+    autoColor: Color? = null,
 ) {
     val effectiveColors = remember(colors, allowAuto) {
         if (allowAuto) listOf("auto") + colors else colors
@@ -103,11 +105,22 @@ fun ColorSwatchPicker(
                 val autoGradient =
                     Brush.linearGradient(
                         colors =
-                            listOf(
-                                Color(0xFF00E676), // Vibrant Spring Green (Standard)
-                                Color(0xFF00E5FF), // Electric Cyan (Fast)
-                            ),
+                            if (autoColor != null) {
+                                listOf(autoColor, autoColor)
+                            } else {
+                                listOf(
+                                    Color(0xFF00E676), // Vibrant Spring Green (Standard)
+                                    Color(0xFF00E5FF), // Electric Cyan (Fast)
+                                )
+                            },
                     )
+
+                val autoContentColor =
+                    if (autoColor != null) {
+                        if (autoColor.luminance() > 0.5f) Color.Black else Color.White
+                    } else {
+                        Color(0xFF003822)
+                    }
 
                 Box(
                     modifier =
@@ -125,13 +138,13 @@ fun ColorSwatchPicker(
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_check_24),
                             contentDescription = stringResource(R.string.duo_battery_charging_color_auto),
-                            tint = Color(0xFF003822),
+                            tint = autoContentColor,
                             modifier = Modifier.size(18.dp),
                         )
                     } else {
                         Text(
                             text = "A",
-                            color = Color(0xFF003822),
+                            color = autoContentColor,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                         )
