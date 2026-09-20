@@ -70,6 +70,7 @@ import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
+import com.sameerasw.essentials.services.receivers.SecurityReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.AppUtil
@@ -355,6 +356,7 @@ class MainViewModel : ViewModel() {
     val selectedCalendarIds = mutableStateOf(setOf<String>())
 
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
+    val isDisableNotificationInteractions = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
     val isNotificationPolicyAccessGranted = mutableStateOf(false)
@@ -2322,6 +2324,11 @@ class MainViewModel : ViewModel() {
 
         isScreenLockedSecurityEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
+        isDisableNotificationInteractions.value =
+            settingsRepository.getBoolean(
+                SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_NOTIFICATION_INTERACTIONS,
+                false,
+            )
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
 
         isAutoUpdateEnabled.value =
@@ -8034,6 +8041,23 @@ class MainViewModel : ViewModel() {
             com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
                 context,
                 "DisableQsWhenLocked",
+            )
+        }
+    }
+
+    fun setDisableNotificationInteractions(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        isDisableNotificationInteractions.value = enabled
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_NOTIFICATION_INTERACTIONS,
+            enabled,
+        )
+        if (!enabled) {
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                context,
+                SecurityReceiver.REQUESTER_NOTIFICATION_INTERACTIONS,
             )
         }
     }

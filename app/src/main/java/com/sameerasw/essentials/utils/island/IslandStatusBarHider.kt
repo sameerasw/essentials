@@ -10,46 +10,31 @@
 package com.sameerasw.essentials.utils.island
 
 import android.content.Context
-import com.sameerasw.essentials.utils.isClockHiddenInSettings
-import com.sameerasw.essentials.utils.sendStatusBarDisableFlags
+import com.sameerasw.essentials.utils.StatusBarManager
 
 object IslandStatusBarHider {
-    private const val FLAG_SYSTEM_ICONS = "system-icons"
-    private const val FLAG_NOTIFICATION_ICONS = "notification-icons"
-    private const val FLAG_CLOCK = "clock"
-
-    private var isHidden = false
+    private const val REQUESTER_ID = "IslandDynamicHide"
 
     fun apply(
         context: Context,
         hide: Boolean,
     ) {
-        if (hide == isHidden) return
-
-        val flags =
-            if (hide) {
-                buildSet {
-                    add(FLAG_SYSTEM_ICONS)
-                    add(FLAG_NOTIFICATION_ICONS)
-                    if (!isClockHiddenInSettings(context)) add(FLAG_CLOCK)
-                }
-            } else {
-                emptySet()
-            }
-
-        if (sendStatusBarDisableFlags(context, flags)) {
-            isHidden = hide
+        if (hide) {
+            StatusBarManager.requestDisable(
+                context,
+                REQUESTER_ID,
+                setOf(
+                    StatusBarManager.FLAG_SYSTEM_ICONS,
+                    StatusBarManager.FLAG_NOTIFICATION_ICONS,
+                    StatusBarManager.FLAG_CLOCK,
+                ),
+            )
+        } else {
+            StatusBarManager.requestRestore(context, REQUESTER_ID)
         }
     }
 
     fun restore(context: Context) {
-        if (!isHidden) return
-        if (sendStatusBarDisableFlags(context, emptySet())) {
-            isHidden = false
-        }
-    }
-
-    fun reset() {
-        isHidden = false
+        StatusBarManager.requestRestore(context, REQUESTER_ID)
     }
 }

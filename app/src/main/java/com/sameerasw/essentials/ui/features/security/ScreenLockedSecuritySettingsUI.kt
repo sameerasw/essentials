@@ -117,6 +117,29 @@ fun ScreenLockedSecuritySettingsUI(
                 iconRes = R.drawable.rounded_security_24,
                 modifier = Modifier.highlight(highlightSetting == "screen_locked_security_toggle"),
             )
+
+            IconToggleItem(
+                title = stringResource(R.string.screen_locked_disable_notification_interactions_title),
+                description = stringResource(R.string.screen_locked_disable_notification_interactions_desc),
+                isChecked = viewModel.isDisableNotificationInteractions.value && isShellGranted,
+                onCheckedChange = { isChecked ->
+                    if (!isShellGranted) {
+                        showPermissionSheet = true
+                    } else {
+                        viewModel.setDisableNotificationInteractions(isChecked, context)
+                    }
+                },
+                onDisabledClick = {
+                    if (!isShellGranted) {
+                        showPermissionSheet = true
+                    }
+                },
+                iconRes = R.drawable.outline_circle_notifications_24,
+                modifier =
+                    Modifier.highlight(
+                        highlightSetting == "screen_locked_disable_notification_interactions",
+                    ),
+            )
         }
     }
 }

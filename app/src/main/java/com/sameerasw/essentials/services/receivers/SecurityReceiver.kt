@@ -18,6 +18,10 @@ import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.StatusBarManager
 
 class SecurityReceiver : BroadcastReceiver() {
+    companion object {
+        const val REQUESTER_NOTIFICATION_INTERACTIONS = "DisableNotificationInteractions"
+    }
+
     override fun onReceive(
         context: Context,
         intent: Intent,
@@ -26,6 +30,11 @@ class SecurityReceiver : BroadcastReceiver() {
         val isDisableQsEnabled =
             settingsRepository.getBoolean(
                 SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED,
+                false,
+            )
+        val isDisableNotificationInteractions =
+            settingsRepository.getBoolean(
+                SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_NOTIFICATION_INTERACTIONS,
                 false,
             )
         val isHideSystemIconsEnabled =
@@ -55,6 +64,17 @@ class SecurityReceiver : BroadcastReceiver() {
                     )
                 }
 
+                if (isDisableNotificationInteractions) {
+                    StatusBarManager.requestDisable(
+                        context,
+                        REQUESTER_NOTIFICATION_INTERACTIONS,
+                        setOf(
+                            StatusBarManager.FLAG_STATUSBAR_EXPANSION,
+                            StatusBarManager.FLAG_QUICK_SETTINGS,
+                        ),
+                    )
+                }
+
                 // Dynamic Hide System Icons logic
                 if (isHideSystemIconsEnabled && isHideSystemIconsLockedOnlyEnabled) {
                     StatusBarManager.requestDisable(
@@ -74,6 +94,10 @@ class SecurityReceiver : BroadcastReceiver() {
                 StatusBarManager.requestRestore(
                     context,
                     "StatusBarIconAdvancedLocked",
+                )
+                StatusBarManager.requestRestore(
+                    context,
+                    REQUESTER_NOTIFICATION_INTERACTIONS,
                 )
                 StatusBarManager.reassertFlags(context)
             }

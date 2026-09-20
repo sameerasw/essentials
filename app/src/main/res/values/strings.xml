@@ -400,6 +400,8 @@
     <string name="app_colors_custom">Custom</string>
     <string name="lock_screen_clock_reset">Reset clock face</string>
     <string name="island_dynamic_hide_status_bar_title">Dynamically hide statusbar items</string>
+    <string name="screen_locked_disable_notification_interactions_title">Disable notification interactions</string>
+    <string name="screen_locked_disable_notification_interactions_desc">Block the notification shade and Quick Settings from being pulled down while locked</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>
     <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
