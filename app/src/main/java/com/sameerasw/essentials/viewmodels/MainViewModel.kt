@@ -4346,6 +4346,35 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun resetLockScreenClock(context: Context): Boolean {
+        val key = "lock_screen_custom_clock_face"
+        var success = false
+
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putString(context.contentResolver, key, null)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            val command = "settings delete secure $key"
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand(command)
+                success = true
+            } else if (RootUtils.isRootPermissionGranted()) {
+                RootUtils.runCommand(command)
+                success = true
+            }
+        }
+
+        if (success) {
+            lockScreenClockId.value = null
+        }
+        return success
+    }
+
     /**
      * Executes the set lock screen clock weight operation.
      *

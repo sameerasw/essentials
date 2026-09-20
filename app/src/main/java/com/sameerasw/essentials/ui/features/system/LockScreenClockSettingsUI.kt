@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -25,6 +26,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -355,6 +358,41 @@ fun LockScreenClockSettingsUI(
                 onCheckedChange = {},
                 showToggle = false,
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                viewModel.resetLockScreenClock(context)
+                (context as? Activity)?.finish()
+            },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+            shape = RoundedCornerShape(24.dp),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                ),
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_refresh_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                )
+                Text(
+                    text = stringResource(R.string.lock_screen_clock_reset),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))

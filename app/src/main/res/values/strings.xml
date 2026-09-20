@@ -398,6 +398,7 @@
     <string name="app_colors_reset_all">Reset all to auto</string>
     <string name="app_colors_auto">Auto</string>
     <string name="app_colors_custom">Custom</string>
+    <string name="lock_screen_clock_reset">Reset clock face</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>
     <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
