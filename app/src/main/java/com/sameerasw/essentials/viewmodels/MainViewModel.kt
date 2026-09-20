@@ -82,6 +82,7 @@ import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.SurfaceFlingerControl
 import com.sameerasw.essentials.utils.TestNotificationUtil
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
+import com.sameerasw.essentials.utils.island.IslandStatusBarHider
 import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.viewmodels.state.DashSettings
 import com.sameerasw.essentials.viewmodels.state.RippleSettings
@@ -185,6 +186,7 @@ class MainViewModel : ViewModel() {
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
     val isIslandSuppressSystemHeadsUp = mutableStateOf(false)
+    val isIslandDynamicHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
     val isIslandTapActionEnabled = mutableStateOf(true)
@@ -755,6 +757,13 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP ->
                         isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR ->
+                        isIslandDynamicHideStatusBar.value =
+                            settingsRepository.getBoolean(
+                                SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR,
+                                false,
+                            )
 
                     SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF ->
                         isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
@@ -2142,6 +2151,11 @@ class MainViewModel : ViewModel() {
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
         islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
         isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
+        isIslandDynamicHideStatusBar.value =
+            settingsRepository.getBoolean(
+                SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR,
+                false,
+            )
         isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
         islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
         isIslandTapActionEnabled.value = settingsRepository.isIslandTapActionEnabled()
@@ -5030,6 +5044,20 @@ class MainViewModel : ViewModel() {
     fun setIslandSuppressSystemHeadsUp(enabled: Boolean) {
         isIslandSuppressSystemHeadsUp.value = enabled
         settingsRepository.setIslandSuppressSystemHeadsUpEnabled(enabled)
+    }
+
+    fun setIslandDynamicHideStatusBar(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        isIslandDynamicHideStatusBar.value = enabled
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR,
+            enabled,
+        )
+        if (!enabled) {
+            IslandStatusBarHider.restore(context)
+        }
     }
 
     fun setIslandHideWhenScreenOff(enabled: Boolean) {

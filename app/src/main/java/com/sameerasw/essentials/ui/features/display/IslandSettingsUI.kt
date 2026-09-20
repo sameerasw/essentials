@@ -474,6 +474,25 @@ fun IslandSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_visibility_off_24,
+                title = stringResource(R.string.island_dynamic_hide_status_bar_title),
+                isChecked = viewModel.isIslandDynamicHideStatusBar.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !ShellUtils.hasPermission(context)) {
+                        requestingPermissionsFor =
+                            Pair(
+                                R.string.island_dynamic_hide_status_bar_title,
+                                listOf(if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"),
+                            )
+                    } else {
+                        viewModel.setIslandDynamicHideStatusBar(checked, context)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_dynamic_hide_status_bar"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = stringResource(R.string.island_catch_up_title),
                 description = stringResource(R.string.island_catch_up_desc),

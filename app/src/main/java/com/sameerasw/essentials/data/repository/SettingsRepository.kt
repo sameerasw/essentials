@@ -447,6 +447,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MAX_WIDTH = "island_max_width"
         const val KEY_ISLAND_CUTOUT_GAP = "island_cutout_gap"
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
+        const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_TAP_ACTION_ENABLED = "island_tap_action_enabled"

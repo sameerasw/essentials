@@ -94,3 +94,29 @@ fun resetAllIconVisibilities(
         }
     }
 }
+
+/**
+ * Sends StatusBarManager disable flags. An empty set re-enables everything.
+ */
+fun sendStatusBarDisableFlags(
+    context: Context,
+    flags: Set<String>,
+): Boolean {
+    if (!ShellUtils.hasPermission(context)) return false
+    val args = if (flags.isEmpty()) "none" else flags.joinToString(" ")
+    ShellUtils.runCommand(context, "cmd statusbar send-disable-flag $args", notifyOnError = false)
+    return true
+}
+
+/**
+ * True when the clock is already hidden through advanced status bar settings.
+ */
+fun isClockHiddenInSettings(context: Context): Boolean {
+    val blacklist =
+        try {
+            Settings.Secure.getString(context.contentResolver, "icon_blacklist").orEmpty()
+        } catch (_: Exception) {
+            ""
+        }
+    return blacklist.split(",").any { it.trim() == "clock" }
+}

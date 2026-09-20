@@ -399,6 +399,7 @@
     <string name="app_colors_auto">Auto</string>
     <string name="app_colors_custom">Custom</string>
     <string name="lock_screen_clock_reset">Reset clock face</string>
+    <string name="island_dynamic_hide_status_bar_title">Dynamically hide statusbar items</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>
     <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
