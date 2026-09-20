@@ -512,12 +512,12 @@ class IslandOverlayView(context: Context) : View(context) {
         }
     }
 
-    private val notificationSenderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val notificationSenderPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         typeface = googleSansFlexTypeface ?: Typeface.create("sans-serif-medium", Typeface.NORMAL)
     }
 
-    private val notificationBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val notificationBodyPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         typeface = googleSansFlexTypeface ?: Typeface.create("sans-serif", Typeface.NORMAL)
     }
@@ -2682,19 +2682,33 @@ class IslandOverlayView(context: Context) : View(context) {
             canvas.restore()
         }
 
+        val maxWidth = (expandedWidthDp - 20) * density;
         notificationBodyPaint.alpha = contentAlpha
         notificationBodyPaint.textSize = m.titleTextSize
         notificationBodyPaint.textAlign = Paint.Align.CENTER
         val titleY = artRect.bottom + m.titleGap + m.titleTextSize
-        canvas.drawText(mediaTitle, pillCenterX, titleY, notificationBodyPaint)
+        val clippedTitle = TextUtils.ellipsize(
+            mediaTitle,
+            notificationBodyPaint,
+            maxWidth,
+            TextUtils.TruncateAt.END
+        ).toString()
+        canvas.drawText(clippedTitle, pillCenterX, titleY, notificationBodyPaint)
         notificationBodyPaint.textAlign = Paint.Align.LEFT
 
         notificationSenderPaint.alpha = contentAlpha
         notificationSenderPaint.textSize = m.artistTextSize
         notificationSenderPaint.textAlign = Paint.Align.CENTER
         val artistY = titleY + m.artistTextSize + m.artistGap
-        canvas.drawText(mediaArtist, pillCenterX, artistY, notificationSenderPaint)
+        val clippedArtist = TextUtils.ellipsize(
+            mediaArtist,
+            notificationSenderPaint,
+            maxWidth,
+            TextUtils.TruncateAt.END
+        ).toString()
+        canvas.drawText(clippedArtist, pillCenterX, artistY, notificationSenderPaint)
         notificationSenderPaint.textAlign = Paint.Align.LEFT
+
 
         val progressY = artistY + m.progressGap
         wavyProgress.draw(canvas, pillLeft + 16f * density, progressY, pillRight - 16f * density, mediaProgressFraction, contentAlpha, playerAccentColor())
