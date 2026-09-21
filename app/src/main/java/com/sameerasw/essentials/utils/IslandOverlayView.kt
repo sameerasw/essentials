@@ -387,6 +387,8 @@ class IslandOverlayView(context: Context) : View(context) {
 
     private val leftMarquee = MarqueeController()
     private val rightMarquee = MarqueeController()
+    private val titleMarquee = MarqueeController()
+    private val artistMarquee = MarqueeController()
     private val marqueeFadePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
     }
@@ -2683,31 +2685,20 @@ class IslandOverlayView(context: Context) : View(context) {
         }
 
         val maxWidth = (expandedWidthDp - 20) * density;
+        val mediaRevealFraction = mediaFraction * (1f - mediaCompactFraction);
+        val left = cameraCenterX - maxWidth/2;
+        val right = cameraCenterX + maxWidth/2;
         notificationBodyPaint.alpha = contentAlpha
         notificationBodyPaint.textSize = m.titleTextSize
-        notificationBodyPaint.textAlign = Paint.Align.CENTER
         val titleY = artRect.bottom + m.titleGap + m.titleTextSize
-        val clippedTitle = TextUtils.ellipsize(
-            mediaTitle,
-            notificationBodyPaint,
-            maxWidth,
-            TextUtils.TruncateAt.END
-        ).toString()
-        canvas.drawText(clippedTitle, pillCenterX, titleY, notificationBodyPaint)
-        notificationBodyPaint.textAlign = Paint.Align.LEFT
+        drawMarqueeText(canvas, mediaTitle, notificationBodyPaint, titleMarquee, left, right, mediaPillRect.top, mediaPillRect.bottom, false, height / 2f, mediaRevealFraction, alignTextToCenter = true)
+
 
         notificationSenderPaint.alpha = contentAlpha
         notificationSenderPaint.textSize = m.artistTextSize
-        notificationSenderPaint.textAlign = Paint.Align.CENTER
         val artistY = titleY + m.artistTextSize + m.artistGap
-        val clippedArtist = TextUtils.ellipsize(
-            mediaArtist,
-            notificationSenderPaint,
-            maxWidth,
-            TextUtils.TruncateAt.END
-        ).toString()
-        canvas.drawText(clippedArtist, pillCenterX, artistY, notificationSenderPaint)
-        notificationSenderPaint.textAlign = Paint.Align.LEFT
+        drawMarqueeText(canvas, mediaArtist, notificationSenderPaint, artistMarquee, left, right, mediaPillRect.top + m.artistTextSize + m.artistGap, mediaPillRect.bottom + m.artistTextSize + m.artistGap, false, height / 2f, mediaRevealFraction, alignTextToCenter = true)
+
 
 
         val progressY = artistY + m.progressGap
@@ -3346,6 +3337,7 @@ class IslandOverlayView(context: Context) : View(context) {
         cornerRadius: Float,
         revealFraction: Float = animatedNotificationFraction,
         alignTextToEnd: Boolean = false,
+        alignTextToCenter : Boolean = false
     ) {
         val availableWidth = (clipRight - clipLeft).coerceAtLeast(10f * density)
         if (revealFraction >= 0.98f) {
@@ -3409,7 +3401,9 @@ class IslandOverlayView(context: Context) : View(context) {
             canvas.save()
             val textClipRect = RectF(clipLeft, currentTop, clipRight, currentBottom)
             canvas.clipRect(textClipRect)
-            val textX = if (alignTextToEnd) (clipRight - paint.measureText(text) - 8f * density).coerceAtLeast(clipLeft) else clipLeft
+            var textX = if (alignTextToEnd) (clipRight - paint.measureText(text) - 8f * density).coerceAtLeast(clipLeft) else clipLeft
+
+            if (alignTextToCenter) textX = clipLeft + ((availableWidth - paint.measureText(text)) / 2f).coerceAtLeast(0f)
             canvas.drawText(text, textX, textY, paint)
             canvas.restore()
         }
