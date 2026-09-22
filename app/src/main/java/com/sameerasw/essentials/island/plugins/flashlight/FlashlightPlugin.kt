@@ -1,5 +1,9 @@
 package com.sameerasw.essentials.island.plugins.flashlight
 
+import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
+import com.sameerasw.essentials.island.ui.components.ConnectedItem
+import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.MaterialTheme
 import android.content.Context
 import android.hardware.camera2.CameraManager
@@ -121,7 +125,7 @@ class FlashlightPlugin : BaseIslandPlugin() {
                 },
                 line = LineContent(icon = { IslandIcon(R.drawable.rounded_flashlight_on_24, tint = MaterialTheme.colorScheme.primary) }, start = "", end = percentText),
                 expanded = ExpandedContent { scope ->
-                    Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = 20.dp)) {
+                    Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedPadding * 0.7f)) {
                         scope.CameraRow(
                             horizontalPadding = 20.dp,
                             start = { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 20.dp, tint = MaterialTheme.colorScheme.primary) },
@@ -136,6 +140,18 @@ class FlashlightPlugin : BaseIslandPlugin() {
                                 modifier = Modifier.padding(horizontal = 20.dp),
                             )
                         }
+                        Spacer(Modifier.height(14.dp))
+                        ConnectedButtonRow(
+                            height = 36.dp,
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            container = Color.White.copy(alpha = 0.2f),
+                            items = listOf(
+                                ConnectedItem({
+                                    turnOff()
+                                    scope.collapse()
+                                }) { ConnectedTextLabel(stringResource(R.string.action_turn_off)) },
+                            ),
+                        )
                     }
                 },
                 dismissible = true,
