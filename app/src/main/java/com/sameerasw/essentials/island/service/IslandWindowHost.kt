@@ -36,6 +36,7 @@ class IslandWindowHost(
     private var geometry: CameraGeometry? = null
     private var targetBounds: IntRect? = null
     private var stage = IslandStage.Hidden
+    private var textInput = false
 
     var maxWidthPx: Int = 0
 
@@ -85,6 +86,26 @@ class IslandWindowHost(
         layoutTouchWindow()
     }
 
+    fun setTextInput(active: Boolean) {
+        if (textInput == active) return
+        textInput = active
+        val lp = drawParams ?: return
+        val view = drawRoot ?: return
+        val inert = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        lp.flags = if (active) lp.flags and inert.inv() else lp.flags or inert
+        lp.softInputMode = if (active) {
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+        } else {
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
+        }
+        try {
+            wm.updateViewLayout(view, lp)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to switch island input mode", e)
+        }
+        layoutTouchWindow()
+    }
+
     fun onStageChanged(stage: IslandStage) {
         this.stage = stage
         layoutTouchWindow()
@@ -96,6 +117,7 @@ class IslandWindowHost(
     }
 
     fun detach() {
+        textInput = false
         removeTouchWindow()
         drawRoot?.let {
             try {
@@ -156,7 +178,7 @@ class IslandWindowHost(
     private fun layoutTouchWindow() {
         val draw = drawParams
         val bounds = targetBounds
-        if (draw == null || bounds == null || stage == IslandStage.Hidden) {
+        if (draw == null || bounds == null || stage == IslandStage.Hidden || textInput) {
             removeTouchWindow()
             return
         }

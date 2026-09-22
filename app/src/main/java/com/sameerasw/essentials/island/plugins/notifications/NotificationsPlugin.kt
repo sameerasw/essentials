@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import android.widget.Toast
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import androidx.compose.ui.graphics.Color
@@ -181,6 +182,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                         message = message,
                         showGlow = showGlow,
                         onAction = { runAction(alert, it) },
+                        onReply = { action, text -> sendReply(alert, action, text) },
                         scope = scope,
                     )
                 },
@@ -196,6 +198,18 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 },
             ),
         )
+    }
+
+    private fun sendReply(alert: ActiveNotificationAlert, action: NotificationActionItem, text: String) {
+        val canCarryText = !action.remoteInputs.isNullOrEmpty()
+        val sent = canCarryText && NotificationListener.instance?.performNotificationAction(action, text) == true
+        if (sent) {
+            Toast.makeText(context, R.string.island_reply_sent, Toast.LENGTH_SHORT).show()
+            if (alerts.firstOrNull()?.key == alert.key) popCurrent(reExpand = false)
+        } else {
+            popCurrent(reExpand = false)
+            context.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+        }
     }
 
     private fun runAction(alert: ActiveNotificationAlert, action: NotificationActionItem) {

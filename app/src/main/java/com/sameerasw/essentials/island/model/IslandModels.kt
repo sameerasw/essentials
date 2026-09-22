@@ -38,6 +38,12 @@ interface IslandExpandedScope {
     fun collapse()
     fun dismiss()
     fun openApp()
+
+    // Makes the island window focusable so a text field can take the keyboard
+    fun setTextInput(active: Boolean)
+
+    // Call while the user is doing something
+    fun keepAlive()
 }
 
 class ExpandedContent(val content: @Composable (IslandExpandedScope) -> Unit)

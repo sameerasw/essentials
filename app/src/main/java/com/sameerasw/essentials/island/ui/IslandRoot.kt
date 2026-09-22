@@ -71,6 +71,7 @@ interface IslandActions {
     fun onDismiss(): Boolean
     fun onOpenFocused()
     fun onInteraction()
+    fun onTextInputChanged(active: Boolean)
 }
 
 private data class ContentKey(val stage: IslandStage, val itemKey: String?)
@@ -239,7 +240,15 @@ fun IslandRoot(
         onTargetBoundsChanged(IntRect(left, top, left + target.width, surfaceTopPx - g + target.height))
     }
 
-    Box(Modifier.fillMaxSize().onSizeChanged { windowWidth = it.width }) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .onSizeChanged { windowWidth = it.width }
+            .pointerInput(stage) {
+                if (stage != IslandStage.Expanded) return@pointerInput
+                detectTapGestures { actions.onCollapse() }
+            },
+    ) {
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -559,6 +568,7 @@ private val NoActions = object : IslandActions {
     override fun onDismiss(): Boolean = false
     override fun onOpenFocused() {}
     override fun onInteraction() {}
+    override fun onTextInputChanged(active: Boolean) {}
 }
 
 @Composable
@@ -590,6 +600,8 @@ private fun StageContent(
                 onCollapse = a::onCollapse,
                 onDismiss = { a.onDismiss() },
                 onOpen = a::onOpenFocused,
+                onTextInput = a::onTextInputChanged,
+                onKeepAlive = a::onInteraction,
             )
         }
     }

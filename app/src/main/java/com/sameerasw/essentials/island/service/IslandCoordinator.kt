@@ -99,6 +99,8 @@ class IslandCoordinator(
             plugins.forEach { it.onUserInteraction(focused) }
         }
 
+        override fun onTextInputChanged(active: Boolean) = windowHost.setTextInput(active)
+
         override fun onOpenFocused() {
             controller.state.value.focused?.onOpen?.invoke()
             controller.collapse()
@@ -129,6 +131,7 @@ class IslandCoordinator(
             },
         )
         controller.onStageChanged = { stage ->
+            if (stage != IslandStage.Expanded) windowHost.setTextInput(false)
             windowHost.onStageChanged(stage)
             syncStatusBar(stage)
         }
