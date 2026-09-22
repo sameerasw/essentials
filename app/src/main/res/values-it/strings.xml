@@ -28,7 +28,7 @@
     <string name="app_lock_description">Proteggi le tue app con l\'autenticazione biometrica. Le app bloccate richiedono l\'autenticazione all\'avvio e rimangono sbloccate fino allo spegnimento dello schermo.</string>
     <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
-    <string name="setting_use_usage_access_title">Usa l\'accesso all\'utilizzo</string>
+    <string name="setting_use_usage_access_title">Usa acesso utilizzo</string>
     <string name="setting_use_usage_access_desc">Invece di Accessibilità (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
@@ -1496,6 +1496,6 @@
     <string name="watch_notif_sync_title">Notifiche</string>
     <string name="setting_app_icon_title">Icona dell\'app</string>
     <string name="setting_app_icon_desc">Personalizza l\'icona del launcher</string>
-    <string name="settings_translate_mode_desc">Premi a lungo qualunque testo per tradurlo e contribuire alla community</string>
+    <string name="settings_translate_mode_desc">Mantieni premuto ogni testo per tradurre e contribuire alla comunità</string>
     <string name="settings_genai_automation_title">Abilità GenAI</string>
 </resources>
