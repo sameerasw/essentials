@@ -1687,4 +1687,6 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="perm_calendar_title">Calendario</string>
     <string name="perm_contacts_title">Permiso de contactos</string>
     <string name="island_show_calls_title">Llamadas</string>
+    <string name="island_show_time_battery_title">Hora y bateria</string>
+    <string name="island_battery_style_title">Estilo de bateria</string>
 </resources>
