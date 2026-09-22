@@ -55,7 +55,7 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
             ) {
-                LineText(line.end, TextAlign.Start, FontWeight.Normal, Modifier.weight(1f))
+                LineText(line.end, TextAlign.End, FontWeight.Normal, Modifier.weight(1f))
                 endSlot()
             }
         } else {

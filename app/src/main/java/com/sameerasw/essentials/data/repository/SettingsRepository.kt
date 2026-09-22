@@ -473,6 +473,7 @@ class SettingsRepository(
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
         const val KEY_ISLAND_SHOW_CALLS = "island_show_calls"
+        const val KEY_ISLAND_SHOW_TIMERS = "island_show_timers"
         const val ISLAND_CAMERA_POSITION_LEFT = "left"
         const val ISLAND_CAMERA_POSITION_CENTER = "center"
         const val ISLAND_CAMERA_POSITION_RIGHT = "right"
@@ -3491,6 +3492,9 @@ class SettingsRepository(
     fun getIslandBatteryStyle(): String =
         getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING
     fun setIslandBatteryStyle(value: String) = putString(KEY_ISLAND_BATTERY_STYLE, value)
+
+    fun isIslandShowTimersEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIMERS, true)
+    fun setIslandShowTimersEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIMERS, enabled)
 
     fun isIslandShowCallsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_CALLS, true)
     fun setIslandShowCallsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_CALLS, enabled)

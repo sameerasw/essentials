@@ -2811,6 +2811,9 @@
     <string name="island_camera_position_center">Center</string>
     <string name="island_camera_position_right">Right</string>
     <string name="island_show_calls_title">Calls</string>
+    <string name="island_show_timers_title">Timers and stopwatches</string>
+    <string name="island_timer_default">Timer</string>
+    <string name="island_stopwatch_default">Stopwatch</string>
     <string name="island_call_incoming">Incoming call</string>
     <string name="island_call_incoming_app">%1$s call</string>
     <string name="island_call_answer">Answer</string>

@@ -763,6 +763,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_show_timers_title,
+                            R.string.island_stopwatch_default,
+                            "island_show_timers",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",

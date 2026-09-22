@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.service
 
+import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.plugins.call.CallPlugin
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
@@ -74,6 +75,7 @@ class IslandCoordinator(
         CalendarPlugin(),
         ConsciousGatePlugin(),
         FlashlightPlugin(),
+        TimerPlugin(),
     )
 
     private var scope: CoroutineScope? = null

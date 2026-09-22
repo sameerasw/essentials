@@ -101,7 +101,7 @@ class CallPlugin : BaseIslandPlugin() {
         val incomingLabel = snap.appName?.let { context.getString(R.string.island_call_incoming_app, it) }
             ?: context.getString(R.string.island_call_incoming)
         val status = if (ringing) incomingLabel else elapsed(snap.startedAt)
-        val photo = snap.photoBase64
+        val photo = snap.photo
         val actions = CallActions(
             answer = { if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context) },
             end = { if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context) },

@@ -186,6 +186,7 @@ class MainViewModel : ViewModel() {
     val islandExpandedScale = mutableFloatStateOf(1f)
     val islandCameraPosition = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_CENTER)
     val isIslandShowCalls = mutableStateOf(true)
+    val isIslandShowTimers = mutableStateOf(true)
     val islandExpandedPadding = mutableFloatStateOf(16f)
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
@@ -2156,6 +2157,7 @@ class MainViewModel : ViewModel() {
         islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
         islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
         isIslandShowCalls.value = settingsRepository.isIslandShowCallsEnabled()
+        isIslandShowTimers.value = settingsRepository.isIslandShowTimersEnabled()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
         islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
@@ -5038,6 +5040,11 @@ class MainViewModel : ViewModel() {
     fun setIslandExpandedWidth(value: Float) {
         islandExpandedWidth.floatValue = value
         settingsRepository.setIslandExpandedWidth(value)
+    }
+
+    fun setIslandShowTimers(enabled: Boolean) {
+        isIslandShowTimers.value = enabled
+        settingsRepository.setIslandShowTimersEnabled(enabled)
     }
 
     fun setIslandShowCalls(enabled: Boolean) {

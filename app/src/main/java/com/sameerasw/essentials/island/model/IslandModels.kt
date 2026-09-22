@@ -16,6 +16,7 @@ object IslandPriority {
     const val BATTERY = 1
     const val NOTIFICATION = 10
     const val FLASHLIGHT = 20
+    const val TIMER = 25
     const val MEDIA = 30
     const val CONSCIOUS_GATE = 40
     const val CALENDAR = 50
