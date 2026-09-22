@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -98,6 +101,13 @@ fun IslandRoot(
 
     var surfaceSize by remember { mutableStateOf(IntSize.Zero) }
     val contentAlpha = remember { Animatable(1f) }
+    val contentMotion = remember { Animatable(0f) }
+    var previousStage by remember { mutableStateOf(stage) }
+    var lastKey by remember { mutableStateOf(key) }
+    var outgoing by remember { mutableStateOf<ContentKey?>(null) }
+    val outgoingAlpha = remember { Animatable(0f) }
+    val outgoingMotion = remember { Animatable(0f) }
+    val contentShiftPx = with(density) { 10.dp.toPx() }
     val collapse = remember { Animatable(0f) }
     val dismissOffset = remember { Animatable(0f) }
     var target by remember { mutableStateOf(IntSize.Zero) }
@@ -105,6 +115,8 @@ fun IslandRoot(
     var windowWidth by remember { mutableStateOf(0) }
     var visible by remember { mutableStateOf(stage != IslandStage.Hidden) }
     var dragCommitted by remember { mutableStateOf(false) }
+    // Set when a swipe threw the card away; the next transition must not replay it as outgoing content.
+    var dismissCommitted by remember { mutableStateOf(false) }
     val showPreview by remember { derivedStateOf { collapse.value > 0f } }
     val showDismissReveal by remember { derivedStateOf { dismissOffset.value != 0f } }
     val revealDirection by remember { derivedStateOf { if (dismissOffset.value >= 0f) 1f else -1f } }
@@ -113,7 +125,11 @@ fun IslandRoot(
     LaunchedEffect(key) {
         if (stage != IslandStage.Hidden) visible = true
         if (dragCommitted) {
+            previousStage = stage
+            lastKey = key
+            outgoing = null
             contentAlpha.snapTo(1f)
+            contentMotion.snapTo(0f)
             delay(IslandMotion.COLLAPSE_MS + 400L)
             if (dragCommitted) {
                 dragCommitted = false
@@ -121,9 +137,26 @@ fun IslandRoot(
             }
             return@LaunchedEffect
         }
+        val growing = stage.rank >= previousStage.rank
+        previousStage = stage
+        val leaving = lastKey
+        lastKey = key
+        val thrownAway = dismissCommitted
+        dismissCommitted = false
+        if (leaving != key && leaving.stage != IslandStage.Hidden && !thrownAway) {
+            outgoing = leaving
+            launch {
+                outgoingAlpha.snapTo(1f)
+                outgoingMotion.snapTo(0f)
+                launch { outgoingMotion.animateTo(if (growing) 1f else -1f, IslandMotion.collapseFloat()) }
+                outgoingAlpha.animateTo(0f, tween(durationMillis = 140))
+                if (outgoing == leaving) outgoing = null
+            }
+        }
+        contentMotion.snapTo(if (growing) -1f else 1f)
         contentAlpha.snapTo(0f)
-        val collapsing = stage == IslandStage.Compact || stage == IslandStage.Hidden
-        contentAlpha.animateTo(1f, tween(durationMillis = if (collapsing) 120 else 160, delayMillis = if (collapsing) 0 else 40))
+        launch { contentMotion.animateTo(0f, if (growing) IslandMotion.contentSpring() else IslandMotion.collapseFloat()) }
+        contentAlpha.animateTo(1f, tween(durationMillis = if (growing) 180 else 120, delayMillis = if (growing) 30 else 0))
     }
     LaunchedEffect(target, windowWidth) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
@@ -257,6 +290,7 @@ fun IslandRoot(
                                     if (commit) {
                                         val dir = if ((if (abs(v.x) > 1500f) v.x else dx) > 0f) 1f else -1f
                                         dismissOffset.animateTo(dir * flyOff, IslandMotion.fling(), initialVelocity = v.x)
+                                        dismissCommitted = true
                                         actions.onDismiss()
                                         dismissOffset.snapTo(0f)
                                     } else {
@@ -275,7 +309,26 @@ fun IslandRoot(
             val item = key.itemKey?.let { state.items[it] ?: lastItems[it] }
             val previewing = key.stage == IslandStage.Expanded || key.stage == IslandStage.Line
             val cardCorner = if (key.stage == IslandStage.Expanded) spec.expandedCorner else spec.compactHeight / 2
-            Box {
+            Box(contentAlignment = Alignment.TopCenter) {
+            outgoing?.let { out ->
+                val outItem = out.itemKey?.let { state.items[it] ?: lastItems[it] }
+                Box(
+                    Modifier
+                        .layout { measurable, _ ->
+                            val p = measurable.measure(Constraints())
+                            layout(0, 0) { p.place(-p.width / 2, 0) }
+                        }
+                        .graphicsLayer {
+                            val m = outgoingMotion.value
+                            alpha = outgoingAlpha.value
+                            val scale = 1f + contentScaleFor(out.stage) * m
+                            scaleX = scale
+                            scaleY = scale
+                            translationY = contentShiftPx * m
+                            transformOrigin = TransformOrigin(0.5f, 0f)
+                        },
+                ) { StageContent(out.stage, outItem, state, spec, actions, interactive = false) }
+            }
             if (showDismissReveal && item?.dismissible == true) {
                 DismissReveal(
                     fromStart = revealDirection > 0f,
@@ -294,42 +347,35 @@ fun IslandRoot(
                         alpha = contentAlpha.value * (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
                             if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
                         translationX = dismissOffset.value
+                        val m = contentMotion.value - if (previewing) collapse.value.coerceIn(0f, 1f) else 0f
+                        val scale = 1f + contentScaleFor(key.stage) * m
+                        scaleX = scale
+                        scaleY = scale
+                        translationY = contentShiftPx * m
+                        transformOrigin = TransformOrigin(0.5f, 0f)
                         val sliding = dismissOffset.value != 0f
                         shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
                         clip = sliding
                     }
-                    .background(Color.Black),
+                    .drawBehind { if (dismissOffset.value != 0f) drawRect(Color.Black) },
             ) {
-                when (key.stage) {
-                    IslandStage.Hidden -> Spacer(Modifier.size(spec.cameraDiameter, spec.compactHeight))
-                    IslandStage.Compact -> CompactTemplate(
-                        state = state,
-                        spec = spec,
-                        onCellTap = { actions.onTap(it) },
-                        onCellLongPress = {
-                            HapticUtil.performHeavyHaptic(view)
-                            actions.onLongPress(it)
-                        },
-                    )
-                    IslandStage.Line -> item?.line?.let { LineTemplate(it, spec) }
-                        ?: Spacer(Modifier.size(spec.lineWidth, spec.compactHeight))
-                    IslandStage.Expanded -> item?.let {
-                        ExpandedHost(
-                            item = it,
-                            spec = spec,
-                            onCollapse = actions::onCollapse,
-                            onDismiss = { actions.onDismiss() },
-                            onOpen = actions::onOpenFocused,
-                        )
-                    }
-                }
+                StageContent(key.stage, item, state, spec, actions, interactive = true)
             }
             if (previewing && showPreview) {
                 // Compact content fades in underneath the finger, so release only has to finish the motion.
                 Box(
                     Modifier
                         .matchParentSize()
-                        .graphicsLayer { alpha = ((collapse.value - 0.3f) / 0.7f).coerceIn(0f, 1f) },
+                        .graphicsLayer {
+                            val t = collapse.value.coerceIn(0f, 1f)
+                            alpha = ((t - 0.3f) / 0.7f).coerceIn(0f, 1f)
+                            val m = 1f - t
+                            val scale = 1f + contentScaleFor(IslandStage.Compact) * m
+                            scaleX = scale
+                            scaleY = scale
+                            translationY = contentShiftPx * m
+                            transformOrigin = TransformOrigin(0.5f, 0f)
+                        },
                     contentAlignment = Alignment.TopCenter,
                 ) {
                     CompactTemplate(state = state, spec = spec, onCellTap = {}, onCellLongPress = {})
@@ -362,6 +408,65 @@ private fun DismissReveal(fromStart: Boolean, progress: () -> Float, corner: Dp,
         ) {
             Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
             Text(stringResource(R.string.action_dismiss), style = IslandTextStyles.title)
+        }
+    }
+}
+
+private val IslandStage.rank: Int
+    get() = when (this) {
+        IslandStage.Hidden -> 0
+        IslandStage.Compact -> 1
+        IslandStage.Line -> 2
+        IslandStage.Expanded -> 3
+    }
+
+private fun contentScaleFor(stage: IslandStage): Float = when (stage) {
+    IslandStage.Hidden, IslandStage.Compact -> 0.25f
+    IslandStage.Line -> 0.1f
+    IslandStage.Expanded -> IslandMotion.CONTENT_SCALE
+}
+
+private val NoActions = object : IslandActions {
+    override fun onTap(itemKey: String?) {}
+    override fun onLongPress(itemKey: String?) {}
+    override fun onCollapse() {}
+    override fun onDismiss(): Boolean = false
+    override fun onOpenFocused() {}
+    override fun onInteraction() {}
+}
+
+@Composable
+private fun StageContent(
+    stage: IslandStage,
+    item: IslandItem?,
+    state: IslandUiState,
+    spec: IslandLayoutSpec,
+    actions: IslandActions,
+    interactive: Boolean,
+) {
+    val view = LocalView.current
+    val a = if (interactive) actions else NoActions
+    when (stage) {
+        IslandStage.Hidden -> Spacer(Modifier.size(spec.cameraDiameter, spec.compactHeight))
+        IslandStage.Compact -> CompactTemplate(
+            state = state,
+            spec = spec,
+            onCellTap = { a.onTap(it) },
+            onCellLongPress = {
+                if (interactive) HapticUtil.performHeavyHaptic(view)
+                a.onLongPress(it)
+            },
+        )
+        IslandStage.Line -> item?.line?.let { LineTemplate(it, spec) }
+            ?: Spacer(Modifier.size(spec.lineWidth, spec.compactHeight))
+        IslandStage.Expanded -> item?.let {
+            ExpandedHost(
+                item = it,
+                spec = spec,
+                onCollapse = a::onCollapse,
+                onDismiss = { a.onDismiss() },
+                onOpen = a::onOpenFocused,
+            )
         }
     }
 }

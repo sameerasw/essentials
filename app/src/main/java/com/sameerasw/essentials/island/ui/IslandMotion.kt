@@ -26,6 +26,9 @@ object IslandMotion {
     fun <T> contentIn(): FiniteAnimationSpec<T> = tween(durationMillis = 220, delayMillis = 70)
     fun <T> contentOut(): FiniteAnimationSpec<T> = tween(durationMillis = 110)
 
+    const val CONTENT_SCALE = 0.06f
+    fun contentSpring(): FiniteAnimationSpec<Float> = spring(0.85f, 420f)
+
     const val COLLAPSE_THRESHOLD = 0.3f
     const val DISMISS_THRESHOLD = 0.3f
 }
