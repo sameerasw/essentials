@@ -124,6 +124,13 @@ fun IslandRoot(
 
     LaunchedEffect(key) {
         if (stage != IslandStage.Hidden) visible = true
+        dismissOffset.snapTo(0f)
+        if (dragCommitted && (stage == IslandStage.Expanded || stage == IslandStage.Line)) {
+            dragCommitted = false
+        }
+        if (!dragCommitted && collapse.value != 0f) {
+            launch { collapse.animateTo(0f, IslandMotion.collapseFloat()) }
+        }
         if (dragCommitted) {
             previousStage = stage
             lastKey = key
@@ -195,7 +202,7 @@ fun IslandRoot(
                     alignment = Alignment.TopCenter,
                     finishedListener = { _, _ ->
                         if (currentState.stage == IslandStage.Hidden) visible = false
-                        if (dragCommitted) {
+                        if (dragCommitted && currentState.stage != IslandStage.Expanded && currentState.stage != IslandStage.Line) {
                             dragCommitted = false
                             scope.launch { collapse.snapTo(0f) }
                         }
