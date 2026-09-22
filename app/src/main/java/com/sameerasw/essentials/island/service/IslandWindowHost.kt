@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.service
 
+import com.sameerasw.essentials.island.state.CameraAnchor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
@@ -130,7 +131,8 @@ class IslandWindowHost(
 
     private fun applyDrawSize(lp: WindowManager.LayoutParams) {
         val geo = geometry ?: return
-        val width = (maxWidthPx + 32 * density).roundToInt().coerceAtMost(geo.screenWidth)
+        val reach = maxWidthPx + 32 * density
+        val width = if (geo.anchor == CameraAnchor.Center) reach.roundToInt().coerceAtMost(geo.screenWidth) else (reach * 2).roundToInt()
         lp.width = width
         lp.height = (geo.screenHeight * 0.6f).roundToInt()
         lp.x = (geo.centerX - width / 2f).roundToInt()

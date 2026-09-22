@@ -52,6 +52,8 @@ class IslandController(
         recompute()
     }
 
+    fun relayout() = recompute()
+
     fun setSuppressed(value: Boolean) {
         if (suppressed == value) return
         suppressed = value

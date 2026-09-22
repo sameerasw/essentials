@@ -36,7 +36,11 @@ object CompactLayoutEngine {
 
         if (anchor != CameraAnchor.Center) {
             val cells = pinned.flatMap { it.cellKeys } + dynamic.flatMap { it.cellKeys.reversed() }
-            return CompactArrangement(emptyList(), cells, visible)
+            return if (anchor == CameraAnchor.Start) {
+                CompactArrangement(emptyList(), cells, visible)
+            } else {
+                CompactArrangement(cells, emptyList(), visible)
+            }
         }
 
         val before = mutableListOf<String>()

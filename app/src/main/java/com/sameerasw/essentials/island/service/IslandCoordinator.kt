@@ -234,8 +234,15 @@ class IslandCoordinator(
         geometry = geo
         val density = service.resources.displayMetrics.density
         val screenWidthDp = geo.screenWidth / density
-        val lineWidth = minOf(settings.getIslandMaxWidth(), screenWidthDp - 16f)
-        val expandedWidth = minOf(settings.getIslandExpandedWidth(), screenWidthDp - 16f)
+        val slotDp = geo.cameraSlotWidth / density
+        val available = when (geo.anchor) {
+            CameraAnchor.Center -> screenWidthDp - 16f
+            CameraAnchor.Start -> screenWidthDp - (geo.centerX / density - slotDp / 2f) - 8f
+            CameraAnchor.End -> geo.centerX / density + slotDp / 2f - 8f
+        }.coerceAtLeast(slotDp * 3f)
+        val scale = settings.getIslandExpandedScale().coerceIn(1f, 1.3f)
+        val lineWidth = minOf(settings.getIslandMaxWidth(), available)
+        val expandedWidth = minOf(settings.getIslandExpandedWidth(), available / scale)
         spec.value = IslandLayoutSpec(
             cameraDiameter = (geo.diameter / density).dp,
             cameraGap = (geo.gap / density).dp,
@@ -246,11 +253,13 @@ class IslandCoordinator(
             expandedPadding = settings.getIslandExpandedPadding().dp,
             expandedTopPadding = settings.getIslandExpandedTopPadding().dp,
             expandedScale = settings.getIslandExpandedScale().coerceIn(1f, 1.3f),
-            expandedOutset = (expandedWidth * (settings.getIslandExpandedScale().coerceIn(1f, 1.3f) - 1f) / 2f).dp,
+            expandedOutset = (expandedWidth * (scale - 1f) / 2f).dp,
+            cameraAnchor = geo.anchor,
         )
         windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * settings.getIslandExpandedScale().coerceIn(1f, 1.3f)) * density).toInt()
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
+        controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
     }
 
@@ -295,6 +304,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_TIMEOUT_MS,
             SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
             SettingsRepository.KEY_ISLAND_EXPANDED_SCALE,
+            SettingsRepository.KEY_ISLAND_CAMERA_POSITION,
         )
     }
 }

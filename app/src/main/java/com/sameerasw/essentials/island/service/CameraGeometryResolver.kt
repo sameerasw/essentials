@@ -39,7 +39,7 @@ object CameraGeometryResolver {
                     gap = gap,
                     screenWidth = screenWidth,
                     screenHeight = screenHeight,
-                    anchor = anchorFor(rect.exactCenterX(), screenWidth),
+                    anchor = anchorFor(settings),
                 )
             }
         }
@@ -52,10 +52,14 @@ object CameraGeometryResolver {
             gap = gap,
             screenWidth = screenWidth,
             screenHeight = screenHeight,
-            anchor = anchorFor(centerX, screenWidth),
+            anchor = anchorFor(settings),
         )
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun anchorFor(centerX: Float, screenWidth: Int): CameraAnchor = CameraAnchor.Center
+    private fun anchorFor(settings: SettingsRepository): CameraAnchor = when (settings.getIslandCameraPosition()) {
+        SettingsRepository.ISLAND_CAMERA_POSITION_LEFT -> CameraAnchor.Start
+        SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT -> CameraAnchor.End
+        else -> CameraAnchor.Center
+    }
 }

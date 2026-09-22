@@ -99,10 +99,22 @@ fun CompactTemplate(
         val left = placeables.take(beforeCount).filter { it.width > 0 }
         val right = placeables.drop(beforeCount).filter { it.width > 0 }
         fun content(list: List<Placeable>) = if (list.isEmpty()) 0 else list.sumOf { it.width } + spacing * (list.size - 1)
+        val height = spec.compactHeight.roundToPx()
+        if (spec.growDirection != 0) {
+            val cells = left + right
+            val body = content(cells) + if (cells.isEmpty()) 0 else spacing
+            val width = cameraSlot + body
+            return@Layout layout(width, height) {
+                var x = if (spec.growDirection > 0) cameraSlot else spacing
+                cells.forEach {
+                    it.place(x, (height - it.height) / 2)
+                    x += it.width + spacing
+                }
+            }
+        }
         // Cells hug the outer ends with the same edge padding on both sides; the slack sits around the camera.
         val side = maxOf(content(left), content(right)) + if (left.isEmpty() && right.isEmpty()) 0 else spacing
         val width = side * 2 + cameraSlot
-        val height = spec.compactHeight.roundToPx()
         layout(width, height) {
             var x = spacing
             left.forEach {

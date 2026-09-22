@@ -34,24 +34,43 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec) {
             .padding(horizontal = spec.cameraGap),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
-        ) {
+        val icon: @Composable () -> Unit = {
             Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) { line.icon() }
-            LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
         }
-        Spacer(Modifier.width(spec.cameraSlotWidth))
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
-        ) {
-            LineText(line.end, TextAlign.Start, FontWeight.Normal, Modifier.weight(1f))
-            line.endSlot?.let { slot ->
-                Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) { slot() }
+        val endSlot: @Composable () -> Unit = {
+            line.endSlot?.let { slot -> Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) { slot() } }
+        }
+        if (spec.growDirection == 0) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
+            ) {
+                icon()
+                LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
             }
+            Spacer(Modifier.width(spec.cameraSlotWidth))
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
+            ) {
+                LineText(line.end, TextAlign.Start, FontWeight.Normal, Modifier.weight(1f))
+                endSlot()
+            }
+        } else {
+            if (spec.growDirection > 0) Spacer(Modifier.width(spec.cameraSlotWidth - spec.cameraGap))
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
+            ) {
+                icon()
+                LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
+                LineText(line.end, TextAlign.End, FontWeight.Normal, Modifier.weight(1f))
+                endSlot()
+            }
+            if (spec.growDirection < 0) Spacer(Modifier.width(spec.cameraSlotWidth - spec.cameraGap))
         }
     }
 }

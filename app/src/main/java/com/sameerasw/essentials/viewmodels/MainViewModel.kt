@@ -184,6 +184,7 @@ class MainViewModel : ViewModel() {
     val islandExpandedWidth = mutableFloatStateOf(360f)
     val islandExpandedRoundness = mutableFloatStateOf(24f)
     val islandExpandedScale = mutableFloatStateOf(1f)
+    val islandCameraPosition = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_CENTER)
     val islandExpandedPadding = mutableFloatStateOf(16f)
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
@@ -2152,6 +2153,7 @@ class MainViewModel : ViewModel() {
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
+        islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
         islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
@@ -5034,6 +5036,11 @@ class MainViewModel : ViewModel() {
     fun setIslandExpandedWidth(value: Float) {
         islandExpandedWidth.floatValue = value
         settingsRepository.setIslandExpandedWidth(value)
+    }
+
+    fun setIslandCameraPosition(value: String) {
+        islandCameraPosition.value = value
+        settingsRepository.setIslandCameraPosition(value)
     }
 
     fun setIslandExpandedScale(value: Float) {

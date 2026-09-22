@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.features.display
 
+import androidx.compose.foundation.background
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
@@ -61,7 +64,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
-private val ISLAND_PLACEMENT_KEYS = setOf("island_use_auto_detect", "island_camera_size", "island_max_width", "island_expanded_width", "island_cutout_gap")
+private val ISLAND_PLACEMENT_KEYS = setOf("island_camera_position", "island_use_auto_detect", "island_camera_size", "island_max_width", "island_expanded_width", "island_cutout_gap")
 private val ISLAND_VISUALS_KEYS = setOf("island_expanded_scale", "island_expanded_roundness", "island_expanded_padding", "island_expanded_top_padding")
 
 @Composable
@@ -205,6 +208,39 @@ fun IslandSettingsUI(
             iconRes = R.drawable.rounded_center_focus_strong_24,
             initiallyExpanded = highlightSetting in ISLAND_PLACEMENT_KEYS,
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp)
+                    .highlight(highlightSetting == "island_camera_position"),
+            ) {
+                Text(
+                    text = stringResource(R.string.island_camera_position_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                val positions = listOf(
+                    SettingsRepository.ISLAND_CAMERA_POSITION_LEFT,
+                    SettingsRepository.ISLAND_CAMERA_POSITION_CENTER,
+                    SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT,
+                )
+                val positionLabels = mapOf(
+                    SettingsRepository.ISLAND_CAMERA_POSITION_LEFT to stringResource(R.string.island_camera_position_left),
+                    SettingsRepository.ISLAND_CAMERA_POSITION_CENTER to stringResource(R.string.island_camera_position_center),
+                    SettingsRepository.ISLAND_CAMERA_POSITION_RIGHT to stringResource(R.string.island_camera_position_right),
+                )
+                SegmentedPicker(
+                    items = positions,
+                    selectedItem = viewModel.islandCameraPosition.value,
+                    onItemSelected = { viewModel.setIslandCameraPosition(it) },
+                    labelProvider = { positionLabels[it].orEmpty() },
+                    title = R.string.island_camera_position_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_center_focus_strong_24,
                 title = stringResource(R.string.island_auto_detect_title),

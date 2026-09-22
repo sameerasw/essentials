@@ -44,5 +44,8 @@ class CompactLayoutEngineTest {
     @Test fun startAnchorPutsEverythingAfter() =
         assertEquals("| time battery media.eq media.art", visual(listOf(time, battery, media), CameraAnchor.Start))
 
+    @Test fun endAnchorPutsEverythingBefore() =
+        assertEquals("media.art media.eq battery time |", visual(listOf(time, battery, media), CameraAnchor.End))
+
     @Test fun empty() = assertEquals("|", visual(emptyList()))
 }

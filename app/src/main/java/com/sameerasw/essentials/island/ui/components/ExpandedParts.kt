@@ -49,19 +49,43 @@ fun IslandExpandedScope.CameraRow(
             .padding(horizontal = horizontalPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            content = start,
-        )
-        Spacer(Modifier.width(spec.cameraSlotWidth))
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            content = end,
-        )
+        val startRow: @Composable RowScope.() -> Unit = {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                content = start,
+            )
+        }
+        val endRow: @Composable RowScope.() -> Unit = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                content = end,
+            )
+        }
+        when {
+            spec.growDirection > 0 -> {
+                Spacer(Modifier.width(spec.cameraSlotWidth))
+                startRow()
+                endRow()
+            }
+            spec.growDirection < 0 -> {
+                startRow()
+                endRow()
+                Spacer(Modifier.width(spec.cameraSlotWidth))
+            }
+            else -> {
+                startRow()
+                Spacer(Modifier.width(spec.cameraSlotWidth))
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                    content = end,
+                )
+            }
+        }
     }
 }
 

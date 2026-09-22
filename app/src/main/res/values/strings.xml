@@ -2806,6 +2806,10 @@
     <string name="island_catch_up_timeout_title">Catch up duration</string>
     <string name="island_expanded_scale_title">Expanded scale</string>
     <string name="island_expanded_scale_desc">Grow the expanded island evenly on every side</string>
+    <string name="island_camera_position_title">Camera position</string>
+    <string name="island_camera_position_left">Left</string>
+    <string name="island_camera_position_center">Center</string>
+    <string name="island_camera_position_right">Right</string>
     <string name="island_calendar_view_event">View event</string>
     <string name="island_calendar_all_day">All day</string>
     <string name="island_line_peek_title">Line peek</string>

@@ -179,6 +179,12 @@ fun IslandRoot(
         contentAlpha.animateTo(1f, tween(durationMillis = if (growing) 180 else 120, delayMillis = if (growing) 30 else 0))
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
+    val cameraSlotPx = with(density) { spec.cameraSlotWidth.roundToPx() }
+    val contentOriginX = when {
+        spec.growDirection > 0 -> 0f
+        spec.growDirection < 0 -> 1f
+        else -> 0.5f
+    }
 
     fun rejectTap() {
         scope.launch {
@@ -223,7 +229,12 @@ fun IslandRoot(
     LaunchedEffect(target, windowWidth, stage) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
-        val left = (windowWidth - target.width) / 2
+        val cameraOffsetInSurface = when {
+            spec.growDirection > 0 -> cameraSlotPx / 2
+            spec.growDirection < 0 -> target.width - cameraSlotPx / 2
+            else -> target.width / 2
+        }
+        val left = windowWidth / 2 - cameraOffsetInSurface
         val top = (surfaceTopPx - g).coerceAtLeast(0)
         onTargetBoundsChanged(IntRect(left, top, left + target.width, surfaceTopPx - g + target.height))
     }
@@ -233,6 +244,11 @@ fun IslandRoot(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = spec.surfaceTop)
+                .layout { measurable, constraints ->
+                    val p = measurable.measure(constraints)
+                    val dx = spec.growDirection * (p.width - cameraSlotPx) / 2
+                    layout(p.width, p.height) { p.place(dx, 0) }
+                }
                 .offset { IntOffset(0, -edgeShift.floatValue.roundToInt()) }
                 .graphicsLayer {
                     alpha = if (visible) 1f else 0f
@@ -308,7 +324,11 @@ fun IslandRoot(
                     var lastStep = 0f
                     val stepPx = 16.dp.toPx()
                     fun inwardSign(): Float {
-                        val cameraX = size.width / 2f
+                        val cameraX = when {
+                            spec.growDirection > 0 -> cameraSlotPx / 2f
+                            spec.growDirection < 0 -> size.width - cameraSlotPx / 2f
+                            else -> size.width / 2f
+                        }
                         return when {
                             startX < cameraX -> 1f
                             startX > cameraX -> -1f
@@ -396,14 +416,24 @@ fun IslandRoot(
             val item = key.itemKey?.let { state.items[it] ?: lastItems[it] }
             val previewing = key.stage == IslandStage.Expanded || key.stage == IslandStage.Line
             val cardCorner = if (key.stage == IslandStage.Expanded) spec.expandedCorner else spec.compactHeight / 2
-            Box(contentAlignment = Alignment.TopCenter) {
+            val layerAlign = when {
+                spec.growDirection > 0 -> Alignment.TopStart
+                spec.growDirection < 0 -> Alignment.TopEnd
+                else -> Alignment.TopCenter
+            }
+            Box(contentAlignment = layerAlign) {
             outgoing?.let { out ->
                 val outItem = out.itemKey?.let { state.items[it] ?: lastItems[it] }
                 Box(
                     Modifier
                         .layout { measurable, _ ->
                             val p = measurable.measure(Constraints())
-                            layout(0, 0) { p.place(-p.width / 2, 0) }
+                            val x = when {
+                                spec.growDirection > 0 -> 0
+                                spec.growDirection < 0 -> -p.width
+                                else -> -p.width / 2
+                            }
+                            layout(0, 0) { p.place(x, 0) }
                         }
                         .graphicsLayer {
                             val m = outgoingMotion.value
@@ -412,7 +442,7 @@ fun IslandRoot(
                             scaleX = scale
                             scaleY = scale
                             translationY = contentShiftPx * m + edgeCorrection(out.stage)
-                            transformOrigin = TransformOrigin(0.5f, 0f)
+                            transformOrigin = TransformOrigin(contentOriginX, 0f)
                         },
                 ) { StageContent(out.stage, outItem, state, spec, actions, interactive = false) }
             }
@@ -444,7 +474,7 @@ fun IslandRoot(
                         scaleX = scale
                         scaleY = scale
                         translationY = contentShiftPx * m + edgeCorrection(key.stage)
-                        transformOrigin = TransformOrigin(0.5f, 0f)
+                        transformOrigin = TransformOrigin(contentOriginX, 0f)
                         val sliding = dismissOffset.value != 0f
                         shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
                         clip = sliding
@@ -470,9 +500,9 @@ fun IslandRoot(
                             scaleX = scale
                             scaleY = scale
                             translationY = contentShiftPx * m + edgeCorrection(IslandStage.Compact)
-                            transformOrigin = TransformOrigin(0.5f, 0f)
+                            transformOrigin = TransformOrigin(contentOriginX, 0f)
                         },
-                    contentAlignment = Alignment.TopCenter,
+                    contentAlignment = layerAlign,
                 ) {
                     CompactTemplate(state = state, spec = spec, onCellTap = {}, onCellLongPress = {})
                 }

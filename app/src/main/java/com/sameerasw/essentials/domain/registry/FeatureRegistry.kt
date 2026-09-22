@@ -763,6 +763,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_camera_position_title,
+                            R.string.island_camera_position_center,
+                            "island_camera_position",
+                        ),
+                        SearchSetting(
                             R.string.island_expanded_scale_title,
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
