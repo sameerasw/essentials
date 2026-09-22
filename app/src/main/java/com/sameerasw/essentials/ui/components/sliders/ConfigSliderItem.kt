@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +35,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.translation.TranslationManager
@@ -69,7 +82,11 @@ fun ConfigSliderItem(
     val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
 
     var showMenu by remember { mutableStateOf(false) }
+    var showValueEntry by remember { mutableStateOf(false) }
     var translationSheetKey by remember { mutableStateOf<String?>(null) }
+
+    // Whole-number ranges get the plain number pad
+    val decimals = increment < 1f
 
     Column(
         modifier =
@@ -78,25 +95,29 @@ fun ConfigSliderItem(
                 .background(
                     color = MaterialTheme.colorScheme.surfaceBright,
                     shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                ).combinedClickable(
+                    onClick = {},
+                    onLongClick =
+                        when {
+                            isTranslationModeActive -> {
+                                {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    showMenu = true
+                                }
+                            }
+                            enabled -> {
+                                {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    showValueEntry = true
+                                }
+                            }
+                            else -> null
+                        },
                 ).padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
     ) {
         Box {
             Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .combinedClickable(
-                            onClick = {},
-                            onLongClick =
-                                if (isTranslationModeActive) {
-                                    {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        showMenu = true
-                                    }
-                                } else {
-                                    null
-                                },
-                        ),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (finalIconRes != 0) {
@@ -132,6 +153,25 @@ fun ConfigSliderItem(
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                         )
                     }
+                }
+            }
+
+            if (showValueEntry) {
+                SegmentedDropdownMenu(
+                    expanded = showValueEntry,
+                    onDismissRequest = { showValueEntry = false },
+                ) {
+                    SliderValueEntry(
+                        value = value,
+                        valueRange = valueRange,
+                        decimals = decimals,
+                        onSubmit = { entered ->
+                            showValueEntry = false
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onValueChange(entered.coerceIn(valueRange))
+                            onValueChangeFinished?.invoke()
+                        },
+                    )
                 }
             }
 
@@ -224,5 +264,69 @@ fun ConfigSliderItem(
             stringKey = translationSheetKey!!,
             onDismissRequest = { translationSheetKey = null },
         )
+    }
+}
+
+@Composable
+private fun SliderValueEntry(
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    decimals: Boolean,
+    onSubmit: (Float) -> Unit,
+) {
+    val focusRequester = remember { FocusRequester() }
+    var text by remember {
+        val start = if (decimals) value.toString() else value.toInt().toString()
+        mutableStateOf(TextFieldValue(start, TextRange(0, start.length)))
+    }
+
+    fun submit() {
+        text.text.trim().replace(',', '.').toFloatOrNull()?.let(onSubmit)
+    }
+
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
+
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { input ->
+                    val allowed = input.text.filter { it.isDigit() || it == '-' || (decimals && (it == '.' || it == ',')) }
+                    text = input.copy(text = allowed)
+                },
+                singleLine = true,
+                label = { Text(stringResource(R.string.slider_value_label)) },
+                supportingText = {
+                    Text(
+                        if (decimals) {
+                            "${valueRange.start} - ${valueRange.endInclusive}"
+                        } else {
+                            "${valueRange.start.toInt()} - ${valueRange.endInclusive.toInt()}"
+                        },
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = if (decimals) KeyboardType.Decimal else KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(onDone = { submit() }),
+                modifier = Modifier
+                    .width(170.dp)
+                    .focusRequester(focusRequester),
+            )
+            IconButton(onClick = { submit() }, modifier = Modifier.padding(start = 4.dp)) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_check_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
     }
 }
