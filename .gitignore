@@ -37,3 +37,5 @@ build/
 local.properties
 .agents/
 *build.gradle.kts.bak
+
+/docs/working/
