@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.draw.drawBehind
@@ -105,7 +106,7 @@ fun IslandRoot(
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
     var expandedHeight by remember { mutableStateOf(0) }
-    val shiftHolder = remember { IntArray(1) }
+    val edgeShift = remember { mutableFloatStateOf(0f) }
     var previousStage by remember { mutableStateOf(stage) }
     var lastKey by remember { mutableStateOf(key) }
     var outgoing by remember { mutableStateOf<ContentKey?>(null) }
@@ -170,6 +171,9 @@ fun IslandRoot(
         contentAlpha.animateTo(1f, tween(durationMillis = if (growing) 180 else 120, delayMillis = if (growing) 30 else 0))
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
+
+    fun edgeCorrection(layerStage: IslandStage): Float =
+        edgeShift.floatValue - if (layerStage == IslandStage.Expanded) outsetPx else 0f
     LaunchedEffect(target, windowWidth, stage) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
@@ -183,7 +187,7 @@ fun IslandRoot(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = spec.surfaceTop)
-                .offset { IntOffset(0, -shiftHolder[0]) }
+                .offset { IntOffset(0, -edgeShift.floatValue.roundToInt()) }
                 .graphicsLayer {
                     alpha = if (visible) 1f else 0f
                     // Corner follows the live height so it can never outrun the size animation.
@@ -204,7 +208,7 @@ fun IslandRoot(
                     val h = (if (t > 0f) lerp(child.height, end.height, t) else child.height).coerceAtLeast(minSurfaceHeight)
                     val range = (expandedHeight - minSurfaceHeight).toFloat()
                     val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
-                    shiftHolder[0] = (outsetPx * p).roundToInt()
+                    edgeShift.floatValue = outsetPx * p
                     layout(w, h) { child.place((w - child.width) / 2, 0) }
                 }
                 .onSizeChanged { surfaceSize = it }
@@ -342,7 +346,7 @@ fun IslandRoot(
                             val scale = 1f + contentScaleFor(out.stage) * m
                             scaleX = scale
                             scaleY = scale
-                            translationY = contentShiftPx * m
+                            translationY = contentShiftPx * m + edgeCorrection(out.stage)
                             transformOrigin = TransformOrigin(0.5f, 0f)
                         },
                 ) { StageContent(out.stage, outItem, state, spec, actions, interactive = false) }
@@ -370,7 +374,7 @@ fun IslandRoot(
                         val scale = 1f + contentScaleFor(key.stage) * m
                         scaleX = scale
                         scaleY = scale
-                        translationY = contentShiftPx * m
+                        translationY = contentShiftPx * m + edgeCorrection(key.stage)
                         transformOrigin = TransformOrigin(0.5f, 0f)
                         val sliding = dismissOffset.value != 0f
                         shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
@@ -392,7 +396,7 @@ fun IslandRoot(
                             val scale = 1f + contentScaleFor(IslandStage.Compact) * m
                             scaleX = scale
                             scaleY = scale
-                            translationY = contentShiftPx * m
+                            translationY = contentShiftPx * m + edgeCorrection(IslandStage.Compact)
                             transformOrigin = TransformOrigin(0.5f, 0f)
                         },
                     contentAlignment = Alignment.TopCenter,
