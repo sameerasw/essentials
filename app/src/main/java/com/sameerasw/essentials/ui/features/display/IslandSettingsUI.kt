@@ -595,6 +595,21 @@ fun IslandSettingsUI(
             cornerRadius = 24.dp,
         ) {
             IconToggleItem(
+                iconRes = R.drawable.rounded_call_24,
+                title = stringResource(R.string.island_show_calls_title),
+                isChecked = viewModel.isIslandShowCalls.value && PermissionUtils.hasCallPermissions(context),
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !PermissionUtils.hasCallPermissions(context)) {
+                        requestingPermissionsFor = Pair(R.string.island_title, listOf("READ_PHONE_STATE", "ANSWER_PHONE_CALLS", "READ_CONTACTS"))
+                    } else {
+                        viewModel.setIslandShowCalls(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_show_calls"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_motion_play_24,
                 title = stringResource(R.string.duo_show_media_title),
                 isChecked = viewModel.isIslandShowMedia.value,

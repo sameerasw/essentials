@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.utils.call.CallStateRepository
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -56,6 +57,7 @@ class CallReceiver : BroadcastReceiver() {
             savedNumber = null
         }
 
+        CallStateRepository.onCallStateChanged(context, state, numberToUse)
         WatchCallSyncManager.onCallStateChanged(context, state, numberToUse)
     }
 }

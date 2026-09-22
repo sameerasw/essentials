@@ -174,6 +174,9 @@ fun initPermissionRegistry() {
     // Install unknown packages feature
     // Watch Call Sync & Notification Sync
     PermissionRegistry.register("READ_PHONE_STATE", R.string.watch_call_sync_title)
+    PermissionRegistry.register("READ_PHONE_STATE", R.string.island_title)
+    PermissionRegistry.register("ANSWER_PHONE_CALLS", R.string.island_title)
+    PermissionRegistry.register("READ_CONTACTS", R.string.island_title)
     PermissionRegistry.register("ANSWER_PHONE_CALLS", R.string.watch_call_sync_title)
     PermissionRegistry.register("READ_CONTACTS", R.string.watch_call_sync_title)
     PermissionRegistry.register("READ_CALL_LOG", R.string.watch_call_sync_title)

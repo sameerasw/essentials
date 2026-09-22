@@ -1,5 +1,10 @@
 package com.sameerasw.essentials.island.ui.components
 
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.foundation.Image
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.draw.drawBehind
@@ -111,6 +116,7 @@ fun Modifier.accentGlow(color: Color, enabled: Boolean, clearTop: Dp): Modifier 
 
 class ConnectedItem(
     val onClick: () -> Unit,
+    val container: Color? = null,
     val content: @Composable () -> Unit,
 )
 
@@ -138,7 +144,7 @@ fun ConnectedButtonRow(
                     .weight(1f)
                     .height(height)
                     .clip(shape)
-                    .background(container)
+                    .background(item.container ?: container)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = ripple(color = Color.White),
@@ -161,4 +167,35 @@ fun ConnectedTextLabel(text: String) {
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(horizontal = 8.dp),
     )
+}
+
+@Composable
+fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier = Modifier) {
+    if (image == null) return
+    val clearTop = cameraClearance
+    Box(modifier) {
+        Image(
+            bitmap = image,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.matchParentSize().blur(40.dp).alpha(0.67f),
+        )
+        Box(
+            Modifier.matchParentSize().drawBehind {
+                val top = clearTop.toPx().coerceAtMost(size.height)
+                drawRect(Color.Black, size = Size(size.width, top))
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        0f to Color.Black,
+                        0.5f to Color.Black.copy(alpha = 0.59f),
+                        1f to Color.Transparent,
+                        startY = top,
+                        endY = size.height,
+                    ),
+                    topLeft = Offset(0f, top),
+                    size = Size(size.width, size.height - top),
+                )
+            },
+        )
+    }
 }

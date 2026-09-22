@@ -9,13 +9,9 @@
 
 package com.sameerasw.essentials.services
 
-import android.content.ContentUris
+import com.sameerasw.essentials.utils.call.CallerLookup
 import android.content.Context
-import android.database.Cursor
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.ContactsContract
 import android.telephony.TelephonyManager
 import android.util.Base64
 import android.util.Log
@@ -105,64 +101,19 @@ object WatchCallSyncManager {
     private fun lookupContactName(
         context: Context,
         number: String?,
-    ): String? {
-        if (number.isNullOrBlank()) return null
-        return try {
-            val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
-            val projection = arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME)
-            var cursor: Cursor? = null
-            try {
-                cursor = context.contentResolver.query(uri, projection, null, null, null)
-                if (cursor != null && cursor.moveToFirst()) {
-                    val nameIdx = cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME)
-                    if (nameIdx != -1) cursor.getString(nameIdx) else null
-                } else {
-                    null
-                }
-            } finally {
-                cursor?.close()
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error looking up contact name", e)
-            null
-        }
-    }
+    ): String? = CallerLookup.name(context, number)
 
     private fun lookupContactPhotoBase64(
         context: Context,
         number: String?,
     ): String? {
-        if (number.isNullOrBlank()) return null
+        val bitmap = CallerLookup.photo(context, number) ?: return null
         return try {
-            val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
-            val projection = arrayOf(ContactsContract.PhoneLookup._ID)
-            var photoBase64: String? = null
-            var cursor: Cursor? = null
-            try {
-                cursor = context.contentResolver.query(uri, projection, null, null, null)
-                if (cursor != null && cursor.moveToFirst()) {
-                    val idIdx = cursor.getColumnIndex(ContactsContract.PhoneLookup._ID)
-                    if (idIdx != -1) {
-                        val contactId = cursor.getLong(idIdx)
-                        val contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
-                        val photoStream = ContactsContract.Contacts.openContactPhotoInputStream(context.contentResolver, contactUri)
-                        if (photoStream != null) {
-                            val bitmap = BitmapFactory.decodeStream(photoStream)
-                            photoStream.close()
-                            if (bitmap != null) {
-                                val outputStream = ByteArrayOutputStream()
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
-                                photoBase64 = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
-                            }
-                        }
-                    }
-                }
-            } finally {
-                cursor?.close()
-            }
-            photoBase64
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
+            Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
         } catch (e: Exception) {
-            Log.e(TAG, "Error looking up contact photo", e)
+            Log.e(TAG, "Error encoding contact photo", e)
             null
         }
     }

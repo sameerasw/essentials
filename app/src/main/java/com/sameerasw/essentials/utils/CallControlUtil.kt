@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.utils
 
+import android.media.AudioDeviceInfo
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -86,6 +87,54 @@ object CallControlUtil {
             Log.e(TAG, "Error toggling microphone mute", e)
             false
         }
+
+    fun isMuted(context: Context): Boolean =
+        (context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.isMicrophoneMute ?: false
+
+    fun isSpeakerOn(context: Context): Boolean {
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: return false
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            audioManager.communicationDevice?.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+        } else {
+            @Suppress("DEPRECATION")
+            audioManager.isSpeakerphoneOn
+        }
+    }
+
+    fun toggleSpeaker(context: Context): Boolean =
+        try {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+            if (audioManager == null) {
+                false
+            } else {
+                val enable = !isSpeakerOn(context)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (enable) {
+                        audioManager.availableCommunicationDevices
+                            .firstOrNull { it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER }
+                            ?.let { audioManager.setCommunicationDevice(it) }
+                    } else {
+                        audioManager.clearCommunicationDevice()
+                    }
+                } else {
+                    @Suppress("DEPRECATION")
+                    audioManager.isSpeakerphoneOn = enable
+                }
+                Log.d(TAG, "Toggled speaker: $enable")
+                enable
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error toggling speaker", e)
+            false
+        }
+
+    fun showInCallScreen(context: Context) {
+        try {
+            (context.getSystemService(Context.TELECOM_SERVICE) as? TelecomManager)?.showInCallScreen(false)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to show in-call screen", e)
+        }
+    }
 
     private fun emulateHeadsetHookClick(context: Context) {
         try {

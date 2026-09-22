@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.service
 
+import com.sameerasw.essentials.island.plugins.call.CallPlugin
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
@@ -66,6 +67,7 @@ class IslandCoordinator(
     )
 
     private val plugins: List<IslandPlugin> = listOf(
+        CallPlugin(),
         TimeBatteryPlugin(),
         NotificationsPlugin(),
         MediaPlugin(),

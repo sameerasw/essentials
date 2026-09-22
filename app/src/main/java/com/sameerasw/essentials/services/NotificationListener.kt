@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.utils.call.CallNotificationParser
+import com.sameerasw.essentials.utils.call.CallStateRepository
 import android.app.Notification
 import android.app.Person
 import android.content.Context
@@ -288,6 +290,10 @@ class NotificationListener : NotificationListenerService() {
             } else {
                 registerReceiver(likeActionReceiver, filter)
             }
+
+            // Calls already in progress when the listener (re)connects.
+            activeNotifications?.filter { CallNotificationParser.isCall(it) && it.packageName != packageName }
+                ?.forEach { CallStateRepository.onCallNotificationPosted(applicationContext, it) }
 
             // Initial discovery from active notifications
             activeNotifications?.forEach { sbn ->
@@ -960,6 +966,7 @@ class NotificationListener : NotificationListenerService() {
         if (sbn.packageName == packageName) {
             return
         }
+        if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
         if (isOngoingScreenCaptureNotification(sbn)) {
             ScreenOffAccessibilityService.updateSmartPixelsState()
         }
@@ -1325,6 +1332,7 @@ class NotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
+        if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationRemoved(sbn.key)
         unreadNotifications.remove(sbn.key)
         WatchNotificationSyncManager.onNotificationRemoved(applicationContext, sbn.key)
 

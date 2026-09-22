@@ -10,6 +10,8 @@ enum class CompactPlacement { Pinned, Dynamic }
 
 // Island item priority
 object IslandPriority {
+    // Calls outrank everything, including the pinned time/battery.
+    const val CALL = -10
     const val TIME = 0
     const val BATTERY = 1
     const val NOTIFICATION = 10

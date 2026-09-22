@@ -2810,6 +2810,14 @@
     <string name="island_camera_position_left">Left</string>
     <string name="island_camera_position_center">Center</string>
     <string name="island_camera_position_right">Right</string>
+    <string name="island_show_calls_title">Calls</string>
+    <string name="island_call_incoming">Incoming call</string>
+    <string name="island_call_incoming_app">%1$s call</string>
+    <string name="island_call_answer">Answer</string>
+    <string name="island_call_decline">Decline</string>
+    <string name="island_call_end">End</string>
+    <string name="island_call_mute">Mute</string>
+    <string name="island_call_speaker">Speaker</string>
     <string name="island_calendar_view_event">View event</string>
     <string name="island_calendar_all_day">All day</string>
     <string name="island_line_peek_title">Line peek</string>
