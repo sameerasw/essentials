@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.consciousgate
 
+import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Column
@@ -90,7 +91,7 @@ class ConsciousGatePlugin : BaseIslandPlugin() {
                         scope.CameraRow(
                             start = {
                                 IslandBitmap(icon, scope.spec.cellSize, circle = true)
-                                Text(label, style = IslandTextStyles.title, maxLines = 1)
+                                MarqueeText(text = label, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                             },
                         )
                         RollingText(

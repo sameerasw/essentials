@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
-import androidx.compose.foundation.basicMarquee
+import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,12 +46,7 @@ fun NotificationExpanded(
                 horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
                 start = {
                     IslandBitmap(alert.icon ?: alert.appIcon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                    Text(
-                        text = sender,
-                        style = IslandTextStyles.title,
-                        maxLines = 1,
-                        modifier = Modifier.weight(1f).basicMarquee(iterations = Int.MAX_VALUE, initialDelayMillis = 1200),
-                    )
+                    MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                 },
             )
             if (message.isNotBlank()) {

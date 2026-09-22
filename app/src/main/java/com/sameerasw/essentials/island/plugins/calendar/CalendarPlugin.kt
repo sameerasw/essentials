@@ -1,8 +1,8 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
@@ -96,7 +96,7 @@ class CalendarPlugin : BaseIslandPlugin() {
                         scope.CameraRow(
                             start = {
                                 IslandIcon(R.drawable.rounded_calendar_today_24, size = 20.dp)
-                                Text(e.title, style = IslandTextStyles.title, maxLines = 1, modifier = Modifier.weight(1f).basicMarquee())
+                                MarqueeText(text = e.title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                             },
                             end = { RollingText(short) },
                         )

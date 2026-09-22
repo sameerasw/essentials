@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
-import androidx.compose.foundation.basicMarquee
+import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -58,13 +58,7 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec) {
 
 @Composable
 private fun LineText(text: String, align: TextAlign, weight: FontWeight, modifier: Modifier) {
-    Text(
-        text = text,
-        modifier = modifier.basicMarquee(iterations = Int.MAX_VALUE, initialDelayMillis = 1200),
-        maxLines = 1,
-        textAlign = align,
-        style = IslandTextStyles.line.copy(fontWeight = weight),
-    )
+    MarqueeText(text = text, style = IslandTextStyles.line.copy(fontWeight = weight), textAlign = align, modifier = modifier)
 }
 
 @OptIn(ExperimentalTextApi::class)

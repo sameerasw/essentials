@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -7,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LinearWavyProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -115,18 +114,18 @@ fun MediaExpanded(
                 }
             }
             Spacer(Modifier.height(12.dp))
-            Text(
+            MarqueeText(
                 text = title,
-                style = IslandTextStyles.title.copy(fontSize = 16.sp, textAlign = TextAlign.Center),
-                maxLines = 1,
-                modifier = Modifier.fillMaxWidth().basicMarquee(),
+                style = IslandTextStyles.title.copy(fontSize = 16.sp),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
             )
             Spacer(Modifier.height(4.dp))
-            Text(
+            MarqueeText(
                 text = artist,
-                style = IslandTextStyles.body.copy(textAlign = TextAlign.Center),
-                maxLines = 1,
-                modifier = Modifier.fillMaxWidth().basicMarquee(),
+                style = IslandTextStyles.body,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
             )
             Spacer(Modifier.height(20.dp))
             LinearWavyProgressIndicator(
