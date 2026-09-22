@@ -1,5 +1,14 @@
 package com.sameerasw.essentials.island.ui
 
+import com.sameerasw.essentials.R
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -93,6 +102,9 @@ fun IslandRoot(
     var visible by remember { mutableStateOf(stage != IslandStage.Hidden) }
     var dragCommitted by remember { mutableStateOf(false) }
     val showPreview by remember { derivedStateOf { collapse.value > 0f } }
+    val showDismissReveal by remember { derivedStateOf { dismissOffset.value != 0f } }
+    val revealDirection by remember { derivedStateOf { if (dismissOffset.value >= 0f) 1f else -1f } }
+    val dismissThresholdPx = with(density) { 48.dp.toPx() }
 
     LaunchedEffect(key) {
         if (stage != IslandStage.Hidden) visible = true
@@ -252,7 +264,16 @@ fun IslandRoot(
         ) {
             val item = key.itemKey?.let { state.items[it] ?: lastItems[it] }
             val previewing = key.stage == IslandStage.Expanded || key.stage == IslandStage.Line
+            val cardCorner = if (key.stage == IslandStage.Expanded) spec.expandedCorner else spec.compactHeight / 2
             Box {
+            if (showDismissReveal && item?.dismissible == true) {
+                DismissReveal(
+                    fromStart = revealDirection > 0f,
+                    progress = { (abs(dismissOffset.value) / dismissThresholdPx).coerceIn(0f, 1f) },
+                    corner = cardCorner,
+                    modifier = Modifier.matchParentSize(),
+                )
+            }
             Box(
                 Modifier
                     .onSizeChanged {
@@ -261,9 +282,13 @@ fun IslandRoot(
                     }
                     .graphicsLayer {
                         alpha = contentAlpha.value * (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
-                            if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width).coerceIn(0f, 1f) else 1f
+                            if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
                         translationX = dismissOffset.value
-                    },
+                        val sliding = dismissOffset.value != 0f
+                        shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
+                        clip = sliding
+                    }
+                    .background(Color.Black),
             ) {
                 when (key.stage) {
                     IslandStage.Hidden -> Spacer(Modifier.size(spec.cameraDiameter, spec.compactHeight))
@@ -306,3 +331,27 @@ fun IslandRoot(
 }
 
 private fun lerp(a: Int, b: Int, t: Float): Int = (a + (b - a) * t).roundToInt()
+
+@Composable
+private fun DismissReveal(fromStart: Boolean, progress: () -> Float, corner: Dp, modifier: Modifier) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(corner))
+            .background(Color.White.copy(alpha = 0.1f))
+            .padding(horizontal = 20.dp),
+        contentAlignment = if (fromStart) Alignment.CenterStart else Alignment.CenterEnd,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.graphicsLayer {
+                val p = progress()
+                alpha = p
+                translationX = (if (fromStart) -1f else 1f) * (1f - p) * 12.dp.toPx()
+            },
+        ) {
+            Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+            Text(stringResource(R.string.action_dismiss), style = IslandTextStyles.title)
+        }
+    }
+}
