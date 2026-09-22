@@ -40,7 +40,7 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec) {
             horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
         ) {
             Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) { line.icon() }
-            LineText(line.start, TextAlign.End, FontWeight.SemiBold, Modifier.weight(1f))
+            LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
         }
         Spacer(Modifier.width(spec.cameraSlotWidth))
         Row(
