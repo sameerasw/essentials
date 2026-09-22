@@ -1494,8 +1494,8 @@
     <string name="feat_watch_controls_desc">Personalizza i controlli</string>
     <string name="watch_call_sync_title">Chiamate</string>
     <string name="watch_notif_sync_title">Notifiche</string>
-    <string name="setting_app_icon_title">Icona dell\'app</string>
-    <string name="setting_app_icon_desc">Personalizza l\'icona del launcher</string>
+    <string name="setting_app_icon_title">Icona app</string>
+    <string name="setting_app_icon_desc">Personalizza l\'icona del launcher schermata home</string>
     <string name="settings_translate_mode_desc">Mantieni premuto ogni testo per tradurre e contribuire alla comunità</string>
     <string name="settings_genai_automation_title">Abilità GenAI</string>
 </resources>
