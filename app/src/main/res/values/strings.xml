@@ -2784,6 +2784,7 @@
     <string name="slider_value_label">Value</string>
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
+    <string name="island_dismiss_on_outside_title">Dismiss on outside activity</string>
     <string name="island_like_while_playing_title">Like music while playing</string>
     <string name="island_gesture_visuals_hint">Turn on Time &amp; battery to see volume, brightness and sound mode changes on the island.</string>
     <string name="island_battery_percentage_title">Show percentage</string>

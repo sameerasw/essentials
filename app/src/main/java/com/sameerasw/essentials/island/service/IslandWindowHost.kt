@@ -40,6 +40,9 @@ class IslandWindowHost(
 
     var maxWidthPx: Int = 0
 
+    // Fired for touches anywhere outside the island, via FLAG_WATCH_OUTSIDE_TOUCH.
+    var onOutsideTouch: (() -> Unit)? = null
+
     private val density get() = context.resources.displayMetrics.density
     private val touchPad get() = (8 * density).roundToInt()
 
@@ -142,7 +145,7 @@ class IslandWindowHost(
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-            (if (touchable) 0 else WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE),
+            (if (touchable) WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH else WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE),
         PixelFormat.TRANSLUCENT,
     ).apply {
         gravity = Gravity.TOP or Gravity.START
@@ -204,6 +207,10 @@ class IslandWindowHost(
     }
 
     private fun forward(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_OUTSIDE) {
+            onOutsideTouch?.invoke()
+            return false
+        }
         val target = composeView ?: return false
         val draw = drawParams ?: return false
         val touch = touchParams ?: return false

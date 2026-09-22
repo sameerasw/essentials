@@ -515,6 +515,17 @@ fun IslandSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_hide_in_owner_app"),
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_touch_app_24,
+                title = stringResource(R.string.island_dismiss_on_outside_title),
+                isChecked = viewModel.isIslandDismissOnOutside.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandDismissOnOutside(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_dismiss_on_outside"),
+            )
         }
 
         Text(

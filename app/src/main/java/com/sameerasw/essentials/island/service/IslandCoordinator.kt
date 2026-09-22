@@ -92,6 +92,7 @@ class IslandCoordinator(
     private var isFullscreenApp = false
     private var running = false
     private var foregroundPackage: String? = null
+    private var textInputActive = false
 
     private val isWindowSuppressed get() = isLandscape || isFullscreenApp
     private val isContentSuppressed: Boolean
@@ -112,7 +113,10 @@ class IslandCoordinator(
             plugins.forEach { it.onUserInteraction(focused) }
         }
 
-        override fun onTextInputChanged(active: Boolean) = windowHost.setTextInput(active)
+        override fun onTextInputChanged(active: Boolean) {
+            textInputActive = active
+            windowHost.setTextInput(active)
+        }
 
         override fun onAdvance(): Boolean = controller.advanceFocused()
 
@@ -165,6 +169,14 @@ class IslandCoordinator(
         }
     }
 
+    // Anything the user touches outside the island collapses the expanded card, when enabled.
+    private fun onOutsideTouch() {
+        if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
+        if (textInputActive) return
+        if (controller.state.value.stage != IslandStage.Expanded) return
+        mainHandler.post { controller.collapse() }
+    }
+
     fun onForegroundPackage(packageName: String) {
         if (foregroundPackage == packageName) return
         foregroundPackage = packageName
@@ -211,6 +223,7 @@ class IslandCoordinator(
         scope = newScope
         applyConfig()
         val geo = geometry ?: return
+        windowHost.onOutsideTouch = ::onOutsideTouch
         val attached = windowHost.attach(geo) {
             val state by controller.state.collectAsState()
             val layoutSpec by spec.collectAsState()
