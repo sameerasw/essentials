@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui
 
+import kotlin.math.hypot
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CancellationException
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableFloatStateOf
@@ -57,14 +59,13 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.state.IslandUiState
-import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 interface IslandActions {
-    fun onTap(itemKey: String?)
+    fun onTap(itemKey: String?): Boolean
     fun onLongPress(itemKey: String?)
     fun onCollapse()
     fun onDismiss(): Boolean
@@ -108,6 +109,8 @@ fun IslandRoot(
     var surfaceSize by remember { mutableStateOf(IntSize.Zero) }
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
+    val wiggle = remember { Animatable(0f) }
+    val context = LocalContext.current
     // Written while the expanded content is measured, so the surface reads it in the same frame (no stale height
     // from a previously expanded card).
     val expandedHeight = remember { IntArray(1) }
@@ -176,6 +179,25 @@ fun IslandRoot(
         contentAlpha.animateTo(1f, tween(durationMillis = if (growing) 180 else 120, delayMillis = if (growing) 30 else 0))
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
+
+    fun rejectTap() {
+        scope.launch {
+            val px = with(density) { 4.dp.toPx() }
+            for ((i, x) in listOf(-px, px, -px * 0.5f, 0f).withIndex()) {
+                wiggle.animateTo(x, tween(durationMillis = if (i == 0) 60 else 80))
+                if (x != 0f) IslandHaptics.wiggle(context)
+            }
+        }
+    }
+
+    fun handleTap(itemKey: String?) {
+        if (actions.onTap(itemKey)) IslandHaptics.tap(context) else rejectTap()
+    }
+
+    fun handleLongPress(itemKey: String?) {
+        IslandHaptics.longPress(context)
+        actions.onLongPress(itemKey)
+    }
 
     // Non-gesture collapses replay the swipe path: scrub progress to 1, then hand over to compact.
     DisposableEffect(Unit) {
@@ -249,18 +271,26 @@ fun IslandRoot(
                 )
                 .pointerInput(Unit) {
                     awaitEachGesture {
-                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                        val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
                         actions.onInteraction()
+                        val ramp = scope.launch {
+                            IslandHaptics.RAMP_DELAYS_MS.forEachIndexed { step, wait ->
+                                delay(wait)
+                                IslandHaptics.longPressRamp(context, step)
+                            }
+                        }
+                        while (true) {
+                            val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull() ?: break
+                            if (!change.pressed || (change.position - down.position).getDistance() > viewConfiguration.touchSlop) break
+                        }
+                        ramp.cancel()
                     }
                 }
                 .pointerInput(stage) {
                     if (stage == IslandStage.Hidden) return@pointerInput
                     detectTapGestures(
-                        onTap = { actions.onTap(null) },
-                        onLongPress = {
-                            HapticUtil.performHeavyHaptic(view)
-                            actions.onLongPress(null)
-                        },
+                        onTap = { handleTap(null) },
+                        onLongPress = { handleLongPress(null) },
                     )
                 }
                 .pointerInput(stage) {
@@ -275,6 +305,8 @@ fun IslandRoot(
                     var towardCamera = false
                     var crossed = false
                     var progress = 0f
+                    var lastStep = 0f
+                    val stepPx = 16.dp.toPx()
                     fun inwardSign(): Float {
                         val cameraX = size.width / 2f
                         return when {
@@ -289,6 +321,7 @@ fun IslandRoot(
                             startX = start.x
                             dx = 0f
                             dy = 0f
+                            lastStep = 0f
                             crossed = false
                         },
                         onDrag = { change, amount ->
@@ -311,7 +344,13 @@ fun IslandRoot(
                             val now = if (towardCamera) progress > COLLAPSE_COMMIT else dismissible && abs(dx) > dismissThreshold
                             if (now != crossed) {
                                 crossed = now
-                                HapticUtil.performGestureThresholdHaptic(view)
+                                if (now) IslandHaptics.thresholdReached(context) else IslandHaptics.thresholdLeft(context)
+                            } else {
+                                val dist = hypot(dx, dy)
+                                if (abs(dist - lastStep) >= stepPx) {
+                                    lastStep = dist
+                                    IslandHaptics.dragStep(context)
+                                }
                             }
                         },
                         onDragEnd = {
@@ -322,6 +361,7 @@ fun IslandRoot(
                                 val commit = crossed || inwardVelocity > 2f
                                 scope.launch {
                                     if (commit) {
+                                        IslandHaptics.commit(context)
                                         collapse.animateTo(1f, IslandMotion.fling(), initialVelocity = inwardVelocity.coerceIn(0f, 8f))
                                         dragCommitted = true
                                         actions.onCollapse()
@@ -334,6 +374,7 @@ fun IslandRoot(
                                 val commit = dismissible && (crossed || abs(v.x) > 1500f)
                                 scope.launch {
                                     if (commit) {
+                                        IslandHaptics.commit(context)
                                         val dir = if ((if (abs(v.x) > 1500f) v.x else dx) > 0f) 1f else -1f
                                         dismissOffset.animateTo(dir * flyOff, IslandMotion.fling(), initialVelocity = v.x)
                                         dismissCommitted = true
@@ -397,7 +438,7 @@ fun IslandRoot(
                     .graphicsLayer {
                         alpha = contentAlpha.value * (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
                             if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
-                        translationX = dismissOffset.value
+                        translationX = dismissOffset.value + wiggle.value
                         val m = contentMotion.value - if (previewing) collapse.value.coerceIn(0f, 1f) else 0f
                         val scale = 1f + contentScaleFor(key.stage) * m
                         scaleX = scale
@@ -410,7 +451,11 @@ fun IslandRoot(
                     }
                     .drawBehind { if (dismissOffset.value != 0f) drawRect(Color.Black) },
             ) {
-                StageContent(key.stage, item, state, spec, actions, interactive = true)
+                StageContent(
+                    key.stage, item, state, spec, actions, interactive = true,
+                    onCellTap = ::handleTap,
+                    onCellLongPress = ::handleLongPress,
+                )
             }
             if (previewing && showPreview) {
                 // Compact content fades in underneath the finger, so release only has to finish the motion.
@@ -478,7 +523,7 @@ private fun contentScaleFor(stage: IslandStage): Float = when (stage) {
 }
 
 private val NoActions = object : IslandActions {
-    override fun onTap(itemKey: String?) {}
+    override fun onTap(itemKey: String?): Boolean = false
     override fun onLongPress(itemKey: String?) {}
     override fun onCollapse() {}
     override fun onDismiss(): Boolean = false
@@ -494,19 +539,17 @@ private fun StageContent(
     spec: IslandLayoutSpec,
     actions: IslandActions,
     interactive: Boolean,
+    onCellTap: (String) -> Unit = {},
+    onCellLongPress: (String) -> Unit = {},
 ) {
-    val view = LocalView.current
     val a = if (interactive) actions else NoActions
     when (stage) {
         IslandStage.Hidden -> Spacer(Modifier.size(spec.cameraDiameter, spec.compactHeight))
         IslandStage.Compact -> CompactTemplate(
             state = state,
             spec = spec,
-            onCellTap = { a.onTap(it) },
-            onCellLongPress = {
-                if (interactive) HapticUtil.performHeavyHaptic(view)
-                a.onLongPress(it)
-            },
+            onCellTap = { if (interactive) onCellTap(it) },
+            onCellLongPress = { if (interactive) onCellLongPress(it) },
         )
         IslandStage.Line -> item?.line?.let { LineTemplate(it, spec) }
             ?: Spacer(Modifier.size(spec.lineWidth, spec.compactHeight))

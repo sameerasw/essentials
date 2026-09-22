@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
@@ -46,7 +46,7 @@ import com.sameerasw.essentials.island.ui.components.RollingText
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.utils.FlashlightUtil
-import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.island.ui.IslandHaptics
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -194,7 +194,7 @@ class FlashlightPlugin : BaseIslandPlugin() {
 // Drag or tap anywhere on the pill to set the torch level, like the old canvas slider.
 @Composable
 private fun LevelPill(initial: Float, height: Dp, onChange: (Float) -> Unit, modifier: Modifier = Modifier) {
-    val view = LocalView.current
+    val context = LocalContext.current
     var level by remember { mutableFloatStateOf(initial.coerceIn(0.01f, 1f)) }
     var lastHapticStep by remember { mutableIntStateOf((level * 10).toInt()) }
     fun update(x: Float, width: Int) {
@@ -203,7 +203,7 @@ private fun LevelPill(initial: Float, height: Dp, onChange: (Float) -> Unit, mod
         val step = (level * 10).toInt()
         if (step != lastHapticStep) {
             lastHapticStep = step
-            HapticUtil.performSliderHaptic(view)
+            IslandHaptics.sliderStep(context)
         }
     }
     Box(

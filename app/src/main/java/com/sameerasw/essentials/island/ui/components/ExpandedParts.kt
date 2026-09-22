@@ -23,13 +23,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandTextStyles
-import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.island.ui.IslandHaptics
 
 // The top row of every expanded view: content split around the camera, same height as the compact pill.
 @Composable
@@ -85,7 +85,7 @@ fun ConnectedButtonRow(
     modifier: Modifier = Modifier,
     container: Color = Color.White.copy(alpha = 0.14f),
 ) {
-    val view = LocalView.current
+    val context = LocalContext.current
     val outer = height / 2
     val inner = 4.dp
     Row(modifier.fillMaxWidth().height(height), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -106,7 +106,7 @@ fun ConnectedButtonRow(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = ripple(color = Color.White),
                     ) {
-                        HapticUtil.performLightHaptic(view)
+                        IslandHaptics.button(context)
                         item.onClick()
                     },
                 contentAlignment = Alignment.Center,

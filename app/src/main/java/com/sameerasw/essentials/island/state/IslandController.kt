@@ -67,18 +67,21 @@ class IslandController(
         }
     }
 
-    fun onTap(itemKey: String?) {
+    fun onTap(itemKey: String?): Boolean {
         val current = _state.value
-        when (current.stage) {
-            IslandStage.Hidden -> Unit
-            IslandStage.Expanded -> collapse()
-            IslandStage.Line -> current.focusedKey?.let { expand(it) }
+        return when (current.stage) {
+            IslandStage.Hidden -> false
+            IslandStage.Expanded -> {
+                collapse()
+                true
+            }
+            IslandStage.Line -> current.focusedKey?.let { expand(it); true } ?: false
             IslandStage.Compact -> {
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
-                    ?: return
-                if (target.interactions.onTap?.invoke() == true) return
-                expand(target.key)
+                    ?: return false
+                if (target.interactions.onTap?.invoke() != true) expand(target.key)
+                true
             }
         }
     }
