@@ -212,7 +212,7 @@ fun IslandRoot(
             scope.launch {
                 dismissOffset.snapTo(0f)
                 val finished = try {
-                    collapse.animateTo(1f, IslandMotion.fling())
+                    collapse.animateTo(1f, IslandMotion.collapseProgress())
                     true
                 } catch (_: CancellationException) {
                     // Interrupted by another animation (a drag, or the stage already changed): still hand over.
@@ -391,11 +391,11 @@ fun IslandRoot(
                                 scope.launch {
                                     if (commit) {
                                         IslandHaptics.commit(context)
-                                        collapse.animateTo(1f, IslandMotion.fling(), initialVelocity = inwardVelocity.coerceIn(0f, 8f))
+                                        collapse.animateTo(1f, IslandMotion.release(), initialVelocity = inwardVelocity.coerceIn(0f, 8f))
                                         dragCommitted = true
                                         actions.onCollapse()
                                     } else {
-                                        collapse.animateTo(0f, IslandMotion.fling(), initialVelocity = inwardVelocity)
+                                        collapse.animateTo(0f, IslandMotion.release(), initialVelocity = inwardVelocity)
                                     }
                                 }
                             } else {
@@ -416,7 +416,7 @@ fun IslandRoot(
                             }
                         },
                         onDragCancel = {
-                            scope.launch { collapse.animateTo(0f, IslandMotion.fling()) }
+                            scope.launch { collapse.animateTo(0f, IslandMotion.release()) }
                             scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
                         },
                     )
