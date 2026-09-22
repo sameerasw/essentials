@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.flashlight
 
+import androidx.compose.material3.MaterialTheme
 import android.content.Context
 import android.hardware.camera2.CameraManager
 import android.os.Build
@@ -112,18 +113,18 @@ class FlashlightPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = if (levels) {
                     listOf(
-                        CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp) },
+                        CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
                         CompactCell("flash.level") { RollingText(percentText) },
                     )
                 } else {
-                    listOf(CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp) })
+                    listOf(CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) })
                 },
-                line = LineContent(icon = { IslandIcon(R.drawable.rounded_flashlight_on_24) }, start = "", end = percentText),
+                line = LineContent(icon = { IslandIcon(R.drawable.rounded_flashlight_on_24, tint = MaterialTheme.colorScheme.primary) }, start = "", end = percentText),
                 expanded = ExpandedContent { scope ->
                     Column(Modifier.padding(top = scope.spec.expandedTopPadding, bottom = 20.dp)) {
                         scope.CameraRow(
                             horizontalPadding = 20.dp,
-                            start = { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 20.dp) },
+                            start = { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 20.dp, tint = MaterialTheme.colorScheme.primary) },
                             end = { RollingText(percentText) },
                         )
                         if (levels) {

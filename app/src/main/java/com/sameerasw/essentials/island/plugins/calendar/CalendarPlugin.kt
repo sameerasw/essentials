@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import androidx.compose.material3.MaterialTheme
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -83,11 +84,11 @@ class CalendarPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.CALENDAR,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("cal.icon") { IslandIcon(R.drawable.rounded_calendar_today_24, size = 18.dp) },
+                    CompactCell("cal.icon") { IslandIcon(R.drawable.rounded_calendar_today_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
                     CompactCell("cal.time") { RollingText(short) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(R.drawable.rounded_calendar_today_24) },
+                    icon = { IslandIcon(R.drawable.rounded_calendar_today_24, tint = MaterialTheme.colorScheme.primary) },
                     start = e.title,
                     end = full,
                 ),
@@ -95,7 +96,7 @@ class CalendarPlugin : BaseIslandPlugin() {
                     Column(Modifier.padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedPadding)) {
                         scope.CameraRow(
                             start = {
-                                IslandIcon(R.drawable.rounded_calendar_today_24, size = 20.dp)
+                                IslandIcon(R.drawable.rounded_calendar_today_24, size = 20.dp, tint = MaterialTheme.colorScheme.primary)
                                 MarqueeText(text = e.title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                             },
                             end = { RollingText(short) },
