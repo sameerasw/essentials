@@ -1,0 +1,164 @@
+package com.sameerasw.essentials.island.plugins.media
+
+import android.graphics.Bitmap
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.island.model.IslandExpandedScope
+import com.sameerasw.essentials.island.ui.IslandMotion
+import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
+import com.sameerasw.essentials.island.ui.components.ConnectedItem
+import com.sameerasw.essentials.island.ui.components.IslandIcon
+import kotlinx.coroutines.delay
+
+class MediaActions(
+    val playPause: () -> Unit,
+    val next: () -> Unit,
+    val previous: () -> Unit,
+    val like: () -> Unit,
+    val progress: () -> Float,
+)
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun MediaExpanded(
+    title: String,
+    artist: String,
+    artwork: Bitmap?,
+    accent: Color,
+    playing: Boolean,
+    liked: Boolean,
+    actions: MediaActions,
+    scope: IslandExpandedScope,
+) {
+    val spec = scope.spec
+    var progress by remember { mutableFloatStateOf(actions.progress()) }
+    LaunchedEffect(playing) {
+        while (true) {
+            progress = actions.progress()
+            if (!playing) break
+            delay(200L)
+        }
+    }
+    val image = remember(artwork) { artwork?.asImageBitmap() }
+
+    Box {
+        if (image != null) {
+            Image(
+                bitmap = image,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize().blur(40.dp).alpha(0.67f),
+            )
+            Box(
+                Modifier.matchParentSize().background(
+                    Brush.verticalGradient(
+                        0f to Color.Black,
+                        0.45f to Color.Black,
+                        0.75f to Color.Black.copy(alpha = 0.59f),
+                        1f to Color.Transparent,
+                    ),
+                ),
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp, bottom = maxOf(spec.expandedPadding, 16.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(Modifier.height(spec.cameraDiameter + 28.dp + spec.expandedTopPadding))
+            AnimatedContent(
+                targetState = image,
+                transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+                label = "playerArt",
+            ) { art ->
+                Box(Modifier.size(88.dp).clip(RoundedCornerShape(20.dp)).background(Color.White.copy(alpha = 0.1f))) {
+                    if (art != null) {
+                        Image(art, null, contentScale = ContentScale.Crop, modifier = Modifier.matchParentSize())
+                    }
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = title,
+                style = IslandTextStyles.title.copy(fontSize = 16.sp, textAlign = TextAlign.Center),
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth().basicMarquee(),
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = artist,
+                style = IslandTextStyles.body.copy(textAlign = TextAlign.Center),
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth().basicMarquee(),
+            )
+            Spacer(Modifier.height(20.dp))
+            LinearWavyProgressIndicator(
+                progress = { progress },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                color = accent,
+                trackColor = Color.White.copy(alpha = 0.2f),
+                amplitude = { if (playing) 1f else 0f },
+            )
+            Spacer(Modifier.height(20.dp))
+            ConnectedButtonRow(
+                height = 52.dp,
+                items = listOf(
+                    ConnectedItem(actions.like) {
+                        IslandIcon(
+                            if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                            tint = if (liked) accent else Color.White,
+                            size = 24.dp,
+                        )
+                    },
+                    ConnectedItem(actions.playPause) {
+                        AnimatedContent(
+                            targetState = playing,
+                            transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+                            label = "playPause",
+                        ) {
+                            IslandIcon(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, size = 26.dp)
+                        }
+                    },
+                    ConnectedItem(actions.next) { IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp) },
+                ),
+            )
+        }
+    }
+}

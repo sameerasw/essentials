@@ -2804,6 +2804,12 @@
     <string name="island_catch_up_title">Catch up</string>
     <string name="island_catch_up_desc">Keep last notification in island for longer</string>
     <string name="island_catch_up_timeout_title">Catch up duration</string>
+    <string name="island_line_peek_title">Line peek</string>
+    <string name="island_line_peek_desc">Briefly show updates across the island, then return to compact</string>
+    <string name="island_notif_compact_heads_up_title">Compact heads up</string>
+    <string name="island_notif_compact_heads_up_desc">Show new notifications as a line peek</string>
+    <string name="island_media_peek_song_change_title">Peek song change</string>
+    <string name="island_media_peek_song_change_desc">Show the new track as a line peek</string>
 
     <string name="shizuku_not_running_title">Shizuku is not running</string>
     <string name="shizuku_not_running_desc">Please start Shizuku to enable features.</string>

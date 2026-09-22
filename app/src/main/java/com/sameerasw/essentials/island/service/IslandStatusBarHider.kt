@@ -7,7 +7,7 @@
  * Description: Utility helper for IslandStatusBarHider.kt.
  */
 
-package com.sameerasw.essentials.utils.island
+package com.sameerasw.essentials.island.service
 
 import android.content.Context
 import com.sameerasw.essentials.utils.StatusBarManager

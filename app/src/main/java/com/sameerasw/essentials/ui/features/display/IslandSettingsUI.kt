@@ -46,10 +46,7 @@ import androidx.compose.ui.unit.dp
 import android.content.Intent
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
-import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
@@ -426,32 +423,17 @@ fun IslandSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_show_glow"),
             )
 
-            val tapActionLabel = if (viewModel.islandTapAction.value == SettingsRepository.ISLAND_TAP_ACTION_EXPAND) {
-                stringResource(R.string.island_tap_action_expand)
-            } else {
-                stringResource(R.string.island_tap_action_open)
-            }
-            ConfigPickerItem(
-                title = stringResource(R.string.island_tap_action_title),
-                selectedValue = tapActionLabel,
-                iconRes = R.drawable.rounded_touch_app_24,
-                modifier = Modifier.fillMaxWidth().highlight(highlightSetting == "island_tap_action"),
-            ) {
-                SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.island_tap_action_open)) },
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandTapAction(SettingsRepository.ISLAND_TAP_ACTION_OPEN)
-                    },
-                )
-                SegmentedDropdownMenuItem(
-                    text = { Text(stringResource(R.string.island_tap_action_expand)) },
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandTapAction(SettingsRepository.ISLAND_TAP_ACTION_EXPAND)
-                    },
-                )
-            }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_motion_play_24,
+                title = stringResource(R.string.island_line_peek_title),
+                description = stringResource(R.string.island_line_peek_desc),
+                isChecked = viewModel.isIslandLineStageEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandLineStageEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_line_stage_enabled"),
+            )
         }
 
         Text(
@@ -498,6 +480,24 @@ fun IslandSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_dynamic_hide_status_bar"),
             )
+
+            AnimatedVisibility(
+                visible = viewModel.isIslandLineStageEnabled.value,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notification_sound_24,
+                    title = stringResource(R.string.island_notif_compact_heads_up_title),
+                    description = stringResource(R.string.island_notif_compact_heads_up_desc),
+                    isChecked = viewModel.isIslandNotifCompactHeadsUp.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifCompactHeadsUp(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_notif_compact_heads_up"),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
@@ -554,6 +554,24 @@ fun IslandSettingsUI(
                 onSettingsClick = { showMediaAppSelectionSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_show_media"),
             )
+
+            AnimatedVisibility(
+                visible = viewModel.isIslandShowMedia.value && viewModel.isIslandLineStageEnabled.value,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_music_note_24,
+                    title = stringResource(R.string.island_media_peek_song_change_title),
+                    description = stringResource(R.string.island_media_peek_song_change_desc),
+                    isChecked = viewModel.isIslandMediaPeekSongChange.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandMediaPeekSongChange(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_media_peek_song_change"),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_calendar_today_24,

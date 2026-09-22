@@ -83,7 +83,7 @@ import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.SurfaceFlingerControl
 import com.sameerasw.essentials.utils.TestNotificationUtil
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
-import com.sameerasw.essentials.utils.island.IslandStatusBarHider
+import com.sameerasw.essentials.island.service.IslandStatusBarHider
 import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.viewmodels.state.DashSettings
 import com.sameerasw.essentials.viewmodels.state.RippleSettings
@@ -190,9 +190,9 @@ class MainViewModel : ViewModel() {
     val isIslandDynamicHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
-    val isIslandTapActionEnabled = mutableStateOf(true)
-    val islandTapAction = mutableStateOf(SettingsRepository.ISLAND_TAP_ACTION_OPEN)
-    val isIslandSwipeUpActionEnabled = mutableStateOf(true)
+    val isIslandLineStageEnabled = mutableStateOf(true)
+    val isIslandMediaPeekSongChange = mutableStateOf(true)
+    val isIslandNotifCompactHeadsUp = mutableStateOf(true)
     val isIslandCatchUpEnabled = mutableStateOf(false)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
     val isIslandShowGlow = mutableStateOf(true)
@@ -774,14 +774,14 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_TIMEOUT_MS ->
                         islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
 
-                    SettingsRepository.KEY_ISLAND_TAP_ACTION_ENABLED ->
-                        isIslandTapActionEnabled.value = settingsRepository.isIslandTapActionEnabled()
+                    SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED ->
+                        isIslandLineStageEnabled.value = settingsRepository.isIslandLineStageEnabled()
 
-                    SettingsRepository.KEY_ISLAND_TAP_ACTION ->
-                        islandTapAction.value = settingsRepository.getIslandTapAction()
+                    SettingsRepository.KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE ->
+                        isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
 
-                    SettingsRepository.KEY_ISLAND_SWIPE_UP_ACTION_ENABLED ->
-                        isIslandSwipeUpActionEnabled.value = settingsRepository.isIslandSwipeUpActionEnabled()
+                    SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP ->
+                        isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -2161,9 +2161,9 @@ class MainViewModel : ViewModel() {
             )
         isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
         islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
-        isIslandTapActionEnabled.value = settingsRepository.isIslandTapActionEnabled()
-        islandTapAction.value = settingsRepository.getIslandTapAction()
-        isIslandSwipeUpActionEnabled.value = settingsRepository.isIslandSwipeUpActionEnabled()
+        isIslandLineStageEnabled.value = settingsRepository.isIslandLineStageEnabled()
+        isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
+        isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
@@ -5083,19 +5083,19 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandTimeoutMs(value)
     }
 
-    fun setIslandTapActionEnabled(enabled: Boolean) {
-        isIslandTapActionEnabled.value = enabled
-        settingsRepository.setIslandTapActionEnabled(enabled)
+    fun setIslandLineStageEnabled(enabled: Boolean) {
+        isIslandLineStageEnabled.value = enabled
+        settingsRepository.setIslandLineStageEnabled(enabled)
     }
 
-    fun setIslandTapAction(value: String) {
-        islandTapAction.value = value
-        settingsRepository.setIslandTapAction(value)
+    fun setIslandMediaPeekSongChange(enabled: Boolean) {
+        isIslandMediaPeekSongChange.value = enabled
+        settingsRepository.setIslandMediaPeekSongChangeEnabled(enabled)
     }
 
-    fun setIslandSwipeUpActionEnabled(enabled: Boolean) {
-        isIslandSwipeUpActionEnabled.value = enabled
-        settingsRepository.setIslandSwipeUpActionEnabled(enabled)
+    fun setIslandNotifCompactHeadsUp(enabled: Boolean) {
+        isIslandNotifCompactHeadsUp.value = enabled
+        settingsRepository.setIslandNotifCompactHeadsUpEnabled(enabled)
     }
 
     fun setIslandCatchUpEnabled(enabled: Boolean) {

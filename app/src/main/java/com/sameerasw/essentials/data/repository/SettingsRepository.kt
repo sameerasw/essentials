@@ -453,11 +453,6 @@ class SettingsRepository(
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
-        const val KEY_ISLAND_TAP_ACTION_ENABLED = "island_tap_action_enabled"
-        const val KEY_ISLAND_TAP_ACTION = "island_tap_action"
-        const val ISLAND_TAP_ACTION_OPEN = "open"
-        const val ISLAND_TAP_ACTION_EXPAND = "expand"
-        const val KEY_ISLAND_SWIPE_UP_ACTION_ENABLED = "island_swipe_up_action_enabled"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
         const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
@@ -475,6 +470,10 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_STYLE = "island_battery_style"
         const val ISLAND_BATTERY_STYLE_RING = "ring"
         const val ISLAND_BATTERY_STYLE_ICON = "icon"
+        const val KEY_ISLAND_LINE_STAGE_ENABLED = "island_line_stage_enabled"
+        const val KEY_ISLAND_PEEK_DURATION_MS = "island_peek_duration_ms"
+        const val KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE = "island_media_peek_song_change"
+        const val KEY_ISLAND_NOTIF_COMPACT_HEADS_UP = "island_notif_compact_heads_up"
 
         // Status Glance
         const val KEY_STATUS_GLANCE_ENABLED = "status_glance_enabled"
@@ -3439,15 +3438,6 @@ class SettingsRepository(
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
 
-    fun isIslandTapActionEnabled(): Boolean = getBoolean(KEY_ISLAND_TAP_ACTION_ENABLED, true)
-    fun setIslandTapActionEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TAP_ACTION_ENABLED, enabled)
-
-    fun getIslandTapAction(): String = getString(KEY_ISLAND_TAP_ACTION, ISLAND_TAP_ACTION_OPEN) ?: ISLAND_TAP_ACTION_OPEN
-    fun setIslandTapAction(value: String) = putString(KEY_ISLAND_TAP_ACTION, value)
-
-    fun isIslandSwipeUpActionEnabled(): Boolean = getBoolean(KEY_ISLAND_SWIPE_UP_ACTION_ENABLED, true)
-    fun setIslandSwipeUpActionEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SWIPE_UP_ACTION_ENABLED, enabled)
-
     fun isIslandShowGlowEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_GLOW, true)
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
 
@@ -3495,6 +3485,18 @@ class SettingsRepository(
     fun getIslandBatteryStyle(): String =
         getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING
     fun setIslandBatteryStyle(value: String) = putString(KEY_ISLAND_BATTERY_STYLE, value)
+
+    fun isIslandLineStageEnabled(): Boolean = getBoolean(KEY_ISLAND_LINE_STAGE_ENABLED, true)
+    fun setIslandLineStageEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_LINE_STAGE_ENABLED, enabled)
+
+    fun getIslandPeekDurationMs(): Long = getLong(KEY_ISLAND_PEEK_DURATION_MS, 3500L)
+    fun setIslandPeekDurationMs(value: Long) = putLong(KEY_ISLAND_PEEK_DURATION_MS, value)
+
+    fun isIslandMediaPeekSongChangeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE, true)
+    fun setIslandMediaPeekSongChangeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE, enabled)
+
+    fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
+    fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, enabled)
 
     fun applyHeadsUpSuppression(suppress: Boolean = isIslandSuppressSystemHeadsUpEnabled()) {
         val targetValue = if (suppress) 0 else 1

@@ -40,7 +40,7 @@ import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
 import com.sameerasw.essentials.services.handlers.DuoOverlayHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
-import com.sameerasw.essentials.services.handlers.IslandOverlayHandler
+import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -75,7 +75,7 @@ class ScreenOffAccessibilityService :
     private lateinit var pocketModeHandler: PocketModeHandler
     private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
     private lateinit var duoOverlayHandler: DuoOverlayHandler
-    lateinit var islandOverlayHandler: IslandOverlayHandler
+    lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
 
     private var lightSensor: Sensor? = null
@@ -301,7 +301,7 @@ class ScreenOffAccessibilityService :
             com.sameerasw.essentials.services.handlers
                 .SmartPixelsHandler(this)
         duoOverlayHandler = DuoOverlayHandler(this)
-        islandOverlayHandler = IslandOverlayHandler(this)
+        islandOverlayHandler = IslandCoordinator(this)
         statusGlanceHandler = StatusGlanceHandler(this)
 
         flashlightHandler.register()
