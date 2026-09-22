@@ -805,12 +805,12 @@ class DuoOverlayHandler(
 
                 when (rotation) {
                     android.view.Surface.ROTATION_90 -> {
-                        centerX = screenWidth * (1f - rawYRatio)
-                        centerY = screenHeight * rawXRatio
-                    }
-                    android.view.Surface.ROTATION_270 -> {
                         centerX = screenWidth * rawYRatio
                         centerY = screenHeight * (1f - rawXRatio)
+                    }
+                    android.view.Surface.ROTATION_270 -> {
+                        centerX = screenWidth * (1f - rawYRatio)
+                        centerY = screenHeight * rawXRatio
                     }
                     android.view.Surface.ROTATION_180 -> {
                         centerX = screenWidth * (1f - rawXRatio)
