@@ -763,6 +763,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_expanded_scale_title,
+                            R.string.island_expanded_scale_desc,
+                            "island_expanded_scale",
+                        ),
+                        SearchSetting(
                             R.string.island_line_peek_title,
                             R.string.island_line_peek_desc,
                             "island_line_stage_enabled",

@@ -245,8 +245,10 @@ class IslandCoordinator(
             expandedCorner = settings.getIslandExpandedRoundness().dp,
             expandedPadding = settings.getIslandExpandedPadding().dp,
             expandedTopPadding = settings.getIslandExpandedTopPadding().dp,
+            expandedScale = settings.getIslandExpandedScale().coerceIn(1f, 1.3f),
+            expandedOutset = (expandedWidth * (settings.getIslandExpandedScale().coerceIn(1f, 1.3f) - 1f) / 2f).dp,
         )
-        windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth) * density).toInt()
+        windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * settings.getIslandExpandedScale().coerceIn(1f, 1.3f)) * density).toInt()
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
@@ -292,6 +294,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_TOP_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TIMEOUT_MS,
             SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
+            SettingsRepository.KEY_ISLAND_EXPANDED_SCALE,
         )
     }
 }

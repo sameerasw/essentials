@@ -183,6 +183,7 @@ class MainViewModel : ViewModel() {
     val islandCutoutGap = mutableFloatStateOf(6f)
     val islandExpandedWidth = mutableFloatStateOf(360f)
     val islandExpandedRoundness = mutableFloatStateOf(24f)
+    val islandExpandedScale = mutableFloatStateOf(1f)
     val islandExpandedPadding = mutableFloatStateOf(16f)
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
@@ -2150,6 +2151,7 @@ class MainViewModel : ViewModel() {
         islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
         islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
+        islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
         islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
@@ -5032,6 +5034,11 @@ class MainViewModel : ViewModel() {
     fun setIslandExpandedWidth(value: Float) {
         islandExpandedWidth.floatValue = value
         settingsRepository.setIslandExpandedWidth(value)
+    }
+
+    fun setIslandExpandedScale(value: Float) {
+        islandExpandedScale.floatValue = value
+        settingsRepository.setIslandExpandedScale(value)
     }
 
     fun setIslandExpandedRoundness(value: Float) {

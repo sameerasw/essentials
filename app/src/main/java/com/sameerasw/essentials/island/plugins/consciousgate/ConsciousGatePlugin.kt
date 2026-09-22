@@ -87,7 +87,7 @@ class ConsciousGatePlugin : BaseIslandPlugin() {
                 ),
                 line = LineContent(icon = { IslandBitmap(icon, 24.dp, circle = true) }, start = label, end = timer),
                 expanded = ExpandedContent { scope ->
-                    Column(Modifier.padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedPadding)) {
+                    Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedPadding)) {
                         scope.CameraRow(
                             start = {
                                 IslandBitmap(icon, scope.spec.cellSize, circle = true)

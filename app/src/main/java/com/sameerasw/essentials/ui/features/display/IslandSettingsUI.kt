@@ -62,7 +62,7 @@ import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 private val ISLAND_PLACEMENT_KEYS = setOf("island_use_auto_detect", "island_camera_size", "island_max_width", "island_expanded_width", "island_cutout_gap")
-private val ISLAND_VISUALS_KEYS = setOf("island_expanded_roundness", "island_expanded_padding", "island_expanded_top_padding")
+private val ISLAND_VISUALS_KEYS = setOf("island_expanded_scale", "island_expanded_roundness", "island_expanded_padding", "island_expanded_top_padding")
 
 @Composable
 private fun IslandExpandableSection(
@@ -312,6 +312,21 @@ fun IslandSettingsUI(
             iconRes = R.drawable.rounded_rounded_corner_24,
             initiallyExpanded = highlightSetting in ISLAND_VISUALS_KEYS,
         ) {
+            ConfigSliderItem(
+                title = stringResource(R.string.island_expanded_scale_title),
+                description = stringResource(R.string.island_expanded_scale_desc),
+                value = viewModel.islandExpandedScale.floatValue,
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandExpandedScale(it)
+                },
+                valueRange = 1f..1.3f,
+                increment = 0.02f,
+                iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                valueFormatter = { "${(it * 100).toInt()}%" },
+                modifier = Modifier.highlight(highlightSetting == "island_expanded_scale"),
+            )
+
             ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_roundness_title),
                 value = viewModel.islandExpandedRoundness.floatValue,

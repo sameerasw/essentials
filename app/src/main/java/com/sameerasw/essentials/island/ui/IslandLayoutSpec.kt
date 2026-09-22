@@ -14,6 +14,8 @@ data class IslandLayoutSpec(
     val expandedCorner: Dp = 24.dp,
     val expandedPadding: Dp = 16.dp,
     val expandedTopPadding: Dp = 0.dp,
+    val expandedScale: Float = 1f,
+    val expandedOutset: Dp = 0.dp,
 ) {
     val compactHeight: Dp get() = cameraDiameter + cameraGap * 2
     val cameraSlotWidth: Dp get() = cameraDiameter + cameraGap * 2

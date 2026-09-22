@@ -2804,6 +2804,8 @@
     <string name="island_catch_up_title">Catch up</string>
     <string name="island_catch_up_desc">Keep last notification in island for longer</string>
     <string name="island_catch_up_timeout_title">Catch up duration</string>
+    <string name="island_expanded_scale_title">Expanded scale</string>
+    <string name="island_expanded_scale_desc">Grow the expanded island evenly on every side</string>
     <string name="island_line_peek_title">Line peek</string>
     <string name="island_line_peek_desc">Briefly show updates across the island, then return to compact</string>
     <string name="island_notif_compact_heads_up_title">Compact heads up</string>

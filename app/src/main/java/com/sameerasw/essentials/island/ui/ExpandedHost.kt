@@ -1,7 +1,9 @@
 package com.sameerasw.essentials.island.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,5 +29,12 @@ fun ExpandedHost(
             override fun openApp() = onOpen()
         }
     }
-    Box(Modifier.width(spec.expandedWidth)) { content.content(scope) }
+    
+    Box(
+        Modifier
+            .width(spec.expandedWidth + spec.expandedOutset * 2)
+            .heightIn(min = spec.expandedCorner * 2 + spec.compactHeight + spec.expandedOutset * 2),
+            
+        contentAlignment = Alignment.TopStart,
+    ) { content.content(scope) }
 }

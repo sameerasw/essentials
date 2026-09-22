@@ -47,7 +47,6 @@ class MediaPlugin : BaseIslandPlugin() {
     private var track: Track? = null
     private var playing = false
     private var liked = false
-    private var dismissedKey: String? = null
     private val pausedGrace = Runnable {
         active = null
         track = null
@@ -97,7 +96,7 @@ class MediaPlugin : BaseIslandPlugin() {
                 render()
                 return
             }
-            val isNewTrack = track != null || dismissedKey != null
+            val isNewTrack = track != null
             c.scope.launch {
                 val (art, accent) = withContext(Dispatchers.IO) {
                     val bmp = MediaSessionSource.artwork(context, metadata)
@@ -105,7 +104,6 @@ class MediaPlugin : BaseIslandPlugin() {
                 }
                 if (active?.sessionToken != playingController.sessionToken) return@launch
                 track = Track(key, title, artist, art, accent)
-                dismissedKey = null
                 render()
                 if (isNewTrack && settings.isIslandMediaPeekSongChangeEnabled()) {
                     c.request(PluginRequest.Peek(ITEM_KEY, settings.getIslandPeekDurationMs()))
@@ -135,7 +133,7 @@ class MediaPlugin : BaseIslandPlugin() {
     private fun render() {
         val t = track
         val controller = active
-        if (t == null || controller == null || t.key == dismissedKey) {
+        if (t == null || controller == null) {
             publish(null)
             return
         }
@@ -168,11 +166,6 @@ class MediaPlugin : BaseIslandPlugin() {
                     MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope)
                 },
                 accent = accent,
-                dismissible = true,
-                onDismiss = {
-                    dismissedKey = track?.key
-                    render()
-                },
                 onOpen = { openPlayer() },
             ),
         )

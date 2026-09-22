@@ -98,6 +98,7 @@ fun MediaExpanded(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(spec.expandedOutset)
                 .padding(start = 12.dp, end = 12.dp, bottom = maxOf(spec.expandedPadding, 16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

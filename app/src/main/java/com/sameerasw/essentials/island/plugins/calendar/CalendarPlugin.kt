@@ -93,7 +93,7 @@ class CalendarPlugin : BaseIslandPlugin() {
                     end = full,
                 ),
                 expanded = ExpandedContent { scope ->
-                    Column(Modifier.padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedPadding)) {
+                    Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedPadding)) {
                         scope.CameraRow(
                             start = {
                                 IslandIcon(R.drawable.rounded_calendar_today_24, size = 20.dp, tint = MaterialTheme.colorScheme.primary)

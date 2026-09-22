@@ -40,7 +40,7 @@ fun NotificationExpanded(
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
     Box {
         Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow))
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
             scope.CameraRow(
                 horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,

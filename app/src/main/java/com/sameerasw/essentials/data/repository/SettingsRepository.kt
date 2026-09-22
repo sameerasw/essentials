@@ -470,6 +470,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_STYLE = "island_battery_style"
         const val ISLAND_BATTERY_STYLE_RING = "ring"
         const val ISLAND_BATTERY_STYLE_ICON = "icon"
+        const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
         const val KEY_ISLAND_LINE_STAGE_ENABLED = "island_line_stage_enabled"
         const val KEY_ISLAND_PEEK_DURATION_MS = "island_peek_duration_ms"
         const val KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE = "island_media_peek_song_change"
@@ -3485,6 +3486,9 @@ class SettingsRepository(
     fun getIslandBatteryStyle(): String =
         getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING
     fun setIslandBatteryStyle(value: String) = putString(KEY_ISLAND_BATTERY_STYLE, value)
+
+    fun getIslandExpandedScale(): Float = getFloat(KEY_ISLAND_EXPANDED_SCALE, 1f)
+    fun setIslandExpandedScale(value: Float) = putFloat(KEY_ISLAND_EXPANDED_SCALE, value)
 
     fun isIslandLineStageEnabled(): Boolean = getBoolean(KEY_ISLAND_LINE_STAGE_ENABLED, true)
     fun setIslandLineStageEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_LINE_STAGE_ENABLED, enabled)

@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.graphics.TransformOrigin
@@ -102,6 +104,8 @@ fun IslandRoot(
     var surfaceSize by remember { mutableStateOf(IntSize.Zero) }
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
+    var expandedHeight by remember { mutableStateOf(0) }
+    val shiftHolder = remember { IntArray(1) }
     var previousStage by remember { mutableStateOf(stage) }
     var lastKey by remember { mutableStateOf(key) }
     var outgoing by remember { mutableStateOf<ContentKey?>(null) }
@@ -165,10 +169,13 @@ fun IslandRoot(
         launch { contentMotion.animateTo(0f, if (growing) IslandMotion.contentSpring() else IslandMotion.collapseFloat()) }
         contentAlpha.animateTo(1f, tween(durationMillis = if (growing) 180 else 120, delayMillis = if (growing) 30 else 0))
     }
-    LaunchedEffect(target, windowWidth) {
+    val outsetPx = with(density) { spec.expandedOutset.toPx() }
+    LaunchedEffect(target, windowWidth, stage) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
+        val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
         val left = (windowWidth - target.width) / 2
-        onTargetBoundsChanged(IntRect(left, surfaceTopPx, left + target.width, surfaceTopPx + target.height))
+        val top = (surfaceTopPx - g).coerceAtLeast(0)
+        onTargetBoundsChanged(IntRect(left, top, left + target.width, surfaceTopPx - g + target.height))
     }
 
     Box(Modifier.fillMaxSize().onSizeChanged { windowWidth = it.width }) {
@@ -176,6 +183,7 @@ fun IslandRoot(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = spec.surfaceTop)
+                .offset { IntOffset(0, -shiftHolder[0]) }
                 .graphicsLayer {
                     alpha = if (visible) 1f else 0f
                     // Corner follows the live height so it can never outrun the size animation.
@@ -194,6 +202,9 @@ fun IslandRoot(
                     // Never smaller than the camera, whatever a spring or fling does.
                     val w = (if (t > 0f) lerp(child.width, end.width, t) else child.width).coerceAtLeast(minSurfaceWidth)
                     val h = (if (t > 0f) lerp(child.height, end.height, t) else child.height).coerceAtLeast(minSurfaceHeight)
+                    val range = (expandedHeight - minSurfaceHeight).toFloat()
+                    val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
+                    shiftHolder[0] = (outsetPx * p).roundToInt()
                     layout(w, h) { child.place((w - child.width) / 2, 0) }
                 }
                 .onSizeChanged { surfaceSize = it }
@@ -349,6 +360,7 @@ fun IslandRoot(
                     .onSizeChanged {
                         target = it
                         if (key.stage == IslandStage.Compact) compactSize = it
+                        if (key.stage == IslandStage.Expanded) expandedHeight = it.height
                     }
                     .graphicsLayer {
                         alpha = contentAlpha.value * (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
