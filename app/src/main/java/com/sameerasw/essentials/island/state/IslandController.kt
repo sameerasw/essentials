@@ -101,9 +101,21 @@ class IslandController(
     fun dismissFocused(): Boolean {
         val item = _state.value.focused ?: return false
         if (!item.dismissible) return false
+        if (item.queue != null) {
+            item.onDismiss?.invoke()
+            restartExpandedTimer()
+            return true
+        }
         clearFocus()
         item.onDismiss?.invoke()
         recompute()
+        return true
+    }
+
+    fun advanceFocused(): Boolean {
+        val queue = _state.value.focused?.queue ?: return false
+        queue.onAdvance()
+        restartExpandedTimer()
         return true
     }
 

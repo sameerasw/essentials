@@ -6,6 +6,7 @@ import com.sameerasw.essentials.island.model.ExpandedContent
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.model.LineContent
+import com.sameerasw.essentials.island.model.QueueInfo
 import com.sameerasw.essentials.island.state.Cancellable
 import com.sameerasw.essentials.island.state.DelayScheduler
 import com.sameerasw.essentials.island.state.IslandController
@@ -133,5 +134,25 @@ class IslandControllerTest {
         assertEquals(IslandStage.Expanded, stage)
         pendingCommit!!.invoke()
         assertEquals(IslandStage.Compact, stage)
+    }
+
+    @Test fun queuedDismissKeepsExpanded() {
+        var dismissed = false
+        val next = item("notif")
+        val current = IslandItem(
+            key = "notif",
+            priority = 10,
+            placement = CompactPlacement.Dynamic,
+            compact = listOf(CompactCell("notif.icon") {}),
+            expanded = ExpandedContent { },
+            dismissible = true,
+            onDismiss = { dismissed = true },
+            queue = QueueInfo(next = next, onAdvance = {}),
+        )
+        controller.setItems("notif", listOf(current))
+        controller.expand("notif")
+        controller.dismissFocused()
+        assertEquals(true, dismissed)
+        assertEquals(IslandStage.Expanded, stage)
     }
 }

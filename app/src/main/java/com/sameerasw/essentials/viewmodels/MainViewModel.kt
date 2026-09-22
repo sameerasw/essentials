@@ -197,6 +197,7 @@ class MainViewModel : ViewModel() {
     val isIslandLineStageEnabled = mutableStateOf(true)
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandNotifCompactHeadsUp = mutableStateOf(true)
+    val isIslandNotifQueue = mutableStateOf(true)
     val isIslandCatchUpEnabled = mutableStateOf(false)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
     val isIslandShowGlow = mutableStateOf(true)
@@ -786,6 +787,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP ->
                         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
+                        isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -2172,6 +2176,7 @@ class MainViewModel : ViewModel() {
         isIslandLineStageEnabled.value = settingsRepository.isIslandLineStageEnabled()
         isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+        isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
@@ -5119,6 +5124,11 @@ class MainViewModel : ViewModel() {
     fun setIslandMediaPeekSongChange(enabled: Boolean) {
         isIslandMediaPeekSongChange.value = enabled
         settingsRepository.setIslandMediaPeekSongChangeEnabled(enabled)
+    }
+
+    fun setIslandNotifQueue(enabled: Boolean) {
+        isIslandNotifQueue.value = enabled
+        settingsRepository.setIslandNotifQueueEnabled(enabled)
     }
 
     fun setIslandNotifCompactHeadsUp(enabled: Boolean) {

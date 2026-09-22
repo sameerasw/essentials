@@ -60,6 +60,11 @@ class InteractionOverrides(
     }
 }
 
+class QueueInfo(
+    val next: IslandItem,
+    val onAdvance: () -> Unit,
+)
+
 class IslandItem(
     val key: String,
     val priority: Int,
@@ -72,6 +77,7 @@ class IslandItem(
     val onDismiss: (() -> Unit)? = null,
     val onOpen: (() -> Unit)? = null,
     val interactions: InteractionOverrides = InteractionOverrides.Default,
+    val queue: QueueInfo? = null,
 ) {
     init {
         require(compact.size in 1..2) { "IslandItem $key must have 1..2 compact cells" }

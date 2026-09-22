@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.model.QueueInfo
 import android.widget.Toast
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
@@ -32,6 +33,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED,
         SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
+        SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
@@ -85,7 +87,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (c.isContentSuppressed()) return
         alerts.removeAll { it.key == alert.key }
         alerts.addFirst(alert)
-        while (alerts.size > MAX_QUEUE) alerts.removeLast()
+        val cap = if (queueEnabled()) MAX_QUEUE else 1
+        while (alerts.size > cap) alerts.removeLast()
         c.mainHandler.removeCallbacks(catchUpRunnable)
         scheduleTimeout()
         render()
@@ -156,49 +159,77 @@ class NotificationsPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
+        val next = if (queueEnabled()) alerts.getOrNull(1) else null
+        publish(
+            itemFor(alert).let { current ->
+                if (next == null) {
+                    current
+                } else {
+                    current.withQueue(QueueInfo(next = itemFor(next), onAdvance = { popCurrent(reExpand = false) }))
+                }
+            },
+        )
+    }
+
+    private fun queueEnabled() = settings.isIslandNotifQueueEnabled()
+
+    private fun itemFor(alert: ActiveNotificationAlert): IslandItem {
         val (sender, message) = senderAndMessage(context, alert)
         val showGlow = settings.isIslandShowGlowEnabled()
         val icon = alert.appIcon ?: alert.icon
         val accent = alert.appColor?.let { Color(soften(it)) }
-        publish(
-            IslandItem(
-                key = ITEM_KEY,
-                priority = IslandPriority.NOTIFICATION,
-                placement = CompactPlacement.Dynamic,
-                compact = listOf(
-                    CompactCell("notif.icon") {
-                        IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                    },
-                ),
-                line = LineContent(
-                    icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
-                    start = sender,
-                    end = message,
-                ),
-                expanded = ExpandedContent { scope ->
-                    NotificationExpanded(
-                        alert = alert,
-                        sender = sender,
-                        message = message,
-                        showGlow = showGlow,
-                        onAction = { runAction(alert, it) },
-                        onReply = { action, text -> sendReply(alert, action, text) },
-                        scope = scope,
-                    )
-                },
-                accent = accent,
-                dismissible = true,
-                onDismiss = {
-                    NotificationListener.dismissNotification(alert.key)
-                    popCurrent(reExpand = false)
-                },
-                onOpen = {
-                    if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
-                    popCurrent(reExpand = false)
+        return IslandItem(
+            key = ITEM_KEY,
+            priority = IslandPriority.NOTIFICATION,
+            placement = CompactPlacement.Dynamic,
+            compact = listOf(
+                CompactCell("notif.icon") {
+                    IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
                 },
             ),
+            line = LineContent(
+                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                start = sender,
+                end = message,
+            ),
+            expanded = ExpandedContent { scope ->
+                NotificationExpanded(
+                    alert = alert,
+                    sender = sender,
+                    message = message,
+                    showGlow = showGlow,
+                    onAction = { runAction(alert, it) },
+                    onReply = { action, text -> sendReply(alert, action, text) },
+                    scope = scope,
+                )
+            },
+            accent = accent,
+            dismissible = true,
+            onDismiss = {
+                NotificationListener.dismissNotification(alert.key)
+                popCurrent(reExpand = false)
+            },
+            onOpen = {
+                if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
+                popCurrent(reExpand = false)
+            },
         )
     }
+
+    private fun IslandItem.withQueue(queue: QueueInfo) = IslandItem(
+        key = key,
+        priority = priority,
+        placement = placement,
+        compact = compact,
+        line = line,
+        expanded = expanded,
+        accent = accent,
+        dismissible = dismissible,
+        onDismiss = onDismiss,
+        onOpen = onOpen,
+        interactions = interactions,
+        queue = queue,
+    )
 
     private fun sendReply(alert: ActiveNotificationAlert, action: NotificationActionItem, text: String) {
         val canCarryText = !action.remoteInputs.isNullOrEmpty()
@@ -225,7 +256,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     companion object {
         const val ITEM_KEY = "notifications"
-        private const val MAX_QUEUE = 20
+        private const val MAX_QUEUE = 3
 
         private val GENERIC_TITLES = setOf(
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",

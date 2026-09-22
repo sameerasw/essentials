@@ -1,5 +1,15 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.AnimatedVisibility
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.flow.first
+import androidx.compose.runtime.snapshotFlow
 import kotlin.math.hypot
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CancellationException
@@ -72,11 +82,14 @@ interface IslandActions {
     fun onOpenFocused()
     fun onInteraction()
     fun onTextInputChanged(active: Boolean)
+    fun onAdvance(): Boolean
 }
 
 private data class ContentKey(val stage: IslandStage, val itemKey: String?)
 
 private const val COLLAPSE_COMMIT = 0.2f
+
+private enum class SwipeIntent { Hide, Dismiss }
 
 // The window never moves; the surface is always horizontally centred in it (= on the camera).
 // Only the surface's width/height/corner animate, read in layout/draw so frames don't recompose.
@@ -132,6 +145,7 @@ fun IslandRoot(
     // Set when a swipe threw the card away; the next transition must not replay it as outgoing content.
     var dismissCommitted by remember { mutableStateOf(false) }
     val showPreview by remember { derivedStateOf { collapse.value > 0f } }
+    var swipeIntent by remember { mutableStateOf<SwipeIntent?>(null) }
     val showDismissReveal by remember { derivedStateOf { dismissOffset.value != 0f } }
     val revealDirection by remember { derivedStateOf { if (dismissOffset.value >= 0f) 1f else -1f } }
     val dismissThresholdPx = with(density) { 48.dp.toPx() }
@@ -328,6 +342,7 @@ fun IslandRoot(
                     var dx = 0f
                     var dy = 0f
                     var towardCamera = false
+                    var stackSlide = false
                     var crossed = false
                     var progress = 0f
                     var lastStep = 0f
@@ -352,6 +367,7 @@ fun IslandRoot(
                             dy = 0f
                             lastStep = 0f
                             crossed = false
+                            stackSlide = false
                         },
                         onDrag = { change, amount ->
                             change.consume()
@@ -359,9 +375,14 @@ fun IslandRoot(
                             dx += amount.x
                             dy += amount.y
                             val inward = dx * inwardSign()
-                            towardCamera = inward > 0f || -dy > abs(dx)
+                            stackSlide = currentState.focused?.queue != null && abs(dx) >= abs(dy)
+                            towardCamera = !stackSlide && (inward > 0f || -dy > abs(dx))
                             val dismissible = currentState.focused?.dismissible == true
-                            if (towardCamera) {
+                            if (stackSlide) {
+                                progress = 0f
+                                scope.launch { collapse.snapTo(0f) }
+                                scope.launch { dismissOffset.snapTo(if (inward > 0f || dismissible) dx else dx * 0.25f) }
+                            } else if (towardCamera) {
                                 progress = (maxOf(inward, -dy) / collapseRange).coerceIn(0f, 1f)
                                 scope.launch { collapse.snapTo(progress) }
                                 scope.launch { dismissOffset.snapTo(0f) }
@@ -370,7 +391,17 @@ fun IslandRoot(
                                 scope.launch { collapse.snapTo(0f) }
                                 scope.launch { dismissOffset.snapTo(if (dismissible) dx else dx * 0.25f) }
                             }
-                            val now = if (towardCamera) progress > COLLAPSE_COMMIT else dismissible && abs(dx) > dismissThreshold
+                            val now = when {
+                                stackSlide -> abs(dx) > dismissThreshold && (inward > 0f || dismissible)
+                                towardCamera -> progress > COLLAPSE_COMMIT
+                                else -> dismissible && abs(dx) > dismissThreshold
+                            }
+                            swipeIntent = when {
+                                !now -> null
+                                stackSlide && inward > 0f -> SwipeIntent.Hide
+                                stackSlide || !towardCamera -> SwipeIntent.Dismiss
+                                else -> null
+                            }
                             if (now != crossed) {
                                 crossed = now
                                 if (now) IslandHaptics.thresholdReached(context) else IslandHaptics.thresholdLeft(context)
@@ -383,8 +414,27 @@ fun IslandRoot(
                             }
                         },
                         onDragEnd = {
+                            swipeIntent = null
                             val v = tracker.calculateVelocity()
-                            if (towardCamera) {
+                            if (stackSlide) {
+                                val flung = abs(v.x) > 1500f
+                                val dir = if ((if (flung) v.x else dx) > 0f) 1f else -1f
+                                val toCamera = dir * inwardSign() > 0f
+                                val allowed = toCamera || currentState.focused?.dismissible == true
+                                val commit = allowed && (crossed || flung)
+                                scope.launch {
+                                    if (commit) {
+                                        IslandHaptics.commit(context)
+                                        val before = currentState.focused
+                                        dismissOffset.animateTo(dir * flyOff, IslandMotion.fling(), initialVelocity = v.x)
+                                        if (toCamera) actions.onAdvance() else actions.onDismiss()
+                                        withTimeoutOrNull(400L) { snapshotFlow { currentState.focused }.first { it !== before } }
+                                        dismissOffset.snapTo(0f)
+                                    } else {
+                                        dismissOffset.animateTo(0f, IslandMotion.fling(), initialVelocity = v.x)
+                                    }
+                                }
+                            } else if (towardCamera) {
                                 // Progress keeps going from where the finger left it, carrying its speed.
                                 val inwardVelocity = maxOf(v.x * inwardSign(), -v.y) / collapseRange
                                 val commit = crossed || inwardVelocity > 2f
@@ -416,6 +466,7 @@ fun IslandRoot(
                             }
                         },
                         onDragCancel = {
+                            swipeIntent = null
                             scope.launch { collapse.animateTo(0f, IslandMotion.release()) }
                             scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
                         },
@@ -455,7 +506,24 @@ fun IslandRoot(
                         },
                 ) { StageContent(out.stage, outItem, state, spec, actions, interactive = false) }
             }
-            if (showDismissReveal && item?.dismissible == true) {
+            val queuedNext = item?.queue?.next
+            if (showDismissReveal && queuedNext != null) {
+                Box(
+                    Modifier
+                        .matchParentSize()
+                        .graphicsLayer {
+                            val p = (abs(dismissOffset.value) / (surfaceSize.width.coerceAtLeast(1) * 0.6f)).coerceIn(0f, 1f)
+                            val s = 0.94f + 0.06f * p
+                            scaleX = s
+                            scaleY = s
+                            alpha = 0.4f + 0.6f * p
+                            transformOrigin = TransformOrigin(contentOriginX, 0f)
+                        },
+                    contentAlignment = layerAlign,
+                ) {
+                    StageContent(key.stage, queuedNext, state, spec, actions, interactive = false)
+                }
+            } else if (showDismissReveal && item?.dismissible == true) {
                 DismissReveal(
                     fromStart = revealDirection > 0f,
                     progress = { (abs(dismissOffset.value) / dismissThresholdPx).coerceIn(0f, 1f) },
@@ -496,6 +564,12 @@ fun IslandRoot(
                     onCellLongPress = ::handleLongPress,
                 )
             }
+            SwipeIntentChip(
+                intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded },
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = spec.expandedOutset + spec.expandedTopPadding + spec.compactHeight + 4.dp),
+            )
             if (previewing && showPreview) {
                 // Compact content fades in underneath the finger, so release only has to finish the motion.
                 Box(
@@ -569,6 +643,7 @@ private val NoActions = object : IslandActions {
     override fun onOpenFocused() {}
     override fun onInteraction() {}
     override fun onTextInputChanged(active: Boolean) {}
+    override fun onAdvance(): Boolean = false
 }
 
 @Composable
@@ -602,6 +677,41 @@ private fun StageContent(
                 onOpen = a::onOpenFocused,
                 onTextInput = a::onTextInputChanged,
                 onKeepAlive = a::onInteraction,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SwipeIntentChip(intent: SwipeIntent?, modifier: Modifier) {
+    var shown by remember { mutableStateOf(SwipeIntent.Dismiss) }
+    if (intent != null) shown = intent
+    AnimatedVisibility(
+        visible = intent != null,
+        modifier = modifier,
+        enter = fadeIn(tween(120)) + scaleIn(spring(dampingRatio = 0.55f, stiffness = 600f), initialScale = 0.6f),
+        exit = fadeOut(tween(100)) + scaleOut(tween(100), targetScale = 0.8f),
+    ) {
+        val hide = shown == SwipeIntent.Hide
+        val container = if (hide) Color(0xFFAECBFA) else Color(0xFFF6AEA9)
+        val ink = if (hide) Color(0xFF0B2A5B) else Color(0xFF5C1210)
+        Row(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .background(container)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Icon(
+                painterResource(if (hide) R.drawable.rounded_visibility_off_24 else R.drawable.rounded_close_24),
+                contentDescription = null,
+                tint = ink,
+                modifier = Modifier.size(16.dp),
+            )
+            Text(
+                stringResource(if (hide) R.string.island_action_hide else R.string.action_dismiss),
+                style = IslandTextStyles.line.copy(color = ink, fontWeight = FontWeight.SemiBold),
             )
         }
     }

@@ -105,6 +105,8 @@ class IslandCoordinator(
 
         override fun onTextInputChanged(active: Boolean) = windowHost.setTextInput(active)
 
+        override fun onAdvance(): Boolean = controller.advanceFocused()
+
         override fun onOpenFocused() {
             controller.state.value.focused?.onOpen?.invoke()
             controller.collapse()

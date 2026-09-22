@@ -788,6 +788,11 @@ object FeatureRegistry {
                             "island_line_stage_enabled",
                         ),
                         SearchSetting(
+                            R.string.island_notif_queue_title,
+                            R.string.island_notif_queue_title,
+                            "island_notif_queue",
+                        ),
+                        SearchSetting(
                             R.string.island_notif_compact_heads_up_title,
                             R.string.island_notif_compact_heads_up_desc,
                             "island_notif_compact_heads_up",
