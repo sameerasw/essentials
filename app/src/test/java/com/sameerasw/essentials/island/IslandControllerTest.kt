@@ -104,4 +104,23 @@ class IslandControllerTest {
         controller.setSuppressed(true)
         assertEquals(IslandStage.Hidden, stage)
     }
+
+    @Test fun interactionRestartsPeekTimer() {
+        controller.setItems("media", listOf(item("media")))
+        controller.peek("media", 3000)
+        controller.onUserInteraction()
+        assertEquals(1, scheduler.pending.size)
+        scheduler.runAll()
+        assertEquals(IslandStage.Compact, stage)
+    }
+
+    @Test fun interactionRestartsExpandedTimer() {
+        controller.expandedTimeoutMs = 5000
+        controller.setItems("media", listOf(item("media")))
+        controller.expand("media")
+        controller.onUserInteraction()
+        assertEquals(1, scheduler.pending.size)
+        scheduler.runAll()
+        assertEquals(IslandStage.Compact, stage)
+    }
 }

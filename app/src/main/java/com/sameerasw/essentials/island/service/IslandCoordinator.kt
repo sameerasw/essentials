@@ -93,6 +93,12 @@ class IslandCoordinator(
         override fun onLongPress(itemKey: String?) = controller.onLongPress(itemKey)
         override fun onCollapse() = controller.collapse()
         override fun onDismiss(): Boolean = controller.dismissFocused()
+        override fun onInteraction() {
+            controller.onUserInteraction()
+            val focused = controller.state.value.focusedKey
+            plugins.forEach { it.onUserInteraction(focused) }
+        }
+
         override fun onOpenFocused() {
             controller.state.value.focused?.onOpen?.invoke()
             controller.collapse()

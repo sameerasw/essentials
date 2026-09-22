@@ -27,4 +27,5 @@ interface IslandPlugin {
     fun stop()
     fun refresh() {}
     fun onScreenStateChanged() = refresh()
+    fun onUserInteraction(focusedKey: String?) {}
 }

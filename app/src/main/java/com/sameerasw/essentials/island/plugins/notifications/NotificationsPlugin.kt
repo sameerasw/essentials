@@ -68,6 +68,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     override fun refresh() = render()
 
+    override fun onUserInteraction(focusedKey: String?) {
+        if (alerts.isEmpty()) return
+        if (focusedKey == ITEM_KEY) autoExpanded = false
+        ctx?.mainHandler?.removeCallbacks(catchUpRunnable)
+        scheduleTimeout()
+    }
+
     override fun onScreenStateChanged() {
         if (ctx?.isContentSuppressed?.invoke() == true) clearAll()
     }

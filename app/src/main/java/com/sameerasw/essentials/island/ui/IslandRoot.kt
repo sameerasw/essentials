@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitEachGesture
 import com.sameerasw.essentials.R
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.res.stringResource
@@ -58,6 +61,7 @@ interface IslandActions {
     fun onCollapse()
     fun onDismiss(): Boolean
     fun onOpenFocused()
+    fun onInteraction()
 }
 
 private data class ContentKey(val stage: IslandStage, val itemKey: String?)
@@ -164,6 +168,12 @@ fun IslandRoot(
                         }
                     },
                 )
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                        actions.onInteraction()
+                    }
+                }
                 .pointerInput(stage) {
                     if (stage == IslandStage.Hidden) return@pointerInput
                     detectTapGestures(

@@ -41,6 +41,7 @@ class IslandController(
     private var expandedKey: String? = null
     private var peekKey: String? = null
     private var peekTimer: Cancellable? = null
+    private var peekDurationMs: Long = 0L
     private var expandedTimer: Cancellable? = null
 
     fun setItems(sourceId: String, items: List<IslandItem>) {
@@ -118,13 +119,26 @@ class IslandController(
         if (item.line == null) return
         cancelPeek()
         peekKey = itemKey
-        peekTimer = scheduler.schedule(durationMs) {
+        peekDurationMs = durationMs
+        schedulePeekEnd(itemKey)
+        recompute()
+    }
+
+    fun onUserInteraction() {
+        if (expandedKey != null) restartExpandedTimer()
+        peekKey?.let { key ->
+            peekTimer?.cancel()
+            schedulePeekEnd(key)
+        }
+    }
+
+    private fun schedulePeekEnd(itemKey: String) {
+        peekTimer = scheduler.schedule(peekDurationMs) {
             if (peekKey == itemKey) {
                 peekKey = null
                 recompute()
             }
         }
-        recompute()
     }
 
     private fun defaultTapTarget(state: IslandUiState): IslandItem? =
