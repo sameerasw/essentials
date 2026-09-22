@@ -1558,7 +1558,7 @@
     <string name="label_auto_reset_battery_stats_desc">当电池电量在90%以上且未充电时自动重置电池状态</string>
     <string name="label_ripple_animation">涟漪动画效果</string>
     <string name="setting_app_icon_title">App 图标</string>
-    <string name="setting_app_icon_desc">自訂在主畫面啟動器上的圖示</string>
+    <string name="setting_app_icon_desc">自定义在桌面上显示的图标</string>
     <string name="feat_power_saving_title">電量節約</string>
     <string name="feat_smart_pixels_desc">熄掉部分像素來節約耗電量</string>
     <string name="smart_pixels_intensity_title">強度</string>
@@ -1574,4 +1574,7 @@
     <string name="feat_sim_names_desc">给激活的SIM卡重命名显示的运营商名称</string>
     <string name="label_online_help_media">在线帮助媒体</string>
     <string name="label_motion_blur">运动模糊</string>
+    <string name="label_charging_mode_title">充电模式</string>
+    <string name="conscious_gate_reappear_off">关闭</string>
+    <string name="label_charging_mode_limited">限制</string>
 </resources>
