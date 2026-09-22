@@ -146,7 +146,7 @@
     <string name="action_import_freeze">Importa l\'elenco delle app congelate</string>
     <string name="freeze_pick_apps_title">Scegli le app da congelare</string>
     <string name="freeze_pick_apps_desc">Scegli quali app possono essere congelate</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_title">Mostra nel launcher</string>
     <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Automazione</string>
     <string name="freeze_when_locked_title">Congelare quando bloccato</string>
@@ -166,8 +166,8 @@
     <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Necessario per rilevare i contenuti multimediali in riproduzione e le notifiche attive per evitare di congelarli</string>
     <string name="freeze_mode_title">Freeze mode</string>
-    <string name="freeze_mode_freeze">Freezing</string>
-    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_freeze">Congelamento</string>
+    <string name="freeze_mode_suspend">Sospensione app</string>
     <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Mostra solo quando lo schermo è spento</string>
@@ -1487,7 +1487,7 @@
     <string name="app_icon_google">Spettro</string>
     <string name="duo_desc">Non si piega</string>
     <string name="feat_power_saving_title">Risparmio energetico</string>
-    <string name="feat_standby_apps_title">App in standby</string>
+    <string name="feat_standby_apps_title">App standby</string>
     <string name="feat_mobile_data_always_on_title">Dati mobili sempre attivi</string>
     <string name="setting_location_reached_full_screen_alarm_title">Allarme a schermo intero</string>
     <string name="feat_watch_controls_title">Personalizza</string>
@@ -1498,4 +1498,9 @@
     <string name="setting_app_icon_desc">Personalizza l\'icona del launcher schermata home</string>
     <string name="settings_translate_mode_desc">Mantieni premuto ogni testo per tradurre e contribuire alla comunità</string>
     <string name="settings_genai_automation_title">Abilità GenAI</string>
+    <string name="qs_secure_sensitive_tiles_desc">Richiede di sbloccare prima di attivare tiles sensibile nelle azioni veloci quando bloccato</string>
+    <string name="tile_url_shortener">Accorcia URL</string>
+    <string name="tile_url_shortener_subtitle">Accorcia Appunti</string>
+    <string name="feat_standby_apps_desc">Ottimizza attività delle app nel background</string>
+    <string name="feat_power_saving_desc">Configura le policies del risparmio energetico</string>
 </resources>
