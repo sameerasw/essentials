@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import androidx.compose.foundation.layout.Arrangement
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,41 +39,48 @@ fun NotificationExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
-    Box {
+    Box(propagateMinConstraints = true) {
         Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow))
-        Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
-            Spacer(Modifier.height(spec.expandedTopPadding))
-            scope.CameraRow(
-                horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
-                start = {
-                    IslandBitmap(alert.icon ?: alert.appIcon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                    MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
-                },
-            )
-            if (message.isNotBlank()) {
-                Spacer(Modifier.height(if (alert.actions.isEmpty()) 4.dp else 0.dp))
-                Text(
-                    text = message,
-                    style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp, lineHeight = 20.sp),
-                    maxLines = 7,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
-                )
-            }
-            if (alert.actions.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                ConnectedButtonRow(
-                    height = 36.dp,
-                    modifier = Modifier.padding(horizontal = sidePadding),
-                    container = Color.White.copy(alpha = 0.2f),
-                    items = alert.actions.map { action ->
-                        ConnectedItem({ onAction(action) }) {
-                            ConnectedTextLabel(if (action.isQuickReply) "${action.title} ↩" else action.title)
-                        }
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column {
+                Spacer(Modifier.height(spec.expandedTopPadding))
+                scope.CameraRow(
+                    horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    start = {
+                        IslandBitmap(alert.icon ?: alert.appIcon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                        MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                 )
+                if (message.isNotBlank()) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = message,
+                        style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp, lineHeight = 20.sp),
+                        maxLines = 7,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
+                    )
+                }
             }
-            Spacer(Modifier.height(if (alert.actions.isEmpty()) spec.expandedPadding * 0.9f else spec.expandedPadding * 0.7f))
+            Column {
+                if (alert.actions.isNotEmpty()) {
+                    Spacer(Modifier.height(14.dp))
+                    ConnectedButtonRow(
+                        height = 36.dp,
+                        modifier = Modifier.padding(horizontal = sidePadding),
+                        container = Color.White.copy(alpha = 0.2f),
+                        items = alert.actions.map { action ->
+                            ConnectedItem({ onAction(action) }) {
+                                ConnectedTextLabel(if (action.isQuickReply) "${action.title} ↩" else action.title)
+                            }
+                        },
+                    )
+                }
+                Spacer(Modifier.height(if (alert.actions.isEmpty()) spec.expandedPadding * 0.9f else spec.expandedPadding * 0.7f))
+            }
         }
     }
 }

@@ -21,6 +21,12 @@ data class UpcomingCalendarEvent(
     val title: String,
     val startTimeMillis: Long,
     val location: String?,
+    val eventId: Long = -1L,
+    val endTimeMillis: Long = 0L,
+    val allDay: Boolean = false,
+    val calendarName: String? = null,
+    val calendarColor: Int? = null,
+    val description: String? = null,
 )
 
 object CalendarEventUtil {
@@ -93,6 +99,9 @@ object CalendarEventUtil {
             CalendarContract.Instances.SELF_ATTENDEE_STATUS,
             CalendarContract.Instances.CALENDAR_ID,
             CalendarContract.Instances.EVENT_LOCATION,
+            CalendarContract.Instances.CALENDAR_DISPLAY_NAME,
+            CalendarContract.Instances.DISPLAY_COLOR,
+            CalendarContract.Instances.DESCRIPTION,
         )
 
         return try {
@@ -122,7 +131,19 @@ object CalendarEventUtil {
                     val begin = cursor.getLong(beginIndex)
                     if (begin in now..maxTimeMillis) {
                         val location = if (locationIndex != -1) cursor.getString(locationIndex)?.trim()?.takeIf { it.isNotBlank() } else null
-                        return@use UpcomingCalendarEvent(rawTitle.trim(), begin, location)
+                        fun str(col: String) = cursor.getColumnIndex(col).takeIf { it != -1 }?.let { cursor.getString(it) }?.trim()?.takeIf { it.isNotBlank() }
+                        val colorIndex = cursor.getColumnIndex(CalendarContract.Instances.DISPLAY_COLOR)
+                        return@use UpcomingCalendarEvent(
+                            title = rawTitle.trim(),
+                            startTimeMillis = begin,
+                            location = location,
+                            eventId = cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.EVENT_ID)),
+                            endTimeMillis = cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.END)),
+                            allDay = allDayIndex != -1 && cursor.getInt(allDayIndex) != 0,
+                            calendarName = str(CalendarContract.Instances.CALENDAR_DISPLAY_NAME),
+                            calendarColor = if (colorIndex != -1 && !cursor.isNull(colorIndex)) cursor.getInt(colorIndex) else null,
+                            description = str(CalendarContract.Instances.DESCRIPTION),
+                        )
                     }
                 }
                 null

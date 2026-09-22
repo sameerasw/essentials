@@ -36,6 +36,9 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var onStageChanged: ((IslandStage) -> Unit)? = null
 
+    var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
+    private var collapsing = false
+
     private val itemsBySource = LinkedHashMap<String, List<IslandItem>>()
     private var suppressed = false
     private var expandedKey: String? = null
@@ -100,6 +103,21 @@ class IslandController(
     }
 
     fun collapse() {
+        val animator = collapseAnimator
+        val stage = _state.value.stage
+        if (animator == null || (stage != IslandStage.Expanded && stage != IslandStage.Line)) {
+            collapseNow()
+            return
+        }
+        if (collapsing) return
+        collapsing = true
+        animator {
+            collapsing = false
+            collapseNow()
+        }
+    }
+
+    private fun collapseNow() {
         clearFocus()
         recompute()
     }

@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui
 
+import kotlinx.coroutines.CancellationException
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.foundation.layout.offset
@@ -82,6 +84,7 @@ fun IslandRoot(
     spec: IslandLayoutSpec,
     actions: IslandActions,
     onTargetBoundsChanged: (IntRect) -> Unit,
+    registerCollapseAnimator: (((() -> Unit) -> Unit)?) -> Unit = {},
 ) {
     val view = LocalView.current
     val density = LocalDensity.current
@@ -105,7 +108,9 @@ fun IslandRoot(
     var surfaceSize by remember { mutableStateOf(IntSize.Zero) }
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
-    var expandedHeight by remember { mutableStateOf(0) }
+    // Written while the expanded content is measured, so the surface reads it in the same frame (no stale height
+    // from a previously expanded card).
+    val expandedHeight = remember { IntArray(1) }
     val edgeShift = remember { mutableFloatStateOf(0f) }
     var previousStage by remember { mutableStateOf(stage) }
     var lastKey by remember { mutableStateOf(key) }
@@ -172,6 +177,25 @@ fun IslandRoot(
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
 
+    // Non-gesture collapses replay the swipe path: scrub progress to 1, then hand over to compact.
+    DisposableEffect(Unit) {
+        registerCollapseAnimator { commit ->
+            scope.launch {
+                dismissOffset.snapTo(0f)
+                val finished = try {
+                    collapse.animateTo(1f, IslandMotion.fling())
+                    true
+                } catch (_: CancellationException) {
+                    // Interrupted by another animation (a drag, or the stage already changed): still hand over.
+                    false
+                }
+                dragCommitted = finished
+                commit()
+            }
+        }
+        onDispose { registerCollapseAnimator(null) }
+    }
+
     fun edgeCorrection(layerStage: IslandStage): Float =
         edgeShift.floatValue - if (layerStage == IslandStage.Expanded) outsetPx else 0f
     LaunchedEffect(target, windowWidth, stage) {
@@ -206,7 +230,7 @@ fun IslandRoot(
                     // Never smaller than the camera, whatever a spring or fling does.
                     val w = (if (t > 0f) lerp(child.width, end.width, t) else child.width).coerceAtLeast(minSurfaceWidth)
                     val h = (if (t > 0f) lerp(child.height, end.height, t) else child.height).coerceAtLeast(minSurfaceHeight)
-                    val range = (expandedHeight - minSurfaceHeight).toFloat()
+                    val range = (expandedHeight[0] - minSurfaceHeight).toFloat()
                     val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
                     edgeShift.floatValue = outsetPx * p
                     layout(w, h) { child.place((w - child.width) / 2, 0) }
@@ -361,10 +385,14 @@ fun IslandRoot(
             }
             Box(
                 Modifier
+                    .layout { measurable, constraints ->
+                        val p = measurable.measure(constraints)
+                        if (key.stage == IslandStage.Expanded) expandedHeight[0] = p.height
+                        layout(p.width, p.height) { p.place(0, 0) }
+                    }
                     .onSizeChanged {
                         target = it
                         if (key.stage == IslandStage.Compact) compactSize = it
-                        if (key.stage == IslandStage.Expanded) expandedHeight = it.height
                     }
                     .graphicsLayer {
                         alpha = contentAlpha.value * (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *

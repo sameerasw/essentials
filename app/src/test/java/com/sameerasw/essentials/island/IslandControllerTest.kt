@@ -123,4 +123,15 @@ class IslandControllerTest {
         scheduler.runAll()
         assertEquals(IslandStage.Compact, stage)
     }
+
+    @Test fun collapseWaitsForAnimator() {
+        var pendingCommit: (() -> Unit)? = null
+        controller.collapseAnimator = { pendingCommit = it }
+        controller.setItems("media", listOf(item("media")))
+        controller.expand("media")
+        controller.collapse()
+        assertEquals(IslandStage.Expanded, stage)
+        pendingCommit!!.invoke()
+        assertEquals(IslandStage.Compact, stage)
+    }
 }

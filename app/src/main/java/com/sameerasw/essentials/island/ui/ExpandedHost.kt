@@ -36,5 +36,6 @@ fun ExpandedHost(
             .heightIn(min = spec.expandedCorner * 2 + spec.compactHeight + spec.expandedOutset * 2),
             
         contentAlignment = Alignment.TopStart,
+        propagateMinConstraints = true,
     ) { content.content(scope) }
 }

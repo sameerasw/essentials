@@ -188,7 +188,7 @@ class IslandCoordinator(
             val layoutSpec by spec.collectAsState()
             val colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) dynamicDarkColorScheme(service) else darkColorScheme()
             MaterialTheme(colorScheme = colors, typography = IslandTypography) {
-                IslandRoot(state, layoutSpec, actions, windowHost::onTargetBoundsChanged)
+                IslandRoot(state, layoutSpec, actions, windowHost::onTargetBoundsChanged) { controller.collapseAnimator = it }
             }
         }
         // Fails until the accessibility service is connected; onServiceConnected calls updateState() again.
