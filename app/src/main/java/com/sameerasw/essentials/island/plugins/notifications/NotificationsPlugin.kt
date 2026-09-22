@@ -176,7 +176,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun itemFor(alert: ActiveNotificationAlert): IslandItem {
         val (sender, message) = senderAndMessage(context, alert)
         val showGlow = settings.isIslandShowGlowEnabled()
-        val icon = alert.appIcon ?: alert.icon
+        val icon = alert.chatIcon ?: alert.appIcon ?: alert.icon
         val accent = alert.appColor?.let { Color(soften(it)) }
         return IslandItem(
             key = ITEM_KEY,

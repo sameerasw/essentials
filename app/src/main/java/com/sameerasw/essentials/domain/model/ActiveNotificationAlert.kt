@@ -25,5 +25,6 @@ data class ActiveNotificationAlert(
     val appName: String? = null,
     val appIcon: Bitmap? = null,
     val actions: List<NotificationActionItem> = emptyList(),
+    val chatIcon: Bitmap? = null,
 )
 

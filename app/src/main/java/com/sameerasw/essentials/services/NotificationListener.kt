@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.services
 
+import android.graphics.drawable.Icon
+import android.content.pm.LauncherApps
 import com.sameerasw.essentials.utils.notification.NotificationRepostFilter
 import com.sameerasw.essentials.utils.chronometer.ChronometerRepository
 import com.sameerasw.essentials.utils.call.CallNotificationParser
@@ -1939,6 +1941,27 @@ class NotificationListener : NotificationListenerService() {
             appIcon = AppUtil.drawableToBitmap(appIconDrawable)
         } catch (_: Exception) {}
 
+        val EXTRA_CONVERSATION_ICON_KEY = "android.conversationIcon"
+        var conversationIcon: Bitmap? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                val icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    notif.extras.getParcelable(EXTRA_CONVERSATION_ICON_KEY, Icon::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    notif.extras.getParcelable<Icon>(EXTRA_CONVERSATION_ICON_KEY)
+                }
+                icon?.loadDrawable(this)?.let { conversationIcon = AppUtil.drawableToBitmap(it) }
+            } catch (_: Exception) {}
+        }
+        var largeIconBitmap: Bitmap? = null
+        try {
+            notif.getLargeIcon()?.loadDrawable(this)?.let { largeIconBitmap = AppUtil.drawableToBitmap(it) }
+        } catch (_: Exception) {}
+        val isGroupConversation = notif.extras.getBoolean(Notification.EXTRA_IS_GROUP_CONVERSATION)
+        val shortcutIcon = if (conversationIcon == null && personAvatar == null && largeIconBitmap == null) conversationShortcutIcon(sbn) else null
+        val chatIcon = (if (isGroupConversation) conversationIcon else null) ?: personAvatar ?: largeIconBitmap ?: conversationIcon ?: shortcutIcon
+
         var bitmap: Bitmap? = personAvatar
         if (bitmap == null) {
             try {
@@ -2017,7 +2040,22 @@ class NotificationListener : NotificationListenerService() {
             appName = appName,
             appIcon = appIcon,
             actions = actionList,
+            chatIcon = chatIcon,
         )
+    }
+
+    private fun conversationShortcutIcon(sbn: StatusBarNotification): Bitmap? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
+        return try {
+            val ranking = Ranking()
+            if (!currentRanking.getRanking(sbn.key, ranking)) return null
+            val shortcut = ranking.conversationShortcutInfo ?: return null
+            val launcherApps = getSystemService(LauncherApps::class.java) ?: return null
+            launcherApps.getShortcutIconDrawable(shortcut, resources.displayMetrics.densityDpi)
+                ?.let { AppUtil.drawableToBitmap(it) }
+        } catch (_: Exception) {
+            null
+        }
     }
 
     fun performNotificationAction(
