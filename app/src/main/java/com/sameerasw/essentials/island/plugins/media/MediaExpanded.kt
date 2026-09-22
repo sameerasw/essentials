@@ -1,5 +1,9 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.island.ui.components.cameraClearance
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.drawBehind
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedContent
@@ -84,15 +88,23 @@ fun MediaExpanded(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize().blur(40.dp).alpha(0.67f),
             )
+            val clearTop = scope.cameraClearance
             Box(
-                Modifier.matchParentSize().background(
-                    Brush.verticalGradient(
-                        0f to Color.Black,
-                        0.45f to Color.Black,
-                        0.75f to Color.Black.copy(alpha = 0.59f),
-                        1f to Color.Transparent,
-                    ),
-                ),
+                Modifier.matchParentSize().drawBehind {
+                    val top = clearTop.toPx().coerceAtMost(size.height)
+                    drawRect(Color.Black, size = Size(size.width, top))
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            0f to Color.Black,
+                            0.5f to Color.Black.copy(alpha = 0.59f),
+                            1f to Color.Transparent,
+                            startY = top,
+                            endY = size.height,
+                        ),
+                        topLeft = Offset(0f, top),
+                        size = Size(size.width, size.height - top),
+                    )
+                },
             )
         }
         Column(

@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.ui.components
 
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -62,15 +65,25 @@ fun IslandExpandedScope.CameraRow(
     }
 }
 
-// Bottom-up tint in the app / artwork colour, matching the old "accent glow".
-fun Modifier.accentGlow(color: Color, enabled: Boolean): Modifier =
-    if (!enabled) this else background(
-        Brush.verticalGradient(
-            0f to Color.Transparent,
-            0.55f to color.copy(alpha = 0.25f),
-            1f to color.copy(alpha = 0.51f),
-        ),
-    )
+val IslandExpandedScope.cameraClearance: Dp
+    get() = spec.expandedOutset + spec.expandedTopPadding + spec.compactHeight + 8.dp
+
+fun Modifier.accentGlow(color: Color, enabled: Boolean, clearTop: Dp): Modifier =
+    if (!enabled) this else drawBehind {
+        val top = clearTop.toPx().coerceAtMost(size.height)
+        if (size.height - top <= 0f) return@drawBehind
+        drawRect(
+            brush = Brush.verticalGradient(
+                0f to Color.Transparent,
+                0.55f to color.copy(alpha = 0.25f),
+                1f to color.copy(alpha = 0.51f),
+                startY = top,
+                endY = size.height,
+            ),
+            topLeft = Offset(0f, top),
+            size = Size(size.width, size.height - top),
+        )
+    }
 
 class ConnectedItem(
     val onClick: () -> Unit,

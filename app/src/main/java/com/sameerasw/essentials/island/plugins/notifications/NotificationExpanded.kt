@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.components.cameraClearance
 import androidx.compose.foundation.layout.Arrangement
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Box
@@ -40,7 +41,7 @@ fun NotificationExpanded(
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
     Box(propagateMinConstraints = true) {
-        Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow))
+        Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
