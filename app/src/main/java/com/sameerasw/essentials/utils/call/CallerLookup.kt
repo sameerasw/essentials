@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.utils.call
 
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+import android.Manifest
 import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,8 +15,11 @@ import android.util.Log
 object CallerLookup {
     private const val TAG = "CallerLookup"
 
+    private fun canRead(context: Context) =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+
     fun name(context: Context, number: String?): String? {
-        if (number.isNullOrBlank()) return null
+        if (number.isNullOrBlank() || !canRead(context)) return null
         return try {
             val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
             context.contentResolver.query(uri, arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME), null, null, null)?.use { cursor ->
@@ -28,7 +34,7 @@ object CallerLookup {
     }
 
     fun photo(context: Context, number: String?): Bitmap? {
-        if (number.isNullOrBlank()) return null
+        if (number.isNullOrBlank() || !canRead(context)) return null
         return try {
             val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
             val contactId = context.contentResolver.query(uri, arrayOf(ContactsContract.PhoneLookup._ID), null, null, null)?.use { cursor ->

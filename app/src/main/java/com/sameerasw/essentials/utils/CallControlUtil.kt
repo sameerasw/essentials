@@ -89,17 +89,24 @@ object CallControlUtil {
         }
 
     fun isMuted(context: Context): Boolean =
-        (context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.isMicrophoneMute ?: false
-
-    fun isSpeakerOn(context: Context): Boolean {
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: return false
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            audioManager.communicationDevice?.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
-        } else {
-            @Suppress("DEPRECATION")
-            audioManager.isSpeakerphoneOn
+        try {
+            (context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.isMicrophoneMute ?: false
+        } catch (_: Exception) {
+            false
         }
-    }
+
+    fun isSpeakerOn(context: Context): Boolean =
+        try {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+            when {
+                audioManager == null -> false
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+                    audioManager.communicationDevice?.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                else -> @Suppress("DEPRECATION") audioManager.isSpeakerphoneOn
+            }
+        } catch (_: Exception) {
+            false
+        }
 
     fun toggleSpeaker(context: Context): Boolean =
         try {
@@ -129,6 +136,7 @@ object CallControlUtil {
         }
 
     fun showInCallScreen(context: Context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) return
         try {
             (context.getSystemService(Context.TELECOM_SERVICE) as? TelecomManager)?.showInCallScreen(false)
         } catch (e: Exception) {

@@ -45,7 +45,7 @@ class CallPlugin : BaseIslandPlugin() {
                 call = next
                 val startedRinging = next?.phase == CallPhase.Ringing && previous?.phase != CallPhase.Ringing
                 if (startedRinging) {
-                    if (enabled()) c.request(PluginRequest.Expand(ITEM_KEY)) else releaseHeadsUpForCall()
+                    if (enabled(next)) c.request(PluginRequest.Expand(ITEM_KEY)) else releaseHeadsUpForCall()
                 }
                 if (next == null) restoreHeadsUpAfterCall()
                 restartTicker()
@@ -58,14 +58,20 @@ class CallPlugin : BaseIslandPlugin() {
 
     private fun releaseHeadsUpForCall() {
         if (!settings.isIslandSuppressSystemHeadsUpEnabled()) return
-        settings.applyHeadsUpSuppression(false)
-        headsUpReleased = true
+        try {
+            settings.applyHeadsUpSuppression(false)
+            headsUpReleased = true
+        } catch (_: Exception) {
+        }
     }
 
     private fun restoreHeadsUpAfterCall() {
         if (!headsUpReleased) return
         headsUpReleased = false
-        if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
+        try {
+            if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
+        } catch (_: Exception) {
+        }
     }
 
     override fun onStop() {
@@ -77,7 +83,12 @@ class CallPlugin : BaseIslandPlugin() {
 
     override fun refresh() = render()
 
-    private fun enabled() = settings.isIslandShowCallsEnabled() && PermissionUtils.hasCallPermissions(context)
+    // App (notification) calls carry their own controls and need no phone permissions; plain telephony calls do.
+    private fun enabled(snap: CallSnapshot? = call): Boolean {
+        if (!settings.isIslandShowCallsEnabled()) return false
+        val fromNotification = snap?.appName != null || snap?.answerIntent != null || snap?.endIntent != null
+        return fromNotification || PermissionUtils.hasCallPermissions(context)
+    }
 
     private fun restartTicker() {
         ticker?.cancel()
@@ -103,10 +114,10 @@ class CallPlugin : BaseIslandPlugin() {
         val status = if (ringing) incomingLabel else elapsed(snap.startedAt)
         val photo = snap.photo
         val actions = CallActions(
-            answer = { if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context) },
-            end = { if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context) },
-            toggleMute = { CallControlUtil.toggleMute(context) },
-            toggleSpeaker = { CallControlUtil.toggleSpeaker(context) },
+            answer = { guarded { if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context) } },
+            end = { guarded { if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context) } },
+            toggleMute = { guarded(false) { CallControlUtil.toggleMute(context) } },
+            toggleSpeaker = { guarded(false) { CallControlUtil.toggleSpeaker(context) } },
             isMuted = { CallControlUtil.isMuted(context) },
             isSpeakerOn = { CallControlUtil.isSpeakerOn(context) },
         )
@@ -141,9 +152,22 @@ class CallPlugin : BaseIslandPlugin() {
                     )
                 },
                 accent = null,
-                onOpen = { if (!sendPendingIntent(context, snap.contentIntent)) CallControlUtil.showInCallScreen(context) },
+                onOpen = { guarded { if (!sendPendingIntent(context, snap.contentIntent)) CallControlUtil.showInCallScreen(context) } },
             ),
         )
+    }
+
+    private fun guarded(block: () -> Unit) {
+        try {
+            block()
+        } catch (_: Exception) {
+        }
+    }
+
+    private fun <T> guarded(fallback: T, block: () -> T): T = try {
+        block()
+    } catch (_: Exception) {
+        fallback
     }
 
     private fun elapsed(startedAt: Long): String {

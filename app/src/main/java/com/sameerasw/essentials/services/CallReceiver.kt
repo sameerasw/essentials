@@ -57,7 +57,11 @@ class CallReceiver : BroadcastReceiver() {
             savedNumber = null
         }
 
-        CallStateRepository.onCallStateChanged(context, state, numberToUse)
+        try {
+            CallStateRepository.onCallStateChanged(context, state, numberToUse)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to update call state", e)
+        }
         WatchCallSyncManager.onCallStateChanged(context, state, numberToUse)
     }
 }

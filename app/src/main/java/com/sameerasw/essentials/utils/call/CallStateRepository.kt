@@ -37,17 +37,28 @@ object CallStateRepository {
     @Synchronized
     fun onCallStateChanged(context: Context, state: Int, number: String?) {
         val previous = telephony
-        telephony = when (state) {
-            TelephonyManager.CALL_STATE_RINGING -> snapshot(context, CallPhase.Ringing, number, previous, incoming = true)
-            TelephonyManager.CALL_STATE_OFFHOOK -> snapshot(context, CallPhase.Active, number, previous, incoming = previous?.incoming ?: false)
-            else -> null
+        telephony = try {
+            telephonySnapshot(context, state, number, previous)
+        } catch (_: Exception) {
+            null
         }
         publish()
     }
 
+    private fun telephonySnapshot(context: Context, state: Int, number: String?, previous: CallSnapshot?): CallSnapshot? =
+        when (state) {
+            TelephonyManager.CALL_STATE_RINGING -> snapshot(context, CallPhase.Ringing, number, previous, incoming = true)
+            TelephonyManager.CALL_STATE_OFFHOOK -> snapshot(context, CallPhase.Active, number, previous, incoming = previous?.incoming ?: false)
+            else -> null
+        }
+
     @Synchronized
     fun onCallNotificationPosted(context: Context, sbn: StatusBarNotification) {
-        val call = CallNotificationParser.parse(context, sbn) ?: return
+        val call = try {
+            CallNotificationParser.parse(context, sbn)
+        } catch (_: Exception) {
+            null
+        } ?: return
         if (!call.ringing) activeSince.putIfAbsent(call.key, call.startedAt ?: System.currentTimeMillis())
         notificationCalls[call.key] = call
         publish()
