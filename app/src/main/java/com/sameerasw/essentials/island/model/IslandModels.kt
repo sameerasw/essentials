@@ -92,6 +92,8 @@ class IslandItem(
     val sourcePackage: String? = null,
     // Temporary priority while the item's state is urgent; null falls back to `priority`.
     val priorityOverride: Int? = null,
+    
+    val compactVisible: Boolean = true,
 ) {
     val effectivePriority: Int get() = priorityOverride ?: priority
 

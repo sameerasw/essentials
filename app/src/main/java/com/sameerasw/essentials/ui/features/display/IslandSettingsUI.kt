@@ -823,6 +823,30 @@ fun IslandSettingsUI(
         }
 
         Text(
+            text = stringResource(R.string.island_section_brief),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp),
+        )
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_calendar_today_24,
+                title = stringResource(R.string.island_brief_title),
+                description = stringResource(R.string.island_brief_desc),
+                isChecked = viewModel.isIslandBriefEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandBriefEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_brief_enabled"),
+            )
+        }
+
+        Text(
             text = stringResource(R.string.duo_section_actions),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -836,9 +860,14 @@ fun IslandSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_front_hand_24,
                 title = stringResource(R.string.duo_action_long_press_title),
-                description = viewModel.islandLongPressAction.value?.let { stringResource(it.title) }
-                    ?: stringResource(R.string.duo_action_none),
+                description = if (viewModel.isIslandBriefEnabled.value) {
+                    stringResource(R.string.island_brief_title)
+                } else {
+                    viewModel.islandLongPressAction.value?.let { stringResource(it.title) }
+                        ?: stringResource(R.string.duo_action_none)
+                },
                 showToggle = false,
+                enabled = !viewModel.isIslandBriefEnabled.value,
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
                     pickingGesture = "long_press"

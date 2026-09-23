@@ -15,6 +15,7 @@ class CompactGestureController(
     private val context: Context,
     private val settings: SettingsRepository,
     private val scope: () -> CoroutineScope?,
+    private val openBrief: () -> Unit,
 ) : CompactGestures {
     private val audioManager by lazy { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
 
@@ -26,7 +27,7 @@ class CompactGestureController(
 
     private val likeWhilePlaying get() = settings.isIslandLikeWhilePlayingEnabled() && musicPlaying
 
-    override val hasLongPress get() = settings.getIslandLongPressAction() != null || likeWhilePlaying
+    override val hasLongPress get() = settings.isIslandBriefEnabled() || settings.getIslandLongPressAction() != null || likeWhilePlaying
 
     override val slideMode: SlideMode
         get() {
@@ -43,6 +44,10 @@ class CompactGestureController(
         if (likeWhilePlaying) {
             scope()?.let(IslandMediaCue::flashLiked)
             execute(Action.LikeCurrentSong)
+            return
+        }
+        if (settings.isIslandBriefEnabled()) {
+            openBrief()
             return
         }
         settings.getIslandLongPressAction()?.let(::execute)

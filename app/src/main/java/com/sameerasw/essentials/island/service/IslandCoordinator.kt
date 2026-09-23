@@ -35,6 +35,7 @@ import com.sameerasw.essentials.island.plugins.consciousgate.ConsciousGatePlugin
 import com.sameerasw.essentials.island.plugins.flashlight.FlashlightPlugin
 import com.sameerasw.essentials.island.plugins.network.NetworkPlugin
 import com.sameerasw.essentials.island.plugins.devices.DevicesPlugin
+import com.sameerasw.essentials.island.plugins.brief.BriefPlugin
 import com.sameerasw.essentials.island.plugins.progress.ProgressPlugin
 import com.sameerasw.essentials.island.plugins.soundmode.SoundModePlugin
 import com.sameerasw.essentials.island.plugins.travel.TravelPlugin
@@ -93,6 +94,7 @@ class IslandCoordinator(
         TravelPlugin(),
         NetworkPlugin(),
         DevicesPlugin(),
+        BriefPlugin(),
     )
 
     private var scope: CoroutineScope? = null
@@ -111,7 +113,12 @@ class IslandCoordinator(
         get() = isWindowSuppressed ||
             (settings.isIslandHideWhenScreenOffEnabled() && (isScreenOff || keyguardManager?.isKeyguardLocked == true))
 
-    private val compactGestures = CompactGestureController(service, settings) { scope }
+    private val compactGestures = CompactGestureController(
+        context = service,
+        settings = settings,
+        scope = { scope },
+        openBrief = { mainHandler.post { controller.expand(BriefPlugin.ITEM_KEY) } },
+    )
 
     private val actions = object : IslandActions {
         override val compactGestures: CompactGestures get() = this@IslandCoordinator.compactGestures
@@ -161,6 +168,7 @@ class IslandCoordinator(
                 addAction(Intent.ACTION_USER_PRESENT)
             },
         )
+        controller.fallbackTapKey = { BriefPlugin.ITEM_KEY.takeIf { settings.isIslandBriefEnabled() } }
         controller.onStageChanged = { stage ->
             if (stage != IslandStage.Expanded) windowHost.setTextInput(false)
             windowHost.onStageChanged(stage)

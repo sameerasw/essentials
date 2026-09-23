@@ -783,6 +783,11 @@ object FeatureRegistry {
                             "island_show_sound_mode",
                         ),
                         SearchSetting(
+                            R.string.island_brief_title,
+                            R.string.island_brief_desc,
+                            "island_brief_enabled",
+                        ),
+                        SearchSetting(
                             R.string.island_show_devices_title,
                             R.string.island_devices_connected,
                             "island_show_devices",

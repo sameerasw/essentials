@@ -196,6 +196,7 @@ class MainViewModel : ViewModel() {
     val isIslandShowTravel = mutableStateOf(true)
     val isIslandShowCaffeinate = mutableStateOf(true)
     val isIslandShowDevices = mutableStateOf(true)
+    val isIslandBriefEnabled = mutableStateOf(false)
     val islandDevicesBatteryOrder = mutableStateOf<List<String>>(emptyList())
     val islandExpandedPadding = mutableFloatStateOf(16f)
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
@@ -2196,6 +2197,7 @@ class MainViewModel : ViewModel() {
         isDuoIslandCombined.value = settingsRepository.isDuoIslandCombinedSetting()
         isIslandShowCaffeinate.value = settingsRepository.isIslandShowCaffeinateEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
+        isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
         islandDevicesBatteryOrder.value = settingsRepository.getIslandDevicesBatteryOrder()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
@@ -5156,6 +5158,11 @@ class MainViewModel : ViewModel() {
     fun setIslandDevicesBatteryOrder(addresses: List<String>) {
         islandDevicesBatteryOrder.value = addresses
         settingsRepository.setIslandDevicesBatteryOrder(addresses)
+    }
+
+    fun setIslandBriefEnabled(enabled: Boolean) {
+        isIslandBriefEnabled.value = enabled
+        settingsRepository.setIslandBriefEnabled(enabled)
     }
 
     fun setIslandShowDevices(enabled: Boolean) {

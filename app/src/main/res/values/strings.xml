@@ -2844,6 +2844,11 @@
     <string name="island_show_calls_title">Calls</string>
     <string name="island_show_timers_title">Timers and stopwatches</string>
     <string name="island_show_network_title">Network activity</string>
+    <string name="island_section_brief">Brief</string>
+    <string name="island_brief_title">Brief</string>
+    <string name="island_brief_desc">Get a brief of what\'s going on</string>
+    <string name="island_brief_no_events">Nothing scheduled</string>
+    <string name="island_brief_all_day">All day</string>
     <string name="duo_combine_with_island">Combine with Island</string>
     <string name="island_combine_with_duo">Combine with Duo</string>
     <string name="island_show_devices_title">Devices</string>

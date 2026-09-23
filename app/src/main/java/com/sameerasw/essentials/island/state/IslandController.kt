@@ -77,6 +77,8 @@ class IslandController(
         }
     }
 
+    var fallbackTapKey: (() -> String?)? = null
+
     fun onTap(itemKey: String?): Boolean {
         val current = _state.value
         return when (current.stage) {
@@ -89,6 +91,7 @@ class IslandController(
             IslandStage.Compact -> {
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
+                    ?: fallbackTapKey?.invoke()?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: return false
                 if (target.interactions.onTap?.invoke() != true) expand(target.key)
                 true
@@ -226,7 +229,7 @@ class IslandController(
         if (peekKey != null && items[peekKey]?.line == null) cancelPeek()
 
         val arrangement = CompactLayoutEngine.arrange(
-            items.values.map { item ->
+            items.values.filter { it.compactVisible }.map { item ->
                 CompactEntry(item.key, item.effectivePriority, item.placement == CompactPlacement.Pinned, item.compact.map { it.key })
             },
             anchorProvider(),

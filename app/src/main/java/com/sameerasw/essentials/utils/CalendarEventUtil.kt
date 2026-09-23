@@ -152,4 +152,58 @@ object CalendarEventUtil {
             null
         }
     }
+
+    fun queryBriefEvents(context: Context, selectedCalendarIds: Set<Long>, showAllDay: Boolean, limit: Int = 1): List<UpcomingCalendarEvent> {
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return emptyList()
+        }
+        val now = System.currentTimeMillis()
+        val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+        ContentUris.appendId(builder, now - 24 * 60 * 60 * 1000L)
+        val endOfTomorrow = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_YEAR, 1)
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }.timeInMillis
+        ContentUris.appendId(builder, endOfTomorrow)
+        val projection = arrayOf(
+            CalendarContract.Instances.EVENT_ID,
+            CalendarContract.Instances.TITLE,
+            CalendarContract.Instances.BEGIN,
+            CalendarContract.Instances.END,
+            CalendarContract.Instances.ALL_DAY,
+            CalendarContract.Instances.SELF_ATTENDEE_STATUS,
+            CalendarContract.Instances.CALENDAR_ID,
+            CalendarContract.Instances.EVENT_LOCATION,
+            CalendarContract.Instances.DISPLAY_COLOR,
+        )
+        val events = mutableListOf<UpcomingCalendarEvent>()
+        try {
+            context.contentResolver.query(builder.build(), projection, null, null, "${CalendarContract.Instances.BEGIN} ASC")?.use { c ->
+                while (c.moveToNext()) {
+                    if (selectedCalendarIds.isNotEmpty() && c.getLong(6) !in selectedCalendarIds) continue
+                    if (c.getInt(5) == CalendarContract.Attendees.ATTENDEE_STATUS_DECLINED) continue
+                    val allDay = c.getInt(4) != 0
+                    if (allDay && !showAllDay) continue
+                    val end = c.getLong(3)
+                    if (end <= now) continue
+                    val title = c.getString(1)?.trim()?.takeIf { it.isNotBlank() } ?: continue
+                    events += UpcomingCalendarEvent(
+                        title = title,
+                        startTimeMillis = c.getLong(2),
+                        location = c.getString(7)?.trim()?.takeIf { it.isNotBlank() },
+                        eventId = c.getLong(0),
+                        endTimeMillis = end,
+                        allDay = allDay,
+                        calendarColor = if (c.isNull(8)) null else c.getInt(8),
+                    )
+                }
+            }
+        } catch (_: Exception) {
+            return emptyList()
+        }
+        return events.filter { it.startTimeMillis <= endOfTomorrow }.take(limit)
+    }
 }
