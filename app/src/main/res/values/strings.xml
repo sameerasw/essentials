@@ -2849,6 +2849,12 @@
     <string name="island_brief_desc">Get a brief of what\'s going on</string>
     <string name="island_brief_no_events">Nothing scheduled</string>
     <string name="island_brief_all_day">All day</string>
+    <string name="island_brief_in_minutes">in %1$dm</string>
+    <string name="island_brief_in_hours">in %1$dh</string>
+    <string name="island_brief_in_hours_minutes">in %1$dh %2$dm</string>
+    <string name="island_brief_today">Today %1$s</string>
+    <string name="island_brief_tomorrow">Tomorrow %1$s</string>
+    <string name="island_brief_now_until">Now · until %1$s</string>
     <string name="duo_combine_with_island">Combine with Island</string>
     <string name="island_combine_with_duo">Combine with Duo</string>
     <string name="island_show_devices_title">Devices</string>

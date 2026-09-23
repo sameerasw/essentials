@@ -344,7 +344,7 @@ private fun BriefOverview(
                             text = stringResource(R.string.island_brief_no_events),
                             style = IslandTextStyles.body,
                         )
-                        else -> list.forEach { event -> BriefEventRow(event, timePattern, accent) { onEventClick(event) } }
+                        else -> list.forEach { event -> BriefEventRow(event, now, accent) { onEventClick(event) } }
                     }
                 }
             }
@@ -358,13 +358,9 @@ private fun BriefOverview(
 }
 
 @Composable
-private fun BriefEventRow(event: UpcomingCalendarEvent, timePattern: String, accent: Color, onClick: () -> Unit) {
-    val format = remember(timePattern) { SimpleDateFormat(timePattern, Locale.getDefault()) }
-    val whenText = if (event.allDay) {
-        stringResource(R.string.island_brief_all_day)
-    } else {
-        "${format.format(Date(event.startTimeMillis))} – ${format.format(Date(event.endTimeMillis))}"
-    }
+private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color, onClick: () -> Unit) {
+    val context = LocalContext.current
+    val whenText = remember(event, now) { briefWhen(context, event, now) }
     val color = event.calendarColor?.let { Color(soften(it)) } ?: accent
     Row(
         modifier = Modifier
@@ -477,4 +473,38 @@ private fun BriefPlayerButton(
     ) {
         IslandIcon(icon, tint = tint, size = iconSize)
     }
+}
+
+private fun briefWhen(context: Context, event: UpcomingCalendarEvent, now: Long): String {
+    val timeFormat = DateFormat.getTimeFormat(context)
+    val start = event.startTimeMillis
+    val tomorrow = !isSameDay(start, now) && start > now
+    if (event.allDay) {
+        val all = context.getString(R.string.island_brief_all_day)
+        return if (tomorrow) context.getString(R.string.island_brief_tomorrow, all) else all
+    }
+    if (start <= now) {
+        return context.getString(R.string.island_brief_now_until, timeFormat.format(Date(event.endTimeMillis)))
+    }
+    val minutes = ((start - now + 59_999L) / 60_000L).toInt()
+    val hours = minutes / 60
+    val rest = minutes % 60
+    return when {
+        minutes < 60 -> context.getString(R.string.island_brief_in_minutes, minutes)
+        minutes < 3 * 60 -> if (rest == 0) {
+            context.getString(R.string.island_brief_in_hours, hours)
+        } else {
+            context.getString(R.string.island_brief_in_hours_minutes, hours, rest)
+        }
+        minutes < 12 * 60 -> context.getString(R.string.island_brief_in_hours, if (rest >= 30) hours + 1 else hours)
+        tomorrow -> context.getString(R.string.island_brief_tomorrow, timeFormat.format(Date(start)))
+        else -> context.getString(R.string.island_brief_today, timeFormat.format(Date(start)))
+    }
+}
+
+private fun isSameDay(a: Long, b: Long): Boolean {
+    val ca = java.util.Calendar.getInstance().apply { timeInMillis = a }
+    val cb = java.util.Calendar.getInstance().apply { timeInMillis = b }
+    return ca.get(java.util.Calendar.YEAR) == cb.get(java.util.Calendar.YEAR) &&
+        ca.get(java.util.Calendar.DAY_OF_YEAR) == cb.get(java.util.Calendar.DAY_OF_YEAR)
 }
