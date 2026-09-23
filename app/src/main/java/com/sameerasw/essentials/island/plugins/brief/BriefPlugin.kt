@@ -51,6 +51,8 @@ import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import kotlinx.coroutines.launch
 import android.os.BatteryManager
+import android.os.Build
+import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -234,7 +236,6 @@ private sealed interface BriefPage {
     data object Player : BriefPage
 }
 
-// Swipe left-to-right returns to the overview
 @Composable
 private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, content: @Composable () -> Unit) {
     val context = LocalContext.current
@@ -328,6 +329,9 @@ private fun BriefOverview(
         }
     }
     val battery = remember(now) { readBattery(context) }
+    val devices by produceState(emptyList<BriefDevice>(), now) {
+        value = withContext(Dispatchers.IO) { readDevices(context) }
+    }
     val events by produceState<List<UpcomingCalendarEvent>?>(null, calendarEnabled) {
         value = if (calendarEnabled) {
             withContext(Dispatchers.IO) { CalendarEventUtil.queryBriefEvents(context, calendarIds, showAllDay) }
@@ -362,6 +366,18 @@ private fun BriefOverview(
                     }
                 },
             )
+
+            if (devices.isNotEmpty()) {
+                Spacer(Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    devices.forEach { device ->
+                        BriefDeviceChip(device, iconStyle, accent, Modifier.weight(1f))
+                    }
+                }
+            }
 
             if (calendarEnabled) {
                 Spacer(Modifier.height(12.dp))
@@ -539,4 +555,56 @@ private fun isSameDay(a: Long, b: Long): Boolean {
     val cb = java.util.Calendar.getInstance().apply { timeInMillis = b }
     return ca.get(java.util.Calendar.YEAR) == cb.get(java.util.Calendar.YEAR) &&
         ca.get(java.util.Calendar.DAY_OF_YEAR) == cb.get(java.util.Calendar.DAY_OF_YEAR)
+}
+
+private class BriefDevice(val iconRes: Int, val level: Int)
+
+private fun readDevices(context: Context): List<BriefDevice> {
+    val settings = SettingsRepository(context)
+    val devices = mutableListOf<BriefDevice>()
+    val macLevel = settings.getInt(SettingsRepository.KEY_MAC_BATTERY_LEVEL, -1)
+    if (settings.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED) &&
+        settings.getBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED) &&
+        macLevel >= 0
+    ) {
+        devices += BriefDevice(R.drawable.rounded_laptop_mac_24, macLevel)
+    }
+    val hasPermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+        context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+    if (hasPermission) {
+        BluetoothBatteryUtils.getPairedDevicesBattery(context).forEach { device ->
+            devices += BriefDevice(deviceIcon(device.name), device.level)
+        }
+    }
+    return devices.take(MAX_DEVICES)
+}
+
+private fun deviceIcon(name: String): Int = when {
+    name.contains("watch", true) || name.contains("gear", true) || name.contains("fit", true) -> R.drawable.rounded_watch_24
+    name.contains("bud", true) || name.contains("pod", true) || name.contains("head", true) ||
+        name.contains("audio", true) || name.contains("sound", true) -> R.drawable.rounded_headphones_24
+    name.contains("keyboard", true) -> R.drawable.rounded_keyboard_24
+    else -> R.drawable.rounded_bluetooth_24
+}
+
+private const val MAX_DEVICES = 4
+
+@Composable
+private fun BriefDeviceChip(device: BriefDevice, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(50))
+            .background(Color.White.copy(alpha = 0.1f))
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IslandIcon(device.iconRes, tint = accent, size = 18.dp)
+        Spacer(Modifier.width(6.dp))
+        if (iconStyle) {
+            BatteryGlyph(device.level, accent, showLevel = true)
+        } else {
+            BatteryRing(device.level, accent, showLevel = true)
+        }
+    }
 }
