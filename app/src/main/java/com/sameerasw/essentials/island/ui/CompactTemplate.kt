@@ -100,12 +100,17 @@ fun CompactTemplate(
         val right = placeables.drop(beforeCount).filter { it.width > 0 }
         fun content(list: List<Placeable>) = if (list.isEmpty()) 0 else list.sumOf { it.width } + spacing * (list.size - 1)
         val height = spec.compactHeight.roundToPx()
+        
+        val squareCell = spec.cellSize.roundToPx()
+        val opticalInset = (height * OPTICAL_INSET_RATIO).toInt()
+        fun edgeInset(outer: Placeable?) = if (outer != null && outer.width > squareCell) opticalInset else 0
         if (spec.growDirection != 0) {
             val cells = left + right
-            val body = content(cells) + if (cells.isEmpty()) 0 else spacing
+            val inset = edgeInset(if (spec.growDirection > 0) cells.lastOrNull() else cells.firstOrNull())
+            val body = content(cells) + if (cells.isEmpty()) 0 else spacing + inset
             val width = cameraSlot + body
             return@Layout layout(width, height) {
-                var x = if (spec.growDirection > 0) cameraSlot else spacing
+                var x = if (spec.growDirection > 0) cameraSlot else spacing + inset
                 cells.forEach {
                     it.place(x, (height - it.height) / 2)
                     x += it.width + spacing
@@ -113,15 +118,17 @@ fun CompactTemplate(
             }
         }
         // Cells hug the outer ends with the same edge padding on both sides; the slack sits around the camera.
-        val side = maxOf(content(left), content(right)) + if (left.isEmpty() && right.isEmpty()) 0 else spacing
+        val leftInset = edgeInset(left.firstOrNull())
+        val rightInset = edgeInset(right.lastOrNull())
+        val side = maxOf(content(left) + leftInset, content(right) + rightInset) + if (left.isEmpty() && right.isEmpty()) 0 else spacing
         val width = side * 2 + cameraSlot
         layout(width, height) {
-            var x = spacing
+            var x = spacing + leftInset
             left.forEach {
                 it.place(x, (height - it.height) / 2)
                 x += it.width + spacing
             }
-            x = width - spacing - content(right)
+            x = width - spacing - rightInset - content(right)
             right.forEach {
                 it.place(x, (height - it.height) / 2)
                 x += it.width + spacing
@@ -129,3 +136,5 @@ fun CompactTemplate(
         }
     }
 }
+
+private const val OPTICAL_INSET_RATIO = 0.15f
