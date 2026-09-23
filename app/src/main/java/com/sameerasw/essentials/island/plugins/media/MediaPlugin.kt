@@ -236,6 +236,9 @@ class MediaPlugin : BaseIslandPlugin() {
             playing = controller.playbackState?.state == PlaybackState.STATE_PLAYING,
             liked = MediaSessionSource.isLiked(controller),
             actions = actions,
+            open = {
+                if (!sendPendingIntent(context, controller.sessionActivity)) launchPackage(context, controller.packageName)
+            },
         )
     }
 

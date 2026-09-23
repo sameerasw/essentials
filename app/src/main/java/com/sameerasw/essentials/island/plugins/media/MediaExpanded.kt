@@ -71,6 +71,7 @@ class MediaSnapshot(
     val playing: Boolean,
     val liked: Boolean,
     val actions: MediaActions,
+    val open: () -> Unit,
 )
 
 object IslandMediaState {

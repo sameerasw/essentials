@@ -38,7 +38,12 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.foundation.gestures.horizontalDrag
+import androidx.compose.foundation.gestures.awaitHorizontalTouchSlopOrCancellation
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -109,6 +114,8 @@ import java.util.Locale
 class BriefPlugin : BaseIslandPlugin() {
     override val id = "brief"
 
+    private var pageOpen: (() -> Unit)? = null
+
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
@@ -132,8 +139,9 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, calendarEnabled, calendarIds, showAllDay, showGlow)
+                    BriefExpanded(scope, iconStyle, calendarEnabled, calendarIds, showAllDay, showGlow) { pageOpen = it }
                 },
+                onOpen = { pageOpen?.invoke() },
                 compactVisible = false,
             ),
         )
@@ -152,9 +160,21 @@ private fun BriefExpanded(
     calendarIds: Set<Long>,
     showAllDay: Boolean,
     showGlow: Boolean,
+    onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
+    val context = LocalContext.current
     var page by remember { mutableStateOf<BriefPage>(BriefPage.Overview) }
     val media by IslandMediaState.current.collectAsState()
+    val current = page
+    SideEffect {
+        onPageOpenChanged(
+            when (current) {
+                BriefPage.Overview -> null
+                BriefPage.Player -> media?.open
+                is BriefPage.Event -> ({ openEvent(context, current.event) })
+            },
+        )
+    }
     LaunchedEffect(media == null) {
         if (media == null && page == BriefPage.Player) page = BriefPage.Overview
     }
@@ -250,20 +270,26 @@ private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, conten
                 translationX = offset.value
             }
             .pointerInput(Unit) {
-                detectHorizontalDragGestures(
-                    onDragEnd = {
-                        if (offset.value > backThreshold) {
-                            IslandHaptics.commit(context)
-                            onBack()
-                        } else {
-                            coroutineScope.launch { offset.animateTo(0f) }
+                awaitEachGesture {
+                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val start = awaitHorizontalTouchSlopOrCancellation(down.id) { change, over ->
+                        if (over > 0f) {
+                            change.consume()
+                            coroutineScope.launch { offset.snapTo(over) }
                         }
-                    },
-                    onDragCancel = { coroutineScope.launch { offset.animateTo(0f) } },
-                ) { change, amount ->
-                    change.consume()
+                    } ?: return@awaitEachGesture
                     scope.keepAlive()
-                    coroutineScope.launch { offset.snapTo((offset.value + amount).coerceAtLeast(0f)) }
+                    val completed = horizontalDrag(start.id) { change ->
+                        val amount = change.positionChange().x
+                        change.consume()
+                        coroutineScope.launch { offset.snapTo((offset.value + amount).coerceAtLeast(0f)) }
+                    }
+                    if (completed && offset.value > backThreshold) {
+                        IslandHaptics.commit(context)
+                        onBack()
+                    } else {
+                        coroutineScope.launch { offset.animateTo(0f) }
+                    }
                 }
             },
     ) {
