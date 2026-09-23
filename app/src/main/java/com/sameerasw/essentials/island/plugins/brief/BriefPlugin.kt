@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.brief
 
+import androidx.compose.foundation.layout.fillMaxSize
+import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -19,6 +21,8 @@ import com.sameerasw.essentials.island.plugins.media.IslandMediaState
 import com.sameerasw.essentials.island.plugins.media.MediaExpanded
 import com.sameerasw.essentials.island.plugins.media.MediaSnapshot
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
+import com.sameerasw.essentials.island.ui.components.accentGlow
+import com.sameerasw.essentials.island.ui.components.cameraClearance
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.provider.CalendarContract
@@ -152,18 +156,23 @@ private fun BriefExpanded(
     LaunchedEffect(media == null) {
         if (media == null && page == BriefPage.Player) page = BriefPage.Overview
     }
+    
+    val pageShape = RoundedCornerShape(scope.spec.expandedCorner)
     Box(propagateMinConstraints = true) {
+        if (!SurfaceBackdrop { BriefBackground(page, media, showGlow, scope, Modifier.fillMaxSize()) }) {
+            BriefBackground(page, media, showGlow, scope, Modifier.matchParentSize())
+        }
         AnimatedContent(
             targetState = page,
             transitionSpec = {
                 val forward = targetState != BriefPage.Overview
-                (slideInHorizontally(spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING)) { if (forward) it / 8 else -it / 8 } + fadeIn(tween(220, delayMillis = 60))) togetherWith
-                    (slideOutHorizontally(spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING)) { if (forward) -it / 8 else it / 8 } + fadeOut(tween(120))) using
+                (slideInHorizontally { if (forward) it / 3 else -it / 3 } + fadeIn()) togetherWith
+                    (slideOutHorizontally { if (forward) -it / 3 else it / 3 } + fadeOut()) using
                     SizeTransform(clip = false) { _, _ -> spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING) }
             },
             label = "brief",
         ) { target ->
-            Box(propagateMinConstraints = true) {
+            Box(propagateMinConstraints = true, modifier = Modifier.clip(pageShape)) {
                 when (target) {
                     BriefPage.Overview -> BriefOverview(
                         scope = scope,
@@ -180,11 +189,41 @@ private fun BriefExpanded(
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
-                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope)
+                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope, drawBackground = false)
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun BriefBackground(page: BriefPage, media: MediaSnapshot?, showGlow: Boolean, scope: IslandExpandedScope, modifier: Modifier) {
+    val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
+    val artAlpha by animateFloatAsState(
+        when (page) {
+            BriefPage.Player -> 1f
+            BriefPage.Overview -> if (media?.playing == true) 1f else 0f
+            is BriefPage.Event -> 0f
+        },
+        tween(400),
+        label = "briefArt",
+    )
+    val event = (page as? BriefPage.Event)?.event
+    val glowColor = event?.calendarColor?.let { Color(soften(it)) } ?: MaterialTheme.colorScheme.primary
+    val glowAlpha by animateFloatAsState(if (event != null) 1f else 0f, tween(400), label = "briefGlow")
+    Box(modifier) {
+        if (artAlpha > 0f) {
+            scope.ArtworkBackdrop(artwork, Modifier.matchParentSize().graphicsLayer { alpha = artAlpha })
+        }
+        if (glowAlpha > 0f) {
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .graphicsLayer { alpha = glowAlpha }
+                    .accentGlow(glowColor, showGlow, scope.cameraClearance),
+            )
         }
     }
 }
@@ -207,11 +246,7 @@ private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, conten
         propagateMinConstraints = true,
         modifier = Modifier
             .graphicsLayer {
-                val progress = (offset.value / (backThreshold * 2f)).coerceIn(0f, 1f)
-                translationX = offset.value * 0.5f
-                alpha = 1f - progress * 0.6f
-                scaleX = 1f - progress * 0.05f
-                scaleY = 1f - progress * 0.05f
+                translationX = offset.value
             }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures(
@@ -250,6 +285,7 @@ private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, sc
                 scope.collapse()
             },
             scope = scope,
+            drawBackground = false,
         )
     }
 }
@@ -307,10 +343,6 @@ private fun BriefOverview(
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
     Box(propagateMinConstraints = true) {
         
-        val backdropAlpha by animateFloatAsState(if (media?.playing == true) 1f else 0f, tween(400), label = "briefBackdrop")
-        if (backdropAlpha > 0f) {
-            scope.ArtworkBackdrop(artwork, Modifier.matchParentSize().graphicsLayer { alpha = backdropAlpha })
-        }
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
             scope.CameraRow(

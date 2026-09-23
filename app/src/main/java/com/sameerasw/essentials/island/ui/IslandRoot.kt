@@ -45,6 +45,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -127,6 +128,7 @@ fun IslandRoot(
     }
 
     var surfaceSize by remember { mutableStateOf(IntSize.Zero) }
+    val backdropSlot = remember { IslandBackdropSlot() }
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
     val wiggle = remember { Animatable(0f) }
@@ -534,6 +536,19 @@ fun IslandRoot(
                 spec.growDirection < 0 -> Alignment.TopEnd
                 else -> Alignment.TopCenter
             }
+            val backdrop = backdropSlot.content
+            if (key.stage == IslandStage.Expanded && backdrop != null) {
+                Box(
+                    Modifier
+                        .layout { measurable, _ ->
+                            val p = measurable.measure(Constraints.fixed(surfaceSize.width.coerceAtLeast(0), surfaceSize.height.coerceAtLeast(0)))
+                            layout(0, 0) { p.place(0, 0) }
+                        }
+                        .graphicsLayer {
+                            alpha = contentAlpha.value * (1f - collapse.value * 1.6f).coerceIn(0f, 1f)
+                        },
+                ) { backdrop() }
+            }
             Box(contentAlignment = layerAlign) {
             outgoing?.let { out ->
                 val outItem = out.itemKey?.let { state.items[it] ?: lastItems[it] }
@@ -611,11 +626,13 @@ fun IslandRoot(
                     }
                     .drawBehind { if (dismissOffset.value != 0f) drawRect(Color.Black) },
             ) {
-                StageContent(
-                    key.stage, item, state, spec, actions, interactive = true,
-                    onCellTap = ::handleTap,
-                    onCellLongPress = ::handleLongPress,
-                )
+                CompositionLocalProvider(LocalIslandBackdropSlot provides backdropSlot) {
+                    StageContent(
+                        key.stage, item, state, spec, actions, interactive = true,
+                        onCellTap = ::handleTap,
+                        onCellLongPress = ::handleLongPress,
+                    )
+                }
             }
             SwipeIntentChip(
                 intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded },

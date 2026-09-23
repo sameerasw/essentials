@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import androidx.compose.foundation.layout.fillMaxSize
+import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.cameraClearance
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
@@ -47,6 +49,8 @@ fun CalendarExpanded(
     showGlow: Boolean,
     onView: () -> Unit,
     scope: IslandExpandedScope,
+    
+    drawBackground: Boolean = true,
 ) {
     val spec = scope.spec
     val context = LocalContext.current
@@ -62,7 +66,9 @@ fun CalendarExpanded(
     val detailStyle = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp, lineHeight = 20.sp)
 
     Box(propagateMinConstraints = true) {
-        Box(Modifier.matchParentSize().accentGlow(calendarColor, showGlow, scope.cameraClearance))
+        if (drawBackground && !SurfaceBackdrop { Box(Modifier.fillMaxSize().accentGlow(calendarColor, showGlow, scope.cameraClearance)) }) {
+            Box(Modifier.matchParentSize().accentGlow(calendarColor, showGlow, scope.cameraClearance))
+        }
         Column(
             modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,

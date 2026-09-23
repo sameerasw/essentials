@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import androidx.compose.foundation.layout.fillMaxSize
+import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
 import com.sameerasw.essentials.island.ui.components.cameraClearance
 import androidx.compose.ui.geometry.Size
@@ -86,6 +88,8 @@ fun MediaExpanded(
     liked: Boolean,
     actions: MediaActions,
     scope: IslandExpandedScope,
+    
+    drawBackground: Boolean = true,
 ) {
     val spec = scope.spec
     var progress by remember { mutableFloatStateOf(actions.progress()) }
@@ -100,7 +104,9 @@ fun MediaExpanded(
     val image = remember(artwork) { artwork?.asImageBitmap() }
 
     Box {
-        scope.ArtworkBackdrop(image, Modifier.matchParentSize())
+        if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
+            scope.ArtworkBackdrop(image, Modifier.matchParentSize())
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
