@@ -61,6 +61,20 @@ class MediaActions(
     val progress: () -> Float,
 )
 
+class MediaSnapshot(
+    val title: String,
+    val artist: String,
+    val artwork: Bitmap?,
+    val accent: Color,
+    val playing: Boolean,
+    val liked: Boolean,
+    val actions: MediaActions,
+)
+
+object IslandMediaState {
+    val current = kotlinx.coroutines.flow.MutableStateFlow<MediaSnapshot?>(null)
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MediaExpanded(

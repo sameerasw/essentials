@@ -57,6 +57,9 @@ class MediaPlugin : BaseIslandPlugin() {
     private var track: Track? = null
     private var playing = false
     private var liked = false
+
+    private var lastController: MediaController? = null
+    private var lastTrack: Track? = null
     private val pausedGrace = Runnable {
         active = null
         track = null
@@ -68,6 +71,9 @@ class MediaPlugin : BaseIslandPlugin() {
     }
 
     override fun onStop() {
+        IslandMediaState.current.value = null
+        lastController = null
+        lastTrack = null
         ctx?.mainHandler?.removeCallbacks(pausedGrace)
         source?.stop()
         source = null
@@ -95,6 +101,7 @@ class MediaPlugin : BaseIslandPlugin() {
         if (playingController != null) {
             c.mainHandler.removeCallbacks(pausedGrace)
             active = playingController
+            lastController = playingController
             playing = true
             liked = MediaSessionSource.isLiked(playingController)
             val metadata = playingController.metadata
@@ -117,6 +124,7 @@ class MediaPlugin : BaseIslandPlugin() {
                 }
                 if (active?.sessionToken != playingController.sessionToken) return@launch
                 track = Track(key, playingController.packageName, title, artist, art, accent)
+                lastTrack = track
                 render()
                 if (isNewTrack && settings.isIslandMediaPeekSongChangeEnabled()) {
                     c.request(PluginRequest.Peek(ITEM_KEY, settings.getIslandPeekDurationMs()))
@@ -147,6 +155,7 @@ class MediaPlugin : BaseIslandPlugin() {
     private fun render() {
         val t = track
         val controller = active
+        publishLastPlayer()
         if (t == null || controller == null) {
             publish(null)
             return
@@ -194,6 +203,42 @@ class MediaPlugin : BaseIslandPlugin() {
         )
     }
 
+    private fun publishLastPlayer() {
+        val controller = lastController
+        val t = lastTrack
+        val alive = controller != null && source?.all.orEmpty().any { it.sessionToken == controller.sessionToken }
+        if (!settings.isIslandShowMediaEnabled() || !alive || t == null || controller == null) {
+            if (!alive) {
+                lastController = null
+                lastTrack = null
+            }
+            IslandMediaState.current.value = null
+            return
+        }
+        val actions = MediaActions(
+            playPause = {
+                if (controller.playbackState?.state == PlaybackState.STATE_PLAYING) {
+                    controller.transportControls.pause()
+                } else {
+                    controller.transportControls.play()
+                }
+            },
+            next = { controller.transportControls.skipToNext() },
+            previous = { controller.transportControls.skipToPrevious() },
+            like = { like() },
+            progress = { MediaSessionSource.position(controller) },
+        )
+        IslandMediaState.current.value = MediaSnapshot(
+            title = t.title,
+            artist = t.artist,
+            artwork = t.artwork,
+            accent = t.accent?.let { Color(it) } ?: Color.White,
+            playing = controller.playbackState?.state == PlaybackState.STATE_PLAYING,
+            liked = MediaSessionSource.isLiked(controller),
+            actions = actions,
+        )
+    }
+
     private suspend fun retryArtwork(key: String, controller: MediaController) {
         ART_RETRY_DELAYS_MS.forEach { wait ->
             delay(wait)
@@ -201,6 +246,7 @@ class MediaPlugin : BaseIslandPlugin() {
             val art = withContext(Dispatchers.IO) { MediaSessionSource.artwork(context, controller.metadata) } ?: return@forEach
             if (track?.key != key || active?.sessionToken != controller.sessionToken) return
             track = track?.copy(artwork = art, accent = accentFrom(art))
+            lastTrack = track
             render()
             return
         }
@@ -218,10 +264,8 @@ class MediaPlugin : BaseIslandPlugin() {
     private fun like() {
         context.sendBroadcast(Intent(NotificationListener.ACTION_LIKE_CURRENT_SONG).setPackage(context.packageName))
         ctx?.mainHandler?.postDelayed({
-            active?.let {
-                liked = MediaSessionSource.isLiked(it)
-                render()
-            }
+            active?.let { liked = MediaSessionSource.isLiked(it) }
+            render()
         }, 400L)
     }
 

@@ -6,6 +6,21 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.ContentUris
+import androidx.compose.foundation.Image
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import com.sameerasw.essentials.island.plugins.media.IslandMediaState
+import com.sameerasw.essentials.island.plugins.media.MediaExpanded
+import com.sameerasw.essentials.island.plugins.media.MediaSnapshot
+import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
+import com.sameerasw.essentials.island.ui.components.IslandIcon
+import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.provider.CalendarContract
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -59,6 +74,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
@@ -131,37 +147,62 @@ private fun BriefExpanded(
     showAllDay: Boolean,
     showGlow: Boolean,
 ) {
-    var selected by remember { mutableStateOf<UpcomingCalendarEvent?>(null) }
+    var page by remember { mutableStateOf<BriefPage>(BriefPage.Overview) }
+    val media by IslandMediaState.current.collectAsState()
+    LaunchedEffect(media == null) {
+        if (media == null && page == BriefPage.Player) page = BriefPage.Overview
+    }
     Box(propagateMinConstraints = true) {
         AnimatedContent(
-            targetState = selected,
+            targetState = page,
             transitionSpec = {
-                val forward = targetState != null
+                val forward = targetState != BriefPage.Overview
                 (slideInHorizontally(spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING)) { if (forward) it / 8 else -it / 8 } + fadeIn(tween(220, delayMillis = 60))) togetherWith
                     (slideOutHorizontally(spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING)) { if (forward) -it / 8 else it / 8 } + fadeOut(tween(120))) using
                     SizeTransform(clip = false) { _, _ -> spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING) }
             },
             label = "brief",
-        ) { event ->
+        ) { target ->
             Box(propagateMinConstraints = true) {
-                if (event == null) {
-                    BriefOverview(scope, iconStyle, calendarEnabled, calendarIds, showAllDay) { selected = it }
-                } else {
-                    BriefEventDetail(event, showGlow, scope) { selected = null }
+                when (target) {
+                    BriefPage.Overview -> BriefOverview(
+                        scope = scope,
+                        iconStyle = iconStyle,
+                        calendarEnabled = calendarEnabled,
+                        calendarIds = calendarIds,
+                        showAllDay = showAllDay,
+                        media = media,
+                        onEventClick = { page = BriefPage.Event(it) },
+                        onPlayerClick = { page = BriefPage.Player },
+                    )
+                    is BriefPage.Event -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
+                        BriefEventDetail(target.event, showGlow, scope)
+                    }
+                    BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
+                        media?.let { m ->
+                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope)
+                        }
+                    }
                 }
             }
         }
     }
 }
 
+private sealed interface BriefPage {
+    data object Overview : BriefPage
+    data class Event(val event: UpcomingCalendarEvent) : BriefPage
+    data object Player : BriefPage
+}
+
+// Swipe left-to-right returns to the overview
 @Composable
-private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, scope: IslandExpandedScope, onBack: () -> Unit) {
+private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, content: @Composable () -> Unit) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val backThreshold = with(density) { 64.dp.toPx() }
     val offset = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
-    val now = System.currentTimeMillis()
     Box(
         propagateMinConstraints = true,
         modifier = Modifier
@@ -190,6 +231,15 @@ private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, sc
                 }
             },
     ) {
+        content()
+    }
+}
+
+@Composable
+private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, scope: IslandExpandedScope) {
+    val context = LocalContext.current
+    val now = System.currentTimeMillis()
+    Box(propagateMinConstraints = true) {
         CalendarExpanded(
             event = event,
             relative = CalendarEventUtil.formatRelativeTime(context, event.startTimeMillis, now),
@@ -225,11 +275,13 @@ private fun BriefOverview(
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
     showAllDay: Boolean,
+    media: MediaSnapshot?,
     onEventClick: (UpcomingCalendarEvent) -> Unit,
+    onPlayerClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val spec = scope.spec
-    val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
+    val sidePadding = spec.expandedPadding * 0.6f + spec.expandedCorner * 0.25f
     val accent = MaterialTheme.colorScheme.primary
 
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -252,7 +304,13 @@ private fun BriefOverview(
     val time = SimpleDateFormat(timePattern, Locale.getDefault()).format(Date(now))
     val date = SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(now))
 
+    val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
     Box(propagateMinConstraints = true) {
+        
+        val backdropAlpha by animateFloatAsState(if (media?.playing == true) 1f else 0f, tween(400), label = "briefBackdrop")
+        if (backdropAlpha > 0f) {
+            scope.ArtworkBackdrop(artwork, Modifier.matchParentSize().graphicsLayer { alpha = backdropAlpha })
+        }
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
             scope.CameraRow(
@@ -289,6 +347,11 @@ private fun BriefOverview(
                         else -> list.forEach { event -> BriefEventRow(event, timePattern, accent) { onEventClick(event) } }
                     }
                 }
+            }
+
+            if (media != null) {
+                Spacer(Modifier.height(8.dp))
+                BriefPlayer(media, artwork, onPlayerClick, Modifier.padding(horizontal = sidePadding))
             }
         }
     }
@@ -341,4 +404,77 @@ private fun readBattery(context: Context): Int {
     val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
     val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
     return if (level < 0 || scale <= 0) -1 else level * 100 / scale
+}
+
+@Composable
+private fun BriefPlayer(media: MediaSnapshot, artwork: ImageBitmap?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier
+                .size(56.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(Color.White.copy(alpha = 0.1f)),
+        ) {
+            if (artwork != null) {
+                Image(artwork, null, contentScale = ContentScale.Crop, modifier = Modifier.matchParentSize())
+            }
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            MarqueeText(text = media.title, style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp))
+            MarqueeText(text = media.artist, style = IslandTextStyles.body)
+        }
+        BriefPlayerButton(
+            icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+            tint = if (media.liked) media.accent else Color.White,
+        ) {
+            IslandHaptics.button(context)
+            media.actions.like()
+        }
+        BriefPlayerButton(
+            icon = if (media.playing) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24,
+            tint = if (media.accent.luminance() > 0.5f) Color.Black else Color.White,
+            container = media.accent,
+            width = 64.dp,
+            iconSize = 26.dp,
+        ) {
+            IslandHaptics.button(context)
+            media.actions.playPause()
+        }
+        BriefPlayerButton(R.drawable.rounded_skip_next_24) {
+            IslandHaptics.button(context)
+            media.actions.next()
+        }
+    }
+}
+
+@Composable
+private fun BriefPlayerButton(
+    icon: Int,
+    tint: Color = Color.White,
+    container: Color? = null,
+    width: Dp = 44.dp,
+    iconSize: Dp = 24.dp,
+    onClick: () -> Unit,
+) {
+    val background by animateColorAsState(container ?: Color.Transparent, label = "briefButton")
+    Box(
+        Modifier
+            .padding(horizontal = 2.dp)
+            .size(width = width, height = 44.dp)
+            .clip(CircleShape)
+            .background(background)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        IslandIcon(icon, tint = tint, size = iconSize)
+    }
 }
