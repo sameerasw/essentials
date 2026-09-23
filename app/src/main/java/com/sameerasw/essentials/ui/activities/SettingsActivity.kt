@@ -122,6 +122,11 @@ import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionGrantUtil
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import androidx.compose.runtime.rememberCoroutineScope
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.ui.core.sheets.BugReportBottomSheet
@@ -337,6 +342,7 @@ fun SettingsContent(
     val isRootEnabled by viewModel.isRootEnabled
     val isRootPermissionGranted by viewModel.isRootPermissionGranted
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
+    val grantScope = rememberCoroutineScope()
     var showInstructionsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
@@ -1274,6 +1280,35 @@ fun SettingsContent(
                             ).padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            Toast.makeText(context, context.getString(R.string.toast_granting_permissions), Toast.LENGTH_SHORT).show()
+                            grantScope.launch {
+                                val done = withContext(Dispatchers.IO) { PermissionGrantUtil.grantAll(context) }
+                                viewModel.check(context)
+                                Toast.makeText(
+                                    context,
+                                    context.getString(if (done) R.string.toast_permissions_granted else R.string.shizuku_not_running_desc),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        },
+                        enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 44.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_shield_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_grant_all_permissions))
+                    }
+
                     Button(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
