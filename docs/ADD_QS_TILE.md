@@ -102,7 +102,6 @@ class FeatureTileService : BaseTileService() {
 | Method | Return Type | Description |
 | :--- | :--- | :--- |
 | `onTileClick()` | `Unit` | Executed asynchronously when the tile is tapped. |
-| `performTileClick()` | suspend `Unit` | Optional override for actions that must await I/O before the tile leaves its processing state. The default calls `onTileClick()`. |
 | `getTileLabel()` | `String` | Primary title string rendered on the tile. |
 | `getTileSubtitle()` | `String` | Secondary status text (e.g. "On", "Off", timer remaining). |
 | `getTileState()` | `Int` | `Tile.STATE_ACTIVE` or `Tile.STATE_INACTIVE`. |

@@ -17,6 +17,7 @@ import rikka.shizuku.Shizuku
 class DataSimTileService : BaseTileService() {
     private var current: DataSimController.State? = null
     private var failed = false
+    private var isSwitching = false
     private var revision = 0
     private val binderListener = Shizuku.OnBinderReceivedListener {
         serviceScope.launch { refresh() }
@@ -48,6 +49,7 @@ class DataSimTileService : BaseTileService() {
     }
 
     private suspend fun refresh() {
+        if (isSwitching) return
         val startedAt = revision
         if (!hasFeaturePermission()) {
             current = null
@@ -67,6 +69,7 @@ class DataSimTileService : BaseTileService() {
     }
 
     override fun onClick() {
+        if (isSwitching) return
         if (!hasFeaturePermission()) {
             val intent = Intent(this, FeatureSettingsActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -85,6 +88,7 @@ class DataSimTileService : BaseTileService() {
 
     override fun getTileLabel() = getString(R.string.tile_data_sim)
     override fun getTileSubtitle(): String {
+        if (isSwitching) return "Working..."
         if (failed) return getString(R.string.tile_data_sim_failed)
         val state = current ?: return getString(R.string.tile_data_sim_loading)
         val selected = state.selected ?: return getString(R.string.tile_data_sim_no_selection)
@@ -93,23 +97,32 @@ class DataSimTileService : BaseTileService() {
 
     override fun hasFeaturePermission() = ShizukuUtils.hasPermission()
     override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.outline_sim_card_24)
-    override fun getTileState() = if (current?.next != null) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+    override fun getTileState() =
+        when {
+            isSwitching -> Tile.STATE_UNAVAILABLE
+            current?.next != null -> Tile.STATE_ACTIVE
+            else -> Tile.STATE_INACTIVE
+        }
 
     override fun onTileClick() {
-        serviceScope.launch { performTileClick() }
-    }
-
-    override suspend fun performTileClick() {
+        if (isSwitching) return
+        isSwitching = true
         revision++
-        try {
-            current = withContext(Dispatchers.IO) { DataSimController.advance(this@DataSimTileService) }
-            failed = false
-        } catch (e: Exception) {
-            Log.e("DataSimTile", "Cannot switch the default data SIM", e)
-            failed = true
-            current = runCatching {
-                withContext(Dispatchers.IO) { DataSimController.read(this@DataSimTileService) }
-            }.getOrNull()
+        updateTile()
+        serviceScope.launch {
+            try {
+                current = withContext(Dispatchers.IO) { DataSimController.advance(this@DataSimTileService) }
+                failed = false
+            } catch (e: Exception) {
+                Log.e("DataSimTile", "Cannot switch the default data SIM", e)
+                failed = true
+                current = runCatching {
+                    withContext(Dispatchers.IO) { DataSimController.read(this@DataSimTileService) }
+                }.getOrNull()
+            } finally {
+                isSwitching = false
+                updateTile()
+            }
         }
     }
 }

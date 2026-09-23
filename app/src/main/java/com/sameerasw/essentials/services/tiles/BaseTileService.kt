@@ -37,9 +37,6 @@ abstract class BaseTileService : TileService() {
 
     abstract fun onTileClick()
 
-    /** Override for tile actions that must wait for background work. */
-    protected open suspend fun performTileClick() = onTileClick()
-
     abstract fun getTileLabel(): String
 
     abstract fun getTileSubtitle(): String
@@ -118,7 +115,7 @@ abstract class BaseTileService : TileService() {
         // Offload actual work to background
         serviceScope.launch {
             try {
-                performTileClick()
+                onTileClick()
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
