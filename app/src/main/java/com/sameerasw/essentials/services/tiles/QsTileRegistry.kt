@@ -92,6 +92,8 @@ object QsTileRegistry {
                 R.drawable.rounded_brightness_auto_24,
                 AdaptiveBrightnessTileService::class.java,
             ),
+            QsTileEntry(R.drawable.rounded_mobile_vibrate_24, HapticsTileService::class.java),
+            QsTileEntry(R.drawable.outline_sim_card_24, DataSimTileService::class.java),
             QsTileEntry(
                 R.drawable.rounded_front_hand_24,
                 ScaleAnimationsTileService::class.java,
@@ -158,6 +160,8 @@ object QsTileRegistry {
     ): Boolean =
         try {
             when (className) {
+                DataSimTileService::class.java.name ->
+                    DataSimController.lastKnownState?.next != null
                 CaffeinateTileService::class.java.name -> {
                     com.sameerasw.essentials.domain.controller.CaffeinateController.isActive.value ||
                             com.sameerasw.essentials.domain.controller.CaffeinateController.isStarting.value
@@ -246,6 +250,10 @@ object QsTileRegistry {
     ): String =
         try {
             when (className) {
+                DataSimTileService::class.java.name -> {
+                    DataSimController.lastKnownState?.selected?.let { it.name ?: context.getString(R.string.tile_data_sim_slot, it.slot + 1) }
+                        ?: context.getString(R.string.tile_data_sim_loading)
+                }
                 CaffeinateTileService::class.java.name -> {
                     if (com.sameerasw.essentials.domain.controller.CaffeinateController.isActive.value) {
                         "Active"

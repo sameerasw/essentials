@@ -21,11 +21,13 @@ import com.sameerasw.essentials.services.tiles.BubblesTileService
 import com.sameerasw.essentials.services.tiles.CaffeinateTileService
 import com.sameerasw.essentials.services.tiles.ChargeQuickTileService
 import com.sameerasw.essentials.services.tiles.ColorPickerTileService
+import com.sameerasw.essentials.services.tiles.DataSimTileService
 import com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService
 import com.sameerasw.essentials.services.tiles.DynamicNightLightTileService
 import com.sameerasw.essentials.services.tiles.EssentialsOnDisplayTileService
 import com.sameerasw.essentials.services.tiles.FlashlightPulseTileService
 import com.sameerasw.essentials.services.tiles.FlashlightTileService
+import com.sameerasw.essentials.services.tiles.HapticsTileService
 import com.sameerasw.essentials.services.tiles.LockdownTileService
 import com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService
 import com.sameerasw.essentials.services.tiles.MonoAudioTileService
@@ -239,6 +241,22 @@ object QSTileRegistry {
                 listOf("WRITE_SETTINGS"),
                 R.string.about_desc_adaptive_brightness,
                 R.string.cat_visuals,
+            ),
+            QSTileInfo(
+                R.string.tile_haptics,
+                R.drawable.rounded_mobile_vibrate_24,
+                HapticsTileService::class.java,
+                listOf("WRITE_SETTINGS"),
+                R.string.about_desc_haptics,
+                R.string.cat_utils,
+            ),
+            QSTileInfo(
+                R.string.tile_data_sim,
+                R.drawable.outline_sim_card_24,
+                DataSimTileService::class.java,
+                listOf("SHIZUKU"),
+                R.string.about_desc_data_sim,
+                R.string.cat_connectivity,
             ),
             QSTileInfo(
                 R.string.tile_scale_animations,

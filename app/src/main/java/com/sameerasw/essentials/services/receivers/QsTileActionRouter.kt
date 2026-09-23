@@ -17,8 +17,14 @@ import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.services.tiles.BaseTileService
 import com.sameerasw.essentials.services.tiles.CaffeinateTileService
+import com.sameerasw.essentials.services.tiles.DataSimController
+import com.sameerasw.essentials.services.tiles.DataSimTileService
 import com.sameerasw.essentials.services.tiles.FlashlightTileService
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.ShizukuUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class QsTileActionRouter : BroadcastReceiver() {
     override fun onReceive(
@@ -51,6 +57,25 @@ class QsTileActionRouter : BroadcastReceiver() {
                     context.sendBroadcast(flashlightIntent)
                 }
 
+                DataSimTileService::class.java.name -> {
+                    val pending = goAsync()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            if (ShizukuUtils.hasPermission()) {
+                                DataSimController.advance(context)
+                            } else {
+                                fallbackLaunch(context)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("QsTileActionRouter", "Failed to switch data SIM", e)
+                        } finally {
+                            notifyWidget(context)
+                            pending.finish()
+                        }
+                    }
+                    return
+                }
+
                 else -> {
                     val clazz = Class.forName(serviceClassName)
                     if (BaseTileService::class.java.isAssignableFrom(clazz)) {
@@ -77,6 +102,10 @@ class QsTileActionRouter : BroadcastReceiver() {
         }
 
         // Notify widget to update state after action
+        notifyWidget(context)
+    }
+
+    private fun notifyWidget(context: Context) {
         val updateIntent =
             Intent("com.sameerasw.essentials.action.QS_TILES_WIDGET_UPDATE").apply {
                 setPackage(context.packageName)

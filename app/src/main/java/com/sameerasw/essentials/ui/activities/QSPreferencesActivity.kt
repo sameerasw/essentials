@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
@@ -87,6 +88,22 @@ class QSPreferencesActivity : ComponentActivity() {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     }
                 startActivity(intent)
+                finish()
+                return
+            }
+
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.DataSimTileService") {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    openSystemSettings(Settings.ACTION_MANAGE_ALL_SIM_PROFILES_SETTINGS, Settings.ACTION_WIRELESS_SETTINGS)
+                } else {
+                    openSystemSettings(Settings.ACTION_WIRELESS_SETTINGS)
+                }
+                finish()
+                return
+            }
+
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.HapticsTileService") {
+                openHapticsSettings()
                 finish()
                 return
             }
@@ -181,5 +198,37 @@ class QSPreferencesActivity : ComponentActivity() {
         }
 
         finish()
+    }
+
+    private fun openHapticsSettings() {
+        // Pixel Settings exports this page but does not provide a public intent action for it.
+        val vibrationSettings =
+            Intent(Intent.ACTION_MAIN).apply {
+                setClassName("com.android.settings", "com.android.settings.Settings\$VibrationIntensitySettingsActivity")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+
+        try {
+            startActivity(vibrationSettings)
+        } catch (_: ActivityNotFoundException) {
+            openSystemSettings(Settings.ACTION_SOUND_SETTINGS)
+        } catch (_: SecurityException) {
+            openSystemSettings(Settings.ACTION_SOUND_SETTINGS)
+        }
+    }
+
+    private fun openSystemSettings(vararg actions: String) {
+        for (action in actions.toList() + Settings.ACTION_SETTINGS) {
+            try {
+                startActivity(
+                    Intent(action).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    },
+                )
+                return
+            } catch (_: ActivityNotFoundException) {
+                // Some devices do not provide every settings screen.
+            }
+        }
     }
 }

@@ -102,6 +102,7 @@ class FeatureTileService : BaseTileService() {
 | Method | Return Type | Description |
 | :--- | :--- | :--- |
 | `onTileClick()` | `Unit` | Executed asynchronously when the tile is tapped. |
+| `performTileClick()` | suspend `Unit` | Optional override for actions that must await I/O before the tile leaves its processing state. The default calls `onTileClick()`. |
 | `getTileLabel()` | `String` | Primary title string rendered on the tile. |
 | `getTileSubtitle()` | `String` | Secondary status text (e.g. "On", "Off", timer remaining). |
 | `getTileState()` | `Int` | `Tile.STATE_ACTIVE` or `Tile.STATE_INACTIVE`. |
@@ -153,7 +154,6 @@ Register the tile in [`QsTileRegistry.ALL_TILES`](../app/src/main/java/com/samee
 
 ```kotlin
 QsTileEntry(
-    titleRes = R.string.tile_feature_label,
     iconRes = R.drawable.rounded_feature_24,
     serviceClass = FeatureTileService::class.java
 ),
@@ -177,9 +177,9 @@ Tapping a tile inside the **Favorite QS Tiles Glance Widget** triggers [`QsTileC
 
 ### 6. In-App Tile Manager UI (`QuickSettingsTilesSettingsUI.kt`)
 
-All QS tiles must be added to the in-app Quick Settings Tiles settings screen so users can view permissions and add tiles directly to their system QS panel via `StatusBarManager.requestAddTileService()`.
+All QS tiles must be added to `QSTileRegistry.getAllTiles()`, which supplies the in-app Quick Settings Tiles screen so users can view permissions and add tiles directly to their system QS panel via `StatusBarManager.requestAddTileService()`.
 
-In [`QuickSettingsTilesSettingsUI.kt`](../app/src/main/java/com/sameerasw/essentials/ui/features/tiles/QuickSettingsTilesSettingsUI.kt), register the tile in `allTiles`:
+Register the tile in [`QSTileRegistry.kt`](../app/src/main/java/com/sameerasw/essentials/domain/registry/QSTileRegistry.kt):
 
 ```kotlin
 QSTileInfo(
