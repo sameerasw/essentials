@@ -4,6 +4,7 @@ enum class SlideMode { None, Volume, Brightness, SoundMode, Track }
 
 interface CompactGestures {
     val hasLongPress: Boolean
+    val longPressOpensBrief: Boolean get() = false
     val slideMode: SlideMode
 
     fun longPress()

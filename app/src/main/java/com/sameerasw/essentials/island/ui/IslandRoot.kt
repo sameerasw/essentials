@@ -234,7 +234,7 @@ fun IslandRoot(
         val gestures = actions.compactGestures
         if (currentState.stage == IslandStage.Compact && gestures.hasLongPress) {
             compactLongPressed = true
-            IslandHaptics.commit(context)
+            if (gestures.longPressOpensBrief) IslandHaptics.openClick(context) else IslandHaptics.commit(context)
             gestures.longPress()
             return
         }
@@ -344,7 +344,11 @@ fun IslandRoot(
                             scope.launch { jelly.pressDown() }
                         }
                         val ramp = if (rumble) {
-                            IslandHaptics.holdRumbleStart(context, holdMs)
+                            if (actions.compactGestures.longPressOpensBrief) {
+                                IslandHaptics.holdTickRampStart(context, holdMs)
+                            } else {
+                                IslandHaptics.holdRumbleStart(context, holdMs)
+                            }
                             null
                         } else {
                             scope.launch {

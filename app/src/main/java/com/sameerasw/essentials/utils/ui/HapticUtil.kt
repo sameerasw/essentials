@@ -328,6 +328,58 @@ object HapticUtil {
         }
     }
 
+    fun startTickRampHaptic(
+        context: Context,
+        durationMs: Long,
+    ) {
+        if (!isAppHapticsEnabled.value) return
+        val vibrator = getVibrator(context)
+        if (!vibrator.hasVibrator()) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA && vibrator.areEnvelopeEffectsSupported()) {
+            val effect = VibrationEffect.BasicEnvelopeBuilder()
+                .setInitialSharpness(0.1f)
+                .addControlPoint(0.08f, 0.2f, (durationMs * 0.35f).toLong().coerceAtLeast(1L))
+                .addControlPoint(0.35f, 0.5f, (durationMs * 0.4f).toLong().coerceAtLeast(1L))
+                .addControlPoint(0.75f, 0.85f, (durationMs * 0.25f).toLong().coerceAtLeast(1L))
+                .build()
+            runCatching { vibrator.vibrate(effect) }
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE)
+        ) {
+            runCatching {
+                vibrator.vibrate(
+                    VibrationEffect.startComposition()
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, 0.8f)
+                        .compose(),
+                )
+            }
+            return
+        }
+        startRampingHoldHaptic(context, durationMs)
+    }
+
+    fun performOpenClickHaptic(context: Context) {
+        if (!isAppHapticsEnabled.value) return
+        val vibrator = getVibrator(context)
+        if (!vibrator.hasVibrator()) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_CLICK)
+        ) {
+            runCatching {
+                vibrator.cancel()
+                vibrator.vibrate(
+                    VibrationEffect.startComposition()
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1f)
+                        .compose(),
+                )
+            }
+        } else {
+            performStrongTickHaptic(context)
+        }
+    }
+
     fun stopHoldHaptic(context: Context) {
         val vibrator =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {

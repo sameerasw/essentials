@@ -27,6 +27,8 @@ class CompactGestureController(
 
     private val likeWhilePlaying get() = settings.isIslandLikeWhilePlayingEnabled() && musicPlaying
 
+    override val longPressOpensBrief get() = settings.isIslandBriefEnabled() && !likeWhilePlaying
+
     override val hasLongPress get() = settings.isIslandBriefEnabled() || settings.getIslandLongPressAction() != null || likeWhilePlaying
 
     override val slideMode: SlideMode

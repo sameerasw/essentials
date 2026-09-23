@@ -22,6 +22,8 @@ object IslandHaptics {
 
     fun holdRumbleStart(context: Context, durationMs: Long) = HapticUtil.startRampingHoldHaptic(context, durationMs)
     fun holdRumbleStop(context: Context) = HapticUtil.stopHoldHaptic(context)
+    fun holdTickRampStart(context: Context, durationMs: Long) = HapticUtil.startTickRampHaptic(context, durationMs)
+    fun openClick(context: Context) = HapticUtil.performOpenClickHaptic(context)
 
     private val RAMP = floatArrayOf(0.18f, 0.42f, 0.70f)
     val RAMP_DELAYS_MS = longArrayOf(110L, 100L, 90L)
