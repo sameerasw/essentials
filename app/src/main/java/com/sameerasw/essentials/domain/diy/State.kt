@@ -52,4 +52,17 @@ sealed interface State {
         override val title: Int get() = R.string.diy_state_time_period
         override val icon: Int get() = R.drawable.rounded_timelapse_24
     }
+
+    // Active while a matching calendar event is in progress; empty calendarIds means all calendars
+    @Keep
+    data class CalendarEvent(
+        @SerializedName("calendarIds") val calendarIds: Set<Long> = emptySet(),
+        @SerializedName("includeAllDay") val includeAllDay: Boolean = false,
+        @SerializedName("includeDeclined") val includeDeclined: Boolean = false,
+        @SerializedName("includeTentative") val includeTentative: Boolean = true,
+        @SerializedName("includeFree") val includeFree: Boolean = true,
+    ) : State {
+        override val title: Int get() = R.string.diy_state_calendar_event
+        override val icon: Int get() = R.drawable.rounded_calendar_today_24
+    }
 }

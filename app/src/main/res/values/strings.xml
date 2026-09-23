@@ -1167,6 +1167,17 @@
     <string name="diy_use_current_network">Use Current Network</string>
     <string name="diy_saved_networks_via_shizuku">Saved networks (via Shizuku)</string>
     <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_state_calendar_event">During calendar event</string>
+    <string name="diy_category_calendar">Calendar</string>
+    <string name="diy_calendar_state_title">Calendar event</string>
+    <string name="diy_calendar_state_desc">Active while an event from the selected calendars is in progress. Select none to use all calendars.</string>
+    <string name="diy_calendar_include_all_day">Include all-day events</string>
+    <string name="diy_calendar_include_declined">Include declined events</string>
+    <string name="diy_calendar_include_tentative">Include tentative events</string>
+    <string name="diy_calendar_include_free">Include events shown as free</string>
+    <string name="diy_calendar_filters">Filters</string>
+    <string name="diy_calendar_calendars">Calendars</string>
+    <string name="diy_calendar_permission">Calendar access is needed to pick calendars</string>
     <string name="diy_time_selection_title">Select Time</string>
     <string name="diy_time_range_selection_title">Select Time Range</string>
     <string name="diy_start_time_label">Start Time</string>

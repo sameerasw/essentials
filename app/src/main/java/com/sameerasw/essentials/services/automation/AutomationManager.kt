@@ -20,6 +20,7 @@ import com.sameerasw.essentials.services.automation.modules.BluetoothModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
 import com.sameerasw.essentials.services.automation.modules.PowerModule
 import com.sameerasw.essentials.services.automation.modules.TimeModule
+import com.sameerasw.essentials.services.automation.modules.CalendarModule
 import com.sameerasw.essentials.services.automation.modules.WifiModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +115,7 @@ object AutomationManager {
         val timeAutomations = mutableListOf<Automation>()
         val bluetoothAutomations = mutableListOf<Automation>()
         val wifiAutomations = mutableListOf<Automation>()
+        val calendarAutomations = mutableListOf<Automation>()
 
         enabledAutomations.forEach { automation ->
             when (automation.type) {
@@ -163,6 +165,11 @@ object AutomationManager {
                         is DIYState.TimePeriod -> {
                             requiredModuleIds.add(TimeModule.ID)
                             timeAutomations.add(automation)
+                        }
+
+                        is DIYState.CalendarEvent -> {
+                            requiredModuleIds.add(CalendarModule.ID)
+                            calendarAutomations.add(automation)
                         }
 
                         else -> {}
@@ -248,6 +255,17 @@ object AutomationManager {
             module.updateAutomations(wifiAutomations)
         } else {
             activeModules.remove(WifiModule.ID)?.stop(context)
+        }
+
+        // Calendar Module
+        if (requiredModuleIds.contains(CalendarModule.ID)) {
+            val module =
+                activeModules.getOrPut(CalendarModule.ID) {
+                    CalendarModule().also { it.start(context) }
+                }
+            module.updateAutomations(calendarAutomations)
+        } else {
+            activeModules.remove(CalendarModule.ID)?.stop(context)
         }
     }
 

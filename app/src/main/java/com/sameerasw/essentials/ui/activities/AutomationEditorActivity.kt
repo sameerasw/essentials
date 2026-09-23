@@ -336,6 +336,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showFreezeAppsSettings by remember { mutableStateOf(false) }
                 var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
                 var showTimeSettings by remember { mutableStateOf(false) }
+                var showCalendarStateSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
                 var showSetKeyboardSheet by remember { mutableStateOf(false) }
@@ -1091,6 +1092,10 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                                 (selectedState as? DIYState.TimePeriod)?.days ?: emptySet(),
                                                                         ),
                                                                     ),
+                                                                R.string.diy_category_calendar to
+                                                                    listOf(
+                                                                        (selectedState as? DIYState.CalendarEvent) ?: DIYState.CalendarEvent(),
+                                                                    ),
                                                             )
                                                         }
 
@@ -1129,10 +1134,14 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     iconRes = state.icon,
                                                                     isSelected = isSelected,
                                                                     onClick = { selectedState = state },
-                                                                    isConfigurable = state is DIYState.TimePeriod,
+                                                                    isConfigurable = state is DIYState.TimePeriod || state is DIYState.CalendarEvent,
                                                                     onSettingsClick = {
                                                                         if (state is DIYState.TimePeriod) {
                                                                             showTimeSettings = true
+                                                                        }
+                                                                        if (state is DIYState.CalendarEvent) {
+                                                                            selectedState = state
+                                                                            showCalendarStateSettings = true
                                                                         }
                                                                     },
                                                                 )
@@ -1389,6 +1398,14 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                     }
                                 }
+                            }
+
+                            if (showCalendarStateSettings) {
+                                com.sameerasw.essentials.ui.core.sheets.CalendarStateSheet(
+                                    initialState = selectedState as? DIYState.CalendarEvent,
+                                    onDismiss = { showCalendarStateSettings = false },
+                                    onStateChange = { selectedState = it },
+                                )
                             }
 
                             if (showTimeSettings) {
