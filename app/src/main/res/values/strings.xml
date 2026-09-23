@@ -990,9 +990,12 @@
     <string name="tile_haptics">Haptics</string>
     <string name="tile_data_sim">Data SIM</string>
     <string name="tile_data_sim_loading">Loading SIM…</string>
+    <string name="tile_data_sim_switching">Switching SIM…</string>
     <string name="tile_data_sim_no_selection">No active data SIM</string>
     <string name="tile_data_sim_failed">SIM unavailable</string>
+    <string name="tile_data_sim_data_enable_failed">SIM selected; mobile data could not be enabled</string>
     <string name="tile_data_sim_slot">SIM %1$d</string>
+    <string name="tile_haptics_write_failed">Could not change haptics</string>
 
     <string name="tile_maps_power_saving">Maps Power Saving</string>
 

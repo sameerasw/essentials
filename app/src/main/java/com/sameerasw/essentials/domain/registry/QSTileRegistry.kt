@@ -252,9 +252,12 @@ object QSTileRegistry {
             ),
             QSTileInfo(
                 R.string.tile_data_sim,
-                R.drawable.outline_sim_card_24,
+                R.drawable.rounded_sim_card_24,
                 DataSimTileService::class.java,
-                listOf("SHIZUKU"),
+                listOf(
+                    if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU",
+                    "READ_PHONE_STATE",
+                ),
                 R.string.about_desc_data_sim,
                 R.string.cat_connectivity,
             ),

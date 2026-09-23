@@ -11,6 +11,8 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
 import android.service.quicksettings.Tile
+import android.util.Log
+import android.widget.Toast
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -57,12 +59,27 @@ class HapticsTileService : BaseTileService() {
 
     override fun onTileClick() {
         if (!hasFeaturePermission()) return
-        val value = if (isEnabled()) 0 else 1
         val resolver = contentResolver
-        if (!Settings.System.putInt(resolver, vibrationSetting, value)) return
-        Settings.System.putInt(resolver, Settings.System.HAPTIC_FEEDBACK_ENABLED, value)
-        if (value == 1) {
-            getSystemService(Vibrator::class.java)?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+        try {
+            val originalVibration = if (isEnabled()) 1 else 0
+            val originalFeedback = Settings.System.getInt(resolver, Settings.System.HAPTIC_FEEDBACK_ENABLED, 0)
+            val value = 1 - originalVibration
+            try {
+                check(Settings.System.putInt(resolver, vibrationSetting, value)) { "Could not write the vibration setting" }
+                check(Settings.System.putInt(resolver, Settings.System.HAPTIC_FEEDBACK_ENABLED, value)) { "Could not write the touch feedback setting" }
+            } catch (e: Exception) {
+                runCatching { Settings.System.putInt(resolver, vibrationSetting, originalVibration) }
+                runCatching { Settings.System.putInt(resolver, Settings.System.HAPTIC_FEEDBACK_ENABLED, originalFeedback) }
+                throw e
+            }
+            if (value == 1) {
+                runCatching {
+                    getSystemService(Vibrator::class.java)?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                }.onFailure { Log.w("HapticsTile", "Could not vibrate for confirmation", it) }
+            }
+        } catch (e: Exception) {
+            Log.e("HapticsTile", "Could not change haptics", e)
+            Toast.makeText(this, R.string.tile_haptics_write_failed, Toast.LENGTH_SHORT).show()
         }
     }
 

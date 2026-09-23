@@ -1202,7 +1202,7 @@
         <service
             android:name=".services.tiles.DataSimTileService"
             android:exported="true"
-            android:icon="@drawable/outline_sim_card_24"
+            android:icon="@drawable/rounded_sim_card_24"
             android:label="@string/tile_data_sim"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

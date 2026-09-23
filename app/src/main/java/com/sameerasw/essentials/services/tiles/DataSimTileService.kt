@@ -8,7 +8,8 @@ import android.service.quicksettings.Tile
 import android.util.Log
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.utils.ShizukuUtils
+import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,13 +21,16 @@ class DataSimTileService : BaseTileService() {
     private var isSwitching = false
     private var revision = 0
     private val binderListener = Shizuku.OnBinderReceivedListener {
-        serviceScope.launch { refresh() }
+        if (!ShellUtils.isRootEnabled(this)) serviceScope.launch { refresh() }
     }
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
-        serviceScope.launch {
+        if (!ShellUtils.isRootEnabled(this)) serviceScope.launch {
             current = null
             updateTile()
         }
+    }
+    private val permissionListener = Shizuku.OnRequestPermissionResultListener { _, _ ->
+        if (!ShellUtils.isRootEnabled(this)) serviceScope.launch { refresh() }
     }
 
     override val isSensitiveTile = true
@@ -35,11 +39,13 @@ class DataSimTileService : BaseTileService() {
         super.onCreate()
         Shizuku.addBinderReceivedListenerSticky(binderListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
+        Shizuku.addRequestPermissionResultListener(permissionListener)
     }
 
     override fun onDestroy() {
         Shizuku.removeBinderReceivedListener(binderListener)
         Shizuku.removeBinderDeadListener(binderDeadListener)
+        Shizuku.removeRequestPermissionResultListener(permissionListener)
         super.onDestroy()
     }
 
@@ -88,15 +94,16 @@ class DataSimTileService : BaseTileService() {
 
     override fun getTileLabel() = getString(R.string.tile_data_sim)
     override fun getTileSubtitle(): String {
-        if (isSwitching) return "Working..."
+        if (isSwitching) return getString(R.string.tile_data_sim_switching)
         if (failed) return getString(R.string.tile_data_sim_failed)
         val state = current ?: return getString(R.string.tile_data_sim_loading)
+        if (state.dataEnableFailed) return getString(R.string.tile_data_sim_data_enable_failed)
         val selected = state.selected ?: return getString(R.string.tile_data_sim_no_selection)
         return selected.name?.takeIf { it.isNotBlank() } ?: getString(R.string.tile_data_sim_slot, selected.slot + 1)
     }
 
-    override fun hasFeaturePermission() = ShizukuUtils.hasPermission()
-    override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.outline_sim_card_24)
+    override fun hasFeaturePermission() = ShellUtils.hasPermission(this) && PermissionUtils.hasReadPhoneStatePermission(this)
+    override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_sim_card_24)
     override fun getTileState() =
         when {
             isSwitching -> Tile.STATE_UNAVAILABLE

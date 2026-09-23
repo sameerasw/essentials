@@ -3,8 +3,11 @@ package com.sameerasw.essentials.services.tiles
 import android.content.Context
 import android.os.Build
 import android.os.IBinder
-import android.telephony.SubscriptionInfo
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import android.util.Log
+import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuBinderWrapper
@@ -12,7 +15,7 @@ import rikka.shizuku.SystemServiceHelper
 import java.lang.reflect.InvocationTargetException
 
 /**
- * Reads and changes the default data subscription through Shizuku's system-service Binder.
+ * Reads subscriptions with the public API and changes the default through Shizuku or root.
  * Android does not expose a public API for changing it from a regular application.
  */
 internal object DataSimController {
@@ -23,29 +26,52 @@ internal object DataSimController {
         private set
 
     data class Sim(val id: Int, val slot: Int, val name: String?)
-    data class State(val selected: Sim?, val next: Sim?, val count: Int)
+    data class State(val selected: Sim?, val next: Sim?, val count: Int, val dataEnableFailed: Boolean = false)
 
     @Synchronized
     fun read(context: Context): State {
-        val subscriptions = service("isub", SUB_INTERFACE)
-        return state(context, subscriptions).also { lastKnownState = it }
+        return try {
+            state(context).also { lastKnownState = it }
+        } catch (e: Exception) {
+            lastKnownState = null
+            throw e
+        }
     }
 
     @Synchronized
     fun advance(context: Context): State {
-        val subscriptions = service("isub", SUB_INTERFACE)
-        val previous = state(context, subscriptions)
+        val previous = state(context)
         lastKnownState = previous
         val target = previous.next ?: return previous
-        call(subscriptions, SUB_INTERFACE, "setDefaultDataSubId", arrayOf(Int::class.javaPrimitiveType!!), target.id)
-        enableData(context, target.id)
-        return state(context, subscriptions).also { lastKnownState = it }
+        val useRoot = ShellUtils.isRootEnabled(context)
+        if (useRoot) {
+            switchWithRoot(target.id)
+        } else {
+            val subscriptions = service("isub", SUB_INTERFACE)
+            call(subscriptions, SUB_INTERFACE, "setDefaultDataSubId", arrayOf(Int::class.javaPrimitiveType!!), target.id)
+        }
+        val updated = state(context)
+        check(updated.selected?.id == target.id) { "Default data SIM did not change" }
+        lastKnownState = updated
+        val dataEnableFailed =
+            try {
+                if (useRoot) {
+                    check(RootUtils.runCommand("svc data enable")) { "Could not enable mobile data" }
+                } else {
+                    enableData(context, target.id)
+                }
+                false
+            } catch (e: Exception) {
+                Log.w("DataSimController", "Default data SIM changed, but mobile data could not be enabled", e)
+                true
+            }
+        return updated.copy(dataEnableFailed = dataEnableFailed).also { lastKnownState = it }
     }
 
-    private fun state(context: Context, subscriptions: Any): State {
-        val selectedId = call(subscriptions, SUB_INTERFACE, "getDefaultDataSubId", emptyArray()) as Int
-        val packageName = if (Shizuku.getUid() == 2000) "com.android.shell" else context.packageName
-        val active = activeSubscriptions(subscriptions, packageName)
+    private fun state(context: Context): State {
+        val selectedId = SubscriptionManager.getDefaultDataSubscriptionId()
+        val subscriptions = requireNotNull(context.getSystemService(SubscriptionManager::class.java))
+        val active = subscriptions.activeSubscriptionInfoList.orEmpty()
             .filter { it.simSlotIndex >= 0 }
             .sortedWith(compareBy({ it.simSlotIndex }, { it.subscriptionId }))
             .map { Sim(it.subscriptionId, it.simSlotIndex, it.displayName?.toString()?.takeIf { name -> name.isNotBlank() } ?: it.carrierName?.toString()) }
@@ -54,22 +80,18 @@ internal object DataSimController {
         return State(active.getOrNull(position), next, active.size)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun activeSubscriptions(subscriptions: Any, packageName: String): List<SubscriptionInfo> {
-        val signatures = listOf(
-            Pair(arrayOf(String::class.java, String::class.java, Boolean::class.javaPrimitiveType!!), arrayOf<Any?>(packageName, null, true)),
-            Pair(arrayOf(String::class.java, String::class.java), arrayOf<Any?>(packageName, null)),
-            Pair(arrayOf(String::class.java), arrayOf<Any?>(packageName)),
-        )
-        for ((types, args) in signatures) {
-            try {
-                return (call(subscriptions, SUB_INTERFACE, "getActiveSubscriptionInfoList", types, *args) as? List<*>)
-                    ?.filterIsInstance<SubscriptionInfo>().orEmpty()
-            } catch (_: NoSuchMethodException) {
-                // The signature changes with the Android release.
-            }
+    private fun switchWithRoot(subId: Int) {
+        applyHiddenApiExemptions()
+        // Binder transaction numbers can change between Android releases.
+        val code = Class.forName("$SUB_INTERFACE\$Stub")
+            .getDeclaredField("TRANSACTION_setDefaultDataSubId")
+            .apply { isAccessible = true }
+            .getInt(null)
+        val process = requireNotNull(RootUtils.newProcess(arrayOf("service", "call", "isub", code.toString(), "i32", subId.toString()))) {
+            "Could not start root service call"
         }
-        throw NoSuchMethodException("No supported subscription-list API")
+        val output = process.inputStream.bufferedReader().use { it.readText() }
+        check(process.waitFor() == 0 && output.contains("Result: Parcel(")) { "Root service call failed: $output" }
     }
 
     private fun enableData(context: Context, subId: Int) {
@@ -99,13 +121,17 @@ internal object DataSimController {
     }
 
     private fun service(name: String, interfaceName: String): Any {
+        applyHiddenApiExemptions()
+        val binder = requireNotNull(SystemServiceHelper.getSystemService(name)) { "$name unavailable" }
+        val stub = Class.forName("$interfaceName\$Stub")
+        return requireNotNull(stub.getMethod("asInterface", IBinder::class.java).invoke(null, ShizukuBinderWrapper(binder)))
+    }
+
+    private fun applyHiddenApiExemptions() {
         if (Build.VERSION.SDK_INT >= 28 && !exemptionsApplied) {
             check(HiddenApiBypass.addHiddenApiExemptions(""))
             exemptionsApplied = true
         }
-        val binder = requireNotNull(SystemServiceHelper.getSystemService(name)) { "$name unavailable" }
-        val stub = Class.forName("$interfaceName\$Stub")
-        return requireNotNull(stub.getMethod("asInterface", IBinder::class.java).invoke(null, ShizukuBinderWrapper(binder)))
     }
 
     private fun call(target: Any, owner: String, name: String, types: Array<out Class<*>>, vararg args: Any?): Any? {

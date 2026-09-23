@@ -10,6 +10,8 @@
 package com.sameerasw.essentials.services.tiles
 
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.ShellUtils
 
 object QsTileRegistry {
     data class QsTileEntry(
@@ -93,7 +95,7 @@ object QsTileRegistry {
                 AdaptiveBrightnessTileService::class.java,
             ),
             QsTileEntry(R.drawable.rounded_mobile_vibrate_24, HapticsTileService::class.java),
-            QsTileEntry(R.drawable.outline_sim_card_24, DataSimTileService::class.java),
+            QsTileEntry(R.drawable.rounded_sim_card_24, DataSimTileService::class.java),
             QsTileEntry(
                 R.drawable.rounded_front_hand_24,
                 ScaleAnimationsTileService::class.java,
@@ -161,7 +163,9 @@ object QsTileRegistry {
         try {
             when (className) {
                 DataSimTileService::class.java.name ->
-                    DataSimController.lastKnownState?.next != null
+                    PermissionUtils.hasReadPhoneStatePermission(context) &&
+                        ShellUtils.hasPermission(context) &&
+                        DataSimController.lastKnownState?.next != null
                 CaffeinateTileService::class.java.name -> {
                     com.sameerasw.essentials.domain.controller.CaffeinateController.isActive.value ||
                             com.sameerasw.essentials.domain.controller.CaffeinateController.isStarting.value
@@ -251,8 +255,13 @@ object QsTileRegistry {
         try {
             when (className) {
                 DataSimTileService::class.java.name -> {
-                    DataSimController.lastKnownState?.selected?.let { it.name ?: context.getString(R.string.tile_data_sim_slot, it.slot + 1) }
-                        ?: context.getString(R.string.tile_data_sim_loading)
+                    val state = DataSimController.lastKnownState
+                    when {
+                        !PermissionUtils.hasReadPhoneStatePermission(context) || !ShellUtils.hasPermission(context) -> context.getString(R.string.permission_missing)
+                        state?.selected != null -> state.selected.name ?: context.getString(R.string.tile_data_sim_slot, state.selected.slot + 1)
+                        state == null -> context.getString(R.string.tile_data_sim_loading)
+                        else -> context.getString(R.string.tile_data_sim_no_selection)
+                    }
                 }
                 CaffeinateTileService::class.java.name -> {
                     if (com.sameerasw.essentials.domain.controller.CaffeinateController.isActive.value) {

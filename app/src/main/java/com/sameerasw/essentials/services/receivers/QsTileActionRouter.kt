@@ -13,7 +13,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import com.sameerasw.essentials.MainActivity
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.services.tiles.BaseTileService
 import com.sameerasw.essentials.services.tiles.CaffeinateTileService
@@ -21,10 +23,12 @@ import com.sameerasw.essentials.services.tiles.DataSimController
 import com.sameerasw.essentials.services.tiles.DataSimTileService
 import com.sameerasw.essentials.services.tiles.FlashlightTileService
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.ShizukuUtils
+import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class QsTileActionRouter : BroadcastReceiver() {
     override fun onReceive(
@@ -61,13 +65,21 @@ class QsTileActionRouter : BroadcastReceiver() {
                     val pending = goAsync()
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
-                            if (ShizukuUtils.hasPermission()) {
-                                DataSimController.advance(context)
+                            if (ShellUtils.hasPermission(context) && PermissionUtils.hasReadPhoneStatePermission(context)) {
+                                val state = DataSimController.advance(context)
+                                if (state.dataEnableFailed) {
+                                    withContext(Dispatchers.Main) {
+                                        Toast.makeText(context, R.string.tile_data_sim_data_enable_failed, Toast.LENGTH_LONG).show()
+                                    }
+                                }
                             } else {
                                 fallbackLaunch(context)
                             }
                         } catch (e: Exception) {
                             Log.e("QsTileActionRouter", "Failed to switch data SIM", e)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, R.string.tile_data_sim_failed, Toast.LENGTH_SHORT).show()
+                            }
                         } finally {
                             notifyWidget(context)
                             pending.finish()
