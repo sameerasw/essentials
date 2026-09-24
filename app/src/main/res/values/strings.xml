@@ -2937,10 +2937,19 @@
     <string name="island_notification_options_title">Notification options</string>
     <string name="island_notif_compact_heads_up_title">Compact heads up</string>
     <string name="island_notif_compact_heads_up_desc">Show new notifications as a line peek</string>
+    <string name="island_notif_arrival_style_title">Notification arrival style</string>
+    <string name="island_notif_arrival_style_desc">Choose how incoming notifications appear on the Island</string>
+    <string name="island_notif_arrival_silent_pill">Silent pill</string>
+    <string name="island_notif_arrival_line_peek">Line peek</string>
+    <string name="island_notif_arrival_full_expand">Full card</string>
     <string name="island_media_peek_song_change_title">Peek song change</string>
     <string name="island_media_keep_when_paused_title">Keep in catchup when paused</string>
     <string name="island_media_show_previous_title">Show previous track button</string>
     <string name="island_media_peek_song_change_desc">Show the new track as a line peek</string>
+    <string name="island_notif_persistent_title">Keep unread notifications</string>
+    <string name="island_notif_persistent_desc">Retain notifications on the Island pill until opened or dismissed, instead of auto-clearing after timeout</string>
+    <string name="island_notif_compact_cycle_title">Cycle icons on compact pill</string>
+    <string name="island_notif_compact_cycle_desc">Rotate through notification icons on the compact pill every few seconds when multiple are queued</string>
 
     <string name="shizuku_not_running_title">Shizuku is not running</string>
     <string name="shizuku_not_running_desc">Please start Shizuku to enable features.</string>

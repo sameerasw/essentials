@@ -119,6 +119,36 @@ fun IslandNotificationOptionsBottomSheet(
 
                 IconToggleItem(
                     iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = stringResource(R.string.island_notif_persistent_title),
+                    description = stringResource(R.string.island_notif_persistent_desc),
+                    isChecked = viewModel.isIslandNotifPersistent.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifPersistent(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_notif_persistent"),
+                )
+
+                AnimatedVisibility(
+                    visible = viewModel.isIslandNotifPersistent.value && viewModel.isIslandNotifQueue.value,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically(),
+                ) {
+                    IconToggleItem(
+                        iconRes = R.drawable.outline_circle_notifications_24,
+                        title = stringResource(R.string.island_notif_compact_cycle_title),
+                        description = stringResource(R.string.island_notif_compact_cycle_desc),
+                        isChecked = viewModel.isIslandNotifCompactCycle.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandNotifCompactCycle(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_notif_compact_cycle"),
+                    )
+                }
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
                     title = stringResource(R.string.island_catch_up_title),
                     description = stringResource(R.string.island_catch_up_desc),
                     isChecked = viewModel.isIslandCatchUpEnabled.value,

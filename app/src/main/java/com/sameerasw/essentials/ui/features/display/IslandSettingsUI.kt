@@ -613,6 +613,8 @@ fun IslandSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_dynamic_hide_status_bar"),
             )
+
+
         }
 
         Text(

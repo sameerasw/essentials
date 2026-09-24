@@ -532,10 +532,16 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_NOTIF_COMPACT_HEADS_UP = "island_notif_compact_heads_up"
+        const val KEY_ISLAND_NOTIF_ARRIVAL_STYLE = "island_notif_arrival_style"
+        const val NOTIF_ARRIVAL_SILENT_PILL = "silent_pill"
+        const val NOTIF_ARRIVAL_LINE_PEEK = "line_peek"
+        const val NOTIF_ARRIVAL_FULL_EXPAND = "full_expand"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
+        const val KEY_ISLAND_NOTIF_PERSISTENT = "island_notif_persistent"
+        const val KEY_ISLAND_NOTIF_COMPACT_CYCLE = "island_notif_compact_cycle"
 
         // Status Glance
         const val KEY_STATUS_GLANCE_ENABLED = "status_glance_enabled"
@@ -3756,11 +3762,38 @@ class SettingsRepository(
     fun isIslandNotifQueueEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
     fun setIslandNotifQueueEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE, enabled)
 
-    fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
+    fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, true)
     fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
 
-    fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
-    fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, enabled)
+    fun isIslandNotifPersistentEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_PERSISTENT, true)
+    fun setIslandNotifPersistentEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_PERSISTENT, enabled)
+
+    fun isIslandNotifCompactCycleEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_CYCLE, true)
+    fun setIslandNotifCompactCycleEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_CYCLE, enabled)
+
+
+    fun getIslandNotifArrivalStyle(): String {
+        val existing = getString(KEY_ISLAND_NOTIF_ARRIVAL_STYLE, null)
+        if (existing != null) return existing
+        if (contains(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP)) {
+            val legacyCompact = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
+            val migrated = if (legacyCompact) NOTIF_ARRIVAL_LINE_PEEK else NOTIF_ARRIVAL_FULL_EXPAND
+            setIslandNotifArrivalStyle(migrated)
+            return migrated
+        }
+        return NOTIF_ARRIVAL_LINE_PEEK
+    }
+
+    fun setIslandNotifArrivalStyle(style: String) {
+        putString(KEY_ISLAND_NOTIF_ARRIVAL_STYLE, style)
+        putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, style == NOTIF_ARRIVAL_LINE_PEEK)
+    }
+
+    fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getIslandNotifArrivalStyle() == NOTIF_ARRIVAL_LINE_PEEK
+    fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) {
+        val style = if (enabled) NOTIF_ARRIVAL_LINE_PEEK else NOTIF_ARRIVAL_FULL_EXPAND
+        setIslandNotifArrivalStyle(style)
+    }
 
     fun isIslandNotifKeepProgressEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, true)
     fun setIslandNotifKeepProgressEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, enabled)

@@ -32,10 +32,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED,
         SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP,
+        SettingsRepository.KEY_ISLAND_NOTIF_ARRIVAL_STYLE,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_PERSISTENT,
+        SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_CYCLE,
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
@@ -44,6 +47,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private val timeoutRunnable = Runnable { onTimeout() }
     private val catchUpRunnable = Runnable { clearAll() }
+    // Rotates the compact pill icon every CYCLE_INTERVAL_MS when multiple notifications are queued
+    private val cycleRunnable = Runnable { onCycleTick() }
 
     private val listener = object : NotificationListener.NotificationAlertListener {
         override fun onNotificationAlertPosted(alert: ActiveNotificationAlert) {
@@ -84,7 +89,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     override fun onScreenStateChanged() {
-        if (ctx?.isContentSuppressed?.invoke() == true) clearAll()
+        val suppressed = ctx?.isContentSuppressed?.invoke() == true
+        if (suppressed) {
+            if (!settings.isIslandNotifPersistentEnabled()) clearAll()
+            // Always pause icon cycling when screen is off / suppressed
+            ctx?.mainHandler?.removeCallbacks(cycleRunnable)
+        } else {
+            scheduleCycle()
+        }
     }
 
     private fun onPosted(alert: ActiveNotificationAlert) {
@@ -96,20 +108,31 @@ class NotificationsPlugin : BaseIslandPlugin() {
         while (alerts.size > cap) alerts.removeLast()
         c.mainHandler.removeCallbacks(catchUpRunnable)
         scheduleTimeout()
+        scheduleCycle()
         render()
         val expandedElsewhere = c.currentStage() == IslandStage.Expanded
         if (!expandedElsewhere) {
-            val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
-            c.request(
-                if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs())
-                else PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true },
-            )
+            when (settings.getIslandNotifArrivalStyle()) {
+                SettingsRepository.NOTIF_ARRIVAL_SILENT_PILL -> {
+                    autoExpanded = false
+                }
+                SettingsRepository.NOTIF_ARRIVAL_FULL_EXPAND -> {
+                    c.request(PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true })
+                }
+                else -> { // NOTIF_ARRIVAL_LINE_PEEK (default)
+                    if (settings.isIslandLineStageEnabled()) {
+                        c.request(PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs()))
+                    } else {
+                        autoExpanded = false
+                    }
+                }
+            }
         }
     }
 
     private fun onRemoved(key: String) {
         if (alerts.removeAll { it.key == key }) {
-            if (alerts.isEmpty()) clearAll() else render()
+            if (alerts.isEmpty()) clearAll() else { scheduleCycle(); render() }
         }
     }
 
@@ -127,7 +150,35 @@ class NotificationsPlugin : BaseIslandPlugin() {
             if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
             return
         }
+        // Persistent: collapse to compact pill instead of clearing all
+        if (settings.isIslandNotifPersistentEnabled() && alerts.isNotEmpty()) {
+            c.request(PluginRequest.Collapse(ITEM_KEY))
+            scheduleCycle()
+            return
+        }
         clearAll()
+    }
+
+    /** Rotates the front notification to the back so compact pill icons cycle non-destructively. */
+    private fun advanceQueue() {
+        val front = alerts.removeFirstOrNull() ?: return
+        alerts.addLast(front)
+        render()
+    }
+
+    private fun onCycleTick() {
+        if (alerts.size > 1 && settings.isIslandNotifCompactCycleEnabled()) {
+            advanceQueue()
+        }
+        scheduleCycle()
+    }
+
+    private fun scheduleCycle() {
+        val handler = ctx?.mainHandler ?: return
+        handler.removeCallbacks(cycleRunnable)
+        if (alerts.size > 1 && settings.isIslandNotifCompactCycleEnabled()) {
+            handler.postDelayed(cycleRunnable, CYCLE_INTERVAL_MS)
+        }
     }
 
     private fun scheduleTimeout() {
@@ -139,6 +190,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun cancelTimers() {
         ctx?.mainHandler?.removeCallbacks(timeoutRunnable)
         ctx?.mainHandler?.removeCallbacks(catchUpRunnable)
+        ctx?.mainHandler?.removeCallbacks(cycleRunnable)
     }
 
     private fun clearAll() {
@@ -154,6 +206,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         scheduleTimeout()
+        scheduleCycle()
         render()
         if (reExpand) ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY))
     }
@@ -271,7 +324,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     companion object {
         const val ITEM_KEY = "notifications"
-        private const val MAX_QUEUE = 3
+        private const val MAX_QUEUE = 5
+        private const val CYCLE_INTERVAL_MS = 5_000L
 
         private val GENERIC_TITLES = setOf(
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",

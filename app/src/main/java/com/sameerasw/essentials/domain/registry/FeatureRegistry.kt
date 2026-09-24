@@ -836,9 +836,19 @@ object FeatureRegistry {
                             "island_notif_queue",
                         ),
                         SearchSetting(
-                            R.string.island_notif_compact_heads_up_title,
-                            R.string.island_notif_compact_heads_up_desc,
-                            "island_notif_compact_heads_up",
+                            R.string.island_notif_arrival_style_title,
+                            R.string.island_notif_arrival_style_desc,
+                            "island_notif_arrival_style",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_persistent_title,
+                            R.string.island_notif_persistent_desc,
+                            "island_notif_persistent",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_compact_cycle_title,
+                            R.string.island_notif_compact_cycle_desc,
+                            "island_notif_compact_cycle",
                         ),
                         SearchSetting(
                             R.string.island_media_peek_song_change_title,

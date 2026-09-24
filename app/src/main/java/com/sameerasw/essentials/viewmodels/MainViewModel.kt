@@ -218,10 +218,13 @@ class MainViewModel : ViewModel() {
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
     val isIslandNotifCompactHeadsUp = mutableStateOf(true)
+    val islandNotifArrivalStyle = mutableStateOf(SettingsRepository.NOTIF_ARRIVAL_LINE_PEEK)
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
     val isIslandShowNotifications = mutableStateOf(true)
-    val isIslandNotifTapToOpen = mutableStateOf(false)
+    val isIslandNotifTapToOpen = mutableStateOf(true)
+    val isIslandNotifPersistent = mutableStateOf(true)
+    val isIslandNotifCompactCycle = mutableStateOf(true)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
     val isIslandShowGlow = mutableStateOf(true)
@@ -838,6 +841,11 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP ->
                         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
 
+                    SettingsRepository.KEY_ISLAND_NOTIF_ARRIVAL_STYLE -> {
+                        islandNotifArrivalStyle.value = settingsRepository.getIslandNotifArrivalStyle()
+                        isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+                    }
+
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
                         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
 
@@ -846,6 +854,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
                         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_PERSISTENT ->
+                        isIslandNotifPersistent.value = settingsRepository.isIslandNotifPersistentEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_CYCLE ->
+                        isIslandNotifCompactCycle.value = settingsRepository.isIslandNotifCompactCycleEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -2257,10 +2271,13 @@ class MainViewModel : ViewModel() {
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+        islandNotifArrivalStyle.value = settingsRepository.getIslandNotifArrivalStyle()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
+        isIslandNotifPersistent.value = settingsRepository.isIslandNotifPersistentEnabled()
+        isIslandNotifCompactCycle.value = settingsRepository.isIslandNotifCompactCycleEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
@@ -5404,6 +5421,16 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNotifTapToOpenEnabled(enabled)
     }
 
+    fun setIslandNotifPersistent(enabled: Boolean) {
+        isIslandNotifPersistent.value = enabled
+        settingsRepository.setIslandNotifPersistentEnabled(enabled)
+    }
+
+    fun setIslandNotifCompactCycle(enabled: Boolean) {
+        isIslandNotifCompactCycle.value = enabled
+        settingsRepository.setIslandNotifCompactCycleEnabled(enabled)
+    }
+
     fun setIslandNotifKeepProgress(enabled: Boolean) {
         isIslandNotifKeepProgress.value = enabled
         settingsRepository.setIslandNotifKeepProgressEnabled(enabled)
@@ -5416,6 +5443,13 @@ class MainViewModel : ViewModel() {
     fun setIslandNotifCompactHeadsUp(enabled: Boolean) {
         isIslandNotifCompactHeadsUp.value = enabled
         settingsRepository.setIslandNotifCompactHeadsUpEnabled(enabled)
+        islandNotifArrivalStyle.value = settingsRepository.getIslandNotifArrivalStyle()
+    }
+
+    fun setIslandNotifArrivalStyle(style: String) {
+        islandNotifArrivalStyle.value = style
+        settingsRepository.setIslandNotifArrivalStyle(style)
+        isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
     }
 
     fun setIslandCatchUpEnabled(enabled: Boolean) {
