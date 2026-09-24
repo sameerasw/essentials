@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.island.plugins.brief
 
 import com.sameerasw.essentials.island.plugins.weather.WeatherExpanded
+import com.sameerasw.essentials.weather.effects.DeviceWeatherHaptics
+import com.sameerasw.essentials.weather.effects.WeatherEffectHaptics
 import com.sameerasw.essentials.weather.effects.WeatherEffectSpec
 import com.sameerasw.essentials.weather.effects.WeatherEffects
 import com.sameerasw.essentials.utils.DeviceUtils
@@ -130,6 +132,7 @@ class BriefPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
         SettingsRepository.KEY_ISLAND_SHOW_WEATHER,
         SettingsRepository.KEY_ISLAND_WEATHER_EFFECTS,
+        SettingsRepository.KEY_ISLAND_WEATHER_HAPTICS,
         SettingsRepository.KEY_WEATHER_UNITS,
     )
 
@@ -147,6 +150,7 @@ class BriefPlugin : BaseIslandPlugin() {
             enabled = settings.isIslandShowWeatherEnabled(),
             unit = WeatherFormat.unitFor(settings.getWeatherUnits()),
             effects = settings.isIslandShowWeatherEnabled() && settings.isIslandWeatherEffectsEnabled() && !DeviceUtils.isPowerSaveMode(context),
+            haptics = settings.isIslandWeatherHapticsEnabled(),
         )
         publish(
             IslandItem(
@@ -204,8 +208,9 @@ private fun BriefExpanded(
         val effectSpec = remember(weather.effects, weatherState.snapshot) {
             weatherState.snapshot?.takeIf { weather.effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
         }
-        if (!SurfaceBackdrop { BriefBackground(page, media, showGlow, scope, effectSpec, Modifier.fillMaxSize()) }) {
-            BriefBackground(page, media, showGlow, scope, effectSpec, Modifier.matchParentSize())
+        val weatherHaptics = remember(context, weather.haptics) { DeviceWeatherHaptics(context).takeIf { weather.haptics } }
+        if (!SurfaceBackdrop { BriefBackground(page, media, showGlow, scope, effectSpec, weatherHaptics, Modifier.fillMaxSize()) }) {
+            BriefBackground(page, media, showGlow, scope, effectSpec, weatherHaptics, Modifier.matchParentSize())
         }
         AnimatedContent(
             targetState = page,
@@ -259,6 +264,7 @@ private fun BriefBackground(
     showGlow: Boolean,
     scope: IslandExpandedScope,
     effects: WeatherEffectSpec,
+    effectHaptics: WeatherEffectHaptics?,
     modifier: Modifier,
 ) {
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
@@ -285,6 +291,7 @@ private fun BriefBackground(
                 spec = effects,
                 modifier = Modifier.matchParentSize().graphicsLayer { alpha = effectsAlpha },
                 clearTop = scope.cameraClearance,
+                haptics = effectHaptics.takeIf { event == null },
             )
         }
         if (glowAlpha > 0f) {
@@ -305,7 +312,7 @@ private sealed interface BriefPage {
     data object Weather : BriefPage
 }
 
-private class BriefWeather(val enabled: Boolean, val unit: TemperatureUnit, val effects: Boolean)
+private class BriefWeather(val enabled: Boolean, val unit: TemperatureUnit, val effects: Boolean, val haptics: Boolean)
 
 @Composable
 private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, content: @Composable () -> Unit) {

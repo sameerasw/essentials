@@ -2849,6 +2849,7 @@
     <string name="island_weather_mode_alerts">Severe alerts</string>
     <string name="island_weather_peek_alerts_title">Peek on severe alerts</string>
     <string name="island_weather_effects_title">Weather effects in Brief</string>
+    <string name="island_weather_haptics_title">Weather haptics</string>
     <string name="weather_section_source">Source</string>
     <string name="weather_section_display">Display</string>
     <string name="weather_provider_title">Provider</string>

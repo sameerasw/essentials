@@ -188,6 +188,44 @@ object HapticUtil {
         }
     }
 
+    fun performThunderRumble(
+        context: Context,
+        intensity: Float,
+    ) {
+        if (!isAppHapticsEnabled.value) return
+        val vibrator = getVibrator(context)
+        if (!vibrator.hasVibrator()) return
+        val scale = intensity.coerceIn(0.1f, 1f)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_LOW_TICK)
+        ) {
+            try {
+                val strike = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                    vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_THUD)
+                ) {
+                    VibrationEffect.Composition.PRIMITIVE_THUD
+                } else {
+                    VibrationEffect.Composition.PRIMITIVE_LOW_TICK
+                }
+                val composition = VibrationEffect.startComposition().addPrimitive(strike, 0.55f * scale)
+                THUNDER_TAIL.forEachIndexed { index, level ->
+                    composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, level * scale, if (index == 0) 20 else 45)
+                }
+                vibrateWithTouchAttributes(vibrator, composition.compose())
+                return
+            } catch (_: Exception) {}
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val timings = longArrayOf(0, 60, 40, 90, 60, 120)
+            val amplitudes = intArrayOf(0, (140 * scale).toInt(), (40 * scale).toInt(), (90 * scale).toInt(), (35 * scale).toInt(), (20 * scale).toInt())
+            vibrateWithTouchAttributes(vibrator, VibrationEffect.createWaveform(timings, amplitudes, -1))
+        }
+    }
+
+    private val THUNDER_TAIL = floatArrayOf(0.3f, 0.22f, 0.16f, 0.12f, 0.4f, 0.2f, 0.12f, 0.07f, 0.04f)
+
     fun performStrongTickHaptic(context: Context) {
         if (!isAppHapticsEnabled.value) return
         val vibrator = getVibrator(context)
