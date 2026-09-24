@@ -196,6 +196,7 @@ class MainViewModel : ViewModel() {
     val islandCameraPosition = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_CENTER)
     val isIslandShowCalls = mutableStateOf(true)
     val isIslandShowTimers = mutableStateOf(true)
+    val isIslandShowWeather = mutableStateOf(false)
     val isIslandTimersShowScreenRecorder = mutableStateOf(true)
     val isIslandShowNetwork = mutableStateOf(true)
     val isIslandShowSoundMode = mutableStateOf(true)
@@ -2215,6 +2216,7 @@ class MainViewModel : ViewModel() {
         islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
         isIslandShowCalls.value = settingsRepository.isIslandShowCallsEnabled()
         isIslandShowTimers.value = settingsRepository.isIslandShowTimersEnabled()
+        isIslandShowWeather.value = settingsRepository.isIslandShowWeatherEnabled()
         isIslandTimersShowScreenRecorder.value = settingsRepository.isIslandTimersShowScreenRecorderEnabled()
         isIslandShowNetwork.value = settingsRepository.isIslandShowNetworkEnabled()
         isIslandShowSoundMode.value = settingsRepository.isIslandShowSoundModeEnabled()
@@ -5244,6 +5246,11 @@ class MainViewModel : ViewModel() {
     fun setIslandCalendarEmoji(calendarId: Long, emoji: String?) {
         settingsRepository.setIslandCalendarEmoji(calendarId, emoji)
         islandCalendarEmojis.value = settingsRepository.getIslandCalendarEmojis()
+    }
+
+    fun setIslandShowWeather(enabled: Boolean) {
+        isIslandShowWeather.value = enabled
+        settingsRepository.setIslandShowWeatherEnabled(enabled)
     }
 
     fun setIslandShowTimers(enabled: Boolean) {

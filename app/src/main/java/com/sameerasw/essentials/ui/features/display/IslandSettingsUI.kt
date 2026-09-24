@@ -64,6 +64,7 @@ import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescr
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandWeatherOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceCalendarOptionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
@@ -153,6 +154,7 @@ fun IslandSettingsUI(
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
+    var showWeatherOptionsSheet by remember { mutableStateOf(false) }
     var pickingGesture by remember { mutableStateOf<String?>(null) }
     var showSlideModeSheet by remember { mutableStateOf(false) }
 
@@ -731,6 +733,19 @@ fun IslandSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_partly_cloudy_day_24,
+                title = stringResource(R.string.lock_screen_clock_weather),
+                isChecked = viewModel.isIslandShowWeather.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandShowWeather(checked)
+                    if (checked && SettingsRepository(context).getWeatherApiKey() == null) showWeatherOptionsSheet = true
+                },
+                onSettingsClick = { showWeatherOptionsSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_show_weather"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_motion_play_24,
                 title = stringResource(R.string.duo_show_media_title),
                 isChecked = viewModel.isIslandShowMedia.value,
@@ -1044,6 +1059,13 @@ fun IslandSettingsUI(
                     )
                 }
             },
+        )
+    }
+
+    if (showWeatherOptionsSheet) {
+        IslandWeatherOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showWeatherOptionsSheet = false },
         )
     }
 

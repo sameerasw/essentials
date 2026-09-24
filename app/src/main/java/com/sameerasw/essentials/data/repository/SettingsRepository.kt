@@ -495,6 +495,22 @@ class SettingsRepository(
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
         const val KEY_ISLAND_SHOW_CALLS = "island_show_calls"
         const val KEY_ISLAND_SHOW_TIMERS = "island_show_timers"
+        const val KEY_ISLAND_SHOW_WEATHER = "island_show_weather"
+        const val KEY_ISLAND_WEATHER_MODE = "island_weather_mode"
+        const val KEY_ISLAND_WEATHER_PEEK_ALERTS = "island_weather_peek_alerts"
+        const val ISLAND_WEATHER_MODE_BRIEF = "brief"
+        const val ISLAND_WEATHER_MODE_COMPACT = "compact"
+        const val ISLAND_WEATHER_MODE_ALERTS = "alerts"
+
+        const val KEY_WEATHER_PROVIDER = "weather_provider"
+        const val KEY_WEATHER_API_KEY = "weather_api_key"
+        const val KEY_WEATHER_LOCATION_MODE = "weather_location_mode"
+        const val KEY_WEATHER_MANUAL_LOCATION = "weather_manual_location"
+        const val KEY_WEATHER_UNITS = "weather_units"
+        const val KEY_WEATHER_REFRESH_MINUTES = "weather_refresh_minutes"
+        const val WEATHER_UNITS_SYSTEM = "system"
+        const val WEATHER_UNITS_CELSIUS = "celsius"
+        const val WEATHER_UNITS_FAHRENHEIT = "fahrenheit"
         const val KEY_ISLAND_CALENDAR_EMOJIS = "island_calendar_emojis"
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
@@ -1565,6 +1581,7 @@ class SettingsRepository(
                     if (key == KEY_GITHUB_ACCESS_TOKEN ||
                         key == KEY_GITHUB_WORKFLOW_TOKEN ||
                         key == KEY_SHIZUKU_AUTH_TOKEN ||
+                        key == KEY_WEATHER_API_KEY ||
                         key.startsWith("mac_battery_") ||
                         key == "airsync_mac_connected" ||
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS ||
@@ -1641,6 +1658,7 @@ class SettingsRepository(
                         KEY_GITHUB_ACCESS_TOKEN,
                         KEY_GITHUB_WORKFLOW_TOKEN,
                         KEY_SHIZUKU_AUTH_TOKEN,
+                        KEY_WEATHER_API_KEY,
                         "airsync_mac_connected",
                         KEY_SNOOZE_DISCOVERED_CHANNELS,
                         KEY_MAPS_DISCOVERED_CHANNELS,
@@ -1679,7 +1697,8 @@ class SettingsRepository(
                             // Do not import sensitive keys from the file even if they exist there
                             if (key == KEY_GITHUB_ACCESS_TOKEN ||
                                 key == KEY_GITHUB_WORKFLOW_TOKEN ||
-                                key == KEY_SHIZUKU_AUTH_TOKEN
+                                key == KEY_SHIZUKU_AUTH_TOKEN ||
+                                key == KEY_WEATHER_API_KEY
                             ) {
                                 return@forEach
                             }
@@ -3608,6 +3627,42 @@ class SettingsRepository(
         updated.forEach { (id, value) -> json.put(id.toString(), value) }
         putString(KEY_ISLAND_CALENDAR_EMOJIS, json.toString())
     }
+
+    fun isIslandShowWeatherEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_WEATHER, false)
+    fun setIslandShowWeatherEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_WEATHER, enabled)
+
+    fun getIslandWeatherMode(): String = getString(KEY_ISLAND_WEATHER_MODE, ISLAND_WEATHER_MODE_BRIEF) ?: ISLAND_WEATHER_MODE_BRIEF
+    fun setIslandWeatherMode(mode: String) = putString(KEY_ISLAND_WEATHER_MODE, mode)
+
+    fun isIslandWeatherPeekAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_PEEK_ALERTS, true)
+    fun setIslandWeatherPeekAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_PEEK_ALERTS, enabled)
+
+    fun getWeatherProvider(): String? = getString(KEY_WEATHER_PROVIDER, null)
+    fun setWeatherProvider(id: String) = putString(KEY_WEATHER_PROVIDER, id)
+
+    fun getWeatherApiKey(): String? = getString(KEY_WEATHER_API_KEY, null)?.takeIf { it.isNotBlank() }
+    fun setWeatherApiKey(key: String?) = putString(KEY_WEATHER_API_KEY, key?.trim().orEmpty())
+
+    fun getWeatherLocationMode(): String = getString(KEY_WEATHER_LOCATION_MODE, "device") ?: "device"
+    fun setWeatherLocationMode(mode: String) = putString(KEY_WEATHER_LOCATION_MODE, mode)
+
+    // Stored as "lat|lon|name".
+    fun getWeatherManualLocation(): Triple<Double, Double, String>? {
+        val parts = getString(KEY_WEATHER_MANUAL_LOCATION, null)?.split("|", limit = 3) ?: return null
+        if (parts.size != 3) return null
+        val lat = parts[0].toDoubleOrNull() ?: return null
+        val lon = parts[1].toDoubleOrNull() ?: return null
+        return Triple(lat, lon, parts[2])
+    }
+
+    fun setWeatherManualLocation(latitude: Double, longitude: Double, name: String) =
+        putString(KEY_WEATHER_MANUAL_LOCATION, "$latitude|$longitude|${name.replace("|", " ")}")
+
+    fun getWeatherUnits(): String = getString(KEY_WEATHER_UNITS, WEATHER_UNITS_SYSTEM) ?: WEATHER_UNITS_SYSTEM
+    fun setWeatherUnits(units: String) = putString(KEY_WEATHER_UNITS, units)
+
+    fun getWeatherRefreshMinutes(): Int = getInt(KEY_WEATHER_REFRESH_MINUTES, 60)
+    fun setWeatherRefreshMinutes(minutes: Int) = putInt(KEY_WEATHER_REFRESH_MINUTES, minutes)
 
     fun isIslandShowTimersEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIMERS, true)
     fun setIslandShowTimersEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIMERS, enabled)

@@ -142,6 +142,7 @@ fun initPermissionRegistry() {
 
     // Location permission
     PermissionRegistry.register("LOCATION", R.string.feat_location_reached_title)
+    PermissionRegistry.register("LOCATION", R.string.lock_screen_clock_weather)
     PermissionRegistry.register("BACKGROUND_LOCATION", R.string.feat_location_reached_title)
     PermissionRegistry.register("USE_FULL_SCREEN_INTENT", R.string.feat_location_reached_title)
 

@@ -771,6 +771,11 @@ object FeatureRegistry {
                             "island_show_timers",
                         ),
                         SearchSetting(
+                            R.string.lock_screen_clock_weather,
+                            R.string.island_weather_options_title,
+                            "island_show_weather",
+                        ),
+                        SearchSetting(
                             R.string.feat_caffeinate_title,
                             R.string.caffeinate_notification_desc,
                             "island_show_caffeinate",

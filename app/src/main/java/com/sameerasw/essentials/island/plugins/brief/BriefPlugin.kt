@@ -1,5 +1,10 @@
 package com.sameerasw.essentials.island.plugins.brief
 
+import com.sameerasw.essentials.island.plugins.weather.WeatherExpanded
+import com.sameerasw.essentials.weather.WeatherFormat
+import com.sameerasw.essentials.weather.WeatherRepository
+import com.sameerasw.essentials.weather.model.TemperatureUnit
+import com.sameerasw.essentials.weather.model.WeatherSnapshot
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import android.Manifest
@@ -120,6 +125,8 @@ class BriefPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
+        SettingsRepository.KEY_ISLAND_SHOW_WEATHER,
+        SettingsRepository.KEY_WEATHER_UNITS,
     )
 
     override fun refresh() {
@@ -132,6 +139,7 @@ class BriefPlugin : BaseIslandPlugin() {
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        val weather = BriefWeather(settings.isIslandShowWeatherEnabled(), WeatherFormat.unitFor(settings.getWeatherUnits()))
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -139,7 +147,7 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, calendarEnabled, calendarIds, showAllDay, showGlow) { pageOpen = it }
+                    BriefExpanded(scope, iconStyle, calendarEnabled, calendarIds, showAllDay, showGlow, weather) { pageOpen = it }
                 },
                 onOpen = { pageOpen?.invoke() },
                 compactVisible = false,
@@ -160,9 +168,11 @@ private fun BriefExpanded(
     calendarIds: Set<Long>,
     showAllDay: Boolean,
     showGlow: Boolean,
+    weather: BriefWeather,
     onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     var page by remember { mutableStateOf<BriefPage>(BriefPage.Overview) }
     val media by IslandMediaState.current.collectAsState()
     val current = page
@@ -172,6 +182,7 @@ private fun BriefExpanded(
                 BriefPage.Overview -> null
                 BriefPage.Player -> media?.open
                 is BriefPage.Event -> ({ openEvent(context, current.event) })
+                BriefPage.Weather -> null
             },
         )
     }
@@ -203,11 +214,20 @@ private fun BriefExpanded(
                         calendarIds = calendarIds,
                         showAllDay = showAllDay,
                         media = media,
+                        weather = weather,
                         onEventClick = { page = BriefPage.Event(it) },
                         onPlayerClick = { page = BriefPage.Player },
+                        onWeatherClick = { page = BriefPage.Weather },
                     )
                     is BriefPage.Event -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         BriefEventDetail(target.event, showGlow, scope)
+                    }
+                    BriefPage.Weather -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
+                        WeatherExpanded(
+                            unit = weather.unit,
+                            scope = scope,
+                            onRefresh = { coroutineScope.launch { WeatherRepository.refresh(context, force = true) } },
+                        )
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
@@ -228,6 +248,7 @@ private fun BriefBackground(page: BriefPage, media: MediaSnapshot?, showGlow: Bo
             BriefPage.Player -> 1f
             BriefPage.Overview -> if (media?.playing == true) 1f else 0f
             is BriefPage.Event -> 0f
+            BriefPage.Weather -> 0f
         },
         tween(400),
         label = "briefArt",
@@ -254,7 +275,10 @@ private sealed interface BriefPage {
     data object Overview : BriefPage
     data class Event(val event: UpcomingCalendarEvent) : BriefPage
     data object Player : BriefPage
+    data object Weather : BriefPage
 }
+
+private class BriefWeather(val enabled: Boolean, val unit: TemperatureUnit)
 
 @Composable
 private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, content: @Composable () -> Unit) {
@@ -313,7 +337,7 @@ private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, sc
             },
             scope = scope,
             emoji = remember(event.calendarId) {
-                com.sameerasw.essentials.data.repository.SettingsRepository(context).getIslandCalendarEmojis()[event.calendarId]
+                SettingsRepository(context).getIslandCalendarEmojis()[event.calendarId]
             },
             drawBackground = false,
         )
@@ -342,8 +366,10 @@ private fun BriefOverview(
     calendarIds: Set<Long>,
     showAllDay: Boolean,
     media: MediaSnapshot?,
+    weather: BriefWeather,
     onEventClick: (UpcomingCalendarEvent) -> Unit,
     onPlayerClick: () -> Unit,
+    onWeatherClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val spec = scope.spec
@@ -395,6 +421,14 @@ private fun BriefOverview(
                     }
                 },
             )
+
+            if (weather.enabled) {
+                val weatherState by WeatherRepository.state.collectAsState()
+                weatherState.snapshot?.let { snapshot ->
+                    Spacer(Modifier.height(12.dp))
+                    BriefWeatherRow(snapshot, weather.unit, accent, onWeatherClick, Modifier.padding(horizontal = sidePadding))
+                }
+            }
 
             if (devices.isNotEmpty()) {
                 Spacer(Modifier.height(12.dp))
@@ -640,6 +674,50 @@ private fun BriefDeviceChip(device: BriefDevice, iconStyle: Boolean, accent: Col
             BatteryGlyph(device.level, accent, showLevel = true)
         } else {
             BatteryRing(device.level, accent, showLevel = true)
+        }
+    }
+}
+
+@Composable
+private fun BriefWeatherRow(snapshot: WeatherSnapshot, unit: TemperatureUnit, accent: Color, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val alert = snapshot.activeAlerts().filter { it.severity.isSevere }.maxByOrNull { it.severity.ordinal }
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color.White.copy(alpha = 0.1f))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IslandIcon(WeatherFormat.icon(snapshot.condition, snapshot.isDay), tint = accent, size = 26.dp)
+        Spacer(Modifier.width(10.dp))
+        Text(WeatherFormat.temperature(snapshot.tempC, unit), style = IslandTextStyles.title.copy(fontSize = 20.sp))
+        Spacer(Modifier.width(10.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                text = alert?.event ?: snapshot.conditionText,
+                style = IslandTextStyles.body.copy(color = Color.White, fontSize = 14.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = stringResource(
+                    R.string.weather_high_low,
+                    WeatherFormat.temperature(snapshot.highC, unit),
+                    WeatherFormat.temperature(snapshot.lowC, unit),
+                ) + " · " + snapshot.locationName,
+                style = IslandTextStyles.body.copy(fontSize = 12.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        if (alert != null) {
+            IslandIcon(R.drawable.rounded_warning_24, tint = MaterialTheme.colorScheme.error, size = 20.dp)
+        } else if (snapshot.chanceOfRain > 0) {
+            IslandIcon(R.drawable.rounded_rainy_24, tint = accent, size = 16.dp)
+            Spacer(Modifier.width(4.dp))
+            Text("${snapshot.chanceOfRain}%", style = IslandTextStyles.body.copy(fontSize = 12.sp))
         }
     }
 }

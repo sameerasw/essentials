@@ -26,8 +26,10 @@ object IslandPriority {
     const val CONSCIOUS_GATE = 40
     const val CAFFEINATE = 44
     const val TRAVEL = 45
+    const val WEATHER_ALERT = 48
     const val CALENDAR = 50
     const val SOUND_MODE = 55
+    const val WEATHER = 58
     const val NETWORK = 60
     const val DEVICES = 62
     const val DEFAULT = 100

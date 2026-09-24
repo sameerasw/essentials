@@ -38,6 +38,7 @@ import com.sameerasw.essentials.island.plugins.devices.DevicesPlugin
 import com.sameerasw.essentials.island.plugins.brief.BriefPlugin
 import com.sameerasw.essentials.island.plugins.progress.ProgressPlugin
 import com.sameerasw.essentials.island.plugins.soundmode.SoundModePlugin
+import com.sameerasw.essentials.island.plugins.weather.WeatherPlugin
 import com.sameerasw.essentials.island.plugins.travel.TravelPlugin
 import com.sameerasw.essentials.island.plugins.caffeinate.CaffeinatePlugin
 import com.sameerasw.essentials.island.plugins.media.MediaPlugin
@@ -90,6 +91,7 @@ class IslandCoordinator(
         FlashlightPlugin(),
         TimerPlugin(),
         SoundModePlugin(),
+        WeatherPlugin(),
         CaffeinatePlugin(),
         TravelPlugin(),
         NetworkPlugin(),
