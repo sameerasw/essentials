@@ -35,8 +35,9 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 interface WeatherEffectHaptics {
-    fun onDrop(intensity: Float)
-    fun onHail(intensity: Float)
+    // weight is 0..1 per drop so the pattern doesn't feel like a metronome.
+    fun onDrop(intensity: Float, weight: Float)
+    fun onHail(intensity: Float, weight: Float)
     fun onStrike(intensity: Float)
 }
 
@@ -44,8 +45,8 @@ interface WeatherEffectHaptics {
 private class ParticleField(val x: FloatArray, val phase: FloatArray, val speed: FloatArray, val size: FloatArray) {
     val count: Int get() = x.size
 
-    // The largest, closest-looking particles; these land with a splash and a haptic tick.
-    fun heroes(count: Int): IntArray = size.indices.sortedByDescending { size[it] }.take(count).toIntArray()
+    // A random spread of particles that land with a splash and a haptic tick; mixed speeds keep the rhythm irregular.
+    fun heroes(count: Int, seed: Int): IntArray = size.indices.shuffled(Random(seed)).take(count).toIntArray()
 
     companion object {
         fun create(count: Int, seed: Int): ParticleField {
@@ -74,7 +75,7 @@ fun WeatherEffects(
     val layers = remember(spec) {
         spec.layers.mapIndexed { index, layer ->
             val field = ParticleField.create(particleCount(layer), seed = index * 7919 + 17)
-            LayerState(layer, field, field.heroes(heroCount(layer)))
+            LayerState(layer, field, field.heroes(heroCount(layer), seed = index * 31 + 5))
         }
     }
 
@@ -138,7 +139,8 @@ private fun particleCount(layer: WeatherEffectLayer): Int = when (layer) {
 }
 
 private fun heroCount(layer: WeatherEffectLayer): Int = when (layer) {
-    is WeatherEffectLayer.Rain, is WeatherEffectLayer.Hail -> 1 + (2 * layer.intensity).roundToInt()
+    is WeatherEffectLayer.Rain -> 2 + (6 * layer.intensity).roundToInt()
+    is WeatherEffectLayer.Hail -> 2 + (3 * layer.intensity).roundToInt()
     else -> 0
 }
 
@@ -185,13 +187,13 @@ private fun emitHaptics(
             is WeatherEffectLayer.Rain -> state.heroes.forEach { i ->
                 val fall = rainFall(state.field, i, layer.intensity, h, density)
                 if (crossed(progress(state.field, i, fall, previous), progress(state.field, i, fall, now), fall.impact)) {
-                    sink.onDrop(layer.intensity)
+                    sink.onDrop(layer.intensity, state.field.size[i])
                 }
             }
             is WeatherEffectLayer.Hail -> state.heroes.forEach { i ->
                 val fall = hailFall(state.field, i, h, density)
                 if (crossed(progress(state.field, i, fall, previous), progress(state.field, i, fall, now), fall.impact)) {
-                    sink.onHail(layer.intensity)
+                    sink.onHail(layer.intensity, state.field.size[i])
                 }
             }
             is WeatherEffectLayer.Lightning -> {
