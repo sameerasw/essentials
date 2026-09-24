@@ -1629,4 +1629,16 @@
     <string name="duo_action_long_press_title">Ingedrukt houden</string>
     <string name="duo_action_swipe_down_title">Omlaag vegen</string>
     <string name="duo_action_horizontal_slide_title">Opzij vegen</string>
+    <string name="island_title">Eiland</string>
+    <string name="island_desc">Dynamisch eiland</string>
+    <string name="island_enable_title">Zet Eiland aan</string>
+    <string name="island_camera_position_title">Camera positie</string>
+    <string name="island_camera_position_left">Links</string>
+    <string name="island_camera_position_center">Midden</string>
+    <string name="island_camera_position_right">Rechts</string>
+    <string name="duo_camera_offset_x_title">Horizontale positie</string>
+    <string name="duo_camera_offset_y_title">Verticale positie</string>
+    <string name="island_max_width_title">Maximum breedte</string>
+    <string name="island_expanded_width_title">Uitgeklapte breedte</string>
+    <string name="island_cutout_gap_title">Camera ruimte</string>
 </resources>
