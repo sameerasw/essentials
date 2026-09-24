@@ -690,28 +690,17 @@ private fun BriefWeatherRow(snapshot: WeatherSnapshot, unit: TemperatureUnit, ac
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IslandIcon(WeatherFormat.icon(snapshot.condition, snapshot.isDay), tint = accent, size = 26.dp)
-        Spacer(Modifier.width(10.dp))
-        Text(WeatherFormat.temperature(snapshot.tempC, unit), style = IslandTextStyles.title.copy(fontSize = 20.sp))
-        Spacer(Modifier.width(10.dp))
-        Column(Modifier.weight(1f)) {
-            Text(
-                text = alert?.event ?: snapshot.conditionText,
-                style = IslandTextStyles.body.copy(color = Color.White, fontSize = 14.sp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Text(
-                text = stringResource(
-                    R.string.weather_high_low,
-                    WeatherFormat.temperature(snapshot.highC, unit),
-                    WeatherFormat.temperature(snapshot.lowC, unit),
-                ) + " · " + snapshot.locationName,
-                style = IslandTextStyles.body.copy(fontSize = 12.sp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+        IslandIcon(WeatherFormat.icon(snapshot.condition, snapshot.isDay), tint = accent, size = 36.dp)
+        Spacer(Modifier.width(12.dp))
+        Text(WeatherFormat.temperature(snapshot.tempC, unit), style = IslandTextStyles.title.copy(fontSize = 28.sp))
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = alert?.event ?: snapshot.conditionText,
+            style = IslandTextStyles.body.copy(color = Color.White, fontSize = 14.sp),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
         if (alert != null) {
             IslandIcon(R.drawable.rounded_warning_24, tint = MaterialTheme.colorScheme.error, size = 20.dp)
         } else if (snapshot.chanceOfRain > 0) {
