@@ -14,10 +14,6 @@ import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
 import java.lang.reflect.InvocationTargetException
 
-/**
- * Reads subscriptions with the public API and changes the default through Shizuku or root.
- * Android does not expose a public API for changing it from a regular application.
- */
 internal object DataSimController {
     private const val SUB_INTERFACE = "com.android.internal.telephony.ISub"
     private const val PHONE_INTERFACE = "com.android.internal.telephony.ITelephony"
@@ -82,7 +78,6 @@ internal object DataSimController {
 
     private fun switchWithRoot(subId: Int) {
         applyHiddenApiExemptions()
-        // Binder transaction numbers can change between Android releases.
         val code = Class.forName("$SUB_INTERFACE\$Stub")
             .getDeclaredField("TRANSACTION_setDefaultDataSubId")
             .apply { isAccessible = true }
@@ -106,7 +101,6 @@ internal object DataSimController {
                 call(phone, PHONE_INTERFACE, "setDataEnabledForReason", types, *args)
                 return
             } catch (_: NoSuchMethodException) {
-                // Older Android releases use a different telephony method.
             }
         }
         for (method in listOf("setUserDataEnabled", "setDataEnabled")) {
@@ -114,7 +108,6 @@ internal object DataSimController {
                 call(phone, PHONE_INTERFACE, method, arrayOf(Int::class.javaPrimitiveType!!, Boolean::class.javaPrimitiveType!!), subId, true)
                 return
             } catch (_: NoSuchMethodException) {
-                // Try the next supported method.
             }
         }
         throw NoSuchMethodException("No supported mobile-data enable API")
@@ -129,7 +122,7 @@ internal object DataSimController {
 
     private fun applyHiddenApiExemptions() {
         if (Build.VERSION.SDK_INT >= 28 && !exemptionsApplied) {
-            check(HiddenApiBypass.addHiddenApiExemptions(""))
+            check(HiddenApiBypass.addHiddenApiExemptions("Lcom/android/internal/telephony/"))
             exemptionsApplied = true
         }
     }

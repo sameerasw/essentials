@@ -13,7 +13,7 @@ This document outlines background services, Quick Settings tiles, and system per
 | **`PrivateDnsTileService`** | Cycles Private DNS provider mode (Off / Automatic / Custom Hostname). | `WRITE_SECURE_SETTINGS` |
 | **`RefreshRateTileService`** | Cycles display refresh rate profiles (Fixed / Auto / Peak). | `WRITE_SECURE_SETTINGS` |
 | **`SoundModeTileService`** | Cycles sound profiles (Normal / Vibrate / Silent). | `ACCESS_NOTIFICATION_POLICY` |
-| **`HapticsTileService`** | Toggles system vibration and touch haptics together. | `WRITE_SETTINGS` |
+| **`HapticsTileService`** | Toggles system vibration and touch haptics together. | `WRITE_SETTINGS` (+ `Shizuku` / `Root` if `vibrate_on` is protected) |
 | **`DataSimTileService`** | Switches to the next active data SIM and enables data on it. | `Shizuku` / `Root`, `READ_PHONE_STATE` |
 | **`AppFreezingTileService`** | Freezes background apps using package state policies. | `Shizuku` / `Root` |
 | **`ChargeQuickTileService`** | Toggles fast charging policy sysfs node. | `Root` |

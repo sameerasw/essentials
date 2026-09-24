@@ -92,7 +92,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
-            if (componentName.className == "com.sameerasw.essentials.services.tiles.DataSimTileService") {
+            if (componentName.className == com.sameerasw.essentials.services.tiles.DataSimTileService::class.java.name) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     openSystemSettings(Settings.ACTION_MANAGE_ALL_SIM_PROFILES_SETTINGS, Settings.ACTION_WIRELESS_SETTINGS)
                 } else {
@@ -102,7 +102,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
-            if (componentName.className == "com.sameerasw.essentials.services.tiles.HapticsTileService") {
+            if (componentName.className == com.sameerasw.essentials.services.tiles.HapticsTileService::class.java.name) {
                 openHapticsSettings()
                 finish()
                 return
@@ -201,7 +201,6 @@ class QSPreferencesActivity : ComponentActivity() {
     }
 
     private fun openHapticsSettings() {
-        // Pixel Settings exports this page but does not provide a public intent action for it.
         val vibrationSettings =
             Intent(Intent.ACTION_MAIN).apply {
                 setClassName("com.android.settings", "com.android.settings.Settings\$VibrationIntensitySettingsActivity")
@@ -227,7 +226,6 @@ class QSPreferencesActivity : ComponentActivity() {
                 )
                 return
             } catch (_: ActivityNotFoundException) {
-                // Some devices do not provide every settings screen.
             }
         }
     }

@@ -162,6 +162,7 @@ object QsTileRegistry {
     ): Boolean =
         try {
             when (className) {
+                HapticsTileService::class.java.name -> HapticsSettings.isEnabled(context)
                 DataSimTileService::class.java.name ->
                     PermissionUtils.hasReadPhoneStatePermission(context) &&
                         ShellUtils.hasPermission(context) &&
@@ -254,6 +255,8 @@ object QsTileRegistry {
     ): String =
         try {
             when (className) {
+                HapticsTileService::class.java.name ->
+                    context.getString(if (HapticsSettings.isEnabled(context)) R.string.tile_active else R.string.tile_inactive)
                 DataSimTileService::class.java.name -> {
                     val state = DataSimController.lastKnownState
                     when {

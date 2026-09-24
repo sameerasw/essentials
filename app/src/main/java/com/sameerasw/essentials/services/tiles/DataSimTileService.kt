@@ -1,12 +1,8 @@
 package com.sameerasw.essentials.services.tiles
 
-import android.app.PendingIntent
-import android.content.Intent
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.service.quicksettings.Tile
 import android.util.Log
-import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
@@ -77,16 +73,7 @@ class DataSimTileService : BaseTileService() {
     override fun onClick() {
         if (isSwitching) return
         if (!hasFeaturePermission()) {
-            val intent = Intent(this, FeatureSettingsActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                putExtra("feature", "Quick settings tiles")
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
-            } else {
-                @Suppress("DEPRECATION")
-                startActivityAndCollapse(intent)
-            }
+            openTilesSettings()
             return
         }
         super.onClick()
