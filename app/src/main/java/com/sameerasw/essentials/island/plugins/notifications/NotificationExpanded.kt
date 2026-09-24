@@ -77,22 +77,23 @@ fun NotificationExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
-    Box(propagateMinConstraints = true) {
+    Box(
+        modifier = Modifier.clickable(
+            enabled = tapToOpen && replyAction == null,
+            interactionSource = null,
+            indication = null,
+        ) {
+            IslandHaptics.button(context)
+            scope.openApp()
+        },
+        propagateMinConstraints = true,
+    ) {
         Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column(
-                modifier = if (tapToOpen) {
-                    Modifier.clickable(interactionSource = null, indication = null) {
-                        IslandHaptics.button(context)
-                        scope.openApp()
-                    }
-                } else {
-                    Modifier
-                },
-            ) {
+            Column {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
