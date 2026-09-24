@@ -1145,7 +1145,7 @@
     <string name="about_desc_nfc">Toggle NFC.\n\nQuickly enable or disable Near Field Communication for payments and pairing.</string>
     <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
     <string name="about_desc_haptics">Toggle system vibration and touch feedback together. Requires Modify system settings permission.</string>
-    <string name="about_desc_data_sim">Switch mobile data to the next active SIM. Requires Shizuku; the selected SIM is also enabled for mobile data.</string>
+    <string name="about_desc_data_sim">Switch mobile data to the next active SIM. Requires Read phone state permission and either Shizuku or root; the selected SIM is also enabled for mobile data.</string>
     <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
     <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
