@@ -95,6 +95,7 @@ fun IslandWeatherOptionsBottomSheet(
 
     var mode by remember { mutableStateOf(settings.getIslandWeatherMode()) }
     var peekAlerts by remember { mutableStateOf(settings.isIslandWeatherPeekAlertsEnabled()) }
+    var effects by remember { mutableStateOf(settings.isIslandWeatherEffectsEnabled()) }
     var units by remember { mutableStateOf(settings.getWeatherUnits()) }
     var refreshMinutes by remember { mutableIntStateOf(settings.getWeatherRefreshMinutes()) }
     var savedKey by remember { mutableStateOf(settings.getWeatherApiKey().orEmpty()) }
@@ -172,6 +173,16 @@ fun IslandWeatherOptionsBottomSheet(
                         HapticUtil.performVirtualKeyHaptic(view)
                         peekAlerts = it
                         settings.setIslandWeatherPeekAlertsEnabled(it)
+                    },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_rainy_24,
+                    title = stringResource(R.string.island_weather_effects_title),
+                    isChecked = effects,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        effects = it
+                        settings.setIslandWeatherEffectsEnabled(it)
                     },
                 )
             }

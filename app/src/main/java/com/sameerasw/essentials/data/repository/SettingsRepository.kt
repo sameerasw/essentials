@@ -498,6 +498,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_WEATHER = "island_show_weather"
         const val KEY_ISLAND_WEATHER_MODE = "island_weather_mode"
         const val KEY_ISLAND_WEATHER_PEEK_ALERTS = "island_weather_peek_alerts"
+        const val KEY_ISLAND_WEATHER_EFFECTS = "island_weather_effects"
         const val ISLAND_WEATHER_MODE_BRIEF = "brief"
         const val ISLAND_WEATHER_MODE_COMPACT = "compact"
         const val ISLAND_WEATHER_MODE_ALERTS = "alerts"
@@ -3636,6 +3637,9 @@ class SettingsRepository(
 
     fun isIslandWeatherPeekAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_PEEK_ALERTS, true)
     fun setIslandWeatherPeekAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_PEEK_ALERTS, enabled)
+
+    fun isIslandWeatherEffectsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_EFFECTS, true)
+    fun setIslandWeatherEffectsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_EFFECTS, enabled)
 
     fun getWeatherProvider(): String? = getString(KEY_WEATHER_PROVIDER, null)
     fun setWeatherProvider(id: String) = putString(KEY_WEATHER_PROVIDER, id)

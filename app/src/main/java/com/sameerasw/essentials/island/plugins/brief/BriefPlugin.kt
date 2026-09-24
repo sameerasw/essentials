@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.island.plugins.brief
 
 import com.sameerasw.essentials.island.plugins.weather.WeatherExpanded
+import com.sameerasw.essentials.weather.effects.WeatherEffectSpec
+import com.sameerasw.essentials.weather.effects.WeatherEffects
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.weather.WeatherFormat
 import com.sameerasw.essentials.weather.WeatherRepository
 import com.sameerasw.essentials.weather.model.TemperatureUnit
@@ -126,6 +129,7 @@ class BriefPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
         SettingsRepository.KEY_ISLAND_SHOW_WEATHER,
+        SettingsRepository.KEY_ISLAND_WEATHER_EFFECTS,
         SettingsRepository.KEY_WEATHER_UNITS,
     )
 
@@ -139,7 +143,11 @@ class BriefPlugin : BaseIslandPlugin() {
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-        val weather = BriefWeather(settings.isIslandShowWeatherEnabled(), WeatherFormat.unitFor(settings.getWeatherUnits()))
+        val weather = BriefWeather(
+            enabled = settings.isIslandShowWeatherEnabled(),
+            unit = WeatherFormat.unitFor(settings.getWeatherUnits()),
+            effects = settings.isIslandShowWeatherEnabled() && settings.isIslandWeatherEffectsEnabled() && !DeviceUtils.isPowerSaveMode(context),
+        )
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -192,8 +200,12 @@ private fun BriefExpanded(
     
     val pageShape = RoundedCornerShape(scope.spec.expandedCorner)
     Box(propagateMinConstraints = true) {
-        if (!SurfaceBackdrop { BriefBackground(page, media, showGlow, scope, Modifier.fillMaxSize()) }) {
-            BriefBackground(page, media, showGlow, scope, Modifier.matchParentSize())
+        val weatherState by WeatherRepository.state.collectAsState()
+        val effectSpec = remember(weather.effects, weatherState.snapshot) {
+            weatherState.snapshot?.takeIf { weather.effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
+        }
+        if (!SurfaceBackdrop { BriefBackground(page, media, showGlow, scope, effectSpec, Modifier.fillMaxSize()) }) {
+            BriefBackground(page, media, showGlow, scope, effectSpec, Modifier.matchParentSize())
         }
         AnimatedContent(
             targetState = page,
@@ -241,7 +253,14 @@ private fun BriefExpanded(
 }
 
 @Composable
-private fun BriefBackground(page: BriefPage, media: MediaSnapshot?, showGlow: Boolean, scope: IslandExpandedScope, modifier: Modifier) {
+private fun BriefBackground(
+    page: BriefPage,
+    media: MediaSnapshot?,
+    showGlow: Boolean,
+    scope: IslandExpandedScope,
+    effects: WeatherEffectSpec,
+    modifier: Modifier,
+) {
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
     val artAlpha by animateFloatAsState(
         when (page) {
@@ -256,9 +275,17 @@ private fun BriefBackground(page: BriefPage, media: MediaSnapshot?, showGlow: Bo
     val event = (page as? BriefPage.Event)?.event
     val glowColor = event?.calendarColor?.let { Color(soften(it)) } ?: MaterialTheme.colorScheme.primary
     val glowAlpha by animateFloatAsState(if (event != null) 1f else 0f, tween(400), label = "briefGlow")
+    val effectsAlpha by animateFloatAsState(if (event == null && !effects.isEmpty) 1f else 0f, tween(600), label = "briefWeatherEffects")
     Box(modifier) {
         if (artAlpha > 0f) {
             scope.ArtworkBackdrop(artwork, Modifier.matchParentSize().graphicsLayer { alpha = artAlpha })
+        }
+        if (effectsAlpha > 0f) {
+            WeatherEffects(
+                spec = effects,
+                modifier = Modifier.matchParentSize().graphicsLayer { alpha = effectsAlpha },
+                clearTop = scope.cameraClearance,
+            )
         }
         if (glowAlpha > 0f) {
             Box(
@@ -278,7 +305,7 @@ private sealed interface BriefPage {
     data object Weather : BriefPage
 }
 
-private class BriefWeather(val enabled: Boolean, val unit: TemperatureUnit)
+private class BriefWeather(val enabled: Boolean, val unit: TemperatureUnit, val effects: Boolean)
 
 @Composable
 private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, content: @Composable () -> Unit) {
