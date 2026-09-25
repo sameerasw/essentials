@@ -4,7 +4,7 @@
  *
  * Feature Module: IME - Snippets
  * File: SnippetFloatingPillView.kt
- * Description: Floating suggestion pill overlay above external keyboards.
+ * Description: Floating suggestion pill overlay above external keyboards styled to match Essentials' floating island design.
  */
 
 package com.sameerasw.essentials.ui.ime.snippets
@@ -39,7 +39,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ime.snippets.Snippet
 
@@ -52,21 +51,21 @@ fun SnippetFloatingPillView(
 ) {
     AnimatedVisibility(
         visible = true,
-        enter = fadeIn() + scaleIn(initialScale = 0.85f),
-        exit = fadeOut() + scaleOut(targetScale = 0.85f),
+        enter = fadeIn() + scaleIn(initialScale = 0.88f),
+        exit = fadeOut() + scaleOut(targetScale = 0.88f),
     ) {
         Surface(
             modifier =
                 modifier
-                    .shadow(elevation = 8.dp, shape = CircleShape)
+                    .shadow(elevation = 10.dp, shape = CircleShape)
                     .clip(CircleShape)
                     .clickable { onExpand() },
-            color = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            color = MaterialTheme.colorScheme.surfaceBright,
+            contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 6.dp,
         ) {
             Row(
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                modifier = Modifier.padding(start = 12.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -74,9 +73,9 @@ fun SnippetFloatingPillView(
                 Box(
                     modifier =
                         Modifier
-                            .size(24.dp)
+                            .size(26.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
+                                color = MaterialTheme.colorScheme.primaryContainer,
                                 shape = CircleShape,
                             ),
                     contentAlignment = Alignment.Center,
@@ -85,52 +84,51 @@ fun SnippetFloatingPillView(
                         painter = painterResource(R.drawable.rounded_text_snippet_24),
                         contentDescription = null,
                         modifier = Modifier.size(15.dp),
-                        tint = MaterialTheme.colorScheme.tertiary,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
 
                 // Keyword Badge
-                Text(
-                    text = snippet.keyword,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                )
-
-                // Divider / separator dot
-                Text(
-                    text = "•",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.5f),
-                )
+                Box(
+                    modifier =
+                        Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                ) {
+                    Text(
+                        text = snippet.keyword,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+                }
 
                 // Title or Content Preview
                 Text(
                     text = snippet.title.ifBlank { snippet.content },
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.85f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.widthIn(max = 180.dp),
+                    modifier = Modifier.widthIn(max = 160.dp),
                 )
-
-                Spacer(Modifier.width(2.dp))
 
                 // Dismiss "X" touch target
                 Box(
                     modifier =
                         Modifier
-                            .size(20.dp)
+                            .size(24.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.12f))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                             .clickable { onDismiss() },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.rounded_close_24),
                         contentDescription = "Dismiss",
-                        modifier = Modifier.size(12.dp),
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }

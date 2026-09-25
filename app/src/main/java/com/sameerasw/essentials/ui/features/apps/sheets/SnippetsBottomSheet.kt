@@ -4,12 +4,12 @@
  *
  * Feature Module: UI Feature - Apps (IME Snippets)
  * File: SnippetsBottomSheet.kt
- * Description: BottomSheet UI for managing, adding, editing, and deleting Raycast-style text snippets.
+ * Description: BottomSheet UI for managing, adding, editing, and deleting Raycast-style text snippets
+ * adhering to Essentials' core design system (EssentialsBottomSheet, RoundedCardContainer, IconToggleItem).
  */
 
 package com.sameerasw.essentials.ui.features.apps.sheets
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,33 +19,27 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,10 +60,12 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ime.snippets.Snippet
 import com.sameerasw.essentials.ime.snippets.SnippetRepository
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SnippetsBottomSheet(
     onDismissRequest: () -> Unit,
@@ -79,7 +75,6 @@ fun SnippetsBottomSheet(
     val repository = remember { SnippetRepository.getInstance(context) }
     val settingsRepository = remember { SettingsRepository(context) }
     val snippets by repository.snippets.collectAsState()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var universalEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalEnabled()) }
     var autoExpandEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalAutoExpandEnabled()) }
@@ -129,12 +124,12 @@ fun SnippetsBottomSheet(
         )
     }
 
-    // Add / Edit Dialog
+    // Add / Edit Bottom Sheet
     if (isCreatingNew || editingSnippet != null) {
         val initial = editingSnippet
-        SnippetEditDialog(
+        SnippetEditSheet(
             snippet = initial,
-            onDismiss = {
+            onDismissRequest = {
                 isCreatingNew = false
                 editingSnippet = null
             },
@@ -151,216 +146,169 @@ fun SnippetsBottomSheet(
         )
     }
 
-    ModalBottomSheet(
+    EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        sheetState = sheetState,
     ) {
-        Column(
+        LazyColumn(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .windowInsetsPadding(WindowInsets.navigationBars)
                     .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // Header: Title + Add Button
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
+            // Header Title
+            item(key = "header_title") {
                 Text(
                     text = stringResource(R.string.snippets_title),
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                 )
-                FilledTonalButton(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        isCreatingNew = true
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_add_24),
-                        contentDescription = stringResource(R.string.snippets_add),
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Spacer(Modifier.width(6.dp))
-                    Text(stringResource(R.string.snippets_add))
-                }
             }
 
-            // Universal External Keyboard Support (Gboard, SwiftKey, etc.)
-            RoundedCardContainer(spacing = 2.dp) {
-                Column(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceBright)
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                ) {
+            // Top Action: Add Snippet Card (Matches UserDictionaryBottomSheet pattern)
+            item(key = "add_snippet_action") {
+                RoundedCardContainer(spacing = 2.dp) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceBright)
+                                .clickable {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    isCreatingNew = true
+                                }
+                                .padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Column(modifier = Modifier.weight(1f)) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_add_24),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp),
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Column {
                             Text(
-                                text = stringResource(R.string.snippets_universal_title),
+                                text = stringResource(R.string.snippets_add),
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = stringResource(R.string.snippets_universal_desc),
+                                text = stringResource(R.string.desc_keyboard_snippets),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                        Switch(
-                            checked = universalEnabled,
-                            onCheckedChange = { checked ->
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                universalEnabled = checked
-                                settingsRepository.setSnippetsUniversalEnabled(checked)
-                            },
-                        )
-                    }
-
-                    AnimatedVisibility(visible = universalEnabled) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
-                            verticalArrangement = Arrangement.spacedBy(10.dp),
-                        ) {
-                            // Option A: Instant Auto-expand
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = stringResource(R.string.snippets_universal_auto_expand),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.snippets_universal_auto_expand_desc),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                }
-                                Switch(
-                                    checked = autoExpandEnabled,
-                                    onCheckedChange = { checked ->
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        autoExpandEnabled = checked
-                                        settingsRepository.setSnippetsUniversalAutoExpandEnabled(checked)
-                                    },
-                                )
-                            }
-
-                            // Option B: Floating Pill Overlay
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = stringResource(R.string.snippets_universal_floating_pill),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.snippets_universal_floating_pill_desc),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                }
-                                Switch(
-                                    checked = floatingPillEnabled,
-                                    onCheckedChange = { checked ->
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        floatingPillEnabled = checked
-                                        settingsRepository.setSnippetsUniversalFloatingPillEnabled(checked)
-                                    },
-                                )
-                            }
-                        }
                     }
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
+            // Settings: External Keyboard Support Group
+            item(key = "external_keyboard_settings") {
+                RoundedCardContainer(spacing = 2.dp) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_keyboard_24,
+                        title = stringResource(R.string.snippets_universal_title),
+                        description = stringResource(R.string.snippets_universal_desc),
+                        isChecked = universalEnabled,
+                        onCheckedChange = { checked ->
+                            universalEnabled = checked
+                            settingsRepository.setSnippetsUniversalEnabled(checked)
+                        },
+                    )
+
+                    if (universalEnabled) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_bolt_24,
+                            title = stringResource(R.string.snippets_universal_auto_expand),
+                            description = stringResource(R.string.snippets_universal_auto_expand_desc),
+                            isChecked = autoExpandEnabled,
+                            onCheckedChange = { checked ->
+                                autoExpandEnabled = checked
+                                settingsRepository.setSnippetsUniversalAutoExpandEnabled(checked)
+                            },
+                        )
+
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_text_snippet_24,
+                            title = stringResource(R.string.snippets_universal_floating_pill),
+                            description = stringResource(R.string.snippets_universal_floating_pill_desc),
+                            isChecked = floatingPillEnabled,
+                            onCheckedChange = { checked ->
+                                floatingPillEnabled = checked
+                                settingsRepository.setSnippetsUniversalFloatingPillEnabled(checked)
+                            },
+                        )
+                    }
+                }
+            }
 
             // Search Bar
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                placeholder = { Text(stringResource(R.string.snippets_search_hint)) },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_search_24),
-                        contentDescription = "Search",
-                        modifier = Modifier.size(20.dp),
-                    )
-                },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { searchQuery = "" }) {
-                            Icon(
-                                painter = painterResource(R.drawable.rounded_close_24),
-                                contentDescription = "Clear",
-                                modifier = Modifier.size(20.dp),
-                            )
+            item(key = "search_bar") {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text(stringResource(R.string.snippets_search_hint)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_search_24),
+                            contentDescription = "Search",
+                            modifier = Modifier.size(20.dp),
+                        )
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_close_24),
+                                    contentDescription = "Clear",
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
                         }
-                    }
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(16.dp),
-                colors =
-                    OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
-                    ),
-            )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
+                        ),
+                )
+            }
 
-            // Snippet List
+            // Snippets List
             if (filteredSnippets.isEmpty()) {
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 48.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(R.string.snippets_empty),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                item(key = "empty_state") {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.snippets_empty),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(filteredSnippets, key = { it.id }) { snippet ->
-                        RoundedCardContainer(spacing = 2.dp) {
+                item(key = "snippets_group") {
+                    RoundedCardContainer(spacing = 2.dp) {
+                        filteredSnippets.forEach { snippet ->
                             Row(
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
                                         .background(MaterialTheme.colorScheme.surfaceBright)
-                                        .clickable { editingSnippet = snippet }
-                                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                                        .clickable {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            editingSnippet = snippet
+                                        }
+                                        .padding(horizontal = 16.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
@@ -409,7 +357,7 @@ fun SnippetsBottomSheet(
                                         Text(
                                             text = "⚡ " + stringResource(R.string.snippets_auto_expand),
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.tertiary,
+                                            color = MaterialTheme.colorScheme.primary,
                                         )
                                     }
                                 }
@@ -447,10 +395,11 @@ fun SnippetsBottomSheet(
                             }
                         }
                     }
-                    item {
-                        Spacer(Modifier.height(16.dp))
-                    }
                 }
+            }
+
+            item(key = "bottom_spacer") {
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
@@ -458,11 +407,12 @@ fun SnippetsBottomSheet(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SnippetEditDialog(
+private fun SnippetEditSheet(
     snippet: Snippet?,
-    onDismiss: () -> Unit,
+    onDismissRequest: () -> Unit,
     onSave: (Snippet) -> Unit,
 ) {
+    val view = LocalView.current
     var title by remember { mutableStateOf(snippet?.title.orEmpty()) }
     var keyword by remember { mutableStateOf(snippet?.keyword.orEmpty()) }
     var content by remember { mutableStateOf(snippet?.content.orEmpty()) }
@@ -470,9 +420,17 @@ private fun SnippetEditDialog(
 
     val isValid = keyword.isNotBlank() && content.isNotBlank()
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
             Text(
                 text =
                     if (snippet == null) {
@@ -480,46 +438,43 @@ private fun SnippetEditDialog(
                     } else {
                         stringResource(R.string.snippets_edit)
                     },
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.SemiBold,
             )
-        },
-        text = {
-            Column(
+
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text(stringResource(R.string.snippets_snippet_title)) },
+                placeholder = { Text("e.g. My Email") },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = { Text(stringResource(R.string.snippets_snippet_title)) },
-                    placeholder = { Text("e.g. My Email") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                )
+                shape = RoundedCornerShape(12.dp),
+            )
 
-                OutlinedTextField(
-                    value = keyword,
-                    onValueChange = { keyword = it },
-                    label = { Text(stringResource(R.string.snippets_keyword)) },
-                    placeholder = { Text("e.g. !email") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                )
+            OutlinedTextField(
+                value = keyword,
+                onValueChange = { keyword = it },
+                label = { Text(stringResource(R.string.snippets_keyword)) },
+                placeholder = { Text("e.g. !email") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+            )
 
-                OutlinedTextField(
-                    value = content,
-                    onValueChange = { content = it },
-                    label = { Text(stringResource(R.string.snippets_content)) },
-                    placeholder = { Text("Expanded snippet text") },
-                    minLines = 3,
-                    maxLines = 6,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                )
+            OutlinedTextField(
+                value = content,
+                onValueChange = { content = it },
+                label = { Text(stringResource(R.string.snippets_content)) },
+                placeholder = { Text("Expanded snippet text") },
+                minLines = 3,
+                maxLines = 6,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+            )
 
-                // Quick Variable Chips
+            // Variable Insert Chips
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
                     text = stringResource(R.string.snippets_quick_insert),
                     style = MaterialTheme.typography.labelSmall,
@@ -532,7 +487,10 @@ private fun SnippetEditDialog(
                     val variables = listOf("{date}", "{time}", "{clipboard}")
                     variables.forEach { placeholder ->
                         AssistChip(
-                            onClick = { content += placeholder },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                content += placeholder
+                            },
                             label = { Text(placeholder) },
                             colors =
                                 AssistChipDefaults.assistChipColors(
@@ -543,38 +501,24 @@ private fun SnippetEditDialog(
                         )
                     }
                 }
-
-                // Auto-expand Toggle
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.snippets_auto_expand),
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                        Text(
-                            text = stringResource(R.string.snippets_auto_expand_desc),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                    Switch(
-                        checked = autoExpandOnSpace,
-                        onCheckedChange = { autoExpandOnSpace = it },
-                    )
-                }
             }
-        },
-        confirmButton = {
+
+            // Auto-expand Toggle using standard RoundedCardContainer + IconToggleItem
+            RoundedCardContainer(spacing = 2.dp) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_bolt_24,
+                    title = stringResource(R.string.snippets_auto_expand),
+                    description = stringResource(R.string.snippets_auto_expand_desc),
+                    isChecked = autoExpandOnSpace,
+                    onCheckedChange = { autoExpandOnSpace = it },
+                )
+            }
+
+            // Save Button
             Button(
                 onClick = {
                     if (isValid) {
+                        HapticUtil.performVirtualKeyHaptic(view)
                         val result =
                             snippet?.copy(
                                 title = title.ifBlank { keyword },
@@ -591,14 +535,20 @@ private fun SnippetEditDialog(
                     }
                 },
                 enabled = isValid,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                shape = RoundedCornerShape(16.dp),
             ) {
-                Text(stringResource(R.string.snippets_save))
+                Text(
+                    text = stringResource(R.string.snippets_save),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.snippets_cancel))
-            }
-        },
-    )
+
+            Spacer(Modifier.height(8.dp))
+        }
+    }
 }

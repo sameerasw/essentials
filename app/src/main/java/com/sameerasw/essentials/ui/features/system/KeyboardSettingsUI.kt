@@ -348,6 +348,7 @@ fun KeyboardSettingsUI(
                 description = stringResource(R.string.desc_keyboard_snippets),
                 isChecked = false,
                 showToggle = false,
+                onClick = { isSnippetsSheetVisible = true },
                 onCheckedChange = { isSnippetsSheetVisible = true },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_snippets"),
             )

@@ -824,20 +824,43 @@ fun KeyboardInputView(
                                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                                         modifier = Modifier.padding(horizontal = 8.dp),
                                     ) {
-                                        if (isSnippet) {
+                                        if (isSnippet && suggestion.snippet != null) {
                                             Icon(
                                                 painter = painterResource(id = R.drawable.rounded_text_snippet_24),
                                                 contentDescription = "Snippet",
                                                 modifier = Modifier.size(16.dp),
                                             )
+                                            Text(
+                                                text = suggestion.snippet.keyword,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = CustomFontFamily,
+                                                maxLines = 1,
+                                            )
+                                            if (suggestion.snippet.title.isNotBlank() && suggestion.snippet.title != suggestion.snippet.keyword) {
+                                                Text(
+                                                    text = "• ${suggestion.snippet.title}",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    fontFamily = CustomFontFamily,
+                                                    maxLines = 1,
+                                                )
+                                            }
+                                        } else {
+                                            if (isSnippet) {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.rounded_text_snippet_24),
+                                                    contentDescription = "Snippet",
+                                                    modifier = Modifier.size(16.dp),
+                                                )
+                                            }
+                                            Text(
+                                                text = suggestion.text,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = CustomFontFamily,
+                                                maxLines = 1,
+                                            )
                                         }
-                                        Text(
-                                            text = suggestion.text,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Bold,
-                                            fontFamily = CustomFontFamily,
-                                            maxLines = 1,
-                                        )
                                     }
                                 }
                             }
