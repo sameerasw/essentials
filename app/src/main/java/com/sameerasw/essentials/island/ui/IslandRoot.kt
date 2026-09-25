@@ -7,6 +7,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.first
 import androidx.compose.runtime.snapshotFlow
@@ -336,6 +337,17 @@ fun IslandRoot(
     var lastQueuedIcons by remember { mutableStateOf(emptyList<StackIcon>()) }
     if (queuedIcons.isNotEmpty()) lastQueuedIcons = queuedIcons
     val queueBelow = remember { Animatable(0f) }
+    
+    val pillReveal = remember { Animatable(0f) }
+    LaunchedEffect(queueShown) {
+        val expandedAlready = stage == IslandStage.Expanded && queueBelow.value >= 0.99f
+        when {
+            queueShown && expandedAlready -> pillReveal.animateTo(1f, IslandMotion.float())
+            queueShown -> pillReveal.snapTo(1f)
+            expandedAlready -> pillReveal.animateTo(0f, tween(240))
+            else -> pillReveal.snapTo(0f)
+        }
+    }
     LaunchedEffect(stage) {
         when (stage) {
             IslandStage.Expanded -> queueBelow.animateTo(1f, IslandMotion.float())
@@ -380,6 +392,64 @@ fun IslandRoot(
                 detectTapGestures { actions.onCollapse() }
             },
     ) {
+        val pillGapPx = with(density) { 2.dp.roundToPx() }
+        AnimatedVisibility(
+            visible = queueShown,
+            enter = if (stage == IslandStage.Expanded) EnterTransition.None else fadeIn(IslandMotion.contentIn()),
+            exit = if (stage == IslandStage.Expanded) fadeOut(tween(1, delayMillis = 260)) else fadeOut(IslandMotion.contentOut()),
+        ) {
+            
+            Box(Modifier.fillMaxSize()) {
+                val t = { queueBelow.value.coerceIn(0f, 1f) }
+                fun Modifier.queueSlot(fromScale: Float, toScale: Float, slides: Boolean = false, alphaOf: (Float) -> Float) =
+                    layout { measurable, constraints ->
+                        val p = measurable.measure(Constraints())
+                        layout(constraints.maxWidth, constraints.maxHeight) {
+                            val w = surfaceSize.width
+                            val sideX = bubbleX(w) + bubbleSizePx / 2f
+                            val sideY = surfaceTopPx + bubbleSizePx / 2f
+                            val belowX = surfaceLeft(w) + w / 2f
+                            val belowY = surfaceTopPx + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
+                            val k = t()
+                            val cx = sideX + (belowX - sideX) * k
+                            val cy = sideY + (belowY - sideY) * k
+                            val tuck = if (slides) (1f - pillReveal.value) * (p.height + pillGapPx) else 0f
+                            p.placeWithLayer((cx - p.width / 2f).roundToInt(), (cy - p.height / 2f - tuck).roundToInt()) {
+                                val s = fromScale + (toScale - fromScale) * k
+                                scaleX = s
+                                scaleY = s
+                                alpha = alphaOf(k) * (1f - collapse.value).coerceIn(0f, 1f)
+                            }
+                        }
+                    }
+                IslandStackBubble(
+                    icons = lastQueuedIcons,
+                    size = spec.compactHeight,
+                    modifier = Modifier
+                        .queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) }
+                        .pointerInput(Unit) {
+                            detectTapGestures {
+                                if (currentState.stage != IslandStage.Line) return@detectTapGestures
+                                IslandHaptics.tap(context)
+                                if (currentState.focused?.queue != null) {
+                                    actions.onAdvance()
+                                } else {
+                                    lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
+                                }
+                            }
+                        },
+                )
+                IslandStackPill(
+                    icons = lastFullStack,
+                    selectedKey = lastFullStack.firstOrNull { it.current }?.key,
+                    iconSize = 30.dp,
+                    interactive = stage == IslandStage.Expanded,
+                    modifier = Modifier
+                        .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
+                        .onSizeChanged { pillSize = it },
+                )
+            }
+        }
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -786,59 +856,6 @@ fun IslandRoot(
                     CompactTemplate(state = state, spec = spec, onCellTap = {}, onCellLongPress = {})
                 }
             }
-            }
-        }
-        val pillGapPx = with(density) { 2.dp.roundToPx() }
-        AnimatedVisibility(
-            visible = queueShown,
-            enter = fadeIn(IslandMotion.contentIn()),
-            exit = fadeOut(IslandMotion.contentOut()),
-        ) {
-            
-            Box(Modifier.fillMaxSize()) {
-                val t = { queueBelow.value.coerceIn(0f, 1f) }
-                fun Modifier.queueSlot(fromScale: Float, toScale: Float, alphaOf: (Float) -> Float) =
-                    layout { measurable, constraints ->
-                        val p = measurable.measure(Constraints())
-                        layout(constraints.maxWidth, constraints.maxHeight) {
-                            val w = surfaceSize.width
-                            val sideX = bubbleX(w) + bubbleSizePx / 2f
-                            val sideY = surfaceTopPx + bubbleSizePx / 2f
-                            val belowX = surfaceLeft(w) + w / 2f
-                            val belowY = surfaceTopPx + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
-                            val k = t()
-                            val cx = sideX + (belowX - sideX) * k
-                            val cy = sideY + (belowY - sideY) * k
-                            p.placeWithLayer((cx - p.width / 2f).roundToInt(), (cy - p.height / 2f).roundToInt()) {
-                                val s = fromScale + (toScale - fromScale) * k
-                                scaleX = s
-                                scaleY = s
-                                alpha = alphaOf(k) * (1f - collapse.value).coerceIn(0f, 1f)
-                            }
-                        }
-                    }
-                IslandStackBubble(
-                    icons = lastQueuedIcons,
-                    size = spec.compactHeight,
-                    modifier = Modifier
-                        .queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) }
-                        .pointerInput(Unit) {
-                            detectTapGestures {
-                                if (currentState.stage != IslandStage.Line) return@detectTapGestures
-                                IslandHaptics.tap(context)
-                                lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
-                            }
-                        },
-                )
-                IslandStackPill(
-                    icons = lastFullStack,
-                    selectedKey = lastFullStack.firstOrNull { it.current }?.key,
-                    iconSize = 30.dp,
-                    interactive = stage == IslandStage.Expanded,
-                    modifier = Modifier
-                        .queueSlot(0.5f, 1f) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
-                        .onSizeChanged { pillSize = it },
-                )
             }
         }
         if (showCameraRing) {

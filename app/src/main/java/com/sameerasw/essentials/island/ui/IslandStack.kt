@@ -1,12 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +13,11 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.input.pointer.pointerInput
@@ -36,6 +35,19 @@ private const val BUBBLE_MAX_MINIS = 3
 
 @Composable
 fun IslandStackBubble(icons: List<StackIcon>, size: Dp, modifier: Modifier = Modifier) {
+    val shown = icons.takeLast(BUBBLE_MAX_MINIS)
+    val count = shown.size
+    val iconSize = when (count) {
+        1 -> size * 0.62f
+        2 -> size * 0.42f
+        else -> size * 0.36f
+    }
+    val r = size * 0.19f
+    fun slot(i: Int): Pair<Dp, Dp> = when (count) {
+        1 -> 0.dp to 0.dp
+        2 -> listOf(-r to 0.dp, r to 0.dp)[i]
+        else -> listOf(0.dp to -r, -r to r * 0.7f, r to r * 0.7f)[i]
+    }
     Box(
         modifier = modifier
             .size(size)
@@ -43,32 +55,25 @@ fun IslandStackBubble(icons: List<StackIcon>, size: Dp, modifier: Modifier = Mod
             .background(Color.Black),
         contentAlignment = Alignment.Center,
     ) {
-        AnimatedContent(
-            targetState = icons.take(BUBBLE_MAX_MINIS),
-            contentKey = { list -> list.map { it.key } },
-            transitionSpec = {
-                (fadeIn(IslandMotion.contentIn()) + scaleIn(IslandMotion.compactFloat(), initialScale = 0.7f)) togetherWith
-                    (fadeOut(IslandMotion.contentOut()) + scaleOut(IslandMotion.compactFloat(), targetScale = 0.7f))
-            },
-            label = "islandBubble",
-        ) { shown ->
-            Box(Modifier.size(size), contentAlignment = Alignment.Center) {
-                when (shown.size) {
-                    0 -> Unit
-                    1 -> shown[0].content(size * 0.62f)
-                    else -> {
-                        val mini = size * if (shown.size == 2) 0.42f else 0.36f
-                        val r = size * 0.19f
-                        val offsets = if (shown.size == 2) {
-                            listOf(-r to 0.dp, r to 0.dp)
-                        } else {
-                            listOf(0.dp to -r, -r to r * 0.7f, r to r * 0.7f)
-                        }
-                        shown.forEachIndexed { i, icon ->
-                            val (x, y) = offsets[i]
-                            Box(Modifier.offset(x, y)) { icon.content(mini) }
-                        }
-                    }
+        shown.forEachIndexed { i, icon ->
+            key(icon.key) {
+                val (tx, ty) = slot(i)
+                val x by animateDpAsState(tx, IslandMotion.compactFloat(), label = "bubbleX")
+                val y by animateDpAsState(ty, IslandMotion.compactFloat(), label = "bubbleY")
+                val s by animateDpAsState(iconSize, IslandMotion.compactFloat(), label = "bubbleSize")
+                val enter = remember { Animatable(0f) }
+                LaunchedEffect(Unit) { enter.animateTo(1f, IslandMotion.compactFloat()) }
+                Box(
+                    Modifier
+                        .offset(x, y)
+                        .graphicsLayer {
+                            scaleX = enter.value
+                            scaleY = enter.value
+                            alpha = enter.value.coerceIn(0f, 1f)
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Box(Modifier.size(s), contentAlignment = Alignment.Center) { icon.content(s) }
                 }
             }
         }
@@ -96,9 +101,16 @@ fun IslandStackPill(
         icons.forEach { icon ->
             key(icon.key) {
                 val selected by animateFloatAsState(if (icon.key == selectedKey) 1f else 0f, IslandMotion.float(), label = "stackSelected")
+                val enter = remember { Animatable(0f) }
+                LaunchedEffect(Unit) { enter.animateTo(1f, IslandMotion.compactFloat()) }
                 Box(
                     Modifier
                         .animatePlacement()
+                        .graphicsLayer {
+                            scaleX = enter.value
+                            scaleY = enter.value
+                            alpha = enter.value.coerceIn(0f, 1f)
+                        }
                         .clip(CircleShape)
                         .drawBehind {
                             val stroke = 2.dp.toPx()
