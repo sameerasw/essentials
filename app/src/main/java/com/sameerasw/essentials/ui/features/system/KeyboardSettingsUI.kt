@@ -59,6 +59,7 @@ fun KeyboardSettingsUI(
     var text by remember { mutableStateOf("") }
     val isKeyboardEnabled by viewModel.isKeyboardEnabled
     val isKeyboardSelected by viewModel.isKeyboardSelected
+    var isSnippetsSheetVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -340,6 +341,16 @@ fun KeyboardSettingsUI(
                     onCheckedChange = { viewModel.isUserDictionarySheetVisible.value = true },
                 )
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_text_snippet_24,
+                title = stringResource(R.string.label_keyboard_snippets),
+                description = stringResource(R.string.desc_keyboard_snippets),
+                isChecked = false,
+                showToggle = false,
+                onCheckedChange = { isSnippetsSheetVisible = true },
+                modifier = Modifier.highlight(highlightSetting == "keyboard_snippets"),
+            )
         }
 
         Spacer(Modifier.height(32.dp))
@@ -348,6 +359,12 @@ fun KeyboardSettingsUI(
             com.sameerasw.essentials.ui.features.apps.sheets.UserDictionaryBottomSheet(
                 viewModel = viewModel,
                 onDismissRequest = { viewModel.isUserDictionarySheetVisible.value = false },
+            )
+        }
+
+        if (isSnippetsSheetVisible) {
+            com.sameerasw.essentials.ui.features.apps.sheets.SnippetsBottomSheet(
+                onDismissRequest = { isSnippetsSheetVisible = false },
             )
         }
     }
