@@ -1521,7 +1521,7 @@
     <string name="island_title">ilha</string>
     <string name="island_desc">ilha dinâmica </string>
     <string name="cat_navigation">navegação </string>
-    <string name="island_enable_title">ativar o ilha dinâmica</string>
+    <string name="island_enable_title">ativar a ilha dinâmica (davi_oficial145 esteve aqui)</string>
     <string name="island_timeout_title">duração na tela</string>
     <string name="island_show_glow_title">Mostrar o brilho do destaque</string>
     <string name="island_camera_position_left">esquedar</string>
@@ -1542,4 +1542,5 @@
     <string name="app_icon_default">padrão</string>
     <string name="feat_circle_to_search_gesture_width_title">Largura da zona de gestos</string>
     <string name="feat_circle_to_search_gesture_width_desc">Ajuste a largura da área de toque na parte inferior.</string>
+    <string name="feat_conscious_gate_desc">Faz uma pausa antes de abrir os aplicativos escolhidos.</string>
 </resources>
