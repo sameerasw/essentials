@@ -353,14 +353,14 @@
     <string name="hide_clock_desc">Remova completamente o relógio da barra de status.</string>
     <string name="hide_notification_icons_title">esconder as notificações </string>
     <string name="hide_notification_icons_desc">Ocultar todos os ícones de notificações recebidas</string>
-    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_hide_gesture_bar_title">esconder barra de navegação </string>
+    <string name="feat_hide_gesture_bar_desc">na Navegação por gestos</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">mostrar no launcher </string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Exibir dinamicamente a barra de gestos somente na tela inicial.</string>
     <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
-    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
-    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_circle_to_search_gesture_height_title">altura da zona de gestos</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Ajuste a altura da área sensível ao toque na parte inferior.</string>
     <string name="feat_other_customizations_title">Outras personalizações</string>
     <string name="feat_other_customizations_desc">Ajustes e modificações adicionais do sistema</string>
     <string name="status_bar_icons_disclaimer">Observe que a implementação dessas opções pode depender do OEM e algumas podem não funcionar.</string>
@@ -694,14 +694,14 @@
     <string name="welcome_back_title">Welcome back to Essentials</string>
     <string name="action_see_whats_new">See what\'s new</string>
     <string name="label_mode_default">Default</string>
-    <string name="label_mode_glove">Glove mode</string>
+    <string name="label_mode_glove">modo glove</string>
     <string name="tile_scale_animations">Glove Mode</string>
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
     <string name="label_increase_touch_sensitivity">Aumentar a sensibilidade ao toque</string>
     <string name="desc_increase_touch_sensitivity">Melhora a capacidade de resposta da tela sensível ao toque ao usar luvas ou películas protetoras.</string>
-    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="label_auto_rotate">rotação automática </string>
     <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
-    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="label_screen_timeout">tempo de tela</string>
     <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
@@ -1539,4 +1539,7 @@
     <string name="setting_app_icon_desc">Personalize o ícone do launcher da tela inicial</string>
     <string name="duo_action_long_press_title">toque longo</string>
     <string name="diy_action_open_app">abrir algum app</string>
+    <string name="app_icon_default">padrão</string>
+    <string name="feat_circle_to_search_gesture_width_title">Largura da zona de gestos</string>
+    <string name="feat_circle_to_search_gesture_width_desc">Ajuste a largura da área de toque na parte inferior.</string>
 </resources>
