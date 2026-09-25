@@ -235,7 +235,7 @@
     <string name="tile_inactive">Không hoạt động</string>
     <string name="tile_developer_options">Tùy chọn nhà phát triển</string>
     <string name="about_desc_developer_options">Chuyển đổi tùy chọn nhà phát triển hệ thống từ ô QS một cách dễ dàng. Điều này có thể đặt lại một số cài đặt dành cho nhà phát triển mà bạn đã sửa đổi.</string>
-    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="tile_refresh_rate">Tốc độ làm mới</string>
     <string name="about_desc_refresh_rate_tile">Bạn có thể chuyển đổi giữa tốc độ làm mới mặc định của hệ thống và tốc độ làm mới được thiết lập sẵn trực tiếp từ ô Cài đặt nhanh bằng Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">DNS riêng</string>
@@ -1856,4 +1856,34 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_enable_title">Bật Island</string>
     <string name="feat_aod_wallpaper_desc">Sử dụng lớp phủ</string>
     <string name="feat_aod_wallpaper_disable_on_dnd">Vô hiệu hóa khi ở chế độ Không làm phiền (DND)</string>
+    <string name="setting_show_legacy_features_title">Hiển thị các tính năng cũ</string>
+    <string name="setting_show_legacy_features_desc">Các tính năng này có thể sẽ không được cập nhật trong tương lai do hạn chế về kỹ thuật hoặc không còn hỗ trợ essential.</string>
+    <string name="pixel_search_results_media_title">Ảnh và video</string>
+    <string name="pixel_search_results_media_desc">Tìm kiếm ảnh, video và GIF</string>
+    <string name="pixel_search_results_files_title">Tệp và tài liệu</string>
+    <string name="pixel_search_results_files_desc">Tìm kiếm tài liệu, âm thanh và tệp đã tải xuống</string>
+    <string name="pixel_search_engine_title">Công cụ tìm kiếm</string>
+    <string name="pixel_search_engine_desc">Nhà cung cấp tìm kiếm mặc định được sử dụng khi tìm kiếm trên web</string>
+    <string name="about_desc_heads_up_notifications">Hiển thị hoặc ẩn thông báo bật lên của hệ thống.
+
+Khi ẩn, thông báo vẫn sẽ đến âm thầm trong vùng làm mờ mà không làm ảnh hưởng đến màn hình của bạn.</string>
+    <string name="tile_url_shortener">Thu gọn URL</string>
+    <string name="tile_url_shortener_subtitle">Thu gọn bảng nhớ tạm</string>
+    <string name="tile_heads_up_notifications">Thông báo quan trọng</string>
+    <string name="screen_locked_disable_notification_interactions_title">Vô hiệu hóa tương tác thông báo</string>
+    <string name="screen_locked_disable_notification_interactions_desc">Chặn việc kéo thanh thông báo và Cài đặt nhanh xuống khi đang ở chế độ khóa màn hình</string>
+    <string name="notification_lighting_ripple_sparkle_title">Lấp lánh</string>
+    <string name="notification_lighting_ripple_sparkle_count_title">Số lượng lấp lánh</string>
+    <string name="notification_lighting_ripple_sparkle_size_title">Kích thước lấp lánh</string>
+    <string name="flashlight_speed_label">Tốc độ</string>
+    <string name="notification_lighting_ripple_repeat_count_title">Số lần lặp lại</string>
+    <string name="notification_lighting_pulse_overlap_title">Sự chồng chéo xung</string>
+    <string name="notification_lighting_ripple_wave_size_title">Kích thước sóng</string>
+    <string name="label_charging_mode_title">Chế độ sạc</string>
+    <string name="conscious_gate_reappear_off">Tắt</string>
+    <string name="label_charging_mode_limited">Giới hạn</string>
+    <string name="button_remap_pause_on_volume_dialog_title">Vô hiệu hóa khi hộp thoại âm lượng đang mở</string>
+    <string name="about_desc_conscious_gate">Thêm màn hình kiểm tra ngắn gọn trước khi mở các ứng dụng mà bạn muốn sử dụng một cách có chủ đích hơn, chẳng hạn như mạng xã hội.
+
+Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có thời gian suy nghĩ Bạn sẽ có cơ hội quyết định ngay lúc này, và chức năng tạm dừng có thể tùy chọn xuất hiện trở lại nếu bạn tiếp tục sử dụng ứng dụng quá thời gian đã định.</string>
 </resources>
