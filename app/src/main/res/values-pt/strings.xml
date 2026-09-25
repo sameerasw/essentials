@@ -1503,4 +1503,19 @@
     <string name="shut_up_restore_delay_desc">Tempo de espera antes de restaurar as configurações após sair de um app Shut-Up!</string>
     <string name="feat_status_glance_desc">Sobreposição de At a glance</string>
     <string name="duo_desc">Isso não dobra </string>
+    <string name="conscious_gate_reappear_title">Reaparece após o uso</string>
+    <string name="conscious_gate_reappear_desc">Exibir novamente a tela de controle remoto após uso contínuo.</string>
+    <string name="conscious_gate_delay_title">Atraso de pausa</string>
+    <string name="conscious_gate_preview_button">Pré-visualização da tela consciente</string>
+    <string name="feat_conscious_gate_title">tela consciente</string>
+    <string name="status_glance_show_calendar_title">eventos do calendário</string>
+    <string name="duo_action_horizontal_slide_sound_mode">modo de som</string>
+    <string name="island_show_network_title">atividade de rede</string>
+    <string name="island_devices_battery_section">dispositivos</string>
+    <string name="island_brief_desc">Fique por dentro do que está acontecendo.</string>
+    <string name="island_brief_title">Apresentação</string>
+    <string name="island_like_while_playing_title">Curta a música enquanto ela toca</string>
+    <string name="duo_action_horizontal_slide_title">Deslizamento horizontal</string>
+    <string name="duo_action_horizontal_slide_track">Mudar de faixa</string>
+    <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
 </resources>
