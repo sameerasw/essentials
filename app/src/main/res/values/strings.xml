@@ -2859,6 +2859,12 @@
     <string name="island_show_when_always">Always</string>
     <string name="island_notif_conceal_locked_title">Conceal notification content</string>
     <string name="island_calendar_hide_locked_title">Hide when locked</string>
+    <string name="island_call_options_title">Calls</string>
+    <string name="island_call_show_mode_title">How to show</string>
+    <string name="island_call_show_expanded">Expanded</string>
+    <string name="island_call_show_peek">Peek</string>
+    <string name="island_call_show_compact">Compact</string>
+    <string name="island_call_sticky_title">Do not auto collapse</string>
     <string name="dev_simulate_weather_title">Simulate weather</string>
     <string name="island_preview_ring_title">Show alignment hint</string>
     <string name="island_preview_stage_title">Preview stage</string>

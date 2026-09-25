@@ -109,7 +109,7 @@ class IslandItem(
 }
 
 sealed interface PluginRequest {
-    data class Peek(val itemKey: String, val durationMs: Long) : PluginRequest
-    data class Expand(val itemKey: String) : PluginRequest
+    data class Peek(val itemKey: String, val durationMs: Long, val sticky: Boolean = false) : PluginRequest
+    data class Expand(val itemKey: String, val sticky: Boolean = false) : PluginRequest
     data class Collapse(val itemKey: String) : PluginRequest
 }

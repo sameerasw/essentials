@@ -64,6 +64,7 @@ import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeS
 import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescription
 import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeBatteryOptionsBottomSheet
@@ -168,6 +169,7 @@ fun IslandSettingsUI(
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
+    var showCallOptionsSheet by remember { mutableStateOf(false) }
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
     var showNotificationOptionsSheet by remember {
@@ -725,6 +727,7 @@ fun IslandSettingsUI(
                         viewModel.setIslandShowCalls(checked)
                     }
                 },
+                onSettingsClick = { showCallOptionsSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_show_calls"),
             )
 
@@ -1149,6 +1152,10 @@ fun IslandSettingsUI(
             viewModel = viewModel,
             onDismissRequest = { showAlarmOptionsSheet = false },
         )
+    }
+
+    if (showCallOptionsSheet) {
+        IslandCallOptionsBottomSheet(onDismissRequest = { showCallOptionsSheet = false })
     }
 
     if (showTimerOptionsSheet) {
