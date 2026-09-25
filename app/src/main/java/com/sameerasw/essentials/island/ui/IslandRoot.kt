@@ -571,15 +571,21 @@ fun IslandRoot(
                                         return@launch
                                     }
                                     IslandHaptics.commit(context)
-                                    dismissOffset.animateTo(dir * flyOff, IslandMotion.fling(), initialVelocity = v.x)
+                                    val remaining = abs(dir * flyOff - dismissOffset.value)
+                                    val speed = maxOf(abs(v.x), 2500f)
+                                    val throwMs = (remaining / speed * 1000f).toInt().coerceIn(90, 200)
+                                    val throwSpec = tween<Float>(throwMs, easing = LinearEasing)
                                     if (focused.queue != null) {
+                                        dismissOffset.animateTo(dir * flyOff, throwSpec)
                                         actions.onDismiss()
-                                        withTimeoutOrNull(400L) { snapshotFlow { currentState.focused }.first { it !== focused } }
+                                        withTimeoutOrNull(250L) { snapshotFlow { currentState.focused }.first { it !== focused } }
+                                        dismissOffset.snapTo(0f)
                                     } else {
+                                        dismissOffset.animateTo(dir * flyOff, throwSpec)
                                         dismissCommitted = true
                                         actions.onDismiss()
+                                        dismissOffset.snapTo(0f)
                                     }
-                                    dismissOffset.snapTo(0f)
                                 }
                             } else {
                                 val upVelocity = -v.y / collapseRange
