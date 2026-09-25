@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
 import com.sameerasw.essentials.island.model.QueueInfo
+import com.sameerasw.essentials.island.model.StackIcon
 import android.widget.Toast
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
@@ -42,6 +43,26 @@ class NotificationsPlugin : BaseIslandPlugin() {
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
+    private var currentIndex = 0
+    
+    private var manualPick = false
+
+    private fun currentAlert(): ActiveNotificationAlert? = alerts.getOrNull(currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0)))
+
+    private fun removeCurrent() {
+        if (alerts.isEmpty()) return
+        alerts.removeAt(currentIndex.coerceIn(0, alerts.size - 1))
+        currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+    }
+
+    private fun select(key: String) {
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index < 0 || index == currentIndex) return
+        currentIndex = index
+        manualPick = true
+        scheduleTimeout()
+        render()
+    }
     private var registered = false
     private var autoExpanded = false
 
@@ -97,32 +118,73 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun onPosted(alert: ActiveNotificationAlert) {
         val c = ctx ?: return
         if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled()) return
-        alerts.removeAll { it.key == alert.key }
+        val existing = alerts.indexOfFirst { it.key == alert.key }
+        if (existing >= 0) {
+            alerts[existing] = alert
+            render()
+            return
+        }
+        c.mainHandler.removeCallbacks(catchUpRunnable)
+        if (queueEnabled() && showingHere()) {
+            alerts.addLast(alert)
+            while (alerts.size > MAX_QUEUE) {
+                alerts.removeAt(if (currentIndex == 0) 1 else 0)
+                if (currentIndex > 0) currentIndex--
+            }
+            render()
+            return
+        }
         alerts.addFirst(alert)
+        currentIndex = 0
+        manualPick = false
         val cap = if (queueEnabled()) MAX_QUEUE else 1
         while (alerts.size > cap) alerts.removeLast()
-        c.mainHandler.removeCallbacks(catchUpRunnable)
         scheduleTimeout()
         render()
-        val expandedElsewhere = c.currentStage() == IslandStage.Expanded
-        if (!expandedElsewhere) {
-            val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
-            c.request(
-                if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs())
-                else PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true },
-            )
-        }
+        if (c.currentStage() != IslandStage.Expanded) popUp()
+    }
+
+    private fun showingHere(): Boolean {
+        val c = ctx ?: return false
+        val stage = c.currentStage()
+        return c.focusedKey() == ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
+    }
+
+    private fun popUp() {
+        val c = ctx ?: return
+        val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
+        c.request(
+            if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs(), sticky = true)
+            else PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true },
+        )
     }
 
     private fun onRemoved(key: String) {
-        if (alerts.removeAll { it.key == key }) {
-            if (alerts.isEmpty()) clearAll() else render()
-        }
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index < 0) return
+        alerts.removeAt(index)
+        if (index < currentIndex) currentIndex--
+        currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+        if (alerts.isEmpty()) clearAll() else render()
     }
 
     private fun onTimeout() {
         val c = ctx ?: return
-        if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Expanded) {
+        if (showingHere() && alerts.size > 1 && !manualPick) {
+            removeCurrent()
+            scheduleTimeout()
+            render()
+            if (c.currentStage() == IslandStage.Line) popUp()
+            return
+        }
+        if (manualPick) {
+            if (c.focusedKey() == ITEM_KEY) c.request(PluginRequest.Collapse(ITEM_KEY))
+            clearAll()
+            return
+        }
+        if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Line) {
+            c.request(PluginRequest.Collapse(ITEM_KEY))
+        } else if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Expanded) {
             if (autoExpanded) {
                 autoExpanded = false
                 c.request(PluginRequest.Collapse(ITEM_KEY))
@@ -151,11 +213,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun clearAll() {
         cancelTimers()
         alerts.clear()
+        currentIndex = 0
+        manualPick = false
         render()
     }
 
     private fun popCurrent(reExpand: Boolean) {
-        alerts.removeFirstOrNull()
+        removeCurrent()
         if (alerts.isEmpty()) {
             clearAll()
             return
@@ -166,19 +230,25 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun render() {
-        val alert = alerts.firstOrNull()
+        val alert = currentAlert()
         if (alert == null) {
             publish(null)
             return
         }
-        val next = if (queueEnabled()) alerts.getOrNull(1) else null
+        val index = alerts.indexOf(alert)
+        val next = if (queueEnabled()) alerts.getOrNull(index + 1) ?: alerts.getOrNull(index - 1) else null
+        val stack = alerts.map { stackIconFor(it, current = it === alert) }
         publish(
             itemFor(alert).let { current ->
-                if (next == null) {
-                    current
-                } else {
-                    current.withQueue(QueueInfo(next = itemFor(next), onAdvance = { popCurrent(reExpand = false) }))
-                }
+                current.withStack(
+                    queue = next?.let {
+                        QueueInfo(
+                            next = itemFor(it).withStack(null, alerts.map { a -> stackIconFor(a, current = a === it) }),
+                            onAdvance = { popCurrent(reExpand = false) },
+                        )
+                    },
+                    stack = stack,
+                )
             },
         )
     }
@@ -270,7 +340,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
         )
     }
 
-    private fun IslandItem.withQueue(queue: QueueInfo) = IslandItem(
+    private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean): StackIcon {
+        val icon = if (concealed()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
+        return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }) { size ->
+            IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
+        }
+    }
+
+    private fun IslandItem.withStack(queue: QueueInfo?, stack: List<StackIcon>) = IslandItem(
         key = key,
         priority = priority,
         placement = placement,
@@ -284,6 +361,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         interactions = interactions,
         queue = queue,
         sourcePackage = sourcePackage,
+        stack = stack,
     )
 
     private fun sendReply(alert: ActiveNotificationAlert, action: NotificationActionItem, text: String) {
@@ -291,7 +369,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val sent = canCarryText && NotificationListener.instance?.performNotificationAction(action, text) == true
         if (sent) {
             Toast.makeText(context, R.string.island_reply_sent, Toast.LENGTH_SHORT).show()
-            if (alerts.firstOrNull()?.key == alert.key) popCurrent(reExpand = false)
+            if (currentAlert()?.key == alert.key) popCurrent(reExpand = false)
         } else {
             popCurrent(reExpand = false)
             context.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
@@ -306,12 +384,12 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         if (action.pendingIntent != null) NotificationListener.instance?.performNotificationAction(action)
-        if (alerts.firstOrNull()?.key == alert.key) popCurrent(reExpand = true)
+        if (currentAlert()?.key == alert.key) popCurrent(reExpand = true)
     }
 
     companion object {
         const val ITEM_KEY = "notifications"
-        private const val MAX_QUEUE = 3
+        private const val MAX_QUEUE = 20
 
         private val GENERIC_TITLES = setOf(
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",
