@@ -238,6 +238,7 @@ fun IslandSettingsUI(
         val previewSettings = remember { SettingsRepository(context) }
         var previewRing by remember { mutableStateOf(false) }
         var previewStage by remember { mutableStateOf(SettingsRepository.ISLAND_PREVIEW_STAGE_AUTO) }
+        var showWhen by remember { mutableStateOf(previewSettings.getIslandShowWhen()) }
         DisposableEffect(Unit) {
             onDispose {
                 previewSettings.setIslandPreviewRingEnabled(false)
@@ -574,16 +575,41 @@ fun IslandSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_lock_portrait_24,
-                title = stringResource(R.string.island_hide_when_screen_off_title),
-                isChecked = viewModel.isIslandHideWhenScreenOff.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandHideWhenScreenOff(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_when_screen_off"),
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp)
+                    .highlight(highlightSetting == "island_show_when" || highlightSetting == "island_hide_when_screen_off"),
+            ) {
+                Text(
+                    text = stringResource(R.string.island_show_when_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                val showWhenOptions = listOf(
+                    SettingsRepository.ISLAND_SHOW_WHEN_UNLOCKED,
+                    SettingsRepository.ISLAND_SHOW_WHEN_SCREEN_ON,
+                    SettingsRepository.ISLAND_SHOW_WHEN_ALWAYS,
+                )
+                val showWhenLabels = mapOf(
+                    SettingsRepository.ISLAND_SHOW_WHEN_UNLOCKED to stringResource(R.string.island_show_when_unlocked),
+                    SettingsRepository.ISLAND_SHOW_WHEN_SCREEN_ON to stringResource(R.string.island_show_when_screen_on),
+                    SettingsRepository.ISLAND_SHOW_WHEN_ALWAYS to stringResource(R.string.island_show_when_always),
+                )
+                SegmentedPicker(
+                    items = showWhenOptions,
+                    selectedItem = showWhen,
+                    onItemSelected = {
+                        showWhen = it
+                        previewSettings.setIslandShowWhen(it)
+                    },
+                    labelProvider = { showWhenLabels[it].orEmpty() },
+                    title = R.string.island_show_when_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,

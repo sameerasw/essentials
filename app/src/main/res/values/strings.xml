@@ -2853,6 +2853,12 @@
     <string name="island_calendar_priority_disabled">Disabled</string>
     <string name="island_calendar_priority_minutes">%1$d mins</string>
     <string name="island_calendar_priority_hours">%1$d h</string>
+    <string name="island_show_when_title">Show when</string>
+    <string name="island_show_when_unlocked">Unlocked</string>
+    <string name="island_show_when_screen_on">Screen on</string>
+    <string name="island_show_when_always">Always</string>
+    <string name="island_notif_conceal_locked_title">Conceal notification content</string>
+    <string name="island_calendar_hide_locked_title">Hide when locked</string>
     <string name="dev_simulate_weather_title">Simulate weather</string>
     <string name="island_preview_ring_title">Show alignment hint</string>
     <string name="island_preview_stage_title">Preview stage</string>

@@ -459,6 +459,12 @@ class SettingsRepository(
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
+        const val KEY_ISLAND_SHOW_WHEN = "island_show_when"
+        const val ISLAND_SHOW_WHEN_UNLOCKED = "unlocked"
+        const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
+        const val ISLAND_SHOW_WHEN_ALWAYS = "always"
+        const val KEY_ISLAND_NOTIF_CONCEAL_LOCKED = "island_notif_conceal_locked"
+        const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
@@ -3561,6 +3567,11 @@ class SettingsRepository(
 
     fun isIslandHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, true)
     fun setIslandHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, enabled)
+
+    fun getIslandShowWhen(): String =
+        getString(KEY_ISLAND_SHOW_WHEN, null)
+            ?: if (isIslandHideWhenScreenOffEnabled()) ISLAND_SHOW_WHEN_UNLOCKED else ISLAND_SHOW_WHEN_ALWAYS
+    fun setIslandShowWhen(value: String) = putString(KEY_ISLAND_SHOW_WHEN, value)
 
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)

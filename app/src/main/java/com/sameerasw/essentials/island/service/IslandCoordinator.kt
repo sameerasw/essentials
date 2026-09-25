@@ -131,7 +131,11 @@ class IslandCoordinator(
     private val isWindowSuppressed get() = isLandscape || isFullscreenApp
     private val isContentSuppressed: Boolean
         get() = isWindowSuppressed ||
-            (settings.isIslandHideWhenScreenOffEnabled() && (isScreenOff || keyguardManager?.isKeyguardLocked == true)) ||
+            when (settings.getIslandShowWhen()) {
+                SettingsRepository.ISLAND_SHOW_WHEN_ALWAYS -> false
+                SettingsRepository.ISLAND_SHOW_WHEN_SCREEN_ON -> isScreenOff
+                else -> isScreenOff || keyguardManager?.isKeyguardLocked == true
+            } ||
             (settings.isIslandHideOnShadeEnabled() && isShadeExpanded)
 
     private val compactGestures = CompactGestureController(
@@ -510,7 +514,7 @@ class IslandCoordinator(
         when (key) {
             SettingsRepository.KEY_ISLAND_ENABLED -> updateState()
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR -> syncStatusBar(controller.state.value.stage)
-            SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF -> applySuppression()
+            SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
             SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values -> applyLauncherOnly()
             SettingsRepository.KEY_ISLAND_HIDE_ON_SHADE -> applySuppression()

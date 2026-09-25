@@ -3,6 +3,7 @@ package com.sameerasw.essentials.island.plugins.notifications
 import com.sameerasw.essentials.island.model.QueueInfo
 import android.widget.Toast
 import android.accessibilityservice.AccessibilityService
+import android.app.KeyguardManager
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -13,6 +14,7 @@ import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.ExpandedContent
+import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.IslandStage
@@ -36,6 +38,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
@@ -84,8 +87,12 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     override fun onScreenStateChanged() {
-        if (ctx?.isContentSuppressed?.invoke() == true) clearAll()
+        if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
+
+    private fun concealed(): Boolean =
+        settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED, false) &&
+            (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
 
     private fun onPosted(alert: ActiveNotificationAlert) {
         val c = ctx ?: return
@@ -179,6 +186,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun queueEnabled() = settings.isIslandNotifQueueEnabled()
 
     private fun itemFor(alert: ActiveNotificationAlert): IslandItem {
+        if (concealed()) return concealedItemFor(alert)
         val (sender, message) = senderAndMessage(context, alert)
         val showGlow = settings.isIslandShowGlowEnabled()
         val tapToOpen = settings.isIslandNotifTapToOpenEnabled()
@@ -230,6 +238,38 @@ class NotificationsPlugin : BaseIslandPlugin() {
         )
     }
 
+    private fun concealedItemFor(alert: ActiveNotificationAlert): IslandItem {
+        val icon = alert.appIcon ?: alert.icon
+        val open = {
+            if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
+            popCurrent(reExpand = false)
+        }
+        return IslandItem(
+            key = ITEM_KEY,
+            priority = IslandPriority.NOTIFICATION,
+            placement = CompactPlacement.Dynamic,
+            compact = listOf(
+                CompactCell("notif.icon") {
+                    IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                },
+            ),
+            line = LineContent(
+                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                start = appNameFor(context, alert),
+                end = "",
+            ),
+            accent = alert.appColor?.let { Color(soften(it)) },
+            dismissible = true,
+            onDismiss = {
+                NotificationListener.dismissNotification(alert.key)
+                popCurrent(reExpand = false)
+            },
+            onOpen = open,
+            interactions = InteractionOverrides(onTap = { open(); true }),
+            sourcePackage = alert.packageName,
+        )
+    }
+
     private fun IslandItem.withQueue(queue: QueueInfo) = IslandItem(
         key = key,
         priority = priority,
@@ -277,13 +317,16 @@ class NotificationsPlugin : BaseIslandPlugin() {
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",
         )
 
-        fun senderAndMessage(context: Context, alert: ActiveNotificationAlert): Pair<String, String> {
-            val appName = alert.appName?.trim() ?: try {
+        fun appNameFor(context: Context, alert: ActiveNotificationAlert): String =
+            alert.appName?.trim() ?: try {
                 val pm = context.packageManager
                 pm.getApplicationLabel(pm.getApplicationInfo(alert.packageName, 0)).toString().trim()
             } catch (_: Exception) {
                 ""
             }
+
+        fun senderAndMessage(context: Context, alert: ActiveNotificationAlert): Pair<String, String> {
+            val appName = appNameFor(context, alert)
             var sender = alert.senderName?.trim().orEmpty()
             if (sender.isBlank() || sender.equals("You", true)) {
                 val title = alert.title.trim()
