@@ -300,6 +300,9 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
+        const val KEY_SNIPPETS_UNIVERSAL_ENABLED = "snippets_universal_enabled"
+        const val KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND = "snippets_universal_auto_expand"
+        const val KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL = "snippets_universal_floating_pill"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -3922,5 +3925,14 @@ class SettingsRepository(
 
     fun getStatusGlanceLongPressAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION)
     fun setStatusGlanceLongPressAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION, action)
+
+    fun isSnippetsUniversalEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_ENABLED, true)
+    fun setSnippetsUniversalEnabled(enabled: Boolean) = putBoolean(KEY_SNIPPETS_UNIVERSAL_ENABLED, enabled)
+
+    fun isSnippetsUniversalAutoExpandEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND, true)
+    fun setSnippetsUniversalAutoExpandEnabled(enabled: Boolean) = putBoolean(KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND, enabled)
+
+    fun isSnippetsUniversalFloatingPillEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL, true)
+    fun setSnippetsUniversalFloatingPillEnabled(enabled: Boolean) = putBoolean(KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL, enabled)
 }
 

@@ -3000,5 +3000,30 @@
     <string name="watchface_promo_step3_title">3. Install on Watch</string>
     <string name="watchface_promo_step3_desc">Open the Play Store listing directly on your watch to install</string>
     <string name="watchface_promo_step3_action">Open on Watch</string>
+    <!-- IME Snippets -->
+    <string name="label_keyboard_snippets">Text snippets</string>
+    <string name="desc_keyboard_snippets">Manage Raycast-style expansion shortcuts</string>
+    <string name="snippets_title">Text snippets</string>
+    <string name="snippets_search_hint">Search snippets…</string>
+    <string name="snippets_empty">No snippets yet</string>
+    <string name="snippets_add">Add snippet</string>
+    <string name="snippets_edit">Edit snippet</string>
+    <string name="snippets_keyword">Keyword</string>
+    <string name="snippets_snippet_title">Title</string>
+    <string name="snippets_content">Expanded text</string>
+    <string name="snippets_auto_expand">Auto-expand on space</string>
+    <string name="snippets_auto_expand_desc">Expands immediately when typing space after keyword</string>
+    <string name="snippets_quick_insert">Insert variable</string>
+    <string name="snippets_save">Save</string>
+    <string name="snippets_delete">Delete</string>
+    <string name="snippets_delete_confirm">Are you sure you want to delete this snippet?</string>
+    <string name="snippets_cancel">Cancel</string>
+    <string name="snippets_universal_title">External keyboard support</string>
+    <string name="snippets_universal_desc">Expand snippets across Gboard, SwiftKey, and any other keyboard using accessibility</string>
+    <string name="snippets_universal_auto_expand">Instant auto-expand</string>
+    <string name="snippets_universal_auto_expand_desc">Instantly expands keyword on Space in any app</string>
+    <string name="snippets_universal_floating_pill">Floating suggestion pill</string>
+    <string name="snippets_universal_floating_pill_desc">Show floating pill above keyboard when trigger prefix is typed</string>
 </resources>
+
 
