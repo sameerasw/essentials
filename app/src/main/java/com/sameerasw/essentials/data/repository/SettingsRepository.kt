@@ -300,9 +300,6 @@ class SettingsRepository(
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
         const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
-        const val KEY_SNIPPETS_UNIVERSAL_ENABLED = "snippets_universal_enabled"
-        const val KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND = "snippets_universal_auto_expand"
-        const val KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL = "snippets_universal_floating_pill"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -647,6 +644,16 @@ class SettingsRepository(
         const val KEY_BUBBLE_WEB_FULLSCREEN = "bubble_web_fullscreen"
         const val KEY_SIM_NAMES_APPLY_ON_BOOT = "sim_names_apply_on_boot"
         const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
+
+        // Snippets Universal
+        const val KEY_SNIPPETS_UNIVERSAL_ENABLED = "snippets_universal_enabled"
+        const val KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND = "snippets_universal_auto_expand"
+        const val KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL = "snippets_universal_floating_pill"
+        const val KEY_SNIPPETS_SUGGESTION_DISPLAY_MODE = "snippets_suggestion_display_mode"
+        const val SNIPPETS_DISPLAY_FLOATING_PILL = "pill"
+        const val SNIPPETS_DISPLAY_DYNAMIC_ISLAND = "island"
+        const val SNIPPETS_DISPLAY_DUO = "duo"
+        const val SNIPPETS_DISPLAY_BOTH = "both"
     }
 
     fun isSimNamesApplyOnBootEnabled(): Boolean = getBoolean(KEY_SIM_NAMES_APPLY_ON_BOOT, false)
@@ -3934,5 +3941,25 @@ class SettingsRepository(
 
     fun isSnippetsUniversalFloatingPillEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL, true)
     fun setSnippetsUniversalFloatingPillEnabled(enabled: Boolean) = putBoolean(KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL, enabled)
+
+    fun getRecommendedSnippetsSuggestionDisplayMode(): String {
+        val islandOn = isIslandEnabled()
+        val duoOn = isDuoEnabled()
+        return when {
+            islandOn && duoOn -> SNIPPETS_DISPLAY_BOTH
+            islandOn -> SNIPPETS_DISPLAY_DYNAMIC_ISLAND
+            duoOn -> SNIPPETS_DISPLAY_DUO
+            else -> SNIPPETS_DISPLAY_FLOATING_PILL
+        }
+    }
+
+    fun getSnippetsSuggestionDisplayMode(): String {
+        val stored = getString(KEY_SNIPPETS_SUGGESTION_DISPLAY_MODE, null)
+        if (stored != null) return stored
+        return getRecommendedSnippetsSuggestionDisplayMode()
+    }
+
+    fun setSnippetsSuggestionDisplayMode(mode: String) =
+        putString(KEY_SNIPPETS_SUGGESTION_DISPLAY_MODE, mode)
 }
 

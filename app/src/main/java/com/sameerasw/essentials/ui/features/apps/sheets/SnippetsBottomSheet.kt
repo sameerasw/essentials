@@ -79,6 +79,8 @@ fun SnippetsBottomSheet(
     var universalEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalEnabled()) }
     var autoExpandEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalAutoExpandEnabled()) }
     var floatingPillEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalFloatingPillEnabled()) }
+    var suggestionDisplayMode by remember { mutableStateOf(settingsRepository.getSnippetsSuggestionDisplayMode()) }
+    var isDisplayStyleSheetVisible by remember { mutableStateOf(false) }
 
     var searchQuery by remember { mutableStateOf("") }
     var editingSnippet by remember { mutableStateOf<Snippet?>(null) }
@@ -143,6 +145,17 @@ fun SnippetsBottomSheet(
                 isCreatingNew = false
                 editingSnippet = null
             },
+        )
+    }
+
+    if (isDisplayStyleSheetVisible) {
+        SnippetDisplayStyleSheet(
+            currentMode = suggestionDisplayMode,
+            onModeSelected = { newMode ->
+                suggestionDisplayMode = newMode
+                settingsRepository.setSnippetsSuggestionDisplayMode(newMode)
+            },
+            onDismissRequest = { isDisplayStyleSheetVisible = false },
         )
     }
 
@@ -229,15 +242,27 @@ fun SnippetsBottomSheet(
                             },
                         )
 
+                        val modeLabel = when (suggestionDisplayMode) {
+                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
+                            SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
+                            SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
+                            else -> stringResource(R.string.snippets_display_pill_title)
+                        }
+                        val modeIcon = when (suggestionDisplayMode) {
+                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> R.drawable.rounded_bolt_24
+                            SettingsRepository.SNIPPETS_DISPLAY_DUO -> R.drawable.rounded_circle_24
+                            SettingsRepository.SNIPPETS_DISPLAY_BOTH -> R.drawable.rounded_auto_awesome_24
+                            else -> R.drawable.rounded_keyboard_24
+                        }
+
                         IconToggleItem(
-                            iconRes = R.drawable.rounded_text_snippet_24,
-                            title = stringResource(R.string.snippets_universal_floating_pill),
-                            description = stringResource(R.string.snippets_universal_floating_pill_desc),
-                            isChecked = floatingPillEnabled,
-                            onCheckedChange = { checked ->
-                                floatingPillEnabled = checked
-                                settingsRepository.setSnippetsUniversalFloatingPillEnabled(checked)
-                            },
+                            iconRes = modeIcon,
+                            title = stringResource(R.string.snippets_display_style_title),
+                            description = modeLabel,
+                            isChecked = false,
+                            showToggle = false,
+                            onClick = { isDisplayStyleSheetVisible = true },
+                            onCheckedChange = { isDisplayStyleSheetVisible = true },
                         )
                     }
                 }
@@ -549,6 +574,118 @@ private fun SnippetEditSheet(
             }
 
             Spacer(Modifier.height(8.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SnippetDisplayStyleSheet(
+    currentMode: String,
+    onModeSelected: (String) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    val view = LocalView.current
+    val context = LocalContext.current
+    val recommendedMode = remember { SettingsRepository(context).getRecommendedSnippetsSuggestionDisplayMode() }
+
+    EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Column {
+                Text(
+                    text = stringResource(R.string.snippets_display_style_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = stringResource(R.string.snippets_display_style_desc),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            RoundedCardContainer(spacing = 2.dp) {
+                val options =
+                    listOf(
+                        Triple(
+                            SettingsRepository.SNIPPETS_DISPLAY_FLOATING_PILL,
+                            Pair(
+                                stringResource(R.string.snippets_display_pill_title),
+                                stringResource(R.string.snippets_display_pill_desc),
+                            ),
+                            R.drawable.rounded_keyboard_24,
+                        ),
+                        Triple(
+                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND,
+                            Pair(
+                                stringResource(R.string.snippets_display_island_title),
+                                stringResource(R.string.snippets_display_island_desc),
+                            ),
+                            R.drawable.rounded_bolt_24,
+                        ),
+                        Triple(
+                            SettingsRepository.SNIPPETS_DISPLAY_DUO,
+                            Pair(
+                                stringResource(R.string.snippets_display_duo_title),
+                                stringResource(R.string.snippets_display_duo_desc),
+                            ),
+                            R.drawable.rounded_circle_24,
+                        ),
+                        Triple(
+                            SettingsRepository.SNIPPETS_DISPLAY_BOTH,
+                            Pair(
+                                stringResource(R.string.snippets_display_both_title),
+                                stringResource(R.string.snippets_display_both_desc),
+                            ),
+                            R.drawable.rounded_auto_awesome_24,
+                        ),
+                    )
+
+                options.forEach { (mode, textPair, iconRes) ->
+                    val isSelected = currentMode == mode
+                    val isRecommended = mode == recommendedMode
+                    val title = if (isRecommended) "${textPair.first} (${stringResource(R.string.snippets_recommended_tag)})" else textPair.first
+                    IconToggleItem(
+                        iconRes = iconRes,
+                        title = title,
+                        description = textPair.second,
+                        isChecked = isSelected,
+                        showToggle = false,
+                        trailingContent =
+                            if (isSelected) {
+                                {
+                                    Icon(
+                                        painter = painterResource(R.drawable.rounded_check_24),
+                                        contentDescription = "Selected",
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp),
+                                    )
+                                }
+                            } else {
+                                null
+                            },
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onModeSelected(mode)
+                            onDismissRequest()
+                        },
+                        onCheckedChange = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onModeSelected(mode)
+                            onDismissRequest()
+                        },
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
         }
     }
 }

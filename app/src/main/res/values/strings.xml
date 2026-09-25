@@ -3024,6 +3024,17 @@
     <string name="snippets_universal_auto_expand_desc">Instantly expands keyword on Space in any app</string>
     <string name="snippets_universal_floating_pill">Floating suggestion pill</string>
     <string name="snippets_universal_floating_pill_desc">Show floating pill above keyboard when trigger prefix is typed</string>
+    <string name="snippets_display_style_title">Suggestion display style</string>
+    <string name="snippets_display_style_desc">Choose where snippet suggestions appear when typing</string>
+    <string name="snippets_display_pill_title">Floating Pill</string>
+    <string name="snippets_display_pill_desc">Floating chip positioned directly above keyboard</string>
+    <string name="snippets_display_island_title">Dynamic Island</string>
+    <string name="snippets_display_island_desc">Subtle line peek around camera cutout at top of screen</string>
+    <string name="snippets_display_duo_title">Duo Camera Ring</string>
+    <string name="snippets_display_duo_desc">Ambient camera ring pulse and glow around punch-hole</string>
+    <string name="snippets_display_both_title">Dynamic Island &amp; Duo</string>
+    <string name="snippets_display_both_desc">Simultaneous suggestions on Dynamic Island and Duo camera ring</string>
+    <string name="snippets_recommended_tag">Recommended</string>
 </resources>
 
 
