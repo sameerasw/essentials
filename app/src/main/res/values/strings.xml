@@ -2865,6 +2865,7 @@
     <string name="island_call_show_peek">Peek</string>
     <string name="island_call_show_compact">Compact</string>
     <string name="island_call_sticky_title">Do not auto collapse</string>
+    <string name="duo_hide_when_locked_title">Hide when locked</string>
     <string name="dev_simulate_weather_title">Simulate weather</string>
     <string name="island_preview_ring_title">Show alignment hint</string>
     <string name="island_preview_stage_title">Preview stage</string>

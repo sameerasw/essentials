@@ -170,6 +170,7 @@ class MainViewModel : ViewModel() {
     val isDuoShowFlashlight = mutableStateOf(true)
     val isDuoHideWhenScreenOff = mutableStateOf(true)
     val isDuoHideWhenScreenOffOnlyIdle = mutableStateOf(false)
+    val isDuoHideWhenLocked = mutableStateOf(false)
     val isDuoUseMaterialYou = mutableStateOf(true)
     val duoCustomColor = mutableStateOf("#FFFFFF")
     val duoTapAction = mutableStateOf<Action?>(null)
@@ -2207,6 +2208,7 @@ class MainViewModel : ViewModel() {
         isDuoShowFlashlight.value = settingsRepository.isDuoShowFlashlightEnabled()
         isDuoHideWhenScreenOff.value = settingsRepository.isDuoHideWhenScreenOffEnabled()
         isDuoHideWhenScreenOffOnlyIdle.value = settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled()
+        isDuoHideWhenLocked.value = settingsRepository.isDuoHideWhenLockedEnabled()
         isDuoUseMaterialYou.value = settingsRepository.isDuoUseMaterialYouEnabled()
         duoCustomColor.value = settingsRepository.getDuoCustomColor()
         duoTapAction.value = settingsRepository.getDuoTapAction()
@@ -5571,6 +5573,11 @@ class MainViewModel : ViewModel() {
     fun setDuoHideWhenScreenOffOnlyIdle(enabled: Boolean) {
         isDuoHideWhenScreenOffOnlyIdle.value = enabled
         settingsRepository.setDuoHideWhenScreenOffOnlyIdleEnabled(enabled)
+    }
+
+    fun setDuoHideWhenLocked(enabled: Boolean) {
+        isDuoHideWhenLocked.value = enabled
+        settingsRepository.setDuoHideWhenLockedEnabled(enabled)
     }
 
     fun setDuoUseMaterialYou(enabled: Boolean) {

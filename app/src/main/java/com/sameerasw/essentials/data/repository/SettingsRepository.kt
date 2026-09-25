@@ -438,6 +438,7 @@ class SettingsRepository(
         const val KEY_DUO_SHOW_FLASHLIGHT = "duo_show_flashlight"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
+        const val KEY_DUO_HIDE_WHEN_LOCKED = "duo_hide_when_locked"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
         const val KEY_DUO_CUSTOM_COLOR = "duo_custom_color"
         const val KEY_DUO_TAP_ACTION = "duo_tap_action"
@@ -3511,6 +3512,9 @@ class SettingsRepository(
 
     fun isDuoHideWhenScreenOffOnlyIdleEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE, false)
     fun setDuoHideWhenScreenOffOnlyIdleEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE, enabled)
+
+    fun isDuoHideWhenLockedEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_LOCKED, false)
+    fun setDuoHideWhenLockedEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_LOCKED, enabled)
 
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
