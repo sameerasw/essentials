@@ -3035,6 +3035,9 @@
     <string name="snippets_display_both_title">Dynamic Island &amp; Duo</string>
     <string name="snippets_display_both_desc">Simultaneous suggestions on Dynamic Island and Duo camera ring</string>
     <string name="snippets_recommended_tag">Recommended</string>
+    <string name="snippets_action_insert">Insert</string>
+    <string name="snippets_action_copy">Copy</string>
+    <string name="snippets_action_copied">Copied to clipboard</string>
 </resources>
 
 

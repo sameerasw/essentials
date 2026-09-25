@@ -9,12 +9,17 @@
 
 package com.sameerasw.essentials.island.plugins.snippets
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ime.snippets.Snippet
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
+import com.sameerasw.essentials.island.model.ExpandedContent
 import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
@@ -62,6 +67,15 @@ class SnippetIslandPlugin : BaseIslandPlugin() {
         onExpandAction = null
     }
 
+    private fun copyToClipboard(text: String) {
+        try {
+            val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            val clip = ClipData.newPlainText("Snippet", text)
+            cm?.setPrimaryClip(clip)
+        } catch (_: Exception) {
+        }
+    }
+
     private fun render() {
         val snippet = activeSnippet
         if (snippet == null) {
@@ -95,10 +109,35 @@ class SnippetIslandPlugin : BaseIslandPlugin() {
                 start = snippet.keyword,
                 end = snippet.title.ifEmpty { snippet.content.take(24) },
             ),
+            expanded = ExpandedContent { scope ->
+                SnippetExpanded(
+                    snippet = snippet,
+                    scope = scope,
+                    onInsert = {
+                        copyToClipboard(snippet.content)
+                        onExpandAction?.invoke()
+                        hideSnippet()
+                    },
+                    onCopy = {
+                        copyToClipboard(snippet.content)
+                        Toast.makeText(context, R.string.snippets_action_copied, Toast.LENGTH_SHORT).show()
+                        hideSnippet()
+                    },
+                    onDismiss = {
+                        hideSnippet()
+                    },
+                )
+            },
             interactions = InteractionOverrides(
                 onTap = {
+                    copyToClipboard(snippet.content)
                     onExpandAction?.invoke()
                     hideSnippet()
+                    true
+                },
+                onLongPress = {
+                    mainHandler.removeCallbacks(autoDismissRunnable)
+                    ctx?.request(PluginRequest.Expand(ITEM_KEY))
                     true
                 },
             ),
