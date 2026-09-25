@@ -342,6 +342,32 @@ fun KeyboardSettingsUI(
                 )
             }
 
+        }
+
+        // Gboard & External Keyboards Section
+        Text(
+            text = "Gboard & External Keyboards",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer(spacing = 2.dp) {
+            val settingsRepo = remember { com.sameerasw.essentials.data.repository.SettingsRepository(context) }
+            var universalOn by remember { mutableStateOf(settingsRepo.isSnippetsUniversalEnabled()) }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_keyboard_24,
+                title = stringResource(R.string.snippets_universal_title),
+                description = stringResource(R.string.snippets_universal_desc),
+                isChecked = universalOn,
+                onCheckedChange = { checked ->
+                    universalOn = checked
+                    settingsRepo.setSnippetsUniversalEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "snippets_universal"),
+            )
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_text_snippet_24,
                 title = stringResource(R.string.label_keyboard_snippets),

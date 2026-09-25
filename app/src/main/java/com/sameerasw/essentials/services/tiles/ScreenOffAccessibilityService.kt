@@ -569,8 +569,10 @@ class ScreenOffAccessibilityService :
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
-            if (::snippetAccessibilityHandler.isInitialized) {
-                snippetAccessibilityHandler.hideFloatingPill()
+            val eventPkg = event.packageName?.toString().orEmpty()
+            val isImeEvent = isKeyboardPackage(eventPkg)
+            if (!isImeEvent && ::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onNonImeWindowChanged()
             }
             checkFullscreenState()
             checkStatusBarExpansion()
@@ -611,6 +613,9 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.setShadeExpanded(expanded)
         islandOverlayHandler.setShadeExpanded(expanded)
         duoOverlayHandler.setShadeExpanded(expanded)
+        if (expanded && ::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.hideFloatingPill()
+        }
     }
 
     private fun isShadeWindowVisible(): Boolean {
@@ -648,10 +653,24 @@ class ScreenOffAccessibilityService :
                         duoOverlayHandler.setFullscreen(isFullscreen)
                         statusGlanceHandler.setFullscreen(isFullscreen)
                         islandOverlayHandler.setFullscreen(isFullscreen)
+                        if (isFullscreen && ::snippetAccessibilityHandler.isInitialized) {
+                            snippetAccessibilityHandler.hideFloatingPill()
+                        }
                     }
                 }
             } catch (_: Exception) {}
         }
+    }
+
+    private fun isKeyboardPackage(pkg: String): Boolean {
+        if (pkg.isEmpty()) return false
+        return pkg.contains("inputmethod", ignoreCase = true) ||
+            pkg.contains("keyboard", ignoreCase = true) ||
+            pkg == "com.google.android.inputmethod.latin" ||
+            pkg == "com.sec.android.inputmethod" ||
+            pkg == "com.touchtype.swiftkey" ||
+            pkg == "com.samsung.android.honeyboard" ||
+            pkg == packageName
     }
 
     override fun onInterrupt() {}

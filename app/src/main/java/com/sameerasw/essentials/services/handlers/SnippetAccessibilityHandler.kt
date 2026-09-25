@@ -99,7 +99,7 @@ class SnippetAccessibilityHandler(
         // 1. Check for Option A: Space-based instant auto-expand
         if (fullText.endsWith(" ") && isAutoExpandEnabled) {
             val textBeforeSpace = fullText.dropLast(1)
-            val candidateWord = textBeforeSpace.substringAfterLast(' ', "").ifBlank { textBeforeSpace }
+            val candidateWord = textBeforeSpace.takeLastWhile { !it.isWhitespace() }
 
             if (candidateWord.isNotBlank()) {
                 val matchingSnippet =
@@ -122,7 +122,7 @@ class SnippetAccessibilityHandler(
         }
 
         // 2. Check for Option B: Floating pill trigger
-        val currentWord = fullText.substringAfterLast(' ', "").ifBlank { fullText }
+        val currentWord = fullText.takeLastWhile { !it.isWhitespace() }
         lastTypedWord = currentWord
 
         if (currentWord.isNotBlank() && isFloatingPillEnabled) {
@@ -167,87 +167,155 @@ class SnippetAccessibilityHandler(
         node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, cursorArgs)
     }
 
+    private fun calculateImeOffset(): Int {
+        val density = service.resources.displayMetrics.density
+        val displayHeight = service.resources.displayMetrics.heightPixels
+        val fallbackOffset = (290 * density).toInt()
+
+        try {
+            val currentWindows = service.windows
+            if (!currentWindows.isNullOrEmpty()) {
+                val imeWindow =
+                    currentWindows.firstOrNull {
+                        it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD
+                    }
+                if (imeWindow != null) {
+                    val imeBounds = android.graphics.Rect()
+                    imeWindow.getBoundsInScreen(imeBounds)
+                    if (imeBounds.height() > 0 && imeBounds.top < displayHeight) {
+                        val keyboardHeight = (displayHeight - imeBounds.top).coerceAtLeast(0)
+                        return keyboardHeight + (10 * density).toInt()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error calculating IME window bounds", e)
+        }
+        return fallbackOffset
+    }
+
     private fun showFloatingPill(snippet: Snippet) {
         mainHandler.post {
             currentMatchedSnippet.value = snippet
             mainHandler.removeCallbacks(dismissRunnable)
             mainHandler.postDelayed(dismissRunnable, AUTO_DISMISS_TIMEOUT_MS)
 
-            if (overlayView == null) {
-                val lifecycle = OverlayLifecycleOwner().also { it.onCreate() }
-                lifecycleOwner = lifecycle
+            if (overlayView != null) {
+                // Overlay already visible; update positioning dynamically if keyboard height changed
+                try {
+                    val frame = overlayView ?: return@post
+                    val lp = frame.layoutParams as? WindowManager.LayoutParams
+                    if (lp != null) {
+                        val newY = calculateImeOffset()
+                        if (lp.y != newY) {
+                            lp.y = newY
+                            windowManager.updateViewLayout(frame, lp)
+                        }
+                    }
+                } catch (_: Exception) {
+                }
+                return@post
+            }
 
-                val composeView =
-                    ComposeView(service).apply {
-                        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
-                        setContent {
-                            EssentialsTheme {
-                                val currentSnippet = currentMatchedSnippet.collectAsState().value
-                                if (currentSnippet != null) {
-                                    SnippetFloatingPillView(
-                                        snippet = currentSnippet,
-                                        onExpand = {
-                                            overlayView?.let { HapticUtil.performUIHaptic(it) }
-                                            activeNode?.let { node ->
-                                                val text = node.text?.toString().orEmpty()
-                                                val expanded =
-                                                    SnippetExpander.expand(currentSnippet.content, service)
-                                                replaceKeywordInNode(
-                                                    node = node,
-                                                    fullText = text,
-                                                    targetWord = lastTypedWord,
-                                                    replacement = "$expanded ",
-                                                )
-                                            }
-                                            hideFloatingPill()
-                                        },
-                                        onDismiss = { hideFloatingPill() },
-                                    )
-                                }
+            val lifecycle = OverlayLifecycleOwner().also { it.onCreate() }
+            lifecycleOwner = lifecycle
+
+            val composeView =
+                ComposeView(service).apply {
+                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+                    setContent {
+                        EssentialsTheme {
+                            val currentSnippet = currentMatchedSnippet.collectAsState().value
+                            if (currentSnippet != null) {
+                                SnippetFloatingPillView(
+                                    snippet = currentSnippet,
+                                    onExpand = {
+                                        overlayView?.let { HapticUtil.performUIHaptic(it) }
+                                        activeNode?.let { node ->
+                                            val text = node.text?.toString().orEmpty()
+                                            val expanded =
+                                                SnippetExpander.expand(currentSnippet.content, service)
+                                            replaceKeywordInNode(
+                                                node = node,
+                                                fullText = text,
+                                                targetWord = lastTypedWord,
+                                                replacement = "$expanded ",
+                                            )
+                                        }
+                                        hideFloatingPill()
+                                    },
+                                    onDismiss = { hideFloatingPill() },
+                                )
                             }
                         }
                     }
-
-                val frame =
-                    FrameLayout(service).apply {
-                        setViewTreeLifecycleOwner(lifecycle)
-                        setViewTreeSavedStateRegistryOwner(lifecycle)
-                        setViewTreeViewModelStoreOwner(lifecycle)
-                        addView(composeView)
-                    }
-
-                val density = service.resources.displayMetrics.density
-                val params =
-                    WindowManager.LayoutParams(
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                        PixelFormat.TRANSLUCENT,
-                    ).apply {
-                        gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                        y = (290 * density).toInt()
-                    }
-
-                frame.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_OUTSIDE) {
-                        hideFloatingPill()
-                        true
-                    } else {
-                        false
-                    }
                 }
 
-                overlayView = frame
-                try {
-                    windowManager.addView(frame, params)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to display snippet floating pill overlay", e)
-                    overlayView = null
+            val frame =
+                FrameLayout(service).apply {
+                    setViewTreeLifecycleOwner(lifecycle)
+                    setViewTreeSavedStateRegistryOwner(lifecycle)
+                    setViewTreeViewModelStoreOwner(lifecycle)
+                    addView(composeView)
+                }
+
+            val params =
+                WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    PixelFormat.TRANSLUCENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                    y = calculateImeOffset()
+                }
+
+            frame.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_OUTSIDE) {
+                    hideFloatingPill()
+                    true
+                } else {
+                    false
                 }
             }
+
+            overlayView = frame
+            try {
+                windowManager.addView(frame, params)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to display snippet floating pill overlay", e)
+                overlayView = null
+            }
+        }
+    }
+
+    fun onNonImeWindowChanged() {
+        if (!isImePresent()) {
+            hideFloatingPill()
+        }
+    }
+
+    private fun isImePresent(): Boolean {
+        return try {
+            val currentWindows = service.windows
+            if (currentWindows.isNullOrEmpty()) return false
+            val displayHeight = service.resources.displayMetrics.heightPixels
+            val imeWindow =
+                currentWindows.firstOrNull {
+                    it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD
+                }
+            if (imeWindow != null) {
+                val bounds = android.graphics.Rect()
+                imeWindow.getBoundsInScreen(bounds)
+                bounds.height() > 0 && bounds.top < displayHeight
+            } else {
+                false
+            }
+        } catch (_: Exception) {
+            false
         }
     }
 
