@@ -1604,4 +1604,5 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_show_battery_percentage_title">Pourcentage de batterie</string>
     <string name="duo_show_battery_title">Batterie</string>
     <string name="duo_show_time_title">Heure</string>
+    <string name="settings_translate_mode_desc">Appuyez longuement sur n\'importe quel texte pour le traduire et contribuer à la communauté.</string>
 </resources>
