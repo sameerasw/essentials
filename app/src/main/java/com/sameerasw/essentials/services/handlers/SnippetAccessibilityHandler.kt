@@ -32,6 +32,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ime.snippets.Snippet
 import com.sameerasw.essentials.ime.snippets.SnippetExpander
 import com.sameerasw.essentials.ime.snippets.SnippetRepository
+import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.island.service.OverlayLifecycleOwner
 import com.sameerasw.essentials.ui.ime.snippets.SnippetFloatingPillView
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -42,6 +43,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class SnippetAccessibilityHandler(
     private val service: AccessibilityService,
     private val scope: CoroutineScope,
+    var islandCoordinator: IslandCoordinator? = null,
+    var duoOverlayHandler: DuoOverlayHandler? = null,
 ) {
     companion object {
         private const val TAG = "SnippetA11yHandler"
@@ -59,6 +62,7 @@ class SnippetAccessibilityHandler(
 
     private val currentMatchedSnippet = MutableStateFlow<Snippet?>(null)
     private var activeNode: AccessibilityNodeInfo? = null
+    private var lastInputBounds: android.graphics.Rect? = null
     private var lastTypedWord: String = ""
 
     private var overlayView: FrameLayout? = null
@@ -71,7 +75,7 @@ class SnippetAccessibilityHandler(
         isAutoExpandEnabled = settingsRepository.isSnippetsUniversalAutoExpandEnabled()
         isFloatingPillEnabled = settingsRepository.isSnippetsUniversalFloatingPillEnabled()
         if (!isUniversalEnabled) {
-            hideFloatingPill()
+            dismissAllSuggestions()
         }
     }
 
@@ -82,6 +86,11 @@ class SnippetAccessibilityHandler(
         if (!sourceNode.isEditable) return
 
         activeNode = sourceNode
+        val bounds = android.graphics.Rect()
+        sourceNode.getBoundsInScreen(bounds)
+        if (bounds.height() > 0 && bounds.top > 0) {
+            lastInputBounds = bounds
+        }
 
         val textList = event.text
         val fullText =
@@ -92,7 +101,7 @@ class SnippetAccessibilityHandler(
             }
 
         if (fullText.isEmpty()) {
-            hideFloatingPill()
+            dismissAllSuggestions()
             return
         }
 
@@ -115,25 +124,25 @@ class SnippetAccessibilityHandler(
                         targetWord = "$candidateWord ",
                         replacement = "$expanded ",
                     )
-                    hideFloatingPill()
+                    dismissAllSuggestions()
                     return
                 }
             }
         }
 
-        // 2. Check for Option B: Floating pill trigger
+        // 2. Check for Option B: Suggestion trigger (Pill, Island, Duo, or Both)
         val currentWord = fullText.takeLastWhile { !it.isWhitespace() }
         lastTypedWord = currentWord
 
-        if (currentWord.isNotBlank() && isFloatingPillEnabled) {
+        if (currentWord.isNotBlank()) {
             val matches = snippetRepository.findMatching(currentWord)
             if (matches.isNotEmpty()) {
-                showFloatingPill(matches.first())
+                showSuggestion(matches.first())
             } else {
-                hideFloatingPill()
+                dismissAllSuggestions()
             }
         } else {
-            hideFloatingPill()
+            dismissAllSuggestions()
         }
     }
 
@@ -170,7 +179,7 @@ class SnippetAccessibilityHandler(
     private fun calculateImeOffset(): Int {
         val density = service.resources.displayMetrics.density
         val displayHeight = service.resources.displayMetrics.heightPixels
-        val fallbackOffset = (290 * density).toInt()
+        var keyboardHeight = (290 * density).toInt()
 
         try {
             val currentWindows = service.windows
@@ -183,18 +192,103 @@ class SnippetAccessibilityHandler(
                     val imeBounds = android.graphics.Rect()
                     imeWindow.getBoundsInScreen(imeBounds)
                     if (imeBounds.height() > 0 && imeBounds.top < displayHeight) {
-                        val keyboardHeight = (displayHeight - imeBounds.top).coerceAtLeast(0)
-                        return keyboardHeight + (10 * density).toInt()
+                        keyboardHeight = (displayHeight - imeBounds.top).coerceAtLeast(0)
                     }
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error calculating IME window bounds", e)
         }
-        return fallbackOffset
+
+        // Dynamically measure active input field to ensure the pill floats comfortably above it
+        val bounds = lastInputBounds
+        if (bounds != null && bounds.height() > 0 && bounds.top > 0 && bounds.top < displayHeight) {
+            val nodeTopFromBottom = displayHeight - bounds.top
+            if (nodeTopFromBottom >= keyboardHeight && bounds.top > (80 * density)) {
+                return nodeTopFromBottom + (12 * density).toInt()
+            }
+        }
+
+        // Fallback: place comfortably above standard multi-line input bar
+        return keyboardHeight + (72 * density).toInt()
     }
 
-    private fun showFloatingPill(snippet: Snippet) {
+    private fun expandSnippet(snippet: Snippet) {
+        overlayView?.let { HapticUtil.performUIHaptic(it) }
+        val targetNode = activeNode?.takeIf {
+            try { it.refresh() } catch (_: Exception) { false }
+        } ?: service.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+
+        if (targetNode != null) {
+            val text = targetNode.text?.toString().orEmpty()
+            val expanded = SnippetExpander.expand(snippet.content, service)
+            replaceKeywordInNode(
+                node = targetNode,
+                fullText = text,
+                targetWord = lastTypedWord,
+                replacement = "$expanded ",
+            )
+        }
+        dismissAllSuggestions()
+    }
+
+    private fun showSuggestion(snippet: Snippet) {
+        val mode = settingsRepository.getSnippetsSuggestionDisplayMode()
+        val onExpand = { expandSnippet(snippet) }
+
+        when (mode) {
+            SettingsRepository.SNIPPETS_DISPLAY_FLOATING_PILL -> {
+                islandCoordinator?.hideSnippet()
+                duoOverlayHandler?.hideSnippetSuggestion()
+                showFloatingPill(snippet, onExpand)
+            }
+            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> {
+                hideFloatingPill()
+                duoOverlayHandler?.hideSnippetSuggestion()
+                if (settingsRepository.isIslandEnabled()) {
+                    islandCoordinator?.showSnippet(snippet, onExpand)
+                } else {
+                    showFloatingPill(snippet, onExpand)
+                }
+            }
+            SettingsRepository.SNIPPETS_DISPLAY_DUO -> {
+                hideFloatingPill()
+                islandCoordinator?.hideSnippet()
+                if (settingsRepository.isDuoEnabled()) {
+                    duoOverlayHandler?.showSnippetSuggestion(snippet, onExpand)
+                } else {
+                    showFloatingPill(snippet, onExpand)
+                }
+            }
+            SettingsRepository.SNIPPETS_DISPLAY_BOTH -> {
+                hideFloatingPill()
+                val islandOn = settingsRepository.isIslandEnabled()
+                val duoOn = settingsRepository.isDuoEnabled()
+                if (islandOn) {
+                    islandCoordinator?.showSnippet(snippet, onExpand)
+                }
+                if (duoOn) {
+                    duoOverlayHandler?.showSnippetSuggestion(snippet, onExpand)
+                }
+                if (!islandOn && !duoOn) {
+                    showFloatingPill(snippet, onExpand)
+                }
+            }
+            else -> {
+                islandCoordinator?.hideSnippet()
+                duoOverlayHandler?.hideSnippetSuggestion()
+                showFloatingPill(snippet, onExpand)
+            }
+        }
+    }
+
+    fun dismissAllSuggestions() {
+        hideFloatingPill()
+        islandCoordinator?.hideSnippet()
+        duoOverlayHandler?.hideSnippetSuggestion()
+    }
+
+    private fun showFloatingPill(snippet: Snippet, onExpand: () -> Unit) {
         mainHandler.post {
             currentMatchedSnippet.value = snippet
             mainHandler.removeCallbacks(dismissRunnable)
@@ -229,22 +323,8 @@ class SnippetAccessibilityHandler(
                             if (currentSnippet != null) {
                                 SnippetFloatingPillView(
                                     snippet = currentSnippet,
-                                    onExpand = {
-                                        overlayView?.let { HapticUtil.performUIHaptic(it) }
-                                        activeNode?.let { node ->
-                                            val text = node.text?.toString().orEmpty()
-                                            val expanded =
-                                                SnippetExpander.expand(currentSnippet.content, service)
-                                            replaceKeywordInNode(
-                                                node = node,
-                                                fullText = text,
-                                                targetWord = lastTypedWord,
-                                                replacement = "$expanded ",
-                                            )
-                                        }
-                                        hideFloatingPill()
-                                    },
-                                    onDismiss = { hideFloatingPill() },
+                                    onExpand = onExpand,
+                                    onDismiss = { dismissAllSuggestions() },
                                 )
                             }
                         }
@@ -273,12 +353,38 @@ class SnippetAccessibilityHandler(
                     y = calculateImeOffset()
                 }
 
+            val density = service.resources.displayMetrics.density
+            var initialY = 0
+            var initialTouchY = 0f
+
             frame.setOnTouchListener { _, event ->
-                if (event.action == MotionEvent.ACTION_OUTSIDE) {
-                    hideFloatingPill()
-                    true
-                } else {
-                    false
+                when (event.action) {
+                    MotionEvent.ACTION_OUTSIDE -> {
+                        dismissAllSuggestions()
+                        true
+                    }
+                    MotionEvent.ACTION_DOWN -> {
+                        val lp = frame.layoutParams as? WindowManager.LayoutParams
+                        initialY = lp?.y ?: 0
+                        initialTouchY = event.rawY
+                        false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        val dy = (initialTouchY - event.rawY).toInt()
+                        if (kotlin.math.abs(dy) > (8 * density).toInt()) {
+                            val lp = frame.layoutParams as? WindowManager.LayoutParams
+                            if (lp != null) {
+                                lp.y = (initialY + dy).coerceAtLeast(0)
+                                try {
+                                    windowManager.updateViewLayout(frame, lp)
+                                } catch (_: Exception) {}
+                            }
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                    else -> false
                 }
             }
 
@@ -294,7 +400,7 @@ class SnippetAccessibilityHandler(
 
     fun onNonImeWindowChanged() {
         if (!isImePresent()) {
-            hideFloatingPill()
+            dismissAllSuggestions()
         }
     }
 
@@ -335,7 +441,7 @@ class SnippetAccessibilityHandler(
     }
 
     fun destroy() {
-        hideFloatingPill()
+        dismissAllSuggestions()
         activeNode = null
     }
 }
