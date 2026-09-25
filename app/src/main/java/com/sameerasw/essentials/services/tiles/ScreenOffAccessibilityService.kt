@@ -281,7 +281,7 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED
             ) {
                 statusGlanceHandler.updateState()
-            } else if (key?.startsWith("snippets_universal_") == true) {
+            } else if (key?.startsWith("snippets_") == true) {
                 if (::snippetAccessibilityHandler.isInitialized) {
                     snippetAccessibilityHandler.updateSettings()
                 }
@@ -312,7 +312,12 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
         snippetAccessibilityHandler =
-            com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler(this, serviceScope)
+            com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler(
+                service = this,
+                scope = serviceScope,
+                islandCoordinator = islandOverlayHandler,
+                duoOverlayHandler = duoOverlayHandler,
+            )
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -392,12 +397,12 @@ class ScreenOffAccessibilityService :
                         }
 
                         "CONSCIOUS_GATE_CONFIRMED" -> {
-                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
+                            intent.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
                             islandOverlayHandler.updateConsciousGateState()
                         }
 
                         "CONSCIOUS_GATE_CLOSED" -> {
-                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
+                            intent.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
                             islandOverlayHandler.updateConsciousGateState()
                         }
 

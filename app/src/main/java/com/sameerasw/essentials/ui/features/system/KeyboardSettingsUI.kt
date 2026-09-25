@@ -60,6 +60,9 @@ fun KeyboardSettingsUI(
     val isKeyboardEnabled by viewModel.isKeyboardEnabled
     val isKeyboardSelected by viewModel.isKeyboardSelected
     var isSnippetsSheetVisible by remember { mutableStateOf(false) }
+    val settingsRepo = remember { com.sameerasw.essentials.data.repository.SettingsRepository(context) }
+    var suggestionDisplayMode by remember { mutableStateOf(settingsRepo.getSnippetsSuggestionDisplayMode()) }
+    var isDisplayStyleSheetVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -353,7 +356,6 @@ fun KeyboardSettingsUI(
         )
 
         RoundedCardContainer(spacing = 2.dp) {
-            val settingsRepo = remember { com.sameerasw.essentials.data.repository.SettingsRepository(context) }
             var universalOn by remember { mutableStateOf(settingsRepo.isSnippetsUniversalEnabled()) }
 
             IconToggleItem(
@@ -367,6 +369,32 @@ fun KeyboardSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "snippets_universal"),
             )
+
+            if (universalOn) {
+                val modeLabel = when (suggestionDisplayMode) {
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
+                    else -> stringResource(R.string.snippets_display_pill_title)
+                }
+                val modeIcon = when (suggestionDisplayMode) {
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> R.drawable.rounded_bolt_24
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DUO -> R.drawable.rounded_circle_24
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_BOTH -> R.drawable.rounded_auto_awesome_24
+                    else -> R.drawable.rounded_keyboard_24
+                }
+
+                IconToggleItem(
+                    iconRes = modeIcon,
+                    title = stringResource(R.string.snippets_display_style_title),
+                    description = modeLabel,
+                    isChecked = false,
+                    showToggle = false,
+                    onClick = { isDisplayStyleSheetVisible = true },
+                    onCheckedChange = { isDisplayStyleSheetVisible = true },
+                    modifier = Modifier.highlight(highlightSetting == "snippets_display_style"),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_text_snippet_24,
@@ -391,7 +419,21 @@ fun KeyboardSettingsUI(
 
         if (isSnippetsSheetVisible) {
             com.sameerasw.essentials.ui.features.apps.sheets.SnippetsBottomSheet(
-                onDismissRequest = { isSnippetsSheetVisible = false },
+                onDismissRequest = {
+                    isSnippetsSheetVisible = false
+                    suggestionDisplayMode = settingsRepo.getSnippetsSuggestionDisplayMode()
+                },
+            )
+        }
+
+        if (isDisplayStyleSheetVisible) {
+            com.sameerasw.essentials.ui.features.apps.sheets.SnippetDisplayStyleSheet(
+                currentMode = suggestionDisplayMode,
+                onModeSelected = { newMode ->
+                    suggestionDisplayMode = newMode
+                    settingsRepo.setSnippetsSuggestionDisplayMode(newMode)
+                },
+                onDismissRequest = { isDisplayStyleSheetVisible = false },
             )
         }
     }

@@ -97,7 +97,15 @@ class IslandController(
                 collapse()
                 true
             }
-            IslandStage.Line -> current.focusedKey?.let { expand(it); true } ?: false
+            IslandStage.Line -> {
+                val focused = current.focused
+                if (focused?.interactions?.onTap?.invoke() == true) {
+                    collapse()
+                    true
+                } else {
+                    current.focusedKey?.let { expand(it); true } ?: false
+                }
+            }
             IslandStage.Compact -> {
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
