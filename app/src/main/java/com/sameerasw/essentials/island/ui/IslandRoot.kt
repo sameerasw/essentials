@@ -505,46 +505,68 @@ fun IslandRoot(
                     val dismissThreshold = 48.dp.toPx()
                     val flyOff = view.resources.displayMetrics.widthPixels * 0.85f
                     val tracker = VelocityTracker()
+                    val peek = stage == IslandStage.Line
+                    var startX = 0f
                     var dx = 0f
                     var dy = 0f
-                    var horizontal = false
-                    var upward = false
+                    
+                    var sliding = false
                     var crossed = false
                     var progress = 0f
                     var lastStep = 0f
                     val stepPx = 16.dp.toPx()
+                    fun inwardSign(): Float {
+                        val cameraX = when {
+                            spec.growDirection > 0 -> cameraSlotPx / 2f
+                            spec.growDirection < 0 -> size.width - cameraSlotPx / 2f
+                            else -> size.width / 2f
+                        }
+                        return when {
+                            startX < cameraX -> 1f
+                            startX > cameraX -> -1f
+                            else -> if (dx >= 0f) -1f else 1f
+                        }
+                    }
                     detectDragGestures(
-                        onDragStart = {
+                        onDragStart = { start ->
                             tracker.resetTracking()
+                            startX = start.x
                             dx = 0f
                             dy = 0f
                             lastStep = 0f
                             crossed = false
-                            horizontal = false
-                            upward = false
+                            sliding = false
                         },
                         onDrag = { change, amount ->
                             change.consume()
                             tracker.addPosition(change.uptimeMillis, change.position)
                             dx += amount.x
                             dy += amount.y
-                            horizontal = abs(dx) >= abs(dy)
-                            upward = !horizontal && dy < 0f
+                            val inward = dx * inwardSign()
+                            val horizontal = abs(dx) >= abs(dy)
+                            val stacked = currentState.focused?.queue != null
                             val dismissible = currentState.focused?.dismissible == true
-                            if (horizontal) {
+                            sliding = if (peek) {
+                                (stacked && horizontal) || (horizontal && inward <= 0f)
+                            } else {
+                                horizontal
+                            }
+                            val advancing = peek && sliding && stacked && inward > 0f
+                            if (sliding) {
                                 progress = 0f
                                 scope.launch { collapse.snapTo(0f) }
-                                scope.launch { dismissOffset.snapTo(if (dismissible) dx else dx * 0.25f) }
+                                scope.launch { dismissOffset.snapTo(if (advancing || dismissible) dx else dx * 0.25f) }
                             } else {
-                                progress = if (upward) (-dy / collapseRange).coerceIn(0f, 1f) else 0f
+                                val pull = if (peek) maxOf(inward, -dy) else -dy
+                                progress = (pull / collapseRange).coerceIn(0f, 1f)
                                 scope.launch { collapse.snapTo(progress) }
                                 scope.launch { dismissOffset.snapTo(0f) }
                             }
-                            val now = if (horizontal) dismissible && abs(dx) > dismissThreshold else upward && progress > COLLAPSE_COMMIT
+                            val now = if (sliding) abs(dx) > dismissThreshold && (advancing || dismissible) else progress > COLLAPSE_COMMIT
                             swipeIntent = when {
                                 !now -> null
-                                horizontal -> SwipeIntent.Dismiss
-                                else -> SwipeIntent.Hide
+                                advancing || !sliding -> SwipeIntent.Hide
+                                else -> SwipeIntent.Dismiss
                             }
                             if (now != crossed) {
                                 crossed = now
@@ -560,13 +582,14 @@ fun IslandRoot(
                         onDragEnd = {
                             swipeIntent = null
                             val v = tracker.calculateVelocity()
-                            if (horizontal) {
+                            if (sliding) {
                                 val focused = currentState.focused
                                 val flung = abs(v.x) > 1500f
-                                val commit = focused?.dismissible == true && (crossed || flung)
                                 val dir = if ((if (flung) v.x else dx) > 0f) 1f else -1f
+                                val advance = peek && focused?.queue != null && dir * inwardSign() > 0f
+                                val commit = (advance || focused?.dismissible == true) && (crossed || flung)
                                 scope.launch {
-                                    if (!commit) {
+                                    if (!commit || focused == null) {
                                         dismissOffset.animateTo(0f, IslandMotion.fling(), initialVelocity = v.x)
                                         return@launch
                                     }
@@ -575,29 +598,27 @@ fun IslandRoot(
                                     val speed = maxOf(abs(v.x), 2500f)
                                     val throwMs = (remaining / speed * 1000f).toInt().coerceIn(90, 200)
                                     val throwSpec = tween<Float>(throwMs, easing = LinearEasing)
+                                    dismissOffset.animateTo(dir * flyOff, throwSpec)
                                     if (focused.queue != null) {
-                                        dismissOffset.animateTo(dir * flyOff, throwSpec)
-                                        actions.onDismiss()
+                                        if (advance) actions.onAdvance() else actions.onDismiss()
                                         withTimeoutOrNull(250L) { snapshotFlow { currentState.focused }.first { it !== focused } }
-                                        dismissOffset.snapTo(0f)
                                     } else {
-                                        dismissOffset.animateTo(dir * flyOff, throwSpec)
                                         dismissCommitted = true
                                         actions.onDismiss()
-                                        dismissOffset.snapTo(0f)
                                     }
+                                    dismissOffset.snapTo(0f)
                                 }
                             } else {
-                                val upVelocity = -v.y / collapseRange
-                                val commit = upward && (crossed || upVelocity > 2f)
+                                val pullVelocity = (if (peek) maxOf(v.x * inwardSign(), -v.y) else -v.y) / collapseRange
+                                val commit = crossed || pullVelocity > 2f
                                 scope.launch {
                                     if (commit) {
                                         IslandHaptics.commit(context)
-                                        collapse.animateTo(1f, IslandMotion.release(), initialVelocity = upVelocity.coerceIn(0f, 8f))
+                                        collapse.animateTo(1f, IslandMotion.release(), initialVelocity = pullVelocity.coerceIn(0f, 8f))
                                         dragCommitted = true
                                         actions.onCollapse()
                                     } else {
-                                        collapse.animateTo(0f, IslandMotion.release(), initialVelocity = upVelocity)
+                                        collapse.animateTo(0f, IslandMotion.release(), initialVelocity = pullVelocity)
                                     }
                                 }
                             }
