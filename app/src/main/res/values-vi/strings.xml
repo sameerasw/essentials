@@ -1800,7 +1800,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_line_peek_desc">Hiển thị nhanh các cập nhật trên khắp island, sau đó quay lại chế độ thu gọn</string>
     <string name="island_hide_in_owner_app_title">Ẩn thông báo lỗi bên trong ứng dụng</string>
     <string name="island_hide_on_shade_title">Ẩn khi thanh trạng thái được mở rộng</string>
-    <string name="island_dismiss_on_outside_title">Bỏ qua khi có hoạt động bên ngoài</string>
+    <string name="island_dismiss_on_outside_title">Bỏ qua khi chạm bên ngoài</string>
     <string name="island_suppress_system_heads_up_title">Ẩn thông báo hệ thống</string>
     <string name="island_dynamic_hide_status_bar_title">Ẩn động các mục trên thanh trạng thái</string>
     <string name="island_notif_compact_heads_up_title">Thông tin nhỏ gọn</string>
