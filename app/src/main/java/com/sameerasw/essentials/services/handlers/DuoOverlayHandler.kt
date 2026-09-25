@@ -363,6 +363,28 @@ class DuoOverlayHandler(
 
     var openBrief: (() -> Unit)? = null
 
+    fun showSnippetSuggestion(snippet: com.sameerasw.essentials.ime.snippets.Snippet, onExpand: () -> Unit) {
+        mainHandler.post {
+            ensureTouchAnchor(isSnippet = true)
+            duoTouchHandler?.onSnippetTapAction = {
+                onExpand()
+                restoreTouchAnchor()
+            }
+            val titleText = snippet.title.ifBlank { snippet.content.take(18) }
+            overlayView?.setInteractiveSnippet(keyword = "!${snippet.keyword}", title = titleText)
+        }
+    }
+
+    fun hideSnippetSuggestion() {
+        mainHandler.post {
+            duoTouchHandler?.onSnippetTapAction = null
+            if (overlayView?.isSnippetActive == true) {
+                overlayView?.resetInteractiveState(animate = true)
+            }
+            restoreTouchAnchor()
+        }
+    }
+
     fun init() {
         windowManager = service.getSystemService(AccessibilityService.WINDOW_SERVICE) as? WindowManager
         updateState()
@@ -1158,6 +1180,66 @@ class DuoOverlayHandler(
 
 
 
+    private fun ensureTouchAnchor(isSnippet: Boolean = false) {
+        val wm = windowManager ?: return
+        val density = service.resources.displayMetrics.density
+        if (duoTouchHandler == null) {
+            duoTouchHandler = DuoTouchHandler(service)
+        }
+        duoTouchHandler?.apply {
+            this.overlayView = this@DuoOverlayHandler.overlayView
+            this.cameraCenterX = currentCenterX
+            this.cameraCenterY = currentCenterY
+            this.cameraRadiusPx = currentCameraRadiusPx
+            this.ringRadiusScale = settingsRepository.getDuoRingRadius()
+        }
+
+        if (touchAnchorView == null) {
+            touchAnchorView = View(service).apply {
+                setOnTouchListener { _, event ->
+                    duoTouchHandler?.onTouchEvent(event) ?: false
+                }
+            }
+        }
+
+        val displayWidth = service.resources.displayMetrics.widthPixels
+        val snippetActive = isSnippet || overlayView?.isSnippetActive == true
+        val diameter = (((currentCameraRadiusPx + 20f * density) * 2 * settingsRepository.getDuoRingRadius()).toInt()).coerceAtLeast((44f * density).toInt())
+        val touchWidth = if (snippetActive) maxOf(diameter, (280f * density).toInt()) else diameter
+        val touchHeight = if (snippetActive) diameter + (72f * density).toInt() else diameter
+
+        @Suppress("DEPRECATION")
+        val touchParams = WindowManager.LayoutParams(
+            touchWidth,
+            touchHeight,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = ((currentCenterX - touchWidth / 2f).toInt()).coerceIn(0, (displayWidth - touchWidth).coerceAtLeast(0))
+            y = ((currentCenterY - diameter / 2f).toInt()).coerceAtLeast(0)
+        }
+
+        if (!isTouchAnchorAdded) {
+            try {
+                wm.addView(touchAnchorView, touchParams)
+                isTouchAnchorAdded = true
+            } catch (e: Exception) {
+                Log.e("DuoOverlayHandler", "Failed to add Duo touch anchor for snippet", e)
+            }
+        } else {
+            try {
+                wm.updateViewLayout(touchAnchorView, touchParams)
+            } catch (_: Exception) {}
+        }
+    }
+
     private fun restoreTouchAnchor() {
         val wm = windowManager ?: return
         val anchor = touchAnchorView ?: return
@@ -1181,6 +1263,7 @@ class DuoOverlayHandler(
 
         val density = service.resources.displayMetrics.density
         val diameter = (((currentCameraRadiusPx + 20f * density) * 2 * settingsRepository.getDuoRingRadius()).toInt()).coerceAtLeast((44f * density).toInt())
+        @Suppress("DEPRECATION")
         val touchParams = WindowManager.LayoutParams(
             diameter,
             diameter,
