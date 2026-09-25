@@ -313,8 +313,15 @@ fun IslandRoot(
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
     fun bubbleX(width: Int): Int =
         if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - bubbleSizePx
-    val fullStack = state.focused?.stack.orEmpty()
-    val queuedIcons = fullStack.filterNot { it.current }
+    val focusedItem = state.focused
+    
+    val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
+        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() }?.stack.orEmpty()
+    } else {
+        emptyList()
+    }
+    val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
+    val queuedIcons = if (foreignStack.isNotEmpty()) fullStack else fullStack.filterNot { it.current }
     val queueShown = (stage == IslandStage.Line || stage == IslandStage.Expanded) && queuedIcons.isNotEmpty()
     var lastFullStack by remember { mutableStateOf(emptyList<StackIcon>()) }
     if (queuedIcons.isNotEmpty()) lastFullStack = fullStack
@@ -348,6 +355,10 @@ fun IslandRoot(
         }
         val top = (surfaceTopPx - g).coerceAtLeast(0)
         var bounds = IntRect(left, top, left + target.width, surfaceTopPx - g + target.height)
+        if (queueShown && stage == IslandStage.Line) {
+            val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - bubbleSizePx
+            bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + bubbleSizePx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
+        }
         if (queueShown && stage == IslandStage.Expanded && pillSize != IntSize.Zero) {
             val pillLeft = left + (target.width - pillSize.width) / 2
             bounds = IntRect(
@@ -809,7 +820,15 @@ fun IslandRoot(
                 IslandStackBubble(
                     icons = lastQueuedIcons,
                     size = spec.compactHeight,
-                    modifier = Modifier.queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) },
+                    modifier = Modifier
+                        .queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) }
+                        .pointerInput(Unit) {
+                            detectTapGestures {
+                                if (currentState.stage != IslandStage.Line) return@detectTapGestures
+                                IslandHaptics.tap(context)
+                                lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
+                            }
+                        },
                 )
                 IslandStackPill(
                     icons = lastFullStack,

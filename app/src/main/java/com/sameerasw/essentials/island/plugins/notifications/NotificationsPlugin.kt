@@ -46,6 +46,22 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private var currentIndex = 0
     
     private var manualPick = false
+    
+    private var pendingPopUp = false
+
+    private fun busyElsewhere(): Boolean {
+        val c = ctx ?: return false
+        val stage = c.currentStage()
+        return c.focusedKey() != ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
+    }
+
+    override fun onFocusChanged(stage: IslandStage, focusedKey: String?) {
+        if (!pendingPopUp || alerts.isEmpty()) return
+        if (stage == IslandStage.Line || stage == IslandStage.Expanded) return
+        pendingPopUp = false
+        scheduleTimeout()
+        popUp()
+    }
 
     private fun currentAlert(): ActiveNotificationAlert? = alerts.getOrNull(currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0)))
 
@@ -56,12 +72,19 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun select(key: String) {
+        val c = ctx ?: return
         val index = alerts.indexOfFirst { it.key == key }
-        if (index < 0 || index == currentIndex) return
+        if (index < 0) return
+        val here = showingHere()
+        if (here && index == currentIndex) return
         currentIndex = index
         manualPick = true
+        pendingPopUp = false
         scheduleTimeout()
         render()
+        if (!here) {
+            if (c.currentStage() == IslandStage.Expanded) c.request(PluginRequest.Expand(ITEM_KEY)) else popUp()
+        }
     }
     private var registered = false
     private var autoExpanded = false
@@ -101,7 +124,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     override fun onUserInteraction(focusedKey: String?) {
-        if (alerts.isEmpty()) return
+        if (alerts.isEmpty() || pendingPopUp) return
         if (focusedKey == ITEM_KEY) autoExpanded = false
         ctx?.mainHandler?.removeCallbacks(catchUpRunnable)
         scheduleTimeout()
@@ -134,14 +157,21 @@ class NotificationsPlugin : BaseIslandPlugin() {
             render()
             return
         }
-        alerts.addFirst(alert)
-        currentIndex = 0
+        val waiting = pendingPopUp && queueEnabled()
+        if (waiting) alerts.addLast(alert) else alerts.addFirst(alert)
+        if (!waiting) currentIndex = 0
         manualPick = false
         val cap = if (queueEnabled()) MAX_QUEUE else 1
         while (alerts.size > cap) alerts.removeLast()
+        if (busyElsewhere()) {
+            pendingPopUp = true
+            cancelTimers()
+            render()
+            return
+        }
         scheduleTimeout()
         render()
-        if (c.currentStage() != IslandStage.Expanded) popUp()
+        popUp()
     }
 
     private fun showingHere(): Boolean {
@@ -170,6 +200,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun onTimeout() {
         val c = ctx ?: return
+        if (pendingPopUp) return
         if (showingHere() && alerts.size > 1 && !manualPick) {
             removeCurrent()
             scheduleTimeout()
@@ -215,6 +246,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         alerts.clear()
         currentIndex = 0
         manualPick = false
+        pendingPopUp = false
         render()
     }
 

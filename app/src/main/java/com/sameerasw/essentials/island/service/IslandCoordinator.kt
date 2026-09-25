@@ -62,6 +62,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -390,6 +392,12 @@ class IslandCoordinator(
         plugins.forEach { plugin ->
             plugin.start(context)
             newScope.launch { plugin.items.collect { controller.setItems(plugin.id, it) } }
+        }
+        newScope.launch {
+            controller.state
+                .map { it.stage to it.focusedKey }
+                .distinctUntilChanged()
+                .collect { (stage, key) -> plugins.forEach { it.onFocusChanged(stage, key) } }
         }
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
         applyPreviewStage()
