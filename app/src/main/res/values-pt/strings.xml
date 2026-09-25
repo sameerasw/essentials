@@ -1518,4 +1518,7 @@
     <string name="duo_action_horizontal_slide_title">Deslizamento horizontal</string>
     <string name="duo_action_horizontal_slide_track">Mudar de faixa</string>
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
+    <string name="island_title">ilha</string>
+    <string name="island_desc">ilha dinâmica </string>
+    <string name="cat_navigation">navegação </string>
 </resources>
