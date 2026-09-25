@@ -122,7 +122,12 @@ class IslandController(
         val item = (if (current.stage == IslandStage.Compact) itemKey?.let { current.items[it] } else current.focused)
             ?: defaultTapTarget(current)
             ?: return
-        val action = item.interactions.onLongPress ?: item.onOpen ?: return
+        if (item.interactions.onLongPress != null) {
+            val handled = item.interactions.onLongPress.invoke()
+            if (handled != true) collapse()
+            return
+        }
+        val action = item.onOpen ?: return
         action()
         collapse()
     }
