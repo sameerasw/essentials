@@ -1385,7 +1385,7 @@
     <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
     <string name="live_wallpaper_playback_trigger_title">Play when</string>
     <string name="live_wallpaper_trigger_unlock">Unlock</string>
-    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_trigger_screen_on">tela ligada</string>
     <string name="live_wallpaper_video_title">Video</string>
     <string name="btn_apply">Apply</string>
     <string name="add_video">Add video</string>
@@ -1530,4 +1530,6 @@
     <string name="icon_network_speed">velocidade de rede</string>
     <string name="feat_aod_wallpaper_title">papel de parede no AOD</string>
     <string name="feat_aod_wallpaper_desc">Usando uma sobreposição</string>
+    <string name="setting_location_reached_full_screen_alarm_title">alarme em tela cheia</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Reproduza o toque do alarme e mostre um alerta em tela cheia ao chegar.</string>
 </resources>
