@@ -781,6 +781,7 @@ fun KeyboardInputView(
                             ) { i ->
                                 val suggestion = mergedSuggestions[i]
                                 val isLearned = suggestion.type == SuggestionType.Learned
+                                val isSnippet = suggestion.type == SuggestionType.Snippet
                                 val suggInteraction = remember { MutableInteractionSource() }
                                 val animatedRadius by animateDpAsState(
                                     targetValue = keyRoundness,
@@ -797,14 +798,20 @@ fun KeyboardInputView(
                                     onPress = { performLightHaptic() },
                                     interactionSource = suggInteraction,
                                     containerColor =
-                                        if (isLearned) {
-                                            MaterialTheme.colorScheme.secondaryContainer
-                                        } else {
-                                            MaterialTheme.colorScheme.secondaryContainer.copy(
-                                                alpha = 0.7f,
-                                            )
+                                        when {
+                                            isSnippet -> MaterialTheme.colorScheme.tertiaryContainer
+                                            isLearned -> MaterialTheme.colorScheme.secondaryContainer
+                                            else ->
+                                                MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                    alpha = 0.7f,
+                                                )
                                         },
-                                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    contentColor =
+                                        if (isSnippet) {
+                                            MaterialTheme.colorScheme.onTertiaryContainer
+                                        } else {
+                                            MaterialTheme.colorScheme.onSecondaryContainer
+                                        },
                                     shape = RoundedCornerShape(animatedRadius),
                                     modifier =
                                         Modifier
@@ -812,13 +819,26 @@ fun KeyboardInputView(
                                             .fillMaxWidth()
                                             .maskClip(RoundedCornerShape(animatedRadius)),
                                 ) {
-                                    Text(
-                                        text = suggestion.text,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        fontFamily = CustomFontFamily,
-                                        maxLines = 1,
-                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                    ) {
+                                        if (isSnippet) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_text_snippet_24),
+                                                contentDescription = "Snippet",
+                                                modifier = Modifier.size(16.dp),
+                                            )
+                                        }
+                                        Text(
+                                            text = suggestion.text,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = CustomFontFamily,
+                                            maxLines = 1,
+                                        )
+                                    }
                                 }
                             }
 
