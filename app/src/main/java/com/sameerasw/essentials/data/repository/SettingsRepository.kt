@@ -548,6 +548,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_DEVICES = "island_show_devices"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
+        const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
         const val KEY_ISLAND_DEVICES_BATTERY_ORDER = "island_devices_battery_order"
         const val ISLAND_CAMERA_POSITION_LEFT = "left"
         const val ISLAND_CAMERA_POSITION_CENTER = "center"
