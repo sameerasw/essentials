@@ -664,7 +664,7 @@
     <string name="label_settings">Paramètres</string>
     <string name="action_report_bug">Signaler un bogue</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Rapport des crash</string>
+    <string name="sentry_report_mode_title">Rapport de crash</string>
     <string name="sentry_mode_off">Désactivé</string>
     <string name="sentry_mode_auto">Auto</string>
     <string name="sentry_crash_toast">Essentials a crashé, rapport envoyé</string>
