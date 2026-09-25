@@ -77,6 +77,7 @@ class ScreenOffAccessibilityService :
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
+    private lateinit var snippetAccessibilityHandler: com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -280,6 +281,10 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED
             ) {
                 statusGlanceHandler.updateState()
+            } else if (key?.startsWith("snippets_universal_") == true) {
+                if (::snippetAccessibilityHandler.isInitialized) {
+                    snippetAccessibilityHandler.updateSettings()
+                }
             }
         }
 
@@ -306,6 +311,8 @@ class ScreenOffAccessibilityService :
         islandOverlayHandler.onVisibilityChanged = { duoOverlayHandler.setIslandVisible(it) }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
+        snippetAccessibilityHandler =
+            com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler(this, serviceScope)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -507,6 +514,9 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.destroy()
         islandOverlayHandler.onDestroy()
         statusGlanceHandler.destroy()
+        if (::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.destroy()
+        }
         statusBarIconHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
@@ -549,9 +559,19 @@ class ScreenOffAccessibilityService :
             islandOverlayHandler.updateConsciousGateState()
         }
 
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            if (::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onTextChanged(event)
+            }
+            return
+        }
+
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
+            if (::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.hideFloatingPill()
+            }
             checkFullscreenState()
             checkStatusBarExpansion()
             freezeHandler.removeCallbacks(shadeRecheckRunnable)
