@@ -1532,4 +1532,11 @@
     <string name="feat_aod_wallpaper_desc">Usando uma sobreposição</string>
     <string name="setting_location_reached_full_screen_alarm_title">alarme em tela cheia</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Reproduza o toque do alarme e mostre um alerta em tela cheia ao chegar.</string>
+    <string name="label_motion_blur">desfoque de movimento </string>
+    <string name="label_motion_blur_amount">força</string>
+    <string name="label_online_help_media">Mídia de ajuda online</string>
+    <string name="setting_app_icon_title">ícone do aplicativo (nota deixa ele mais estiloso)</string>
+    <string name="setting_app_icon_desc">Personalize o ícone do launcher da tela inicial</string>
+    <string name="duo_action_long_press_title">toque longo</string>
+    <string name="diy_action_open_app">abrir algum app</string>
 </resources>
