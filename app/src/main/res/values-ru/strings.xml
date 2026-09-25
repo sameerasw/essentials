@@ -1663,4 +1663,41 @@
     <string name="notification_lighting_ripple_position_pick_title">Выбрать позицию</string>
     <string name="notification_lighting_ripple_position_pick_desc">Тапните где угодно на экране что бы выбрать место старта ряби</string>
     <string name="notification_lighting_ripple_sparkle_title">Частицы</string>
+    <string name="watch_watchface_title">Циферблат</string>
+    <string name="watch_watchface_desc">Настройка циферблата</string>
+    <string name="watch_complications_title">Виджеты циферблата</string>
+    <string name="watch_complications_desc">Настройка виджетов</string>
+    <string name="qs_secure_sensitive_tiles_title">Защита конфиденциальных плиток</string>
+    <string name="qs_secure_sensitive_tiles_desc">Требовать разблокировку перед запуском конфиденциальных плиток быстрых настроек</string>
+    <string name="perm_write_secure_instructions">Это разрешение можно выдать с помощью ПК через ADB. Скопируйте команду ADB и выполните её в оболочке.
+
+Или вы можете легко выдать его с помощью Shizuku, нажав кнопку ниже.
+
+Это разрешение нужно выдать только один раз.</string>
+    <string name="tile_restart_systemui">Перезапустить SystemUI</string>
+    <string name="about_desc_restart_systemui_tile">Легко перезапускайте SystemUI прямо из плитки быстрых настроек. Помогает быстро устранить сбои в строке состояния или сразу применить изменения системного интерфейса. Требуется доступ root или Shizuku.</string>
+    <string name="watchface_clock_outline_title">Только контур</string>
+    <string name="watchface_clock_outline_desc">Показывать только контуры шрифта вместо заполненного текста</string>
+    <string name="island_font_scale_title">Размер шрифта</string>
+    <string name="watchface_complications_on_aod_title">Показать на AOD</string>
+    <string name="watchface_complications_on_aod_desc">Следите за тем, чтобы осложнения были видны в режиме «Всегда включённый дисплей»</string>
+    <string name="watchface_complication_outline_title">Обводка виджета циферблата</string>
+    <string name="watchface_complication_outline_desc">Показывать тонкую круглую рамку вокруг элементов</string>
+    <string name="watchface_right_complication_title">Правый виджет</string>
+    <string name="watchface_left_complication_title">Левый виджет</string>
+    <string name="watchface_hide_device_icons_title">Скрыть иконки устройства</string>
+    <string name="watchface_hide_device_icons_desc">Скрыть нижние иконки часов и телефона</string>
+    <string name="watchface_hide_battery_title">Скрыть индикатор батареи</string>
+    <string name="watchface_hide_battery_desc">Скрыть дуги, дорожки и индикаторы батареи</string>
+    <string name="setting_show_legacy_features_desc">Эти функции могут не обновляться в будущем из-за технических ограничений или из-за того, что они не являются необходимыми.</string>
+    <string name="feat_standby_apps_desc">Оптимизация фоновой активности приложений</string>
+    <string name="about_desc_standby_apps">Управление категориями режима ожидания приложений Android для контроля фоновой работы, использования сети и расхода батареи.
+• Активные — Приложение используется или использовалось совсем недавно.
+• Рабочий набор — Используется регулярно или ежедневно; задачи и будильники откладываются незначительно.
+• Частые — Используется еженедельно; фоновая работа откладывается сильнее.
+• Редкие — Используется редко; задачи, будильники и фоновый интернет сильно ограничены.
+• Ограниченные — Самый низкий приоритет (Android 12+); задачи выполняются пакетно примерно раз в день, и разрешен один будильник в день. Лучшая экономия батареи, но нарушаются своевременные уведомления.</string>
+    <string name="feat_standby_apps_title">Приложения в режиме ожидания</string>
+    <string name="feat_power_saving_title">Экономия энергии</string>
+    <string name="feat_power_saving_desc">Настройка политик энергосбережения</string>
 </resources>
