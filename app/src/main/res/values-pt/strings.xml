@@ -1578,4 +1578,20 @@
     <string name="label_ripple_animation">Animação de ondulação</string>
     <string name="setting_show_legacy_features_title">mostrar funções legacy (nota: legacy no português é legado)</string>
     <string name="setting_show_legacy_features_desc">Essas funcionalidades não vão receber atualizações futuras devido a limitações técnicas ou por não serem consideradas essenciais.</string>
+    <string name="diy_create_pixel_searchbar_title">barra de pesquisa do pixel</string>
+    <string name="pixel_search_results_media_title">fotos e videos</string>
+    <string name="pixel_search_results_media_desc">pesquisar fotos, videos, e GIFs</string>
+    <string name="pixel_search_results_files_title">arquivos e documentos</string>
+    <string name="pixel_search_results_files_desc">pesquisar documentos, audio, e arquivos baixado</string>
+    <string name="pixel_search_results_contacts_title">Contatos</string>
+    <string name="diy_category_apps">Aplicativos</string>
+    <string name="pixel_search_results_apps_desc">pesquisar e iniciar aplicativos instalado </string>
+    <string name="pixel_search_results_settings_title">configurações do Essentials </string>
+    <string name="pixel_search_results_settings_desc">Recursos de pesquisa e links diretos para suas configurações.</string>
+    <string name="pixel_search_results_shortcuts_title">atalhos</string>
+    <string name="pixel_search_results_shortcuts_desc">Pesquisar ações rápidas e atalhos do launcher </string>
+    <string name="pixel_search_results_web_title">pesquisa na web </string>
+    <string name="pixel_search_results_web_desc">Mostrar opções de pesquisa no Google ou no navegador padrão.</string>
+    <string name="pixel_search_use_bubbles_title">Use balões de pesquisa na web.</string>
+    <string name="pixel_search_use_bubbles_desc">Abra os resultados da pesquisa e os links em sobreposições de bolhas flutuantes.</string>
 </resources>
