@@ -1689,4 +1689,41 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_show_calls_title">Llamadas</string>
     <string name="island_show_time_battery_title">Hora y bateria</string>
     <string name="island_battery_style_title">Estilo de bateria</string>
+    <string name="about_desc_status_glance">La vista de estado muestra un chip ambiental con prioridad junto al orificio de la cámara frontal. Muestra dinámicamente la linterna activa, los próximos eventos del calendario, el contenido multimedia que se está reproduciendo y la hora actual.</string>
+    <string name="island_camera_position_title">Posición camara</string>
+    <string name="island_camera_position_left">Izquierda </string>
+    <string name="island_camera_position_right">Derecha</string>
+    <string name="island_camera_position_center">Centrar</string>
+    <string name="island_hide_in_owner_app_title">Ocultar la complicación dentro de la aplicación</string>
+    <string name="about_desc_conscious_gate">Agrega una breve pantalla de puerta de atención plena antes de abrir las aplicaciones que has elegido usar con más intencionalidad, como las redes sociales.
+
+El botón Continuar permanece deshabilitado durante unos segundos para que tengas un momento para decidir, y la pausa puede reaparecer opcionalmente si sigues usando la aplicación más allá de un tiempo determinado</string>
+    <string name="about_desc_standby_apps">Administra los contenedores de espera de aplicaciones de Android para controlar la ejecución de aplicaciones en segundo plano, el uso de la red y el consumo de batería.
+
+Activa: aplicación en uso o usada muy recientemente.
+
+Conjunto de trabajo: se usa regularmente o a diario; las tareas y alarmas se retrasan ligeramente.
+
+Frecuente: se usa semanalmente; el trabajo en segundo plano se retrasa más.
+
+Rara: se usa poco; las tareas, alarmas e internet en segundo plano están muy limitados.
+
+Restringida: prioridad más baja (Android 12+); aproximadamente una vez al día, tareas agrupadas y una alarma al día. Máximo ahorro de batería, interrumpe las notificaciones oportunas</string>
+    <string name="about_desc_heads_up_notifications">Mostrar u ocultar las notificaciones emergentes del sistema.
+
+Cuando están ocultas, las notificaciones siguen llegando silenciosamente en la sombra sin aparecer en la pantalla.</string>
+    <string name="tile_lockdown_mode_about_desc">Bloquea tu teléfono o activa el bloqueo si el modo de bloqueo está activado.
+
+El modo de bloqueo desactiva los métodos de desbloqueo débiles como el reconocimiento facial/de huella digital y requiere un patrón o PIN para desbloquear el teléfono de forma segura.
+
+Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</string>
+    <string name="island_enable_title">Habilitar Isla</string>
+    <string name="island_show_timers_title">Temporizadores y cronometros</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Modo de sonido</string>
+    <string name="island_show_network_title">Actividad de conexiones</string>
+    <string name="island_devices_battery_section">Dispositivos</string>
+    <string name="island_brief_desc">Ten un breve de que esta pasando</string>
+    <string name="island_like_while_playing_title">Like a la cancion si se esta reproduciendo</string>
+    <string name="duo_action_horizontal_slide_track">Cambiar cancion</string>
+    <string name="duo_action_horizontal_slide_track_desc">Solo activar si los medios estan sonando</string>
 </resources>

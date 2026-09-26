@@ -1424,7 +1424,7 @@
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Погода</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1663,4 +1663,85 @@
     <string name="notification_lighting_ripple_position_pick_title">Выбрать позицию</string>
     <string name="notification_lighting_ripple_position_pick_desc">Тапните где угодно на экране что бы выбрать место старта ряби</string>
     <string name="notification_lighting_ripple_sparkle_title">Частицы</string>
+    <string name="watch_watchface_title">Циферблат</string>
+    <string name="watch_watchface_desc">Настройка циферблата</string>
+    <string name="watch_complications_title">Виджеты</string>
+    <string name="watch_complications_desc">Настройка виджетов циферблата</string>
+    <string name="qs_secure_sensitive_tiles_title">Защита конфиденциальных плиток</string>
+    <string name="qs_secure_sensitive_tiles_desc">Требовать разблокировку перед запуском конфиденциальных плиток быстрых настроек</string>
+    <string name="perm_write_secure_instructions">Это разрешение можно выдать с помощью ПК через ADB. Скопируйте команду ADB и выполните её в оболочке.
+
+Или вы можете легко выдать его с помощью Shizuku, нажав кнопку ниже.
+
+Это разрешение нужно выдать только один раз.</string>
+    <string name="tile_restart_systemui">Перезапустить SystemUI</string>
+    <string name="about_desc_restart_systemui_tile">Легко перезапускайте SystemUI прямо из плитки быстрых настроек. Помогает быстро устранить сбои в строке состояния или сразу применить изменения системного интерфейса. Требуется доступ root или Shizuku.</string>
+    <string name="watchface_clock_outline_title">Только контур</string>
+    <string name="watchface_clock_outline_desc">Показывать только контуры шрифта вместо заливки текста</string>
+    <string name="island_font_scale_title">Размер шрифта</string>
+    <string name="watchface_complications_on_aod_title">Показывать на AOD</string>
+    <string name="watchface_complications_on_aod_desc">Оставлять виджеты видимыми на экране \"Always On Display\"</string>
+    <string name="watchface_complication_outline_title">Обводка виджета циферблата</string>
+    <string name="watchface_complication_outline_desc">Показывать тонкую круглую рамку вокруг элементов</string>
+    <string name="watchface_right_complication_title">Правый виджет</string>
+    <string name="watchface_left_complication_title">Левый виджет</string>
+    <string name="watchface_hide_device_icons_title">Скрыть иконки устройства</string>
+    <string name="watchface_hide_device_icons_desc">Скрыть нижние иконки часов и телефона</string>
+    <string name="watchface_hide_battery_title">Скрыть индикатор батареи</string>
+    <string name="watchface_hide_battery_desc">Скрыть дуги, дорожки и индикаторы батареи</string>
+    <string name="setting_show_legacy_features_desc">Эти функции могут не обновляться в будущем из-за технических ограничений или из-за того, что они не являются необходимыми.</string>
+    <string name="feat_standby_apps_desc">Оптимизация фоновой активности приложений</string>
+    <string name="about_desc_standby_apps">Управление категориями режима ожидания приложений Android для контроля фоновой работы, использования сети и расхода батареи.
+• Активные — Приложение используется или использовалось совсем недавно.
+• Рабочий набор — Используется регулярно или ежедневно; задачи и будильники откладываются незначительно.
+• Частые — Используется еженедельно; фоновая работа откладывается сильнее.
+• Редкие — Используется редко; задачи, будильники и фоновый интернет сильно ограничены.
+• Ограниченные — Самый низкий приоритет (Android 12+); задачи выполняются пакетно примерно раз в день, и разрешен один будильник в день. Лучшая экономия батареи, но нарушаются своевременные уведомления.</string>
+    <string name="feat_standby_apps_title">Приложения в режиме ожидания</string>
+    <string name="feat_power_saving_title">Экономия энергии</string>
+    <string name="feat_power_saving_desc">Настройка политик энергосбережения</string>
+    <string name="watchface_glance_complications_desc">Выберите, что показывать</string>
+    <string name="watchface_show_glow_title">Показывать свечение</string>
+    <string name="watchface_show_glow_desc">Динамический градиент акцентного цвета сверху при приближении событий и поездок</string>
+    <string name="watchface_clock_dual_tone_title">Двойной тон</string>
+    <string name="watchface_clock_dual_tone_desc">Часы белым, минуты акцентным цветом</string>
+    <string name="pocket_mode_use_light_desc">Используйте уровень освещенности в дополнение к близости для повышения точности</string>
+    <string name="pocket_mode_use_light_title">Используйте датчик освещенности</string>
+    <string name="pocket_mode_trigger_delay_title">задержка запуска</string>
+    <string name="feat_aod_wallpaper_desc">Используя оверлей</string>
+    <string name="status_glance_hide_in_quick_settings_title">Скрыть в быстрых настройках</string>
+    <string name="island_notif_queue_title">Очередь уведомлений</string>
+    <string name="island_notif_keep_progress_title">Сохраняйте уведомления о ходе выполнения</string>
+    <string name="island_notif_compact_heads_up_title">Компактные головки вверх</string>
+    <string name="island_notif_compact_heads_up_desc">Показывать новые уведомления в виде беглого просмотра строки</string>
+    <string name="island_catch_up_title">подогнать</string>
+    <string name="island_catch_up_desc">Сохраняйте последнее уведомление на островке  дольше</string>
+    <string name="island_catch_up_timeout_title">Продолжительность наверстывания упущенного</string>
+    <string name="island_show_time_battery_title">Время и батарея </string>
+    <string name="island_show_timers_title">Таймеры и секундомеры</string>
+    <string name="feat_conscious_gate_title">Сознательные врата</string>
+    <string name="island_show_glow_title">Показать акцентное свечение</string>
+    <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
+    <string name="island_line_peek_title">Подглядывание за линией</string>
+    <string name="island_hide_in_owner_app_title">Скрыть сложность внутри приложения</string>
+    <string name="island_dismiss_on_outside_title">Уволить из-за внешней деятельности</string>
+    <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
+    <string name="duo_battery_percentage_only_colored_desc">Отображать процентное содержание только при зарядке, в режиме экономии заряда батареи или при низком уровне заряда батареи</string>
+    <string name="duo_rotate_album_art_title">Поворачивать обложку альбома</string>
+    <string name="duo_hide_when_screen_off_only_idle_title">Скрываться на AOD только во время простоя</string>
+    <string name="duo_combine_with_island">Сочетать с островом</string>
+    <string name="island_dynamic_hide_status_bar_title">Динамическое скрытие элементов строки состояния</string>
+    <string name="island_suppress_system_heads_up_title">Скрыть информацию о системе</string>
+    <string name="island_notif_tap_to_open_title">Нажмите, чтобы открыть уведомления</string>
+    <string name="feat_prefer_gpu_composing_title">Предпочитаете графический процессор для создания экрана</string>
+    <string name="feat_prefer_gpu_composing_desc">Отключите аппаратные оверлеи, чтобы принудительно скомпоновать экран на графическом процессоре. Сбрасывается при перезагрузке устройства.</string>
+    <string name="perm_storage_title">Доступ ко всем файлам</string>
+    <string name="perm_files_media_desc">Для поиска и отображения фотографий, видео, аудио и документов в результатах пиксельного поиска Essentials требуется разрешение на доступ к файлам и мультимедийным материалам.</string>
+    <string name="perm_bubbles_title">Плавающие пузыри</string>
+    <string name="perm_bubbles_desc">Разрешить веб-просмотрам открываться в виде плавающих диалоговых окон над другими приложениями</string>
+    <string name="perm_bubbles_instructions">Установить значение \"Все разговоры\" можно в настройках уведомлений приложения или через Shizuku / Root.</string>
+    <string name="island_hide_on_shade_title">Скрывать при раскрытии строки состояния</string>
+    <string name="island_enable_title">Включить остров</string>
+    <string name="island_show_calls_title">Звонки</string>
+    <string name="island_devices_battery_section">Устройства </string>
 </resources>
