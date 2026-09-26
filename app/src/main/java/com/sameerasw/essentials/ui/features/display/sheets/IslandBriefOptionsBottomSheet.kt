@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -69,6 +70,12 @@ fun IslandBriefOptionsBottomSheet(
                         viewModel.setIslandBriefShowAlarm(checked)
                     },
                     modifier = Modifier.highlight(highlightSetting == "island_brief_show_alarm"),
+                )
+
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER,
+                    iconRes = R.drawable.rounded_calendar_today_24,
+                    title = stringResource(R.string.island_brief_two_line_header_title),
                 )
             }
         }

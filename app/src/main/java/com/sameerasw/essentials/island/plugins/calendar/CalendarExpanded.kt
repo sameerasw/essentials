@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import com.sameerasw.essentials.island.ui.squareFit
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.cameraClearance
@@ -136,7 +137,7 @@ fun CalendarGlyph(emoji: String?, size: Dp, tint: Color) {
     } else {
         val paint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
         val bounds = remember { android.graphics.Rect() }
-        Canvas(Modifier.size(size)) {
+        Canvas(Modifier.squareFit(size)) {
             paint.textSize = this.size.minDimension
             paint.getTextBounds(emoji, 0, emoji.length, bounds)
             val scale = this.size.minDimension * EMOJI_SCALE / maxOf(bounds.width(), bounds.height()).coerceAtLeast(1)
