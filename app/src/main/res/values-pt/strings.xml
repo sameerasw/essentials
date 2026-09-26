@@ -1319,10 +1319,10 @@
     <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
-    <string name="refresh_rate_mode_fixed">Fixed</string>
-    <string name="refresh_rate_mode_range">Range</string>
-    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_mode_fixed">fixa</string>
+    <string name="refresh_rate_mode_range">taxa de atualização customizada</string>
+    <string name="refresh_rate_fixed_title">taxa de atualização fixa </string>
+    <string name="refresh_rate_fixed_desc">Defina as taxas de atualização mínima e máxima com o mesmo valor.</string>
     <string name="refresh_rate_min_title">Minimum refresh rate</string>
     <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
     <string name="refresh_rate_peak_title">Peak refresh rate</string>
@@ -1415,7 +1415,7 @@
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Relógio da tela de bloqueio</string>
     <string name="feat_lock_screen_clock_desc">Personalize o relógio da tela de bloqueio nos Pixels</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="about_desc_lock_screen_clock">Altere o estilo do relógio da tela de bloqueio nos Pixels. Selecione entre os mostradores de relógio disponíveis na interface do sistema. Alguns estilos antigos podem não estar disponíveis.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
     <string name="lock_screen_clock_flex">Flex</string>
@@ -1439,7 +1439,7 @@
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
-    <string name="about_title">About</string>
+    <string name="about_title">sobre</string>
     <string name="color_default">Default</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -1520,7 +1520,7 @@
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
     <string name="island_title">ilha</string>
     <string name="island_desc">ilha dinâmica </string>
-    <string name="cat_navigation">navegação </string>
+    <string name="cat_navigation">navegação</string>
     <string name="island_enable_title">ativar a ilha dinâmica (davi_oficial145 esteve aqui)</string>
     <string name="island_timeout_title">duração na tela</string>
     <string name="island_show_glow_title">Mostrar o brilho do destaque</string>
@@ -1575,4 +1575,7 @@
     <string name="feat_network_download_rate_limit_desc">Limitar a velocidade de download em todo o sistema</string>
     <string name="feat_wireless_display_certification_title">Certificação de tela sem fio</string>
     <string name="feat_wireless_display_certification_desc">Exibir opções para certificação de tela sem fio</string>
+    <string name="label_ripple_animation">Animação de ondulação</string>
+    <string name="setting_show_legacy_features_title">mostrar funções legacy (nota: legacy no português é legado)</string>
+    <string name="setting_show_legacy_features_desc">Essas funcionalidades não vão receber atualizações futuras devido a limitações técnicas ou por não serem consideradas essenciais.</string>
 </resources>
