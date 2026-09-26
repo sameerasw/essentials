@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.weather.effects.WeatherSimulation
+import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import android.Manifest
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -1385,7 +1388,26 @@ fun SettingsContent(
                     }
                 }
 
-
+                val devSettings = remember { SettingsRepository(context) }
+                var simulatedWeather by remember {
+                    mutableStateOf(devSettings.getString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, WeatherSimulation.OFF) ?: WeatherSimulation.OFF)
+                }
+                ConfigPickerItem(
+                    title = stringResource(R.string.dev_simulate_weather_title),
+                    iconRes = R.drawable.rounded_partly_cloudy_day_24,
+                    selectedValue = WeatherSimulation.presets.firstOrNull { it.id == simulatedWeather }?.label.orEmpty(),
+                ) {
+                    WeatherSimulation.presets.forEach { preset ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text(preset.label) },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                simulatedWeather = preset.id
+                                devSettings.putString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, preset.id)
+                            },
+                        )
+                    }
+                }
 
                 Row(
                     modifier =

@@ -13,6 +13,11 @@ object IslandMotion {
     const val STIFFNESS = 320f
 
     val size: FiniteAnimationSpec<IntSize> = spring(DAMPING, STIFFNESS, IntSize(1, 1))
+    const val COMPACT_DAMPING = 0.72f
+    const val COMPACT_STIFFNESS = 280f
+    val compactSize: FiniteAnimationSpec<IntSize> = spring(COMPACT_DAMPING, COMPACT_STIFFNESS, IntSize(1, 1))
+    val compactOffset: FiniteAnimationSpec<IntOffset> = spring(COMPACT_DAMPING, COMPACT_STIFFNESS, IntOffset(1, 1))
+    fun <T> compactFloat(): FiniteAnimationSpec<T> = spring(COMPACT_DAMPING, COMPACT_STIFFNESS)
     const val COLLAPSE_MS = 380
     private val CollapseEasing = CubicBezierEasing(0.4f, 0f, 0.1f, 1f)
     val collapseSize: FiniteAnimationSpec<IntSize> = tween(COLLAPSE_MS, easing = CollapseEasing)

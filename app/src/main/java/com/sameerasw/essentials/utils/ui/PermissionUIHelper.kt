@@ -566,7 +566,16 @@ object PermissionUIHelper {
         activity: Activity? = null,
     ): PermissionItem? {
         val perm = AppPermission.fromKey(key) ?: return null
-        return getPermissionItem(perm, context, viewModel, activity)
+        return getPermissionItem(perm, context, viewModel, activity ?: context.findActivity())
+    }
+
+    private fun Context.findActivity(): Activity? {
+        var ctx: Context? = this
+        while (ctx is android.content.ContextWrapper) {
+            if (ctx is Activity) return ctx
+            ctx = ctx.baseContext
+        }
+        return null
     }
 
     @JvmName("getPermissionItemsFromKeys")
