@@ -427,7 +427,7 @@
     <string name="feat_app_lock_desc">使用生物识别保护应用</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
-    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_none">无</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -1577,4 +1577,23 @@
     <string name="label_charging_mode_title">充电模式</string>
     <string name="conscious_gate_reappear_off">关闭</string>
     <string name="label_charging_mode_limited">限制</string>
+    <string name="island_title">灵动岛</string>
+    <string name="island_desc">灵动岛</string>
+    <string name="island_enable_title">启用灵动岛</string>
+    <string name="island_camera_position_title">摄像头位置</string>
+    <string name="island_camera_position_left">左侧</string>
+    <string name="island_camera_position_center">中间</string>
+    <string name="island_camera_position_right">右侧</string>
+    <string name="duo_camera_size_title">摄像头宽度</string>
+    <string name="island_max_width_title">最大宽度</string>
+    <string name="island_show_network_title">网络活动</string>
+    <string name="island_devices_battery_section">设备</string>
+    <string name="duo_action_horizontal_slide_sound_mode">声音模式</string>
+    <string name="status_glance_show_calendar_title">日历事件</string>
+    <string name="duo_show_media_title">媒体播放</string>
+    <string name="island_show_timers_title">计时器与停表</string>
+    <string name="island_show_time_battery_title">时间与电池</string>
+    <string name="island_show_calls_title">电话</string>
+    <string name="duo_hide_when_screen_off_title">熄屏时隐藏</string>
+    <string name="duo_action_long_press_title">长按</string>
 </resources>
