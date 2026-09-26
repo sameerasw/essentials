@@ -16,7 +16,7 @@ while read -r num branch; do
   [ -n "$ONLY" ] && [ "$ONLY" != "$num" ] && continue
   echo "=== #$num ($branch) ==="
   git fetch -q origin "$BASE" "$branch"
-  git checkout -q -B "$branch" "origin/$branch"
+  git checkout -q -B "$branch" "origin/$branch" || { failed+=("#$num checkout"); continue; }
   if ! git merge -q --no-edit "origin/$BASE" 2>/dev/null; then
     conflicted=$(git diff --name-only --diff-filter=U)
     if echo "$conflicted" | grep -qv '^app/src/main/res/values-[^/]*/strings\.xml$'; then
@@ -42,7 +42,7 @@ while read -r num branch; do
     git push -q origin "HEAD:$branch" || { failed+=("#$num push"); continue; }
   fi
   gh pr checks "$num" --watch --fail-fast >/dev/null 2>&1
-  if gh pr merge "$num" --squash --delete-branch; then
+  if gh pr merge "$num" --rebase --delete-branch; then
     merged+=("#$num"); echo "merged"
   else
     failed+=("#$num merge"); echo "merge failed"
