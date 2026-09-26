@@ -1604,6 +1604,12 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_show_battery_percentage_title">Pourcentage de batterie</string>
     <string name="duo_show_battery_title">Batterie</string>
     <string name="duo_show_time_title">Heure</string>
+    <string name="settings_translate_mode_desc">Appuyez longuement sur n\'importe quel texte pour le traduire et contribuer à la communauté.</string>
+    <string name="settings_translate_mode">Mode traduction</string>
+    <string name="settings_translated_texts">Traduit</string>
+    <string name="settings_translated_texts_desc">%d modification(s) en attente — touchez pour soumettre ou annuler</string>
+    <string name="setting_show_legacy_features_title">Afficher les fonctionnalités héritées</string>
+    <string name="setting_show_legacy_features_desc">Ces fonctionnalités pourraient ne pas bénéficier de futures mises à jour en raison de limitations techniques ou parce qu\'elles ne sont pas essentielles.</string>
     <string name="duo_rotate_album_art_title">Faire pivoter la pochette d\'album</string>
     <string name="island_hide_on_shade_title">Masquer lorsque la barre d\'état est déployée</string>
 </resources>

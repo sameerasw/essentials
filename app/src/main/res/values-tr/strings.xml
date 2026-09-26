@@ -1684,4 +1684,15 @@ Katmanı görüntüleyebilmek için erişilebilirlik izni, mevcut duvar kağıd�
     <string name="sound_mode_use_shizuku_desc">Rahatsız Etme modunu etkinleştirmeden zil sesi modunu ayarlamak için Shizuku\'yu kullanın</string>
     <string name="feat_aod_wallpaper_keep_on_media">Medya oynatılırken açık tut</string>
     <string name="feat_aod_wallpaper_media_apps">Medya uygulamalarını atla</string>
+    <string name="label_charging_mode_title">Şarj modu</string>
+    <string name="conscious_gate_reappear_off">Kapalı</string>
+    <string name="label_charging_mode_limited">Sınırlı</string>
+    <string name="about_desc_heads_up_notifications">Sistem bildirim heads-up açılır pencerelerini gösterin veya gizleyin.
+
+Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim paneline sessizce düşmeye devam eder.</string>
+    <string name="tile_heads_up_notifications">Heads Up bildirimleri</string>
+    <string name="freeze_tag_never_auto_freeze_desc">Bu etikete sahip uygulamalar, otomatik dondurmadan muaf tutulacaktır</string>
+    <string name="action_lock_auto_freeze">Asla otomatik dondurma</string>
+    <string name="freeze_tag_color_coded_desc">Uygulama ızgarasında etiket renklerini göster</string>
+    <string name="freeze_tag_color_coded_title">Renk kodlu etiket</string>
 </resources>
