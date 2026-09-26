@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Aplicativos seguros com biometria</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
-    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_none">nada —w—</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -1508,14 +1508,14 @@
     <string name="conscious_gate_delay_title">Atraso de pausa</string>
     <string name="conscious_gate_preview_button">Pré-visualização da tela consciente</string>
     <string name="feat_conscious_gate_title">tela consciente</string>
-    <string name="status_glance_show_calendar_title">eventos do calendário</string>
+    <string name="status_glance_show_calendar_title">eventos do calendário </string>
     <string name="duo_action_horizontal_slide_sound_mode">modo de som</string>
     <string name="island_show_network_title">atividade de rede</string>
     <string name="island_devices_battery_section">dispositivos</string>
     <string name="island_brief_desc">Fique por dentro do que está acontecendo.</string>
     <string name="island_brief_title">Apresentação</string>
     <string name="island_like_while_playing_title">Curta a música enquanto ela toca</string>
-    <string name="duo_action_horizontal_slide_title">Deslizamento horizontal</string>
+    <string name="duo_action_horizontal_slide_title">deslizamento horizontal </string>
     <string name="duo_action_horizontal_slide_track">Mudar de faixa</string>
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
     <string name="island_title">ilha</string>
@@ -1543,4 +1543,21 @@
     <string name="feat_circle_to_search_gesture_width_title">Largura da zona de gestos</string>
     <string name="feat_circle_to_search_gesture_width_desc">Ajuste a largura da área de toque na parte inferior.</string>
     <string name="feat_conscious_gate_desc">Faz uma pausa antes de abrir os aplicativos escolhidos.</string>
+    <string name="island_action_tap_title">toque único</string>
+    <string name="duo_action_double_tap_title">toque duplo</string>
+    <string name="status_glance_action_swipe_right_title">deslizar para a direita</string>
+    <string name="status_glance_hide_in_quick_settings_title">esconder nas funções rapidas</string>
+    <string name="status_glance_album_art_colors_title">Cores da capa do álbum</string>
+    <string name="status_glance_album_art_colors_desc">Usa as cores da arte da mídia para o fundo da pílula durante a reprodução.</string>
+    <string name="pixel_searchbar_background_pill_title">fundo da pílula </string>
+    <string name="status_glance_background_pill_desc">ativando essa função ele adiciona um fundo a pílula com o material you do seu papel de parede atual</string>
+    <string name="status_glance_bold_text_title">Texto em negrito</string>
+    <string name="status_glance_bold_text_desc">Deixa o texto em negrito para melhorar a legibilidade.</string>
+    <string name="status_glance_hide_when_locked_title">esconder na tela de bloqueio </string>
+    <string name="status_glance_hide_when_locked_desc">esconde a pílula quando o dispositivo é bloqueado</string>
+    <string name="duo_show_battery_title">bateria</string>
+    <string name="duo_show_time_title">hora</string>
+    <string name="duo_show_media_title">Reprodução de mídia</string>
+    <string name="duo_show_flashlight_title">lanterna </string>
+    <string name="duo_action_swipe_down_title">deslizar para baixl</string>
 </resources>
