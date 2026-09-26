@@ -688,7 +688,7 @@
     <string name="label_haptic_feedback">Haptisches Feedback</string>
     <string name="label_updates">Aktualisierungen</string>
     <string name="label_auto_check_updates">Automatische Suche nach Updates</string>
-    <string name="desc_auto_check_updates">Beim Start der App nach Updates suchen</string>
+    <string name="desc_auto_check_updates">Beim App-Start nach Updates suchen</string>
     <string name="action_all_set">Alles bereit</string>
     <string name="action_check_whats_new">Was gibt\'s neues?</string>
     <string name="welcome_back_title">Willkommen zurück zu Essentials</string>
@@ -731,7 +731,11 @@ Warte bis die Benachrichtigung erscheint, und rufe dann diese Funktion auf, in d
 
 Auf alle stummgeschalteten Benachrichtigungen kannst weiterhin über den Benachrichtigungsverlauf in Android zugreifen.</string>
     <string name="about_desc_quick_settings_tiles">Füge den Schnelleinstellungen benutzerdefinierte Kacheln hinzu.\n\nDrücke lange auf eine beliebige Kachel, um zu erfahren, welche Funktion sie hat.</string>
-    <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
+    <string name="about_desc_button_remap">Belegen Sie Ihre Hardwaretasten neu, um verschiedene Aktionen und Tastenkombinationen auszuführen.
+
+Passen Sie an, was passiert, wenn Sie die Lautstärketasten unter bestimmten Bedingungen lange drücken.
+
+Einige Verhaltensweisen, wie z. B. das Ausschalten des Bildschirms oder die Steuerung der Taschenlampe, können von der Implementierung des jeweiligen Herstellers abhängen und funktionieren möglicherweise nicht auf allen Geräten wie erwartet. Einige Szenarien können mithilfe von Shizuku-Berechtigungen umgangen werden, bieten aber aufgrund der Implementierungen möglicherweise nicht dasselbe Benutzererlebnis</string>
     <string name="about_desc_dynamic_night_light">Schalte den Blaulichtfilter deines Bildschirms automatisch je nach der aktuell geöffneten App ein oder aus.</string>
     <string name="about_desc_screen_locked_security">Erhöhen Sie die Sicherheit, wenn Ihr Gerät gesperrt ist.
 
@@ -1466,7 +1470,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Wetter</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1827,8 +1831,34 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_tap_action_title">Tippaktion</string>
     <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
     <string name="island_suppress_system_heads_up_title">System-Headsup ausblenden</string>
-    <string name="island_catch_up_title">Aufholen</string>
+    <string name="island_catch_up_title">Nachholen</string>
     <string name="island_catch_up_desc">Letzte Benachrichtigung länger auf der Insel anzeigen</string>
     <string name="conscious_gate_feel_every_second_title">Spüre jede verschwendete Sekunde</string>
     <string name="island_show_time_battery_title">Uhrzeit und Akku</string>
+    <string name="island_hide_on_shade_title">Ausblenden, wenn die Statusleiste erweitert ist</string>
+    <string name="island_expanded_scale_title">Erweiterter Maßstab</string>
+    <string name="island_expanded_scale_desc">Vergrößern Sie die Insel gleichmäßig auf allen Seiten</string>
+    <string name="island_font_scale_title">Schriftart</string>
+    <string name="island_line_peek_title">Zeilenansicht</string>
+    <string name="island_line_peek_desc">Kurz Aktualisierungen auf der gesamten Insel anzeigen, dann zur Kompaktansicht zurückkehren</string>
+    <string name="island_hide_in_owner_app_title">Komplikation innerhalb der App ausblenden</string>
+    <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
+    <string name="island_dynamic_hide_status_bar_title">Statusleistenelemente dynamisch ausblenden</string>
+    <string name="island_notif_compact_heads_up_title">Kompakte Benachrichtigungen</string>
+    <string name="island_notif_compact_heads_up_desc">Neue Benachrichtigungen als Zeilenvorschau anzeigen</string>
+    <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
+    <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
+    <string name="island_catch_up_timeout_title">Nachholdauer</string>
+    <string name="island_show_calls_title">Anrufe</string>
+    <string name="island_show_timers_title">Timer und Stoppuhren</string>
+    <string name="island_show_network_title">Netzwerkaktivität</string>
+    <string name="island_devices_battery_section">Geräte</string>
+    <string name="island_brief_title">Kurzübersicht</string>
+    <string name="island_brief_desc">Erhalten Sie einen Überblick über die aktuelle Situation</string>
+    <string name="island_like_while_playing_title">Musik während der Wiedergabe liken</string>
+    <string name="duo_action_horizontal_slide_track_desc">Nur aktiv, während Medien wiedergegeben werden</string>
+    <string name="duo_action_horizontal_slide_track">Titel wechseln</string>
+    <string name="label_motion_blur_amount">Menge</string>
+    <string name="setting_show_legacy_features_title">Legacy-Funktionen anzeigen</string>
+    <string name="setting_show_legacy_features_desc">Diese Funktionen erhalten möglicherweise keine zukünftigen Updates aufgrund technischer Einschränkungen oder weil sie nicht essentiell sind.</string>
 </resources>
