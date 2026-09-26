@@ -361,6 +361,8 @@ class DuoOverlayHandler(
         }
     }
 
+    var openBrief: (() -> Unit)? = null
+
     fun init() {
         windowManager = service.getSystemService(AccessibilityService.WINDOW_SERVICE) as? WindowManager
         updateState()
@@ -371,6 +373,14 @@ class DuoOverlayHandler(
         overlayView?.isScreenOff = false
         updateState()
     }
+
+    fun onUserPresent() {
+        overlayView?.isLockedHidden = shouldHideForLock()
+    }
+
+    private fun shouldHideForLock(): Boolean =
+        settingsRepository.isDuoHideWhenLockedEnabled() &&
+            (service.getSystemService(android.content.Context.KEYGUARD_SERVICE) as? android.app.KeyguardManager)?.isKeyguardLocked == true
 
     fun onScreenOff() {
         isScreenOff = true
@@ -865,6 +875,7 @@ class DuoOverlayHandler(
                 this.isFullscreen = this@DuoOverlayHandler.isFullscreen
                 this.isYieldingToIsland = shouldYieldToIsland()
                 this.isShadeHidden = shouldHideForShade()
+                this.isLockedHidden = shouldHideForLock()
                 val areUnsupportedFeaturesEnabled = settingsRepository.isEnableUnsupportedFeatures()
                 this.hideWhenScreenOff = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffEnabled() else true
                 this.hideWhenScreenOffOnlyIdle = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled() else false
@@ -936,6 +947,7 @@ class DuoOverlayHandler(
             }
 
             val isTouchEnabled = settingsRepository.getDuoTapAction() != null ||
+                settingsRepository.isDuoTapForBriefActive() ||
                 settingsRepository.getDuoDoubleTapAction() != null ||
                 settingsRepository.getDuoLongPressAction() != null ||
                 settingsRepository.getDuoSwipeDownAction() != null ||
@@ -952,6 +964,7 @@ class DuoOverlayHandler(
                     this.cameraCenterY = centerY
                     this.cameraRadiusPx = cameraRadiusPx
                     this.ringRadiusScale = settingsRepository.getDuoRingRadius()
+                    this.openBrief = this@DuoOverlayHandler.openBrief
                 }
 
                 if (touchAnchorView == null) {
@@ -1160,6 +1173,7 @@ class DuoOverlayHandler(
         if (!isTouchAnchorAdded) return
 
         val gesturesEnabled = settingsRepository.getDuoTapAction() != null ||
+                settingsRepository.isDuoTapForBriefActive() ||
             settingsRepository.getDuoDoubleTapAction() != null ||
             settingsRepository.getDuoLongPressAction() != null ||
             settingsRepository.getDuoSwipeDownAction() != null ||

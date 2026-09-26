@@ -375,13 +375,16 @@ object HapticUtil {
         val vibrator = getVibrator(context)
         if (!vibrator.hasVibrator()) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA && vibrator.areEnvelopeEffectsSupported()) {
-            val effect = VibrationEffect.BasicEnvelopeBuilder()
-                .setInitialSharpness(0.1f)
-                .addControlPoint(0.08f, 0.2f, (durationMs * 0.35f).toLong().coerceAtLeast(1L))
-                .addControlPoint(0.35f, 0.5f, (durationMs * 0.4f).toLong().coerceAtLeast(1L))
-                .addControlPoint(0.75f, 0.85f, (durationMs * 0.25f).toLong().coerceAtLeast(1L))
-                .build()
-            runCatching { vibrator.vibrate(effect) }
+            runCatching {
+                val effect = VibrationEffect.BasicEnvelopeBuilder()
+                    .setInitialSharpness(0.1f)
+                    .addControlPoint(0.08f, 0.2f, (durationMs * 0.35f).toLong().coerceAtLeast(1L))
+                    .addControlPoint(0.35f, 0.5f, (durationMs * 0.4f).toLong().coerceAtLeast(1L))
+                    .addControlPoint(0.75f, 0.85f, (durationMs * 0.25f).toLong().coerceAtLeast(1L))
+                    .addControlPoint(0f, 0.85f, 20L)
+                    .build()
+                vibrator.vibrate(effect)
+            }
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&

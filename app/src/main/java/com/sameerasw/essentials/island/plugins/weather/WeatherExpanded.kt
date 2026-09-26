@@ -5,6 +5,8 @@ import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,17 +33,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandHaptics
+import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.components.CameraRow
+import com.sameerasw.essentials.island.ui.components.cameraClearance
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import com.sameerasw.essentials.weather.WeatherFormat
 import com.sameerasw.essentials.weather.WeatherRepository
+import com.sameerasw.essentials.weather.effects.DeviceWeatherHaptics
+import com.sameerasw.essentials.weather.effects.WeatherEffectSpec
+import com.sameerasw.essentials.weather.effects.WeatherEffects
 import com.sameerasw.essentials.weather.model.TemperatureUnit
 import com.sameerasw.essentials.weather.model.WeatherAlert
 import com.sameerasw.essentials.weather.model.WeatherError
@@ -54,6 +63,8 @@ import java.util.Locale
 fun WeatherExpanded(
     unit: TemperatureUnit,
     scope: IslandExpandedScope,
+    effects: Boolean,
+    haptics: Boolean,
     onRefresh: () -> Unit,
 ) {
     val state by WeatherRepository.state.collectAsState()
@@ -61,7 +72,41 @@ fun WeatherExpanded(
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val snapshot = state.snapshot
     val accent = MaterialTheme.colorScheme.primary
+    val context = LocalContext.current
+    val effectSpec = remember(effects, snapshot) {
+        snapshot?.takeIf { effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
+    }
+    val effectHaptics = remember(context, haptics) { DeviceWeatherHaptics(context).takeIf { haptics } }
 
+    Box(propagateMinConstraints = true) {
+        if (!effectSpec.isEmpty) {
+            val backdrop: @Composable (Modifier) -> Unit = { modifier ->
+                WeatherEffects(
+                    spec = effectSpec,
+                    modifier = modifier,
+                    clearTop = scope.cameraClearance,
+                    haptics = effectHaptics,
+                )
+            }
+            if (!SurfaceBackdrop { backdrop(Modifier.fillMaxSize()) }) backdrop(Modifier.matchParentSize())
+        }
+        WeatherContent(unit, scope, state.loading, state.error, snapshot, accent, sidePadding, onRefresh)
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun WeatherContent(
+    unit: TemperatureUnit,
+    scope: IslandExpandedScope,
+    loading: Boolean,
+    error: WeatherError?,
+    snapshot: WeatherSnapshot?,
+    accent: Color,
+    sidePadding: Dp,
+    onRefresh: () -> Unit,
+) {
+    val spec = scope.spec
     Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
         Spacer(Modifier.height(spec.expandedTopPadding))
         scope.CameraRow(
@@ -89,10 +134,10 @@ fun WeatherExpanded(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             if (snapshot == null) {
-                if (state.loading) {
+                if (loading) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) { LoadingIndicator() }
                 } else {
-                    Text(errorText(state.error), style = IslandTextStyles.body)
+                    Text(errorText(error), style = IslandTextStyles.body)
                 }
             } else {
                 Text(
@@ -116,7 +161,7 @@ fun WeatherExpanded(
                     DetailChip(R.drawable.rounded_air_24, WeatherFormat.wind(snapshot.windKph, unit), Modifier.weight(1f))
                     DetailChip(R.drawable.rounded_rainy_24, "${snapshot.chanceOfRain}%", Modifier.weight(1f))
                 }
-                UpdatedRow(snapshot, state.loading, state.error, scope, onRefresh)
+                UpdatedRow(snapshot, loading, error, scope, onRefresh)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.sameerasw.essentials.island.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
 
 enum class IslandStage { Hidden, Compact, Line, Expanded }
@@ -32,6 +33,7 @@ object IslandPriority {
     const val WEATHER = 58
     const val NETWORK = 60
     const val DEVICES = 62
+    const val ALARM = 90
     const val DEFAULT = 100
 }
 
@@ -74,6 +76,13 @@ class InteractionOverrides(
     }
 }
 
+class StackIcon(
+    val key: String,
+    val current: Boolean = false,
+    val onSelect: (() -> Unit)? = null,
+    val content: @Composable (size: Dp) -> Unit,
+)
+
 class QueueInfo(
     val next: IslandItem,
     val onAdvance: () -> Unit,
@@ -98,6 +107,9 @@ class IslandItem(
     val priorityOverride: Int? = null,
     
     val compactVisible: Boolean = true,
+    val bypassLauncherOnly: Boolean = false,
+    
+    val stack: List<StackIcon> = emptyList(),
 ) {
     val effectivePriority: Int get() = priorityOverride ?: priority
 
@@ -107,7 +119,7 @@ class IslandItem(
 }
 
 sealed interface PluginRequest {
-    data class Peek(val itemKey: String, val durationMs: Long) : PluginRequest
-    data class Expand(val itemKey: String) : PluginRequest
+    data class Peek(val itemKey: String, val durationMs: Long, val sticky: Boolean = false) : PluginRequest
+    data class Expand(val itemKey: String, val sticky: Boolean = false) : PluginRequest
     data class Collapse(val itemKey: String) : PluginRequest
 }

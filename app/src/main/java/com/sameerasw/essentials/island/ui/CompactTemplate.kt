@@ -5,7 +5,11 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
@@ -70,10 +74,19 @@ fun CompactTemplate(
             ordered.forEach { entry ->
                 key(entry.cell.key) {
                     val visibleState = transitions[entry.cell.key] ?: remember { MutableTransitionState(true) }
+                    val cameraOnEnd = if (spec.growDirection != 0) spec.growDirection < 0 else entry.before
+                    val cameraEdge = if (cameraOnEnd) Alignment.End else Alignment.Start
+                    val towardCamera: (Int) -> Int = { if (cameraOnEnd) it / 2 else -it / 2 }
                     AnimatedVisibility(
                         visibleState = visibleState,
-                        enter = fadeIn(IslandMotion.contentIn()) + expandHorizontally(IslandMotion.size, expandFrom = Alignment.CenterHorizontally),
-                        exit = fadeOut(IslandMotion.contentOut()) + shrinkHorizontally(IslandMotion.size, shrinkTowards = Alignment.CenterHorizontally),
+                        enter = fadeIn(IslandMotion.contentIn()) +
+                            expandHorizontally(IslandMotion.compactSize, expandFrom = cameraEdge) +
+                            slideInHorizontally(IslandMotion.compactOffset, towardCamera) +
+                            scaleIn(IslandMotion.compactFloat(), initialScale = 0.6f),
+                        exit = fadeOut(IslandMotion.contentOut()) +
+                            shrinkHorizontally(IslandMotion.compactSize, shrinkTowards = cameraEdge) +
+                            slideOutHorizontally(IslandMotion.compactOffset, towardCamera) +
+                            scaleOut(IslandMotion.compactFloat(), targetScale = 0.6f),
                         modifier = Modifier
                             .animatePlacement()
                             .pointerInput(entry.itemKey) {

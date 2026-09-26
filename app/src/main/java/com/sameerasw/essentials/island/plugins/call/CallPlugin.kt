@@ -33,6 +33,18 @@ class CallPlugin : BaseIslandPlugin() {
 
     override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_CALLS)
 
+    private fun popUp() {
+        val c = ctx ?: return
+        val sticky = settings.getBoolean(SettingsRepository.KEY_ISLAND_CALL_STICKY, false)
+        val mode = settings.getString(SettingsRepository.KEY_ISLAND_CALL_SHOW_MODE, SettingsRepository.ISLAND_CALL_SHOW_PEEK)
+        when {
+            mode == SettingsRepository.ISLAND_CALL_SHOW_COMPACT -> Unit
+            mode == SettingsRepository.ISLAND_CALL_SHOW_PEEK && settings.isIslandLineStageEnabled() ->
+                c.request(PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs(), sticky))
+            else -> c.request(PluginRequest.Expand(ITEM_KEY, sticky))
+        }
+    }
+
     private var call: CallSnapshot? = null
     private var ticker: Job? = null
     private var observer: Job? = null
@@ -45,7 +57,7 @@ class CallPlugin : BaseIslandPlugin() {
                 call = next
                 val startedRinging = next?.phase == CallPhase.Ringing && previous?.phase != CallPhase.Ringing
                 if (startedRinging) {
-                    if (enabled(next)) c.request(PluginRequest.Expand(ITEM_KEY)) else releaseHeadsUpForCall()
+                    if (enabled(next)) popUp() else releaseHeadsUpForCall()
                 }
                 if (next == null) restoreHeadsUpAfterCall()
                 restartTicker()
