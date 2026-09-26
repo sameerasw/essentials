@@ -2826,6 +2826,17 @@
     <string name="island_preview_title">Island</string>
     <string name="island_preview_sample">Dynamic notifications preview</string>
     <string name="island_show_glow_title">Show accent glow</string>
+    <string name="island_border_outline_title">Border outline</string>
+    <string name="island_border_outline_desc">Draws a thin outline around the island</string>
+    <string name="island_border_outline_thickness_title">Outline thickness</string>
+    <string name="island_border_outline_hide_expanded_title">Hide when expanded</string>
+    <string name="island_border_outline_hide_expanded_desc">Only outline the compact and peek island</string>
+    <string name="island_pulse_shadow_title">Show pulse shadow on notification</string>
+    <string name="island_pulse_shadow_desc">Briefly glows behind the island in the app color</string>
+    <string name="island_pulse_shadow_size_title">Glow size</string>
+    <string name="island_pulse_shadow_y_shift_title">Vertical shift</string>
+    <string name="island_pulse_shadow_spread_title">Glow spread</string>
+    <string name="island_pulse_shadow_duration_title">Pulse duration</string>
     <string name="island_show_glow_desc">App based color glow</string>
     <string name="island_expanded_width_title">Expanded width</string>
     <string name="island_cutout_gap_title">Camera gap</string>
