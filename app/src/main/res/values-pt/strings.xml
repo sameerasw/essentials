@@ -687,7 +687,7 @@
     <string name="label_app_language">Linguagem</string>
     <string name="label_haptic_feedback">Feedback tátil</string>
     <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Procurar por atualizações </string>
+    <string name="label_auto_check_updates">checar automaticamente por atualizações </string>
     <string name="desc_auto_check_updates">Procurar por atualização no início do aplicativo</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
@@ -1518,4 +1518,6 @@
     <string name="island_cutout_gap_title">Distância da câmera </string>
     <string name="setting_show_legacy_features_title">Mostras funções legado</string>
     <string name="setting_show_legacy_features_desc">Essas funções não irão receber atualizações futuras por conta de limitações técnicas ou não serem essenciais </string>
+    <string name="setting_app_icon_title">ícone do app</string>
+    <string name="setting_app_icon_desc">customize o ícone do app na sua tela inicial</string>
 </resources>
