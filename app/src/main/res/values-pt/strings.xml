@@ -1503,4 +1503,6 @@
     <string name="shut_up_restore_delay_desc">Tempo de espera antes de restaurar as configurações após sair de um app Shut-Up!</string>
     <string name="feat_status_glance_desc">Sobreposição de At a glance</string>
     <string name="duo_desc">Isso não dobra </string>
+    <string name="setting_app_icon_title">ícone do app</string>
+    <string name="setting_app_icon_desc">customize o ícone do app na sua tela inicial</string>
 </resources>
