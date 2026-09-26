@@ -41,3 +41,9 @@ local.properties
 /docs/working/
 # Sentry auth token for mapping uploads
 sentry.properties
+
+
+
+.claude/
+
+.DS_Store
