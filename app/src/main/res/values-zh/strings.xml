@@ -1577,6 +1577,8 @@
     <string name="label_charging_mode_title">充电模式</string>
     <string name="conscious_gate_reappear_off">关闭</string>
     <string name="label_charging_mode_limited">限制</string>
+    <string name="setting_show_legacy_features_title">显示旧版功能</string>
+    <string name="setting_show_legacy_features_desc">由于技术限制或这些功能并非必需，它们可能不会在未来获得更新。</string>
     <string name="island_title">灵动岛</string>
     <string name="island_desc">灵动岛</string>
     <string name="island_enable_title">启用灵动岛</string>
