@@ -116,6 +116,15 @@ fun StatusGlanceCalendarOptionsBottomSheet(
 
             if (allowIconEdit) {
                 IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_CALENDAR_LAUNCHER_ONLY)
+                if (rememberIslandShowsWhileLocked()) {
+                    RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                        IslandPrefToggle(
+                            settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
+                            iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                            title = stringResource(R.string.island_calendar_hide_locked_title),
+                        )
+                    }
+                }
             }
 
             RoundedCardContainer {

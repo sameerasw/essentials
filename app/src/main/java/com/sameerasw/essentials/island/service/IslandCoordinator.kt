@@ -25,6 +25,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import android.graphics.Color as AndroidColor
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.gestures.CompactGestureController
@@ -62,6 +64,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -131,7 +135,11 @@ class IslandCoordinator(
     private val isWindowSuppressed get() = isLandscape || isFullscreenApp
     private val isContentSuppressed: Boolean
         get() = isWindowSuppressed ||
-            (settings.isIslandHideWhenScreenOffEnabled() && (isScreenOff || keyguardManager?.isKeyguardLocked == true)) ||
+            when (settings.getIslandShowWhen()) {
+                SettingsRepository.ISLAND_SHOW_WHEN_ALWAYS -> false
+                SettingsRepository.ISLAND_SHOW_WHEN_SCREEN_ON -> isScreenOff
+                else -> isScreenOff || keyguardManager?.isKeyguardLocked == true
+            } ||
             (settings.isIslandHideOnShadeEnabled() && isShadeExpanded)
 
     private val compactGestures = CompactGestureController(
@@ -387,6 +395,12 @@ class IslandCoordinator(
             plugin.start(context)
             newScope.launch { plugin.items.collect { controller.setItems(plugin.id, it) } }
         }
+        newScope.launch {
+            controller.state
+                .map { it.stage to it.focusedKey }
+                .distinctUntilChanged()
+                .collect { (stage, key) -> plugins.forEach { it.onFocusChanged(stage, key) } }
+        }
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
         applyPreviewStage()
     }
@@ -483,6 +497,19 @@ class IslandCoordinator(
             fontScale = settings.getIslandFontScale().coerceIn(0.8f, 1.3f),
             expandedOutset = (expandedWidth * (scale - 1f) / 2f).dp,
             cameraAnchor = geo.anchor,
+            outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
+                runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
+                    .getOrElse { Color(AndroidColor.parseColor(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)) }
+            } else {
+                null
+            },
+            outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
+            outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
+            pulseShadow = settings.isIslandPulseShadowEnabled(),
+            pulseSize = settings.getIslandPulseShadowSize().coerceIn(0.2f, 1f),
+            pulseYShift = settings.getIslandPulseShadowYShift().coerceIn(0f, 1f),
+            pulseSpread = settings.getIslandPulseShadowSpread().coerceIn(1f, 4f),
+            pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
         )
         windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * settings.getIslandExpandedScale().coerceIn(1f, 1.3f)) * density).toInt()
         windowHost.updateGeometry(geo)
@@ -510,7 +537,7 @@ class IslandCoordinator(
         when (key) {
             SettingsRepository.KEY_ISLAND_ENABLED -> updateState()
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR -> syncStatusBar(controller.state.value.stage)
-            SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF -> applySuppression()
+            SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
             SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values -> applyLauncherOnly()
             SettingsRepository.KEY_ISLAND_HIDE_ON_SHADE -> applySuppression()
@@ -541,6 +568,15 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_ENABLED,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_COLOR,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_THICKNESS,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SIZE,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_Y_SHIFT,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SPREAD,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_DURATION_MS,
             SettingsRepository.KEY_ISLAND_EXPANDED_ROUNDNESS,
             SettingsRepository.KEY_ISLAND_EXPANDED_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TOP_PADDING,

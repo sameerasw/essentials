@@ -21,17 +21,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.island.model.LineContent
 
 @Composable
-fun LineTemplate(line: LineContent, spec: IslandLayoutSpec) {
+fun LineTemplate(line: LineContent, spec: IslandLayoutSpec, startInset: Dp = 0.dp, endInset: Dp = 0.dp) {
     val textEndInset = if (line.endSlot == null && spec.growDirection >= 0) spec.compactHeight * OPTICAL_INSET_RATIO else 0.dp
     Row(
         modifier = Modifier
-            .width(spec.lineWidth)
+            .width(spec.lineWidth - startInset - endInset)
             .height(spec.compactHeight)
             .padding(start = spec.cameraGap, end = spec.cameraGap + textEndInset),
         verticalAlignment = Alignment.CenterVertically,
@@ -44,7 +45,7 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec) {
         }
         if (spec.growDirection == 0) {
             Row(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.width((spec.lineWidth - spec.cameraSlotWidth) / 2 - spec.cameraGap - startInset),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
             ) {

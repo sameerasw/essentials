@@ -2,6 +2,7 @@ package com.sameerasw.essentials.island.ui
 
 import com.sameerasw.essentials.island.state.CameraAnchor
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -21,6 +22,14 @@ data class IslandLayoutSpec(
     val fontScale: Float = 1f,
     val expandedOutset: Dp = 0.dp,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,
+    val outlineColor: Color? = null,
+    val outlineThickness: Dp = 1.dp,
+    val outlineHiddenWhenExpanded: Boolean = false,
+    val pulseShadow: Boolean = false,
+    val pulseSize: Float = 0.5f,
+    val pulseYShift: Float = 0.35f,
+    val pulseSpread: Float = 2f,
+    val pulseDurationMs: Int = 1450,
 ) {
     val compactHeight: Dp get() = cameraDiameter + verticalGap * 2
     val cameraSlotWidth: Dp get() = cameraDiameter + cameraGap * 2

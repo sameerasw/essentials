@@ -504,7 +504,10 @@ class StatusBarIconViewModel : ViewModel() {
         setAdvancedFlagEnabled(context, PREF_HIDE_SYSTEM_ICONS, false)
         setAdvancedFlagEnabled(context, PREF_HIDE_CLOCK, false)
         setAdvancedFlagEnabled(context, PREF_HIDE_NOTIFICATION_ICONS, false)
-        setBatteryPercentageMode(0, context)
+        batteryPercentageMode.value = 0
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            remove(PREF_BATTERY_PERCENT_MODE)
+        }
         setClockPosition(0, context)
 
         // Build default visibility map
