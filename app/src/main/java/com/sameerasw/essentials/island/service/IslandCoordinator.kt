@@ -25,6 +25,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import android.graphics.Color as AndroidColor
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.gestures.CompactGestureController
@@ -495,6 +497,19 @@ class IslandCoordinator(
             fontScale = settings.getIslandFontScale().coerceIn(0.8f, 1.3f),
             expandedOutset = (expandedWidth * (scale - 1f) / 2f).dp,
             cameraAnchor = geo.anchor,
+            outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
+                runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
+                    .getOrElse { Color(AndroidColor.parseColor(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)) }
+            } else {
+                null
+            },
+            outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
+            outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
+            pulseShadow = settings.isIslandPulseShadowEnabled(),
+            pulseSize = settings.getIslandPulseShadowSize().coerceIn(0.2f, 1f),
+            pulseYShift = settings.getIslandPulseShadowYShift().coerceIn(0f, 1f),
+            pulseSpread = settings.getIslandPulseShadowSpread().coerceIn(1f, 4f),
+            pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
         )
         windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * settings.getIslandExpandedScale().coerceIn(1f, 1.3f)) * density).toInt()
         windowHost.updateGeometry(geo)
@@ -553,6 +568,15 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_ENABLED,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_COLOR,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_THICKNESS,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SIZE,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_Y_SHIFT,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SPREAD,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_DURATION_MS,
             SettingsRepository.KEY_ISLAND_EXPANDED_ROUNDNESS,
             SettingsRepository.KEY_ISLAND_EXPANDED_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TOP_PADDING,

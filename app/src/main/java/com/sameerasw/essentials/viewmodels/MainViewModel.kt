@@ -230,6 +230,15 @@ class MainViewModel : ViewModel() {
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
     val isIslandShowGlow = mutableStateOf(true)
+    val isIslandBorderOutline = mutableStateOf(false)
+    val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
+    val islandBorderOutlineThickness = mutableFloatStateOf(1f)
+    val isIslandBorderOutlineHiddenWhenExpanded = mutableStateOf(false)
+    val isIslandPulseShadow = mutableStateOf(false)
+    val islandPulseShadowSize = mutableFloatStateOf(0.5f)
+    val islandPulseShadowYShift = mutableFloatStateOf(0.35f)
+    val islandPulseShadowSpread = mutableFloatStateOf(2f)
+    val islandPulseShadowDurationMs = mutableFloatStateOf(1450f)
     val isIslandShowMedia = mutableStateOf(true)
     val isIslandShowCalendar = mutableStateOf(false)
     val isIslandShowConsciousGate = mutableStateOf(true)
@@ -2274,6 +2283,15 @@ class MainViewModel : ViewModel() {
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
+        isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
+        islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
+        islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
+        isIslandBorderOutlineHiddenWhenExpanded.value = settingsRepository.isIslandBorderOutlineHiddenWhenExpanded()
+        isIslandPulseShadow.value = settingsRepository.isIslandPulseShadowEnabled()
+        islandPulseShadowSize.floatValue = settingsRepository.getIslandPulseShadowSize()
+        islandPulseShadowYShift.floatValue = settingsRepository.getIslandPulseShadowYShift()
+        islandPulseShadowSpread.floatValue = settingsRepository.getIslandPulseShadowSpread()
+        islandPulseShadowDurationMs.floatValue = settingsRepository.getIslandPulseShadowDurationMs()
         isIslandShowMedia.value = settingsRepository.isIslandShowMediaEnabled()
         isIslandShowCalendar.value = settingsRepository.isIslandShowCalendarEnabled()
         isIslandShowConsciousGate.value = settingsRepository.isIslandShowConsciousGateEnabled()
@@ -5461,6 +5479,51 @@ class MainViewModel : ViewModel() {
     fun setIslandShowGlow(enabled: Boolean) {
         isIslandShowGlow.value = enabled
         settingsRepository.setIslandShowGlowEnabled(enabled)
+    }
+
+    fun setIslandBorderOutline(enabled: Boolean) {
+        isIslandBorderOutline.value = enabled
+        settingsRepository.setIslandBorderOutlineEnabled(enabled)
+    }
+
+    fun setIslandBorderOutlineColor(colorHex: String) {
+        islandBorderOutlineColor.value = colorHex
+        settingsRepository.setIslandBorderOutlineColor(colorHex)
+    }
+
+    fun setIslandBorderOutlineThickness(value: Float) {
+        islandBorderOutlineThickness.floatValue = value
+        settingsRepository.setIslandBorderOutlineThickness(value)
+    }
+
+    fun setIslandBorderOutlineHiddenWhenExpanded(hidden: Boolean) {
+        isIslandBorderOutlineHiddenWhenExpanded.value = hidden
+        settingsRepository.setIslandBorderOutlineHiddenWhenExpanded(hidden)
+    }
+
+    fun setIslandPulseShadow(enabled: Boolean) {
+        isIslandPulseShadow.value = enabled
+        settingsRepository.setIslandPulseShadowEnabled(enabled)
+    }
+
+    fun setIslandPulseShadowSize(value: Float) {
+        islandPulseShadowSize.floatValue = value
+        settingsRepository.setIslandPulseShadowSize(value)
+    }
+
+    fun setIslandPulseShadowYShift(value: Float) {
+        islandPulseShadowYShift.floatValue = value
+        settingsRepository.setIslandPulseShadowYShift(value)
+    }
+
+    fun setIslandPulseShadowSpread(value: Float) {
+        islandPulseShadowSpread.floatValue = value
+        settingsRepository.setIslandPulseShadowSpread(value)
+    }
+
+    fun setIslandPulseShadowDurationMs(value: Float) {
+        islandPulseShadowDurationMs.floatValue = value
+        settingsRepository.setIslandPulseShadowDurationMs(value)
     }
 
     fun setIslandShowMedia(enabled: Boolean) {
