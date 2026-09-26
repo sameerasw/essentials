@@ -682,7 +682,7 @@
     <string name="preferences_desc">配置一些基本设置以开始使用。</string>
     <string name="label_app_settings">应用设置</string>
     <string name="label_app_language">语言</string>
-    <string name="label_haptic_feedback">触觉反馈</string>
+    <string name="label_haptic_feedback">震动反馈</string>
     <string name="label_updates">更新</string>
     <string name="label_auto_check_updates">自动检查更新</string>
     <string name="desc_auto_check_updates">应用启动时检查更新</string>
