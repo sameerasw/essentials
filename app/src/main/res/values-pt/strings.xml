@@ -1603,4 +1603,16 @@
     <string name="feat_prefer_gpu_composing_desc">Desative as sobreposições de hardware para forçar a composição da tela pela GPU. A configuração é redefinida ao reiniciar o dispositivo.</string>
     <string name="feat_allow_overlays_in_settings_title">permitir sobreposição nas configurações (nota: isso pode permitir malware/adware de sobreposição para não o deixar ver a tela das configurações para poder desinstalar).</string>
     <string name="feat_allow_overlays_in_settings_desc">Permitir que os apps desenhem sobreposições nas configurações do sistema.</string>
+    <string name="label_device_battery">nível da bateria</string>
+    <string name="label_battery_health">saúde</string>
+    <string name="label_battery_temperature">Temperatura</string>
+    <string name="label_battery_capacity">Capacidade </string>
+    <string name="label_battery_capacity_health">saúde da capacidade </string>
+    <string name="label_battery_cycle_count">contandor de ciclos </string>
+    <string name="label_battery_mode">Modo</string>
+    <string name="label_battery_technology">Tecnologia</string>
+    <string name="label_battery_charge_counter">Carga atual</string>
+    <string name="label_battery_current_now">Corrente em tempo real</string>
+    <string name="label_battery_current_avg">Corrente média</string>
+    <string name="label_battery_avg_remaining">Tempo médio restante</string>
 </resources>
