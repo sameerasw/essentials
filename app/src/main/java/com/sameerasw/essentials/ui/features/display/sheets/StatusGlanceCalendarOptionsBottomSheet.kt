@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -74,6 +75,24 @@ fun StatusGlanceCalendarOptionsBottomSheet(
     )
 
     val currentCode = viewModel.statusGlanceCalendarTimeframe.value
+    val timeframeMinutes = when (currentCode) {
+        "15m" -> 15
+        "30m" -> 30
+        "1h" -> 60
+        "2h" -> 120
+        "6h" -> 360
+        "24h" -> 1440
+        else -> Int.MAX_VALUE
+    }
+    val settings = remember { SettingsRepository(context) }
+    var priorityMinutes by remember { mutableIntStateOf(settings.getIslandCalendarPriorityMinutes()) }
+    val priorityOptions = listOf(0, 5, 10, 15, 30, 60, 120).filter { it < timeframeMinutes }
+    val disabledLabel = stringResource(R.string.island_calendar_priority_disabled)
+    fun priorityLabel(minutes: Int): String = when {
+        minutes <= 0 -> disabledLabel
+        minutes < 60 -> context.getString(R.string.island_calendar_priority_minutes, minutes)
+        else -> context.getString(R.string.island_calendar_priority_hours, minutes / 60)
+    }
     val currentLabel = timeframes.firstOrNull { it.first == currentCode }?.second
         ?: stringResource(R.string.status_glance_calendar_timeframe_today)
 
@@ -97,6 +116,15 @@ fun StatusGlanceCalendarOptionsBottomSheet(
 
             if (allowIconEdit) {
                 IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_CALENDAR_LAUNCHER_ONLY)
+                if (rememberIslandShowsWhileLocked()) {
+                    RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                        IslandPrefToggle(
+                            settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
+                            iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                            title = stringResource(R.string.island_calendar_hide_locked_title),
+                        )
+                    }
+                }
             }
 
             RoundedCardContainer {
@@ -113,6 +141,25 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                                 viewModel.setStatusGlanceCalendarTimeframe(code)
                             },
                         )
+                    }
+                }
+
+                if (allowIconEdit) {
+                    ConfigPickerItem(
+                        title = stringResource(R.string.island_calendar_priority_title),
+                        selectedValue = priorityLabel(priorityMinutes),
+                        iconRes = R.drawable.rounded_timer_24,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        priorityOptions.forEach { minutes ->
+                            SegmentedDropdownMenuItem(
+                                text = { Text(priorityLabel(minutes)) },
+                                onClick = {
+                                    priorityMinutes = minutes
+                                    settings.setIslandCalendarPriorityMinutes(minutes)
+                                },
+                            )
+                        }
                     }
                 }
 
