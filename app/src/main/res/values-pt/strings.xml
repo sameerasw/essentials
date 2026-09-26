@@ -32,7 +32,7 @@
     <string name="setting_use_usage_access_desc">Em vez de acessibilidade (Congelar, Bloqueio de Aplicativos, Luz Noturna Dinâmica)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Ativar remapeamento de botão</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku or Root or Root</string>
+    <string name="button_remap_use_shizuku_title">usar Shizuku ou Root</string>
     <string name="button_remap_use_shizuku_desc">Funciona com a tela desligada (recomendado)</string>
     <string name="shizuku_not_running_toast">Shizuku não está correndo</string>
     <string name="shizuku_detected_prefix">Detectado %1$s</string>
@@ -427,8 +427,8 @@
     <string name="feat_screen_locked_security_title">Segurança bloqueada com tela</string>
     <string name="feat_app_lock_title">Bloqueio de aplicativo</string>
     <string name="feat_app_lock_desc">Aplicativos seguros com biometria</string>
-    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
-    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_title">Atraso no travamento automático</string>
+    <string name="app_lock_auto_lock_delay_desc">Após sair do aplicativo</string>
     <string name="app_lock_auto_lock_delay_none">nada —w—</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
@@ -1506,7 +1506,7 @@
     <string name="conscious_gate_reappear_title">Reaparece após o uso</string>
     <string name="conscious_gate_reappear_desc">Exibir novamente a tela de controle remoto após uso contínuo.</string>
     <string name="conscious_gate_delay_title">Atraso de pausa</string>
-    <string name="conscious_gate_preview_button">Pré-visualização da tela consciente</string>
+    <string name="conscious_gate_preview_button">prévia da tela consciente (recomendado para testar)</string>
     <string name="feat_conscious_gate_title">tela consciente</string>
     <string name="status_glance_show_calendar_title">eventos do calendário </string>
     <string name="duo_action_horizontal_slide_sound_mode">modo de som</string>
@@ -1560,4 +1560,19 @@
     <string name="duo_show_media_title">Reprodução de mídia</string>
     <string name="duo_show_flashlight_title">lanterna </string>
     <string name="duo_action_swipe_down_title">deslizar para baixl</string>
+    <string name="island_notif_tap_to_open_title">toque para abrir a notificação</string>
+    <string name="island_notif_queue_title">Fila de notificações</string>
+    <string name="island_notif_keep_progress_title">manter processo de notificações</string>
+    <string name="island_notif_compact_heads_up_title">Cabeças compactas</string>
+    <string name="button_remap_pause_on_volume_dialog_title">Desativa remapeamento de tecla temporáriamente quando a caixa de diálogo do volume é aberta</string>
+    <string name="screen_locked_disable_notification_interactions_title">desativar interações de notificações </string>
+    <string name="screen_locked_disable_notification_interactions_desc">Impeça que a barra de notificações e as Configurações Rápidas sejam exibidas enquanto o dispositivo estiver bloqueado.</string>
+    <string name="feat_sim_names_title">Nomes de SIM (cartão de dados móveis ou o digital)</string>
+    <string name="feat_sim_names_desc">Renomea o nome de exibição da operadora para o cartão SIM ativo</string>
+    <string name="feat_mobile_data_always_on_title">Dados móveis sempre ativos</string>
+    <string name="feat_mobile_data_always_on_desc">Mantenha os dados móveis ativos mesmo quando o Wi-Fi estiver conectado.</string>
+    <string name="feat_network_download_rate_limit_title">limite de taxa de download da rede</string>
+    <string name="feat_network_download_rate_limit_desc">Limitar a velocidade de download em todo o sistema</string>
+    <string name="feat_wireless_display_certification_title">Certificação de tela sem fio</string>
+    <string name="feat_wireless_display_certification_desc">Exibir opções para certificação de tela sem fio</string>
 </resources>
