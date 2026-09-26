@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -66,6 +67,14 @@ fun IslandNotificationOptionsBottomSheet(
                 spacing = 2.dp,
                 cornerRadius = 24.dp,
             ) {
+                if (rememberIslandShowsWhileLocked()) {
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
+                        iconRes = R.drawable.rounded_visibility_off_24,
+                        title = stringResource(R.string.island_notif_conceal_locked_title),
+                    )
+                }
+
                 AnimatedVisibility(
                     visible = viewModel.isIslandLineStageEnabled.value,
                     enter = fadeIn() + expandVertically(),

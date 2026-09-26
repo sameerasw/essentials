@@ -1,8 +1,10 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
 import com.sameerasw.essentials.island.model.QueueInfo
+import com.sameerasw.essentials.island.model.StackIcon
 import android.widget.Toast
 import android.accessibilityservice.AccessibilityService
+import android.app.KeyguardManager
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -13,6 +15,7 @@ import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.ExpandedContent
+import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.IslandStage
@@ -36,9 +39,53 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
+    private var currentIndex = 0
+    
+    private var manualPick = false
+    
+    private var pendingPopUp = false
+
+    private fun busyElsewhere(): Boolean {
+        val c = ctx ?: return false
+        val stage = c.currentStage()
+        return c.focusedKey() != ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
+    }
+
+    override fun onFocusChanged(stage: IslandStage, focusedKey: String?) {
+        if (!pendingPopUp || alerts.isEmpty()) return
+        if (stage == IslandStage.Line || stage == IslandStage.Expanded) return
+        pendingPopUp = false
+        scheduleTimeout()
+        popUp()
+    }
+
+    private fun currentAlert(): ActiveNotificationAlert? = alerts.getOrNull(currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0)))
+
+    private fun removeCurrent() {
+        if (alerts.isEmpty()) return
+        alerts.removeAt(currentIndex.coerceIn(0, alerts.size - 1))
+        currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+    }
+
+    private fun select(key: String) {
+        val c = ctx ?: return
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index < 0) return
+        val here = showingHere()
+        if (here && index == currentIndex) return
+        currentIndex = index
+        manualPick = true
+        pendingPopUp = false
+        scheduleTimeout()
+        render()
+        if (!here) {
+            if (c.currentStage() == IslandStage.Expanded) c.request(PluginRequest.Expand(ITEM_KEY)) else popUp()
+        }
+    }
     private var registered = false
     private var autoExpanded = false
 
@@ -77,45 +124,98 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     override fun onUserInteraction(focusedKey: String?) {
-        if (alerts.isEmpty()) return
+        if (alerts.isEmpty() || pendingPopUp) return
         if (focusedKey == ITEM_KEY) autoExpanded = false
         ctx?.mainHandler?.removeCallbacks(catchUpRunnable)
         scheduleTimeout()
     }
 
     override fun onScreenStateChanged() {
-        if (ctx?.isContentSuppressed?.invoke() == true) clearAll()
+        if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
+
+    private fun concealed(): Boolean =
+        settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED, false) &&
+            (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
 
     private fun onPosted(alert: ActiveNotificationAlert) {
         val c = ctx ?: return
         if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled()) return
-        alerts.removeAll { it.key == alert.key }
-        alerts.addFirst(alert)
+        val existing = alerts.indexOfFirst { it.key == alert.key }
+        if (existing >= 0) {
+            alerts[existing] = alert
+            render()
+            return
+        }
+        c.mainHandler.removeCallbacks(catchUpRunnable)
+        if (queueEnabled() && showingHere()) {
+            alerts.addLast(alert)
+            while (alerts.size > MAX_QUEUE) {
+                alerts.removeAt(if (currentIndex == 0) 1 else 0)
+                if (currentIndex > 0) currentIndex--
+            }
+            render()
+            return
+        }
+        val waiting = pendingPopUp && queueEnabled()
+        if (waiting) alerts.addLast(alert) else alerts.addFirst(alert)
+        if (!waiting) currentIndex = 0
+        manualPick = false
         val cap = if (queueEnabled()) MAX_QUEUE else 1
         while (alerts.size > cap) alerts.removeLast()
-        c.mainHandler.removeCallbacks(catchUpRunnable)
+        if (busyElsewhere()) {
+            pendingPopUp = true
+            cancelTimers()
+            render()
+            return
+        }
         scheduleTimeout()
         render()
-        val expandedElsewhere = c.currentStage() == IslandStage.Expanded
-        if (!expandedElsewhere) {
-            val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
-            c.request(
-                if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs())
-                else PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true },
-            )
-        }
+        popUp()
+    }
+
+    private fun showingHere(): Boolean {
+        val c = ctx ?: return false
+        val stage = c.currentStage()
+        return c.focusedKey() == ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
+    }
+
+    private fun popUp() {
+        val c = ctx ?: return
+        val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
+        c.request(
+            if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs(), sticky = true)
+            else PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true },
+        )
     }
 
     private fun onRemoved(key: String) {
-        if (alerts.removeAll { it.key == key }) {
-            if (alerts.isEmpty()) clearAll() else render()
-        }
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index < 0) return
+        alerts.removeAt(index)
+        if (index < currentIndex) currentIndex--
+        currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+        if (alerts.isEmpty()) clearAll() else render()
     }
 
     private fun onTimeout() {
         val c = ctx ?: return
-        if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Expanded) {
+        if (pendingPopUp) return
+        if (showingHere() && alerts.size > 1 && !manualPick) {
+            removeCurrent()
+            scheduleTimeout()
+            render()
+            if (c.currentStage() == IslandStage.Line) popUp()
+            return
+        }
+        if (manualPick) {
+            if (c.focusedKey() == ITEM_KEY) c.request(PluginRequest.Collapse(ITEM_KEY))
+            clearAll()
+            return
+        }
+        if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Line) {
+            c.request(PluginRequest.Collapse(ITEM_KEY))
+        } else if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Expanded) {
             if (autoExpanded) {
                 autoExpanded = false
                 c.request(PluginRequest.Collapse(ITEM_KEY))
@@ -144,11 +244,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun clearAll() {
         cancelTimers()
         alerts.clear()
+        currentIndex = 0
+        manualPick = false
+        pendingPopUp = false
         render()
     }
 
     private fun popCurrent(reExpand: Boolean) {
-        alerts.removeFirstOrNull()
+        removeCurrent()
         if (alerts.isEmpty()) {
             clearAll()
             return
@@ -159,19 +262,25 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun render() {
-        val alert = alerts.firstOrNull()
+        val alert = currentAlert()
         if (alert == null) {
             publish(null)
             return
         }
-        val next = if (queueEnabled()) alerts.getOrNull(1) else null
+        val index = alerts.indexOf(alert)
+        val next = if (queueEnabled()) alerts.getOrNull(index + 1) ?: alerts.getOrNull(index - 1) else null
+        val stack = alerts.map { stackIconFor(it, current = it === alert) }
         publish(
             itemFor(alert).let { current ->
-                if (next == null) {
-                    current
-                } else {
-                    current.withQueue(QueueInfo(next = itemFor(next), onAdvance = { popCurrent(reExpand = false) }))
-                }
+                current.withStack(
+                    queue = next?.let {
+                        QueueInfo(
+                            next = itemFor(it).withStack(null, alerts.map { a -> stackIconFor(a, current = a === it) }),
+                            onAdvance = { popCurrent(reExpand = false) },
+                        )
+                    },
+                    stack = stack,
+                )
             },
         )
     }
@@ -179,6 +288,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun queueEnabled() = settings.isIslandNotifQueueEnabled()
 
     private fun itemFor(alert: ActiveNotificationAlert): IslandItem {
+        if (concealed()) return concealedItemFor(alert)
         val (sender, message) = senderAndMessage(context, alert)
         val showGlow = settings.isIslandShowGlowEnabled()
         val tapToOpen = settings.isIslandNotifTapToOpenEnabled()
@@ -230,7 +340,46 @@ class NotificationsPlugin : BaseIslandPlugin() {
         )
     }
 
-    private fun IslandItem.withQueue(queue: QueueInfo) = IslandItem(
+    private fun concealedItemFor(alert: ActiveNotificationAlert): IslandItem {
+        val icon = alert.appIcon ?: alert.icon
+        val open = {
+            if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
+            popCurrent(reExpand = false)
+        }
+        return IslandItem(
+            key = ITEM_KEY,
+            priority = IslandPriority.NOTIFICATION,
+            placement = CompactPlacement.Dynamic,
+            compact = listOf(
+                CompactCell("notif.icon") {
+                    IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                },
+            ),
+            line = LineContent(
+                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                start = appNameFor(context, alert),
+                end = "",
+            ),
+            accent = alert.appColor?.let { Color(soften(it)) },
+            dismissible = true,
+            onDismiss = {
+                NotificationListener.dismissNotification(alert.key)
+                popCurrent(reExpand = false)
+            },
+            onOpen = open,
+            interactions = InteractionOverrides(onTap = { open(); true }),
+            sourcePackage = alert.packageName,
+        )
+    }
+
+    private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean): StackIcon {
+        val icon = if (concealed()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
+        return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }) { size ->
+            IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
+        }
+    }
+
+    private fun IslandItem.withStack(queue: QueueInfo?, stack: List<StackIcon>) = IslandItem(
         key = key,
         priority = priority,
         placement = placement,
@@ -244,6 +393,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         interactions = interactions,
         queue = queue,
         sourcePackage = sourcePackage,
+        stack = stack,
     )
 
     private fun sendReply(alert: ActiveNotificationAlert, action: NotificationActionItem, text: String) {
@@ -251,7 +401,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val sent = canCarryText && NotificationListener.instance?.performNotificationAction(action, text) == true
         if (sent) {
             Toast.makeText(context, R.string.island_reply_sent, Toast.LENGTH_SHORT).show()
-            if (alerts.firstOrNull()?.key == alert.key) popCurrent(reExpand = false)
+            if (currentAlert()?.key == alert.key) popCurrent(reExpand = false)
         } else {
             popCurrent(reExpand = false)
             context.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
@@ -266,24 +416,27 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         if (action.pendingIntent != null) NotificationListener.instance?.performNotificationAction(action)
-        if (alerts.firstOrNull()?.key == alert.key) popCurrent(reExpand = true)
+        if (currentAlert()?.key == alert.key) popCurrent(reExpand = true)
     }
 
     companion object {
         const val ITEM_KEY = "notifications"
-        private const val MAX_QUEUE = 3
+        private const val MAX_QUEUE = 20
 
         private val GENERIC_TITLES = setOf(
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",
         )
 
-        fun senderAndMessage(context: Context, alert: ActiveNotificationAlert): Pair<String, String> {
-            val appName = alert.appName?.trim() ?: try {
+        fun appNameFor(context: Context, alert: ActiveNotificationAlert): String =
+            alert.appName?.trim() ?: try {
                 val pm = context.packageManager
                 pm.getApplicationLabel(pm.getApplicationInfo(alert.packageName, 0)).toString().trim()
             } catch (_: Exception) {
                 ""
             }
+
+        fun senderAndMessage(context: Context, alert: ActiveNotificationAlert): Pair<String, String> {
+            val appName = appNameFor(context, alert)
             var sender = alert.senderName?.trim().orEmpty()
             if (sender.isBlank() || sender.equals("You", true)) {
                 val title = alert.title.trim()
