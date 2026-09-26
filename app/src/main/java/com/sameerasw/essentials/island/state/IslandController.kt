@@ -34,6 +34,7 @@ class IslandController(
 
     var lineStageEnabled: Boolean = true
     var expandedTimeoutMs: Long = 0L
+    var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
@@ -46,8 +47,11 @@ class IslandController(
     private var peekTimer: Cancellable? = null
     private var peekDurationMs: Long = 0L
     private var expandedTimer: Cancellable? = null
+    private var stickyFocus = false
 
     private var hiddenPackage: String? = null
+    private var launcherOnlySources: Set<String> = emptySet()
+    private var onLauncher = true
 
     fun setItems(sourceId: String, items: List<IslandItem>) {
         itemsBySource[sourceId] = items
@@ -57,6 +61,13 @@ class IslandController(
     fun setHiddenPackage(packageName: String?) {
         if (hiddenPackage == packageName) return
         hiddenPackage = packageName
+        recompute()
+    }
+
+    fun setLauncherState(onLauncher: Boolean, launcherOnlySources: Set<String>) {
+        if (this.onLauncher == onLauncher && this.launcherOnlySources == launcherOnlySources) return
+        this.onLauncher = onLauncher
+        this.launcherOnlySources = launcherOnlySources
         recompute()
     }
 
@@ -71,8 +82,8 @@ class IslandController(
 
     fun handle(request: PluginRequest) {
         when (request) {
-            is PluginRequest.Peek -> peek(request.itemKey, request.durationMs)
-            is PluginRequest.Expand -> expand(request.itemKey)
+            is PluginRequest.Peek -> peek(request.itemKey, request.durationMs, sticky = request.sticky)
+            is PluginRequest.Expand -> expand(request.itemKey, request.sticky)
             is PluginRequest.Collapse -> if (expandedKey == request.itemKey || peekKey == request.itemKey) collapse()
         }
     }
@@ -145,26 +156,30 @@ class IslandController(
         }
     }
 
+    fun collapseImmediately() = collapseNow()
+
     private fun collapseNow() {
         clearFocus()
         recompute()
     }
 
-    fun expand(itemKey: String) {
+    fun expand(itemKey: String, sticky: Boolean = false) {
         val item = allItems()[itemKey] ?: return
         if (item.expanded == null || suppressed) return
         cancelPeek()
         expandedKey = itemKey
+        stickyFocus = sticky
         restartExpandedTimer()
         recompute()
     }
 
-    fun peek(itemKey: String, durationMs: Long) {
-        if (!lineStageEnabled || suppressed || expandedKey != null) return
+    fun peek(itemKey: String, durationMs: Long, force: Boolean = false, sticky: Boolean = false) {
+        if ((!lineStageEnabled && !force) || suppressed || expandedKey != null) return
         val item = allItems()[itemKey] ?: return
         if (item.line == null) return
         cancelPeek()
         peekKey = itemKey
+        stickyFocus = sticky
         peekDurationMs = durationMs
         schedulePeekEnd(itemKey)
         recompute()
@@ -179,6 +194,7 @@ class IslandController(
     }
 
     private fun schedulePeekEnd(itemKey: String) {
+        if (holdFocus || stickyFocus) return
         peekTimer = scheduler.schedule(peekDurationMs) {
             if (peekKey == itemKey) {
                 peekKey = null
@@ -198,7 +214,7 @@ class IslandController(
         expandedTimer = null
         val timeout = expandedTimeoutMs
         val key = expandedKey ?: return
-        if (timeout <= 0L) return
+        if (timeout <= 0L || holdFocus || stickyFocus) return
         expandedTimer = scheduler.schedule(timeout) { if (expandedKey == key) collapse() }
     }
 
@@ -206,6 +222,7 @@ class IslandController(
         peekTimer?.cancel()
         peekTimer = null
         peekKey = null
+        stickyFocus = false
     }
 
     private fun clearFocus() {
@@ -216,7 +233,10 @@ class IslandController(
     }
 
     private fun allItems(): Map<String, IslandItem> =
-        itemsBySource.values.flatten()
+        itemsBySource
+            .flatMap { (source, items) ->
+                if (onLauncher || source !in launcherOnlySources) items else items.filter { it.bypassLauncherOnly }
+            }
             .filter { hiddenPackage == null || it.sourcePackage != hiddenPackage }
             .associateBy { it.key }
 

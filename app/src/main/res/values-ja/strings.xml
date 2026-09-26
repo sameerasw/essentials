@@ -1781,6 +1781,7 @@
     <string name="diy_action_open_now_playing_app">再生中のアプリを開く</string>
     <string name="diy_action_wifi_on">Wi-Fiをオンにする</string>
     <string name="diy_action_wifi_off">Wi-Fiをオフにする</string>
+    <string name="settings_genai_automation_title">生成AI機能を使用する</string>
     <string name="duo_rotate_album_art_title">アルバムアートを回転</string>
     <string name="diy_action_wifi_toggle">Wi-Fiを切り替える</string>
     <string name="diy_action_cellular_on">モバイルデータをオンにする</string>

@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.plugins.weather
 
+import com.sameerasw.essentials.island.plugins.brief.BriefPlugin
+import com.sameerasw.essentials.island.model.InteractionOverrides
+import com.sameerasw.essentials.utils.DeviceUtils
 import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
@@ -37,6 +40,8 @@ class WeatherPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_WEATHER_LOCATION_MODE,
         SettingsRepository.KEY_WEATHER_MANUAL_LOCATION,
         SettingsRepository.KEY_WEATHER_UNITS,
+        SettingsRepository.KEY_ISLAND_WEATHER_EFFECTS,
+        SettingsRepository.KEY_ISLAND_WEATHER_HAPTICS,
         SettingsRepository.KEY_WEATHER_REFRESH_MINUTES,
     )
 
@@ -103,6 +108,8 @@ class WeatherPlugin : BaseIslandPlugin() {
         }
         val unit = WeatherFormat.unitFor(settings.getWeatherUnits())
         val mode = settings.getIslandWeatherMode()
+        val effects = settings.isIslandWeatherEffectsEnabled() && !DeviceUtils.isPowerSaveMode(context)
+        val haptics = settings.isIslandWeatherHapticsEnabled()
         val alert = snapshot.activeAlerts().filter { it.severity.isSevere }.maxByOrNull { it.severity.ordinal }
         val temperature = WeatherFormat.temperature(snapshot.tempC, unit)
         val icon = if (alert != null) R.drawable.rounded_warning_24 else WeatherFormat.icon(snapshot.condition, snapshot.isDay)
@@ -141,9 +148,18 @@ class WeatherPlugin : BaseIslandPlugin() {
                     WeatherExpanded(
                         unit = unit,
                         scope = scope,
+                        effects = effects,
+                        haptics = haptics,
                         onRefresh = { ctx?.scope?.launch { WeatherRepository.refresh(context, force = true) } },
                     )
                 },
+                interactions = InteractionOverrides(
+                    onTap = {
+                        settings.isIslandBriefEnabled().also { brief ->
+                            if (brief) ctx?.request?.invoke(PluginRequest.Expand(BriefPlugin.ITEM_KEY))
+                        }
+                    },
+                ),
                 compactVisible = compactVisible,
             ),
         )

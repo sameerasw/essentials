@@ -11,6 +11,7 @@ package com.sameerasw.essentials.services.widgets
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,8 +52,13 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.services.tiles.DataSimController
+import com.sameerasw.essentials.services.tiles.DataSimTileService
 import com.sameerasw.essentials.services.tiles.QsTileRegistry
 import com.sameerasw.essentials.utils.ColorUtil
+import com.sameerasw.essentials.utils.PermissionUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class QsTilesWidget : GlanceAppWidget() {
     override val sizeMode = androidx.glance.appwidget.SizeMode.Exact
@@ -62,6 +68,18 @@ class QsTilesWidget : GlanceAppWidget() {
         context: Context,
         id: GlanceId,
     ) {
+        if (
+            DataSimTileService::class.java.name in SettingsRepository(context).getPinnedQsTiles() &&
+            PermissionUtils.hasReadPhoneStatePermission(context)
+        ) {
+            withContext(Dispatchers.IO) {
+                try {
+                    DataSimController.read(context)
+                } catch (e: Exception) {
+                    Log.w("QsTilesWidget", "Cannot refresh data SIM state", e)
+                }
+            }
+        }
         provideContent {
             GlanceTheme {
                 val prefs =

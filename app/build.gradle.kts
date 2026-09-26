@@ -171,6 +171,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigationevent)
     implementation(platform(libs.androidx.compose.bom))
 
     // Android 12+ SplashScreen API with backward compatibility attributes

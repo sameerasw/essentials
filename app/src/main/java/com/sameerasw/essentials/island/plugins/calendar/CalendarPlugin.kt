@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import android.app.KeyguardManager
 import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
 import android.provider.CalendarContract
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +29,8 @@ class CalendarPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_CALENDAR,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
         SettingsRepository.KEY_ISLAND_CALENDAR_EMOJIS,
+        SettingsRepository.KEY_ISLAND_CALENDAR_PRIORITY_MINUTES,
+        SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
     )
 
     private var event: UpcomingCalendarEvent? = null
@@ -63,7 +67,9 @@ class CalendarPlugin : BaseIslandPlugin() {
 
     private fun render() {
         val e = event
-        if (e == null || ctx == null) {
+        val hiddenWhileLocked = settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED, false) &&
+            (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
+        if (e == null || ctx == null || hiddenWhileLocked) {
             publish(null)
             return
         }
@@ -72,11 +78,14 @@ class CalendarPlugin : BaseIslandPlugin() {
         val short = CalendarEventUtil.formatRelativeTimeCompact(e.startTimeMillis, now)
         val showGlow = settings.isIslandShowGlowEnabled()
         val emoji = settings.getIslandCalendarEmojis()[e.calendarId]
+        val priorityMs = settings.getIslandCalendarPriorityMinutes() * 60_000L
+        val urgent = priorityMs > 0 && e.startTimeMillis - now in 0..priorityMs
         publish(
             IslandItem(
                 key = ITEM_KEY,
                 priority = IslandPriority.CALENDAR,
-                priorityOverride = IslandPriority.CALENDAR_OVERRIDE.takeIf { e.startTimeMillis - now in 0..URGENT_MS },
+                priorityOverride = IslandPriority.CALENDAR_OVERRIDE.takeIf { urgent },
+                bypassLauncherOnly = urgent,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("cal.icon") { CalendarGlyph(emoji, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
@@ -123,6 +132,5 @@ class CalendarPlugin : BaseIslandPlugin() {
     companion object {
         const val ITEM_KEY = "calendar"
         private const val POLL_MS = 60_000L
-        private const val URGENT_MS = 5 * 60_000L
     }
 }

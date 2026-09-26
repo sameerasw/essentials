@@ -48,6 +48,7 @@ class DuoTouchHandler(
     var cameraCenterY: Float = 0f
     var cameraRadiusPx: Float = 36f
     var ringRadiusScale: Float = 1.0f
+    var openBrief: (() -> Unit)? = null
 
     private var downX: Float = 0f
     private var downY: Float = 0f
@@ -226,7 +227,8 @@ class DuoTouchHandler(
 
                 if (!didPerformAnyGesture && totalDist < touchSlopPx && elapsed < 350L) {
                     val doubleTapAction = settingsRepository.getDuoDoubleTapAction()
-                    val tapAction = settingsRepository.getDuoTapAction()
+                    val tapAction = if (settingsRepository.isDuoTapForBriefActive() && openBrief != null) null else settingsRepository.getDuoTapAction()
+                    val briefTap = openBrief?.takeIf { settingsRepository.isDuoTapForBriefActive() }
 
                     if (isDoubleTapPending && doubleTapAction != null) {
                         isDoubleTapPending = false
@@ -238,15 +240,19 @@ class DuoTouchHandler(
                         lastTapTime = SystemClock.uptimeMillis()
                         lastTapX = downX
                         lastTapY = downY
-                        if (tapAction != null) {
+                        if (tapAction != null || briefTap != null) {
                             val runnable = Runnable {
                                 pendingSingleTapRunnable = null
                                 HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
-                                executeAction(tapAction)
+                                if (briefTap != null) briefTap() else tapAction?.let { executeAction(it) }
                             }
                             pendingSingleTapRunnable = runnable
                             handler.postDelayed(runnable, doubleTapTimeoutMs)
                         }
+                    } else if (briefTap != null) {
+                        lastTapTime = 0L
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
+                        briefTap()
                     } else if (tapAction != null) {
                         lastTapTime = 0L
                         HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
