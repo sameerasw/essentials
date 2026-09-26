@@ -1424,7 +1424,7 @@
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Погода</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1708,7 +1708,7 @@
     <string name="pocket_mode_use_light_desc">Используйте уровень освещенности в дополнение к близости для повышения точности</string>
     <string name="pocket_mode_use_light_title">Используйте датчик освещенности</string>
     <string name="pocket_mode_trigger_delay_title">задержка запуска</string>
-    <string name="feat_aod_wallpaper_desc">Использование наложения</string>
+    <string name="feat_aod_wallpaper_desc">Используя оверлей</string>
     <string name="status_glance_hide_in_quick_settings_title">Скрыть в быстрых настройках</string>
     <string name="island_notif_queue_title">Очередь уведомлений</string>
     <string name="island_notif_keep_progress_title">Сохраняйте уведомления о ходе выполнения</string>
@@ -1717,7 +1717,7 @@
     <string name="island_catch_up_title">подогнать</string>
     <string name="island_catch_up_desc">Сохраняйте последнее уведомление на островке  дольше</string>
     <string name="island_catch_up_timeout_title">Продолжительность наверстывания упущенного</string>
-    <string name="island_show_time_battery_title">Время и заряд батареи</string>
+    <string name="island_show_time_battery_title">Время и батарея </string>
     <string name="island_show_timers_title">Таймеры и секундомеры</string>
     <string name="feat_conscious_gate_title">Сознательные врата</string>
     <string name="island_show_glow_title">Показать акцентное свечение</string>
@@ -1741,4 +1741,7 @@
     <string name="perm_bubbles_desc">Разрешить веб-просмотрам открываться в виде плавающих диалоговых окон над другими приложениями</string>
     <string name="perm_bubbles_instructions">Установить значение \"Все разговоры\" можно в настройках уведомлений приложения или через Shizuku / Root.</string>
     <string name="island_hide_on_shade_title">Скрывать при раскрытии строки состояния</string>
+    <string name="island_enable_title">Включить остров</string>
+    <string name="island_show_calls_title">Звонки</string>
+    <string name="island_devices_battery_section">Устройства </string>
 </resources>
