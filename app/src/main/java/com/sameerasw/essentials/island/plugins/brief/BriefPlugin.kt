@@ -138,6 +138,7 @@ class BriefPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER,
         SettingsRepository.KEY_WEATHER_UNITS,
         SettingsRepository.KEY_ISLAND_BRIEF_SHOW_ALARM,
+        SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER,
         SettingsRepository.KEY_ISLAND_ALARM_WINDOW_HOURS,
     )
 
@@ -152,6 +153,7 @@ class BriefPlugin : BaseIslandPlugin() {
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        val twoLineHeader = settings.getBoolean(SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER, false)
         val weather = BriefWeather(
             enabled = settings.isIslandShowWeatherEnabled(),
             unit = WeatherFormat.unitFor(settings.getWeatherUnits()),
@@ -166,7 +168,7 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, weather) { pageOpen = it }
+                    BriefExpanded(scope, iconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, weather, twoLineHeader) { pageOpen = it }
                 },
                 onOpen = { pageOpen?.invoke() },
                 compactVisible = false,
@@ -189,6 +191,7 @@ private fun BriefExpanded(
     showAllDay: Boolean,
     showGlow: Boolean,
     weather: BriefWeather,
+    twoLineHeader: Boolean,
     onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -241,6 +244,7 @@ private fun BriefExpanded(
                         showAllDay = showAllDay,
                         media = media,
                         weather = weather,
+                        twoLineHeader = twoLineHeader,
                         onEventClick = { page = BriefPage.Event(it) },
                         onPlayerClick = { page = BriefPage.Player },
                         onWeatherClick = { page = BriefPage.Weather },
@@ -419,6 +423,7 @@ private fun BriefOverview(
     showAllDay: Boolean,
     media: MediaSnapshot?,
     weather: BriefWeather,
+    twoLineHeader: Boolean,
     onEventClick: (UpcomingCalendarEvent) -> Unit,
     onPlayerClick: () -> Unit,
     onWeatherClick: () -> Unit,
@@ -457,17 +462,22 @@ private fun BriefOverview(
         
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
+            val headerPadding = spec.cameraGap + spec.expandedCorner * 0.35f
             scope.CameraRow(
-                horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                horizontalPadding = headerPadding,
                 start = {
                     Text(time, style = IslandTextStyles.title.copy(fontSize = 20.sp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(date, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                    if (!twoLineHeader) {
+                        Spacer(Modifier.width(8.dp))
+                        Text(date, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                    }
                 },
                 end = {
-                    alarm?.let {
-                        BriefAlarmChip(NextAlarm.format(context, it.triggerTime, withPeriod = false), accent)
-                        Spacer(Modifier.width(8.dp))
+                    if (!twoLineHeader) {
+                        alarm?.let {
+                            BriefAlarmChip(NextAlarm.format(context, it.triggerTime, withPeriod = false), accent)
+                            Spacer(Modifier.width(8.dp))
+                        }
                     }
                     if (battery >= 0) {
                         if (iconStyle) {
@@ -478,6 +488,16 @@ private fun BriefOverview(
                     }
                 },
             )
+
+            if (twoLineHeader) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = headerPadding).padding(top = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(date, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                    alarm?.let { BriefAlarmChip(NextAlarm.format(context, it.triggerTime, withPeriod = false), accent) }
+                }
+            }
 
             if (weather.enabled) {
                 val weatherState by WeatherRepository.state.collectAsState()

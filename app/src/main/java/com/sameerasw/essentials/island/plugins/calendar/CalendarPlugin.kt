@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import android.app.KeyguardManager
 import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
 import android.provider.CalendarContract
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +30,7 @@ class CalendarPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
         SettingsRepository.KEY_ISLAND_CALENDAR_EMOJIS,
         SettingsRepository.KEY_ISLAND_CALENDAR_PRIORITY_MINUTES,
+        SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
     )
 
     private var event: UpcomingCalendarEvent? = null
@@ -64,7 +67,9 @@ class CalendarPlugin : BaseIslandPlugin() {
 
     private fun render() {
         val e = event
-        if (e == null || ctx == null) {
+        val hiddenWhileLocked = settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED, false) &&
+            (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
+        if (e == null || ctx == null || hiddenWhileLocked) {
             publish(null)
             return
         }
