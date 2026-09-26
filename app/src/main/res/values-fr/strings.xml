@@ -664,7 +664,7 @@
     <string name="label_settings">Paramètres</string>
     <string name="action_report_bug">Signaler un bogue</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Rapport de crash</string>
+    <string name="sentry_report_mode_title">Rapport des crash</string>
     <string name="sentry_mode_off">Désactivé</string>
     <string name="sentry_mode_auto">Auto</string>
     <string name="sentry_crash_toast">Essentials a crashé, rapport envoyé</string>
@@ -1610,4 +1610,6 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="settings_translated_texts_desc">%d modification(s) en attente — touchez pour soumettre ou annuler</string>
     <string name="setting_show_legacy_features_title">Afficher les fonctionnalités héritées</string>
     <string name="setting_show_legacy_features_desc">Ces fonctionnalités pourraient ne pas bénéficier de futures mises à jour en raison de limitations techniques ou parce qu\'elles ne sont pas essentielles.</string>
+    <string name="duo_rotate_album_art_title">Faire pivoter la pochette d\'album</string>
+    <string name="island_hide_on_shade_title">Masquer lorsque la barre d\'état est déployée</string>
 </resources>
