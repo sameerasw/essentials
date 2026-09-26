@@ -42,7 +42,7 @@ while read -r num branch; do
     git push -q origin "HEAD:$branch" || { failed+=("#$num push"); continue; }
   fi
   gh pr checks "$num" --watch --fail-fast >/dev/null 2>&1
-  if gh pr merge "$num" --rebase --delete-branch; then
+  if gh pr merge "$num" --rebase --delete-branch || gh pr merge "$num" --merge --delete-branch; then
     merged+=("#$num"); echo "merged"
   else
     failed+=("#$num merge"); echo "merge failed"
