@@ -49,6 +49,7 @@ class DuoTouchHandler(
     var cameraRadiusPx: Float = 36f
     var ringRadiusScale: Float = 1.0f
     var openBrief: (() -> Unit)? = null
+    var onSnippetTapAction: (() -> Unit)? = null
 
     private var downX: Float = 0f
     private var downY: Float = 0f
@@ -110,7 +111,9 @@ class DuoTouchHandler(
             MotionEvent.ACTION_DOWN -> {
                 val effectiveRadius = (cameraRadiusPx + 20f * density) * ringRadiusScale
                 val dist = hypot(x - cameraCenterX, y - cameraCenterY)
-                if (dist > effectiveRadius) {
+                val isSnippet = overlayView?.isSnippetActive == true && onSnippetTapAction != null
+                val inSnippetPill = isSnippet && overlayView?.snippetPillRect?.contains(x, y) == true
+                if (dist > effectiveRadius && !inSnippetPill) {
                     isTouchActiveInCutout = false
                     return false
                 }
@@ -128,6 +131,11 @@ class DuoTouchHandler(
                 isVolumeOrBrightnessAdjusted = false
 
                 overlayView?.triggerTapAnimation()
+
+                if (isSnippet) {
+                    // Suppress ring gestures while snippet suggestion is interactive
+                    return true
+                }
 
                 val doubleTapAction = settingsRepository.getDuoDoubleTapAction()
                 val isSecondTapInWindow = (downTime - lastTapTime) < doubleTapTimeoutMs &&
@@ -225,7 +233,20 @@ class DuoTouchHandler(
                     isSoundModeTriggered ||
                     isVolumeOrBrightnessAdjusted
 
+                val snippetTap = onSnippetTapAction
+                if (snippetTap != null && overlayView?.isSnippetActive == true) {
+                    if (totalDist < touchSlopPx * 2f && elapsed < 650L) {
+                        onSnippetTapAction = null
+                        overlayView?.resetInteractiveState(animate = true)
+                        HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
+                        snippetTap()
+                        isTouchActiveInCutout = false
+                        return true
+                    }
+                }
+
                 if (!didPerformAnyGesture && totalDist < touchSlopPx && elapsed < 350L) {
+
                     val doubleTapAction = settingsRepository.getDuoDoubleTapAction()
                     val tapAction = if (settingsRepository.isDuoTapForBriefActive() && openBrief != null) null else settingsRepository.getDuoTapAction()
                     val briefTap = openBrief?.takeIf { settingsRepository.isDuoTapForBriefActive() }

@@ -77,6 +77,7 @@ class ScreenOffAccessibilityService :
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
+    private lateinit var snippetAccessibilityHandler: com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -280,6 +281,10 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED
             ) {
                 statusGlanceHandler.updateState()
+            } else if (key?.startsWith("snippets_") == true) {
+                if (::snippetAccessibilityHandler.isInitialized) {
+                    snippetAccessibilityHandler.updateSettings()
+                }
             }
         }
 
@@ -306,6 +311,13 @@ class ScreenOffAccessibilityService :
         islandOverlayHandler.onVisibilityChanged = { duoOverlayHandler.setIslandVisible(it) }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
+        snippetAccessibilityHandler =
+            com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler(
+                service = this,
+                scope = serviceScope,
+                islandCoordinator = islandOverlayHandler,
+                duoOverlayHandler = duoOverlayHandler,
+            )
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -386,12 +398,12 @@ class ScreenOffAccessibilityService :
                         }
 
                         "CONSCIOUS_GATE_CONFIRMED" -> {
-                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
+                            intent.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
                             islandOverlayHandler.updateConsciousGateState()
                         }
 
                         "CONSCIOUS_GATE_CLOSED" -> {
-                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
+                            intent.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
                             islandOverlayHandler.updateConsciousGateState()
                         }
 
@@ -508,6 +520,9 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.destroy()
         islandOverlayHandler.onDestroy()
         statusGlanceHandler.destroy()
+        if (::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.destroy()
+        }
         statusBarIconHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
@@ -550,9 +565,21 @@ class ScreenOffAccessibilityService :
             islandOverlayHandler.updateConsciousGateState()
         }
 
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            if (::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onTextChanged(event)
+            }
+            return
+        }
+
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
+            val eventPkg = event.packageName?.toString().orEmpty()
+            val isImeEvent = isKeyboardPackage(eventPkg)
+            if (!isImeEvent && ::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onNonImeWindowChanged()
+            }
             checkFullscreenState()
             checkStatusBarExpansion()
             freezeHandler.removeCallbacks(shadeRecheckRunnable)
@@ -592,6 +619,9 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.setShadeExpanded(expanded)
         islandOverlayHandler.setShadeExpanded(expanded)
         duoOverlayHandler.setShadeExpanded(expanded)
+        if (expanded && ::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.hideFloatingPill()
+        }
     }
 
     private fun isShadeWindowVisible(): Boolean {
@@ -629,10 +659,24 @@ class ScreenOffAccessibilityService :
                         duoOverlayHandler.setFullscreen(isFullscreen)
                         statusGlanceHandler.setFullscreen(isFullscreen)
                         islandOverlayHandler.setFullscreen(isFullscreen)
+                        if (isFullscreen && ::snippetAccessibilityHandler.isInitialized) {
+                            snippetAccessibilityHandler.hideFloatingPill()
+                        }
                     }
                 }
             } catch (_: Exception) {}
         }
+    }
+
+    private fun isKeyboardPackage(pkg: String): Boolean {
+        if (pkg.isEmpty()) return false
+        return pkg.contains("inputmethod", ignoreCase = true) ||
+            pkg.contains("keyboard", ignoreCase = true) ||
+            pkg == "com.google.android.inputmethod.latin" ||
+            pkg == "com.sec.android.inputmethod" ||
+            pkg == "com.touchtype.swiftkey" ||
+            pkg == "com.samsung.android.honeyboard" ||
+            pkg == packageName
     }
 
     override fun onInterrupt() {}

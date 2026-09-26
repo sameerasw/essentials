@@ -62,6 +62,7 @@ import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
+import com.sameerasw.essentials.ui.features.apps.sheets.SnippetDisplayStyleSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryPercentageOptionsBottomSheet
@@ -95,6 +96,8 @@ fun DuoSettingsUI(
     var showNetworkOptionsSheet by remember { mutableStateOf(false) }
     var showTimeOptionsSheet by remember { mutableStateOf(false) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
+    var showSnippetStyleSheet by remember { mutableStateOf(false) }
+    var snippetDisplayMode by remember { mutableStateOf(SettingsRepository(context).getSnippetsSuggestionDisplayMode()) }
 
     var pickingActionForGesture by remember { mutableStateOf<String?>(null) }
     var activeConfigGesture by remember { mutableStateOf<String?>(null) }
@@ -450,6 +453,44 @@ fun DuoSettingsUI(
                     viewModel.setDuoShowFlashlight(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_show_flashlight"),
+            )
+
+            val isSnippetsDuoActive = snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_DUO ||
+                snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_BOTH
+            IconToggleItem(
+                iconRes = R.drawable.rounded_text_snippet_24,
+                title = stringResource(R.string.label_keyboard_snippets),
+                description = when (snippetDisplayMode) {
+                    SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
+                    SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
+                    SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
+                    else -> stringResource(R.string.snippets_display_pill_title)
+                },
+                isChecked = isSnippetsDuoActive,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    val repo = SettingsRepository(context)
+                    if (checked) {
+                        repo.setSnippetsUniversalEnabled(true)
+                        val newMode = if (snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND) {
+                            SettingsRepository.SNIPPETS_DISPLAY_BOTH
+                        } else {
+                            SettingsRepository.SNIPPETS_DISPLAY_DUO
+                        }
+                        repo.setSnippetsSuggestionDisplayMode(newMode)
+                        snippetDisplayMode = newMode
+                    } else {
+                        val newMode = if (snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_BOTH) {
+                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND
+                        } else {
+                            SettingsRepository.SNIPPETS_DISPLAY_FLOATING_PILL
+                        }
+                        repo.setSnippetsSuggestionDisplayMode(newMode)
+                        snippetDisplayMode = newMode
+                    }
+                },
+                onSettingsClick = { showSnippetStyleSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "duo_show_snippets"),
             )
         }
 
@@ -1151,6 +1192,17 @@ fun DuoSettingsUI(
                 )
             },
             context = context,
+        )
+    }
+
+    if (showSnippetStyleSheet) {
+        SnippetDisplayStyleSheet(
+            currentMode = snippetDisplayMode,
+            onModeSelected = { newMode ->
+                snippetDisplayMode = newMode
+                SettingsRepository(context).setSnippetsSuggestionDisplayMode(newMode)
+            },
+            onDismissRequest = { showSnippetStyleSheet = false },
         )
     }
 }

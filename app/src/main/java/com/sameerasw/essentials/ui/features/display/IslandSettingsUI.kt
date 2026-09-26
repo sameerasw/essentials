@@ -60,6 +60,7 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.features.apps.sheets.SnippetDisplayStyleSheet
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.actions.GestureActionPickerSheet
 import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeSheet
@@ -116,6 +117,8 @@ fun IslandSettingsUI(
     var showWeatherOptionsSheet by remember { mutableStateOf(false) }
     var pickingGesture by remember { mutableStateOf<String?>(null) }
     var showSlideModeSheet by remember { mutableStateOf(false) }
+    var showSnippetStyleSheet by remember { mutableStateOf(false) }
+    var snippetDisplayMode by remember { mutableStateOf(SettingsRepository(context).getSnippetsSuggestionDisplayMode()) }
 
     if (requestingPermissionsFor != null) {
         val (titleRes, permKeys) = requestingPermissionsFor!!
@@ -394,6 +397,44 @@ fun IslandSettingsUI(
                 onSettingsClick = { showDevicesBatterySheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_show_devices"),
             )
+
+            val isSnippetsIslandActive = snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND ||
+                snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_BOTH
+            IconToggleItem(
+                iconRes = R.drawable.rounded_text_snippet_24,
+                title = stringResource(R.string.label_keyboard_snippets),
+                description = when (snippetDisplayMode) {
+                    SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
+                    SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
+                    SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
+                    else -> stringResource(R.string.snippets_display_pill_title)
+                },
+                isChecked = isSnippetsIslandActive,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    val repo = SettingsRepository(context)
+                    if (checked) {
+                        repo.setSnippetsUniversalEnabled(true)
+                        val newMode = if (snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_DUO) {
+                            SettingsRepository.SNIPPETS_DISPLAY_BOTH
+                        } else {
+                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND
+                        }
+                        repo.setSnippetsSuggestionDisplayMode(newMode)
+                        snippetDisplayMode = newMode
+                    } else {
+                        val newMode = if (snippetDisplayMode == SettingsRepository.SNIPPETS_DISPLAY_BOTH) {
+                            SettingsRepository.SNIPPETS_DISPLAY_DUO
+                        } else {
+                            SettingsRepository.SNIPPETS_DISPLAY_FLOATING_PILL
+                        }
+                        repo.setSnippetsSuggestionDisplayMode(newMode)
+                        snippetDisplayMode = newMode
+                    }
+                },
+                onSettingsClick = { showSnippetStyleSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_show_snippets"),
+            )
         }
 
         RoundedCardContainer(
@@ -671,6 +712,17 @@ fun IslandSettingsUI(
             viewModel = viewModel,
             onDismissRequest = { showCalendarOptionsSheet = false },
             allowIconEdit = true,
+        )
+    }
+
+    if (showSnippetStyleSheet) {
+        SnippetDisplayStyleSheet(
+            currentMode = snippetDisplayMode,
+            onModeSelected = { newMode ->
+                snippetDisplayMode = newMode
+                SettingsRepository(context).setSnippetsSuggestionDisplayMode(newMode)
+            },
+            onDismissRequest = { showSnippetStyleSheet = false },
         )
     }
 }
