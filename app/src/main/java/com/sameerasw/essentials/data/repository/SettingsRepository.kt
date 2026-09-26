@@ -438,6 +438,7 @@ class SettingsRepository(
         const val KEY_DUO_SHOW_FLASHLIGHT = "duo_show_flashlight"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF = "duo_hide_when_screen_off"
         const val KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE = "duo_hide_when_screen_off_only_idle"
+        const val KEY_DUO_HIDE_WHEN_LOCKED = "duo_hide_when_locked"
         const val KEY_DUO_USE_MATERIAL_YOU = "duo_use_material_you"
         const val KEY_DUO_CUSTOM_COLOR = "duo_custom_color"
         const val KEY_DUO_TAP_ACTION = "duo_tap_action"
@@ -459,6 +460,12 @@ class SettingsRepository(
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
+        const val KEY_ISLAND_SHOW_WHEN = "island_show_when"
+        const val ISLAND_SHOW_WHEN_UNLOCKED = "unlocked"
+        const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
+        const val ISLAND_SHOW_WHEN_ALWAYS = "always"
+        const val KEY_ISLAND_NOTIF_CONCEAL_LOCKED = "island_notif_conceal_locked"
+        const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
@@ -502,6 +509,11 @@ class SettingsRepository(
         const val ISLAND_PREVIEW_STAGE_PEEK = "peek"
         const val ISLAND_PREVIEW_STAGE_EXPANDED = "expanded"
         const val KEY_ISLAND_SHOW_CALLS = "island_show_calls"
+        const val KEY_ISLAND_CALL_SHOW_MODE = "island_call_show_mode"
+        const val KEY_ISLAND_CALL_STICKY = "island_call_sticky"
+        const val ISLAND_CALL_SHOW_EXPANDED = "expanded"
+        const val ISLAND_CALL_SHOW_PEEK = "peek"
+        const val ISLAND_CALL_SHOW_COMPACT = "compact"
         const val KEY_ISLAND_SHOW_TIMERS = "island_show_timers"
         const val KEY_ISLAND_SHOW_WEATHER = "island_show_weather"
         const val KEY_ISLAND_WEATHER_MODE = "island_weather_mode"
@@ -536,6 +548,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_DEVICES = "island_show_devices"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
+        const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
         const val KEY_ISLAND_DEVICES_BATTERY_ORDER = "island_devices_battery_order"
         const val ISLAND_CAMERA_POSITION_LEFT = "left"
         const val ISLAND_CAMERA_POSITION_CENTER = "center"
@@ -550,6 +563,16 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
+        const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
+        const val KEY_ISLAND_BORDER_OUTLINE_COLOR = "island_border_outline_color"
+        const val KEY_ISLAND_BORDER_OUTLINE_THICKNESS = "island_border_outline_thickness"
+        const val KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED = "island_border_outline_hide_expanded"
+        const val KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION = "island_pulse_shadow_on_notification"
+        const val KEY_ISLAND_PULSE_SHADOW_SIZE = "island_pulse_shadow_size"
+        const val KEY_ISLAND_PULSE_SHADOW_Y_SHIFT = "island_pulse_shadow_y_shift"
+        const val KEY_ISLAND_PULSE_SHADOW_SPREAD = "island_pulse_shadow_spread"
+        const val KEY_ISLAND_PULSE_SHADOW_DURATION_MS = "island_pulse_shadow_duration_ms"
+        const val ISLAND_BORDER_OUTLINE_DEFAULT_COLOR = "#202020"
 
         // Status Glance
         const val KEY_STATUS_GLANCE_ENABLED = "status_glance_enabled"
@@ -3511,6 +3534,9 @@ class SettingsRepository(
     fun isDuoHideWhenScreenOffOnlyIdleEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE, false)
     fun setDuoHideWhenScreenOffOnlyIdleEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_SCREEN_OFF_ONLY_IDLE, enabled)
 
+    fun isDuoHideWhenLockedEnabled(): Boolean = getBoolean(KEY_DUO_HIDE_WHEN_LOCKED, false)
+    fun setDuoHideWhenLockedEnabled(enabled: Boolean) = putBoolean(KEY_DUO_HIDE_WHEN_LOCKED, enabled)
+
     fun isDuoUseMaterialYouEnabled(): Boolean = getBoolean(KEY_DUO_USE_MATERIAL_YOU, true)
     fun setDuoUseMaterialYouEnabled(enabled: Boolean) = putBoolean(KEY_DUO_USE_MATERIAL_YOU, enabled)
 
@@ -3572,8 +3598,41 @@ class SettingsRepository(
     fun isIslandHideWhenScreenOffEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, true)
     fun setIslandHideWhenScreenOffEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, enabled)
 
+    fun getIslandShowWhen(): String =
+        getString(KEY_ISLAND_SHOW_WHEN, null)
+            ?: if (isIslandHideWhenScreenOffEnabled()) ISLAND_SHOW_WHEN_UNLOCKED else ISLAND_SHOW_WHEN_ALWAYS
+    fun setIslandShowWhen(value: String) = putString(KEY_ISLAND_SHOW_WHEN, value)
+
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
+
+    fun isIslandBorderOutlineEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, false)
+    fun setIslandBorderOutlineEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_ENABLED, enabled)
+
+    fun getIslandBorderOutlineColor(): String =
+        getString(KEY_ISLAND_BORDER_OUTLINE_COLOR, ISLAND_BORDER_OUTLINE_DEFAULT_COLOR) ?: ISLAND_BORDER_OUTLINE_DEFAULT_COLOR
+    fun setIslandBorderOutlineColor(colorHex: String) = putString(KEY_ISLAND_BORDER_OUTLINE_COLOR, colorHex)
+
+    fun isIslandBorderOutlineHiddenWhenExpanded(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, false)
+    fun setIslandBorderOutlineHiddenWhenExpanded(hidden: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, hidden)
+
+    fun getIslandBorderOutlineThickness(): Float = getFloat(KEY_ISLAND_BORDER_OUTLINE_THICKNESS, 1f)
+    fun setIslandBorderOutlineThickness(value: Float) = putFloat(KEY_ISLAND_BORDER_OUTLINE_THICKNESS, value)
+
+    fun isIslandPulseShadowEnabled(): Boolean = getBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, false)
+    fun setIslandPulseShadowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, enabled)
+
+    fun getIslandPulseShadowSize(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SIZE, 0.5f)
+    fun setIslandPulseShadowSize(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SIZE, value)
+
+    fun getIslandPulseShadowYShift(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_Y_SHIFT, 0.35f)
+    fun setIslandPulseShadowYShift(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_Y_SHIFT, value)
+
+    fun getIslandPulseShadowSpread(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD, 2f)
+    fun setIslandPulseShadowSpread(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD, value)
+
+    fun getIslandPulseShadowDurationMs(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_DURATION_MS, 1450f)
+    fun setIslandPulseShadowDurationMs(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_DURATION_MS, value)
 
     fun isIslandShowGlowEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_GLOW, true)
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)

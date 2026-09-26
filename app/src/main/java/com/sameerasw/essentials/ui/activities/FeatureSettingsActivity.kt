@@ -74,7 +74,16 @@ import com.sameerasw.essentials.ui.features.system.CalendarSyncSettingsUI
 import com.sameerasw.essentials.ui.features.display.AodWallpaperPreviewCard
 import com.sameerasw.essentials.ui.features.display.AodWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.display.DuoSettingsUI
+import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_SUB_PAGE_IDS
+import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.IslandBehaviorSettingsUI
+import com.sameerasw.essentials.ui.features.display.IslandDurationSettingsUI
+import com.sameerasw.essentials.ui.features.display.IslandPlacementSettingsUI
 import com.sameerasw.essentials.ui.features.display.IslandSettingsUI
+import com.sameerasw.essentials.ui.features.display.IslandVisualsSettingsUI
 import com.sameerasw.essentials.ui.features.display.StatusGlanceSettingsUI
 import com.sameerasw.essentials.ui.features.system.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.features.system.EssentialsOnDisplaySettingsUI
@@ -622,7 +631,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         viewModel.isEnableUnsupportedFeatures.value,
                                         viewModel.isShowLegacyFeatures.value,
                                     ).filter { it.parentFeatureId == featureId }
-                            if (children.isNotEmpty() && featureId != "Networks") {
+                            if (children.isNotEmpty() && featureId != "Networks" && featureId != "Island") {
                         val sectionChildLists =
                                     run {
                                         val childMap = children.associateBy { it.id }
@@ -1203,6 +1212,38 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    ISLAND_PLACEMENT_FEATURE_ID -> {
+                                        IslandPlacementSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    ISLAND_VISUALS_FEATURE_ID -> {
+                                        IslandVisualsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    ISLAND_DURATION_FEATURE_ID -> {
+                                        IslandDurationSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    ISLAND_BEHAVIOR_FEATURE_ID -> {
+                                        IslandBehaviorSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
                                     "Status glance" -> {
                                         StatusGlanceSettingsUI(
                                             viewModel = viewModel,
@@ -1350,13 +1391,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             fabIconRes =
                                 when {
                                     isStandbyMultiSelecting -> R.drawable.rounded_mobiledata_arrows_24
-                                    featureId == "Island" -> R.drawable.rounded_play_arrow_24
+                                    (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> R.drawable.rounded_play_arrow_24
                                     else -> null
                                 },
                             fabAction =
                                 when {
                                     isStandbyMultiSelecting -> { { isStandbyMoveSheetVisible = true } }
-                                    featureId == "Island" -> {
+                                    (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> {
                                         {
                                             viewModel.triggerIslandPreview(context)
                                         }
@@ -1366,7 +1407,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             fabContentDescription =
                                 when {
                                     isStandbyMultiSelecting -> stringResource(R.string.action_move_bucket)
-                                    featureId == "Island" -> stringResource(R.string.action_preview)
+                                    (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS) -> stringResource(R.string.action_preview)
                                     else -> null
                                 },
                             modifier =
@@ -1374,7 +1415,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     .align(Alignment.BottomCenter)
                                     .zIndex(1f),
                             onHelpClick =
-                                if (isStandbyMultiSelecting || featureId == "Island") {
+                                if (isStandbyMultiSelecting || (featureId == "Island" || featureId in ISLAND_SUB_PAGE_IDS)) {
                                     null
                                 } else {
                                     {

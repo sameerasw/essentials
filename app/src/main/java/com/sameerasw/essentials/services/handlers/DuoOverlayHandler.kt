@@ -396,6 +396,14 @@ class DuoOverlayHandler(
         updateState()
     }
 
+    fun onUserPresent() {
+        overlayView?.isLockedHidden = shouldHideForLock()
+    }
+
+    private fun shouldHideForLock(): Boolean =
+        settingsRepository.isDuoHideWhenLockedEnabled() &&
+            (service.getSystemService(android.content.Context.KEYGUARD_SERVICE) as? android.app.KeyguardManager)?.isKeyguardLocked == true
+
     fun onScreenOff() {
         isScreenOff = true
         overlayView?.isScreenOff = true
@@ -889,6 +897,7 @@ class DuoOverlayHandler(
                 this.isFullscreen = this@DuoOverlayHandler.isFullscreen
                 this.isYieldingToIsland = shouldYieldToIsland()
                 this.isShadeHidden = shouldHideForShade()
+                this.isLockedHidden = shouldHideForLock()
                 val areUnsupportedFeaturesEnabled = settingsRepository.isEnableUnsupportedFeatures()
                 this.hideWhenScreenOff = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffEnabled() else true
                 this.hideWhenScreenOffOnlyIdle = if (areUnsupportedFeaturesEnabled) settingsRepository.isDuoHideWhenScreenOffOnlyIdleEnabled() else false
