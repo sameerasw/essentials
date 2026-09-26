@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.features.display
 
 import androidx.compose.foundation.background
+import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import androidx.compose.animation.AnimatedVisibility
@@ -63,10 +64,12 @@ import com.sameerasw.essentials.ui.features.display.actions.GestureActionPickerS
 import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeSheet
 import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescription
 import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandBorderOutlineOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandWeatherOptionsBottomSheet
@@ -79,7 +82,7 @@ import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 private val ISLAND_PLACEMENT_KEYS = setOf("island_camera_position", "island_use_auto_detect", "island_camera_size", "island_max_width", "island_expanded_width", "island_cutout_gap")
-private val ISLAND_VISUALS_KEYS = setOf("island_expanded_scale", "island_font_scale", "island_expanded_roundness", "island_expanded_padding", "island_expanded_top_padding")
+private val ISLAND_VISUALS_KEYS = setOf("island_expanded_scale", "island_font_scale", "island_expanded_roundness", "island_border_outline_enabled", "island_expanded_padding", "island_expanded_top_padding")
 
 @Composable
 private fun IslandExpandableSection(
@@ -170,6 +173,8 @@ fun IslandSettingsUI(
     var showTimeBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
     var showCallOptionsSheet by remember { mutableStateOf(false) }
+    var showBorderOutlineSheet by remember { mutableStateOf(false) }
+    var showPulseShadowSheet by remember { mutableStateOf(false) }
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
     var showNotificationOptionsSheet by remember {
@@ -474,6 +479,19 @@ fun IslandSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_font_scale"),
             )
 
+            IconToggleItem(
+                iconRes = R.drawable.rounded_square_24,
+                title = stringResource(R.string.island_border_outline_title),
+                description = stringResource(R.string.island_border_outline_desc),
+                isChecked = viewModel.isIslandBorderOutline.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandBorderOutline(checked)
+                },
+                onSettingsClick = { showBorderOutlineSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_border_outline_enabled"),
+            )
+
             ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_roundness_title),
                 value = viewModel.islandExpandedRoundness.floatValue,
@@ -622,6 +640,19 @@ fun IslandSettingsUI(
                     viewModel.setIslandShowGlow(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_show_glow"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_blur_on_24,
+                title = stringResource(R.string.island_pulse_shadow_title),
+                description = stringResource(R.string.island_pulse_shadow_desc),
+                isChecked = viewModel.isIslandPulseShadow.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandPulseShadow(checked)
+                },
+                onSettingsClick = { showPulseShadowSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
             )
 
             IconToggleItem(
@@ -1151,6 +1182,20 @@ fun IslandSettingsUI(
         IslandAlarmOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showAlarmOptionsSheet = false },
+        )
+    }
+
+    if (showPulseShadowSheet) {
+        IslandPulseShadowOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showPulseShadowSheet = false },
+        )
+    }
+
+    if (showBorderOutlineSheet) {
+        IslandBorderOutlineOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showBorderOutlineSheet = false },
         )
     }
 
