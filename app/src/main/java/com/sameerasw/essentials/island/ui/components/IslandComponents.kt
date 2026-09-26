@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui.components
 
+import com.sameerasw.essentials.island.ui.squareFit
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -84,7 +85,7 @@ fun IslandBitmap(
 
 @Composable
 fun IslandIcon(res: Int, tint: Color = Color.White, size: Dp = 20.dp, modifier: Modifier = Modifier) {
-    Icon(painterResource(res), contentDescription = null, tint = tint, modifier = modifier.size(size))
+    Icon(painterResource(res), contentDescription = null, tint = tint, modifier = modifier.squareFit(size))
 }
 
 @Composable
@@ -109,7 +110,7 @@ fun EqualizerBars(
     val animated = levels.mapIndexed { i, level ->
         animateFloatAsState(level, IslandMotion.float(), label = "eq$i").value
     }
-    Canvas(modifier.size(size)) {
+    Canvas(modifier.squareFit(size)) {
         val barWidth = this.size.width / 5f
         animated.forEachIndexed { i, level ->
             val h = this.size.height * level
@@ -127,14 +128,15 @@ fun EqualizerBars(
 fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = false, size: Dp = if (showLevel) 24.dp else 18.dp) {
     val sweep by animateFloatAsState(360f * level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batterySweep")
     val ringColor by animateColorAsState(color, label = "batteryColor")
-    Box(modifier.size(size), contentAlignment = Alignment.Center) {
+    Box(modifier.squareFit(size), contentAlignment = Alignment.Center) {
         Canvas(Modifier.matchParentSize()) {
-            val stroke = this.size.minDimension * (if (showLevel) 0.12f else 0.16f)
-            val inset = stroke / 2f
-            val arcSize = Size(this.size.width - stroke, this.size.height - stroke)
-            drawArc(Color.White.copy(alpha = 0.25f), 0f, 360f, false, Offset(inset, inset), arcSize, style = Stroke(stroke * 0.5f))
+            val diameter = this.size.minDimension
+            val stroke = diameter * (if (showLevel) 0.12f else 0.16f)
+            val topLeft = Offset((this.size.width - diameter + stroke) / 2f, (this.size.height - diameter + stroke) / 2f)
+            val arcSize = Size(diameter - stroke, diameter - stroke)
+            drawArc(Color.White.copy(alpha = 0.25f), 0f, 360f, false, topLeft, arcSize, style = Stroke(stroke * 0.5f))
             if (sweep > 0.5f) {
-                drawArc(ringColor, -90f, sweep, false, Offset(inset, inset), arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
+                drawArc(ringColor, -90f, sweep, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
             }
         }
         if (showLevel) {
@@ -157,8 +159,9 @@ fun BatteryGlyph(level: Int, color: Color, modifier: Modifier = Modifier, showLe
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Box(
             Modifier
-                .size(width = 28.dp, height = 15.dp)
-                .clip(RoundedCornerShape(4.5.dp))
+                .sizeIn(maxWidth = 28.dp, maxHeight = 15.dp)
+                .aspectRatio(28f / 15f, matchHeightConstraintsFirst = true)
+                .clip(RoundedCornerShape(30))
                 .drawBehind {
                     drawRect(Color.White.copy(alpha = 0.3f))
                     drawRect(fillColor, size = Size(size.width * fraction, size.height))

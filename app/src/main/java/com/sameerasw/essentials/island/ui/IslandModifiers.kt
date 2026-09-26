@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.unit.Dp
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector2D
 import androidx.compose.animation.core.VectorConverter
@@ -32,3 +35,6 @@ fun Modifier.animatePlacement(): Modifier = composed {
         }
     }
 }
+
+fun Modifier.squareFit(size: Dp): Modifier =
+    sizeIn(maxWidth = size, maxHeight = size).aspectRatio(1f, matchHeightConstraintsFirst = true)
