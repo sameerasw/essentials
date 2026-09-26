@@ -664,7 +664,7 @@
     <string name="label_settings">Paramètres</string>
     <string name="action_report_bug">Signaler un bogue</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Rapport des crash</string>
+    <string name="sentry_report_mode_title">Rapport de crash</string>
     <string name="sentry_mode_off">Désactivé</string>
     <string name="sentry_mode_auto">Auto</string>
     <string name="sentry_crash_toast">Essentials a crashé, rapport envoyé</string>
@@ -1604,4 +1604,10 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_show_battery_percentage_title">Pourcentage de batterie</string>
     <string name="duo_show_battery_title">Batterie</string>
     <string name="duo_show_time_title">Heure</string>
+    <string name="settings_translate_mode_desc">Appuyez longuement sur n\'importe quel texte pour le traduire et contribuer à la communauté.</string>
+    <string name="settings_translate_mode">Mode traduction</string>
+    <string name="settings_translated_texts">Traduit</string>
+    <string name="settings_translated_texts_desc">%d modification(s) en attente — touchez pour soumettre ou annuler</string>
+    <string name="setting_show_legacy_features_title">Afficher les fonctionnalités héritées</string>
+    <string name="setting_show_legacy_features_desc">Ces fonctionnalités pourraient ne pas bénéficier de futures mises à jour en raison de limitations techniques ou parce qu\'elles ne sont pas essentielles.</string>
 </resources>
