@@ -1604,4 +1604,6 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_show_battery_percentage_title">Pourcentage de batterie</string>
     <string name="duo_show_battery_title">Batterie</string>
     <string name="duo_show_time_title">Heure</string>
+    <string name="duo_rotate_album_art_title">Faire pivoter la pochette d\'album</string>
+    <string name="island_hide_on_shade_title">Masquer lorsque la barre d\'état est déployée</string>
 </resources>
