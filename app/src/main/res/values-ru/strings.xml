@@ -1424,7 +1424,7 @@
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Погода</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1663,4 +1663,12 @@
     <string name="notification_lighting_ripple_position_pick_title">Выбрать позицию</string>
     <string name="notification_lighting_ripple_position_pick_desc">Тапните где угодно на экране что бы выбрать место старта ряби</string>
     <string name="notification_lighting_ripple_sparkle_title">Частицы</string>
+    <string name="feat_aod_wallpaper_desc">Используя оверлей</string>
+    <string name="perm_storage_title">Доступ ко всем файлам</string>
+    <string name="island_enable_title">Включить остров</string>
+    <string name="island_show_calls_title">Звонки</string>
+    <string name="island_show_time_battery_title">Время и батарея </string>
+    <string name="island_show_timers_title">Таймеры и секундомеры</string>
+    <string name="island_devices_battery_section">Устройства </string>
+    <string name="watch_watchface_title">Циферблат</string>
 </resources>
