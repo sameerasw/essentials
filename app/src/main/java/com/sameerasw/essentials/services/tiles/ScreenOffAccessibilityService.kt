@@ -362,6 +362,7 @@ class ScreenOffAccessibilityService :
                         Intent.ACTION_USER_PRESENT -> {
                             aodWallpaperOverlayHandler.onScreenOn()
                             statusGlanceHandler.onUserPresent()
+                            duoOverlayHandler.onUserPresent()
                             islandOverlayHandler.updateState()
                             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                             if (prefs.getBoolean("pocket_mode_lock_screen_only", false)) {
