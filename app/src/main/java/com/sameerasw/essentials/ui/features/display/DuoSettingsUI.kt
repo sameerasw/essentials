@@ -519,6 +519,16 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_hide_when_screen_off_only_idle"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                title = stringResource(R.string.duo_hide_when_locked_title),
+                isChecked = viewModel.isDuoHideWhenLocked.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoHideWhenLocked(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_hide_when_locked"),
+            )
         }
 
         if (!viewModel.isEnableUnsupportedFeatures.value) {

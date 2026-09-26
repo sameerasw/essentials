@@ -36,3 +36,28 @@ fun IslandLauncherOnlyToggle(settingKey: String, modifier: Modifier = Modifier) 
         )
     }
 }
+
+@Composable
+fun IslandPrefToggle(settingKey: String, iconRes: Int, title: String, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val settings = remember { SettingsRepository(context) }
+    var checked by remember { mutableStateOf(settings.getBoolean(settingKey, false)) }
+    IconToggleItem(
+        iconRes = iconRes,
+        title = title,
+        isChecked = checked,
+        onCheckedChange = {
+            HapticUtil.performVirtualKeyHaptic(view)
+            checked = it
+            settings.putBoolean(settingKey, it)
+        },
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun rememberIslandShowsWhileLocked(): Boolean {
+    val context = LocalContext.current
+    return remember { SettingsRepository(context).getIslandShowWhen() != SettingsRepository.ISLAND_SHOW_WHEN_UNLOCKED }
+}

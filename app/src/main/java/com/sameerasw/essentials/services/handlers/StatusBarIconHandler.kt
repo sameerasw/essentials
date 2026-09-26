@@ -19,6 +19,7 @@ import android.net.NetworkCapabilities
 import android.os.BatteryManager
 import android.provider.Settings
 import android.telephony.TelephonyManager
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.StatusBarIconRegistry
 import com.sameerasw.essentials.ui.core.pickers.NetworkType
 import com.sameerasw.essentials.utils.updateIconBlacklistSetting
@@ -105,6 +106,7 @@ class StatusBarIconHandler(
     fun updateAll() {
         scope.launch {
             val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            if (!prefs.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED, false)) return@launch
             val isSmartWiFiEnabled =
                 prefs.getBoolean(StatusBarIconViewModel.PREF_SMART_WIFI_ENABLED, false)
             val isSmartDataEnabled =
