@@ -1782,4 +1782,12 @@
     <string name="diy_action_wifi_on">Wi-Fiをオンにする</string>
     <string name="diy_action_wifi_off">Wi-Fiをオフにする</string>
     <string name="settings_genai_automation_title">生成AI機能を使用する</string>
+    <string name="duo_rotate_album_art_title">アルバムアートを回転</string>
+    <string name="diy_action_wifi_toggle">Wi-Fiを切り替える</string>
+    <string name="diy_action_cellular_on">モバイルデータをオンにする</string>
+    <string name="diy_action_cellular_off">モバイルデータをオフにする</string>
+    <string name="diy_action_cellular_toggle">モバイルデータを切り替える</string>
+    <string name="diy_action_hotspot_on">テザリングをオンにする</string>
+    <string name="diy_action_hotspot_off">テザリングをオフにする</string>
+    <string name="diy_action_hotspot_toggle">テザリングを切り替える</string>
 </resources>
