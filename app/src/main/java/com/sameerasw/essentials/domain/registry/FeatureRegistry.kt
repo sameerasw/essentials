@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials.domain.registry
 
+import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
 import android.content.Context
 import android.content.Intent
 import com.sameerasw.essentials.EssentialsApp
@@ -751,16 +755,6 @@ object FeatureRegistry {
                 searchableSettings =
                     listOf(
                         SearchSetting(
-                            R.string.island_max_width_title,
-                            R.string.island_max_width_desc,
-                            "island_max_width",
-                        ),
-                        SearchSetting(
-                            R.string.island_suppress_system_heads_up_title,
-                            R.string.island_suppress_system_heads_up_desc,
-                            "island_suppress_system_heads_up",
-                        ),
-                        SearchSetting(
                             R.string.island_show_time_battery_title,
                             R.string.island_battery_style_title,
                             "island_show_time_battery",
@@ -784,6 +778,11 @@ object FeatureRegistry {
                             R.string.feat_location_reached_title,
                             R.string.island_travel_pause,
                             "island_show_travel",
+                        ),
+                        SearchSetting(
+                            R.string.island_show_alarm_title,
+                            R.string.island_alarm_window_title,
+                            "island_show_alarm",
                         ),
                         SearchSetting(
                             R.string.island_show_sound_mode_title,
@@ -816,21 +815,6 @@ object FeatureRegistry {
                             "island_show_calls",
                         ),
                         SearchSetting(
-                            R.string.island_camera_position_title,
-                            R.string.island_camera_position_center,
-                            "island_camera_position",
-                        ),
-                        SearchSetting(
-                            R.string.island_expanded_scale_title,
-                            R.string.island_expanded_scale_desc,
-                            "island_expanded_scale",
-                        ),
-                        SearchSetting(
-                            R.string.island_line_peek_title,
-                            R.string.island_line_peek_desc,
-                            "island_line_stage_enabled",
-                        ),
-                        SearchSetting(
                             R.string.island_notif_queue_title,
                             R.string.island_notif_queue_title,
                             "island_notif_queue",
@@ -860,6 +844,112 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setIslandEnabled(enabled)
+            },
+            object : Feature(
+                id = ISLAND_PLACEMENT_FEATURE_ID,
+                title = R.string.island_section_placement,
+                iconRes = R.drawable.rounded_center_focus_strong_24,
+                category = R.string.cat_interface,
+                description = R.string.island_section_placement,
+                showToggle = false,
+                parentFeatureId = "Island",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.island_max_width_title,
+                            R.string.island_max_width_desc,
+                            "island_max_width",
+                        ),
+                        SearchSetting(
+                            R.string.island_camera_position_title,
+                            R.string.island_camera_position_center,
+                            "island_camera_position",
+                        ),
+                    ),
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = ISLAND_VISUALS_FEATURE_ID,
+                title = R.string.island_section_visuals,
+                iconRes = R.drawable.rounded_palette_24,
+                category = R.string.cat_interface,
+                description = R.string.island_section_visuals,
+                showToggle = false,
+                parentFeatureId = "Island",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.island_expanded_scale_title,
+                            R.string.island_expanded_scale_desc,
+                            "island_expanded_scale",
+                        ),
+                    ),
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = ISLAND_DURATION_FEATURE_ID,
+                title = R.string.island_section_duration,
+                iconRes = R.drawable.rounded_timer_24,
+                category = R.string.cat_interface,
+                description = R.string.island_section_duration,
+                showToggle = false,
+                parentFeatureId = "Island",
+                isVisibleInMain = false,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = ISLAND_BEHAVIOR_FEATURE_ID,
+                title = R.string.island_section_behavior,
+                iconRes = R.drawable.rounded_settings_motion_mode_24,
+                category = R.string.cat_interface,
+                description = R.string.island_section_behavior,
+                showToggle = false,
+                parentFeatureId = "Island",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.island_suppress_system_heads_up_title,
+                            R.string.island_suppress_system_heads_up_desc,
+                            "island_suppress_system_heads_up",
+                        ),
+                        SearchSetting(
+                            R.string.island_line_peek_title,
+                            R.string.island_line_peek_desc,
+                            "island_line_stage_enabled",
+                        ),
+                    ),
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
             },
             object : Feature(
                 id = "Maps power saving mode",

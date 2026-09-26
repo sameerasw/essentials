@@ -1498,9 +1498,19 @@
     <string name="setting_app_icon_desc">Personalizza l\'icona del launcher schermata home</string>
     <string name="settings_translate_mode_desc">Mantieni premuto ogni testo per tradurre e contribuire alla comunità</string>
     <string name="settings_genai_automation_title">Abilità GenAI</string>
-    <string name="qs_secure_sensitive_tiles_desc">Richiede di sbloccare prima di attivare tiles sensibile nelle azioni veloci quando bloccato</string>
+    <string name="qs_secure_sensitive_tiles_desc">Richiedi lo sblocco prima di attivare i riquadri QS sensibili mentre sono bloccati</string>
     <string name="tile_url_shortener">Accorcia URL</string>
     <string name="tile_url_shortener_subtitle">Accorcia Appunti</string>
     <string name="feat_standby_apps_desc">Ottimizza attività delle app nel background</string>
     <string name="feat_power_saving_desc">Configura le policies del risparmio energetico</string>
+    <string name="feat_notification_snoozing_title">Posticipa le notifiche</string>
+    <string name="feat_notification_snoozing_desc">Riprogramma le notifiche</string>
+    <string name="label_snooze_default">Tempo di posticipazione predefinito</string>
+    <string name="label_snooze_option_1">Opzione 1</string>
+    <string name="label_snooze_option_2">Opzione 2</string>
+    <string name="label_snooze_option_3">Opsione 3</string>
+    <string name="label_snooze_option_4">Opzione 4</string>
+    <string name="feat_wireless_display_certification_title">Certificazione display wireless</string>
+    <string name="feat_wireless_display_certification_desc">Mostra le opzioni per la certificazione del display wireless</string>
+    <string name="qs_secure_sensitive_tiles_title">Proteggi i riquadri sensibili</string>
 </resources>

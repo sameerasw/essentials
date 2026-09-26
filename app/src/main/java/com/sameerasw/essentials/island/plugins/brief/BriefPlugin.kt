@@ -1,10 +1,12 @@
 package com.sameerasw.essentials.island.plugins.brief
 
+import com.sameerasw.essentials.island.plugins.alarm.NextAlarm
 import com.sameerasw.essentials.island.plugins.weather.WeatherExpanded
 import com.sameerasw.essentials.weather.effects.DeviceWeatherHaptics
 import com.sameerasw.essentials.weather.effects.WeatherEffectHaptics
 import com.sameerasw.essentials.weather.effects.WeatherEffectSpec
 import com.sameerasw.essentials.weather.effects.WeatherEffects
+import com.sameerasw.essentials.weather.effects.WeatherSimulation
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.weather.WeatherFormat
 import com.sameerasw.essentials.weather.WeatherRepository
@@ -133,7 +135,11 @@ class BriefPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_WEATHER,
         SettingsRepository.KEY_ISLAND_WEATHER_EFFECTS,
         SettingsRepository.KEY_ISLAND_WEATHER_HAPTICS,
+        SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER,
         SettingsRepository.KEY_WEATHER_UNITS,
+        SettingsRepository.KEY_ISLAND_BRIEF_SHOW_ALARM,
+        SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER,
+        SettingsRepository.KEY_ISLAND_ALARM_WINDOW_HOURS,
     )
 
     override fun refresh() {
@@ -142,15 +148,18 @@ class BriefPlugin : BaseIslandPlugin() {
             return
         }
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
+        val alarmHours = if (settings.isIslandBriefShowAlarmEnabled()) settings.getIslandAlarmWindowHours() else null
         val calendarIds = settings.getStatusGlanceCalendarSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        val twoLineHeader = settings.getBoolean(SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER, false)
         val weather = BriefWeather(
             enabled = settings.isIslandShowWeatherEnabled(),
             unit = WeatherFormat.unitFor(settings.getWeatherUnits()),
             effects = settings.isIslandShowWeatherEnabled() && settings.isIslandWeatherEffectsEnabled() && !DeviceUtils.isPowerSaveMode(context),
             haptics = settings.isIslandWeatherHapticsEnabled(),
+            simulated = WeatherSimulation.find(settings.getString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, WeatherSimulation.OFF))?.spec,
         )
         publish(
             IslandItem(
@@ -159,7 +168,7 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, calendarEnabled, calendarIds, showAllDay, showGlow, weather) { pageOpen = it }
+                    BriefExpanded(scope, iconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, weather, twoLineHeader) { pageOpen = it }
                 },
                 onOpen = { pageOpen?.invoke() },
                 compactVisible = false,
@@ -176,11 +185,13 @@ class BriefPlugin : BaseIslandPlugin() {
 private fun BriefExpanded(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
+    alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
     showAllDay: Boolean,
     showGlow: Boolean,
     weather: BriefWeather,
+    twoLineHeader: Boolean,
     onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -205,8 +216,8 @@ private fun BriefExpanded(
     val pageShape = RoundedCornerShape(scope.spec.expandedCorner)
     Box(propagateMinConstraints = true) {
         val weatherState by WeatherRepository.state.collectAsState()
-        val effectSpec = remember(weather.effects, weatherState.snapshot) {
-            weatherState.snapshot?.takeIf { weather.effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
+        val effectSpec = remember(weather.effects, weather.simulated, weatherState.snapshot) {
+            weather.simulated ?: weatherState.snapshot?.takeIf { weather.effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
         }
         val weatherHaptics = remember(context, weather.haptics) { DeviceWeatherHaptics(context).takeIf { weather.haptics } }
         if (!SurfaceBackdrop { BriefBackground(page, media, showGlow, scope, effectSpec, weatherHaptics, Modifier.fillMaxSize()) }) {
@@ -227,11 +238,13 @@ private fun BriefExpanded(
                     BriefPage.Overview -> BriefOverview(
                         scope = scope,
                         iconStyle = iconStyle,
+                        alarmHours = alarmHours,
                         calendarEnabled = calendarEnabled,
                         calendarIds = calendarIds,
                         showAllDay = showAllDay,
                         media = media,
                         weather = weather,
+                        twoLineHeader = twoLineHeader,
                         onEventClick = { page = BriefPage.Event(it) },
                         onPlayerClick = { page = BriefPage.Player },
                         onWeatherClick = { page = BriefPage.Weather },
@@ -314,7 +327,13 @@ private sealed interface BriefPage {
     data object Weather : BriefPage
 }
 
-private class BriefWeather(val enabled: Boolean, val unit: TemperatureUnit, val effects: Boolean, val haptics: Boolean)
+private class BriefWeather(
+    val enabled: Boolean,
+    val unit: TemperatureUnit,
+    val effects: Boolean,
+    val haptics: Boolean,
+    val simulated: WeatherEffectSpec? = null,
+)
 
 @Composable
 private fun SwipeBackPage(scope: IslandExpandedScope, onBack: () -> Unit, content: @Composable () -> Unit) {
@@ -398,11 +417,13 @@ private fun openEvent(context: Context, event: UpcomingCalendarEvent) {
 private fun BriefOverview(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
+    alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
     showAllDay: Boolean,
     media: MediaSnapshot?,
     weather: BriefWeather,
+    twoLineHeader: Boolean,
     onEventClick: (UpcomingCalendarEvent) -> Unit,
     onPlayerClick: () -> Unit,
     onWeatherClick: () -> Unit,
@@ -420,6 +441,7 @@ private fun BriefOverview(
         }
     }
     val battery = remember(now) { readBattery(context) }
+    val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
     val devices by produceState(emptyList<BriefDevice>(), now) {
         value = withContext(Dispatchers.IO) { readDevices(context) }
     }
@@ -440,14 +462,23 @@ private fun BriefOverview(
         
         Column(Modifier.fillMaxWidth().padding(spec.expandedOutset).padding(bottom = spec.expandedBottomPadding)) {
             Spacer(Modifier.height(spec.expandedTopPadding))
+            val headerPadding = spec.cameraGap + spec.expandedCorner * 0.35f
             scope.CameraRow(
-                horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                horizontalPadding = headerPadding,
                 start = {
                     Text(time, style = IslandTextStyles.title.copy(fontSize = 20.sp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(date, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                    if (!twoLineHeader) {
+                        Spacer(Modifier.width(8.dp))
+                        Text(date, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                    }
                 },
                 end = {
+                    if (!twoLineHeader) {
+                        alarm?.let {
+                            BriefAlarmChip(NextAlarm.format(context, it.triggerTime, withPeriod = false), accent)
+                            Spacer(Modifier.width(8.dp))
+                        }
+                    }
                     if (battery >= 0) {
                         if (iconStyle) {
                             BatteryGlyph(battery, accent, showLevel = true)
@@ -457,6 +488,16 @@ private fun BriefOverview(
                     }
                 },
             )
+
+            if (twoLineHeader) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = headerPadding).padding(top = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(date, style = IslandTextStyles.body, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                    alarm?.let { BriefAlarmChip(NextAlarm.format(context, it.triggerTime, withPeriod = false), accent) }
+                }
+            }
 
             if (weather.enabled) {
                 val weatherState by WeatherRepository.state.collectAsState()
@@ -693,6 +734,21 @@ private fun deviceIcon(name: String): Int = when {
 }
 
 private const val MAX_DEVICES = 4
+
+@Composable
+private fun BriefAlarmChip(time: String, accent: Color) {
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(Color.White.copy(alpha = 0.1f))
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IslandIcon(R.drawable.rounded_alarm_24, tint = accent, size = 16.dp)
+        Spacer(Modifier.width(4.dp))
+        Text(time, style = IslandTextStyles.compact.copy(fontSize = 13.sp))
+    }
+}
 
 @Composable
 private fun BriefDeviceChip(device: BriefDevice, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {

@@ -199,6 +199,8 @@ fun IslandWeatherOptionsBottomSheet(
                 )
             }
 
+            IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_WEATHER_LAUNCHER_ONLY)
+
             SectionTitle(R.string.weather_section_source)
             RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
                 ConfigPickerItem(

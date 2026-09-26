@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.weather
 
+import com.sameerasw.essentials.island.plugins.brief.BriefPlugin
+import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.utils.DeviceUtils
 import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
@@ -151,6 +153,13 @@ class WeatherPlugin : BaseIslandPlugin() {
                         onRefresh = { ctx?.scope?.launch { WeatherRepository.refresh(context, force = true) } },
                     )
                 },
+                interactions = InteractionOverrides(
+                    onTap = {
+                        settings.isIslandBriefEnabled().also { brief ->
+                            if (brief) ctx?.request?.invoke(PluginRequest.Expand(BriefPlugin.ITEM_KEY))
+                        }
+                    },
+                ),
                 compactVisible = compactVisible,
             ),
         )

@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -66,6 +67,14 @@ fun IslandNotificationOptionsBottomSheet(
                 spacing = 2.dp,
                 cornerRadius = 24.dp,
             ) {
+                if (rememberIslandShowsWhileLocked()) {
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
+                        iconRes = R.drawable.rounded_visibility_off_24,
+                        title = stringResource(R.string.island_notif_conceal_locked_title),
+                    )
+                }
+
                 AnimatedVisibility(
                     visible = viewModel.isIslandLineStageEnabled.value,
                     enter = fadeIn() + expandVertically(),
@@ -134,17 +143,18 @@ fun IslandNotificationOptionsBottomSheet(
                     enter = fadeIn() + expandVertically(),
                     exit = fadeOut() + shrinkVertically(),
                 ) {
+                    val infinityText = stringResource(R.string.island_timeout_infinity)
                     ConfigSliderItem(
                         title = stringResource(R.string.island_catch_up_timeout_title),
-                        value = (viewModel.islandCatchUpTimeoutMs.longValue / 1000f),
+                        value = catchUpStepIndex(viewModel.islandCatchUpTimeoutMs.longValue).toFloat(),
                         onValueChange = {
                             HapticUtil.performUIHaptic(view)
-                            viewModel.setIslandCatchUpTimeoutMs((it * 1000).toLong())
+                            viewModel.setIslandCatchUpTimeoutMs(CATCH_UP_STEPS_MS[it.toInt().coerceIn(CATCH_UP_STEPS_MS.indices)])
                         },
-                        valueRange = 5f..60f,
-                        increment = 5f,
+                        valueRange = 0f..CATCH_UP_STEPS_MS.lastIndex.toFloat(),
+                        increment = 1f,
                         iconRes = R.drawable.rounded_timer_24,
-                        valueFormatter = { "${it.toInt()}s" },
+                        valueFormatter = { formatCatchUp(CATCH_UP_STEPS_MS[it.toInt().coerceIn(CATCH_UP_STEPS_MS.indices)], infinityText) },
                         modifier = Modifier.highlight(highlightSetting == "island_catch_up_timeout"),
                     )
                 }
@@ -152,3 +162,17 @@ fun IslandNotificationOptionsBottomSheet(
         }
     }
 }
+
+private val CATCH_UP_STEPS_MS =
+    longArrayOf(5_000, 10_000, 15_000, 20_000, 30_000, 45_000, 60_000, 120_000, 180_000, 300_000, 600_000, 900_000, 0)
+
+private fun catchUpStepIndex(ms: Long): Int =
+    if (ms <= 0L) CATCH_UP_STEPS_MS.lastIndex
+    else CATCH_UP_STEPS_MS.indices.filter { CATCH_UP_STEPS_MS[it] > 0 }.minBy { kotlin.math.abs(CATCH_UP_STEPS_MS[it] - ms) }
+
+private fun formatCatchUp(ms: Long, infinityText: String): String =
+    when {
+        ms <= 0L -> infinityText
+        ms < 60_000 -> "${ms / 1000}s"
+        else -> "${ms / 60_000}m"
+    }

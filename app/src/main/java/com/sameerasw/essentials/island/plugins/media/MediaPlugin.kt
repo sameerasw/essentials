@@ -146,8 +146,10 @@ class MediaPlugin : BaseIslandPlugin() {
             playing = false
             render()
             c.mainHandler.removeCallbacks(pausedGrace)
-            val grace = if (settings.isIslandMediaKeepWhenPausedEnabled()) settings.getIslandCatchUpTimeoutMs() else PAUSED_GRACE_MS
-            c.mainHandler.postDelayed(pausedGrace, grace)
+            val keep = settings.isIslandMediaKeepWhenPausedEnabled()
+            if (!keep || !settings.isIslandCatchUpInfinite()) {
+                c.mainHandler.postDelayed(pausedGrace, if (keep) settings.getIslandCatchUpTimeoutMs() else PAUSED_GRACE_MS)
+            }
         } else {
             c.mainHandler.removeCallbacks(pausedGrace)
             active = null

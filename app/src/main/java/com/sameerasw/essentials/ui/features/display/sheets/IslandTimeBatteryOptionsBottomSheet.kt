@@ -57,6 +57,7 @@ fun IslandTimeBatteryOptionsBottomSheet(
                 onlyLow = viewModel.isIslandBatteryOnlyLow.value,
                 onOnlyLowChange = viewModel::setIslandBatteryOnlyLow,
             )
+            IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY)
         }
     }
 }
