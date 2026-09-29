@@ -1729,4 +1729,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="perm_bubbles_desc">Permite las vistas previas para abrirlas en una burbuja flotante sobre otras apps</string>
     <string name="perm_files_media_desc">Para mostrar fotos, videos, audio y documentos en los resultados de Pixel Search (Busqueda de Pixel), Essentiasls necesita el permiso para acceder a archivos y media.</string>
     <string name="perm_contacts_desc">Para mostrar contactos en Pixel Search (Busqueda de Pixel), Essential necesita permiso para leer tus contactos.</string>
+    <string name="label_motion_blur_amount">Intensidad</string>
 </resources>
