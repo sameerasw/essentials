@@ -1727,4 +1727,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="duo_action_horizontal_slide_track">Cambiar cancion</string>
     <string name="duo_action_horizontal_slide_track_desc">Solo activar si los medios estan sonando</string>
     <string name="perm_bubbles_desc">Permite las vistas previas para abrirlas en una burbuja flotante sobre otras apps</string>
+    <string name="perm_files_media_desc">Para mostrar fotos, videos, audio y documentos en los resultados de Pixel Search (Busqueda de Pixel), Essentiasls necesita el permiso para acceder a archivos y media.</string>
 </resources>
