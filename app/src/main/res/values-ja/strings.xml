@@ -1809,7 +1809,7 @@
     <string name="weather_sim_time_day">日中</string>
     <string name="weather_sim_time_dusk">夕暮れ</string>
     <string name="weather_sim_time_night">夜</string>
-    <string name="weather_sim_temp_title">温度</string>
+    <string name="weather_sim_temp_title">気温</string>
     <string name="weather_sim_time_title">時間帯</string>
     <string name="screen_locked_disable_notification_interactions_title">通知シェードを無効化</string>
     <string name="screen_locked_disable_notification_interactions_desc">ロック中に通知シェードとクイック設定を使用できなくする</string>
@@ -1826,4 +1826,5 @@
     <string name="island_hide_on_shade_title">ステータスバー展開時に非表示にする</string>
     <string name="duo_hide_when_locked_title">ロック中には非表示にする</string>
     <string name="feat_aod_wallpaper_keep_on_media">メディア再生中に表示を維持</string>
+    <string name="weather_units_title">単位</string>
 </resources>
