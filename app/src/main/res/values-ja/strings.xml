@@ -1796,7 +1796,7 @@
     <string name="settings_genai_automation_desc">デバイス上のGemini Nanoを使用して、説明からオートメーションを作成できます</string>
     <string name="perm_calendar_title">カレンダー</string>
     <string name="perm_storage_title">すべてのファイルへのアクセス</string>
-    <string name="feat_weather_desc">プロバイダーと設定を調整</string>
+    <string name="feat_weather_desc">プロバイダーと設定を変更する</string>
     <string name="weather_provider_title">プロバイダー</string>
     <string name="weather_model_title">予報モデル</string>
     <string name="weather_location_device">現在地</string>
