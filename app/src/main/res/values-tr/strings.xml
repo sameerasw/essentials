@@ -1634,7 +1634,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="watchface_glance_comp_alarm_title">Sonraki alarm</string>
     <string name="watchface_glance_comp_travel_title">Orada mıyız? (Tahmini Varış Süresi)</string>
     <string name="watchface_glance_comp_travel_desc">Hedefe kalan süre/mesafeyi göster</string>
-    <string name="label_online_help_media">Çevrimiçi yardım medyası</string>
+    <string name="label_online_help_media">Çevrim içi yardım medyası</string>
     <string name="qs_secure_sensitive_tiles_desc">Kilitliyken hassas hızlı ayar kutucuklarını tetiklemeden önce kilit açmayı ister</string>
     <string name="qs_secure_sensitive_tiles_title">Güvenli hassas kutucuklar</string>
     <string name="status_glance_enable_title">Durum ön izlemesini etkinleştir</string>
@@ -1760,4 +1760,7 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="diy_set_keyboard_title">Klavyeyi Ayarla</string>
     <string name="screen_locked_disable_notification_interactions_desc">Kilitliyken bildirim panelinin ve Hızlı Ayarlar\'ın aşağı çekilmesini engelleyin</string>
     <string name="screen_locked_disable_notification_interactions_title">Bildirim etkileşimlerini devre dışı bırak</string>
+    <string name="feat_weather_title">Hava durumu</string>
+    <string name="feat_weather_desc">Sağlayıcıları ve ayarları yapılandırın</string>
+    <string name="about_desc_weather">Bir hava durumu tahmini kaynağı seçin; konumunuzu, birimleri ve yenileme aralığını ayarlayın; ayrıca tam hava durumu ekranının uygulama listenizde görünüp görünmeyeceğine karar verin. Ada ve Özet özellikleri bu ayarları kullanır.</string>
 </resources>
