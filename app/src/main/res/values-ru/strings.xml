@@ -1762,4 +1762,7 @@
     <string name="island_weather_effects_title">Погодные эффекты</string>
     <string name="island_weather_haptics_title">Имитация вибрации</string>
     <string name="weather_refresh_interval_title">Обновлять каждые</string>
+    <string name="feat_conscious_gate_desc">Пауза перед открытием выбранных приложений</string>
+    <string name="haptic_mode_stronger">Повышенная</string>
+    <string name="about_desc_weather">Выберите источник прогноза, укажите местоположение, единицы измерения и интервал обновления, а также решите, будет ли полный экран погоды отображаться в списке приложений. Островок и Сводка используют эти настройки.</string>
 </resources>
