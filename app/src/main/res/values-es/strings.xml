@@ -1736,4 +1736,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="label_thermal_cpu">Temperatura de.CPU</string>
     <string name="label_auto_reset_battery_stats_title">Reiniciar automaticamente</string>
     <string name="label_auto_reset_battery_stats_desc">Automaticamente reinicia las estadisticas de la bateria si el dispositivo se desconecta despues del 90% c de carga.</string>
+    <string name="feat_weather_title">Clima</string>
+    <string name="feat_weather_desc">Configura provedores y ajustes</string>
 </resources>
