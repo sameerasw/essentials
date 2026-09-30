@@ -23,6 +23,7 @@ data class IslandLayoutSpec(
     val expandedOutset: Dp = 0.dp,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,
     val outlineColor: Color? = null,
+    val outlineDynamic: Boolean = false,
     val outlineThickness: Dp = 1.dp,
     val outlineHiddenWhenExpanded: Boolean = false,
     val pulseShadow: Boolean = false,

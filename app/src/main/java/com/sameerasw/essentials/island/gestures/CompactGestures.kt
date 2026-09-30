@@ -11,6 +11,10 @@ interface CompactGestures {
 
     fun slideStep(forward: Boolean)
 
+    fun slideBegin() {}
+
+    fun slideTo(dx: Float, rangePx: Float): Int = levelPercent()
+
     fun slideCommit(dx: Float)
 
     fun levelPercent(): Int

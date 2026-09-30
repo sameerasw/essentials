@@ -54,6 +54,8 @@ class DuoTouchHandler(
     private var downY: Float = 0f
     private var downTime: Long = 0L
     private var lastSlideX: Float = 0f
+    private val brightnessSlide = com.sameerasw.essentials.utils.LinearBrightness(service)
+    private var lastBrightnessPercent: Int = 0
 
     private var lastTapTime: Long = 0L
     private var lastTapX: Float = 0f
@@ -119,6 +121,8 @@ class DuoTouchHandler(
                 downX = x
                 downY = y
                 lastSlideX = x
+                brightnessSlide.begin()
+                lastBrightnessPercent = brightnessSlide.percent()
                 downTime = SystemClock.uptimeMillis()
                 isLongPressTriggered = false
                 isSwipeDownTriggered = false
@@ -295,26 +299,15 @@ class DuoTouchHandler(
             }
 
             "brightness" -> {
-                val deltaX = currentX - lastSlideX
-                if (abs(deltaX) >= slideStepPx) {
-                    try {
-                        val currentBrightness = Settings.System.getInt(
-                            service.contentResolver,
-                            Settings.System.SCREEN_BRIGHTNESS,
-                            128
-                        )
-                        val step = if (deltaX > 0) 15 else -15
-                        val newBrightness = (currentBrightness + step).coerceIn(1, 255)
-                        Settings.System.putInt(
-                            service.contentResolver,
-                            Settings.System.SCREEN_BRIGHTNESS,
-                            newBrightness
-                        )
-                        HapticUtil.performHapticForService(service, HapticFeedbackType.SUBTLE)
-                        overlayView?.setInteractiveBrightness(newBrightness, 255)
-                    } catch (_: Exception) {
+                if (abs(totalDx) >= slideStepPx || isVolumeOrBrightnessAdjusted) {
+                    val percent = brightnessSlide.slide(currentX - downX, service.resources.displayMetrics.widthPixels * 0.6f)
+                    if (percent != lastBrightnessPercent) {
+                        if (percent / 5 != lastBrightnessPercent / 5) {
+                            HapticUtil.performHapticForService(service, HapticFeedbackType.SUBTLE)
+                        }
+                        lastBrightnessPercent = percent
+                        overlayView?.setInteractiveBrightness(percent, 100)
                     }
-                    lastSlideX = currentX
                     isVolumeOrBrightnessAdjusted = true
                 }
             }

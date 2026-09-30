@@ -56,12 +56,12 @@ class CallPlugin : BaseIslandPlugin() {
                 val previous = call
                 call = next
                 val startedRinging = next?.phase == CallPhase.Ringing && previous?.phase != CallPhase.Ringing
-                if (startedRinging) {
-                    if (enabled(next)) popUp() else releaseHeadsUpForCall()
-                }
                 if (next == null) restoreHeadsUpAfterCall()
                 restartTicker()
                 render()
+                if (startedRinging) {
+                    if (enabled(next)) popUp() else releaseHeadsUpForCall()
+                }
             }
         }
     }

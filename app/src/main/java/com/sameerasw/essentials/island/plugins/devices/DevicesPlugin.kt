@@ -206,6 +206,7 @@ class DevicesPlugin : BaseIslandPlugin() {
                 key = BATTERY_KEY,
                 priority = IslandPriority.DEVICES,
                 placement = CompactPlacement.Dynamic,
+                outlineAccent = color ?: idleColor(),
                 compact = listOf(
                     CompactCell("devices.battery.level") { DeviceBattery(d.level, iconStyle, showLevel, color ?: idleColor()) },
                     CompactCell("devices.battery.icon") { IslandIcon(d.iconRes, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },

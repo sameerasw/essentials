@@ -161,6 +161,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             key = BATTERY_KEY,
             priority = IslandPriority.BATTERY,
             placement = CompactPlacement.Pinned,
+            outlineAccent = displayColor,
             compact = listOf(
                 CompactCell("battery") {
                     when {

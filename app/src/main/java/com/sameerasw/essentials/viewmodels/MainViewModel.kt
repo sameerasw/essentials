@@ -202,6 +202,7 @@ class MainViewModel : ViewModel() {
     val isIslandTimersShowScreenRecorder = mutableStateOf(true)
     val isIslandShowNetwork = mutableStateOf(true)
     val isIslandShowSoundMode = mutableStateOf(true)
+    val isIslandSoundModeKeepIcon = mutableStateOf(true)
     val isIslandShowAlarm = mutableStateOf(false)
     val islandAlarmWindowHours = mutableIntStateOf(12)
     val isIslandShowTravel = mutableStateOf(true)
@@ -232,6 +233,7 @@ class MainViewModel : ViewModel() {
     val isIslandShowGlow = mutableStateOf(true)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
+    val isIslandBorderOutlineDynamic = mutableStateOf(false)
     val islandBorderOutlineThickness = mutableFloatStateOf(1f)
     val isIslandBorderOutlineHiddenWhenExpanded = mutableStateOf(false)
     val isIslandPulseShadow = mutableStateOf(false)
@@ -2248,6 +2250,7 @@ class MainViewModel : ViewModel() {
         isIslandTimersShowScreenRecorder.value = settingsRepository.isIslandTimersShowScreenRecorderEnabled()
         isIslandShowNetwork.value = settingsRepository.isIslandShowNetworkEnabled()
         isIslandShowSoundMode.value = settingsRepository.isIslandShowSoundModeEnabled()
+        isIslandSoundModeKeepIcon.value = settingsRepository.isIslandSoundModeKeepIconEnabled()
         isIslandShowAlarm.value = settingsRepository.isIslandShowAlarmEnabled()
         islandAlarmWindowHours.intValue = settingsRepository.getIslandAlarmWindowHours()
         isIslandShowTravel.value = settingsRepository.isIslandShowTravelEnabled()
@@ -2285,6 +2288,7 @@ class MainViewModel : ViewModel() {
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
+        isIslandBorderOutlineDynamic.value = settingsRepository.isIslandBorderOutlineDynamicEnabled()
         islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
         isIslandBorderOutlineHiddenWhenExpanded.value = settingsRepository.isIslandBorderOutlineHiddenWhenExpanded()
         isIslandPulseShadow.value = settingsRepository.isIslandPulseShadowEnabled()
@@ -5299,6 +5303,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandShowSoundModeEnabled(enabled)
     }
 
+    fun setIslandSoundModeKeepIcon(enabled: Boolean) {
+        isIslandSoundModeKeepIcon.value = enabled
+        settingsRepository.setIslandSoundModeKeepIconEnabled(enabled)
+    }
+
     fun setIslandShowNetwork(enabled: Boolean) {
         isIslandShowNetwork.value = enabled
         settingsRepository.setIslandShowNetworkEnabled(enabled)
@@ -5489,6 +5498,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBorderOutlineColor(colorHex: String) {
         islandBorderOutlineColor.value = colorHex
         settingsRepository.setIslandBorderOutlineColor(colorHex)
+    }
+
+    fun setIslandBorderOutlineDynamic(enabled: Boolean) {
+        isIslandBorderOutlineDynamic.value = enabled
+        settingsRepository.setIslandBorderOutlineDynamicEnabled(enabled)
     }
 
     fun setIslandBorderOutlineThickness(value: Float) {

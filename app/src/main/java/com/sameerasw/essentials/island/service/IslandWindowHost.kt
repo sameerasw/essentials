@@ -12,7 +12,11 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import com.sameerasw.essentials.utils.HapticUtil
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.IntRect
 import androidx.lifecycle.setViewTreeLifecycleOwner
@@ -55,7 +59,10 @@ class IslandWindowHost(
         val lifecycle = OverlayLifecycleOwner().also { it.onCreate() }
         val compose = ComposeView(context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
-            setContent(content)
+            setContent {
+                val gated = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
+                CompositionLocalProvider(LocalHapticFeedback provides gated) { content() }
+            }
         }
         val frame = FrameLayout(context).apply {
             setViewTreeLifecycleOwner(lifecycle)

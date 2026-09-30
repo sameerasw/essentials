@@ -929,6 +929,8 @@ class DuoOverlayHandler(
                     isTouchable = false
                 )
                 try {
+                    overlayView?.let { runCatching { wm.removeViewImmediate(it) } }
+                    overlayView?.playEnter()
                     wm.addView(overlayView, params)
                     isOverlayAdded = true
                     registerRotationListener()
@@ -1335,13 +1337,19 @@ class DuoOverlayHandler(
         }
     }
 
-    fun removeOverlay() {
+    fun removeOverlay(animate: Boolean = true) {
         mainHandler.post {
-            if (isOverlayAdded && overlayView != null) {
-                try {
-                    windowManager?.removeView(overlayView)
-                } catch (_: Exception) {}
+            val fading = overlayView
+            if (isOverlayAdded && fading != null) {
                 isOverlayAdded = false
+                val remove = {
+                    if (!isOverlayAdded) {
+                        try {
+                            windowManager?.removeView(fading)
+                        } catch (_: Exception) {}
+                    }
+                }
+                if (animate) fading.playExit(remove) else remove()
             }
             if (isTouchAnchorAdded && touchAnchorView != null) {
                 try {
@@ -1360,7 +1368,7 @@ class DuoOverlayHandler(
     }
 
     fun destroy() {
-        removeOverlay()
+        removeOverlay(animate = false)
         overlayView = null
         touchAnchorView = null
         currentArtOrIconBitmap = null

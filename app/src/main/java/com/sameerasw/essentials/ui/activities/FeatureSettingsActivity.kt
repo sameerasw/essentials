@@ -605,6 +605,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 )
                             }
 
+                            if (featureId == "Weather") {
+                                com.sameerasw.essentials.ui.features.weather.WeatherHeaderCard(
+                                    height = headerHeight - 16.dp,
+                                    minHeight = minHeaderHeight - 16.dp,
+                                    maxHeight = maxHeaderHeight - 16.dp,
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                )
+                            }
+
                             if (featureObj != null && featureObj.animationRes != 0) {
                                 LottieFeatureAnimation(
                                     resId = featureObj.animationRes,
@@ -1113,6 +1122,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Weather" -> {
+                                        com.sameerasw.essentials.ui.features.weather.WeatherSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
                                         )
                                     }
 

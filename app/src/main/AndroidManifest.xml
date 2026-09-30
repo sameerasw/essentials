@@ -315,6 +315,28 @@
             android:label="@string/tab_app_updates_title"
             android:theme="@style/Theme.Essentials"></activity>
         <activity
+            android:name=".ui.activities.WeatherDetailActivity"
+            android:exported="true"
+            android:icon="@drawable/rounded_partly_cloudy_day_24"
+            android:label="@string/weather_activity_label"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.sameerasw.essentials.weather"
+            android:theme="@style/Theme.Essentials.Weather" />
+
+        <activity-alias
+            android:name=".WeatherLauncher"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/rounded_partly_cloudy_day_24"
+            android:label="@string/weather_activity_label"
+            android:targetActivity=".ui.activities.WeatherDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
             android:name=".ui.activities.ColorPickerActivity"
             android:excludeFromRecents="true"
             android:exported="false"

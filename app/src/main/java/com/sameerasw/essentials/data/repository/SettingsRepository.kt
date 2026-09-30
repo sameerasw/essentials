@@ -465,6 +465,7 @@ class SettingsRepository(
         const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
         const val ISLAND_SHOW_WHEN_ALWAYS = "always"
         const val KEY_ISLAND_NOTIF_CONCEAL_LOCKED = "island_notif_conceal_locked"
+        const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
@@ -504,6 +505,9 @@ class SettingsRepository(
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
         const val KEY_ISLAND_PREVIEW_RING = "island_preview_ring"
         const val KEY_DEBUG_SIMULATED_WEATHER = "debug_simulated_weather"
+        const val KEY_DEBUG_WEATHER_EXPERIMENTAL = "debug_weather_experimental"
+        const val KEY_DEBUG_SIMULATED_TIME = "debug_simulated_time"
+        const val KEY_DEBUG_SIMULATED_TEMP = "debug_simulated_temp"
         const val KEY_ISLAND_PREVIEW_STAGE = "island_preview_stage"
         const val ISLAND_PREVIEW_STAGE_AUTO = "auto"
         const val ISLAND_PREVIEW_STAGE_PEEK = "peek"
@@ -526,6 +530,9 @@ class SettingsRepository(
 
         const val KEY_WEATHER_PROVIDER = "weather_provider"
         const val KEY_WEATHER_API_KEY = "weather_api_key"
+        const val KEY_WEATHER_SHOW_IN_LAUNCHER = "weather_show_in_launcher"
+        const val KEY_WEATHER_OPENMETEO_MODEL = "weather_openmeteo_model"
+        fun weatherApiKeyName(providerId: String) = "${KEY_WEATHER_API_KEY}_$providerId"
         const val KEY_WEATHER_LOCATION_MODE = "weather_location_mode"
         const val KEY_WEATHER_MANUAL_LOCATION = "weather_manual_location"
         const val KEY_WEATHER_UNITS = "weather_units"
@@ -537,6 +544,7 @@ class SettingsRepository(
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
         const val KEY_ISLAND_SHOW_SOUND_MODE = "island_show_sound_mode"
+        const val KEY_ISLAND_SOUND_MODE_KEEP_ICON = "island_sound_mode_keep_icon"
         const val KEY_ISLAND_SHOW_ALARM = "island_show_alarm"
         const val KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY = "island_time_battery_launcher_only"
         const val KEY_ISLAND_WEATHER_LAUNCHER_ONLY = "island_weather_launcher_only"
@@ -565,6 +573,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
         const val KEY_ISLAND_BORDER_OUTLINE_COLOR = "island_border_outline_color"
+        const val KEY_ISLAND_BORDER_OUTLINE_DYNAMIC = "island_border_outline_dynamic"
         const val KEY_ISLAND_BORDER_OUTLINE_THICKNESS = "island_border_outline_thickness"
         const val KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED = "island_border_outline_hide_expanded"
         const val KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION = "island_pulse_shadow_on_notification"
@@ -1625,7 +1634,7 @@ class SettingsRepository(
                     if (key == KEY_GITHUB_ACCESS_TOKEN ||
                         key == KEY_GITHUB_WORKFLOW_TOKEN ||
                         key == KEY_SHIZUKU_AUTH_TOKEN ||
-                        key == KEY_WEATHER_API_KEY ||
+                        key.startsWith(KEY_WEATHER_API_KEY) ||
                         key.startsWith("mac_battery_") ||
                         key == "airsync_mac_connected" ||
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS ||
@@ -1703,6 +1712,7 @@ class SettingsRepository(
                         KEY_GITHUB_WORKFLOW_TOKEN,
                         KEY_SHIZUKU_AUTH_TOKEN,
                         KEY_WEATHER_API_KEY,
+                        *com.sameerasw.essentials.weather.provider.WeatherProviders.all.map { weatherApiKeyName(it.id) }.toTypedArray(),
                         "airsync_mac_connected",
                         KEY_SNOOZE_DISCOVERED_CHANNELS,
                         KEY_MAPS_DISCOVERED_CHANNELS,
@@ -1742,7 +1752,7 @@ class SettingsRepository(
                             if (key == KEY_GITHUB_ACCESS_TOKEN ||
                                 key == KEY_GITHUB_WORKFLOW_TOKEN ||
                                 key == KEY_SHIZUKU_AUTH_TOKEN ||
-                                key == KEY_WEATHER_API_KEY
+                                key.startsWith(KEY_WEATHER_API_KEY)
                             ) {
                                 return@forEach
                             }
@@ -3603,6 +3613,9 @@ class SettingsRepository(
         getString(KEY_ISLAND_BORDER_OUTLINE_COLOR, ISLAND_BORDER_OUTLINE_DEFAULT_COLOR) ?: ISLAND_BORDER_OUTLINE_DEFAULT_COLOR
     fun setIslandBorderOutlineColor(colorHex: String) = putString(KEY_ISLAND_BORDER_OUTLINE_COLOR, colorHex)
 
+    fun isIslandBorderOutlineDynamicEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_DYNAMIC, false)
+    fun setIslandBorderOutlineDynamicEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_DYNAMIC, enabled)
+
     fun isIslandBorderOutlineHiddenWhenExpanded(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, false)
     fun setIslandBorderOutlineHiddenWhenExpanded(hidden: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, hidden)
 
@@ -3737,8 +3750,33 @@ class SettingsRepository(
     fun getWeatherProvider(): String? = getString(KEY_WEATHER_PROVIDER, null)
     fun setWeatherProvider(id: String) = putString(KEY_WEATHER_PROVIDER, id)
 
-    fun getWeatherApiKey(): String? = getString(KEY_WEATHER_API_KEY, null)?.takeIf { it.isNotBlank() }
-    fun setWeatherApiKey(key: String?) = putString(KEY_WEATHER_API_KEY, key?.trim().orEmpty())
+    // Keys are stored per provider; the single key from before multiple sources belongs to WeatherAPI.com.
+    fun isWeatherExperimentalEnabled(): Boolean = getBoolean(KEY_DEBUG_WEATHER_EXPERIMENTAL, false)
+
+    fun getSimulatedWeather(): com.sameerasw.essentials.weather.effects.WeatherSimulationPreset? =
+        if (isWeatherExperimentalEnabled()) {
+            com.sameerasw.essentials.weather.effects.WeatherSimulation.find(
+                getString(KEY_DEBUG_SIMULATED_WEATHER, com.sameerasw.essentials.weather.effects.WeatherSimulation.OFF),
+            )
+        } else {
+            null
+        }
+
+    fun getSimulatedTimeOfDay(): String? =
+        if (isWeatherExperimentalEnabled()) getString(KEY_DEBUG_SIMULATED_TIME, "auto")?.takeIf { it != "auto" } else null
+
+    fun getSimulatedTempC(): Double? =
+        if (isWeatherExperimentalEnabled()) getString(KEY_DEBUG_SIMULATED_TEMP, "auto")?.toDoubleOrNull() else null
+
+    fun getWeatherOpenMeteoModel(): String? = getString(KEY_WEATHER_OPENMETEO_MODEL, null)?.takeIf { it.isNotBlank() }
+    fun setWeatherOpenMeteoModel(model: String?) = putString(KEY_WEATHER_OPENMETEO_MODEL, model.orEmpty())
+
+    fun getWeatherApiKey(providerId: String): String? {
+        val own = getString(weatherApiKeyName(providerId), null)
+        if (own != null) return own.takeIf { it.isNotBlank() }
+        return if (providerId == "weatherapi") getString(KEY_WEATHER_API_KEY, null)?.takeIf { it.isNotBlank() } else null
+    }
+    fun setWeatherApiKey(providerId: String, key: String?) = putString(weatherApiKeyName(providerId), key?.trim().orEmpty())
 
     fun getWeatherLocationMode(): String = getString(KEY_WEATHER_LOCATION_MODE, "device") ?: "device"
     fun setWeatherLocationMode(mode: String) = putString(KEY_WEATHER_LOCATION_MODE, mode)
@@ -3772,6 +3810,9 @@ class SettingsRepository(
 
     fun isIslandShowSoundModeEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SOUND_MODE, true)
     fun setIslandShowSoundModeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_SOUND_MODE, enabled)
+
+    fun isIslandSoundModeKeepIconEnabled(): Boolean = getBoolean(KEY_ISLAND_SOUND_MODE_KEEP_ICON, true)
+    fun setIslandSoundModeKeepIconEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SOUND_MODE_KEEP_ICON, enabled)
 
     fun isIslandShowAlarmEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_ALARM, false)
     fun setIslandShowAlarmEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_ALARM, enabled)

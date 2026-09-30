@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.weather.effects
 
 import com.sameerasw.essentials.weather.effects.WeatherEffectLayer.Clouds
+import com.sameerasw.essentials.weather.model.WeatherCondition
+import com.sameerasw.essentials.weather.model.WeatherSnapshot
 import com.sameerasw.essentials.weather.effects.WeatherEffectLayer.Fog
 import com.sameerasw.essentials.weather.effects.WeatherEffectLayer.Hail
 import com.sameerasw.essentials.weather.effects.WeatherEffectLayer.Lightning
@@ -37,6 +39,48 @@ object WeatherSimulation {
         preset("dry_lightning", "Dry lightning", Clouds(0.7f), Lightning(1f)),
         preset("everything", "Everything", Clouds(1f), Rain(1f, 0.4f), Snow(1f), Hail(1f), Lightning(1f)),
     )
+
+    fun apply(snapshot: WeatherSnapshot, preset: WeatherSimulationPreset): WeatherSnapshot =
+        snapshot.copy(
+            condition = conditionOf(preset.spec),
+            conditionText = preset.label,
+            isDay = preset.spec.layers.none { it is Stars },
+        )
+
+    fun withTimeOfDay(snapshot: WeatherSnapshot, override: String?): WeatherSnapshot =
+        if (override == null) snapshot else snapshot.copy(isDay = override != "night")
+
+    fun timeFor(snapshot: WeatherSnapshot?, override: String?, clock: Long): Long {
+        val rise = snapshot?.extras?.sunriseMillis
+        val set = snapshot?.extras?.sunsetMillis
+        if (override == null || rise == null || set == null) return clock
+        val day = 24 * 60 * 60_000L
+        val shift = Math.floorDiv(clock - rise, day) * day
+        val r = rise + shift
+        val s = set + shift
+        return when (override) {
+            "dawn" -> r
+            "day" -> (r + s) / 2
+            "dusk" -> s
+            else -> (s + r + day) / 2
+        }
+    }
+
+    private fun conditionOf(spec: WeatherEffectSpec): WeatherCondition {
+        val layers = spec.layers
+        val rain = layers.filterIsInstance<Rain>().firstOrNull()
+        return when {
+            layers.any { it is Lightning } -> WeatherCondition.THUNDERSTORM
+            layers.any { it is Hail } -> WeatherCondition.HAIL
+            layers.any { it is Snow } && rain != null -> WeatherCondition.SLEET
+            layers.any { it is Snow } -> WeatherCondition.SNOW
+            rain != null -> if (rain.intensity >= 0.9f) WeatherCondition.HEAVY_RAIN else if (rain.intensity > 0.4f) WeatherCondition.RAIN else WeatherCondition.DRIZZLE
+            layers.any { it is Fog } -> WeatherCondition.FOG
+            layers.any { it is Clouds && it.intensity > 0.7f } -> WeatherCondition.CLOUDY
+            layers.any { it is Clouds } -> WeatherCondition.PARTLY_CLOUDY
+            else -> WeatherCondition.CLEAR
+        }
+    }
 
     fun find(id: String?): WeatherSimulationPreset? = presets.firstOrNull { it.id == id && it.id != OFF }
 

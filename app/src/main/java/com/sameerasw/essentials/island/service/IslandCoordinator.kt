@@ -56,6 +56,7 @@ import com.sameerasw.essentials.island.state.IslandController
 import com.sameerasw.essentials.island.ui.IslandActions
 import com.sameerasw.essentials.island.ui.IslandFontFamily
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
+import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.IslandRoot
 import com.sameerasw.essentials.utils.ShellUtils
 import kotlinx.coroutines.CoroutineScope
@@ -227,7 +228,7 @@ class IslandCoordinator(
     fun updateState() {
         mainHandler.post {
             val shouldRun = settings.isIslandEnabled() && !isWindowSuppressed
-            if (shouldRun) start() else stop()
+            if (shouldRun) start() else stop(animate = true)
             if (running) {
                 applyConfig()
                 applySuppression()
@@ -348,8 +349,16 @@ class IslandCoordinator(
     }
 
     private fun start() {
+        pendingStop?.let {
+            mainHandler.removeCallbacks(it)
+            pendingStop = null
+            hiding = false
+            applySuppression()
+        }
         if (running) return
         running = true
+        revealing = true
+        controller.setSuppressed(true)
         applyLauncherOnly()
         val newScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         scope = newScope
@@ -377,10 +386,12 @@ class IslandCoordinator(
         // Fails until the accessibility service is connected; onServiceConnected calls updateState() again.
         if (!attached) {
             running = false
+            revealing = false
             newScope.cancel()
             scope = null
             return
         }
+        mainHandler.postDelayed(endReveal, REVEAL_DELAY_MS)
         val context = IslandPluginContext(
             service = service,
             settings = settings,
@@ -451,8 +462,31 @@ class IslandCoordinator(
         compactVisible = false,
     )
 
-    private fun stop() {
+    private var revealing = false
+    private var hiding = false
+    private var pendingStop: Runnable? = null
+    private val endReveal = Runnable {
+        revealing = false
+        applySuppression()
+    }
+
+    private fun stop(animate: Boolean = false) {
         if (!running) return
+        if (animate) {
+            if (pendingStop != null) return
+            hiding = true
+            applySuppression()
+            val task = Runnable {
+                pendingStop = null
+                hiding = false
+                stop()
+            }
+            pendingStop = task
+            mainHandler.postDelayed(task, IslandMotion.COLLAPSE_MS + HIDE_SETTLE_MS)
+            return
+        }
+        mainHandler.removeCallbacks(endReveal)
+        revealing = false
         running = false
         controller.holdFocus = false
         controller.setItems(PREVIEW_SOURCE, emptyList())
@@ -503,6 +537,7 @@ class IslandCoordinator(
             } else {
                 null
             },
+            outlineDynamic = settings.isIslandBorderOutlineDynamicEnabled(),
             outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
             outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
             pulseShadow = settings.isIslandPulseShadowEnabled(),
@@ -520,7 +555,7 @@ class IslandCoordinator(
     }
 
     private fun applySuppression() {
-        controller.setSuppressed(isContentSuppressed)
+        controller.setSuppressed(isContentSuppressed || revealing || hiding)
     }
 
     private fun syncStatusBar(stage: IslandStage) {
@@ -551,6 +586,8 @@ class IslandCoordinator(
     }
 
     private companion object {
+        const val REVEAL_DELAY_MS = 120L
+        const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
@@ -570,6 +607,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_ENABLED,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_COLOR,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_DYNAMIC,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_THICKNESS,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED,
             SettingsRepository.KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION,

@@ -1039,7 +1039,17 @@ class DuoOverlayView(context: Context) : View(context) {
     private var currentDotBaseColor: Int = Color.WHITE
     private var themeAnimator: ValueAnimator? = null
 
-    private fun animateScreenOffVisibility(visible: Boolean) {
+    fun playEnter() {
+        visibilityAnimator?.cancel()
+        animatedVisibilityAlpha = 0f
+        animatedVisibilityScale = 0.35f
+        animatedVisibilityRotation = -65f
+        animateScreenOffVisibility(true)
+    }
+
+    fun playExit(onEnd: () -> Unit) = animateScreenOffVisibility(false, onEnd)
+
+    private fun animateScreenOffVisibility(visible: Boolean, onEnd: (() -> Unit)? = null) {
         visibilityAnimator?.cancel()
         val startAlpha = animatedVisibilityAlpha
         val targetAlpha = if (visible) 1.0f else 0.0f
@@ -1063,6 +1073,19 @@ class DuoOverlayView(context: Context) : View(context) {
                 animatedVisibilityScale = (startScale + (targetScale - startScale) * fraction).coerceAtLeast(0.01f)
                 animatedVisibilityRotation = startRotation + (targetRotation - startRotation) * fraction
                 invalidate()
+            }
+            if (onEnd != null) {
+                addListener(object : android.animation.AnimatorListenerAdapter() {
+                    private var cancelled = false
+
+                    override fun onAnimationCancel(animation: android.animation.Animator) {
+                        cancelled = true
+                    }
+
+                    override fun onAnimationEnd(animation: android.animation.Animator) {
+                        if (!cancelled) onEnd()
+                    }
+                })
             }
             start()
         }

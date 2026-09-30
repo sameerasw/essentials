@@ -77,6 +77,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -163,6 +164,16 @@ fun IslandRoot(
     )
 
     val pulseAccent = state.items[state.focusedKey]?.accent
+    val dynamicOutline: Color? = if (spec.outlineDynamic) {
+        val focused = state.items[state.focusedKey]
+        (focused?.outlineAccent ?: focused?.accent)
+            ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.let { it.outlineAccent ?: it.accent } }
+    } else {
+        null
+    }
+    val animatedOutlineColor: Color? = spec.outlineColor?.let { base ->
+        animateColorAsState(dynamicOutline ?: base, label = "islandOutlineColor").value
+    }
     val pulse = remember { Animatable(0f) }
     LaunchedEffect(state.focusedKey, spec.pulseShadow) {
         pulse.snapTo(0f)
@@ -526,7 +537,7 @@ fun IslandRoot(
                 }
                 .background(Color.Black)
                 .then(
-                    spec.outlineColor?.takeIf { outlineAlpha > 0f }
+                    animatedOutlineColor?.takeIf { outlineAlpha > 0f }
                         ?.let { Modifier.border(spec.outlineThickness, it.copy(alpha = it.alpha * outlineAlpha), surfaceShape) }
                         ?: Modifier,
                 )

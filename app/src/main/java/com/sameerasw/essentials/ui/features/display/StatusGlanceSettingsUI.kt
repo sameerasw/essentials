@@ -819,6 +819,7 @@ fun StatusGlanceSettingsUI(
 
     if (showOpenAppSettings) {
         SingleAppSelectionSheet(
+            includeSelf = true,
             onDismissRequest = { showOpenAppSettings = false },
             onAppSelected = { app ->
                 val newAction = Action.OpenApp(packageName = app.packageName)

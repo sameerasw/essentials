@@ -879,6 +879,42 @@ class StatusGlanceView(context: Context) : View(context) {
         return calculated.coerceAtMost(maxAllowedWidth)
     }
 
+    fun playEnter() {
+        revealAnimator?.cancel()
+        revealProgress = 0f
+        isVisibilityHidden = false
+        animateReveal(1f)
+    }
+
+    fun playExit(onEnd: () -> Unit) = animateReveal(0f, onEnd)
+
+    private fun animateReveal(target: Float, onEnd: (() -> Unit)? = null) {
+        revealAnimator?.cancel()
+        val hide = target == 0f
+        revealAnimator = ValueAnimator.ofFloat(revealProgress, target).apply {
+            duration = if (hide) 240L else 380L
+            interpolator = if (hide) LinearInterpolator() else DecelerateInterpolator(1.8f)
+            addUpdateListener {
+                revealProgress = it.animatedValue as Float
+                invalidate()
+            }
+            if (onEnd != null) {
+                addListener(object : AnimatorListenerAdapter() {
+                    private var cancelled = false
+
+                    override fun onAnimationCancel(animation: Animator) {
+                        cancelled = true
+                    }
+
+                    override fun onAnimationEnd(animation: Animator) {
+                        if (!cancelled) onEnd()
+                    }
+                })
+            }
+            start()
+        }
+    }
+
     fun updateVisibilityState(immediate: Boolean = false) {
         val shouldHide = (isLocked && hideWhenLocked) || isScreenOff || isLandscape || (isFullscreen && hideWhenFullscreen) || (isShadeExpanded && hideInQuickSettings)
         if (isVisibilityHidden == shouldHide && !immediate) return

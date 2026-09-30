@@ -287,6 +287,7 @@ class StatusGlanceHandler(
         val params = getOverlayLayoutParams()
 
         try {
+            glanceView?.playEnter()
             wm.addView(glanceView, params)
             isOverlayAdded = true
             updateGlancePosition()
@@ -1004,21 +1005,26 @@ class StatusGlanceHandler(
         }
     }
 
-    private fun removeOverlay() {
-        if (isOverlayAdded && glanceView != null && windowManager != null) {
-            try {
-                windowManager?.removeView(glanceView)
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun removeOverlay(animate: Boolean = true) {
+        val fading = glanceView
+        val wm = windowManager
+        if (isOverlayAdded && fading != null && wm != null) {
+            val remove = {
+                try {
+                    wm.removeView(fading)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
             isOverlayAdded = false
             glanceView = null
+            if (animate) fading.playExit(remove) else remove()
         }
         removeTouchAnchor()
     }
 
     fun destroy() {
-        removeOverlay()
+        removeOverlay(animate = false)
         touchAnchorView = null
         touchHandler = null
         unregisterTorchCallback()

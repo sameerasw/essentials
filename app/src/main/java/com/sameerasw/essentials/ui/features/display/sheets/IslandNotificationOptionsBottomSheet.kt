@@ -22,6 +22,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -44,6 +49,8 @@ fun IslandNotificationOptionsBottomSheet(
     highlightSetting: String? = null,
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
+    var concealed by remember { mutableStateOf(SettingsRepository(context).getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED, false)) }
 
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -72,7 +79,19 @@ fun IslandNotificationOptionsBottomSheet(
                         settingKey = SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
                         iconRes = R.drawable.rounded_visibility_off_24,
                         title = stringResource(R.string.island_notif_conceal_locked_title),
+                        onChanged = { concealed = it },
                     )
+                    AnimatedVisibility(
+                        visible = concealed,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
+                    ) {
+                        IslandPrefToggle(
+                            settingKey = SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
+                            iconRes = R.drawable.rounded_person_24,
+                            title = stringResource(R.string.island_notif_conceal_chat_pictures_title),
+                        )
+                    }
                 }
 
                 AnimatedVisibility(

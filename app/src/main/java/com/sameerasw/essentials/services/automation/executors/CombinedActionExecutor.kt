@@ -26,6 +26,7 @@ import android.telephony.TelephonyManager
 import android.view.KeyEvent
 import android.widget.Toast
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.NotificationListener
@@ -40,6 +41,11 @@ import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
 
 object CombinedActionExecutor {
+    private suspend fun vibrateModeHaptic(context: Context) {
+        kotlinx.coroutines.delay(350)
+        HapticUtil.performStrongDoubleHaptic(context)
+    }
+
     suspend fun execute(
         context: Context,
         action: Action,
@@ -216,6 +222,7 @@ object CombinedActionExecutor {
                         }
                     try {
                         audioManager.ringerMode = ringerMode
+                        if (ringerMode == AudioManager.RINGER_MODE_VIBRATE) vibrateModeHaptic(context)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -381,12 +388,10 @@ object CombinedActionExecutor {
                     val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
                     if (nm.isNotificationPolicyAccessGranted) {
                         try {
+                            val enteringVibrate = am.ringerMode != AudioManager.RINGER_MODE_VIBRATE
                             am.ringerMode =
-                                if (am.ringerMode == AudioManager.RINGER_MODE_VIBRATE) {
-                                    AudioManager.RINGER_MODE_NORMAL
-                                } else {
-                                    AudioManager.RINGER_MODE_VIBRATE
-                                }
+                                if (enteringVibrate) AudioManager.RINGER_MODE_VIBRATE else AudioManager.RINGER_MODE_NORMAL
+                            if (enteringVibrate) vibrateModeHaptic(context)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -437,6 +442,16 @@ object CombinedActionExecutor {
                 is Action.TurnOnHotspot -> setHotspotEnabled(context, true)
                 is Action.TurnOffHotspot -> setHotspotEnabled(context, false)
                 is Action.ToggleHotspot -> setHotspotEnabled(context, !isHotspotEnabled(context))
+
+                is Action.TurnOnDuo -> SettingsRepository(context).setDuoEnabled(true)
+                is Action.TurnOffDuo -> SettingsRepository(context).setDuoEnabled(false)
+                is Action.ToggleDuo -> SettingsRepository(context).let { it.setDuoEnabled(!it.isDuoEnabled()) }
+                is Action.TurnOnIsland -> SettingsRepository(context).setIslandEnabled(true)
+                is Action.TurnOffIsland -> SettingsRepository(context).setIslandEnabled(false)
+                is Action.ToggleIsland -> SettingsRepository(context).let { it.setIslandEnabled(!it.isIslandEnabled()) }
+                is Action.TurnOnStatusGlance -> SettingsRepository(context).setStatusGlanceEnabled(true)
+                is Action.TurnOffStatusGlance -> SettingsRepository(context).setStatusGlanceEnabled(false)
+                is Action.ToggleStatusGlance -> SettingsRepository(context).let { it.setStatusGlanceEnabled(!it.isStatusGlanceEnabled()) }
 
                 is Action.SometimesEssentials -> {
                     val repository =

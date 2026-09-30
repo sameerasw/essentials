@@ -19,21 +19,78 @@ import android.os.VibratorManager
 import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType as ComposeHapticFeedbackType
 import com.sameerasw.essentials.domain.HapticFeedbackType
 
 /**
  * Centralized haptic feedback utility that can be toggled on/off app-wide.
  * Controls in-app UI haptics and service/gesture haptics.
  */
+enum class AppHapticMode { DISABLED, ENABLED, STRONGER }
+
+fun VibrationEffect.Composition.composeBoosted(vibrator: Vibrator): VibrationEffect {
+    if (HapticUtil.hapticMode.value == AppHapticMode.STRONGER &&
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+        vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_THUD)
+    ) {
+        addPrimitive(VibrationEffect.Composition.PRIMITIVE_THUD, 0.6f, 0)
+    }
+    return compose()
+}
+
 object HapticUtil {
+    val hapticMode = mutableStateOf(AppHapticMode.ENABLED)
+
+    fun boost(scale: Float): Float =
+        if (hapticMode.value == AppHapticMode.STRONGER) (scale * 1.6f + 0.2f).coerceAtMost(1f) else scale
+
     // Mutable state to track if in-app haptics are enabled
     val isAppHapticsEnabled = mutableStateOf(true)
+
+    fun gate(context: Context, delegate: HapticFeedback): HapticFeedback =
+        object : HapticFeedback {
+            override fun performHapticFeedback(hapticFeedbackType: ComposeHapticFeedbackType) {
+                if (!isAppHapticsEnabled.value) return
+                if (hapticMode.value == AppHapticMode.STRONGER && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    performCustomHaptic(context, composeStrength(hapticFeedbackType))
+                } else {
+                    delegate.performHapticFeedback(hapticFeedbackType)
+                }
+            }
+        }
+
+    private fun playStronger(view: View, strength: Float): Boolean {
+        if (hapticMode.value != AppHapticMode.STRONGER || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+        performCustomHaptic(view.context, strength)
+        return true
+    }
+
+    private fun composeStrength(type: ComposeHapticFeedbackType): Float =
+        when (type) {
+            ComposeHapticFeedbackType.LongPress -> 0.7f
+            ComposeHapticFeedbackType.TextHandleMove -> 0.3f
+            ComposeHapticFeedbackType.SegmentFrequentTick -> 0.25f
+            ComposeHapticFeedbackType.SegmentTick -> 0.35f
+            ComposeHapticFeedbackType.GestureThresholdActivate -> 0.6f
+            ComposeHapticFeedbackType.GestureEnd -> 0.5f
+            ComposeHapticFeedbackType.Confirm -> 0.7f
+            ComposeHapticFeedbackType.Reject -> 0.85f
+            ComposeHapticFeedbackType.ToggleOn, ComposeHapticFeedbackType.ToggleOff -> 0.5f
+            else -> 0.5f
+        }
+
+    fun vibrate(context: Context, effect: VibrationEffect) {
+        if (!isAppHapticsEnabled.value) return
+        runCatching { getVibrator(context).vibrate(effect) }
+    }
 
     /**
      * Perform standard UI interaction haptic feedback (keyboard tap / standard click)
      */
     fun performUIHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.5f)) return
         view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
     }
 
@@ -42,6 +99,7 @@ object HapticUtil {
      */
     fun performLightHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.3f)) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_TICK)
         } else {
@@ -61,6 +119,7 @@ object HapticUtil {
      */
     fun performMediumHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.6f)) return
         view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
     }
 
@@ -69,6 +128,7 @@ object HapticUtil {
      */
     fun performHeavyHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.85f)) return
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
     }
 
@@ -77,6 +137,7 @@ object HapticUtil {
      */
     fun performSliderHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.25f)) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
         } else {
@@ -89,6 +150,7 @@ object HapticUtil {
      */
     fun performVirtualKeyHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.85f)) return
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
     }
 
@@ -97,6 +159,7 @@ object HapticUtil {
      */
     fun performConfirmHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.7f)) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
         } else {
@@ -109,6 +172,7 @@ object HapticUtil {
      */
     fun performRejectHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.85f)) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             view.performHapticFeedback(HapticFeedbackConstants.REJECT)
         } else {
@@ -121,6 +185,7 @@ object HapticUtil {
      */
     fun performGestureThresholdHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
+        if (playStronger(view, 0.6f)) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             view.performHapticFeedback(HapticFeedbackConstants.GESTURE_THRESHOLD_ACTIVATE)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -167,9 +232,9 @@ object HapticUtil {
             )
         ) {
             val effect = VibrationEffect.startComposition()
-                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, 0.4f)
-                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 0.9f, 35)
-                .compose()
+                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, boost(0.4f))
+                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, boost(0.9f), 35)
+                .composeBoosted(vibrator)
             vibrateWithTouchAttributes(vibrator, effect)
             return
         }
@@ -208,11 +273,11 @@ object HapticUtil {
                 } else {
                     VibrationEffect.Composition.PRIMITIVE_LOW_TICK
                 }
-                val composition = VibrationEffect.startComposition().addPrimitive(strike, 0.55f * scale)
+                val composition = VibrationEffect.startComposition().addPrimitive(strike, boost(0.55f * scale))
                 THUNDER_TAIL.forEachIndexed { index, level ->
-                    composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, level * scale, if (index == 0) 20 else 45)
+                    composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, boost(level * scale), if (index == 0) 20 else 45)
                 }
-                vibrateWithTouchAttributes(vibrator, composition.compose())
+                vibrateWithTouchAttributes(vibrator, composition.composeBoosted(vibrator))
                 return
             } catch (_: Exception) {}
         }
@@ -226,6 +291,39 @@ object HapticUtil {
 
     private val THUNDER_TAIL = floatArrayOf(0.3f, 0.22f, 0.16f, 0.12f, 0.4f, 0.2f, 0.12f, 0.07f, 0.04f)
 
+    fun performStrongDoubleHaptic(context: Context) {
+        if (!isAppHapticsEnabled.value) return
+        val vibrator = getVibrator(context)
+        if (!vibrator.hasVibrator()) return
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_CLICK)
+        ) {
+            val composition = VibrationEffect.startComposition()
+                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f)
+                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f, 80)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_THUD)
+            ) {
+                composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_THUD, 1.0f, 50)
+            } else {
+                composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 0.8f, 80)
+            }
+            val effect = composition.composeBoosted(vibrator)
+            vibrateWithTouchAttributes(vibrator, effect)
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            vibrateWithTouchAttributes(vibrator, VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 35, 70, 45, 50, 40), intArrayOf(0, 255, 0, 255, 0, 255), -1))
+        }
+    }
+
     fun performStrongTickHaptic(context: Context) {
         if (!isAppHapticsEnabled.value) return
         val vibrator = getVibrator(context)
@@ -236,7 +334,7 @@ object HapticUtil {
         ) {
             val effect = VibrationEffect.startComposition()
                 .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f)
-                .compose()
+                .composeBoosted(vibrator)
             vibrateWithTouchAttributes(vibrator, effect)
             return
         }
@@ -265,6 +363,7 @@ object HapticUtil {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             try {
+                val primitiveStrength = boost(clampedStrength)
                 val primitive = if (clampedStrength < 0.35f &&
                     vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_LOW_TICK)
                 ) {
@@ -281,8 +380,8 @@ object HapticUtil {
 
                 if (primitive != null) {
                     val effect = VibrationEffect.startComposition()
-                        .addPrimitive(primitive, clampedStrength)
-                        .compose()
+                        .addPrimitive(primitive, primitiveStrength)
+                        .composeBoosted(vibrator)
                     vibrateWithTouchAttributes(vibrator, effect)
                     return
                 }
@@ -290,7 +389,10 @@ object HapticUtil {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val effect = if (clampedStrength < 0.5f) {
+            val stronger = hapticMode.value == AppHapticMode.STRONGER
+            val effect = if (stronger) {
+                VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK)
+            } else if (clampedStrength < 0.5f) {
                 VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
             } else {
                 VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
@@ -301,7 +403,7 @@ object HapticUtil {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (vibrator.hasAmplitudeControl()) {
-                val amplitude = (clampedStrength * clampedStrength * 255).toInt().coerceIn(1, 255)
+                val amplitude = (boost(clampedStrength) * boost(clampedStrength) * 255).toInt().coerceIn(1, 255)
                 val effect = VibrationEffect.createOneShot(12, amplitude)
                 vibrator.vibrate(effect)
             } else {
@@ -378,9 +480,9 @@ object HapticUtil {
             runCatching {
                 val effect = VibrationEffect.BasicEnvelopeBuilder()
                     .setInitialSharpness(0.1f)
-                    .addControlPoint(0.08f, 0.2f, (durationMs * 0.35f).toLong().coerceAtLeast(1L))
-                    .addControlPoint(0.35f, 0.5f, (durationMs * 0.4f).toLong().coerceAtLeast(1L))
-                    .addControlPoint(0.75f, 0.85f, (durationMs * 0.25f).toLong().coerceAtLeast(1L))
+                    .addControlPoint(boost(0.08f), 0.2f, (durationMs * 0.35f).toLong().coerceAtLeast(1L))
+                    .addControlPoint(boost(0.35f), 0.5f, (durationMs * 0.4f).toLong().coerceAtLeast(1L))
+                    .addControlPoint(boost(0.75f), 0.85f, (durationMs * 0.25f).toLong().coerceAtLeast(1L))
                     .addControlPoint(0f, 0.85f, 20L)
                     .build()
                 vibrator.vibrate(effect)
@@ -393,8 +495,8 @@ object HapticUtil {
             runCatching {
                 vibrator.vibrate(
                     VibrationEffect.startComposition()
-                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, 0.8f)
-                        .compose(),
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, boost(0.8f))
+                        .composeBoosted(vibrator),
                 )
             }
             return
@@ -414,7 +516,7 @@ object HapticUtil {
                 vibrator.vibrate(
                     VibrationEffect.startComposition()
                         .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1f)
-                        .compose(),
+                        .composeBoosted(vibrator),
                 )
             }
         } else {
@@ -435,30 +537,28 @@ object HapticUtil {
         runCatching { vibrator.cancel() }
     }
 
-    /**
-     * Load app haptic preference from SharedPreferences
-     */
-    fun loadAppHapticsEnabled(context: Context): Boolean {
+    fun loadHapticMode(context: Context): AppHapticMode {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        return prefs.getBoolean("app_haptics_enabled", true)
+        val stored = prefs.getString("app_haptics_mode", null)
+        if (stored != null) return runCatching { AppHapticMode.valueOf(stored) }.getOrDefault(AppHapticMode.ENABLED)
+        return if (prefs.getBoolean("app_haptics_enabled", true)) AppHapticMode.ENABLED else AppHapticMode.DISABLED
     }
 
-    /**
-     * Save app haptic preference to SharedPreferences
-     */
-    fun saveAppHapticsEnabled(
+    fun saveHapticMode(
         context: Context,
-        enabled: Boolean,
+        mode: AppHapticMode,
     ) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("app_haptics_enabled", enabled).apply()
-        isAppHapticsEnabled.value = enabled
+        prefs.edit().putString("app_haptics_mode", mode.name).apply()
+        applyMode(mode)
     }
 
-    /**
-     * Initialize haptic setting from SharedPreferences
-     */
     fun initialize(context: Context) {
-        isAppHapticsEnabled.value = loadAppHapticsEnabled(context)
+        applyMode(loadHapticMode(context))
+    }
+
+    private fun applyMode(mode: AppHapticMode) {
+        hapticMode.value = mode
+        isAppHapticsEnabled.value = mode != AppHapticMode.DISABLED
     }
 }

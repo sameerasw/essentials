@@ -71,6 +71,7 @@ fun AppSelectionSheet(
     onAppToggle: ((Context, String, Boolean) -> Unit)? = null,
     title: String = stringResource(R.string.action_select_apps),
     excludePackages: List<String> = emptyList(),
+    includeSelf: Boolean = false,
     context: Context = LocalContext.current,
     headerContent: (@Composable () -> Unit)? = null,
 ) {
@@ -92,7 +93,7 @@ fun AppSelectionSheet(
                 val savedSelections = onLoadApps(context)
 
                 // Load all installed apps (heavy operation on background thread)
-                val allApps = AppUtil.getInstalledApps(context)
+                val allApps = AppUtil.getInstalledApps(context, includeSelf)
 
                 val selectionsToMerge =
                     savedSelections.ifEmpty {
@@ -308,6 +309,7 @@ fun AppSelectionSheet(
 fun SingleAppSelectionSheet(
     onDismissRequest: () -> Unit,
     onAppSelected: (NotificationApp) -> Unit,
+    includeSelf: Boolean = false,
     context: Context = LocalContext.current,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -321,7 +323,7 @@ fun SingleAppSelectionSheet(
         withContext(Dispatchers.IO) {
             try {
                 // Get only user/downloaded apps
-                val installedApps = AppUtil.getInstalledApps(context).filter { !it.isSystemApp }
+                val installedApps = AppUtil.getInstalledApps(context, includeSelf).filter { !it.isSystemApp }
                 withContext(Dispatchers.Main) {
                     apps = installedApps
                 }

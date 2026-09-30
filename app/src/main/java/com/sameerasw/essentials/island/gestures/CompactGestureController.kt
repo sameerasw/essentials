@@ -6,6 +6,7 @@ import android.provider.Settings
 import android.view.KeyEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.utils.LinearBrightness
 import com.sameerasw.essentials.utils.media.MusicSessionUtil
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +18,7 @@ class CompactGestureController(
     private val scope: () -> CoroutineScope?,
     private val openBrief: () -> Unit,
 ) : CompactGestures {
+    private val brightness by lazy { LinearBrightness(context) }
     private val audioManager by lazy { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
 
     private val musicPlaying: Boolean
@@ -62,15 +64,15 @@ class CompactGestureController(
                 if (forward) AudioManager.ADJUST_RAISE else AudioManager.ADJUST_LOWER,
                 AudioManager.FLAG_SHOW_UI,
             )
-            SlideMode.Brightness -> try {
-                val current = Settings.System.getInt(context.contentResolver, Settings.System.SCREEN_BRIGHTNESS, 128)
-                val next = (current + if (forward) 15 else -15).coerceIn(1, 255)
-                Settings.System.putInt(context.contentResolver, Settings.System.SCREEN_BRIGHTNESS, next)
-            } catch (_: Exception) {
-            }
             else -> {}
         }
     }
+
+    override fun slideBegin() {
+        if (slideMode == SlideMode.Brightness) brightness.begin()
+    }
+
+    override fun slideTo(dx: Float, rangePx: Float): Int = brightness.slide(dx, rangePx)
 
     override fun slideCommit(dx: Float) {
         val forward = forward(dx)
@@ -86,11 +88,7 @@ class CompactGestureController(
             val max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).coerceAtLeast(1)
             audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) * 100 / max
         }
-        SlideMode.Brightness -> try {
-            Settings.System.getInt(context.contentResolver, Settings.System.SCREEN_BRIGHTNESS, 128) * 100 / 255
-        } catch (_: Exception) {
-            0
-        }
+        SlideMode.Brightness -> brightness.percent()
         else -> 0
     }
 

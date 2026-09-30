@@ -75,6 +75,16 @@ fun IslandBorderOutlineOptionsBottomSheet(
                     },
                 )
 
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_palette_24,
+                    title = stringResource(R.string.island_border_outline_dynamic_title),
+                    isChecked = viewModel.isIslandBorderOutlineDynamic.value,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandBorderOutlineDynamic(it)
+                    },
+                )
+
                 ColorSwatchPicker(
                     selectedColorHex = viewModel.islandBorderOutlineColor.value,
                     onColorSelected = { viewModel.setIslandBorderOutlineColor(it) },

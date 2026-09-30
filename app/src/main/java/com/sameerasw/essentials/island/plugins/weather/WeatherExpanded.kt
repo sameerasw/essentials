@@ -1,6 +1,13 @@
 package com.sameerasw.essentials.island.plugins.weather
 
 import android.content.Context
+import kotlinx.coroutines.delay
+import com.sameerasw.essentials.weather.provider.WeatherProviders
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.LaunchedEffect
+import android.text.format.DateUtils
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -65,6 +72,7 @@ fun WeatherExpanded(
     scope: IslandExpandedScope,
     effects: Boolean,
     haptics: Boolean,
+    simulated: WeatherEffectSpec? = null,
     onRefresh: () -> Unit,
 ) {
     val state by WeatherRepository.state.collectAsState()
@@ -73,8 +81,8 @@ fun WeatherExpanded(
     val snapshot = state.snapshot
     val accent = MaterialTheme.colorScheme.primary
     val context = LocalContext.current
-    val effectSpec = remember(effects, snapshot) {
-        snapshot?.takeIf { effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
+    val effectSpec = remember(effects, snapshot, simulated) {
+        snapshot?.takeIf { effects }?.let { simulated ?: WeatherEffectSpec.from(it) } ?: WeatherEffectSpec.None
     }
     val effectHaptics = remember(context, haptics) { DeviceWeatherHaptics(context).takeIf { haptics } }
 
@@ -260,14 +268,39 @@ private fun UpdatedRow(
     onRefresh: () -> Unit,
 ) {
     val context = LocalContext.current
+    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(snapshot.updatedAt) {
+        while (true) {
+            now = System.currentTimeMillis()
+            delay(30_000L)
+        }
+    }
+    val age = DateUtils.getRelativeTimeSpanString(
+        snapshot.updatedAt,
+        maxOf(now, snapshot.updatedAt),
+        DateUtils.MINUTE_IN_MILLIS,
+        DateUtils.FORMAT_ABBREV_RELATIVE,
+    ).toString()
+    val provider = WeatherProviders.byId(snapshot.providerId).displayName
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = if (error != null) errorText(error) else stringResource(R.string.weather_updated_at, formatTime(context, snapshot.updatedAt)),
-            style = IslandTextStyles.body.copy(fontSize = 11.sp),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f),
-        )
+        if (error != null) {
+            Text(
+                text = errorText(error),
+                style = IslandTextStyles.body.copy(fontSize = 11.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+        } else {
+            Text(
+                text = "$provider - $age",
+                style = IslandTextStyles.body.copy(fontSize = 11.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f),
+            )
+        }
         if (loading) {
             LoadingIndicator(Modifier.size(28.dp))
         } else {

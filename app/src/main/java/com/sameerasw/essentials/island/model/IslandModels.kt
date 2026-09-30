@@ -70,6 +70,7 @@ class ExpandedContent(val content: @Composable (IslandExpandedScope) -> Unit)
 class InteractionOverrides(
     val onTap: (() -> Boolean)? = null,
     val onLongPress: (() -> Unit)? = null,
+    val onExpandedTap: (() -> Boolean)? = null,
 ) {
     companion object {
         val Default = InteractionOverrides()
@@ -96,6 +97,7 @@ class IslandItem(
     val line: LineContent? = null,
     val expanded: ExpandedContent? = null,
     val accent: Color? = null,
+    val outlineAccent: Color? = null,
     val dismissible: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
     val onOpen: (() -> Unit)? = null,

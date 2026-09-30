@@ -63,6 +63,30 @@ data class HourlyForecast(
 )
 
 @Keep
+data class DailyForecast(
+    val dayMillis: Long,
+    val highC: Double,
+    val lowC: Double,
+    val condition: WeatherCondition,
+    val chanceOfRain: Int,
+)
+
+// Optional extras; providers fill what they offer and the detail sheet hides the rest.
+@Keep
+data class WeatherExtras(
+    val pressureHpa: Double? = null,
+    val visibilityKm: Double? = null,
+    val dewPointC: Double? = null,
+    val cloudCover: Int? = null,
+    val uvIndex: Double? = null,
+    val windGustKph: Double? = null,
+    val windDirectionDeg: Double? = null,
+    val precipitationMm: Double? = null,
+    val sunriseMillis: Long? = null,
+    val sunsetMillis: Long? = null,
+)
+
+@Keep
 data class WeatherAlert(
     val id: String,
     val event: String,
@@ -93,6 +117,8 @@ data class WeatherSnapshot(
     val alerts: List<WeatherAlert>,
     val updatedAt: Long,
     val providerId: String,
+    val extras: WeatherExtras? = null,
+    val daily: List<DailyForecast>? = null,
 ) {
     fun activeAlerts(now: Long = System.currentTimeMillis()): List<WeatherAlert> = alerts.filter { it.isActive(now) }
 }

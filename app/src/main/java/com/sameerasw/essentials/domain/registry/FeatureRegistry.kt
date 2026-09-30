@@ -2039,6 +2039,23 @@ object FeatureRegistry {
                 }
             },
             object : Feature(
+                id = "Weather",
+                title = R.string.feat_weather_title,
+                iconRes = R.drawable.rounded_partly_cloudy_day_24,
+                category = R.string.cat_tools,
+                description = R.string.feat_weather_desc,
+                aboutDescription = R.string.about_desc_weather,
+                showToggle = false,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
                 id = "Daily Wallpaper",
                 title = R.string.feat_daily_wallpaper_title,
                 iconRes = R.drawable.rounded_wallpaper_24,

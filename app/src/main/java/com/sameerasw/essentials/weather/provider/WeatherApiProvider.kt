@@ -2,7 +2,9 @@ package com.sameerasw.essentials.weather.provider
 
 import com.sameerasw.essentials.weather.model.AlertSeverity
 import com.sameerasw.essentials.weather.model.CityResult
+import com.sameerasw.essentials.weather.model.DailyForecast
 import com.sameerasw.essentials.weather.model.HourlyForecast
+import com.sameerasw.essentials.weather.model.WeatherExtras
 import com.sameerasw.essentials.weather.model.WeatherAlert
 import com.sameerasw.essentials.weather.model.WeatherCondition
 import com.sameerasw.essentials.weather.model.WeatherLocation
@@ -28,7 +30,7 @@ class WeatherApiProvider : WeatherProvider {
     override suspend fun fetch(location: WeatherLocation, apiKey: String?): WeatherSnapshot {
         val key = apiKey?.trim().orEmpty()
         if (key.isEmpty()) throw WeatherProviderException(WeatherProviderException.Reason.INVALID_KEY)
-        val json = JSONObject(get("forecast.json", "key=${encode(key)}&q=${encode(location.query)}&days=2&aqi=no&alerts=yes"))
+        val json = JSONObject(get("forecast.json", "key=${encode(key)}&q=${encode(location.query)}&days=3&aqi=no&alerts=yes"))
         return try {
             parseForecast(json, location)
         } catch (e: JSONException) {
@@ -138,6 +140,27 @@ class WeatherApiProvider : WeatherProvider {
             alerts = alerts,
             updatedAt = now,
             providerId = id,
+            extras = WeatherExtras(
+                pressureHpa = current.optDouble("pressure_mb").takeUnless { it.isNaN() },
+                visibilityKm = current.optDouble("vis_km").takeUnless { it.isNaN() },
+                dewPointC = current.optDouble("dewpoint_c").takeUnless { it.isNaN() },
+                cloudCover = current.optInt("cloud", -1).takeIf { it >= 0 },
+                uvIndex = current.optDouble("uv").takeUnless { it.isNaN() },
+                windGustKph = current.optDouble("gust_kph").takeUnless { it.isNaN() },
+                windDirectionDeg = current.optDouble("wind_degree").takeUnless { it.isNaN() },
+                precipitationMm = current.optDouble("precip_mm").takeUnless { it.isNaN() },
+            ),
+            daily = (0 until days.length()).map { i ->
+                val d = days.getJSONObject(i)
+                val day = d.getJSONObject("day")
+                DailyForecast(
+                    dayMillis = d.getLong("date_epoch") * 1000L,
+                    highC = day.getDouble("maxtemp_c"),
+                    lowC = day.getDouble("mintemp_c"),
+                    condition = conditionFor(day.getJSONObject("condition").optInt("code")),
+                    chanceOfRain = day.optInt("daily_chance_of_rain"),
+                )
+            },
         )
     }
 
@@ -180,6 +203,6 @@ class WeatherApiProvider : WeatherProvider {
         const val BASE_URL = "https://api.weatherapi.com/v1"
         const val TIMEOUT_MS = 15_000
         const val HOUR_MS = 60 * 60 * 1000L
-        const val HOURLY_COUNT = 8
+        const val HOURLY_COUNT = 24
     }
 }
