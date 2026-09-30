@@ -1931,4 +1931,10 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="duo_hide_when_locked_title">Ẩn khi bị khoá</string>
     <string name="feat_weather_desc">Cấu hình nhà cung cấp và cài đặt</string>
     <string name="dev_weather_experimental_title">Thử nghiệm thời tiết</string>
+    <string name="dev_simulate_weather_title">Mô phỏng thời tiết</string>
+    <string name="weather_sim_time_title">Thời gian trong ngày</string>
+    <string name="weather_sim_time_dawn">Bình minh</string>
+    <string name="weather_sim_time_day">Ngày</string>
+    <string name="weather_sim_time_dusk">Hoàng hôn</string>
+    <string name="weather_sim_time_night">Đêm</string>
 </resources>
