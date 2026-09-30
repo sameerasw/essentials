@@ -533,10 +533,14 @@ class ScreenOffAccessibilityService :
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
-        var detectedPackage = event.packageName?.toString()
+        val trustsEventPackage = event.eventType != AccessibilityEvent.TYPE_WINDOWS_CHANGED
+        var detectedPackage = if (trustsEventPackage) event.packageName?.toString() else null
         if (detectedPackage == null || detectedPackage == "android") {
             try {
-                val activePkg = rootInActiveWindow?.packageName?.toString()
+                val activePkg = windows
+                    ?.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
+                    ?.root?.packageName?.toString()
+                    ?: rootInActiveWindow?.packageName?.toString()
                     ?: windows?.firstOrNull { it.isFocused }?.root?.packageName?.toString()
                 if (activePkg != null) {
                     detectedPackage = activePkg

@@ -95,6 +95,7 @@ class IslandController(
         return when (current.stage) {
             IslandStage.Hidden -> false
             IslandStage.Expanded -> {
+                current.focused?.interactions?.onExpandedTap?.invoke()
                 collapse()
                 true
             }

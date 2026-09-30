@@ -152,7 +152,7 @@ object AutomationManager {
 
                 Automation.Type.STATE -> {
                     when (automation.state) {
-                        is DIYState.Charging, is DIYState.PowerSaving -> {
+                        is DIYState.Charging, is DIYState.PowerSaving, is DIYState.BatteryLevel -> {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }

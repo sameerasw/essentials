@@ -1612,4 +1612,14 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="setting_show_legacy_features_desc">Ces fonctionnalités pourraient ne pas bénéficier de futures mises à jour en raison de limitations techniques ou parce qu\'elles ne sont pas essentielles.</string>
     <string name="duo_rotate_album_art_title">Faire pivoter la pochette d\'album</string>
     <string name="island_hide_on_shade_title">Masquer lorsque la barre d\'état est déployée</string>
+    <string name="status_glance_bold_text_title">Texte en gras</string>
+    <string name="status_glance_bold_text_desc">Le texte en gras pour une meilleure lisibilité </string>
+    <string name="status_glance_album_art_colors_title">Couleurs de l\'album</string>
+    <string name="status_glance_hide_in_quick_settings_title">Cacher dans les paramètres rapides</string>
+    <string name="status_glance_hide_when_locked_title">Cacher sur l\'écran de verrouillage</string>
+    <string name="island_action_tap_title">Appui simple</string>
+    <string name="duo_action_double_tap_title">Double appui</string>
+    <string name="duo_action_long_press_title">Appui long</string>
+    <string name="status_glance_action_swipe_right_title">Swiper vers la droite </string>
+    <string name="status_glance_show_calendar_title">Événements du calendrier </string>
 </resources>

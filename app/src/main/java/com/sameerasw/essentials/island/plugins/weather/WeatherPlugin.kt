@@ -7,6 +7,8 @@ import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.activities.WeatherDetailActivity
+import android.content.Intent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
@@ -20,6 +22,8 @@ import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.RollingText
 import com.sameerasw.essentials.weather.WeatherFormat
 import com.sameerasw.essentials.weather.WeatherRepository
+import com.sameerasw.essentials.weather.effects.WeatherSimulation
+import com.sameerasw.essentials.weather.provider.WeatherProviders
 import com.sameerasw.essentials.weather.model.WeatherState
 import com.sameerasw.essentials.weather.work.WeatherScheduler
 import kotlinx.coroutines.Job
@@ -37,6 +41,10 @@ class WeatherPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_WEATHER_PEEK_ALERTS,
         SettingsRepository.KEY_WEATHER_PROVIDER,
         SettingsRepository.KEY_WEATHER_API_KEY,
+        SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER,
+        SettingsRepository.KEY_DEBUG_WEATHER_EXPERIMENTAL,
+        SettingsRepository.KEY_WEATHER_OPENMETEO_MODEL,
+        *WeatherProviders.all.map { SettingsRepository.weatherApiKeyName(it.id) }.toTypedArray(),
         SettingsRepository.KEY_WEATHER_LOCATION_MODE,
         SettingsRepository.KEY_WEATHER_MANUAL_LOCATION,
         SettingsRepository.KEY_WEATHER_UNITS,
@@ -77,7 +85,8 @@ class WeatherPlugin : BaseIslandPlugin() {
         WeatherScheduler.schedule(context, settings.getWeatherRefreshMinutes())
         val signature = listOf(
             settings.getWeatherProvider(),
-            settings.getWeatherApiKey(),
+            settings.getWeatherOpenMeteoModel(),
+            WeatherRepository.config(context).let { it.providerId to it.apiKey },
             settings.getWeatherLocationMode(),
             settings.getWeatherManualLocation()?.toString(),
         ).joinToString("|")
@@ -110,6 +119,7 @@ class WeatherPlugin : BaseIslandPlugin() {
         val mode = settings.getIslandWeatherMode()
         val effects = settings.isIslandWeatherEffectsEnabled() && !DeviceUtils.isPowerSaveMode(context)
         val haptics = settings.isIslandWeatherHapticsEnabled()
+        val simulated = settings.getSimulatedWeather()?.spec
         val alert = snapshot.activeAlerts().filter { it.severity.isSevere }.maxByOrNull { it.severity.ordinal }
         val temperature = WeatherFormat.temperature(snapshot.tempC, unit)
         val icon = if (alert != null) R.drawable.rounded_warning_24 else WeatherFormat.icon(snapshot.condition, snapshot.isDay)
@@ -150,6 +160,7 @@ class WeatherPlugin : BaseIslandPlugin() {
                         scope = scope,
                         effects = effects,
                         haptics = haptics,
+                        simulated = simulated,
                         onRefresh = { ctx?.scope?.launch { WeatherRepository.refresh(context, force = true) } },
                     )
                 },
@@ -159,6 +170,8 @@ class WeatherPlugin : BaseIslandPlugin() {
                             if (brief) ctx?.request?.invoke(PluginRequest.Expand(BriefPlugin.ITEM_KEY))
                         }
                     },
+                    onLongPress = { openWeatherDetails(context) },
+                    onExpandedTap = { openWeatherDetails(context); true },
                 ),
                 compactVisible = compactVisible,
             ),
@@ -172,5 +185,15 @@ class WeatherPlugin : BaseIslandPlugin() {
 
     companion object {
         const val ITEM_KEY = "weather"
+    }
+}
+
+fun openWeatherDetails(context: android.content.Context) {
+    try {
+        context.startActivity(
+            Intent(context, WeatherDetailActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP),
+        )
+    } catch (_: Exception) {
     }
 }

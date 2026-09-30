@@ -35,6 +35,9 @@ class PowerModule : AutomationModule {
     // State tracking
     private var isCharging = false
     private var isPowerSaving = false
+    private var appContext: Context? = null
+    private var batteryLevel = -1
+    private val batteryStateActive = mutableMapOf<String, Boolean>()
 
     private val receiver =
         object : BroadcastReceiver() {
@@ -56,6 +59,18 @@ class PowerModule : AutomationModule {
                             isCharging = false
                             handleTrigger(context, Trigger.ChargerDisconnected)
                             handleChargingStateChange(context, false)
+                        }
+                    }
+
+                    Intent.ACTION_BATTERY_CHANGED -> {
+                        val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+                        val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
+                        if (level >= 0 && scale > 0) {
+                            val percent = level * 100 / scale
+                            if (percent != batteryLevel) {
+                                batteryLevel = percent
+                                evaluateBatteryLevel(context)
+                            }
                         }
                     }
 
@@ -83,7 +98,9 @@ class PowerModule : AutomationModule {
                 addAction(Intent.ACTION_POWER_CONNECTED)
                 addAction(Intent.ACTION_POWER_DISCONNECTED)
                 addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+                addAction(Intent.ACTION_BATTERY_CHANGED)
             }
+        appContext = context.applicationContext
         context.registerReceiver(receiver, filter)
 
         // Initial check for charging
@@ -113,10 +130,31 @@ class PowerModule : AutomationModule {
         } catch (e: Exception) {
             // Ignore if not registered
         }
+        batteryStateActive.clear()
+        batteryLevel = -1
+        appContext = null
     }
 
     override fun updateAutomations(automations: List<Automation>) {
         this.automations = automations
+        batteryStateActive.keys.retainAll(automations.map { it.id }.toSet())
+        appContext?.let { evaluateBatteryLevel(it) }
+    }
+
+    private fun evaluateBatteryLevel(context: Context) {
+        val level = batteryLevel
+        if (level < 0) return
+        automations
+            .filter { it.type == Automation.Type.STATE && it.isEnabled }
+            .forEach { automation ->
+                val state = automation.state as? DIYState.BatteryLevel ?: return@forEach
+                val inRange = level in state.minLevel..state.maxLevel
+                val previous = batteryStateActive.put(automation.id, inRange)
+                if (inRange == (previous ?: false)) return@forEach
+                val action = if (inRange) automation.entryAction else automation.exitAction
+                if (action == null) return@forEach
+                scope.launch { CombinedActionExecutor.execute(context, action) }
+            }
     }
 
     private fun handleTrigger(

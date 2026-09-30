@@ -4,7 +4,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 
 <p align="center">
-<img width="99%" src="https://github.com/user-attachments/assets/c0849951-4cf0-4a91-9964-f7c212977af1" />
+<img width="99%" alt="essentials" src="https://github.com/user-attachments/assets/b14e1067-a414-42fd-80c5-6d1f6086ab38" />
 </p>
 
 <p align="center">

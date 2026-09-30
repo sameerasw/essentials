@@ -343,6 +343,60 @@ sealed interface Action {
     }
 
     @Keep
+    data object TurnOnDuo : Action {
+        override val title: Int = R.string.diy_action_duo_turnon
+        override val icon: Int = R.drawable.rounded_motion_play_24
+    }
+
+    @Keep
+    data object TurnOffDuo : Action {
+        override val title: Int = R.string.diy_action_duo_turnoff
+        override val icon: Int = R.drawable.rounded_motion_play_24
+    }
+
+    @Keep
+    data object ToggleDuo : Action {
+        override val title: Int = R.string.diy_action_duo_toggle
+        override val icon: Int = R.drawable.rounded_motion_play_24
+    }
+
+    @Keep
+    data object TurnOnIsland : Action {
+        override val title: Int = R.string.diy_action_island_turnon
+        override val icon: Int = R.drawable.rounded_upcoming_24
+    }
+
+    @Keep
+    data object TurnOffIsland : Action {
+        override val title: Int = R.string.diy_action_island_turnoff
+        override val icon: Int = R.drawable.rounded_upcoming_24
+    }
+
+    @Keep
+    data object ToggleIsland : Action {
+        override val title: Int = R.string.diy_action_island_toggle
+        override val icon: Int = R.drawable.rounded_upcoming_24
+    }
+
+    @Keep
+    data object TurnOnStatusGlance : Action {
+        override val title: Int = R.string.diy_action_statusglance_turnon
+        override val icon: Int = R.drawable.rounded_ad_units_24
+    }
+
+    @Keep
+    data object TurnOffStatusGlance : Action {
+        override val title: Int = R.string.diy_action_statusglance_turnoff
+        override val icon: Int = R.drawable.rounded_ad_units_24
+    }
+
+    @Keep
+    data object ToggleStatusGlance : Action {
+        override val title: Int = R.string.diy_action_statusglance_toggle
+        override val icon: Int = R.drawable.rounded_ad_units_24
+    }
+
+    @Keep
     data object ToggleHotspot : Action {
         override val title: Int = R.string.diy_action_hotspot_toggle
         override val icon: Int = R.drawable.rounded_wifi_tethering_24

@@ -124,6 +124,8 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.utils.AppHapticMode
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionGrantUtil
 import kotlinx.coroutines.withContext
@@ -325,7 +327,7 @@ fun SettingsContent(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val isStoragePermissionGranted by viewModel.isStoragePermissionGranted
     val context = LocalContext.current
-    val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
+    val hapticMode by HapticUtil.hapticMode
     var isPermissionsExpanded by remember { mutableStateOf(expandPermissionsInitial) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
@@ -704,14 +706,18 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_vibrate_24,
-                title = "Haptic Feedback",
-                isChecked = isAppHapticsEnabled.value,
-                onCheckedChange = { isChecked ->
-                    isAppHapticsEnabled.value = isChecked
-                    HapticUtil.saveAppHapticsEnabled(context, isChecked)
-                },
+            val hapticModeLabels = mapOf(
+                AppHapticMode.DISABLED to stringResource(R.string.haptic_mode_disabled),
+                AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
+                AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
+            )
+            SegmentedPicker(
+                items = AppHapticMode.entries,
+                selectedItem = hapticMode,
+                onItemSelected = { HapticUtil.saveHapticMode(context, it) },
+                labelProvider = { hapticModeLabels.getValue(it) },
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.label_haptic_feedback),
             )
 
             IconToggleItem(
@@ -1389,25 +1395,17 @@ fun SettingsContent(
                 }
 
                 val devSettings = remember { SettingsRepository(context) }
-                var simulatedWeather by remember {
-                    mutableStateOf(devSettings.getString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, WeatherSimulation.OFF) ?: WeatherSimulation.OFF)
-                }
-                ConfigPickerItem(
-                    title = stringResource(R.string.dev_simulate_weather_title),
+                var weatherExperimental by remember { mutableStateOf(devSettings.isWeatherExperimentalEnabled()) }
+                IconToggleItem(
                     iconRes = R.drawable.rounded_partly_cloudy_day_24,
-                    selectedValue = WeatherSimulation.presets.firstOrNull { it.id == simulatedWeather }?.label.orEmpty(),
-                ) {
-                    WeatherSimulation.presets.forEach { preset ->
-                        SegmentedDropdownMenuItem(
-                            text = { Text(preset.label) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                simulatedWeather = preset.id
-                                devSettings.putString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, preset.id)
-                            },
-                        )
-                    }
-                }
+                    title = stringResource(R.string.dev_weather_experimental_title),
+                    isChecked = weatherExperimental,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        weatherExperimental = it
+                        devSettings.putBoolean(SettingsRepository.KEY_DEBUG_WEATHER_EXPERIMENTAL, it)
+                    },
+                )
 
                 Row(
                     modifier =

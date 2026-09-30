@@ -47,6 +47,8 @@ abstract class BaseTileService : TileService() {
 
     open fun isDeviceSupported(): Boolean = true
 
+    open val clickHaptic: Boolean = true
+
     open fun getTileIcon(): Icon? = null
 
     override fun onStartListening() {
@@ -87,7 +89,7 @@ abstract class BaseTileService : TileService() {
         }
 
         // Immediate feedback 1: Haptics
-        HapticUtil.performHapticForService(this)
+        if (clickHaptic) HapticUtil.performHapticForService(this)
 
         if (!hasFeaturePermission() || isProcessing) {
             return

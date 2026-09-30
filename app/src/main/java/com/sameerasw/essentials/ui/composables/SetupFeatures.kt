@@ -1415,6 +1415,7 @@ fun SetupFeatures(
                         listOf(
                             "Location reached",
                             "Watermark",
+                            "Weather",
                         ),
                     )
 

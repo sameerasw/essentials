@@ -5,8 +5,9 @@ import com.sameerasw.essentials.weather.model.WeatherLocation
 import com.sameerasw.essentials.weather.provider.WeatherProviders
 
 class SettingsWeatherConfig(private val settings: SettingsRepository) : WeatherConfig {
-    override val providerId: String get() = WeatherProviders.byId(settings.getWeatherProvider()).id
-    override val apiKey: String? get() = settings.getWeatherApiKey()
+    override val providerId: String
+        get() = WeatherProviders.resolve(settings.getWeatherProvider(), settings.getWeatherApiKey("weatherapi")).id
+    override val apiKey: String? get() = settings.getWeatherApiKey(providerId)
     override val locationMode: WeatherLocationMode
         get() = if (settings.getWeatherLocationMode() == "manual") WeatherLocationMode.MANUAL else WeatherLocationMode.DEVICE
     override val manualLocation: WeatherLocation?

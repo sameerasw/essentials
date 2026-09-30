@@ -150,6 +150,7 @@ class LocationAlarmActivity : ComponentActivity() {
     }
 
     private fun startUrgentVibration() {
+        if (!com.sameerasw.essentials.utils.HapticUtil.isAppHapticsEnabled.value) return
         val vibrator =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager =

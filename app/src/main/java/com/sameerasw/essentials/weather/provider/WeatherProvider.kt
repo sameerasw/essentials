@@ -20,9 +20,22 @@ class WeatherProviderException(val reason: Reason, message: String? = null) : Ex
 }
 
 object WeatherProviders {
-    val all: List<WeatherProvider> = listOf(WeatherApiProvider())
+    val all: List<WeatherProvider> = listOf(
+        OpenMeteoProvider(),
+        MetNorwayProvider(),
+        NwsProvider(),
+        PirateWeatherProvider(),
+        TomorrowIoProvider(),
+        VisualCrossingProvider(),
+        OpenWeatherMapProvider(),
+        WeatherApiProvider(),
+    )
 
     val default: WeatherProvider get() = all.first()
 
     fun byId(id: String?): WeatherProvider = all.firstOrNull { it.id == id } ?: default
+
+    // Users who set up a WeatherAPI key before other sources existed keep using it until they pick another.
+    fun resolve(savedId: String?, apiKey: String?): WeatherProvider =
+        if (savedId == null && !apiKey.isNullOrBlank()) byId("weatherapi") else byId(savedId)
 }
