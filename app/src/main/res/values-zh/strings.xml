@@ -1600,4 +1600,5 @@
     <string name="duo_action_long_press_title">长按</string>
     <string name="weather_provider_title">提供者</string>
     <string name="tile_data_sim">SIM卡数据</string>
+    <string name="label_apply_after_reboot">重启后启用</string>
 </resources>
