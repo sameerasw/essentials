@@ -307,8 +307,16 @@ fun IslandRoot(
     }
 
     fun handleLongPress(itemKey: String?) {
+        val current = currentState
+        val targetedItem = (if (current.stage == IslandStage.Compact) itemKey?.let { current.items[it] } else current.focused)
+            ?: current.items.values.firstOrNull { it.interactions.onLongPress != null }
+        if (targetedItem?.interactions?.onLongPress != null) {
+            IslandHaptics.longPress(context)
+            actions.onLongPress(targetedItem.key)
+            return
+        }
         val gestures = actions.compactGestures
-        if (currentState.stage == IslandStage.Compact && gestures.hasLongPress) {
+        if (current.stage == IslandStage.Compact && gestures.hasLongPress) {
             compactLongPressed = true
             if (gestures.longPressOpensBrief) IslandHaptics.openClick(context) else IslandHaptics.commit(context)
             gestures.longPress()

@@ -509,8 +509,18 @@ class DuoOverlayView(context: Context) : View(context) {
         const val INTERACTIVE_MODE_BRIGHTNESS = 2
         const val INTERACTIVE_MODE_TRACK = 3
         const val INTERACTIVE_MODE_SOUND_MODE = 4
+        const val INTERACTIVE_MODE_SNIPPET = 5
         const val MEDIA_ART_SPIN_DURATION_MS = 32000L
     }
+
+    val isSnippetActive: Boolean
+        get() = interactiveMode == INTERACTIVE_MODE_SNIPPET
+
+    private var snippetKeyword: String = ""
+    private var snippetTitle: String = ""
+    private var snippetPillFraction: Float = 0f
+    private var snippetPillAnimator: ValueAnimator? = null
+    val snippetPillRect = RectF()
 
     private var interactiveMode: Int = INTERACTIVE_MODE_NONE
     private var interactiveProgress: Float = 0f
@@ -663,6 +673,32 @@ class DuoOverlayView(context: Context) : View(context) {
         updateProgressAnimation(interactiveProgress)
     }
 
+    fun setInteractiveSnippet(keyword: String = "", title: String = "") {
+        interactiveMode = INTERACTIVE_MODE_SNIPPET
+        interactiveProgress = 100f
+        interactiveIcon = getThemedBitmap(R.drawable.rounded_text_snippet_24)
+        snippetKeyword = keyword
+        snippetTitle = title
+
+        removeCallbacks(revertInteractiveRunnable)
+        postDelayed(revertInteractiveRunnable, 4500L)
+
+        snippetPillAnimator?.cancel()
+        snippetPillAnimator = ValueAnimator.ofFloat(snippetPillFraction, 1.0f).apply {
+            duration = 320
+            interpolator = OvershootInterpolator(1.2f)
+            addUpdateListener { anim ->
+                snippetPillFraction = anim.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+
+        updateActiveProgressMode()
+        updateProgressAnimation(100f)
+        triggerTapAnimation()
+    }
+
     fun setInteractiveTrackRotation(rotationDegrees: Float) {
         trackRotationAnimator?.cancel()
         interactiveTrackRotation = rotationDegrees
@@ -687,11 +723,35 @@ class DuoOverlayView(context: Context) : View(context) {
 
     fun resetInteractiveState(animate: Boolean = true) {
         removeCallbacks(revertInteractiveRunnable)
-        if (interactiveMode == INTERACTIVE_MODE_NONE) return
+        if (interactiveMode == INTERACTIVE_MODE_NONE && snippetPillFraction <= 0.01f) return
         interactiveMode = INTERACTIVE_MODE_NONE
         interactiveIcon = null
         releaseTrackRotation()
         updateActiveProgressMode()
+
+        snippetPillAnimator?.cancel()
+        if (animate && snippetPillFraction > 0.01f) {
+            snippetPillAnimator = ValueAnimator.ofFloat(snippetPillFraction, 0f).apply {
+                duration = 240
+                interpolator = DecelerateInterpolator()
+                addUpdateListener { anim ->
+                    snippetPillFraction = anim.animatedValue as Float
+                    if (snippetPillFraction <= 0.01f) {
+                        snippetKeyword = ""
+                        snippetTitle = ""
+                        snippetPillRect.setEmpty()
+                    }
+                    invalidate()
+                }
+                start()
+            }
+        } else {
+            snippetPillFraction = 0f
+            snippetKeyword = ""
+            snippetTitle = ""
+            snippetPillRect.setEmpty()
+            invalidate()
+        }
     }
 
     private fun getChargingBoltBitmap(): Bitmap? {
@@ -1405,28 +1465,30 @@ class DuoOverlayView(context: Context) : View(context) {
         style = Paint.Style.STROKE
     }
 
-    private val notificationPillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val snippetPillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.BLACK
+        color = Color.parseColor("#1C1B1F")
     }
 
-    private val notificationPillBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val snippetPillBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1f * density
         color = Color.argb(45, 255, 255, 255)
     }
 
-    private val notificationTitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val snippetKeywordPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         letterSpacing = -0.01f
     }
 
-    private val notificationBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+    private val snippetTitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#C4C6D0")
+        typeface = Typeface.DEFAULT
         letterSpacing = -0.01f
     }
+
+    private val snippetIconPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
 
     init {
         val (track, progress, dot) = getTargetColors()
@@ -1920,8 +1982,127 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-            canvas.restore()
         }
+
+        if (snippetPillFraction > 0.01f) {
+            drawSnippetPill(canvas)
+        }
+    }
+
+    private fun drawSnippetPill(canvas: Canvas) {
+        if (snippetPillFraction <= 0.01f) return
+
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels.toFloat()
+
+        val pillHeight = 32f * density
+        val pillCornerRadius = pillHeight / 2f
+        val iconSize = 16f * density
+        val paddingHorizontal = 12f * density
+        val spacing = 6f * density
+
+        val kwTextSize = 12.5f * density
+        val titleTextSize = 11.5f * density
+        snippetKeywordPaint.textSize = kwTextSize
+        snippetTitlePaint.textSize = titleTextSize
+
+        val keywordText = snippetKeyword
+        val titleText = snippetTitle
+
+        val kwWidth = if (keywordText.isNotEmpty()) snippetKeywordPaint.measureText(keywordText) else 0f
+        val hasSeparator = keywordText.isNotEmpty() && titleText.isNotEmpty()
+        val separator = "  •  "
+        val sepWidth = if (hasSeparator) snippetTitlePaint.measureText(separator) else 0f
+        var titleWidth = if (titleText.isNotEmpty()) snippetTitlePaint.measureText(titleText) else 0f
+
+        val maxAllowedWidth = screenWidth - (32f * density)
+        var totalContentWidth = paddingHorizontal * 2 + iconSize + spacing + kwWidth + (if (hasSeparator) sepWidth + titleWidth else 0f)
+
+        var displayTitle = titleText
+        if (totalContentWidth > maxAllowedWidth) {
+            val availableForTitle = (maxAllowedWidth - (paddingHorizontal * 2 + iconSize + spacing + kwWidth + sepWidth)).coerceAtLeast(0f)
+            if (availableForTitle > 30f * density) {
+                displayTitle = android.text.TextUtils.ellipsize(
+                    titleText,
+                    android.text.TextPaint(snippetTitlePaint),
+                    availableForTitle,
+                    android.text.TextUtils.TruncateAt.END
+                ).toString()
+                titleWidth = snippetTitlePaint.measureText(displayTitle)
+            } else {
+                displayTitle = ""
+                titleWidth = 0f
+            }
+            totalContentWidth = paddingHorizontal * 2 + iconSize + spacing + kwWidth + (if (displayTitle.isNotEmpty()) sepWidth + titleWidth else 0f)
+        }
+
+        val pillWidth = totalContentWidth.coerceIn(48f * density, maxAllowedWidth)
+
+        val minCenterX = pillWidth / 2f + 16f * density
+        val maxCenterX = screenWidth - pillWidth / 2f - 16f * density
+        val pillCenterX = cameraCenterX.coerceIn(minCenterX, maxCenterX)
+
+        val pillLeft = pillCenterX - pillWidth / 2f
+        val pillRight = pillCenterX + pillWidth / 2f
+
+        val baseRadius = (cameraRadiusPx + arcThicknessPx / 2f + 2f * density) * ringRadiusScale
+        val dropDistance = 10f * density + (12f * density * snippetPillFraction)
+        val pillTop = cameraCenterY + baseRadius + dropDistance
+        val pillBottom = pillTop + pillHeight
+
+        snippetPillRect.set(pillLeft, pillTop, pillRight, pillBottom)
+
+        val alphaInt = (255 * snippetPillFraction).toInt().coerceIn(0, 255)
+        if (alphaInt <= 0) return
+
+        val saveCount = canvas.save()
+        val scale = 0.85f + 0.15f * snippetPillFraction
+        canvas.scale(scale, scale, pillCenterX, (pillTop + pillBottom) / 2f)
+
+        snippetPillPaint.color = Color.argb((alphaInt * 0.96f).toInt(), 28, 27, 31)
+        canvas.drawRoundRect(snippetPillRect, pillCornerRadius, pillCornerRadius, snippetPillPaint)
+
+        val borderAlpha = (alphaInt * 0.35f).toInt()
+        val borderColor = if (isDarkTheme) Color.WHITE else Color.BLACK
+        snippetPillBorderPaint.color = Color.argb(borderAlpha, Color.red(borderColor), Color.green(borderColor), Color.blue(borderColor))
+        canvas.drawRoundRect(snippetPillRect, pillCornerRadius, pillCornerRadius, snippetPillBorderPaint)
+
+        var currentX = pillLeft + paddingHorizontal
+        val iconY = pillTop + (pillHeight - iconSize) / 2f
+        val icon = interactiveIcon ?: getThemedBitmap(R.drawable.rounded_text_snippet_24)
+        if (icon != null) {
+            val iconRectF = RectF(currentX, iconY, currentX + iconSize, iconY + iconSize)
+            snippetIconPaint.alpha = alphaInt
+            snippetIconPaint.colorFilter = PorterDuffColorFilter(currentProgressColor, PorterDuff.Mode.SRC_IN)
+            canvas.drawBitmap(icon, null, iconRectF, snippetIconPaint)
+            currentX += iconSize + spacing
+        }
+
+        val textCenterY = (pillTop + pillBottom) / 2f
+        val kwBounds = android.graphics.Rect()
+        if (keywordText.isNotEmpty()) {
+            snippetKeywordPaint.color = Color.argb(alphaInt, 255, 255, 255)
+            snippetKeywordPaint.getTextBounds(keywordText, 0, keywordText.length, kwBounds)
+            val kwBaseline = textCenterY - kwBounds.exactCenterY()
+            canvas.drawText(keywordText, currentX, kwBaseline, snippetKeywordPaint)
+            currentX += kwWidth
+        }
+
+        if (displayTitle.isNotEmpty()) {
+            snippetTitlePaint.color = Color.argb((alphaInt * 0.72f).toInt(), 200, 205, 215)
+            if (hasSeparator) {
+                snippetTitlePaint.getTextBounds(separator, 0, separator.length, kwBounds)
+                val sepBaseline = textCenterY - kwBounds.exactCenterY()
+                canvas.drawText(separator, currentX, sepBaseline, snippetTitlePaint)
+                currentX += sepWidth
+            }
+
+            snippetTitlePaint.getTextBounds(displayTitle, 0, displayTitle.length, kwBounds)
+            val titleBaseline = textCenterY - kwBounds.exactCenterY()
+            canvas.drawText(displayTitle, currentX, titleBaseline, snippetTitlePaint)
+        }
+
+        canvas.restoreToCount(saveCount)
     }
 
     override fun onAttachedToWindow() {
@@ -1955,6 +2136,8 @@ class DuoOverlayView(context: Context) : View(context) {
         tapAnimator?.cancel()
         pullDownAnimator?.cancel()
         trackRotationAnimator?.cancel()
+        snippetPillAnimator?.cancel()
+        snippetPillAnimator = null
     }
 }
 
