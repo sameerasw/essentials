@@ -1930,4 +1930,5 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="duo_rotate_album_art_title">Xoay ảnh bìa album</string>
     <string name="duo_hide_when_locked_title">Ẩn khi bị khoá</string>
     <string name="feat_weather_desc">Cấu hình nhà cung cấp và cài đặt</string>
+    <string name="dev_weather_experimental_title">Thử nghiệm thời tiết</string>
 </resources>
