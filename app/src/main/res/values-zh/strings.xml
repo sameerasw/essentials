@@ -1598,4 +1598,5 @@
     <string name="island_show_calls_title">电话</string>
     <string name="duo_hide_when_screen_off_title">熄屏时隐藏</string>
     <string name="duo_action_long_press_title">长按</string>
+    <string name="weather_provider_title">提供者</string>
 </resources>
