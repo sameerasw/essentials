@@ -1753,4 +1753,13 @@
     <string name="island_timeout_title">Продолжительность показа</string>
     <string name="island_expanded_timeout_title">Тайм-аут раскрытости</string>
     <string name="island_expanded_timeout_desc">Длительность после второго всё сворачиваться в капсулу (от 0 до бесконечности)</string>
+    <string name="feat_weather_title">Погода</string>
+    <string name="feat_weather_desc">Настройка провайдеров и параметров</string>
+    <string name="weather_provider_title">Провайдер</string>
+    <string name="weather_model_title">Модель прогноза</string>
+    <string name="weather_location_device">Текущее местоположение</string>
+    <string name="weather_location_manual">Выбор города</string>
+    <string name="island_weather_effects_title">Погодные эффекты</string>
+    <string name="island_weather_haptics_title">Имитация вибрации</string>
+    <string name="weather_refresh_interval_title">Обновлять каждые</string>
 </resources>
