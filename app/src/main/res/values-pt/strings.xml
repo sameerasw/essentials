@@ -1424,7 +1424,7 @@
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">clima</string>
+    <string name="lock_screen_clock_weather">Clima</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1505,7 +1505,7 @@
     <string name="duo_desc">Isso não dobra </string>
     <string name="island_title">ilha</string>
     <string name="island_desc">ilha dinâmica </string>
-    <string name="island_enable_title">ativar a ilha dinâmica (davi_oficial145 esteve aqui)</string>
+    <string name="island_enable_title">ativar a ilha dinâmica</string>
     <string name="island_camera_position_title">Posição da câmera </string>
     <string name="island_camera_position_center">Centro</string>
     <string name="island_camera_position_left">esquedar</string>
@@ -1622,4 +1622,14 @@
     <string name="label_battery_current_now">Corrente em tempo real</string>
     <string name="label_battery_current_avg">Corrente média</string>
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
+    <string name="island_section_placement">Posição </string>
+    <string name="island_section_visuals">Visual</string>
+    <string name="island_section_duration">Duração </string>
+    <string name="island_section_behavior">Comportamento </string>
+    <string name="island_call_options_title">Chamadas</string>
+    <string name="island_section_notifications">Notificações </string>
+    <string name="island_show_time_battery_title">Horário e bateria </string>
+    <string name="island_show_timers_title">Temporizadores e cronômetros</string>
+    <string name="diy_volume_channel_alarm">Alarme</string>
+    <string name="duo_slide_mirror_direction_title">Espelhar direções </string>
 </resources>
