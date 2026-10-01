@@ -1535,7 +1535,7 @@
     <string name="duo_action_horizontal_slide_title">deslizamento horizontal </string>
     <string name="duo_action_horizontal_slide_track">Mudar de faixa</string>
     <string name="duo_action_horizontal_slide_track_desc">Ativo somente enquanto a mídia estiver sendo reproduzida.</string>
-    <string name="cat_navigation">navegação</string>
+    <string name="cat_navigation">Navegação</string>
     <string name="island_timeout_title">duração na tela</string>
     <string name="island_show_glow_title">Mostrar o brilho do destaque</string>
     <string name="icon_network_speed">velocidade de rede</string>
@@ -1632,4 +1632,12 @@
     <string name="island_show_timers_title">Temporizadores e cronômetros</string>
     <string name="diy_volume_channel_alarm">Alarme</string>
     <string name="duo_slide_mirror_direction_title">Espelhar direções </string>
+    <string name="duo_battery_low_color_title">Bateria baixa (&lt;20%)</string>
+    <string name="duo_battery_critical_color_title">Bateria criticamente baixa(&lt;10%)</string>
+    <string name="duo_battery_power_save_color_title">Economia de bateria</string>
+    <string name="island_battery_idle_color_title">Cor padrão </string>
+    <string name="island_battery_only_low_title">Só mostrar quando baixo</string>
+    <string name="island_battery_style_title">Estilo da bateria</string>
+    <string name="island_battery_percentage_title">Mostrar porcentagem </string>
+    <string name="island_battery_percentage_conditional_title">Apenas para as condições abaixo</string>
 </resources>
