@@ -1738,4 +1738,11 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="label_auto_reset_battery_stats_desc">Automaticamente reinicia las estadisticas de la bateria si el dispositivo se desconecta despues del 90% c de carga.</string>
     <string name="feat_weather_title">Clima</string>
     <string name="feat_weather_desc">Configura provedores y ajustes</string>
+    <string name="weather_provider_title">Provedor</string>
+    <string name="weather_location_device">Ubicación actual</string>
+    <string name="weather_location_manual">Selecciona una ciudad</string>
+    <string name="weather_units_title">Unidades</string>
+    <string name="weather_refresh_interval_title">Actualizar cada</string>
+    <string name="island_weather_effects_title">Efectos del clima</string>
+    <string name="island_weather_haptics_title">Háptica de simulación</string>
 </resources>
