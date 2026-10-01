@@ -832,8 +832,8 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="diy_effect_dim_wallpaper">Hình nền mờ</string>
     <string name="diy_effect_night_mode">Chế độ ban đêm</string>
     <string name="diy_device_effects_android_15_warning">Tính năng này yêu cầu Android 15 trở lên.</string>
-    <string name="diy_device_effects_enabled">Đã bật</string>
-    <string name="diy_device_effects_disabled">Tàn tật</string>
+    <string name="diy_device_effects_enabled">Bật</string>
+    <string name="diy_device_effects_disabled">Tắt</string>
     <string name="diy_action_sound_mode">Chế độ âm thanh</string>
     <string name="diy_sound_mode_desc">Hành động này cho phép chuyển đổi giữa các chế độ Âm thanh, Rung và Im lặng dựa trên trình kích hoạt. Nó yêu cầu quyền truy cập Không làm phiền.</string>
     <!-- About Section -->
@@ -1937,4 +1937,5 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="weather_sim_time_day">Ngày</string>
     <string name="weather_sim_time_dusk">Hoàng hôn</string>
     <string name="weather_sim_time_night">Đêm</string>
+    <string name="haptic_mode_stronger">Mạnh</string>
 </resources>
