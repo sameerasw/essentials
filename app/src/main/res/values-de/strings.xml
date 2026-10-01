@@ -1863,7 +1863,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="setting_show_legacy_features_desc">Diese Funktionen erhalten möglicherweise keine zukünftigen Updates aufgrund technischer Einschränkungen oder weil sie nicht essentiell sind.</string>
     <string name="weather_units_title">Einheiten</string>
     <string name="island_weather_effects_title">Wettereffekte</string>
-    <string name="island_weather_haptics_title">Simulationshaptik</string>
+    <string name="island_weather_haptics_title">Haptik simulieren</string>
     <string name="duo_action_horizontal_slide_sound_mode">Tonmodus</string>
     <string name="island_sound_mode_keep_icon_title">Symbol weiterhin anzeigen</string>
     <string name="island_preview_ring_title">Ausrichtungshinweis anzeigen</string>
@@ -1879,4 +1879,17 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_show_when_unlocked">Entsperrt</string>
     <string name="island_show_when_screen_on">Bildschirm an</string>
     <string name="island_show_when_always">Immer</string>
+    <string name="feat_weather_title">Wetter</string>
+    <string name="feat_weather_desc">Konfiguriere Anbieter und Einstellungen</string>
+    <string name="weather_provider_title">Anbieter</string>
+    <string name="weather_model_title">Vorhersagemodell</string>
+    <string name="weather_location_device">Standort</string>
+    <string name="weather_location_manual">Manueller Ort</string>
+    <string name="weather_refresh_interval_title">Aktualisierungsrate</string>
+    <string name="dev_simulate_weather_title">Wetter simulieren</string>
+    <string name="weather_sim_time_title">Tageszeit </string>
+    <string name="weather_sim_time_dawn">Morgen</string>
+    <string name="weather_sim_time_day">Tag</string>
+    <string name="weather_sim_time_dusk">Abend</string>
+    <string name="weather_sim_time_night">Nacht</string>
 </resources>
