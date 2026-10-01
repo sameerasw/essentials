@@ -1942,4 +1942,5 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_border_outline_hide_expanded_title">Ẩn khi mở rộng</string>
     <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>
     <string name="island_border_outline_thickness_title">Độ dày đường viền</string>
+    <string name="island_notif_conceal_locked_title">Ẩn nội dung thông báo</string>
 </resources>
