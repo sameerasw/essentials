@@ -1760,4 +1760,6 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="diy_set_keyboard_title">Klavyeyi Ayarla</string>
     <string name="screen_locked_disable_notification_interactions_desc">Kilitliyken bildirim panelinin ve Hızlı Ayarlar\'ın aşağı çekilmesini engelleyin</string>
     <string name="screen_locked_disable_notification_interactions_title">Bildirim etkileşimlerini devre dışı bırak</string>
+    <string name="weather_location_manual">Geçerli Lokasyon</string>
+    <string name="weather_location_device">Geçerli Lokasyon</string>
 </resources>
