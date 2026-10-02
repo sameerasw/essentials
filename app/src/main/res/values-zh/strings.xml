@@ -1589,7 +1589,7 @@
     <string name="duo_camera_size_title">摄像头宽度</string>
     <string name="island_max_width_title">最大宽度</string>
     <string name="island_show_network_title">网络活动</string>
-    <string name="island_devices_battery_section">设备</string>
+    <string name="island_devices_battery_section">蓝牙设备</string>
     <string name="duo_action_horizontal_slide_sound_mode">声音模式</string>
     <string name="status_glance_show_calendar_title">日历事件</string>
     <string name="duo_show_media_title">媒体播放</string>
@@ -1601,4 +1601,7 @@
     <string name="weather_provider_title">提供者</string>
     <string name="tile_data_sim">SIM卡数据</string>
     <string name="label_apply_after_reboot">重启后启用</string>
+    <string name="diy_volume_channel_alarm">闹钟</string>
+    <string name="island_pulse_shadow_title">在应用通知上显示光影</string>
+    <string name="island_pulse_shadow_desc">在灵动岛上短暂显示应用主题颜色的光影</string>
 </resources>
