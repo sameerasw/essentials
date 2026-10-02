@@ -1388,7 +1388,7 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">闭嘴!</string>
+    <string name="feat_shut_up_title">闭上!</string>
     <string name="feat_shut_up_desc">I know what I\'m doing</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
@@ -1600,7 +1600,7 @@
     <string name="duo_action_long_press_title">长按</string>
     <string name="weather_provider_title">提供者</string>
     <string name="tile_data_sim">SIM卡数据</string>
-    <string name="label_apply_after_reboot">重启后启用</string>
+    <string name="label_apply_after_reboot">重启后应用</string>
     <string name="diy_volume_channel_alarm">闹钟</string>
     <string name="island_pulse_shadow_title">在应用通知上显示光影</string>
     <string name="island_pulse_shadow_desc">在灵动岛上短暂显示应用主题颜色的光影</string>
@@ -1615,4 +1615,10 @@
     <string name="conscious_gate_delay_desc">继续按钮禁用时间</string>
     <string name="conscious_gate_feel_every_second_title">感受每一秒的浪费</string>
     <string name="conscious_gate_preview_button">预览意识限制屏幕</string>
+    <string name="watch_watchface_title">表盘</string>
+    <string name="watch_watchface_desc">自定义表盘</string>
+    <string name="setting_location_reached_full_screen_alarm_title">全屏闹钟</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">到达时播放闹铃声并显示全屏提醒</string>
+    <string name="screen_locked_disable_notification_interactions_title">禁用通知交互</string>
+    <string name="screen_locked_disable_notification_interactions_desc">锁定屏幕时，阻止下拉通知栏和快速设置</string>
 </resources>
