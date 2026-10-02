@@ -1604,4 +1604,9 @@
     <string name="diy_volume_channel_alarm">闹钟</string>
     <string name="island_pulse_shadow_title">在应用通知上显示光影</string>
     <string name="island_pulse_shadow_desc">在灵动岛上短暂显示应用主题颜色的光影</string>
+    <string name="island_battery_style_title">电池样式</string>
+    <string name="island_section_placement">位置</string>
+    <string name="island_section_visuals">视觉</string>
+    <string name="island_section_behavior">行为</string>
+    <string name="island_section_duration">时长</string>
 </resources>
