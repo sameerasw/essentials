@@ -1928,7 +1928,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="weather_model_title">Mô hình dự báo</string>
     <string name="island_media_show_previous_title">Hiển thị nút bài hát trước</string>
     <string name="duo_rotate_album_art_title">Xoay ảnh bìa album</string>
-    <string name="duo_hide_when_locked_title">Ẩn khi bị khoá</string>
+    <string name="duo_hide_when_locked_title">Ẩn khi bị khóa</string>
     <string name="feat_weather_desc">Cấu hình nhà cung cấp và cài đặt</string>
     <string name="dev_weather_experimental_title">Thử nghiệm thời tiết</string>
     <string name="dev_simulate_weather_title">Mô phỏng thời tiết</string>
@@ -1947,4 +1947,13 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_pulse_shadow_y_shift_title">Dịch chuyển theo chiều dọc</string>
     <string name="island_pulse_shadow_spread_title">Ánh sáng lan tỏa</string>
     <string name="island_pulse_shadow_duration_title">Thời lượng xung</string>
+    <string name="duo_enable_title">Bật Duo</string>
+    <string name="cat_networks">Mạng lưới</string>
+    <string name="about_desc_aod_wallpaper">Hiển thị hình nền của bạn phía sau đồng hồ trên màn hình Always On Display bằng cách sử dụng lớp phủ, với độ mờ, độ nhòe, hiệu ứng viền đen và ngưỡng đen có thể điều chỉnh. Bạn cũng có thể chọn một hình ảnh tùy chỉnh hoặc hiển thị ảnh bìa album nhạc đang phát.
+
+Tính năng này chỉ hoạt động với hình nền tĩnh. Hình nền động và video không được hỗ trợ.
+
+Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cần quyền truy cập bộ nhớ để đọc dữ liệu hình nền hiện tại của bạn. Chỉ cần quyền truy cập thông báo nếu bạn bật ảnh bìa album.</string>
+    <string name="feat_conscious_gate_desc">Tạm dừng trước khi mở các ứng dụng đã chọn</string>
+    <string name="about_desc_weather">Chọn nguồn dự báo, thiết lập vị trí, đơn vị đo và khoảng thời gian cập nhật, đồng thời chọn xem màn hình thời tiết đầy đủ có hiển thị trong danh sách ứng dụng của bạn hay không. Tính năng Island và Brief sử dụng các cài đặt này.</string>
 </resources>
