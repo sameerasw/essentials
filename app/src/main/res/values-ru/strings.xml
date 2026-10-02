@@ -1724,7 +1724,7 @@
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>
-    <string name="island_dismiss_on_outside_title">Уволить из-за внешней деятельности</string>
+    <string name="island_dismiss_on_outside_title">Убрать из-за внешней деятельности</string>
     <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
     <string name="duo_battery_percentage_only_colored_desc">Отображать процентное содержание только при зарядке, в режиме экономии заряда батареи или при низком уровне заряда батареи</string>
     <string name="duo_rotate_album_art_title">Поворачивать обложку альбома</string>
@@ -1753,4 +1753,41 @@
     <string name="island_timeout_title">Продолжительность показа</string>
     <string name="island_expanded_timeout_title">Тайм-аут раскрытости</string>
     <string name="island_expanded_timeout_desc">Длительность после второго всё сворачиваться в капсулу (от 0 до бесконечности)</string>
+    <string name="feat_weather_title">Погода </string>
+    <string name="feat_weather_desc">Настройте провайдера и др. настройки </string>
+    <string name="weather_provider_title">Провайдер </string>
+    <string name="weather_location_device">Текущая локация</string>
+    <string name="weather_location_manual">Выбрать город</string>
+    <string name="weather_units_title">Единицы измерения</string>
+    <string name="weather_refresh_interval_title">Обновлять каждые </string>
+    <string name="island_weather_effects_title">Погодные эффекты </string>
+    <string name="island_weather_haptics_title">Симуляционная тактильная отдача</string>
+    <string name="about_desc_weather">Выберите источник прогноза, выберите свою локацию, единицы измерения и интервал обновления, и выберите будет ли появляться полноэкранном приложение погоды в списке приложений. Остров и Брифинг используют эти настройки</string>
+    <string name="island_section_placement">Размещение</string>
+    <string name="island_section_visuals">Внешность </string>
+    <string name="island_section_notifications">Уведомления </string>
+    <string name="island_section_duration">Длительность </string>
+    <string name="island_section_behavior">Поведение </string>
+    <string name="island_preview_ring_title">Показать подсказки для точности </string>
+    <string name="diy_volume_channel_alarm">Будильник </string>
+    <string name="island_brief_two_line_header_title">2-линейный заголовок </string>
+    <string name="island_brief_show_alarm_title">Показать время наступления </string>
+    <string name="island_call_sticky_title">Не сворачиваться автоматически </string>
+    <string name="island_call_show_mode_title">Как показывать</string>
+    <string name="island_call_show_expanded">Раскрытым </string>
+    <string name="island_call_show_compact">Компактно</string>
+    <string name="island_notif_conceal_locked_title">Скрыть содержимое уведомлений</string>
+    <string name="conscious_gate_preview_button">Предпросмотр экрана Сознательных ворот </string>
+    <string name="conscious_gate_enable_title">Включить сознательные врата</string>
+    <string name="conscious_gate_select_apps_title">Выбрать закрытые приложения </string>
+    <string name="status_glance_calendar_timeframe_title">Показывать предстоящие события в</string>
+    <string name="island_launcher_only_title">Показывать только в лаунчере </string>
+    <string name="status_glance_calendar_show_all_day_title">Показывать события на весь день </string>
+    <string name="feat_conscious_gate_desc">Пауза перед тем как открыть выбранные приложения </string>
+    <string name="conscious_gate_delay_title">Длительность паузы </string>
+    <string name="conscious_gate_reappear_desc">Показывать экран «Сознательных ворот» после продолжительного использования</string>
+    <string name="conscious_gate_feel_every_second_title">Чувствовать каждую потраченную секунду </string>
+    <string name="about_desc_conscious_gate">Добавляет короткий экран осознанного контроля перед открытием приложений, к которым вы решили подходить более осознанно, например, соц сетей
+
+Кнопка Продолжить остается неактивной в течение нескольких секунд, чтобы у вас было время принять решение, и при желании пауза может появиться снова, если вы продолжите использовать приложение после истечения установленного времени</string>
 </resources>
