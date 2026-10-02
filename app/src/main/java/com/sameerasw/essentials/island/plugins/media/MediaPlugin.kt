@@ -58,7 +58,9 @@ class MediaPlugin : BaseIslandPlugin() {
     private var track: Track? = null
     private var playing = false
     private var liked = false
-    private var likable = false;
+    private var canLike = false
+    private var canSkipBack = false;
+    private var canSkipForward = false
 
     private var lastController: MediaController? = null
     private var lastTrack: Track? = null
@@ -102,7 +104,10 @@ class MediaPlugin : BaseIslandPlugin() {
 
         if (playingController != null) {
             c.mainHandler.removeCallbacks(pausedGrace)
-            likable = playingController.ratingType !=0
+            val actions = playingController.playbackState?.actions ?: 0L
+            canLike = playingController.ratingType != 0
+            canSkipBack = actions and PlaybackState.ACTION_SKIP_TO_PREVIOUS != 0L
+            canSkipForward = actions and PlaybackState.ACTION_SKIP_TO_NEXT != 0L
             active = playingController
             lastController = playingController
             playing = true
@@ -202,7 +207,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, accent) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, likable = likable)
+                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, canLike = canLike, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
                 },
                 accent = accent,
                 onOpen = { openPlayer() },
@@ -249,7 +254,9 @@ class MediaPlugin : BaseIslandPlugin() {
             open = {
                 if (!sendPendingIntent(context, controller.sessionActivity)) launchPackage(context, controller.packageName)
             },
-            likable = likable
+            canLike = canLike,
+            canSkipBack = canSkipBack,
+            canSkipForward = canSkipForward
         )
     }
 
