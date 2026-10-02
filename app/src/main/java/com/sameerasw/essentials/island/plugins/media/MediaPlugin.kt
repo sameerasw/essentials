@@ -40,6 +40,7 @@ class MediaPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_MEDIA,
         SettingsRepository.KEY_ISLAND_MEDIA_EXCLUDED_APPS,
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS,
+        SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE,
     )
 
     private val ART_RETRY_DELAYS_MS = longArrayOf(1500L, 3000L)
@@ -178,7 +179,7 @@ class MediaPlugin : BaseIslandPlugin() {
             playPause = { togglePlay() },
             next = { active?.transportControls?.skipToNext() },
             previous = if (settings.isIslandMediaShowPreviousEnabled()) ({ active?.transportControls?.skipToPrevious() }) else null,
-            like = { like() },
+            like = if (settings.isIslandMediaShowLikeEnabled()) ({ like() }) else null,
             progress = { active?.let(MediaSessionSource::position) ?: 0f },
             canSeek = { active?.let(MediaSessionSource::canSeek) ?: false },
             seekTo = { fraction -> active?.let { MediaSessionSource.seekTo(it, fraction) } },
@@ -238,7 +239,7 @@ class MediaPlugin : BaseIslandPlugin() {
             },
             next = { controller.transportControls.skipToNext() },
             previous = if (settings.isIslandMediaShowPreviousEnabled()) ({ controller.transportControls.skipToPrevious() }) else null,
-            like = { like() },
+            like = if (settings.isIslandMediaShowLikeEnabled()) ({ like() }) else null,
             progress = { MediaSessionSource.position(controller) },
             canSeek = { MediaSessionSource.canSeek(controller) },
             seekTo = { fraction -> MediaSessionSource.seekTo(controller, fraction) },

@@ -3118,5 +3118,6 @@
     <string name="whats_new_overcast_status_permission_needed">Installed (Permission needed)</string>
     <string name="whats_new_overcast_status_not_installed">Not installed</string>
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
+    <string name="island_media_show_like_title">Show like track button</string>
 </resources>
 

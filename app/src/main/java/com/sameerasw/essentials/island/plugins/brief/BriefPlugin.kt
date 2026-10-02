@@ -681,12 +681,18 @@ private fun BriefPlayer(media: MediaSnapshot, artwork: ImageBitmap?, onClick: ()
             MarqueeText(text = media.title, style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp))
             MarqueeText(text = media.artist, style = IslandTextStyles.body)
         }
-        BriefPlayerButton(
-            icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-            tint = if (media.likable) {if (media.liked) media.accent else Color.White} else {Color.Gray},
-        ) {
-            if (media.likable) IslandHaptics.button(context) else IslandHaptics.wiggle(context)
-            media.actions.like()
+        media.actions.like?.let {
+            BriefPlayerButton(
+                icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                tint = if (media.canLike) {
+                    if (media.liked) media.accent else Color.White
+                } else {
+                    Color.Gray
+                },
+            ) {
+                if (media.canLike) IslandHaptics.button(context) else IslandHaptics.wiggle(context)
+                it()
+            }
         }
         BriefPlayerButton(
             icon = if (media.playing) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24,

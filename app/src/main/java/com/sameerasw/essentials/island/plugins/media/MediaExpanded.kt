@@ -3,10 +3,6 @@ package com.sameerasw.essentials.island.plugins.media
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
-import com.sameerasw.essentials.island.ui.components.cameraClearance
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.draw.drawBehind
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
 import android.os.SystemClock
@@ -38,10 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -67,7 +60,7 @@ class MediaActions(
     val playPause: () -> Unit,
     val next: () -> Unit,
     val previous: (() -> Unit)?,
-    val like: () -> Unit,
+    val like: (() -> Unit)?,
     val progress: () -> Float,
     val canSeek: () -> Boolean = { false },
     val seekTo: (Float) -> Unit = {},
@@ -174,12 +167,14 @@ fun MediaExpanded(
             ConnectedButtonRow(
                 height = rowHeight,
                 items = listOfNotNull(
-                    ConnectedItem(actions.like, enabled = likable) {
-                        IslandIcon(
-                            if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                            tint = if (!likable) Color.LightGray else {if (liked) accent else Color.White},
-                            size = 24.dp,
-                        )
+                    actions.like?.let {
+                        ConnectedItem(it, enabled = canLike) {
+                            IslandIcon(
+                                if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                                tint = if (liked) accent else Color.White,
+                                size = 24.dp,
+                            )
+                        }
                     },
                     actions.previous?.let {
                         ConnectedItem(it, enabled = canSkipBack) {
