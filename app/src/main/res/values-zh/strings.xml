@@ -1609,4 +1609,10 @@
     <string name="island_section_visuals">视觉</string>
     <string name="island_section_behavior">行为</string>
     <string name="island_section_duration">时长</string>
+    <string name="conscious_gate_select_apps_title">选择受限制的应用</string>
+    <string name="conscious_gate_enable_title">启用意识限制</string>
+    <string name="conscious_gate_delay_title">暂停延迟</string>
+    <string name="conscious_gate_delay_desc">继续按钮禁用时间</string>
+    <string name="conscious_gate_feel_every_second_title">感受每一秒的浪费</string>
+    <string name="conscious_gate_preview_button">预览意识限制屏幕</string>
 </resources>
