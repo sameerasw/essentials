@@ -146,7 +146,7 @@
     <string name="action_import_freeze">Exporteer de lijst met bevroren apps</string>
     <string name="freeze_pick_apps_title">Kies apps om te bevriezen</string>
     <string name="freeze_pick_apps_desc">Kies welke apps bevroren kunnen worden</string>
-    <string name="freeze_show_in_launcher_title">Toon als aparte app in launcher</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
     <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Automatisatie</string>
     <string name="freeze_when_locked_title">Bevriezen bij vergrendeling</string>
@@ -1638,7 +1638,7 @@
     <string name="island_camera_position_right">Rechts</string>
     <string name="duo_camera_offset_x_title">Horizontale positie</string>
     <string name="duo_camera_offset_y_title">Verticale positie</string>
-    <string name="island_max_width_title">Maximale breedte</string>
+    <string name="island_max_width_title">Maximum breedte</string>
     <string name="island_expanded_width_title">Uitgeklapte breedte</string>
     <string name="island_cutout_gap_title">Camera ruimte</string>
     <string name="island_preview_ring_title">Toon uitlijnhulp</string>
@@ -1697,7 +1697,7 @@
     <string name="island_dismiss_on_outside_title">Klap in bij activiteit buiten het eiland</string>
     <string name="island_suppress_system_heads_up_title">Verberg systeemmeldingen</string>
     <string name="island_dynamic_hide_status_bar_title">Verberg dynamisch statusbalk elementen</string>
-    <string name="duo_enable_title">Zet Duo aan</string>
+    <string name="duo_enable_title">Duo Inschakelen</string>
     <string name="feat_weather_desc">Configureer providers en instellingen</string>
     <string name="weather_model_title">Voorspellingsmodel</string>
     <string name="weather_location_device">Huidige locatie</string>
