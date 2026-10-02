@@ -690,7 +690,7 @@
     <string name="label_auto_check_updates">Tự động kiểm tra cập nhật</string>
     <string name="desc_auto_check_updates">Kiểm tra bản cập nhật khi khởi chạy ứng dụng</string>
     <string name="action_all_set">All Set</string>
-    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="action_check_whats_new">Xem có gì mới?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
     <string name="action_see_whats_new">See what\'s new</string>
     <string name="label_mode_default">Default</string>
@@ -1956,4 +1956,12 @@ Tính năng này chỉ hoạt động với hình nền tĩnh. Hình nền độ
 Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cần quyền truy cập bộ nhớ để đọc dữ liệu hình nền hiện tại của bạn. Chỉ cần quyền truy cập thông báo nếu bạn bật ảnh bìa album.</string>
     <string name="feat_conscious_gate_desc">Tạm dừng trước khi mở các ứng dụng đã chọn</string>
     <string name="about_desc_weather">Chọn nguồn dự báo, thiết lập vị trí, đơn vị đo và khoảng thời gian cập nhật, đồng thời chọn xem màn hình thời tiết đầy đủ có hiển thị trong danh sách ứng dụng của bạn hay không. Tính năng Island và Brief sử dụng các cài đặt này.</string>
+    <string name="label_unsupported">Không hỗ trợ</string>
+    <string name="app_icon_legacy">Cũ</string>
+    <string name="watchface_promo_step1_title">1. Tham gia nhóm Google</string>
+    <string name="watchface_promo_step1_desc">Hãy tham gia nhóm thử nghiệm bằng tài khoản Gmail được liên kết với đồng hồ của bạn</string>
+    <string name="watchface_promo_step2_title">2. Tham gia Chương trình Beta</string>
+    <string name="watchface_promo_step2_desc">Đăng ký tham gia chương trình thử nghiệm nội bộ trên Google Play</string>
+    <string name="watchface_promo_step3_title">3. Cài đặt trên đồng hồ</string>
+    <string name="watchface_promo_step3_desc">Mở trực tiếp mục Play Store trên đồng hồ của bạn để cài đặt</string>
 </resources>
