@@ -68,8 +68,8 @@
     <string name="feat_essentials_on_display_desc">Xem qua các phương tiện truyền thông và thông tin về AOD</string>
     <string name="essentials_on_display_docked_mode_title">Chế độ đế</string>
     <string name="essentials_on_display_docked_mode_desc">Giữ cho lớp phủ luôn hiển thị trong khi nhạc đang phát trên chế độ AOD</string>
-    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
-    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_respect_notifications_title">Tôn trọng các thông báo mới</string>
+    <string name="essentials_on_display_respect_notifications_desc">Tạm thời tắt thông báo mới</string>
     <string name="essentials_on_display_random_shapes_title">Hình dạng ngẫu nhiên</string>
     <string name="essentials_on_display_random_shapes_desc">Sử dụng nhiều hình dạng khác nhau từ Material 3 cho ảnh bìa album</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
