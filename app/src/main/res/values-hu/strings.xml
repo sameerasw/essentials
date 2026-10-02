@@ -442,7 +442,7 @@
     <string name="feat_always_on_display_title">Mindig bekapcsolt kijelző </string>
     <string name="feat_always_on_display_desc">Idő és információ megjelenítése kikapcsolt képernyő mellett</string>
     <string name="feat_calendar_sync_title">Naptár szinkronizálás</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_calendar_sync_desc">Szinkronizálja a telefonja naptárát a karórájára</string>
     <string name="feat_lock_from_watch_title">Zárolás óráról</string>
     <string name="feat_lock_from_watch_desc">Zárold a telefonod távolról</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
@@ -1514,4 +1514,17 @@
     <string name="island_brief_desc">Ismerd meg röviden hogy mi történik</string>
     <string name="island_like_while_playing_title">Zene kedvelése lejátszás közben</string>
     <string name="duo_action_horizontal_slide_title">Vízszintes csúszka</string>
+    <string name="about_desc_weather">Válasszon egy előrejelzési forrást, állítsa be tartózkodási helyét, mértékegységeit és frissítési időközét, majd válassza ki, hogy megjelenjen-e a teljes időjárás-képernyő az alkalmazáslistában. A Sziget és a Röviden ezeket a beállításokat használja</string>
+    <string name="watch_watchface_title">Óraszámlap</string>
+    <string name="watch_watchface_desc">Óraszámlap testreszabása</string>
+    <string name="watch_complications_title">Komplikációk</string>
+    <string name="watch_complications_desc">Komplikáció modulok testreszabása</string>
+    <string name="feat_watch_controls_desc">Vezérlők testreszabása</string>
+    <string name="feat_sync_sound_mode_title">Hang mód</string>
+    <string name="feat_sync_sound_mode_desc">Automatikusan szinkronizálja az órájával</string>
+    <string name="watch_notif_sync_desc">Csak az indítónak</string>
+    <string name="feat_watch_wireless_debugging_desc">Engedélyezze távolról</string>
+    <string name="feat_sync_location_reached_desc">Látható legyen az eszköz csempén</string>
+    <string name="feat_standby_apps_title">Készenléti alkalmazások</string>
+    <string name="feat_standby_apps_desc">Optimalizálja az alkalmazások háttérben futó müködését</string>
 </resources>
