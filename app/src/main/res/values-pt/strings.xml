@@ -1622,10 +1622,10 @@
     <string name="label_battery_current_now">Corrente em tempo real</string>
     <string name="label_battery_current_avg">Corrente média</string>
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
-    <string name="island_section_placement">Posição </string>
+    <string name="island_section_placement">posicionamento</string>
     <string name="island_section_visuals">Visual</string>
     <string name="island_section_duration">Duração </string>
-    <string name="island_section_behavior">Comportamento </string>
+    <string name="island_section_behavior">Comportamento</string>
     <string name="island_call_options_title">Chamadas</string>
     <string name="island_section_notifications">Notificações </string>
     <string name="island_show_time_battery_title">Horário e bateria </string>
@@ -1648,4 +1648,8 @@
     <string name="about_desc_weather">Selecione uma fonte de previsão, defina sua localização, unidades e intervalo de atualização e escolha se a tela completa do tempo aparece na sua lista de aplicativos. O mapa Ilha e o mapa Resumo usam essas configurações.</string>
     <string name="island_weather_effects_title">efeitos climáticos</string>
     <string name="feat_weather_title">Clima</string>
+    <string name="island_media_peek_song_change_title">Prévia ao mudar de música</string>
+    <string name="island_media_keep_when_paused_title">Manter em modo de recuperação quando pausado</string>
+    <string name="island_media_show_previous_title">mostrar botão para voltar a música anterior</string>
+    <string name="island_sound_mode_keep_icon_title">Continuar mostrando o ícone</string>
 </resources>
