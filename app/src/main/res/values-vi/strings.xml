@@ -1964,4 +1964,8 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="watchface_promo_step2_desc">Đăng ký tham gia chương trình thử nghiệm nội bộ trên Google Play</string>
     <string name="watchface_promo_step3_title">3. Cài đặt trên đồng hồ</string>
     <string name="watchface_promo_step3_desc">Mở trực tiếp mục Play Store trên đồng hồ của bạn để cài đặt</string>
+    <string name="island_section_placement">Vị trí</string>
+    <string name="island_section_visuals">Hình ảnh</string>
+    <string name="island_section_duration">Khoảng thời gian</string>
+    <string name="island_section_behavior">Hành vi</string>
 </resources>
