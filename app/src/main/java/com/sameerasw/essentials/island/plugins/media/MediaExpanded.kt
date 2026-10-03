@@ -3,10 +3,6 @@ package com.sameerasw.essentials.island.plugins.media
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
-import com.sameerasw.essentials.island.ui.components.cameraClearance
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.draw.drawBehind
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
 import android.os.SystemClock
@@ -35,10 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -64,7 +57,7 @@ class MediaActions(
     val playPause: () -> Unit,
     val next: () -> Unit,
     val previous: (() -> Unit)?,
-    val like: () -> Unit,
+    val like: (() -> Unit)?,
     val progress: () -> Float,
     val canSeek: () -> Boolean = { false },
     val seekTo: (Float) -> Unit = {},
@@ -79,7 +72,9 @@ class MediaSnapshot(
     val liked: Boolean,
     val actions: MediaActions,
     val open: () -> Unit,
-    val likable: Boolean = false
+    val canLike: Boolean = false,
+    val canSkipBack: Boolean = true,
+    val canSkipForward: Boolean = true,
 )
 
 object IslandMediaState {
@@ -97,7 +92,9 @@ fun MediaExpanded(
     liked: Boolean,
     actions: MediaActions,
     scope: IslandExpandedScope,
-    likable: Boolean = true,
+    canLike: Boolean = true,
+    canSkipBack: Boolean = false,
+    canSkipForward: Boolean = false,
     drawBackground: Boolean = true,
 ) {
     val spec = scope.spec
@@ -186,15 +183,17 @@ fun MediaExpanded(
             ConnectedButtonRow(
                 height = 52.dp,
                 items = listOfNotNull(
-                    ConnectedItem(actions.like, enabled = likable) {
-                        IslandIcon(
-                            if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                            tint = if (!likable) Color.LightGray else {if (liked) accent else Color.White},
-                            size = 24.dp,
-                        )
+                    actions.like?.let {
+                        ConnectedItem(it, enabled = canLike) {
+                            IslandIcon(
+                                if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                                tint = if (liked) accent else Color.White,
+                                size = 24.dp,
+                            )
+                        }
                     },
                     actions.previous?.let {
-                        ConnectedItem(it) {
+                        ConnectedItem(it, enabled = canSkipBack) {
                             IslandIcon(R.drawable.rounded_skip_previous_24, size = 24.dp)
                         }
                     },
@@ -207,7 +206,11 @@ fun MediaExpanded(
                             IslandIcon(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, size = 26.dp)
                         }
                     },
-                    ConnectedItem(actions.next) { IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp) },
+                    ConnectedItem(
+                        actions.next, enabled = canSkipForward) {
+                            IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp
+                        )
+                    },
                 ),
             )
         }

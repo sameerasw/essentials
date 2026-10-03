@@ -616,6 +616,16 @@ fun IslandSettingsUI(
                             },
                             modifier = Modifier.highlight(highlightSetting == "island_media_show_previous"),
                         )
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_favorite_24,
+                            title = stringResource(R.string.island_media_show_like_title),
+                            isChecked = viewModel.isIslandMediaShowLike.value,
+                            onCheckedChange = { checked ->
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setIslandMediaShowLike(checked)
+                            },
+                            modifier = Modifier.highlight(highlightSetting == "island_media_show_like"),
+                        )
                     }
                     Text(
                         text = stringResource(R.string.duo_media_skip_apps_title),

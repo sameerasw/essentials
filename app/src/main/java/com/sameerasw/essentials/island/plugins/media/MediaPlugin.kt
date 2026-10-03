@@ -40,6 +40,7 @@ class MediaPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_MEDIA,
         SettingsRepository.KEY_ISLAND_MEDIA_EXCLUDED_APPS,
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS,
+        SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE,
     )
 
     private val ART_RETRY_DELAYS_MS = longArrayOf(1500L, 3000L)
@@ -58,7 +59,9 @@ class MediaPlugin : BaseIslandPlugin() {
     private var track: Track? = null
     private var playing = false
     private var liked = false
-    private var likable = false;
+    private var canLike = false
+    private var canSkipBack = false;
+    private var canSkipForward = false
 
     private var lastController: MediaController? = null
     private var lastTrack: Track? = null
@@ -102,7 +105,10 @@ class MediaPlugin : BaseIslandPlugin() {
 
         if (playingController != null) {
             c.mainHandler.removeCallbacks(pausedGrace)
-            likable = playingController.ratingType !=0
+            val actions = playingController.playbackState?.actions ?: 0L
+            canLike = playingController.ratingType != 0
+            canSkipBack = actions and PlaybackState.ACTION_SKIP_TO_PREVIOUS != 0L
+            canSkipForward = actions and PlaybackState.ACTION_SKIP_TO_NEXT != 0L
             active = playingController
             lastController = playingController
             playing = true
@@ -173,7 +179,7 @@ class MediaPlugin : BaseIslandPlugin() {
             playPause = { togglePlay() },
             next = { active?.transportControls?.skipToNext() },
             previous = if (settings.isIslandMediaShowPreviousEnabled()) ({ active?.transportControls?.skipToPrevious() }) else null,
-            like = { like() },
+            like = if (settings.isIslandMediaShowLikeEnabled()) ({ like() }) else null,
             progress = { active?.let(MediaSessionSource::position) ?: 0f },
             canSeek = { active?.let(MediaSessionSource::canSeek) ?: false },
             seekTo = { fraction -> active?.let { MediaSessionSource.seekTo(it, fraction) } },
@@ -202,7 +208,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, accent) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, likable = likable)
+                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, canLike = canLike, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
                 },
                 accent = accent,
                 onOpen = { openPlayer() },
@@ -233,7 +239,7 @@ class MediaPlugin : BaseIslandPlugin() {
             },
             next = { controller.transportControls.skipToNext() },
             previous = if (settings.isIslandMediaShowPreviousEnabled()) ({ controller.transportControls.skipToPrevious() }) else null,
-            like = { like() },
+            like = if (settings.isIslandMediaShowLikeEnabled()) ({ like() }) else null,
             progress = { MediaSessionSource.position(controller) },
             canSeek = { MediaSessionSource.canSeek(controller) },
             seekTo = { fraction -> MediaSessionSource.seekTo(controller, fraction) },
@@ -249,7 +255,9 @@ class MediaPlugin : BaseIslandPlugin() {
             open = {
                 if (!sendPendingIntent(context, controller.sessionActivity)) launchPackage(context, controller.packageName)
             },
-            likable = likable
+            canLike = canLike,
+            canSkipBack = canSkipBack,
+            canSkipForward = canSkipForward
         )
     }
 
