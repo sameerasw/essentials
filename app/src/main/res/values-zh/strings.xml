@@ -437,7 +437,7 @@
     <string name="feat_freeze_desc">禁用不常用的应用</string>
     <string name="feat_watermark_title">水印</string>
     <string name="feat_watermark_desc">向照片添加 EXIF 数据和徽标</string>
-    <string name="feat_always_on_display_title">始终显示</string>
+    <string name="feat_always_on_display_title">息屏显示</string>
     <string name="feat_always_on_display_desc">屏幕关闭时显示时间和信息</string>
     <string name="feat_calendar_sync_title">日历同步</string>
     <string name="feat_calendar_sync_desc">将手机日历同步到手表</string>
@@ -1598,4 +1598,6 @@
     <string name="island_show_calls_title">电话</string>
     <string name="duo_hide_when_screen_off_title">熄屏时隐藏</string>
     <string name="duo_action_long_press_title">长按</string>
+    <string name="feat_weather_title">天气</string>
+    <string name="feat_weather_desc">配置提供商和设置</string>
 </resources>
