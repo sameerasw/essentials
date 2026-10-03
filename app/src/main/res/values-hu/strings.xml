@@ -299,14 +299,14 @@
     <string name="icon_vpn">VPN</string>
     <string name="icon_airplane_mode">Repülőgép mód</string>
     <string name="icon_hotspot">Hotspot</string>
-    <string name="icon_cast">Öntvény</string>
+    <string name="icon_cast">Tartalomátküldés </string>
     <string name="icon_mobile_data">Mobil adatok</string>
     <string name="icon_phone_signal">Telefonjel</string>
     <string name="icon_volte">VoLTE / VoNR</string>
     <string name="icon_wifi_calling">WiFi hívás / VoWiFi</string>
     <string name="icon_call_status">Hívás állapota / Szinkronizálás</string>
     <string name="icon_tty">TTY</string>
-    <string name="icon_volume">Kötet</string>
+    <string name="icon_volume">Hangerő</string>
     <string name="icon_headset">Fejhallgató</string>
     <string name="icon_speakerphone">Kihangosító</string>
     <string name="icon_dmb">DMB</string>
@@ -315,7 +315,7 @@
     <string name="icon_alarm">Riasztás</string>
     <string name="icon_battery">Akkumulátor</string>
     <string name="icon_power_saving">Energiatakarékosság</string>
-    <string name="icon_data_saver">Data Saver</string>
+    <string name="icon_data_saver">Adatforgalom csökkentő</string>
     <string name="icon_rotation_lock">Forgászár</string>
     <string name="icon_location">Helyszín / GPS</string>
     <string name="icon_sync">Szinkronizál</string>
@@ -328,7 +328,7 @@
     <string name="icon_samsung_services">Samsung szolgáltatások</string>
     <string name="icon_ethernet">Ethernet</string>
     <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">Show Seconds in Clock</string>
+    <string name="stb_clock_seconds">Mutassa a másodperceket az órán</string>
     <string name="stb_battery_percentage">Akkumulátor százalék</string>
     <string name="stb_battery_percentage_always">Mindig</string>
     <string name="stb_battery_percentage_charging">Töltés</string>
@@ -345,14 +345,14 @@
     <string name="action_reset_all_icons">Állítsa vissza az összes ikont</string>
     <string name="status_bar_section_advanced">További beállítások</string>
     <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_all_system_icons_title">Minden rendszer ikon elrejtése</string>
+    <string name="hide_all_system_icons_desc">Minden nem értesítési ikon elrejtése az állapotsoron</string>
     <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
     <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
-    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
-    <string name="hide_notification_icons_title">Hide notifications</string>
-    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="hide_clock_title">Óra elrejtése</string>
+    <string name="hide_clock_desc">Teljesen eltávolítja az órát az állapotsorról</string>
+    <string name="hide_notification_icons_title">Értesítések elrejtése</string>
+    <string name="hide_notification_icons_desc">Elrejti az összes bejövő értesítési ikont</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
     <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
@@ -1551,4 +1551,6 @@
     <string name="label_thermal_gpu">Grafikus processzor hőmérséklet</string>
     <string name="label_thermal_skin">Bőr hőmérséklet</string>
     <string name="label_thermal_throttling_status">Leszabályozási állapot</string>
+    <string name="icon_network_speed">Hálózati sebesség</string>
+    <string name="icon_glove_mode">Kesztyű mód</string>
 </resources>
