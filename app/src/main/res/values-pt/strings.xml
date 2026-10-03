@@ -1622,4 +1622,12 @@
     <string name="label_battery_current_now">Corrente em tempo real</string>
     <string name="label_battery_current_avg">Corrente média</string>
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
+    <string name="island_weather_peek_alerts_title">Confira os alertas de gravidade</string>
+    <string name="island_launcher_only_title">Só aparece no iniciador</string>
+    <string name="weather_provider_title">Provedor </string>
+    <string name="weather_location_manual">Escolha uma cidade</string>
+    <string name="weather_location_device">localização atual</string>
+    <string name="about_desc_weather">Selecione uma fonte de previsão, defina sua localização, unidades e intervalo de atualização e escolha se a tela completa do tempo aparece na sua lista de aplicativos. O mapa Ilha e o mapa Resumo usam essas configurações.</string>
+    <string name="island_weather_effects_title">efeitos climáticos</string>
+    <string name="feat_weather_title">Clima</string>
 </resources>
