@@ -389,7 +389,7 @@
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Schermuitzetwidget</string>
     <string name="feat_screen_off_widget_desc">Onzichtbare widget om het scherm uit te zetten</string>
-    <string name="feat_statusbar_icons_title">Iconen van de statusbalk</string>
+    <string name="feat_statusbar_icons_title">Statusbalk iconen</string>
     <string name="feat_statusbar_icons_desc">Past de zichtbaarheid van iconen in de statusbalk aan</string>
     <string name="feat_caffeinate_title">Cafeïne</string>
     <string name="feat_caffeinate_desc">Houd het scherm wakker</string>
@@ -1641,4 +1641,5 @@
     <string name="island_max_width_title">Maximum breedte</string>
     <string name="island_expanded_width_title">Uitgeklapte breedte</string>
     <string name="island_cutout_gap_title">Camera ruimte</string>
+    <string name="duo_enable_title">Duo Inschakelen</string>
 </resources>
