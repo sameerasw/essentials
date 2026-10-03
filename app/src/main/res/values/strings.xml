@@ -2667,6 +2667,7 @@
     <!-- Duo -->
     <string name="duo_title">Duo</string>
     <string name="duo_desc">This doesn\'t fold</string>
+    <string name="about_desc_duo_tile">Turn the Duo camera ring overlay on or off from your Quick Settings.</string>
     <string name="duo_enable_title">Enable Duo</string>
     <string name="duo_enable_desc">This doesn\'t fold, but does cool stuff</string>
     <string name="island_auto_align_camera">Auto align with camera</string>
@@ -2808,6 +2809,7 @@
     <!-- Island -->
     <string name="island_title">Island</string>
     <string name="island_desc">Dynamic island</string>
+    <string name="about_desc_island_tile">Turn the Island notification overlay on or off from your Quick Settings.</string>
     <string name="island_enable_title">Enable Island</string>
     <string name="island_enable_desc">Display dynamic island</string>
     <string name="island_section_position">Position and dimensions</string>
