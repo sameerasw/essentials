@@ -18,6 +18,7 @@ import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
+import androidx.core.graphics.toColorInt
 
 class BatteryAlertsPlugin : BaseIslandPlugin() {
     override val id = "battery_alerts_plugin"
@@ -115,7 +116,7 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
 
     private fun getBatteryColor(state: String): Color {
         fun parse(hex: String, fallback: Int) = try {
-            AndroidColor.parseColor(hex)
+            hex.toColorInt()
         } catch (_: Exception) {
             fallback
         }
