@@ -1622,4 +1622,17 @@
     <string name="label_battery_current_now">Corrente em tempo real</string>
     <string name="label_battery_current_avg">Corrente média</string>
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
+    <string name="island_media_peek_song_change_title">Prévia ao mudar de música</string>
+    <string name="island_media_keep_when_paused_title">Manter em modo de recuperação quando pausado</string>
+    <string name="island_media_show_previous_title">mostrar botão para voltar a música anterior</string>
+    <string name="island_sound_mode_keep_icon_title">Continuar mostrando o ícone</string>
+    <string name="island_section_placement">posicionamento</string>
+    <string name="island_section_visuals">Visual</string>
+    <string name="island_section_duration">Duração </string>
+    <string name="island_section_behavior">Comportamento</string>
+    <string name="sound_mode_use_shizuku_desc">Usar Shizuku para ativar o modo de toque sem ativar o modo Não Perturbe.</string>
+    <string name="flashlight_pocket_title">detecção de bolso</string>
+    <string name="flashlight_pocket_desc">Desligua a lanterna quando o celular estiver no seu bolso.</string>
+    <string name="flashlight_overheat_title">prevenção de aquecimento</string>
+    <string name="flashlight_overheat_desc">Diminui o brilho após um período de uso prolongado.</string>
 </resources>
