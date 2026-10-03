@@ -378,7 +378,7 @@
     <!-- Categories -->
     <string name="cat_tools">工具</string>
     <string name="cat_visuals">视觉效果</string>
-    <string name="cat_system">系统</string>
+    <string name="cat_system">系统默认</string>
     <!-- UI Elements -->
     <string name="search_placeholder">Search Essentials</string>
     <string name="search_no_results">没有找到 \"%1$s\" 的结果</string>
@@ -1598,4 +1598,11 @@
     <string name="island_show_calls_title">电话</string>
     <string name="duo_hide_when_screen_off_title">熄屏时隐藏</string>
     <string name="duo_action_long_press_title">长按</string>
+    <string name="feat_weather_title">天气</string>
+    <string name="feat_weather_desc">配置提供商和设置</string>
+    <string name="weather_provider_title">提供商</string>
+    <string name="weather_location_device">当前位置</string>
+    <string name="weather_location_manual">选择一个城市</string>
+    <string name="weather_refresh_interval_title">刷新间隔</string>
+    <string name="island_weather_effects_title">天气影响</string>
 </resources>
