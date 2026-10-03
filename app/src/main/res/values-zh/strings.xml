@@ -1621,4 +1621,6 @@
     <string name="setting_location_reached_full_screen_alarm_desc">到达时播放闹铃声并显示全屏提醒</string>
     <string name="screen_locked_disable_notification_interactions_title">禁用通知交互</string>
     <string name="screen_locked_disable_notification_interactions_desc">锁定屏幕时，阻止下拉通知栏和快速设置</string>
+    <string name="pixel_search_engine_title">搜索引擎</string>
+    <string name="pixel_search_engine_desc">搜索网络时使用的默认搜索提供商</string>
 </resources>
