@@ -246,6 +246,7 @@ class MainViewModel : ViewModel() {
     val isIslandShowCalendar = mutableStateOf(false)
     val isIslandShowConsciousGate = mutableStateOf(true)
     val isIslandShowTimeBattery = mutableStateOf(false)
+    val isIslandShowBatteryAlerts = mutableStateOf(false)
     val isIslandShowFlashlight = mutableStateOf(true)
     val islandBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
     val isIslandBatteryPercentageEnabled = mutableStateOf(false)
@@ -2303,6 +2304,7 @@ class MainViewModel : ViewModel() {
         isIslandShowCalendar.value = settingsRepository.isIslandShowCalendarEnabled()
         isIslandShowConsciousGate.value = settingsRepository.isIslandShowConsciousGateEnabled()
         isIslandShowTimeBattery.value = settingsRepository.isIslandShowTimeBatteryEnabled()
+        isIslandShowBatteryAlerts.value = settingsRepository.isIslandShowBatteryAlertsEnabled()
         isIslandShowFlashlight.value = settingsRepository.isIslandShowFlashlightEnabled()
         islandBatteryStyle.value = settingsRepository.getIslandBatteryStyle()
         isIslandBatteryPercentageEnabled.value = settingsRepository.isIslandBatteryPercentageEnabled()
@@ -5583,6 +5585,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBatteryStyle(value: String) {
         islandBatteryStyle.value = value
         settingsRepository.setIslandBatteryStyle(value)
+    }
+
+    fun setIslandShowBatteryAlerts(enabled: Boolean) {
+        isIslandShowBatteryAlerts.value = enabled
+        settingsRepository.setIslandShowBatteryAlertsEnabled(enabled)
     }
 
     fun setIslandBatteryPercentageEnabled(enabled: Boolean) {

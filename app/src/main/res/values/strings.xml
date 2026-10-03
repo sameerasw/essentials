@@ -2836,6 +2836,14 @@
     <string name="island_battery_style_title">Battery style</string>
     <string name="island_battery_style_ring">Ring</string>
     <string name="island_battery_style_icon">Icon</string>
+    <string name="island_battery_alerts_title">Battery alerts</string>
+    <string name="island_battery_alerts_options_title">Battery alert options</string>
+    <string name="island_battery_alert_charging_title">Charging connected</string>
+    <string name="island_battery_alert_low_title">Low battery (6-20%)</string>
+    <string name="island_battery_alert_critical_title">Critical battery (≤ 5%)</string>
+    <string name="island_battery_alert_charging">Charging</string>
+    <string name="island_battery_alert_low">Low battery</string>
+    <string name="island_battery_alert_critical">Critical battery</string>
     <string name="slider_value_label">Value</string>
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
