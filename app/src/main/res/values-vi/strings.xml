@@ -68,8 +68,8 @@
     <string name="feat_essentials_on_display_desc">Xem qua các phương tiện truyền thông và thông tin về AOD</string>
     <string name="essentials_on_display_docked_mode_title">Chế độ đế</string>
     <string name="essentials_on_display_docked_mode_desc">Giữ cho lớp phủ luôn hiển thị trong khi nhạc đang phát trên chế độ AOD</string>
-    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
-    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_respect_notifications_title">Tôn trọng các thông báo mới</string>
+    <string name="essentials_on_display_respect_notifications_desc">Tạm thời tắt thông báo mới</string>
     <string name="essentials_on_display_random_shapes_title">Hình dạng ngẫu nhiên</string>
     <string name="essentials_on_display_random_shapes_desc">Sử dụng nhiều hình dạng khác nhau từ Material 3 cho ảnh bìa album</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
@@ -690,7 +690,7 @@
     <string name="label_auto_check_updates">Tự động kiểm tra cập nhật</string>
     <string name="desc_auto_check_updates">Kiểm tra bản cập nhật khi khởi chạy ứng dụng</string>
     <string name="action_all_set">All Set</string>
-    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="action_check_whats_new">Xem có gì mới?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
     <string name="action_see_whats_new">See what\'s new</string>
     <string name="label_mode_default">Default</string>
@@ -832,8 +832,8 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="diy_effect_dim_wallpaper">Hình nền mờ</string>
     <string name="diy_effect_night_mode">Chế độ ban đêm</string>
     <string name="diy_device_effects_android_15_warning">Tính năng này yêu cầu Android 15 trở lên.</string>
-    <string name="diy_device_effects_enabled">Đã bật</string>
-    <string name="diy_device_effects_disabled">Tàn tật</string>
+    <string name="diy_device_effects_enabled">Bật</string>
+    <string name="diy_device_effects_disabled">Tắt</string>
     <string name="diy_action_sound_mode">Chế độ âm thanh</string>
     <string name="diy_sound_mode_desc">Hành động này cho phép chuyển đổi giữa các chế độ Âm thanh, Rung và Im lặng dựa trên trình kích hoạt. Nó yêu cầu quyền truy cập Không làm phiền.</string>
     <!-- About Section -->
@@ -1829,7 +1829,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="weather_units_title">Đơn vị</string>
     <string name="island_media_peek_song_change_title">Bài hát thay đổi</string>
     <string name="island_media_keep_when_paused_title">Hãy tiếp tục theo kịp tiến độ khi tạm dừng</string>
-    <string name="feat_conscious_gate_title">Cổng ý thức</string>
+    <string name="feat_conscious_gate_title">Màn hình ý thức</string>
     <string name="conscious_gate_enable_title">Kích hoạt ý thức</string>
     <string name="conscious_gate_select_apps_title">Chọn ứng dụng có ý thức</string>
     <string name="conscious_gate_select_apps_desc">Hãy chọn ứng dụng nào hiển thị màn hình kiểm tra trạng thái trước khi mở</string>
@@ -1882,4 +1882,90 @@ Khi ẩn, thông báo vẫn sẽ đến âm thầm trong vùng làm mờ mà kh�
     <string name="about_desc_conscious_gate">Thêm màn hình kiểm tra ngắn gọn trước khi mở các ứng dụng mà bạn muốn sử dụng một cách có chủ đích hơn, chẳng hạn như mạng xã hội.
 
 Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có thời gian suy nghĩ Bạn sẽ có cơ hội quyết định ngay lúc này, và chức năng tạm dừng có thể tùy chọn xuất hiện trở lại nếu bạn tiếp tục sử dụng ứng dụng quá thời gian đã định.</string>
+    <string name="island_section_notifications">Thông báo</string>
+    <string name="feat_weather_title">Thời tiết</string>
+    <string name="diy_volume_channel_alarm">Báo thức</string>
+    <string name="island_sound_mode_keep_icon_title">Tiếp tục hiển thị biểu tượng</string>
+    <string name="island_alarm_window_title">Hiển thị báo thức trong vòng</string>
+    <string name="island_launcher_only_title">Chỉ hiển thị trên màn hình chính</string>
+    <string name="island_launcher_only_desc">Ẩn khi ứng dụng đang mở</string>
+    <string name="island_preview_ring_title">Hiển thị gợi ý căn chỉnh</string>
+    <string name="island_preview_stage_title">Giai đoạn xem trước</string>
+    <string name="app_colors_auto">Tự động</string>
+    <string name="island_call_show_peek">Xem trước</string>
+    <string name="island_call_show_expanded">Mở rộng</string>
+    <string name="island_pulse_shadow_title">Hiển thị bóng đổ trên thông báo</string>
+    <string name="island_pulse_shadow_desc">Ánh sáng lóe lên trong giây lát phía sau island trong màu sắc của ứng dụng</string>
+    <string name="island_border_outline_title">Đường viền</string>
+    <string name="island_border_outline_desc">Vẽ một đường viền mỏng xung quanh island</string>
+    <string name="island_show_when_title">Hiển thị khi</string>
+    <string name="island_show_when_unlocked">Mở khoá</string>
+    <string name="island_show_when_screen_on">Màn hình bật</string>
+    <string name="island_show_when_always">Luôn luôn</string>
+    <string name="island_brief_show_alarm_title">Hiển thị báo thức sắp tới</string>
+    <string name="island_brief_two_line_header_title">Tiêu đề 2 dòng</string>
+    <string name="diy_action_wifi_toggle">Bật/Tắt WiFi</string>
+    <string name="diy_action_cellular_toggle">Bật/Tắt Dữ liệu di động</string>
+    <string name="diy_action_auto_brightness_toggle">Bật/Tắt tự động điều chỉnh độ sáng</string>
+    <string name="diy_action_set_charging_mode">Đặt chế độ sạc</string>
+    <string name="diy_action_take_screenshot">Chụp ảnh màn hình</string>
+    <string name="diy_action_duo_turnon">Bật Duo</string>
+    <string name="diy_action_duo_turnoff">Tắt Duo</string>
+    <string name="diy_action_duo_toggle">Bật/Tắt Duo</string>
+    <string name="diy_action_island_turnon">Bật Island</string>
+    <string name="diy_action_island_turnoff">Tắt Island</string>
+    <string name="diy_action_island_toggle">Bật/Tắt Island</string>
+    <string name="diy_action_statusglance_turnon">Bật xem trạng thái nhanh</string>
+    <string name="diy_action_statusglance_turnoff">Tắt xem trạng thái nhanh</string>
+    <string name="diy_action_statusglance_toggle">Bật/Tắt xem trạng thái nhanh</string>
+    <string name="duo_action_horizontal_slide_volume">Âm lượng</string>
+    <string name="duo_action_horizontal_slide_brightness">Độ sáng</string>
+    <string name="duo_slide_mirror_direction_title">Hướng phản chiếu</string>
+    <string name="island_calendar_priority_title">Ưu tiên khi ở gần</string>
+    <string name="island_battery_percentage_conditional_title">Chỉ áp dụng trong các điều kiện dưới đây</string>
+    <string name="island_call_sticky_title">Không tự động thu gọn</string>
+    <string name="island_call_show_mode_title">Cách xem</string>
+    <string name="weather_model_title">Mô hình dự báo</string>
+    <string name="island_media_show_previous_title">Hiển thị nút bài hát trước</string>
+    <string name="duo_rotate_album_art_title">Xoay ảnh bìa album</string>
+    <string name="duo_hide_when_locked_title">Ẩn khi bị khóa</string>
+    <string name="feat_weather_desc">Cấu hình nhà cung cấp và cài đặt</string>
+    <string name="dev_weather_experimental_title">Thử nghiệm thời tiết</string>
+    <string name="dev_simulate_weather_title">Mô phỏng thời tiết</string>
+    <string name="weather_sim_time_title">Thời gian trong ngày</string>
+    <string name="weather_sim_time_dawn">Bình minh</string>
+    <string name="weather_sim_time_day">Ngày</string>
+    <string name="weather_sim_time_dusk">Hoàng hôn</string>
+    <string name="weather_sim_time_night">Đêm</string>
+    <string name="haptic_mode_stronger">Mạnh</string>
+    <string name="island_border_outline_dynamic_title">Màu sắc sống động</string>
+    <string name="island_border_outline_hide_expanded_title">Ẩn khi mở rộng</string>
+    <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>
+    <string name="island_border_outline_thickness_title">Độ dày đường viền</string>
+    <string name="island_notif_conceal_locked_title">Ẩn nội dung thông báo</string>
+    <string name="island_pulse_shadow_size_title">Kích thước phát sáng</string>
+    <string name="island_pulse_shadow_y_shift_title">Dịch chuyển theo chiều dọc</string>
+    <string name="island_pulse_shadow_spread_title">Ánh sáng lan tỏa</string>
+    <string name="island_pulse_shadow_duration_title">Thời lượng xung</string>
+    <string name="duo_enable_title">Bật Duo</string>
+    <string name="cat_networks">Mạng lưới</string>
+    <string name="about_desc_aod_wallpaper">Hiển thị hình nền của bạn phía sau đồng hồ trên màn hình Always On Display bằng cách sử dụng lớp phủ, với độ mờ, độ nhòe, hiệu ứng viền đen và ngưỡng đen có thể điều chỉnh. Bạn cũng có thể chọn một hình ảnh tùy chỉnh hoặc hiển thị ảnh bìa album nhạc đang phát.
+
+Tính năng này chỉ hoạt động với hình nền tĩnh. Hình nền động và video không được hỗ trợ.
+
+Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cần quyền truy cập bộ nhớ để đọc dữ liệu hình nền hiện tại của bạn. Chỉ cần quyền truy cập thông báo nếu bạn bật ảnh bìa album.</string>
+    <string name="feat_conscious_gate_desc">Tạm dừng trước khi mở các ứng dụng đã chọn</string>
+    <string name="about_desc_weather">Chọn nguồn dự báo, thiết lập vị trí, đơn vị đo và khoảng thời gian cập nhật, đồng thời chọn xem màn hình thời tiết đầy đủ có hiển thị trong danh sách ứng dụng của bạn hay không. Tính năng Island và Brief sử dụng các cài đặt này.</string>
+    <string name="label_unsupported">Không hỗ trợ</string>
+    <string name="app_icon_legacy">Cũ</string>
+    <string name="watchface_promo_step1_title">1. Tham gia nhóm Google</string>
+    <string name="watchface_promo_step1_desc">Hãy tham gia nhóm thử nghiệm bằng tài khoản Gmail được liên kết với đồng hồ của bạn</string>
+    <string name="watchface_promo_step2_title">2. Tham gia Chương trình Beta</string>
+    <string name="watchface_promo_step2_desc">Đăng ký tham gia chương trình thử nghiệm nội bộ trên Google Play</string>
+    <string name="watchface_promo_step3_title">3. Cài đặt trên đồng hồ</string>
+    <string name="watchface_promo_step3_desc">Mở trực tiếp mục Play Store trên đồng hồ của bạn để cài đặt</string>
+    <string name="island_section_placement">Vị trí</string>
+    <string name="island_section_visuals">Hình ảnh</string>
+    <string name="island_section_duration">Khoảng thời gian</string>
+    <string name="island_section_behavior">Hành vi</string>
 </resources>
