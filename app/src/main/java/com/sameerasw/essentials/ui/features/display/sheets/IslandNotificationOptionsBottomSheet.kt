@@ -113,6 +113,18 @@ fun IslandNotificationOptionsBottomSheet(
                 }
 
                 IconToggleItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = stringResource(R.string.island_notif_compact_only_title),
+                    description = stringResource(R.string.island_notif_compact_only_desc),
+                    isChecked = viewModel.isIslandNotifCompactOnly.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifCompactOnly(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_notif_compact_only"),
+                )
+
+                IconToggleItem(
                     iconRes = R.drawable.rounded_downloading_24,
                     title = stringResource(R.string.island_notif_keep_progress_title),
                     isChecked = viewModel.isIslandNotifKeepProgress.value,

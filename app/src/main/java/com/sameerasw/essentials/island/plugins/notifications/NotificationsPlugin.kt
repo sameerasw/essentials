@@ -35,6 +35,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED,
         SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP,
+        SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_ONLY,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
@@ -49,6 +50,10 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private var manualPick = false
     
     private var pendingPopUp = false
+
+    // Compact-only mode never reaches Line/Expanded, so the running timeout is the only signal
+    // that the compact row is actively cycling this plugin's alerts (vs. sitting in catch-up).
+    private var cycling = false
 
     private fun busyElsewhere(): Boolean {
         val c = ctx ?: return false
@@ -178,11 +183,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun showingHere(): Boolean {
         val c = ctx ?: return false
         val stage = c.currentStage()
+        if (compactOnly()) return cycling && alerts.isNotEmpty() && stage != IslandStage.Hidden
         return c.focusedKey() == ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
     }
 
     private fun popUp() {
         val c = ctx ?: return
+        if (compactOnly()) return
         val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
         c.request(
             if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs(), sticky = true)
@@ -225,6 +232,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         if (settings.isIslandCatchUpEnabled() && alerts.isNotEmpty()) {
+            cycling = false
             if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
             return
         }
@@ -235,9 +243,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val handler = ctx?.mainHandler ?: return
         handler.removeCallbacks(timeoutRunnable)
         handler.postDelayed(timeoutRunnable, settings.getIslandTimeoutMs())
+        cycling = true
     }
 
     private fun cancelTimers() {
+        cycling = false
         ctx?.mainHandler?.removeCallbacks(timeoutRunnable)
         ctx?.mainHandler?.removeCallbacks(catchUpRunnable)
     }
@@ -287,6 +297,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun queueEnabled() = settings.isIslandNotifQueueEnabled()
+
+    private fun compactOnly() = settings.isIslandNotifCompactOnlyEnabled()
 
     private fun itemFor(alert: ActiveNotificationAlert): IslandItem {
         if (concealed()) return concealedItemFor(alert)

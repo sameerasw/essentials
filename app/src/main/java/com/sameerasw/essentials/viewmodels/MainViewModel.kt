@@ -225,6 +225,7 @@ class MainViewModel : ViewModel() {
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
     val isIslandNotifCompactHeadsUp = mutableStateOf(true)
+    val isIslandNotifCompactOnly = mutableStateOf(false)
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
     val isIslandShowNotifications = mutableStateOf(true)
@@ -855,6 +856,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP ->
                         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_ONLY ->
+                        isIslandNotifCompactOnly.value = settingsRepository.isIslandNotifCompactOnlyEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
                         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
@@ -2282,6 +2286,7 @@ class MainViewModel : ViewModel() {
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+        isIslandNotifCompactOnly.value = settingsRepository.isIslandNotifCompactOnlyEnabled()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
@@ -5476,6 +5481,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNotifCompactHeadsUp(enabled: Boolean) {
         isIslandNotifCompactHeadsUp.value = enabled
         settingsRepository.setIslandNotifCompactHeadsUpEnabled(enabled)
+    }
+
+    fun setIslandNotifCompactOnly(enabled: Boolean) {
+        isIslandNotifCompactOnly.value = enabled
+        settingsRepository.setIslandNotifCompactOnlyEnabled(enabled)
     }
 
     fun setIslandCatchUpEnabled(enabled: Boolean) {

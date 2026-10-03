@@ -556,6 +556,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_NOTIF_COMPACT_HEADS_UP = "island_notif_compact_heads_up"
+        const val KEY_ISLAND_NOTIF_COMPACT_ONLY = "island_notif_compact_only"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
@@ -3846,6 +3847,9 @@ class SettingsRepository(
 
     fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
     fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, enabled)
+
+    fun isIslandNotifCompactOnlyEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_ONLY, false)
+    fun setIslandNotifCompactOnlyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_ONLY, enabled)
 
     fun isIslandNotifKeepProgressEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, true)
     fun setIslandNotifKeepProgressEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, enabled)

@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateColorAsState
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.first
 import androidx.compose.runtime.snapshotFlow
@@ -77,7 +78,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -163,7 +163,20 @@ fun IslandRoot(
         label = "islandOutlineAlpha",
     )
 
-    val pulseAccent = state.items[state.focusedKey]?.accent
+    val pulseAccent = state.focused?.accent
+        ?: state.items.values.firstOrNull { it.accent != null }?.accent
+        ?: state.items.values.firstOrNull()?.accent
+
+    // Notifications share one item key for the whole queue, so the item map alone signals nothing:
+    // an arrival only adds a stack key, an advance only moves the `current` flag. Watch both.
+    val pulseKeys = remember(state.items) {
+        state.items.keys + state.items.values.flatMap { item -> item.stack.map { it.key } }
+    }
+    val pulseShown = remember(state.items, state.focusedKey) {
+        val current = state.items.values.firstNotNullOfOrNull { item -> item.stack.firstOrNull { it.current }?.key }
+        "${state.focusedKey}|$current"
+    }
+
     val dynamicOutline: Color? = if (spec.outlineDynamic) {
         val focused = state.items[state.focusedKey]
         (focused?.outlineAccent ?: focused?.accent)
@@ -174,10 +187,16 @@ fun IslandRoot(
     val animatedOutlineColor: Color? = spec.outlineColor?.let { base ->
         animateColorAsState(dynamicOutline ?: base, label = "islandOutlineColor").value
     }
+
     val pulse = remember { Animatable(0f) }
-    LaunchedEffect(state.focusedKey, spec.pulseShadow) {
+    val pulsed = remember { arrayOfNulls<Pair<Set<String>, String>>(1) }
+    LaunchedEffect(pulseKeys, pulseShown, spec.pulseShadow) {
         pulse.snapTo(0f)
-        if (!spec.pulseShadow || state.focusedKey == null) return@LaunchedEffect
+        val last = pulsed[0]
+        pulsed[0] = pulseKeys to pulseShown
+        // A dismissal shrinks the queue without bringing anything new forward - no pulse for that.
+        val arrived = last == null || (pulseKeys - last.first).isNotEmpty() || pulseShown != last.second
+        if (!spec.pulseShadow || pulseKeys.isEmpty() || !arrived) return@LaunchedEffect
         pulse.animateTo(1f, tween(250, easing = LinearEasing))
         pulse.animateTo(0f, tween(1200, easing = LinearEasing))
     }
@@ -363,18 +382,23 @@ fun IslandRoot(
         if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - bubbleSizePx
     val focusedItem = state.focused
     
+    // With nothing focused (compact-only) the on-screen item still owns its stack, so `current`
+    // has to survive the lookup or its icon shows up twice: on the island and in the bubble.
+    val ownStack = focusedItem?.stack?.takeIf { it.isNotEmpty() }
+        ?: state.items.values.takeIf { focusedItem == null }?.firstOrNull { it.stack.isNotEmpty() }?.stack
+        ?: emptyList()
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
         state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() }?.stack.orEmpty()
     } else {
         emptyList()
     }
-    val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
+    val fullStack = ownStack.ifEmpty { foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) } }
     val queuedIcons = if (foreignStack.isNotEmpty()) fullStack else fullStack.filterNot { it.current }
-    val queueShown = (stage == IslandStage.Line || stage == IslandStage.Expanded) && queuedIcons.isNotEmpty()
+    val queueShown = stage != IslandStage.Hidden && queuedIcons.isNotEmpty()
     var lastFullStack by remember { mutableStateOf(emptyList<StackIcon>()) }
     if (queuedIcons.isNotEmpty()) lastFullStack = fullStack
     var pillSize by remember { mutableStateOf(IntSize.Zero) }
-    val lineInsetActive = queueShown && stage == IslandStage.Line
+    val lineInsetActive = queueShown && (stage == IslandStage.Line || stage == IslandStage.Compact)
     val lineInset = if (lineInsetActive) spec.compactHeight + spec.cameraGap else 0.dp
     val lineInsets = if (spec.growDirection > 0) 0.dp to lineInset else lineInset to 0.dp
     LaunchedEffect(lineInsetActive, spec.growDirection) {
@@ -398,7 +422,7 @@ fun IslandRoot(
     LaunchedEffect(stage) {
         when (stage) {
             IslandStage.Expanded -> queueBelow.animateTo(1f, IslandMotion.float())
-            IslandStage.Line -> queueBelow.animateTo(0f, IslandMotion.float())
+            IslandStage.Line, IslandStage.Compact -> queueBelow.animateTo(0f, IslandMotion.float())
             else -> Unit
         }
     }
@@ -414,7 +438,7 @@ fun IslandRoot(
         }
         val top = (surfaceTopPx - g).coerceAtLeast(0)
         var bounds = IntRect(left, top, left + target.width, surfaceTopPx - g + target.height)
-        if (queueShown && stage == IslandStage.Line) {
+        if (queueShown && (stage == IslandStage.Line || stage == IslandStage.Compact)) {
             val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - bubbleSizePx
             bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + bubbleSizePx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
         }
@@ -476,7 +500,7 @@ fun IslandRoot(
                         .queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) }
                         .pointerInput(Unit) {
                             detectTapGestures {
-                                if (currentState.stage != IslandStage.Line) return@detectTapGestures
+                                if (currentState.stage != IslandStage.Line && currentState.stage != IslandStage.Compact) return@detectTapGestures
                                 IslandHaptics.tap(context)
                                 if (currentState.focused?.queue != null) {
                                     actions.onAdvance()
