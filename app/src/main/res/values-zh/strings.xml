@@ -1623,4 +1623,9 @@
     <string name="screen_locked_disable_notification_interactions_desc">锁定屏幕时，阻止下拉通知栏和快速设置</string>
     <string name="pixel_search_engine_title">搜索引擎</string>
     <string name="pixel_search_engine_desc">搜索网络时使用的默认搜索提供商</string>
+    <string name="duo_action_horizontal_slide_title">水平滑动</string>
+    <string name="duo_action_horizontal_slide_brightness">亮度</string>
+    <string name="duo_action_horizontal_slide_volume">音量</string>
+    <string name="duo_action_horizontal_slide_track">切换曲目</string>
+    <string name="duo_action_horizontal_slide_track_desc">仅在播放时起效</string>
 </resources>
