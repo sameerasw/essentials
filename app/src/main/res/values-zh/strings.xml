@@ -826,8 +826,8 @@
     <string name="diy_effect_dim_wallpaper">调暗壁纸</string>
     <string name="diy_effect_night_mode">夜间模式</string>
     <string name="diy_device_effects_android_15_warning">此功能需要Android 15或更高版本。</string>
-    <string name="diy_device_effects_enabled">已启用</string>
-    <string name="diy_device_effects_disabled">已禁用</string>
+    <string name="diy_device_effects_enabled">启用</string>
+    <string name="diy_device_effects_disabled">禁用</string>
     <string name="diy_action_sound_mode">声音模式</string>
     <string name="diy_sound_mode_desc">此操作允许根据触发器在声音、振动和静音模式之间切换。需要勿扰权限。</string>
     <!-- About Section -->
@@ -1632,7 +1632,7 @@
     <string name="feat_weather_title">天气</string>
     <string name="feat_weather_desc">配置提供商和设置</string>
     <string name="weather_location_device">当前位置</string>
-    <string name="weather_location_manual">选择一个城市</string>
+    <string name="weather_location_manual">选择城市</string>
     <string name="weather_refresh_interval_title">刷新间隔</string>
-    <string name="island_weather_effects_title">天气影响</string>
+    <string name="island_weather_effects_title">天气效果</string>
 </resources>
