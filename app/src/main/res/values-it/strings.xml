@@ -1392,7 +1392,7 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Taci!</string>
+    <string name="feat_shut_up_title">Shut-Up!</string>
     <string name="feat_shut_up_desc">So cosa sto facendo</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
@@ -1513,4 +1513,5 @@
     <string name="feat_wireless_display_certification_title">Certificazione display wireless</string>
     <string name="feat_wireless_display_certification_desc">Mostra le opzioni per la certificazione del display wireless</string>
     <string name="qs_secure_sensitive_tiles_title">Proteggi i riquadri sensibili</string>
+    <string name="tile_lockdown_mode_desc">Schermo spento e Tile Quick Settings</string>
 </resources>
