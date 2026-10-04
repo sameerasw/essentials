@@ -1757,4 +1757,19 @@
     <string name="island_weather_haptics_title">Имитация вибрации</string>
     <string name="feat_conscious_gate_desc">Пауза перед открытием выбранных приложений</string>
     <string name="haptic_mode_stronger">Повышенная</string>
+    <string name="feat_weather_title">Погода</string>
+    <string name="feat_weather_desc">Настройка провайдеров и параметров</string>
+    <string name="weather_provider_title">Провайдер</string>
+    <string name="weather_model_title">Модель прогноза</string>
+    <string name="weather_location_device">Текущее местоположение</string>
+    <string name="weather_location_manual">Выбор города</string>
+    <string name="weather_refresh_interval_title">Обновлять каждые</string>
+    <string name="about_desc_weather">Выберите источник прогноза, укажите местоположение, единицы измерения и интервал обновления, а также решите, будет ли полный экран погоды отображаться в списке приложений. Островок и Сводка используют эти настройки.</string>
+    <string name="island_section_notifications">Уведомления</string>
+    <string name="island_show_network_title">Сетевая активность</string>
+    <string name="island_section_placement">Размещение</string>
+    <string name="island_section_visuals">Визуальные настройки</string>
+    <string name="island_section_duration">Длительность</string>
+    <string name="island_section_behavior">Поведение</string>
+    <string name="duo_hide_when_locked_title">Скрыть на заблокированном экране</string>
 </resources>
