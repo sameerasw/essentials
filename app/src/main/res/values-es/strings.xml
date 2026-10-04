@@ -1758,4 +1758,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="weather_refresh_interval_title">Actualizar cada</string>
     <string name="perm_overcast_weather_title">Permiso del clima de Overcast</string>
     <string name="perm_overcast_weather_desc">Essentials lee el ultimo clima de tu actual o guardada ubicacion de Overcast</string>
+    <string name="setting_hidden_debugging_title">Ocultar soporte de deduperacion</string>
 </resources>
