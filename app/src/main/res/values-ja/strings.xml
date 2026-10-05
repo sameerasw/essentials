@@ -1904,4 +1904,15 @@
     <string name="weather_sim_time_day">昼</string>
     <string name="weather_sim_time_dusk">夕方</string>
     <string name="weather_sim_time_night">夜</string>
+    <string name="setting_hidden_debugging_title">デバッグ非表示をサポート</string>
+    <string name="island_keep_on_landscape_title">横向きでも表示</string>
+    <string name="island_landscape_top_spacing_title">横向き時の上部のスペース</string>
+    <string name="island_bond_edge_title">非アクティブ時にノッチでボンディング</string>
+    <string name="island_max_items_title">表示する最大アイテム数</string>
+    <string name="island_show_signal_title">モバイルデータの電波強度を表示</string>
+    <string name="island_signal_wifi_title">Wi-Fiの電波強度を表示</string>
+    <string name="island_signal_low_only_title">電波強度が低い場合に表示する</string>
+    <string name="island_signal_show_mode_title">ネットワークモードを表示する</string>
+    <string name="island_always_gestures_title">常にジェスチャーができるようにする</string>
+    <string name="island_always_gestures_desc">Islandが非表示の状態でもジェスチャーができるようにします</string>
 </resources>
