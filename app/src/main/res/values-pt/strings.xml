@@ -1622,13 +1622,14 @@
     <string name="label_battery_current_now">Corrente em tempo real</string>
     <string name="label_battery_current_avg">Corrente média</string>
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
-    <string name="island_section_placement">posicionamento</string>
+    <string name="island_section_placement">posicionamento </string>
     <string name="island_section_visuals">Visual</string>
     <string name="island_section_duration">Duração </string>
     <string name="island_section_behavior">Comportamento</string>
-    <string name="island_call_options_title">Chamadas</string>
-    <string name="island_section_notifications">Notificações </string>
-    <string name="island_show_time_battery_title">Horário e bateria </string>
+    <string name="island_call_options_title">chamadas</string>
+    <string name="island_section_notifications">notificações </string>
+    <string name="island_show_time_battery_title">
+tempo e bateria</string>
     <string name="island_show_timers_title">Temporizadores e cronômetros</string>
     <string name="diy_volume_channel_alarm">Alarme</string>
     <string name="duo_slide_mirror_direction_title">Espelhar direções </string>
@@ -1657,4 +1658,9 @@
     <string name="flashlight_pocket_desc">Desligua a lanterna quando o celular estiver no seu bolso.</string>
     <string name="flashlight_overheat_title">prevenção de aquecimento</string>
     <string name="flashlight_overheat_desc">Diminui o brilho após um período de uso prolongado.</string>
+    <string name="island_preview_stage_title">pré-visualização</string>
+    <string name="app_colors_auto">Automático</string>
+    <string name="island_call_show_peek">Espiar</string>
+    <string name="island_call_show_expanded">Expandido</string>
+    <string name="setting_hidden_debugging_title">esconder Suporte para depuração</string>
 </resources>
