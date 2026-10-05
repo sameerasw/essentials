@@ -64,7 +64,7 @@
     <string name="like_song_settings_desc">Este recurso requer acesso à notificação para detectar a mídia atualmente sendo reproduzida e acionar a ação semelhante. Ative-o abaixo.</string>
     <string name="like_song_toast_enabled">Mostrar mensagem de brinde</string>
     <string name="like_song_aod_overlay_title">Mostrar sobreposição no AOD</string>
-    <string name="feat_essentials_on_display_title">Essenciais em Exibição</string>
+    <string name="feat_essentials_on_display_title">Essentials em Exibição</string>
     <string name="feat_essentials_on_display_desc">Visualize mídias e informações no Always On Display</string>
     <string name="essentials_on_display_docked_mode_title">Modo acoplado (carregando)</string>
     <string name="essentials_on_display_docked_mode_desc">Mantenha a sobreposição visível indefinidamente enquanto a música estiver tocando no AOD.</string>
@@ -146,8 +146,8 @@
     <string name="action_import_freeze">Importar lista de aplicativos congelados</string>
     <string name="freeze_pick_apps_title">Escolha aplicativos para congelar</string>
     <string name="freeze_pick_apps_desc">Escolha quais aplicativos podem ser congelados</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
-    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="freeze_show_in_launcher_title">mostrar no launcher</string>
+    <string name="freeze_show_in_launcher_desc">adicionar um atalho ao launcher para acesso mais facil</string>
     <string name="settings_section_automation">Automação</string>
     <string name="freeze_when_locked_title">Congelar quando bloqueado</string>
     <string name="freeze_delay_title">Atraso de congelamento</string>
@@ -166,8 +166,8 @@
     <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Necessário para detectar mídia em reprodução e notificações ativas para evitar congelá-las</string>
     <string name="freeze_mode_title">Freeze mode</string>
-    <string name="freeze_mode_freeze">Freezing</string>
-    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_freeze">Congelamento</string>
+    <string name="freeze_mode_suspend">suspensão de app</string>
     <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Mostrar apenas quando a tela está desligada</string>
@@ -1663,4 +1663,6 @@ tempo e bateria</string>
     <string name="island_call_show_peek">Espiar</string>
     <string name="island_call_show_expanded">Expandido</string>
     <string name="setting_hidden_debugging_title">esconder Suporte para depuração</string>
+    <string name="freeze_tag_color_coded_title">Etiquetas com código de cores</string>
+    <string name="freeze_tag_color_coded_desc">Exibir cores de etiquetas na grade do aplicativo</string>
 </resources>
