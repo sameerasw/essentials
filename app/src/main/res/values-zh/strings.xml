@@ -1628,4 +1628,5 @@
     <string name="duo_action_horizontal_slide_volume">音量</string>
     <string name="duo_action_horizontal_slide_track">切换曲目</string>
     <string name="duo_action_horizontal_slide_track_desc">仅在播放时起效</string>
+    <string name="setting_hidden_debugging_title">隐藏调试选项</string>
 </resources>
