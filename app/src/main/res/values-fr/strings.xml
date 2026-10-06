@@ -1640,4 +1640,5 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_action_horizontal_slide_title">Glissement horizontal</string>
     <string name="duo_hide_when_locked_title">Cacher quand verrouillé</string>
     <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
+    <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
 </resources>
