@@ -12,10 +12,6 @@ package com.sameerasw.essentials.domain.model
 import android.view.KeyEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 
-/**
- * Physical inputs that can be remapped. New inputs (e.g. power button, back tap) are added here
- * along with their preference keys in [RemapSlot.prefKey].
- */
 enum class RemapInput {
     VOLUME_UP,
     VOLUME_DOWN,
@@ -26,9 +22,6 @@ enum class RemapScreenState {
     ON,
 }
 
-/**
- * A single remappable slot. Each slot stores an ordered list of actions that run on long press.
- */
 data class RemapSlot(
     val input: RemapInput,
     val screenState: RemapScreenState,

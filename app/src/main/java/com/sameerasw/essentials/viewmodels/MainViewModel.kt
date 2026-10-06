@@ -4890,10 +4890,7 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Replaces the ordered action sequence for a Button Remap slot. An empty list unmaps it.
-     *
-     * @param slot [RemapSlot] Target input and screen state.
-     * @param actions [List] Actions to run in order on long press.
+     * Sets the ordered actions for a Button Remap slot.
      */
     fun setRemapActions(
         slot: RemapSlot,

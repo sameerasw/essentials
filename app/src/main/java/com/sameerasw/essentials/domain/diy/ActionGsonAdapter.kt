@@ -76,10 +76,6 @@ object ActionGsonAdapter {
         return array.toString()
     }
 
-    /**
-     * Parses a JSON array of actions. Entries that fail to deserialize (e.g. actions removed in a
-     * newer version) are skipped rather than discarding the whole list.
-     */
     fun listFromJson(json: String): List<Action> =
         try {
             JsonParser.parseString(json).asJsonArray.mapNotNull { element ->

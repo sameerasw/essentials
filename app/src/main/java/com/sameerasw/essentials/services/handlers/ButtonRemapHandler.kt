@@ -30,6 +30,7 @@ import com.sameerasw.essentials.services.InputEventListenerService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
@@ -45,6 +46,7 @@ class ButtonRemapHandler(
     private var isLongPressTriggered: Boolean = false
     private var lastPressedKeyCode: Int = -1
     private var lastPendingActions: List<Action> = emptyList()
+    private var sequenceJob: Job? = null
     private val longPressTimeout = 500L
 
     var isVolumeDialogVisible: Boolean = false
@@ -203,7 +205,6 @@ class ButtonRemapHandler(
         }
     }
 
-    /** True if Toggle flashlight is in any (screen on or off) sequence for this volume key. */
     private fun isFlashlightMapped(keyCode: Int): Boolean =
         listOf(true, false).any { isScreenOn ->
             RemapSlot
@@ -213,13 +214,12 @@ class ButtonRemapHandler(
                 .any { it is Action.ToggleFlashlight }
         }
 
-    /**
-     * Runs a remap sequence in order. A short gap between actions lets asynchronous ones
-     * (torch callbacks, app launches, settings writes) settle before the next one starts.
-     */
     private fun handleLongPress(actions: List<Action>) {
-        if (actions.isEmpty()) return
-        scope.launch {
+        if (actions.isEmpty() || sequenceJob?.isActive == true) return
+        sequenceJob = scope.launch {
+            if (actions.any { it !is Action.ToggleFlashlight }) {
+                triggerHapticFeedback()
+            }
             actions.forEachIndexed { index, action ->
                 if (index > 0) delay(ACTION_SEQUENCE_GAP_MS)
                 try {
@@ -229,14 +229,9 @@ class ButtonRemapHandler(
                         CombinedActionExecutor.execute(service, action)
                     }
                 } catch (e: Exception) {
-                    // Keep running the rest of the sequence if one action fails
                     e.printStackTrace()
                 }
             }
-        }
-        // Flashlight toggling gives its own feedback; only buzz when something else runs
-        if (actions.any { it !is Action.ToggleFlashlight }) {
-            triggerHapticFeedback()
         }
     }
 

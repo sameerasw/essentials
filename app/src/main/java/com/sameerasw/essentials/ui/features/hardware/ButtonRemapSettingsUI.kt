@@ -81,6 +81,7 @@ import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import java.util.concurrent.atomic.AtomicLong
 import sh.calvin.reorderable.ReorderableColumn
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -179,9 +180,15 @@ fun ButtonRemapSettingsUI(
         )
     val currentActions: List<Action> = viewModel.remapActions[currentSlot].orEmpty()
 
+    val rowIdCounter = remember { AtomicLong() }
+    val rowIds = remember(currentSlot) { mutableListOf<Long>() }
+    if (rowIds.size != currentActions.size) {
+        rowIds.clear()
+        currentActions.forEach { _ -> rowIds.add(rowIdCounter.getAndIncrement()) }
+    }
+
     fun updateActions(actions: List<Action>) = viewModel.setRemapActions(currentSlot, actions)
 
-    // Config sheets save back into the sequence entry they were opened for
     val onActionSelected: (Action) -> Unit = { action ->
         val index = configIndex
         if (index != null && index in currentActions.indices) {
@@ -479,7 +486,6 @@ fun ButtonRemapSettingsUI(
                     )
                 }
 
-                // Ordered action sequence for the selected slot
                 RoundedCardContainer(spacing = 2.dp) {
                     if (currentActions.isEmpty()) {
                         Text(
@@ -495,10 +501,10 @@ fun ButtonRemapSettingsUI(
                                     ).padding(16.dp),
                         )
                     } else {
-                        // Actions can repeat (e.g. Open app twice), so rows are keyed by position
                         ReorderableColumn(
                             list = currentActions,
                             onSettle = { fromIndex, toIndex ->
+                                rowIds.add(toIndex, rowIds.removeAt(fromIndex))
                                 updateActions(
                                     currentActions.toMutableList().apply { add(toIndex, removeAt(fromIndex)) },
                                 )
@@ -506,7 +512,7 @@ fun ButtonRemapSettingsUI(
                             onMove = { HapticUtil.performUIHaptic(view) },
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) { index, action, isDragging ->
-                            key(currentSlot, index) {
+                            key(rowIds.getOrNull(index) ?: index) {
                                 ReorderableItem {
                                     RemapSequenceItem(
                                         position = index + 1,
@@ -519,6 +525,7 @@ fun ButtonRemapSettingsUI(
                                         dragHandleModifier = Modifier.draggableHandle(),
                                         onSettingsClick = { openActionSettings(index, action) },
                                         onRemove = {
+                                            if (index in rowIds.indices) rowIds.removeAt(index)
                                             updateActions(currentActions.toMutableList().apply { removeAt(index) })
                                         },
                                     )
@@ -564,12 +571,12 @@ fun ButtonRemapSettingsUI(
             onActionPicked = { action ->
                 showAddActionSheet = false
                 val newIndex = currentActions.size
+                rowIds.add(rowIdCounter.getAndIncrement())
                 updateActions(currentActions + action)
                 val missing = getMissingPermissionsHelper(action)
                 if (missing.isNotEmpty()) {
                     showMissingPermissionSheet(action, missing)
                 } else if (action.isConfigurable) {
-                    // Configurable actions open their settings straight away
                     openActionSettings(newIndex, action)
                 }
             },
