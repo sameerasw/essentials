@@ -1688,7 +1688,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="perm_contacts_title">Permiso de contactos</string>
     <string name="island_show_calls_title">Llamadas</string>
     <string name="island_show_time_battery_title">Hora y bateria</string>
-    <string name="island_battery_style_title">CHUECO </string>
+    <string name="island_battery_style_title">Estilo de bateria</string>
     <string name="about_desc_status_glance">La vista de estado muestra un chip ambiental con prioridad junto al orificio de la cámara frontal. Muestra dinámicamente la linterna activa, los próximos eventos del calendario, el contenido multimedia que se está reproduciendo y la hora actual.</string>
     <string name="island_camera_position_title">Posición camara</string>
     <string name="island_camera_position_left">Izquierda </string>
@@ -1751,13 +1751,13 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="perm_overcast_weather_title">Permiso del clima de Overcast</string>
     <string name="perm_overcast_weather_desc">Essentials lee el ultimo clima de tu actual o guardada ubicacion de Overcast</string>
     <string name="setting_hidden_debugging_title">Ocultar soporte de deduperacion</string>
-    <string name="island_section_visuals">Diseño</string>
+    <string name="island_section_visuals">Visuales</string>
     <string name="island_section_duration">Duracion</string>
-    <string name="island_section_behavior">Comportamiento</string>
-    <string name="island_section_placement">Posición</string>
+    <string name="island_section_behavior">Opacidad</string>
+    <string name="island_section_placement">Posicion</string>
     <string name="island_brief_show_alarm_title">Mostrar las siguientes alarmas</string>
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>
-    <string name="diy_volume_channel_alarm">Alarma</string>
+    <string name="diy_volume_channel_alarm">Alarmas</string>
     <string name="island_launcher_only_title">Solo mostrar en el launcher</string>
     <string name="island_alarm_window_title">Mostrar alarmas dentro</string>
     <string name="island_battery_only_low_title">Solo mostrar si esta baja</string>
@@ -1766,4 +1766,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_weather_mode_title">Mostrar en Isla</string>
     <string name="island_section_notifications">Notificaciones</string>
+    <string name="feat_weather_title">Clima</string>
+    <string name="feat_weather_desc">Configura proveedores y configuraciones</string>
 </resources>
