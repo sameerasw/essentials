@@ -437,7 +437,7 @@
     <string name="feat_freeze_desc">禁用不常用的应用</string>
     <string name="feat_watermark_title">水印</string>
     <string name="feat_watermark_desc">向照片添加 EXIF 数据和徽标</string>
-    <string name="feat_always_on_display_title">息屏显示</string>
+    <string name="feat_always_on_display_title">始终显示</string>
     <string name="feat_always_on_display_desc">屏幕关闭时显示时间和信息</string>
     <string name="feat_calendar_sync_title">日历同步</string>
     <string name="feat_calendar_sync_desc">将手机日历同步到手表</string>
@@ -826,8 +826,8 @@
     <string name="diy_effect_dim_wallpaper">调暗壁纸</string>
     <string name="diy_effect_night_mode">夜间模式</string>
     <string name="diy_device_effects_android_15_warning">此功能需要Android 15或更高版本。</string>
-    <string name="diy_device_effects_enabled">启用</string>
-    <string name="diy_device_effects_disabled">禁用</string>
+    <string name="diy_device_effects_enabled">已启用</string>
+    <string name="diy_device_effects_disabled">已禁用</string>
     <string name="diy_action_sound_mode">声音模式</string>
     <string name="diy_sound_mode_desc">此操作允许根据触发器在声音、振动和静音模式之间切换。需要勿扰权限。</string>
     <!-- About Section -->
