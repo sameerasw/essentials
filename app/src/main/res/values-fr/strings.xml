@@ -1638,4 +1638,5 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_action_tap_title">Appui</string>
     <string name="duo_action_swipe_down_title">Glissement vers le bas</string>
     <string name="duo_action_horizontal_slide_title">Glissement horizontal</string>
+    <string name="duo_hide_when_locked_title">Cacher quand verrouillé</string>
 </resources>
