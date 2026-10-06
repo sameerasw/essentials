@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
@@ -61,6 +62,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
@@ -126,10 +128,7 @@ class MainViewModel : ViewModel() {
     val isButtonRemapUseShizuku = mutableStateOf(false)
     val isButtonRemapPauseOnVolumeDialog = mutableStateOf(true)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
-    val volumeUpActionOff = mutableStateOf<Action?>(null)
-    val volumeDownActionOff = mutableStateOf<Action?>(null)
-    val volumeUpActionOn = mutableStateOf<Action?>(null)
-    val volumeDownActionOn = mutableStateOf<Action?>(null)
+    val remapActions = mutableStateMapOf<RemapSlot, List<Action>>()
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -141,6 +140,9 @@ class MainViewModel : ViewModel() {
     val isDuoTapForBrief = mutableStateOf(false)
     val isDuoHideOnShade = mutableStateOf(false)
     val isDuoAutoDetect = mutableStateOf(true)
+    val isFoldableCameraDevice = mutableStateOf(false)
+    val isDuoOrientationProfiles = mutableStateOf(false)
+    val isDuoHiddenInCurrentOrientation = mutableStateOf(false)
     val hasMultipleDuoDisplays = mutableStateOf(false)
     val duoCameraOffsetX = mutableFloatStateOf(50f)
     val duoCameraOffsetY = mutableFloatStateOf(3f)
@@ -184,6 +186,8 @@ class MainViewModel : ViewModel() {
 
     val isIslandEnabled = mutableStateOf(false)
     val isIslandAutoDetect = mutableStateOf(true)
+    val isIslandOrientationProfiles = mutableStateOf(false)
+    val isIslandHiddenInCurrentOrientation = mutableStateOf(false)
     val islandCameraOffsetX = mutableFloatStateOf(50f)
     val islandCameraOffsetY = mutableFloatStateOf(3f)
     val islandCameraSize = mutableFloatStateOf(1.0f)
@@ -271,6 +275,8 @@ class MainViewModel : ViewModel() {
 
     val isStatusGlanceEnabled = mutableStateOf(false)
     val isStatusGlanceAutoDetect = mutableStateOf(true)
+    val isStatusGlanceOrientationProfiles = mutableStateOf(false)
+    val isStatusGlanceHiddenInCurrentOrientation = mutableStateOf(false)
     val statusGlanceOffsetX = mutableFloatStateOf(60f)
     val statusGlanceOffsetY = mutableFloatStateOf(2f)
     val statusGlanceMaxWidth = mutableFloatStateOf(180f)
@@ -2189,10 +2195,9 @@ class MainViewModel : ViewModel() {
                 false,
             ) // Default false here as key check logic
 
-        volumeUpActionOff.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF)
-        volumeDownActionOff.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF)
-        volumeUpActionOn.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON)
-        volumeDownActionOn.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON)
+        RemapSlot.ALL.forEach { slot ->
+            remapActions[slot] = settingsRepository.getRemapActions(slot.prefKey)
+        }
 
         val hapticName =
             settingsRepository.getString(
@@ -4897,62 +4902,14 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Executes the set volume up action off operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
+     * Sets the ordered actions for a Button Remap slot.
      */
-    fun setVolumeUpActionOff(
-        action: Action?,
-        context: Context,
+    fun setRemapActions(
+        slot: RemapSlot,
+        actions: List<Action>,
     ) {
-        volumeUpActionOff.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF, action)
-    }
-
-    /**
-     * Executes the set volume down action off operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeDownActionOff(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeDownActionOff.value = action
-        settingsRepository.setRemapAction(
-            SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF,
-            action,
-        )
-    }
-
-    /**
-     * Executes the set volume up action on operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeUpActionOn(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeUpActionOn.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON, action)
-    }
-
-    /**
-     * Executes the set volume down action on operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeDownActionOn(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeDownActionOn.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON, action)
+        remapActions[slot] = actions
+        settingsRepository.setRemapActions(slot.prefKey, actions)
     }
 
     /**
@@ -5053,10 +5010,43 @@ class MainViewModel : ViewModel() {
 
     fun refreshDuoCameraPlacement() {
         settingsRepository.markDisplayProfileSeen()
+        isFoldableCameraDevice.value = settingsRepository.isFoldableDevice()
+        isDuoOrientationProfiles.value = settingsRepository.isDuoOrientationProfilesEnabled()
+        isDuoHiddenInCurrentOrientation.value = settingsRepository.isDuoHiddenInCurrentOrientation()
         duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
         duoCameraOffsetY.floatValue = settingsRepository.getDuoCameraOffsetY()
         duoCameraSize.floatValue = settingsRepository.getDuoCameraSize()
-        hasMultipleDuoDisplays.value = settingsRepository.getKnownDisplayProfileCount() > 1
+        hasMultipleDuoDisplays.value = settingsRepository.isFoldableDevice()
+    }
+
+    fun setDuoOrientationProfiles(enabled: Boolean) {
+        settingsRepository.setDuoOrientationProfilesEnabled(enabled)
+        refreshDuoCameraPlacement()
+    }
+
+    fun setDuoHiddenInCurrentOrientation(hidden: Boolean) {
+        settingsRepository.setDuoHiddenInCurrentOrientation(hidden)
+        isDuoHiddenInCurrentOrientation.value = hidden
+    }
+
+    fun refreshIslandCameraPlacement() {
+        isFoldableCameraDevice.value = settingsRepository.isFoldableDevice()
+        isIslandOrientationProfiles.value = settingsRepository.isIslandOrientationProfilesEnabled()
+        isIslandHiddenInCurrentOrientation.value = settingsRepository.isIslandHiddenInCurrentOrientation()
+        islandCameraOffsetX.floatValue = settingsRepository.getIslandCameraOffsetX()
+        islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
+        islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
+        islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
+    }
+
+    fun setIslandOrientationProfiles(enabled: Boolean) {
+        settingsRepository.setIslandOrientationProfilesEnabled(enabled)
+        refreshIslandCameraPlacement()
+    }
+
+    fun setIslandHiddenInCurrentOrientation(hidden: Boolean) {
+        settingsRepository.setIslandHiddenInCurrentOrientation(hidden)
+        isIslandHiddenInCurrentOrientation.value = hidden
     }
 
     fun setDuoArcThickness(value: Float) {
@@ -5821,6 +5811,24 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceAutoDetect(enabled: Boolean) {
         isStatusGlanceAutoDetect.value = enabled
         settingsRepository.setStatusGlanceAutoDetectEnabled(enabled)
+    }
+
+    fun refreshStatusGlanceCameraPlacement() {
+        isFoldableCameraDevice.value = settingsRepository.isFoldableDevice()
+        isStatusGlanceOrientationProfiles.value = settingsRepository.isStatusGlanceOrientationProfilesEnabled()
+        isStatusGlanceHiddenInCurrentOrientation.value = settingsRepository.isStatusGlanceHiddenInCurrentOrientation()
+        statusGlanceOffsetX.floatValue = settingsRepository.getStatusGlanceOffsetX()
+        statusGlanceOffsetY.floatValue = settingsRepository.getStatusGlanceOffsetY()
+    }
+
+    fun setStatusGlanceOrientationProfiles(enabled: Boolean) {
+        settingsRepository.setStatusGlanceOrientationProfilesEnabled(enabled)
+        refreshStatusGlanceCameraPlacement()
+    }
+
+    fun setStatusGlanceHiddenInCurrentOrientation(hidden: Boolean) {
+        settingsRepository.setStatusGlanceHiddenInCurrentOrientation(hidden)
+        isStatusGlanceHiddenInCurrentOrientation.value = hidden
     }
 
     fun setStatusGlanceOffsetX(value: Float) {

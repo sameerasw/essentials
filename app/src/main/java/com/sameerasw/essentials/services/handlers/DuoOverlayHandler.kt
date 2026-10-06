@@ -797,6 +797,8 @@ class DuoOverlayHandler(
     private fun showOrUpdateOverlay() {
         mainHandler.post {
             val wm = windowManager ?: return@post
+            val hideForOrientation = settingsRepository.isFoldableDevice() &&
+                settingsRepository.isDuoHiddenInCurrentOrientation()
 
             val displayMetrics = DisplayMetrics()
             @Suppress("DEPRECATION")
@@ -953,6 +955,7 @@ class DuoOverlayHandler(
             } else {
                 overlayView?.invalidate()
             }
+            overlayView?.visibility = if (hideForOrientation) View.GONE else View.VISIBLE
 
             if (settingsRepository.isDuoShowTimeEnabled()) {
                 registerTimeReceiver()
@@ -961,13 +964,13 @@ class DuoOverlayHandler(
                 unregisterTimeReceiver()
             }
 
-            val isTouchEnabled = settingsRepository.getDuoTapAction() != null ||
+            val isTouchEnabled = !hideForOrientation && (settingsRepository.getDuoTapAction() != null ||
                 settingsRepository.isDuoTapForBriefActive() ||
                 settingsRepository.getDuoDoubleTapAction() != null ||
                 settingsRepository.getDuoLongPressAction() != null ||
                 settingsRepository.getDuoSwipeDownAction() != null ||
                 settingsRepository.getDuoSlideMode() != "none" ||
-                settingsRepository.isDuoSlideTrackEnabled()
+                settingsRepository.isDuoSlideTrackEnabled())
 
             if (isTouchEnabled) {
                 if (duoTouchHandler == null) {
@@ -1396,4 +1399,3 @@ class DuoOverlayHandler(
         flashlightIconBitmap = null
     }
 }
-

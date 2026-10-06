@@ -25,12 +25,15 @@ import android.view.KeyEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.services.InputEventListenerService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ButtonRemapHandler(
@@ -42,7 +45,8 @@ class ButtonRemapHandler(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var isLongPressTriggered: Boolean = false
     private var lastPressedKeyCode: Int = -1
-    private var lastPendingAction: Action? = null
+    private var lastPendingActions: List<Action> = emptyList()
+    private var sequenceJob: Job? = null
     private val longPressTimeout = 500L
 
     var isVolumeDialogVisible: Boolean = false
@@ -50,7 +54,7 @@ class ButtonRemapHandler(
     private val longPressRunnable =
         Runnable {
             isLongPressTriggered = true
-            lastPendingAction?.let { handleLongPress(it) }
+            handleLongPress(lastPendingActions)
         }
 
     fun onKeyEvent(event: KeyEvent): Boolean {
@@ -99,11 +103,8 @@ class ButtonRemapHandler(
             val isTorchControl =
                 flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
-            val suffix = "_off"
-            val actionKey =
-                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) "button_remap_vol_up_action$suffix" else "button_remap_vol_down_action$suffix"
-            val action = settingsRepository.getRemapAction(actionKey)
-            val isMapped = action != null
+            val slot = RemapSlot.forKeyCode(keyCode, isScreenOn = false)
+            val isMapped = slot != null && settingsRepository.getRemapActions(slot.prefKey).isNotEmpty()
 
             if (isMapped || isTorchControl) {
                 return true
@@ -114,36 +115,25 @@ class ButtonRemapHandler(
         if (flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val isAlwaysTurnOffEnabled =
                 prefs.getBoolean("flashlight_always_turn_off_enabled", false)
-            val isVolUpFlashlight =
-                settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF) is Action.ToggleFlashlight ||
-                    settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON) is Action.ToggleFlashlight
-            val isVolDownFlashlight =
-                settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF) is Action.ToggleFlashlight ||
-                    settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON) is Action.ToggleFlashlight
-            val isFlashlightCapableButton =
-                (keyCode == KeyEvent.KEYCODE_VOLUME_UP && isVolUpFlashlight) ||
-                    (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && isVolDownFlashlight)
+            val isFlashlightCapableButton = isFlashlightMapped(keyCode)
+            val mappedActions =
+                RemapSlot
+                    .forKeyCode(keyCode, isScreenInteractive)
+                    ?.let { settingsRepository.getRemapActions(it.prefKey) }
+                    .orEmpty()
 
-            val actionKey =
-                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                    if (isScreenInteractive) SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF
-                } else {
-                    if (isScreenInteractive) SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF
-                }
-            val mappedAction = settingsRepository.getRemapAction(actionKey)
-
-            val targetLongPressAction: Action =
+            val targetLongPressActions: List<Action> =
                 if (isAlwaysTurnOffEnabled && isFlashlightCapableButton) {
-                    Action.ToggleFlashlight
+                    listOf(Action.ToggleFlashlight)
                 } else {
-                    mappedAction ?: Action.ToggleFlashlight
+                    mappedActions.ifEmpty { listOf(Action.ToggleFlashlight) }
                 }
 
             if (event.action == KeyEvent.ACTION_DOWN) {
                 if (event.repeatCount == 0) {
                     isLongPressTriggered = false
                     lastPressedKeyCode = keyCode
-                    lastPendingAction = targetLongPressAction
+                    lastPendingActions = targetLongPressActions
                     handler.postDelayed(longPressRunnable, longPressTimeout)
                 }
                 return true
@@ -158,40 +148,23 @@ class ButtonRemapHandler(
 
         if (!isButtonRemapEnabled) return false
 
-        val isScreenOn = isScreenInteractive
-
-        val actionKey =
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF
-            } else {
-                if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF
-            }
-
-        val action = settingsRepository.getRemapAction(actionKey)
+        val slot = RemapSlot.forKeyCode(keyCode, isScreenInteractive) ?: return false
+        val actions = settingsRepository.getRemapActions(slot.prefKey)
         val isAlwaysTurnOffEnabled = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
 
-        val isVolUpFlashlight =
-            settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF) is Action.ToggleFlashlight ||
-                settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON) is Action.ToggleFlashlight
-        val isVolDownFlashlight =
-            settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF) is Action.ToggleFlashlight ||
-                settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON) is Action.ToggleFlashlight
+        val finalActions =
+            if (flashlightHandler.isTorchOn && isAlwaysTurnOffEnabled && isFlashlightMapped(keyCode)) {
+                listOf(Action.ToggleFlashlight)
+            } else {
+                actions
+            }
 
-        val isFlashlightCapableButton =
-            (keyCode == KeyEvent.KEYCODE_VOLUME_UP && isVolUpFlashlight) ||
-                (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && isVolDownFlashlight)
-
-        var finalAction = action
-        if (flashlightHandler.isTorchOn && isAlwaysTurnOffEnabled && isFlashlightCapableButton) {
-            finalAction = Action.ToggleFlashlight
-        }
-
-        if (finalAction == null) return false
+        if (finalActions.isEmpty()) return false
 
         if (event.action == KeyEvent.ACTION_DOWN) {
             if (event.repeatCount == 0) {
                 lastPressedKeyCode = keyCode
-                lastPendingAction = finalAction
+                lastPendingActions = finalActions
                 isLongPressTriggered = false
                 handler.postDelayed(longPressRunnable, longPressTimeout)
             }
@@ -226,28 +199,39 @@ class ButtonRemapHandler(
                         false
                     }
 
-                val actionKey =
-                    if (direction == "UP") {
-                        if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF
-                    } else {
-                        if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF
-                    }
-                val action = settingsRepository.getRemapAction(actionKey)
-                if (action != null) {
-                    handleLongPress(action)
-                }
+                val slot = RemapSlot.forVolume(isUp = direction == "UP", isScreenOn = isScreenOn)
+                handleLongPress(settingsRepository.getRemapActions(slot.prefKey))
             }
         }
     }
 
-    private fun handleLongPress(action: Action) {
-        if (action is Action.ToggleFlashlight) {
-            flashlightHandler.toggleFlashlight()
-        } else {
-            scope.launch {
-                CombinedActionExecutor.execute(service, action)
+    private fun isFlashlightMapped(keyCode: Int): Boolean =
+        listOf(true, false).any { isScreenOn ->
+            RemapSlot
+                .forKeyCode(keyCode, isScreenOn)
+                ?.let { settingsRepository.getRemapActions(it.prefKey) }
+                .orEmpty()
+                .any { it is Action.ToggleFlashlight }
+        }
+
+    private fun handleLongPress(actions: List<Action>) {
+        if (actions.isEmpty() || sequenceJob?.isActive == true) return
+        sequenceJob = scope.launch {
+            if (actions.any { it !is Action.ToggleFlashlight }) {
+                triggerHapticFeedback()
             }
-            triggerHapticFeedback()
+            actions.forEachIndexed { index, action ->
+                if (index > 0) delay(ACTION_SEQUENCE_GAP_MS)
+                try {
+                    if (action is Action.ToggleFlashlight) {
+                        flashlightHandler.toggleFlashlight()
+                    } else {
+                        CombinedActionExecutor.execute(service, action)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
     }
 
@@ -289,4 +273,8 @@ class ButtonRemapHandler(
         } catch (_: Exception) {
             false
         }
+
+    companion object {
+        private const val ACTION_SEQUENCE_GAP_MS = 150L
+    }
 }

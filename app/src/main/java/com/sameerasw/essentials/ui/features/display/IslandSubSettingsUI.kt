@@ -95,6 +95,11 @@ fun IslandPlacementSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val displayConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
+    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp,
+        displayConfiguration.orientation) {
+        viewModel.refreshIslandCameraPlacement()
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -107,6 +112,26 @@ fun IslandPlacementSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            if (viewModel.isFoldableCameraDevice.value) {
+                Text(
+                    text = stringResource(R.string.foldable_camera_profile_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_center_focus_strong_24,
+                    title = stringResource(R.string.foldable_orientation_profiles_title),
+                    isChecked = viewModel.isIslandOrientationProfiles.value,
+                    onCheckedChange = { viewModel.setIslandOrientationProfiles(it) },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_visibility_off_24,
+                    title = stringResource(R.string.foldable_hide_current_orientation_title),
+                    isChecked = viewModel.isIslandHiddenInCurrentOrientation.value,
+                    onCheckedChange = { viewModel.setIslandHiddenInCurrentOrientation(it) },
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

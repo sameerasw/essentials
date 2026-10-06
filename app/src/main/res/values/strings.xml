@@ -243,6 +243,9 @@
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
     <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
+    <string name="button_remap_add_action">Add action</string>
+    <string name="button_remap_no_actions">No actions. The button works normally.</string>
+    <string name="button_remap_sequence_hint">Actions run in order from top to bottom. Drag to reorder.</string>
     <string name="flashlight_intensity_title">Flashlight Intensity</string>
     <string name="flashlight_fade_title">Fade in and out</string>
     <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
@@ -2708,6 +2711,7 @@
     <!-- Duo -->
     <string name="duo_title">Duo</string>
     <string name="duo_desc">This doesn\'t fold</string>
+    <string name="about_desc_duo_tile">Turn the Duo camera ring overlay on or off from your Quick Settings.</string>
     <string name="duo_enable_title">Enable Duo</string>
     <string name="duo_enable_desc">This doesn\'t fold, but does cool stuff</string>
     <string name="island_auto_align_camera">Auto align with camera</string>
@@ -2716,6 +2720,9 @@
     <string name="duo_auto_detect_desc">Automatically locate the front camera cutout</string>
     <string name="duo_camera_offset_x_title">Horizontal position</string>
     <string name="duo_per_display_hint">Position and size are saved separately for each display (for example folded and unfolded). Adjust them on each one.</string>
+    <string name="foldable_camera_profile_hint">This screen has its own camera placement. Fold or unfold the device to configure the other camera.</string>
+    <string name="foldable_orientation_profiles_title">Separate portrait and landscape placement</string>
+    <string name="foldable_hide_current_orientation_title">Hide on this screen in this orientation</string>
     <string name="duo_camera_offset_y_title">Vertical position</string>
     <string name="duo_camera_size_title">Camera size</string>
     <string name="duo_arc_thickness_title">Ring thickness</string>
@@ -2849,6 +2856,7 @@
     <!-- Island -->
     <string name="island_title">Island</string>
     <string name="island_desc">Dynamic island</string>
+    <string name="about_desc_island_tile">Turn the Island notification overlay on or off from your Quick Settings.</string>
     <string name="island_enable_title">Enable Island</string>
     <string name="island_enable_desc">Display dynamic island</string>
     <string name="island_section_position">Position and dimensions</string>
@@ -3120,4 +3128,3 @@
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
     <string name="island_media_show_like_title">Show like track button</string>
 </resources>
-

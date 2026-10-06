@@ -70,8 +70,7 @@ class SettingsRepository(
             )
         for (key in remapKeys) {
             val raw = prefs.getString(key, null) ?: continue
-            // Skip if already JSON (starts with '{') — already migrated or set by new code
-            if (raw.startsWith("{")) continue
+            if (raw.startsWith("{") || raw.startsWith("[")) continue
             val action: Action? =
                 when (raw) {
                     "Toggle flashlight" -> Action.ToggleFlashlight
@@ -121,6 +120,26 @@ class SettingsRepository(
             prefs.edit().remove(key).apply()
         } else {
             prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
+        }
+    }
+
+    fun getRemapActions(key: String): List<Action> {
+        val json = prefs.getString(key, null) ?: return emptyList()
+        return if (json.trimStart().startsWith("[")) {
+            ActionGsonAdapter.listFromJson(json)
+        } else {
+            listOfNotNull(ActionGsonAdapter.fromJson(json))
+        }
+    }
+
+    fun setRemapActions(
+        key: String,
+        actions: List<Action>,
+    ) {
+        when (actions.size) {
+            0 -> prefs.edit().remove(key).apply()
+            1 -> setRemapAction(key, actions.first())
+            else -> prefs.edit().putString(key, ActionGsonAdapter.listToJson(actions)).apply()
         }
     }
 
@@ -413,6 +432,9 @@ class SettingsRepository(
         const val KEY_DUO_CAMERA_OFFSET_X = "duo_camera_offset_x"
         const val KEY_DUO_CAMERA_OFFSET_Y = "duo_camera_offset_y"
         const val KEY_DUO_CAMERA_SIZE = "duo_camera_size"
+        const val KEY_DUO_ORIENTATION_PROFILES = "duo_orientation_profiles"
+        const val KEY_DUO_HIDE_PORTRAIT = "duo_hide_portrait"
+        const val KEY_DUO_HIDE_LANDSCAPE = "duo_hide_landscape"
         const val KEY_DUO_KNOWN_DISPLAY_PROFILES = "duo_known_display_profiles"
         const val KEY_DUO_ARC_THICKNESS = "duo_arc_thickness"
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
@@ -513,6 +535,9 @@ class SettingsRepository(
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
         const val KEY_ISLAND_HIDE_LIVE_UPDATES = "island_hide_live_updates"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
+        const val KEY_ISLAND_ORIENTATION_PROFILES = "island_orientation_profiles"
+        const val KEY_ISLAND_HIDE_PORTRAIT = "island_hide_portrait"
+        const val KEY_ISLAND_HIDE_LANDSCAPE = "island_hide_landscape"
         const val KEY_ISLAND_PREVIEW_RING = "island_preview_ring"
         const val KEY_ISLAND_PREVIEW_STAGE = "island_preview_stage"
         const val ISLAND_PREVIEW_STAGE_AUTO = "auto"
@@ -597,6 +622,9 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_USE_AUTO_DETECT = "status_glance_use_auto_detect"
         const val KEY_STATUS_GLANCE_OFFSET_X = "status_glance_offset_x"
         const val KEY_STATUS_GLANCE_OFFSET_Y = "status_glance_offset_y"
+        const val KEY_STATUS_GLANCE_ORIENTATION_PROFILES = "status_glance_orientation_profiles"
+        const val KEY_STATUS_GLANCE_HIDE_PORTRAIT = "status_glance_hide_portrait"
+        const val KEY_STATUS_GLANCE_HIDE_LANDSCAPE = "status_glance_hide_landscape"
         const val KEY_STATUS_GLANCE_MAX_WIDTH = "status_glance_max_width"
         const val KEY_STATUS_GLANCE_FONT_SIZE = "status_glance_font_size"
         const val KEY_STATUS_GLANCE_SHOW_FLASHLIGHT = "status_glance_show_flashlight"
@@ -3463,14 +3491,93 @@ class SettingsRepository(
 
     fun getKnownDisplayProfileCount(): Int = prefs.getStringSet(KEY_DUO_KNOWN_DISPLAY_PROFILES, emptySet())?.size ?: 0
 
-    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float {
-        val profileKey = "$baseKey@${getDisplayProfileId()}"
-        return if (contains(profileKey)) getFloat(profileKey, default) else getFloat(baseKey, default)
+    fun isFoldableDevice(): Boolean =
+        context.packageManager.hasSystemFeature("android.hardware.sensor.hinge_angle") ||
+            context.packageManager.hasSystemFeature("com.google.pixel.camera.concurrent_foldable_dual_front")
+
+    private fun orientationKey(baseKey: String): String {
+        val orientation = if (context.resources.configuration.orientation ==
+            android.content.res.Configuration.ORIENTATION_LANDSCAPE) "landscape" else "portrait"
+        return "$baseKey@${getDisplayProfileId()}@$orientation"
     }
 
+    private fun getCameraPlacementFloat(baseKey: String, default: Float, useOrientation: Boolean): Float {
+        val orientationKey = orientationKey(baseKey)
+        val displayKey = "$baseKey@${getDisplayProfileId()}"
+        return when {
+            useOrientation && contains(orientationKey) -> getFloat(orientationKey, default)
+            contains(displayKey) -> getFloat(displayKey, default)
+            else -> getFloat(baseKey, default)
+        }
+    }
+
+    private fun setCameraPlacementFloat(baseKey: String, value: Float, useOrientation: Boolean) {
+        if (useOrientation) {
+            putFloat(orientationKey(baseKey), value)
+        } else {
+            putFloat("$baseKey@${getDisplayProfileId()}", value)
+            putFloat(baseKey, value)
+        }
+    }
+
+    private fun getCameraPlacementString(baseKey: String, default: String, useOrientation: Boolean): String {
+        val displayKey = "$baseKey@${getDisplayProfileId()}"
+        return when {
+            useOrientation && contains(orientationKey(baseKey)) -> getString(orientationKey(baseKey), default)
+            contains(displayKey) -> getString(displayKey, default)
+            else -> getString(baseKey, default)
+        } ?: default
+    }
+
+    private fun setCameraPlacementString(baseKey: String, value: String, useOrientation: Boolean) {
+        if (useOrientation) putString(orientationKey(baseKey), value)
+        else {
+            putString("$baseKey@${getDisplayProfileId()}", value)
+            putString(baseKey, value)
+        }
+    }
+
+    private fun getCameraHidden(baseKey: String, default: Boolean): Boolean =
+        getBoolean("$baseKey@${getDisplayProfileId()}", getBoolean(baseKey, default))
+
+    private fun setCameraHidden(baseKey: String, hidden: Boolean) =
+        putBoolean("$baseKey@${getDisplayProfileId()}", hidden)
+
+    fun isDuoOrientationProfilesEnabled(): Boolean = getBoolean(KEY_DUO_ORIENTATION_PROFILES, false)
+    fun setDuoOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_DUO_ORIENTATION_PROFILES, enabled)
+    fun isDuoHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_DUO_HIDE_LANDSCAPE, false)
+        else getCameraHidden(KEY_DUO_HIDE_PORTRAIT, false)
+    fun setDuoHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_DUO_HIDE_LANDSCAPE else KEY_DUO_HIDE_PORTRAIT, hidden)
+
+    fun isIslandOrientationProfilesEnabled(): Boolean = getBoolean(KEY_ISLAND_ORIENTATION_PROFILES, false)
+    fun setIslandOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ORIENTATION_PROFILES, enabled)
+    fun isIslandHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_ISLAND_HIDE_LANDSCAPE, !isIslandKeepOnLandscapeEnabled())
+        else getCameraHidden(KEY_ISLAND_HIDE_PORTRAIT, false)
+    fun setIslandHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_ISLAND_HIDE_LANDSCAPE else KEY_ISLAND_HIDE_PORTRAIT, hidden)
+
+    fun isStatusGlanceOrientationProfilesEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ORIENTATION_PROFILES, false)
+    fun setStatusGlanceOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_ORIENTATION_PROFILES, enabled)
+    fun isStatusGlanceHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_STATUS_GLANCE_HIDE_LANDSCAPE, true)
+        else getCameraHidden(KEY_STATUS_GLANCE_HIDE_PORTRAIT, false)
+    fun setStatusGlanceHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_STATUS_GLANCE_HIDE_LANDSCAPE else KEY_STATUS_GLANCE_HIDE_PORTRAIT, hidden)
+
+    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float =
+        getCameraPlacementFloat(baseKey, default, isDuoOrientationProfilesEnabled())
+
     private fun setDuoPlacementFloat(baseKey: String, value: Float) {
-        putFloat("$baseKey@${getDisplayProfileId()}", value)
-        putFloat(baseKey, value)
+        setCameraPlacementFloat(baseKey, value, isDuoOrientationProfilesEnabled())
     }
 
     fun getDuoCameraOffsetX(): Float = getDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_X, 50f)
@@ -3601,14 +3708,14 @@ class SettingsRepository(
     fun isIslandAutoDetectEnabled(): Boolean = getBoolean(KEY_ISLAND_USE_AUTO_DETECT, true)
     fun setIslandAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_USE_AUTO_DETECT, enabled)
 
-    fun getIslandCameraOffsetX(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f)
-    fun setIslandCameraOffsetX(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_X, value)
+    fun getIslandCameraOffsetX(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraOffsetX(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandCameraOffsetY(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f)
-    fun setIslandCameraOffsetY(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value)
+    fun getIslandCameraOffsetY(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraOffsetY(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandCameraSize(): Float = getFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f)
-    fun setIslandCameraSize(value: Float) = putFloat(KEY_ISLAND_CAMERA_SIZE, value)
+    fun getIslandCameraSize(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraSize(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, value, isIslandOrientationProfilesEnabled())
 
     fun getIslandMaxWidth(): Float = getFloat(KEY_ISLAND_MAX_WIDTH, 360f)
     fun setIslandMaxWidth(value: Float) = putFloat(KEY_ISLAND_MAX_WIDTH, value)
@@ -3848,8 +3955,9 @@ class SettingsRepository(
     fun setIslandShowCallsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_CALLS, enabled)
 
     fun getIslandCameraPosition(): String =
-        getString(KEY_ISLAND_CAMERA_POSITION, ISLAND_CAMERA_POSITION_CENTER) ?: ISLAND_CAMERA_POSITION_CENTER
-    fun setIslandCameraPosition(value: String) = putString(KEY_ISLAND_CAMERA_POSITION, value)
+        getCameraPlacementString(KEY_ISLAND_CAMERA_POSITION, ISLAND_CAMERA_POSITION_CENTER, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraPosition(value: String) =
+        setCameraPlacementString(KEY_ISLAND_CAMERA_POSITION, value, isIslandOrientationProfilesEnabled())
 
     fun isIslandPreviewRingEnabled(): Boolean = getBoolean(KEY_ISLAND_PREVIEW_RING, false)
     fun setIslandPreviewRingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PREVIEW_RING, enabled)
@@ -3953,11 +4061,11 @@ class SettingsRepository(
     fun isStatusGlanceAutoDetectEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, true)
     fun setStatusGlanceAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, enabled)
 
-    fun getStatusGlanceOffsetX(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f)
-    fun setStatusGlanceOffsetX(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_X, value)
+    fun getStatusGlanceOffsetX(): Float = getCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f, isStatusGlanceOrientationProfilesEnabled())
+    fun setStatusGlanceOffsetX(value: Float) = setCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_X, value, isStatusGlanceOrientationProfilesEnabled())
 
-    fun getStatusGlanceOffsetY(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f)
-    fun setStatusGlanceOffsetY(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_Y, value)
+    fun getStatusGlanceOffsetY(): Float = getCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f, isStatusGlanceOrientationProfilesEnabled())
+    fun setStatusGlanceOffsetY(value: Float) = setCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_Y, value, isStatusGlanceOrientationProfilesEnabled())
 
     fun getStatusGlanceMaxWidth(): Float = getFloat(KEY_STATUS_GLANCE_MAX_WIDTH, 180f)
     fun setStatusGlanceMaxWidth(value: Float) = putFloat(KEY_STATUS_GLANCE_MAX_WIDTH, value)
@@ -4052,4 +4160,3 @@ class SettingsRepository(
     fun getStatusGlanceLongPressAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION)
     fun setStatusGlanceLongPressAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION, action)
 }
-

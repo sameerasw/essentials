@@ -169,6 +169,7 @@ class StatusGlanceHandler(
                 queryUpcomingCalendarEvent()
                 reEvaluateAndApplyMedia(isInitial = true)
                 syncConfigToView()
+                applyOrientationVisibility()
             } else {
                 removeOverlay()
                 unregisterTorchCallback()
@@ -178,6 +179,16 @@ class StatusGlanceHandler(
                 unregisterBatteryReceiver()
             }
         }
+    }
+
+    private fun isPlacementHidden(): Boolean =
+        if (settingsRepository.isFoldableDevice()) settingsRepository.isStatusGlanceHiddenInCurrentOrientation()
+        else isLandscape
+
+    private fun applyOrientationVisibility() {
+        glanceView?.isLandscape = isPlacementHidden()
+        glanceView?.visibility = if (isPlacementHidden()) View.GONE else View.VISIBLE
+        updateTouchAnchor()
     }
 
     fun setFullscreen(fullscreen: Boolean) {
@@ -263,7 +274,7 @@ class StatusGlanceHandler(
             v.mediaArtworkBitmap = cachedMediaArtwork
 
             isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            v.isLandscape = isLandscape
+            v.isLandscape = isPlacementHidden()
             v.isFullscreen = isFullscreen
             v.isShadeExpanded = isShadeExpanded
             v.isLocked = isLocked
@@ -345,7 +356,7 @@ class StatusGlanceHandler(
 
     @Suppress("DEPRECATION")
     private fun updateTouchAnchor() {
-        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || (isLocked && settingsRepository.isStatusGlanceHideWhenLockedEnabled()) || isLandscape || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
+        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || (isLocked && settingsRepository.isStatusGlanceHideWhenLockedEnabled()) || isPlacementHidden() || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
             removeTouchAnchor()
             return
         }
@@ -999,10 +1010,11 @@ class StatusGlanceHandler(
         val isNightMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         glanceView?.isDarkTheme = isNightMode
         isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-        glanceView?.isLandscape = isLandscape
+        applyOrientationVisibility()
         if (settingsRepository.isStatusGlanceEnabled()) {
             mainHandler.postDelayed({
                 updateGlancePosition()
+                applyOrientationVisibility()
             }, 300)
         }
     }

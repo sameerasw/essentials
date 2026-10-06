@@ -82,6 +82,11 @@ fun StatusGlanceSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val displayConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
+    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp,
+        displayConfiguration.orientation) {
+        viewModel.refreshStatusGlanceCameraPlacement()
+    }
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
@@ -210,6 +215,26 @@ fun StatusGlanceSettingsUI(
                     spacing = 2.dp,
                     cornerRadius = 24.dp,
                 ) {
+                    if (viewModel.isFoldableCameraDevice.value) {
+                        Text(
+                            text = stringResource(R.string.foldable_camera_profile_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                        IconToggleItem(
+                            title = stringResource(R.string.foldable_orientation_profiles_title),
+                            iconRes = R.drawable.rounded_center_focus_strong_24,
+                            isChecked = viewModel.isStatusGlanceOrientationProfiles.value,
+                            onCheckedChange = { viewModel.setStatusGlanceOrientationProfiles(it) },
+                        )
+                        IconToggleItem(
+                            title = stringResource(R.string.foldable_hide_current_orientation_title),
+                            iconRes = R.drawable.rounded_visibility_off_24,
+                            isChecked = viewModel.isStatusGlanceHiddenInCurrentOrientation.value,
+                            onCheckedChange = { viewModel.setStatusGlanceHiddenInCurrentOrientation(it) },
+                        )
+                    }
                     IconToggleItem(
                         title = stringResource(R.string.status_glance_auto_detect_button_title),
                         description = stringResource(R.string.status_glance_auto_detect_button_desc),

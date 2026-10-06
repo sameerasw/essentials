@@ -154,7 +154,12 @@ class IslandCoordinator(
     private var foregroundPackage: String? = null
     private var textInputActive = false
 
-    private val isWindowSuppressed get() = (isLandscape && !settings.isIslandKeepOnLandscapeEnabled()) || isFullscreenApp
+    private val isWindowSuppressed get() = isFullscreenApp ||
+        if (settings.isFoldableDevice()) {
+            settings.isIslandHiddenInCurrentOrientation()
+        } else {
+            isLandscape && !settings.isIslandKeepOnLandscapeEnabled()
+        }
     private val isContentSuppressed: Boolean
         get() = isWindowSuppressed ||
             when (settings.getIslandShowWhen()) {
@@ -632,8 +637,11 @@ class IslandCoordinator(
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         key ?: return
-        when (key) {
+        val baseKey = key.substringBefore('@')
+        when (baseKey) {
             SettingsRepository.KEY_ISLAND_ENABLED, SettingsRepository.KEY_ISLAND_KEEP_ON_LANDSCAPE -> updateState()
+            SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
+            SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE -> updateState()
             SettingsRepository.KEY_ISLAND_ALWAYS_GESTURES -> syncGestureHitbox()
             SettingsRepository.KEY_ISLAND_PRIORITY_ORDER -> if (running) reloadPriorities()
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR -> syncStatusBar()
@@ -689,6 +697,9 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_SCALE,
             SettingsRepository.KEY_ISLAND_FONT_SCALE,
             SettingsRepository.KEY_ISLAND_CAMERA_POSITION,
+            SettingsRepository.KEY_ISLAND_ORIENTATION_PROFILES,
+            SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
+            SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE,
             SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
@@ -708,4 +719,3 @@ private val IslandTypography = Typography().run {
         titleSmall = titleSmall.copy(fontFamily = IslandFontFamily),
     )
 }
-
