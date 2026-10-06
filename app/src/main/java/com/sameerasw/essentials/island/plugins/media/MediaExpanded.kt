@@ -75,7 +75,6 @@ class MediaSnapshot(
     val liked: Boolean,
     val actions: MediaActions,
     val open: () -> Unit,
-    val canLike: Boolean = false,
     val canSkipBack: Boolean = true,
     val canSkipForward: Boolean = true,
 )
@@ -95,7 +94,6 @@ fun MediaExpanded(
     liked: Boolean,
     actions: MediaActions,
     scope: IslandExpandedScope,
-    canLike: Boolean = true,
     canSkipBack: Boolean = false,
     canSkipForward: Boolean = false,
     drawBackground: Boolean = true,
@@ -168,7 +166,7 @@ fun MediaExpanded(
                 height = rowHeight,
                 items = listOfNotNull(
                     actions.like?.let {
-                        ConnectedItem(it, enabled = canLike) {
+                        ConnectedItem(it) {
                             IslandIcon(
                                 if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
                                 tint = if (liked) accent else Color.White,
@@ -190,10 +188,8 @@ fun MediaExpanded(
                             IslandIcon(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, size = 26.dp)
                         }
                     },
-                    ConnectedItem(
-                        actions.next, enabled = canSkipForward) {
-                            IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp
-                        )
+                    ConnectedItem(actions.next, enabled = canSkipForward) {
+                        IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp)
                     },
                 ),
             )

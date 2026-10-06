@@ -59,9 +59,6 @@ class MediaPlugin : BaseIslandPlugin() {
     private var track: Track? = null
     private var playing = false
     private var liked = false
-    private var canLike = false
-    private var canSkipBack = false;
-    private var canSkipForward = false
 
     private var lastController: MediaController? = null
     private var lastTrack: Track? = null
@@ -105,10 +102,6 @@ class MediaPlugin : BaseIslandPlugin() {
 
         if (playingController != null) {
             c.mainHandler.removeCallbacks(pausedGrace)
-            val actions = playingController.playbackState?.actions ?: 0L
-            canLike = playingController.ratingType != 0
-            canSkipBack = actions and PlaybackState.ACTION_SKIP_TO_PREVIOUS != 0L
-            canSkipForward = actions and PlaybackState.ACTION_SKIP_TO_NEXT != 0L
             active = playingController
             lastController = playingController
             playing = true
@@ -164,6 +157,12 @@ class MediaPlugin : BaseIslandPlugin() {
         }
     }
 
+    private fun canShowLike(controller: MediaController) =
+        settings.isIslandMediaShowLikeEnabled() && controller.ratingType != 0
+
+    private fun supportsAction(controller: MediaController, action: Long) =
+        (controller.playbackState?.actions ?: 0L) and action != 0L
+
     private fun render() {
         val t = track
         val controller = active
@@ -175,11 +174,13 @@ class MediaPlugin : BaseIslandPlugin() {
         val accent = t.accent?.let { Color(it) } ?: Color.White
         val isPlaying = playing
         val isLiked = liked
+        val canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS)
+        val canSkipForward = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_NEXT)
         val actions = MediaActions(
             playPause = { togglePlay() },
             next = { active?.transportControls?.skipToNext() },
             previous = if (settings.isIslandMediaShowPreviousEnabled()) ({ active?.transportControls?.skipToPrevious() }) else null,
-            like = if (settings.isIslandMediaShowLikeEnabled()) ({ like() }) else null,
+            like = if (canShowLike(controller)) ({ like() }) else null,
             progress = { active?.let(MediaSessionSource::position) ?: 0f },
             canSeek = { active?.let(MediaSessionSource::canSeek) ?: false },
             seekTo = { fraction -> active?.let { MediaSessionSource.seekTo(it, fraction) } },
@@ -208,7 +209,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, accent) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, canLike = canLike, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
+                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
                 },
                 accent = accent,
                 onOpen = { openPlayer() },
@@ -239,7 +240,7 @@ class MediaPlugin : BaseIslandPlugin() {
             },
             next = { controller.transportControls.skipToNext() },
             previous = if (settings.isIslandMediaShowPreviousEnabled()) ({ controller.transportControls.skipToPrevious() }) else null,
-            like = if (settings.isIslandMediaShowLikeEnabled()) ({ like() }) else null,
+            like = if (canShowLike(controller)) ({ like() }) else null,
             progress = { MediaSessionSource.position(controller) },
             canSeek = { MediaSessionSource.canSeek(controller) },
             seekTo = { fraction -> MediaSessionSource.seekTo(controller, fraction) },
@@ -255,9 +256,8 @@ class MediaPlugin : BaseIslandPlugin() {
             open = {
                 if (!sendPendingIntent(context, controller.sessionActivity)) launchPackage(context, controller.packageName)
             },
-            canLike = canLike,
-            canSkipBack = canSkipBack,
-            canSkipForward = canSkipForward
+            canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS),
+            canSkipForward = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_NEXT),
         )
     }
 

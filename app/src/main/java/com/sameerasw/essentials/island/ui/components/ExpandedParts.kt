@@ -141,14 +141,14 @@ fun ConnectedButtonRow(
                 index == items.lastIndex -> RoundedCornerShape(inner, outer, outer, inner)
                 else -> RoundedCornerShape(inner)
             }
-            val alpha = if (item.enabled ) 1f else 0.6f
+            val alpha = if (item.enabled) 1f else 0.6f
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(height)
                     .clip(shape)
                     .alpha(alpha)
-                    .background(item.container?:container)
+                    .background(item.container ?: container)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = ripple(color = Color.White),

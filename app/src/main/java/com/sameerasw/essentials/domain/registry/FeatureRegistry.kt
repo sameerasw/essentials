@@ -829,6 +829,16 @@ object FeatureRegistry {
                             R.string.island_media_peek_song_change_desc,
                             "island_media_peek_song_change",
                         ),
+                        SearchSetting(
+                            R.string.island_media_show_previous_title,
+                            R.string.duo_show_media_title,
+                            "island_media_show_previous",
+                        ),
+                        SearchSetting(
+                            R.string.island_media_show_like_title,
+                            R.string.duo_show_media_title,
+                            "island_media_show_like",
+                        ),
                     ),
                 parentFeatureId = "Display",
             ) {

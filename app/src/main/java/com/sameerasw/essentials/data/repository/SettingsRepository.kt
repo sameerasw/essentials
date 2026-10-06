@@ -4019,7 +4019,7 @@ class SettingsRepository(
     fun isIslandMediaShowPreviousEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, false)
     fun setIslandMediaShowPreviousEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, enabled)
 
-    fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, false)
+    fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
     fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)
 
     fun isIslandShowNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, true)
