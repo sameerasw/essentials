@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
@@ -61,6 +62,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
@@ -126,10 +128,7 @@ class MainViewModel : ViewModel() {
     val isButtonRemapUseShizuku = mutableStateOf(false)
     val isButtonRemapPauseOnVolumeDialog = mutableStateOf(true)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
-    val volumeUpActionOff = mutableStateOf<Action?>(null)
-    val volumeDownActionOff = mutableStateOf<Action?>(null)
-    val volumeUpActionOn = mutableStateOf<Action?>(null)
-    val volumeDownActionOn = mutableStateOf<Action?>(null)
+    val remapActions = mutableStateMapOf<RemapSlot, List<Action>>()
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -2185,10 +2184,9 @@ class MainViewModel : ViewModel() {
                 false,
             ) // Default false here as key check logic
 
-        volumeUpActionOff.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF)
-        volumeDownActionOff.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF)
-        volumeUpActionOn.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON)
-        volumeDownActionOn.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON)
+        RemapSlot.ALL.forEach { slot ->
+            remapActions[slot] = settingsRepository.getRemapActions(slot.prefKey)
+        }
 
         val hapticName =
             settingsRepository.getString(
@@ -4892,62 +4890,17 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Executes the set volume up action off operation.
+     * Replaces the ordered action sequence for a Button Remap slot. An empty list unmaps it.
      *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
+     * @param slot [RemapSlot] Target input and screen state.
+     * @param actions [List] Actions to run in order on long press.
      */
-    fun setVolumeUpActionOff(
-        action: Action?,
-        context: Context,
+    fun setRemapActions(
+        slot: RemapSlot,
+        actions: List<Action>,
     ) {
-        volumeUpActionOff.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF, action)
-    }
-
-    /**
-     * Executes the set volume down action off operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeDownActionOff(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeDownActionOff.value = action
-        settingsRepository.setRemapAction(
-            SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF,
-            action,
-        )
-    }
-
-    /**
-     * Executes the set volume up action on operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeUpActionOn(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeUpActionOn.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON, action)
-    }
-
-    /**
-     * Executes the set volume down action on operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeDownActionOn(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeDownActionOn.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON, action)
+        remapActions[slot] = actions
+        settingsRepository.setRemapActions(slot.prefKey, actions)
     }
 
     /**

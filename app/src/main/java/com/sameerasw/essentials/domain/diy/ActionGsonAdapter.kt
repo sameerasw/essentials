@@ -11,9 +11,11 @@
 package com.sameerasw.essentials.domain.diy
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonParser
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import kotlin.reflect.KClass
@@ -66,5 +68,28 @@ object ActionGsonAdapter {
             gson.fromJson(json, Action::class.java)
         } catch (_: Exception) {
             null
+        }
+
+    fun listToJson(actions: List<Action>): String {
+        val array = JsonArray()
+        actions.forEach { array.add(gson.toJsonTree(it, Action::class.java)) }
+        return array.toString()
+    }
+
+    /**
+     * Parses a JSON array of actions. Entries that fail to deserialize (e.g. actions removed in a
+     * newer version) are skipped rather than discarding the whole list.
+     */
+    fun listFromJson(json: String): List<Action> =
+        try {
+            JsonParser.parseString(json).asJsonArray.mapNotNull { element ->
+                try {
+                    gson.fromJson(element, Action::class.java)
+                } catch (_: Exception) {
+                    null
+                }
+            }
+        } catch (_: Exception) {
+            emptyList()
         }
 }

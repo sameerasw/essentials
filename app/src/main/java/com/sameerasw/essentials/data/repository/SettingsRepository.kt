@@ -70,8 +70,8 @@ class SettingsRepository(
             )
         for (key in remapKeys) {
             val raw = prefs.getString(key, null) ?: continue
-            // Skip if already JSON (starts with '{') — already migrated or set by new code
-            if (raw.startsWith("{")) continue
+            // Skip if already JSON (object or action list) — already migrated or set by new code
+            if (raw.startsWith("{") || raw.startsWith("[")) continue
             val action: Action? =
                 when (raw) {
                     "Toggle flashlight" -> Action.ToggleFlashlight
@@ -121,6 +121,34 @@ class SettingsRepository(
             prefs.edit().remove(key).apply()
         } else {
             prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
+        }
+    }
+
+    /**
+     * Reads an ordered action sequence. Keys written by [setRemapAction] (a single JSON object)
+     * are read as a one-item list, so existing configs and imports need no migration.
+     */
+    fun getRemapActions(key: String): List<Action> {
+        val json = prefs.getString(key, null) ?: return emptyList()
+        return if (json.trimStart().startsWith("[")) {
+            ActionGsonAdapter.listFromJson(json)
+        } else {
+            listOfNotNull(ActionGsonAdapter.fromJson(json))
+        }
+    }
+
+    /**
+     * Stores an ordered action sequence. A single action is kept in the legacy object format
+     * so older app versions can still read it after a downgrade.
+     */
+    fun setRemapActions(
+        key: String,
+        actions: List<Action>,
+    ) {
+        when (actions.size) {
+            0 -> prefs.edit().remove(key).apply()
+            1 -> setRemapAction(key, actions.first())
+            else -> prefs.edit().putString(key, ActionGsonAdapter.listToJson(actions)).apply()
         }
     }
 

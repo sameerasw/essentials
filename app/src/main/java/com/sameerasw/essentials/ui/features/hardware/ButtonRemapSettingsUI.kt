@@ -24,7 +24,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,6 +37,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +56,9 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.RemapInput
+import com.sameerasw.essentials.domain.model.RemapScreenState
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
 import com.sameerasw.essentials.shizuku.ShizukuStatus
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
@@ -63,6 +69,7 @@ import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.CustomSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.ChargingModeSettingsSheet
@@ -74,6 +81,7 @@ import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import sh.calvin.reorderable.ReorderableColumn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,6 +114,8 @@ fun ButtonRemapSettingsUI(
     var showCustomSettingsSettings by remember { mutableStateOf(false) }
     var showSetVolumeSettings by remember { mutableStateOf(false) }
     var configAction by remember { mutableStateOf<Action?>(null) }
+    var configIndex by remember { mutableStateOf<Int?>(null) }
+    var showAddActionSheet by remember { mutableStateOf(false) }
 
     // Missing permission handling sheet
     var showPermissionSheet by remember { mutableStateOf(false) }
@@ -162,20 +172,75 @@ fun ButtonRemapSettingsUI(
         }
     }
 
-    val currentAction: Action? =
-        when (selectedScreenTab) {
-            0 if selectedButtonTab == 0 -> viewModel.volumeUpActionOff.value
-            0 if selectedButtonTab == 1 -> viewModel.volumeDownActionOff.value
-            1 if selectedButtonTab == 0 -> viewModel.volumeUpActionOn.value
-            else -> viewModel.volumeDownActionOn.value
+    val currentSlot =
+        RemapSlot(
+            input = if (selectedButtonTab == 0) RemapInput.VOLUME_UP else RemapInput.VOLUME_DOWN,
+            screenState = if (selectedScreenTab == 0) RemapScreenState.OFF else RemapScreenState.ON,
+        )
+    val currentActions: List<Action> = viewModel.remapActions[currentSlot].orEmpty()
+
+    fun updateActions(actions: List<Action>) = viewModel.setRemapActions(currentSlot, actions)
+
+    // Config sheets save back into the sequence entry they were opened for
+    val onActionSelected: (Action) -> Unit = { action ->
+        val index = configIndex
+        if (index != null && index in currentActions.indices) {
+            updateActions(currentActions.toMutableList().apply { this[index] = action })
+        }
+    }
+
+    fun showMissingPermissionSheet(
+        action: Action,
+        missing: List<String>,
+    ) {
+        permissionKeysToShow = missing
+        permissionFeatureTitle = action.title
+        showPermissionSheet = true
+    }
+
+    fun openActionSettings(
+        index: Int,
+        action: Action,
+    ) {
+        if (action is Action.ToggleFlashlight) {
+            showFlashlightOptions = true
+            return
+        }
+        if (action is Action.LikeCurrentSong) {
+            showLikeSongOptions.value = true
+            return
+        }
+        val missing = getMissingPermissionsHelper(action)
+        if (missing.isNotEmpty()) {
+            showMissingPermissionSheet(action, missing)
+            return
         }
 
-    val onActionSelected: (Action?) -> Unit = { action ->
-        when (selectedScreenTab) {
-            0 if selectedButtonTab == 0 -> viewModel.setVolumeUpActionOff(action, context)
-            0 if selectedButtonTab == 1 -> viewModel.setVolumeDownActionOff(action, context)
-            1 if selectedButtonTab == 0 -> viewModel.setVolumeUpActionOn(action, context)
-            else -> viewModel.setVolumeDownActionOn(action, context)
+        configIndex = index
+        configAction = action
+        when (action) {
+            is Action.DimWallpaper -> showDimSettings = true
+            is Action.ScreenOff -> showScreenOffSettings = true
+            is Action.DeviceEffects -> showDeviceEffectsSettings = true
+            is Action.SoundMode -> showSoundModeSettings = true
+            is Action.SetChargingMode -> showChargingModeSettings = true
+            is Action.TriggerNotificationLighting -> showNotificationLightingSettings = true
+            is Action.OverlayControl -> showOverlayControlSettings = true
+            is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
+            is Action.FreezeTag -> showFreezeTagSettings = true
+            is Action.OpenApp -> showOpenAppSettings = true
+            is Action.FreezeApps -> {
+                temporarySelectedAppsForAction = action.packageNames
+                showFreezeAppsSettings = true
+            }
+            is Action.UnfreezeApps -> {
+                temporarySelectedAppsForAction = action.packageNames
+                showFreezeAppsSettings = true
+            }
+            is Action.Keyboard -> showSetKeyboardSheet = true
+            is Action.SetVolume -> showSetVolumeSettings = true
+            is Action.CustomSettings -> showCustomSettingsSettings = true
+            else -> {}
         }
     }
 
@@ -414,111 +479,64 @@ fun ButtonRemapSettingsUI(
                     )
                 }
 
-                // None Option
+                // Ordered action sequence for the selected slot
                 RoundedCardContainer(spacing = 2.dp) {
-                    RemapActionItem(
-                        title = stringResource(R.string.haptic_none),
-                        isSelected = currentAction == null,
-                        onClick = { onActionSelected(null) },
-                        iconRes = R.drawable.rounded_do_not_disturb_on_24,
-                    )
-                }
-
-                // Categorized Actions List
-                val actionCategories =
-                    remember(selectedScreenTab) {
-                        ActionRegistry.getCategories(screenOnOnly = selectedScreenTab == 1)
-                    }
-
-                var expandedActionCategory by remember(selectedScreenTab, selectedButtonTab) {
-                    mutableStateOf<Int?>(
-                        actionCategories
-                            .firstOrNull { category ->
-                                category.actions.any { currentAction != null && it::class == currentAction::class }
-                            }?.titleRes ?: actionCategories.firstOrNull()?.titleRes,
-                    )
-                }
-
-                actionCategories.forEach { category ->
-                    CategoryExpandableSection(
-                        title = stringResource(category.titleRes),
-                        itemCount = category.actions.size,
-                        isExpanded = expandedActionCategory == category.titleRes,
-                        onToggleExpand = {
-                            expandedActionCategory =
-                                if (expandedActionCategory == category.titleRes) null else category.titleRes
-                        },
-                    ) {
-                        category.actions.forEach { action ->
-                            val resolvedAction =
-                                if (currentAction != null && currentAction::class == action::class) currentAction else action
-                            val isSelected =
-                                currentAction != null && currentAction::class == resolvedAction::class
-                            val missing = getMissingPermissionsHelper(resolvedAction)
-
-                            fun showMissingPermissionSheet() {
-                                permissionKeysToShow = missing
-                                permissionFeatureTitle = resolvedAction.title
-                                showPermissionSheet = true
+                    if (currentActions.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.button_remap_no_actions),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = MaterialTheme.colorScheme.surfaceBright,
+                                        shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                                    ).padding(16.dp),
+                        )
+                    } else {
+                        // Actions can repeat (e.g. Open app twice), so rows are keyed by position
+                        ReorderableColumn(
+                            list = currentActions,
+                            onSettle = { fromIndex, toIndex ->
+                                updateActions(
+                                    currentActions.toMutableList().apply { add(toIndex, removeAt(fromIndex)) },
+                                )
+                            },
+                            onMove = { HapticUtil.performUIHaptic(view) },
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                        ) { index, action, isDragging ->
+                            key(currentSlot, index) {
+                                ReorderableItem {
+                                    RemapSequenceItem(
+                                        position = index + 1,
+                                        action = action,
+                                        isDragging = isDragging,
+                                        hasSettings =
+                                            action.isConfigurable ||
+                                                action is Action.ToggleFlashlight ||
+                                                action is Action.LikeCurrentSong,
+                                        dragHandleModifier = Modifier.draggableHandle(),
+                                        onSettingsClick = { openActionSettings(index, action) },
+                                        onRemove = {
+                                            updateActions(currentActions.toMutableList().apply { removeAt(index) })
+                                        },
+                                    )
+                                }
                             }
-
-                            RemapActionItem(
-                                title = stringResource(resolvedAction.title),
-                                iconRes = resolvedAction.icon,
-                                isSelected = isSelected,
-                                hasSettings =
-                                    resolvedAction.isConfigurable ||
-                                        resolvedAction is Action.ToggleFlashlight ||
-                                        resolvedAction is Action.LikeCurrentSong,
-                                onClick = {
-                                    onActionSelected(resolvedAction)
-                                    if (missing.isNotEmpty()) {
-                                        showMissingPermissionSheet()
-                                    }
-                                },
-                                onSettingsClick = {
-                                    if (resolvedAction is Action.ToggleFlashlight) {
-                                        showFlashlightOptions = true
-                                        return@RemapActionItem
-                                    }
-                                    if (resolvedAction is Action.LikeCurrentSong) {
-                                        showLikeSongOptions.value = true
-                                        return@RemapActionItem
-                                    }
-                                    if (missing.isNotEmpty()) {
-                                        showMissingPermissionSheet()
-                                        return@RemapActionItem
-                                    }
-
-                                    configAction = resolvedAction
-                                    when (resolvedAction) {
-                                        is Action.DimWallpaper -> showDimSettings = true
-                                        is Action.ScreenOff -> showScreenOffSettings = true
-                                        is Action.DeviceEffects -> showDeviceEffectsSettings = true
-                                        is Action.SoundMode -> showSoundModeSettings = true
-                                        is Action.SetChargingMode -> showChargingModeSettings = true
-                                        is Action.TriggerNotificationLighting -> showNotificationLightingSettings = true
-                                        is Action.OverlayControl -> showOverlayControlSettings = true
-                                        is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
-                                        is Action.FreezeTag -> showFreezeTagSettings = true
-                                        is Action.OpenApp -> showOpenAppSettings = true
-                                        is Action.FreezeApps -> {
-                                            temporarySelectedAppsForAction = resolvedAction.packageNames
-                                            showFreezeAppsSettings = true
-                                        }
-                                        is Action.UnfreezeApps -> {
-                                            temporarySelectedAppsForAction = resolvedAction.packageNames
-                                            showFreezeAppsSettings = true
-                                        }
-                                        is Action.Keyboard -> showSetKeyboardSheet = true
-                                        is Action.SetVolume -> showSetVolumeSettings = true
-                                        is Action.CustomSettings -> showCustomSettingsSettings = true
-                                        else -> {}
-                                    }
-                                },
-                            )
                         }
                     }
+
+                    RemapAddActionItem(onClick = { showAddActionSheet = true })
+                }
+
+                if (currentActions.size > 1) {
+                    Text(
+                        text = stringResource(R.string.button_remap_sequence_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    )
                 }
             }
         }
@@ -537,6 +555,25 @@ fun ButtonRemapSettingsUI(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+
+    if (showAddActionSheet) {
+        RemapAddActionSheet(
+            screenOnOnly = selectedScreenTab == 1,
+            onDismiss = { showAddActionSheet = false },
+            onActionPicked = { action ->
+                showAddActionSheet = false
+                val newIndex = currentActions.size
+                updateActions(currentActions + action)
+                val missing = getMissingPermissionsHelper(action)
+                if (missing.isNotEmpty()) {
+                    showMissingPermissionSheet(action, missing)
+                } else if (action.isConfigurable) {
+                    // Configurable actions open their settings straight away
+                    openActionSettings(newIndex, action)
+                }
+            },
+        )
     }
 
     // Config Bottom Sheets
@@ -870,6 +907,200 @@ fun RemapActionItem(
                     contentDescription = stringResource(R.string.content_desc_settings),
                     tint = MaterialTheme.colorScheme.primary,
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RemapSequenceItem(
+    position: Int,
+    action: Action,
+    isDragging: Boolean,
+    hasSettings: Boolean,
+    dragHandleModifier: Modifier,
+    onSettingsClick: () -> Unit,
+    onRemove: () -> Unit,
+) {
+    val view = LocalView.current
+    val title = stringResource(action.title)
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    color =
+                        if (isDragging) {
+                            MaterialTheme.colorScheme.surfaceContainerHighest
+                        } else {
+                            MaterialTheme.colorScheme.surfaceBright
+                        },
+                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                ).padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.rounded_drag_handle_24),
+            contentDescription = stringResource(R.string.content_desc_drag_reorder),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier =
+                dragHandleModifier
+                    .padding(8.dp)
+                    .size(24.dp),
+        )
+
+        Text(
+            text = position.toString(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+
+        Icon(
+            painter = painterResource(id = action.icon),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.primary,
+        )
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
+        if (hasSettings) {
+            IconButton(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    onSettingsClick()
+                },
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_settings_24),
+                    contentDescription = stringResource(R.string.content_desc_settings),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
+
+        IconButton(
+            onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                onRemove()
+            },
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_close_24),
+                contentDescription = stringResource(R.string.action_remove),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RemapAddActionItem(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val view = LocalView.current
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable {
+                    HapticUtil.performUIHaptic(view)
+                    onClick()
+                }.background(
+                    color = MaterialTheme.colorScheme.surfaceBright,
+                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                ).padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.rounded_add_24),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            text = stringResource(R.string.button_remap_add_action),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
+
+@Composable
+private fun RemapAddActionSheet(
+    screenOnOnly: Boolean,
+    onDismiss: () -> Unit,
+    onActionPicked: (Action) -> Unit,
+) {
+    val view = LocalView.current
+    val actionCategories =
+        remember(screenOnOnly) { ActionRegistry.getCategories(screenOnOnly = screenOnOnly) }
+    var expandedActionCategory by remember(screenOnOnly) {
+        mutableStateOf(actionCategories.firstOrNull()?.titleRes)
+    }
+
+    EssentialsBottomSheet(onDismissRequest = onDismiss) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.button_remap_add_action),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 16.dp),
+            )
+
+            actionCategories.forEach { category ->
+                CategoryExpandableSection(
+                    title = stringResource(category.titleRes),
+                    itemCount = category.actions.size,
+                    isExpanded = expandedActionCategory == category.titleRes,
+                    onToggleExpand = {
+                        expandedActionCategory =
+                            if (expandedActionCategory == category.titleRes) null else category.titleRes
+                    },
+                ) {
+                    category.actions.forEach { action ->
+                        Row(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        HapticUtil.performUIHaptic(view)
+                                        onActionPicked(action)
+                                    }.background(
+                                        color = MaterialTheme.colorScheme.surfaceBright,
+                                        shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                                    ).padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(id = action.icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Text(
+                                text = stringResource(action.title),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                    }
+                }
             }
         }
     }

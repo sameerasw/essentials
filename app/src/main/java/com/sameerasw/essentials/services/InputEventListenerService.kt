@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.Display
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.input.InputDeviceScanner
 import com.sameerasw.essentials.input.VolumeLongPressDetector
 import com.sameerasw.essentials.input.VolumePressEvent
@@ -211,14 +212,16 @@ class InputEventListenerService : Service() {
                                 val pm =
                                     getSystemService(POWER_SERVICE) as android.os.PowerManager
                                 val isScreenOn = pm.isInteractive
-                                val key =
-                                    if (event.direction == com.sameerasw.essentials.input.VolumeDirection.UP) {
-                                        if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF
-                                    } else {
-                                        if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF
-                                    }
-                                val action = SettingsRepository(this@InputEventListenerService).getRemapAction(key)
-                                if (action != null) {
+                                val slot =
+                                    RemapSlot.forVolume(
+                                        isUp = event.direction == com.sameerasw.essentials.input.VolumeDirection.UP,
+                                        isScreenOn = isScreenOn,
+                                    )
+                                val isMapped =
+                                    SettingsRepository(this@InputEventListenerService)
+                                        .getRemapActions(slot.prefKey)
+                                        .isNotEmpty()
+                                if (isMapped) {
                                     val am =
                                         getSystemService(AUDIO_SERVICE) as android.media.AudioManager
                                     val direction =
@@ -238,15 +241,17 @@ class InputEventListenerService : Service() {
                             val pm =
                                 getSystemService(POWER_SERVICE) as android.os.PowerManager
                             val isScreenOn = pm.isInteractive
-                            val key =
-                                if (event.direction == com.sameerasw.essentials.input.VolumeDirection.UP) {
-                                    if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF
-                                } else {
-                                    if (isScreenOn) SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON else SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF
-                                }
-                            val action = SettingsRepository(this@InputEventListenerService).getRemapAction(key)
+                            val slot =
+                                RemapSlot.forVolume(
+                                    isUp = event.direction == com.sameerasw.essentials.input.VolumeDirection.UP,
+                                    isScreenOn = isScreenOn,
+                                )
+                            val isMapped =
+                                SettingsRepository(this@InputEventListenerService)
+                                    .getRemapActions(slot.prefKey)
+                                    .isNotEmpty()
 
-                            if (action != null) {
+                            if (isMapped) {
                                 val am =
                                     getSystemService(AUDIO_SERVICE) as android.media.AudioManager
                                 val dirKey =

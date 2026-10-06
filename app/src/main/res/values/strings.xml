@@ -243,6 +243,9 @@
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
     <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
+    <string name="button_remap_add_action">Add action</string>
+    <string name="button_remap_no_actions">No actions. The button works normally.</string>
+    <string name="button_remap_sequence_hint">Actions run in order from top to bottom. Drag to reorder.</string>
     <string name="flashlight_intensity_title">Flashlight Intensity</string>
     <string name="flashlight_fade_title">Fade in and out</string>
     <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
