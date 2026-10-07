@@ -308,6 +308,18 @@ fun IslandSettingsUI(
                         stringResource(R.string.weather_error_overcast_permission)
                     } else {
                         null
+                    },
+                isChecked = viewModel.isIslandShowWeather.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandShowWeather(checked)
+                    if (checked && !OvercastWeather.isAvailable(context)) {
+                        requestingPermissionsFor = Pair(R.string.lock_screen_clock_weather, listOf("OVERCAST_WEATHER"))
+                    }
+                },
+                onSettingsClick = { showWeatherOptionsSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_show_weather"),
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -380,6 +392,18 @@ fun IslandSettingsUI(
                         },
                         onSettingsClick = { showTimeBatteryOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_time_battery"),
+                    )
+                    "battery_alerts" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.rounded_battery_alert_24,
+                        title = stringResource(R.string.island_battery_alerts_title),
+                        isChecked = viewModel.isIslandShowBatteryAlerts.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowBatteryAlerts(checked)
+                        },
+                        onSettingsClick = { showBatteryAlertsOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_battery_alerts"),
                     )
                     "flashlight" -> IconToggleItem(
                         dragHandle = handle,
