@@ -1672,4 +1672,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="conscious_gate_reappear_desc">Remontre l\'écran de la barrière de conscience après une réutilisation.</string>
     <string name="conscious_gate_delay_desc">Combien de temps le bouton \"Continuer\" doit être désactivé ?</string>
     <string name="screen_locked_disable_notification_interactions_title">Désactiver les interactions avec les notifications</string>
+    <string name="label_battery_tab_info">Informations</string>
+    <string name="diy_category_apps">Applications</string>
+    <string name="label_charging_mode_title">Mode de chargement</string>
 </resources>
