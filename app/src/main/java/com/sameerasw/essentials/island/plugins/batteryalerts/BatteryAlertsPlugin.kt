@@ -54,7 +54,6 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
                 readBattery(intent)
                 val newAlertState = currentAlertState()
 
-                // Trigger a brief peek when charger is plugged in or alert state changes
                 if ((isCharging && !wasCharging) || (newAlertState != prevAlertState && newAlertState.isNotEmpty())) {
                     peekAlert()
                 } else if (!peeking) {
@@ -183,7 +182,7 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
 
         val item = IslandItem(
             key = ITEM_KEY,
-            priority = IslandPriority.BATTERY,
+            priority = IslandPriority.BATTERY_ALERT,
             placement = CompactPlacement.Dynamic,
             accent = alertColor,
             compactVisible = false,

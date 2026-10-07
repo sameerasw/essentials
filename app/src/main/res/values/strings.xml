@@ -2839,8 +2839,8 @@
     <string name="island_battery_alerts_title">Battery alerts</string>
     <string name="island_battery_alerts_options_title">Battery alert options</string>
     <string name="island_battery_alert_charging_title">Charging connected</string>
-    <string name="island_battery_alert_low_title">Low battery (6-20%)</string>
-    <string name="island_battery_alert_critical_title">Critical battery (≤ 5%)</string>
+    <string name="island_battery_alert_low_title">Low battery (11-20%)</string>
+    <string name="island_battery_alert_critical_title">Critical battery (0-10%)</string>
     <string name="island_battery_alert_charging">Charging</string>
     <string name="island_battery_alert_low">Low battery</string>
     <string name="island_battery_alert_critical">Critical battery</string>
