@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.service
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.view.WindowManager
@@ -24,7 +25,10 @@ object CameraGeometryResolver {
         val gap = settings.getIslandCutoutGap() * density
         val verticalGap = 6f * density
 
-        if (settings.isIslandAutoDetectEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val manualInLandscape = settings.isIslandKeepOnLandscapeEnabled() &&
+            context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+        if (!manualInLandscape && settings.isIslandAutoDetectEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val rect = try {
                 wm.maximumWindowMetrics.windowInsets.displayCutout?.boundingRects
                     ?.let { rects -> rects.find { it.top == 0 } ?: rects.firstOrNull() }
@@ -47,15 +51,22 @@ object CameraGeometryResolver {
         }
 
         val centerX = settings.getIslandCameraOffsetX() / 100f * screenWidth
+        val radius = 16f * density * sizeScale
+        val centerY = if (manualInLandscape) {
+            settings.getIslandLandscapeTopSpacing() * density + verticalGap + radius
+        } else {
+            settings.getIslandCameraOffsetY() / 100f * screenHeight
+        }
         return CameraGeometry(
             centerX = centerX,
-            centerY = settings.getIslandCameraOffsetY() / 100f * screenHeight,
-            radius = 16f * density * sizeScale,
+            centerY = centerY,
+            radius = radius,
             gap = gap,
             verticalGap = verticalGap,
             screenWidth = screenWidth,
             screenHeight = screenHeight,
             anchor = anchorFor(settings),
+            hasCamera = !manualInLandscape,
         )
     }
 

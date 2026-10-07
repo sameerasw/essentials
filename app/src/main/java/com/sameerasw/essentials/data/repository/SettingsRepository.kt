@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.data.repository
 
+import com.sameerasw.essentials.ui.core.pickers.NetworkType
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
@@ -69,8 +70,7 @@ class SettingsRepository(
             )
         for (key in remapKeys) {
             val raw = prefs.getString(key, null) ?: continue
-            // Skip if already JSON (starts with '{') — already migrated or set by new code
-            if (raw.startsWith("{")) continue
+            if (raw.startsWith("{") || raw.startsWith("[")) continue
             val action: Action? =
                 when (raw) {
                     "Toggle flashlight" -> Action.ToggleFlashlight
@@ -120,6 +120,26 @@ class SettingsRepository(
             prefs.edit().remove(key).apply()
         } else {
             prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
+        }
+    }
+
+    fun getRemapActions(key: String): List<Action> {
+        val json = prefs.getString(key, null) ?: return emptyList()
+        return if (json.trimStart().startsWith("[")) {
+            ActionGsonAdapter.listFromJson(json)
+        } else {
+            listOfNotNull(ActionGsonAdapter.fromJson(json))
+        }
+    }
+
+    fun setRemapActions(
+        key: String,
+        actions: List<Action>,
+    ) {
+        when (actions.size) {
+            0 -> prefs.edit().remove(key).apply()
+            1 -> setRemapAction(key, actions.first())
+            else -> prefs.edit().putString(key, ActionGsonAdapter.listToJson(actions)).apply()
         }
     }
 
@@ -264,6 +284,7 @@ class SettingsRepository(
         const val KEY_CONSCIOUS_GATE_FEEL_EVERY_SECOND = "conscious_gate_feel_every_second"
         const val KEY_CONSCIOUS_GATE_TITLE = "conscious_gate_title"
         const val KEY_CONSCIOUS_GATE_MESSAGE = "conscious_gate_message"
+        const val KEY_HIDDEN_DEBUGGING_SUPPORT = "hidden_debugging_support"
         const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
@@ -282,6 +303,7 @@ class SettingsRepository(
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
+        const val KEY_PRIVILEGED_MODE = "privileged_mode"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
         const val KEY_ENABLE_UNSUPPORTED_FEATURES = "enable_unsupported_features"
         const val KEY_SHOW_LEGACY_FEATURES = "show_legacy_features"
@@ -411,6 +433,9 @@ class SettingsRepository(
         const val KEY_DUO_CAMERA_OFFSET_X = "duo_camera_offset_x"
         const val KEY_DUO_CAMERA_OFFSET_Y = "duo_camera_offset_y"
         const val KEY_DUO_CAMERA_SIZE = "duo_camera_size"
+        const val KEY_DUO_ORIENTATION_PROFILES = "duo_orientation_profiles"
+        const val KEY_DUO_HIDE_PORTRAIT = "duo_hide_portrait"
+        const val KEY_DUO_HIDE_LANDSCAPE = "duo_hide_landscape"
         const val KEY_DUO_KNOWN_DISPLAY_PROFILES = "duo_known_display_profiles"
         const val KEY_DUO_ARC_THICKNESS = "duo_arc_thickness"
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
@@ -459,6 +484,7 @@ class SettingsRepository(
         const val KEY_ISLAND_CUTOUT_GAP = "island_cutout_gap"
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
+        const val KEY_ISLAND_COMPACT_HIDE_STATUS_BAR = "island_compact_hide_status_bar"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
         const val KEY_ISLAND_SHOW_WHEN = "island_show_when"
         const val ISLAND_SHOW_WHEN_UNLOCKED = "unlocked"
@@ -493,6 +519,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LIKE_WHILE_PLAYING = "island_like_while_playing"
         const val KEY_ISLAND_SLIDE_INVERT_DIRECTION = "island_slide_invert_direction"
         const val KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL = "island_battery_percentage_conditional"
+        const val KEY_ISLAND_BATTERY_ICON_CONDITIONAL = "island_battery_icon_conditional"
         const val KEY_ISLAND_BATTERY_ONLY_LOW = "island_battery_only_low"
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
         const val KEY_ISLAND_SHOW_BATTERY_ALERTS = "island_show_battery_alerts"
@@ -505,8 +532,17 @@ class SettingsRepository(
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
         const val KEY_ISLAND_HIDE_ON_SHADE = "island_hide_on_shade"
+        const val KEY_ISLAND_KEEP_ON_LANDSCAPE = "island_keep_on_landscape"
+        const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
+        const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
+        const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
+        const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
+        const val KEY_ISLAND_HIDE_LIVE_UPDATES = "island_hide_live_updates"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
+        const val KEY_ISLAND_ORIENTATION_PROFILES = "island_orientation_profiles"
+        const val KEY_ISLAND_HIDE_PORTRAIT = "island_hide_portrait"
+        const val KEY_ISLAND_HIDE_LANDSCAPE = "island_hide_landscape"
         const val KEY_ISLAND_PREVIEW_RING = "island_preview_ring"
         const val KEY_ISLAND_PREVIEW_STAGE = "island_preview_stage"
         const val ISLAND_PREVIEW_STAGE_AUTO = "auto"
@@ -535,7 +571,16 @@ class SettingsRepository(
         const val WEATHER_UNITS_FAHRENHEIT = "fahrenheit"
         const val KEY_ISLAND_CALENDAR_EMOJIS = "island_calendar_emojis"
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
+        const val KEY_ISLAND_TIMERS_FILTER_APPS = "island_timers_filter_apps"
+        const val KEY_ISLAND_TIMERS_SELECTED_APPS = "island_timers_selected_apps"
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
+        const val KEY_ISLAND_SHOW_SIGNAL = "island_show_signal"
+        const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
+        const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
+        const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
+        const val KEY_ISLAND_SIGNAL_LOW_ONLY = "island_signal_low_only"
+        const val KEY_ISLAND_SIGNAL_NETWORK_TYPES = "island_signal_network_modes"
+        const val KEY_ISLAND_SIGNAL_SHOW_MODE = "island_signal_show_mode"
         const val KEY_ISLAND_SHOW_SOUND_MODE = "island_show_sound_mode"
         const val KEY_ISLAND_SOUND_MODE_KEEP_ICON = "island_sound_mode_keep_icon"
         const val KEY_ISLAND_SHOW_ALARM = "island_show_alarm"
@@ -559,9 +604,13 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE = "island_media_peek_song_change"
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
+        const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_COMPACT_HEADS_UP = "island_notif_compact_heads_up"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
+        const val KEY_ISLAND_NOTIF_SKIP_SILENT = "island_notif_skip_silent"
+        const val KEY_ISLAND_NOTIF_FILTER_APPS = "island_notif_filter_apps"
+        const val KEY_ISLAND_NOTIF_FILTER_APPS_LIST = "island_notif_filter_apps_list"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
@@ -581,6 +630,9 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_USE_AUTO_DETECT = "status_glance_use_auto_detect"
         const val KEY_STATUS_GLANCE_OFFSET_X = "status_glance_offset_x"
         const val KEY_STATUS_GLANCE_OFFSET_Y = "status_glance_offset_y"
+        const val KEY_STATUS_GLANCE_ORIENTATION_PROFILES = "status_glance_orientation_profiles"
+        const val KEY_STATUS_GLANCE_HIDE_PORTRAIT = "status_glance_hide_portrait"
+        const val KEY_STATUS_GLANCE_HIDE_LANDSCAPE = "status_glance_hide_landscape"
         const val KEY_STATUS_GLANCE_MAX_WIDTH = "status_glance_max_width"
         const val KEY_STATUS_GLANCE_FONT_SIZE = "status_glance_font_size"
         const val KEY_STATUS_GLANCE_SHOW_FLASHLIGHT = "status_glance_show_flashlight"
@@ -622,6 +674,7 @@ class SettingsRepository(
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
         const val KEY_SHUT_UP_RESTORE_DELAY = "shut_up_restore_delay"
         const val KEY_SHUT_UP_RESTORE_MODE = "shut_up_restore_mode"
+        const val KEY_SHUT_UP_KEYBOARD = "shut_up_keyboard"
         const val KEY_SHIZUKU_AUTH_TOKEN = "shizuku_auth_token"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"
         const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
@@ -658,6 +711,10 @@ class SettingsRepository(
         const val KEY_LOCK_SCREEN_CLOCK_SEED_COLOR = "lock_screen_clock_seed_color"
         const val KEY_RECENT_SEARCHES = "recent_searches"
         const val KEY_POCKET_MODE_ENABLED = "pocket_mode_enabled"
+        const val KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED = "face_unlock_brightness_enabled"
+        const val KEY_FACE_UNLOCK_MAX_BRIGHTNESS = "face_unlock_max_brightness"
+        const val KEY_FACE_UNLOCK_TRIGGER_UNLOCK = "face_unlock_trigger_unlock"
+        const val KEY_FACE_UNLOCK_LIGHT_TINT = "face_unlock_light_tint"
         const val KEY_POCKET_MODE_USE_LIGHT_SENSOR = "pocket_mode_use_light_sensor"
         const val KEY_POCKET_MODE_EXCLUDED_APPS = "pocket_mode_excluded_apps"
         const val KEY_POCKET_MODE_TRIGGER_DELAY = "pocket_mode_trigger_delay"
@@ -2021,6 +2078,10 @@ class SettingsRepository(
      * Executes the get shut up restore mode operation.
      * @return The resulting String data.
      */
+    fun getShutUpKeyboard(): String = prefs.getString(KEY_SHUT_UP_KEYBOARD, "") ?: ""
+
+    fun setShutUpKeyboard(ime: String) = putString(KEY_SHUT_UP_KEYBOARD, ime)
+
     fun getShutUpRestoreMode(): String = prefs.getString(KEY_SHUT_UP_RESTORE_MODE, "Auto") ?: "Auto"
 
     /**
@@ -2411,7 +2472,10 @@ class SettingsRepository(
      *
      * @param enabled [Boolean] Target enabled.
      */
-    fun setEnableUnsupportedFeatures(enabled: Boolean) = putBoolean(KEY_ENABLE_UNSUPPORTED_FEATURES, enabled)
+    fun setEnableUnsupportedFeatures(enabled: Boolean) {
+        com.sameerasw.essentials.utils.DeviceUtils.torchRestrictionLifted = enabled
+        putBoolean(KEY_ENABLE_UNSUPPORTED_FEATURES, enabled)
+    }
 
     fun isShowLegacyFeatures(): Boolean = getBoolean(KEY_SHOW_LEGACY_FEATURES, true)
 
@@ -3439,14 +3503,93 @@ class SettingsRepository(
 
     fun getKnownDisplayProfileCount(): Int = prefs.getStringSet(KEY_DUO_KNOWN_DISPLAY_PROFILES, emptySet())?.size ?: 0
 
-    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float {
-        val profileKey = "$baseKey@${getDisplayProfileId()}"
-        return if (contains(profileKey)) getFloat(profileKey, default) else getFloat(baseKey, default)
+    fun isFoldableDevice(): Boolean =
+        context.packageManager.hasSystemFeature("android.hardware.sensor.hinge_angle") ||
+            context.packageManager.hasSystemFeature("com.google.pixel.camera.concurrent_foldable_dual_front")
+
+    private fun orientationKey(baseKey: String): String {
+        val orientation = if (context.resources.configuration.orientation ==
+            android.content.res.Configuration.ORIENTATION_LANDSCAPE) "landscape" else "portrait"
+        return "$baseKey@${getDisplayProfileId()}@$orientation"
     }
 
+    private fun getCameraPlacementFloat(baseKey: String, default: Float, useOrientation: Boolean): Float {
+        val orientationKey = orientationKey(baseKey)
+        val displayKey = "$baseKey@${getDisplayProfileId()}"
+        return when {
+            useOrientation && contains(orientationKey) -> getFloat(orientationKey, default)
+            contains(displayKey) -> getFloat(displayKey, default)
+            else -> getFloat(baseKey, default)
+        }
+    }
+
+    private fun setCameraPlacementFloat(baseKey: String, value: Float, useOrientation: Boolean) {
+        if (useOrientation) {
+            putFloat(orientationKey(baseKey), value)
+        } else {
+            putFloat("$baseKey@${getDisplayProfileId()}", value)
+            putFloat(baseKey, value)
+        }
+    }
+
+    private fun getCameraPlacementString(baseKey: String, default: String, useOrientation: Boolean): String {
+        val displayKey = "$baseKey@${getDisplayProfileId()}"
+        return when {
+            useOrientation && contains(orientationKey(baseKey)) -> getString(orientationKey(baseKey), default)
+            contains(displayKey) -> getString(displayKey, default)
+            else -> getString(baseKey, default)
+        } ?: default
+    }
+
+    private fun setCameraPlacementString(baseKey: String, value: String, useOrientation: Boolean) {
+        if (useOrientation) putString(orientationKey(baseKey), value)
+        else {
+            putString("$baseKey@${getDisplayProfileId()}", value)
+            putString(baseKey, value)
+        }
+    }
+
+    private fun getCameraHidden(baseKey: String, default: Boolean): Boolean =
+        getBoolean("$baseKey@${getDisplayProfileId()}", getBoolean(baseKey, default))
+
+    private fun setCameraHidden(baseKey: String, hidden: Boolean) =
+        putBoolean("$baseKey@${getDisplayProfileId()}", hidden)
+
+    fun isDuoOrientationProfilesEnabled(): Boolean = getBoolean(KEY_DUO_ORIENTATION_PROFILES, false)
+    fun setDuoOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_DUO_ORIENTATION_PROFILES, enabled)
+    fun isDuoHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_DUO_HIDE_LANDSCAPE, false)
+        else getCameraHidden(KEY_DUO_HIDE_PORTRAIT, false)
+    fun setDuoHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_DUO_HIDE_LANDSCAPE else KEY_DUO_HIDE_PORTRAIT, hidden)
+
+    fun isIslandOrientationProfilesEnabled(): Boolean = getBoolean(KEY_ISLAND_ORIENTATION_PROFILES, false)
+    fun setIslandOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ORIENTATION_PROFILES, enabled)
+    fun isIslandHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_ISLAND_HIDE_LANDSCAPE, !isIslandKeepOnLandscapeEnabled())
+        else getCameraHidden(KEY_ISLAND_HIDE_PORTRAIT, false)
+    fun setIslandHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_ISLAND_HIDE_LANDSCAPE else KEY_ISLAND_HIDE_PORTRAIT, hidden)
+
+    fun isStatusGlanceOrientationProfilesEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ORIENTATION_PROFILES, false)
+    fun setStatusGlanceOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_ORIENTATION_PROFILES, enabled)
+    fun isStatusGlanceHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_STATUS_GLANCE_HIDE_LANDSCAPE, true)
+        else getCameraHidden(KEY_STATUS_GLANCE_HIDE_PORTRAIT, false)
+    fun setStatusGlanceHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_STATUS_GLANCE_HIDE_LANDSCAPE else KEY_STATUS_GLANCE_HIDE_PORTRAIT, hidden)
+
+    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float =
+        getCameraPlacementFloat(baseKey, default, isDuoOrientationProfilesEnabled())
+
     private fun setDuoPlacementFloat(baseKey: String, value: Float) {
-        putFloat("$baseKey@${getDisplayProfileId()}", value)
-        putFloat(baseKey, value)
+        setCameraPlacementFloat(baseKey, value, isDuoOrientationProfilesEnabled())
     }
 
     fun getDuoCameraOffsetX(): Float = getDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_X, 50f)
@@ -3577,14 +3720,14 @@ class SettingsRepository(
     fun isIslandAutoDetectEnabled(): Boolean = getBoolean(KEY_ISLAND_USE_AUTO_DETECT, true)
     fun setIslandAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_USE_AUTO_DETECT, enabled)
 
-    fun getIslandCameraOffsetX(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f)
-    fun setIslandCameraOffsetX(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_X, value)
+    fun getIslandCameraOffsetX(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraOffsetX(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandCameraOffsetY(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f)
-    fun setIslandCameraOffsetY(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value)
+    fun getIslandCameraOffsetY(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraOffsetY(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandCameraSize(): Float = getFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f)
-    fun setIslandCameraSize(value: Float) = putFloat(KEY_ISLAND_CAMERA_SIZE, value)
+    fun getIslandCameraSize(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraSize(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, value, isIslandOrientationProfilesEnabled())
 
     fun getIslandMaxWidth(): Float = getFloat(KEY_ISLAND_MAX_WIDTH, 360f)
     fun setIslandMaxWidth(value: Float) = putFloat(KEY_ISLAND_MAX_WIDTH, value)
@@ -3713,6 +3856,8 @@ class SettingsRepository(
     fun isIslandSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_ISLAND_SLIDE_INVERT_DIRECTION, true)
     fun setIslandSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_ISLAND_SLIDE_INVERT_DIRECTION, enabled)
 
+    fun isIslandBatteryIconConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, false)
+    fun setIslandBatteryIconConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, enabled)
     fun isIslandBatteryPercentageConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, false)
 
     fun isIslandBatteryOnlyLowEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ONLY_LOW, false)
@@ -3761,9 +3906,33 @@ class SettingsRepository(
 
     fun isIslandTimersShowScreenRecorderEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER, true)
     fun setIslandTimersShowScreenRecorderEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER, enabled)
+    fun isIslandTimersFilterAppsEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMERS_FILTER_APPS, false)
+    fun setIslandTimersFilterAppsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMERS_FILTER_APPS, enabled)
+    fun loadIslandTimersSelectedApps() = loadAppSelection(KEY_ISLAND_TIMERS_SELECTED_APPS)
+    fun saveIslandTimersSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_ISLAND_TIMERS_SELECTED_APPS, apps)
+    fun updateIslandTimersAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_ISLAND_TIMERS_SELECTED_APPS, packageName, enabled)
 
     fun isIslandShowNetworkEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NETWORK, true)
     fun setIslandShowNetworkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NETWORK, enabled)
+    fun isIslandNetworkActivityEnabled(): Boolean = getBoolean(KEY_ISLAND_NETWORK_ACTIVITY, true)
+    fun setIslandNetworkActivityEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NETWORK_ACTIVITY, enabled)
+    fun isIslandSignalLowOnlyEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, false)
+    fun setIslandSignalLowOnlyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, enabled)
+    fun getIslandPriorityOrder(): List<String>? =
+        getString(KEY_ISLAND_PRIORITY_ORDER, null)?.split(",")?.filter { it.isNotBlank() }?.takeIf { it.isNotEmpty() }
+    fun setIslandPriorityOrder(order: List<String>?) = putString(KEY_ISLAND_PRIORITY_ORDER, order?.joinToString(","))
+    fun isIslandSignalWifiEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_WIFI, false)
+    fun setIslandSignalWifiEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_WIFI, enabled)
+    fun isIslandShowSignalEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SIGNAL, false)
+    fun setIslandShowSignalEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_SIGNAL, enabled)
+    fun isIslandSignalShowModeEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_SHOW_MODE, false)
+    fun setIslandSignalShowModeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_SHOW_MODE, enabled)
+    fun getIslandSignalNetworkTypes(): Set<NetworkType> =
+        (getString(KEY_ISLAND_SIGNAL_NETWORK_TYPES, "NETWORK_5G,NETWORK_4G,NETWORK_3G,NETWORK_OTHER") ?: "")
+            .split(",")
+            .mapNotNull { name -> NetworkType.entries.firstOrNull { it.name == name } }
+            .toSet()
+    fun setIslandSignalNetworkTypes(types: Set<NetworkType>) = putString(KEY_ISLAND_SIGNAL_NETWORK_TYPES, types.joinToString(",") { it.name })
 
     fun isIslandShowSoundModeEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SOUND_MODE, true)
     fun setIslandShowSoundModeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_SOUND_MODE, enabled)
@@ -3801,8 +3970,9 @@ class SettingsRepository(
     fun setIslandShowCallsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_CALLS, enabled)
 
     fun getIslandCameraPosition(): String =
-        getString(KEY_ISLAND_CAMERA_POSITION, ISLAND_CAMERA_POSITION_CENTER) ?: ISLAND_CAMERA_POSITION_CENTER
-    fun setIslandCameraPosition(value: String) = putString(KEY_ISLAND_CAMERA_POSITION, value)
+        getCameraPlacementString(KEY_ISLAND_CAMERA_POSITION, ISLAND_CAMERA_POSITION_CENTER, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraPosition(value: String) =
+        setCameraPlacementString(KEY_ISLAND_CAMERA_POSITION, value, isIslandOrientationProfilesEnabled())
 
     fun isIslandPreviewRingEnabled(): Boolean = getBoolean(KEY_ISLAND_PREVIEW_RING, false)
     fun setIslandPreviewRingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PREVIEW_RING, enabled)
@@ -3814,11 +3984,33 @@ class SettingsRepository(
     fun getIslandExpandedScale(): Float = getFloat(KEY_ISLAND_EXPANDED_SCALE, 1f)
     fun setIslandExpandedScale(value: Float) = putFloat(KEY_ISLAND_EXPANDED_SCALE, value)
 
+    fun isIslandHideLiveUpdatesEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, false)
+    fun setIslandHideLiveUpdatesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, enabled)
     fun isIslandDismissOnOutsideEnabled(): Boolean = getBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, false)
     fun setIslandDismissOnOutsideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, enabled)
 
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)
+
+    fun isIslandKeepOnLandscapeEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
+
+    fun setIslandKeepOnLandscapeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, enabled)
+
+    fun isIslandAlwaysGesturesEnabled(): Boolean = getBoolean(KEY_ISLAND_ALWAYS_GESTURES, false)
+
+    fun setIslandAlwaysGesturesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALWAYS_GESTURES, enabled)
+
+    fun getIslandMaxItems(): Int = getInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
+
+    fun setIslandMaxItems(value: Int) = putInt(KEY_ISLAND_MAX_ITEMS, value)
+
+    fun isIslandBondEdgeEnabled(): Boolean = getBoolean(KEY_ISLAND_BOND_EDGE, false)
+
+    fun setIslandBondEdgeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BOND_EDGE, enabled)
+
+    fun getIslandLandscapeTopSpacing(): Float = getFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, 0f)
+
+    fun setIslandLandscapeTopSpacing(value: Float) = putFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, value)
 
     fun isIslandHideOnShadeEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_ON_SHADE, false)
 
@@ -3842,11 +4034,37 @@ class SettingsRepository(
     fun isIslandMediaShowPreviousEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, false)
     fun setIslandMediaShowPreviousEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, enabled)
 
+    fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
+    fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)
+
     fun isIslandShowNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, true)
     fun setIslandShowNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, enabled)
 
     fun isIslandNotifQueueEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
     fun setIslandNotifQueueEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE, enabled)
+
+    fun isFaceUnlockBrightnessEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED, false)
+    fun setFaceUnlockBrightnessEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED, enabled)
+
+    fun getFaceUnlockMaxBrightness(): Int = getInt(KEY_FACE_UNLOCK_MAX_BRIGHTNESS, 100)
+    fun setFaceUnlockMaxBrightness(value: Int) = putInt(KEY_FACE_UNLOCK_MAX_BRIGHTNESS, value)
+
+    fun isFaceUnlockTriggerUnlockEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_TRIGGER_UNLOCK, true)
+    fun setFaceUnlockTriggerUnlockEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_TRIGGER_UNLOCK, enabled)
+
+    fun isFaceUnlockLightTintEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_LIGHT_TINT, false)
+    fun setFaceUnlockLightTintEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_LIGHT_TINT, enabled)
+
+    fun isIslandNotifSkipSilentEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_SKIP_SILENT, true)
+    fun setIslandNotifSkipSilentEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_SKIP_SILENT, enabled)
+
+    fun isIslandNotifFilterAppsEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_FILTER_APPS, false)
+    fun setIslandNotifFilterAppsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_FILTER_APPS, enabled)
+
+    fun loadIslandNotifFilterApps() = loadAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST)
+    fun saveIslandNotifFilterApps(apps: List<AppSelection>) = saveAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST, apps)
+    fun updateIslandNotifFilterAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST, packageName, enabled)
 
     fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
     fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
@@ -3881,11 +4099,11 @@ class SettingsRepository(
     fun isStatusGlanceAutoDetectEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, true)
     fun setStatusGlanceAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, enabled)
 
-    fun getStatusGlanceOffsetX(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f)
-    fun setStatusGlanceOffsetX(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_X, value)
+    fun getStatusGlanceOffsetX(): Float = getCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f, isStatusGlanceOrientationProfilesEnabled())
+    fun setStatusGlanceOffsetX(value: Float) = setCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_X, value, isStatusGlanceOrientationProfilesEnabled())
 
-    fun getStatusGlanceOffsetY(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f)
-    fun setStatusGlanceOffsetY(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_Y, value)
+    fun getStatusGlanceOffsetY(): Float = getCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f, isStatusGlanceOrientationProfilesEnabled())
+    fun setStatusGlanceOffsetY(value: Float) = setCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_Y, value, isStatusGlanceOrientationProfilesEnabled())
 
     fun getStatusGlanceMaxWidth(): Float = getFloat(KEY_STATUS_GLANCE_MAX_WIDTH, 180f)
     fun setStatusGlanceMaxWidth(value: Float) = putFloat(KEY_STATUS_GLANCE_MAX_WIDTH, value)
@@ -3980,4 +4198,3 @@ class SettingsRepository(
     fun getStatusGlanceLongPressAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION)
     fun setStatusGlanceLongPressAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION, action)
 }
-

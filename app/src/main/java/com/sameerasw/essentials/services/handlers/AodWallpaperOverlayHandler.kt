@@ -339,6 +339,11 @@ class AodWallpaperOverlayHandler(
         hideOverlay()
     }
 
+    fun onUserPresent() {
+        if (!prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_ENABLED, false)) return
+        onScreenOn()
+    }
+
     private fun isDeviceInteractive(): Boolean = powerManager?.isInteractive == true
 
     private fun registerDisplayListener() {

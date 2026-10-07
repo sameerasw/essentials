@@ -29,6 +29,12 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.DashConfig
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.RippleConfig
+import com.sameerasw.essentials.services.NotificationLightingService
+import com.sameerasw.essentials.utils.overlay.fromPrefs
+import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.ui.activities.PixelSearchResultsActivity
@@ -46,6 +52,72 @@ object CombinedActionExecutor {
         HapticUtil.performStrongDoubleHaptic(context)
     }
 
+    private fun prefFloat(
+        prefs: android.content.SharedPreferences,
+        key: String,
+        default: Float,
+    ): Float =
+        try {
+            prefs.getFloat(key, default)
+        } catch (_: ClassCastException) {
+            prefs.getInt(key, default.toInt()).toFloat()
+        }
+
+    fun triggerNotificationLighting(
+        context: Context,
+        action: Action.TriggerNotificationLighting,
+    ) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        if (action.style == NotificationLightingStyle.SYSTEM) {
+            if (!ShellUtils.hasPermission(context)) return
+            val metrics = context.resources.displayMetrics
+            val centerX = metrics.widthPixels / 2
+            val centerY = metrics.heightPixels / 2
+            val command =
+                when (action.systemMode) {
+                    0 -> "cmd statusbar charging-ripple"
+                    1 -> "cmd statusbar auth-ripple custom $centerX $centerY"
+                    else -> {
+                        val posX = (prefFloat(prefs, "edge_lighting_indicator_x", 50f) / 100f * metrics.widthPixels).toInt()
+                        val posY = (prefFloat(prefs, "edge_lighting_indicator_y", 2f) / 100f * metrics.heightPixels).toInt()
+                        "cmd statusbar auth-ripple custom $posX $posY"
+                    }
+                }
+            ShellUtils.runCommand(context, command, featureName = context.getString(action.title))
+            return
+        }
+
+        val intent =
+            Intent(context, NotificationLightingService::class.java).apply {
+                putExtra("corner_radius_dp", prefFloat(prefs, "edge_lighting_corner_radius", 20f))
+                putExtra("stroke_thickness_dp", prefFloat(prefs, "edge_lighting_stroke_thickness", 8f))
+                putExtra("ignore_screen_state", true)
+                putExtra("style", action.style.name)
+                putExtra("color_mode", action.colorMode.name)
+                putExtra("custom_color", action.customColor)
+                putExtra("pulse_count", action.pulseCount)
+                putExtra("pulse_duration", action.pulseDuration)
+                putExtra("glow_sides", action.glowSides.map { it.name }.toTypedArray())
+                putExtra("indicator_x", prefFloat(prefs, "edge_lighting_indicator_x", 50f))
+                putExtra("indicator_y", prefFloat(prefs, "edge_lighting_indicator_y", 2f))
+                putExtra("indicator_scale", prefFloat(prefs, "edge_lighting_indicator_scale", 1.0f))
+                putExtra("sweep_position", prefs.getString("edge_lighting_sweep_position", "CENTER") ?: "CENTER")
+                putExtra("sweep_thickness", prefFloat(prefs, "edge_lighting_sweep_thickness", 8f))
+                putExtra("random_shapes", prefs.getBoolean("edge_lighting_sweep_random_shapes", true))
+                RippleConfig.fromPrefs(prefs).writeTo(this)
+                DashConfig.fromPrefs(prefs).writeTo(this)
+            }
+        try {
+            if (PermissionUtils.isAccessibilityServiceEnabled(context)) {
+                context.startService(intent)
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                intent.putExtra("is_foreground_start", true)
+                context.startForegroundService(intent)
+            }
+        } catch (_: Exception) {
+        }
+    }
+
     suspend fun execute(
         context: Context,
         action: Action,
@@ -57,6 +129,7 @@ object CombinedActionExecutor {
                 is Action.SetChargingMode ->
                     com.sameerasw.essentials.utils.battery.ChargingModeUtil
                         .setMode(context, action.mode)
+                is Action.TriggerNotificationLighting -> triggerNotificationLighting(context, action)
                 is Action.HapticVibration -> {
                     HapticUtil.performCustomHaptic(context, 0.6f)
                 }
@@ -443,6 +516,19 @@ object CombinedActionExecutor {
                 is Action.TurnOffHotspot -> setHotspotEnabled(context, false)
                 is Action.ToggleHotspot -> setHotspotEnabled(context, !isHotspotEnabled(context))
 
+                is Action.OverlayControl -> {
+                    val settings = SettingsRepository(context)
+                    fun resolve(mode: Action.OverlayMode, current: Boolean): Boolean? =
+                        when (mode) {
+                            Action.OverlayMode.SKIP -> null
+                            Action.OverlayMode.OFF -> false
+                            Action.OverlayMode.ON -> true
+                            Action.OverlayMode.TOGGLE -> !current
+                        }
+                    resolve(action.duo, settings.isDuoEnabled())?.let(settings::setDuoEnabled)
+                    resolve(action.island, settings.isIslandEnabled())?.let(settings::setIslandEnabled)
+                    resolve(action.statusGlance, settings.isStatusGlanceEnabled())?.let(settings::setStatusGlanceEnabled)
+                }
                 is Action.TurnOnDuo -> SettingsRepository(context).setDuoEnabled(true)
                 is Action.TurnOffDuo -> SettingsRepository(context).setDuoEnabled(false)
                 is Action.ToggleDuo -> SettingsRepository(context).let { it.setDuoEnabled(!it.isDuoEnabled()) }

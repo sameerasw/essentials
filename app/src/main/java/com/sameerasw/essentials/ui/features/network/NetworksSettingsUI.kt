@@ -177,7 +177,7 @@ fun NetworksSettingsUI(
                         val intent =
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://github.com/thedjchi/Shizuku"),
+                                Uri.parse("https://github.com/rushiranpise/Shizuku-Next"),
                             )
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)

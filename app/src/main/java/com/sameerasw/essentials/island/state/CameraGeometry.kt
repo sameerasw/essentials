@@ -11,9 +11,10 @@ data class CameraGeometry(
     val screenHeight: Int,
     val anchor: CameraAnchor = CameraAnchor.Center,
     val verticalGap: Float = gap,
+    val hasCamera: Boolean = true,
 ) {
     val diameter: Float get() = radius * 2f
     val compactHeight: Float get() = diameter + verticalGap * 2f
     val surfaceTop: Float get() = (centerY - radius - verticalGap).coerceAtLeast(0f)
-    val cameraSlotWidth: Float get() = diameter + gap * 2f
+    val cameraSlotWidth: Float get() = if (hasCamera) diameter + gap * 2f else 0f
 }

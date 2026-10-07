@@ -163,5 +163,34 @@ fun WhatsNewCustomContent(
                 },
             )
         }
+
+        Text(
+            text = stringResource(R.string.setting_hidden_debugging_title),
+            style =
+                MaterialTheme.typography.titleMedium.copy(
+                    fontFamily = GoogleSansFlexRounded,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.1.sp,
+                ),
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        listOf(
+            R.string.setting_hidden_debugging_help_1,
+            R.string.setting_hidden_debugging_help_2,
+            R.string.setting_hidden_debugging_help_3,
+        ).forEach { textRes ->
+            Text(
+                text = stringResource(textRes),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        com.sameerasw.essentials.ui.core.sheets.HiddenDebuggingAutoDetectCard(
+            onAutoDetected = { mainViewModel.setHiddenDebuggingSupport(true) },
+        )
     }
 }

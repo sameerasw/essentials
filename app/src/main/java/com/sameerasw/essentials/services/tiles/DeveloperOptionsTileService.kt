@@ -60,13 +60,5 @@ class DeveloperOptionsTileService : BaseTileService() {
         }
     }
 
-    private fun isDevOptionsEnabled(): Boolean =
-        try {
-            Settings.Global.getInt(
-                contentResolver,
-                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
-            ) == 1
-        } catch (e: Exception) {
-            false
-        }
+    private fun isDevOptionsEnabled(): Boolean = com.sameerasw.essentials.utils.HiddenDebuggingUtils.isDevOptionsEnabled(this)
 }

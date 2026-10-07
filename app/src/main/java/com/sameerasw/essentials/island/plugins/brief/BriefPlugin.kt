@@ -85,6 +85,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -270,7 +272,7 @@ private fun BriefExpanded(
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
-                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope, drawBackground = false, likable = m.likable)
+                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward)
                         }
                     }
                 }
@@ -505,53 +507,104 @@ private fun BriefOverview(
                 }
             }
 
-            if (weather.enabled) {
-                val weatherState by WeatherRepository.state.collectAsState()
-                weatherState.snapshot?.let { snapshot ->
+            val blockPadding = sidePadding
+            val weatherBlock: @Composable () -> Unit = {
+                if (weather.enabled) {
+                    val weatherState by WeatherRepository.state.collectAsState()
+                    weatherState.snapshot?.let { snapshot ->
+                        Spacer(Modifier.height(12.dp))
+                        BriefWeatherRow(snapshot, weather.unit, accent, onWeatherClick, Modifier.padding(horizontal = blockPadding))
+                    }
+                }
+            }
+            val devicesBlock: @Composable () -> Unit = {
+                if (devices.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
-                    BriefWeatherRow(snapshot, weather.unit, accent, onWeatherClick, Modifier.padding(horizontal = sidePadding))
-                }
-            }
-
-            if (devices.isNotEmpty()) {
-                Spacer(Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-                ) {
-                    val single = devices.size == 1
-                    devices.forEach { device ->
-                        BriefDeviceChip(
-                            device,
-                            iconStyle,
-                            accent,
-                            if (single) Modifier else Modifier.weight(1f),
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = blockPadding),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+                    ) {
+                        val single = devices.size == 1
+                        devices.forEach { device ->
+                            BriefDeviceChip(
+                                device,
+                                iconStyle,
+                                accent,
+                                if (single) Modifier else Modifier.weight(1f),
+                            )
+                        }
                     }
                 }
             }
-
-            if (calendarEnabled) {
-                Spacer(Modifier.height(12.dp))
-                val list = events
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                ) {
-                    when {
-                        list == null -> Unit
-                        list.isEmpty() -> Text(
-                            text = stringResource(R.string.island_brief_no_events),
-                            style = IslandTextStyles.body,
-                        )
-                        else -> list.forEach { event -> BriefEventRow(event, now, accent) { onEventClick(event) } }
+            val calendarBlock: @Composable () -> Unit = {
+                if (calendarEnabled) {
+                    Spacer(Modifier.height(12.dp))
+                    val list = events
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = blockPadding),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        when {
+                            list == null -> Unit
+                            list.isEmpty() -> Text(
+                                text = stringResource(R.string.island_brief_no_events),
+                                style = IslandTextStyles.body,
+                            )
+                            else -> list.forEach { event -> BriefEventRow(event, now, accent) { onEventClick(event) } }
+                        }
                     }
                 }
             }
-
-            if (media != null) {
-                Spacer(Modifier.height(8.dp))
-                BriefPlayer(media, artwork, onPlayerClick, Modifier.padding(horizontal = sidePadding))
+            val playerBlock: @Composable () -> Unit = {
+                if (media != null) {
+                    Spacer(Modifier.height(8.dp))
+                    BriefPlayer(media, artwork, onPlayerClick, Modifier.padding(horizontal = blockPadding))
+                }
+            }
+            if (spec.landscape) {
+                val weatherSnapshot by WeatherRepository.state.collectAsState()
+                val landscapeItems = buildList<@Composable () -> Unit> {
+                    if (weather.enabled) {
+                        weatherSnapshot.snapshot?.let { snapshot ->
+                            add { BriefWeatherRow(snapshot, weather.unit, accent, onWeatherClick) }
+                        }
+                    }
+                    if (devices.isNotEmpty()) {
+                        add {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+                            ) {
+                                val single = devices.size == 1
+                                devices.forEach { device ->
+                                    BriefDeviceChip(device, iconStyle, accent, if (single) Modifier else Modifier.weight(1f))
+                                }
+                            }
+                        }
+                    }
+                    if (calendarEnabled) {
+                        val list = events
+                        when {
+                            list == null -> Unit
+                            list.isEmpty() -> add { Text(stringResource(R.string.island_brief_no_events), style = IslandTextStyles.body) }
+                            else -> list.forEach { event -> add { BriefEventRow(event, now, accent) { onEventClick(event) } } }
+                        }
+                    }
+                }
+                if (landscapeItems.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+                    BalancedColumns(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = blockPadding),
+                        rowGap = 6.dp,
+                        columnGap = 8.dp,
+                    ) { landscapeItems.forEach { it() } }
+                }
+                playerBlock()
+            } else {
+                weatherBlock()
+                devicesBlock()
+                calendarBlock()
+                playerBlock()
             }
         }
     }
@@ -628,12 +681,14 @@ private fun BriefPlayer(media: MediaSnapshot, artwork: ImageBitmap?, onClick: ()
             MarqueeText(text = media.title, style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp))
             MarqueeText(text = media.artist, style = IslandTextStyles.body)
         }
-        BriefPlayerButton(
-            icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-            tint = if (media.likable) {if (media.liked) media.accent else Color.White} else {Color.Gray},
-        ) {
-            if (media.likable) IslandHaptics.button(context) else IslandHaptics.wiggle(context)
-            media.actions.like()
+        media.actions.like?.let {
+            BriefPlayerButton(
+                icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                tint = if (media.liked) media.accent else Color.White,
+            ) {
+                IslandHaptics.button(context)
+                it()
+            }
         }
         BriefPlayerButton(
             icon = if (media.playing) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24,
@@ -805,6 +860,33 @@ private fun BriefWeatherRow(snapshot: WeatherSnapshot, unit: TemperatureUnit, ac
             IslandIcon(R.drawable.rounded_rainy_24, tint = accent, size = 16.dp)
             Spacer(Modifier.width(4.dp))
             Text("${snapshot.chanceOfRain}%", style = IslandTextStyles.body.copy(fontSize = 12.sp))
+        }
+    }
+}
+
+@Composable
+private fun BalancedColumns(modifier: Modifier = Modifier, rowGap: Dp, columnGap: Dp, content: @Composable () -> Unit) {
+    Layout(content = content, modifier = modifier) { measurables, constraints ->
+        val gapX = columnGap.roundToPx()
+        val gapY = rowGap.roundToPx()
+        val columnWidth = ((constraints.maxWidth - gapX) / 2).coerceAtLeast(0)
+        val childConstraints = Constraints(minWidth = columnWidth, maxWidth = columnWidth)
+        val placeables = measurables.map { it.measure(childConstraints) }
+        val heights = IntArray(2)
+        val counts = IntArray(2)
+        val columnOf = placeables.map { placeable ->
+            val column = if (heights[1] < heights[0]) 1 else 0
+            heights[column] += placeable.height + if (counts[column] > 0) gapY else 0
+            counts[column]++
+            column
+        }
+        layout(constraints.maxWidth, maxOf(heights[0], heights[1])) {
+            val y = IntArray(2)
+            placeables.forEachIndexed { index, placeable ->
+                val column = columnOf[index]
+                placeable.placeRelative(column * (columnWidth + gapX), y[column])
+                y[column] += placeable.height + gapY
+            }
         }
     }
 }

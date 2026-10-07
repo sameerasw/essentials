@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.state
 
+import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandStage
@@ -13,6 +14,8 @@ data class IslandUiState(
     val items: Map<String, IslandItem> = emptyMap(),
     val arrangement: CompactArrangement = CompactArrangement.Empty,
     val focusedKey: String? = null,
+    val sideBubble: SideBubble? = null,
+    val sideBubbleKey: String? = null,
 ) {
     val focused: IslandItem? get() = focusedKey?.let { items[it] }
 }
@@ -32,6 +35,14 @@ class IslandController(
     private val _state = MutableStateFlow(IslandUiState())
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
+    var maxCells: Int = CompactLayoutEngine.MAX_CELLS
+    private var feedbackActive = false
+
+    fun setFeedbackActive(active: Boolean) {
+        if (feedbackActive == active) return
+        feedbackActive = active
+        recompute()
+    }
     var lineStageEnabled: Boolean = true
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
@@ -249,28 +260,45 @@ class IslandController(
         }
         if (peekKey != null && items[peekKey]?.line == null) cancelPeek()
 
+        val bubbleOwner = items.values
+            .filter { it.sideBubble != null }
+            .sortedBy { it.sideBubble!!.priority }
+            .firstOrNull { candidate ->
+                !candidate.sideBubble!!.whenOccupiedOnly || items.values.any {
+                    it.key != candidate.key &&
+                        it.compactVisible &&
+                        it.placement == CompactPlacement.Dynamic &&
+                        it.sideBubble?.whenOccupiedOnly != true
+                }
+            }
+        val usesBubbleOnly = bubbleOwner?.sideBubble?.whenOccupiedOnly == true
         val arrangement = CompactLayoutEngine.arrange(
-            items.values.filter { it.compactVisible }.map { item ->
+            items.values.filter { it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) }.map { item ->
                 CompactEntry(
                     item.key,
                     item.effectivePriority,
                     item.placement == CompactPlacement.Pinned,
                     item.compact.filterNot { it.soloOnly }.map { it.key },
                     item.compact.filter { it.soloOnly }.map { it.key },
+                    item.needsCompanyAtCenter,
+                    item.companionOnly,
                 )
             },
             anchorProvider(),
+            maxCells = maxCells,
+            leftExtra = if (bubbleOwner != null) 1 else 0,
         )
         val focusedKey = expandedKey ?: peekKey
         val stage = when {
+            feedbackActive && !suppressed && expandedKey == null && peekKey == null -> IslandStage.Compact
             items.isEmpty() -> IslandStage.Hidden
             expandedKey != null -> IslandStage.Expanded
             peekKey != null -> IslandStage.Line
-            arrangement.visibleItems.isEmpty() -> IslandStage.Hidden
+            arrangement.visibleItems.isEmpty() && bubbleOwner == null -> IslandStage.Hidden
             else -> IslandStage.Compact
         }
         val previous = _state.value.stage
-        _state.value = IslandUiState(stage, items, arrangement, focusedKey)
+        _state.value = IslandUiState(stage, items, arrangement, focusedKey, bubbleOwner?.sideBubble, bubbleOwner?.key)
         if (previous != stage) onStageChanged?.invoke(stage)
     }
 }

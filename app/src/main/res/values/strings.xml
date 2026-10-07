@@ -23,6 +23,9 @@
     <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
     <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
     <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="shut_up_keyboard_title">Keyboard</string>
+    <string name="shut_up_keyboard_skip">Skip</string>
+    <string name="shut_up_restore_keyboard">Restore keyboard</string>
     <string name="shut_up_restore_delay_title">Restoration Delay</string>
     <string name="shut_up_restore_delay_desc">Wait time before restoring settings after exiting a Shut-Up! app</string>
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
@@ -137,6 +140,18 @@
     <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
     <string name="app_lock_warning">Beware that this is not a robust solution as this is only a 3rd party application. If you need strong security, consider using Private Space or other such features.</string>
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
+    <string name="setting_hidden_debugging_title">Hidden debugging support</string>
+    <string name="setting_hidden_debugging_help_1">In Android 17 QPR1 Google introduced a change where developer options and USB debugging options status is hidden for 3rd party apps and always reports 0.</string>
+    <string name="setting_hidden_debugging_help_2">This helps to counter the garbage banking and other apps with BS security measures which we also counter with the "Shut Up" feature.</string>
+    <string name="setting_hidden_debugging_help_3">But this also breaks the detection for Essentials. In this case, enable this option to use Shizuku shell to detect the status which is still possible. Keep in mind that wireless debugging is not concealed.</string>
+    <string name="setting_hidden_debugging_auto_title">Auto detect</string>
+    <string name="setting_hidden_debugging_auto_help">Make sure developer options and USB debugging is enabled</string>
+    <string name="setting_hidden_debugging_shizuku_required">Shizuku required</string>
+    <string name="setting_hidden_debugging_detected">Hidden status detected. Support enabled.</string>
+    <string name="setting_hidden_debugging_not_hidden">Status is not hidden on this device.</string>
+    <string name="setting_hidden_debugging_inconclusive">Could not tell. Turn on developer options or USB debugging and try again.</string>
+    <string name="setting_hidden_debugging_needs_shizuku">Start Shizuku and grant permission first.</string>
+    <string name="action_got_it">Got it</string>
     <string name="setting_use_usage_access_title">Use usage access</string>
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
 
@@ -228,6 +243,9 @@
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
     <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
+    <string name="button_remap_add_action">Add action</string>
+    <string name="button_remap_no_actions">No actions. The button works normally.</string>
+    <string name="button_remap_sequence_hint">Actions run in order from top to bottom. Drag to reorder.</string>
     <string name="flashlight_intensity_title">Flashlight Intensity</string>
     <string name="flashlight_fade_title">Fade in and out</string>
     <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
@@ -399,6 +417,7 @@
     <string name="app_colors_auto">Auto</string>
     <string name="app_colors_custom">Custom</string>
     <string name="lock_screen_clock_reset">Reset clock face</string>
+    <string name="island_compact_hide_status_bar_title">Hide all items for compact island</string>
     <string name="island_dynamic_hide_status_bar_title">Dynamically hide statusbar items</string>
     <string name="screen_locked_disable_notification_interactions_title">Disable notification interactions</string>
     <string name="screen_locked_disable_notification_interactions_desc">Block the notification shade and Quick Settings from being pulled down while locked</string>
@@ -652,6 +671,24 @@
     <string name="requires_following_permissions">%1$s requires following permissions</string>
     <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
     <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
+    <string name="unsupported_sheet_title">Enable unsupported features?</string>
+    <string name="unsupported_sheet_body">These features are untested on your device. They may not work, could require extra permissions or root access, and can break things. Only continue if you understand the risk. This enables:</string>
+    <string name="unsupported_cap_hidden_title">Hidden features</string>
+    <string name="unsupported_cap_hidden_desc">OEM-specific or redundant features that are hidden by default.</string>
+    <string name="unsupported_cap_tiles_title">Tiles for unsupported features</string>
+    <string name="unsupported_cap_tiles_desc">Quick settings tiles stay usable even when this device can\'t run the feature.</string>
+    <string name="unsupported_cap_search_title">Unsupported features in search</string>
+    <string name="unsupported_cap_search_desc">Features hidden for your device show up in search results and can be opened.</string>
+    <string name="unsupported_cap_freeze_title">Freeze system apps</string>
+    <string name="unsupported_cap_freeze_desc">Allows picking system apps for freezing. Freezing the wrong one can break your device.</string>
+    <string name="unsupported_cap_duo_title">Duo screen-off controls</string>
+    <string name="unsupported_cap_duo_desc">Lets you change when Duo hides on a dark screen. This can misbehave with always-on display on some devices.</string>
+    <string name="unsupported_cap_flashlight_title">Flashlight access</string>
+    <string name="unsupported_cap_flashlight_desc">Flashlight features and tile are turned off on this device because they can lock up the camera. Enabling this lifts that block.</string>
+    <string name="unsupported_please_wait">Please wait</string>
+    <string name="unsupported_hold_to_enable">Hold to enable</string>
+    <string name="unsupported_auth_title">Confirm it\'s you</string>
+    <string name="unsupported_auth_subtitle">Verify to enable unsupported features</string>
     <string name="setting_show_legacy_features_title">Show legacy features</string>
     <string name="setting_show_legacy_features_desc">These features may not receive future updates due to technical limitations or not being essential.</string>
     <string name="unsupported_features_warning_title">Enable unsupported features?</string>
@@ -1049,6 +1086,7 @@
     <string name="label_app_settings">App Settings</string>
     <string name="label_app_language">Language</string>
     <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_haptics_title">Haptics</string>
     <string name="haptic_mode_disabled">Disabled</string>
     <string name="haptic_mode_enabled">Enabled</string>
     <string name="haptic_mode_stronger">Stronger</string>
@@ -1227,6 +1265,7 @@
     <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_set_charging_mode">Set Charging Mode</string>
+    <string name="diy_action_notification_lighting">Trigger notification lighting</string>
     <string name="diy_charging_mode_desc">Choose whether charging is not optimized, adaptive, or limited to 80%.</string>
     <string name="diy_action_wifi_on">Turn On WiFi</string>
     <string name="diy_action_wifi_off">Turn Off WiFi</string>
@@ -1274,6 +1313,11 @@
     <string name="diy_action_island_turnon">Turn On Island</string>
     <string name="diy_action_island_turnoff">Turn Off Island</string>
     <string name="diy_action_island_toggle">Toggle Island</string>
+    <string name="diy_action_overlay_control">Overlays</string>
+    <string name="overlay_mode_skip">Skip</string>
+    <string name="overlay_mode_off">Off</string>
+    <string name="overlay_mode_on">On</string>
+    <string name="overlay_mode_toggle">Toggle</string>
     <string name="diy_action_statusglance_turnon">Turn On Status Glance</string>
     <string name="diy_action_statusglance_turnoff">Turn Off Status Glance</string>
     <string name="diy_action_statusglance_toggle">Toggle Status Glance</string>
@@ -1739,6 +1783,12 @@
     <string name="setting_location_reached_full_screen_alarm_desc">Play alarm ringtone and show full-screen alert upon arrival</string>
     <string name="setting_use_root_title">Use Root</string>
     <string name="setting_use_root_desc">Instead of Shizuku</string>
+    <string name="setting_privileged_mode_title">Privileged access</string>
+    <string name="privileged_mode_auto">Auto</string>
+    <string name="privileged_mode_shizuku">Shizuku</string>
+    <string name="privileged_mode_dhizuku">Dhizuku</string>
+    <string name="privileged_mode_porter">Porter</string>
+    <string name="privileged_mode_root">Root</string>
     <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Keyboard</string>
@@ -2667,6 +2717,7 @@
     <!-- Duo -->
     <string name="duo_title">Duo</string>
     <string name="duo_desc">This doesn\'t fold</string>
+    <string name="about_desc_duo_tile">Turn the Duo camera ring overlay on or off from your Quick Settings.</string>
     <string name="duo_enable_title">Enable Duo</string>
     <string name="duo_enable_desc">This doesn\'t fold, but does cool stuff</string>
     <string name="island_auto_align_camera">Auto align with camera</string>
@@ -2675,6 +2726,9 @@
     <string name="duo_auto_detect_desc">Automatically locate the front camera cutout</string>
     <string name="duo_camera_offset_x_title">Horizontal position</string>
     <string name="duo_per_display_hint">Position and size are saved separately for each display (for example folded and unfolded). Adjust them on each one.</string>
+    <string name="foldable_camera_profile_hint">This screen has its own camera placement. Fold or unfold the device to configure the other camera.</string>
+    <string name="foldable_orientation_profiles_title">Separate portrait and landscape placement</string>
+    <string name="foldable_hide_current_orientation_title">Hide on this screen in this orientation</string>
     <string name="duo_camera_offset_y_title">Vertical position</string>
     <string name="duo_camera_size_title">Camera size</string>
     <string name="duo_arc_thickness_title">Ring thickness</string>
@@ -2808,10 +2862,17 @@
     <!-- Island -->
     <string name="island_title">Island</string>
     <string name="island_desc">Dynamic island</string>
+    <string name="about_desc_island_tile">Turn the Island notification overlay on or off from your Quick Settings.</string>
     <string name="island_enable_title">Enable Island</string>
     <string name="island_enable_desc">Display dynamic island</string>
     <string name="island_section_position">Position and dimensions</string>
     <string name="island_section_placement">Placement</string>
+    <string name="island_keep_on_landscape_title">Keep on landscape</string>
+    <string name="island_landscape_top_spacing_title">Landscape top spacing</string>
+    <string name="island_bond_edge_title">Bond with notch when inactive</string>
+    <string name="island_max_items_title">Max items to show</string>
+    <string name="island_always_gestures_title">Always available gestures</string>
+    <string name="island_always_gestures_desc">Keep the gesture area available even while island is hidden</string>
     <string name="island_section_visuals">Visuals</string>
     <string name="island_section_duration">Duration</string>
     <string name="island_section_notifications">Notifications</string>
@@ -2848,11 +2909,13 @@
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
     <string name="island_hide_on_shade_title">Hide when status bar is expanded</string>
+    <string name="island_hide_live_updates_title">Hide live updates dynamically</string>
     <string name="island_dismiss_on_outside_title">Dismiss on outside activity</string>
     <string name="island_like_while_playing_title">Like music while playing</string>
     <string name="island_gesture_visuals_hint">Turn on Time &amp; battery to see volume, brightness and sound mode changes on the island.</string>
     <string name="island_battery_percentage_title">Show percentage</string>
-    <string name="island_battery_percentage_conditional_title">Only for below conditions</string>
+    <string name="island_battery_percentage_conditional_title">% only for below conditions</string>
+    <string name="island_battery_icon_conditional_title">Icon only for below conditions</string>
     <string name="island_tap_action_desc">Choose what tap and long press do</string>
     <string name="island_tap_action_open">Open</string>
     <string name="island_tap_action_expand">Expand</string>
@@ -2955,7 +3018,16 @@
     <string name="weather_error_unknown">Couldn\'t load weather</string>
     <string name="island_timer_options_title">Timer options</string>
     <string name="island_timers_show_screen_recorder_title">Show screen recorder</string>
-    <string name="island_show_network_title">Network activity</string>
+    <string name="island_timers_filter_apps_title">Filter for apps</string>
+    <string name="island_reorder_title">Re-order</string>
+    <string name="island_show_network_title">Network</string>
+    <string name="island_show_signal_title">Show mobile signal</string>
+    <string name="island_signal_options_title">Network options</string>
+    <string name="island_signal_types_title">Show signal on</string>
+    <string name="island_network_activity_title">Show network activity</string>
+    <string name="island_signal_low_only_title">Show when low signal</string>
+    <string name="island_signal_wifi_title">Show Wi-Fi signal</string>
+    <string name="island_signal_show_mode_title">Show network mode</string>
     <string name="island_section_brief">Brief</string>
     <string name="island_brief_title">Brief</string>
     <string name="island_brief_desc">Get a brief of what\'s going on</string>
@@ -3023,6 +3095,13 @@
     <string name="island_notif_tap_to_open_title">Tap to open notifications</string>
     <string name="island_notif_queue_title">Notification queue</string>
     <string name="island_notification_options_title">Notification options</string>
+    <string name="feat_face_unlock_brightness_title">Face illumination</string>
+    <string name="feat_face_unlock_brightness_desc">Bump brightness in low light</string>
+    <string name="face_unlock_illuminate">Illuminate</string>
+    <string name="face_unlock_trigger_unlock_title">Trigger unlock</string>
+    <string name="face_unlock_light_tint_title">Light tint</string>
+    <string name="island_notif_skip_silent_title">Skip silent notifications</string>
+    <string name="island_notif_filter_apps_title">Filter apps</string>
     <string name="island_notif_compact_heads_up_title">Compact heads up</string>
     <string name="island_notif_compact_heads_up_desc">Show new notifications as a line peek</string>
     <string name="island_media_peek_song_change_title">Peek song change</string>
@@ -3068,5 +3147,5 @@
     <string name="whats_new_overcast_status_permission_needed">Installed (Permission needed)</string>
     <string name="whats_new_overcast_status_not_installed">Not installed</string>
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
+    <string name="island_media_show_like_title">Show like track button</string>
 </resources>
-

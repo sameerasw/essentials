@@ -17,6 +17,8 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.RollingText
+import com.sameerasw.essentials.services.LiveUpdateSnoozer
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.CallControlUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.call.CallPhase
@@ -104,13 +106,23 @@ class CallPlugin : BaseIslandPlugin() {
 
     private fun restartTicker() {
         ticker?.cancel()
-        if (call?.phase != CallPhase.Active) return
+        if (call == null) return
         ticker = ctx?.scope?.launch {
             while (isActive) {
                 delay(1000L - System.currentTimeMillis() % 1000L)
-                render()
+                CallStateRepository.reconcile(context, activeNotificationKeys())
+                if (call?.phase == CallPhase.Active) render()
             }
         }
+    }
+
+    private fun activeNotificationKeys(): Set<String>? = try {
+        val listener = NotificationListener.instance ?: return null
+        val keys = listener.activeNotifications.orEmpty().map { it.key }.toMutableSet()
+        LiveUpdateSnoozer.snoozedNotifications().forEach { keys += it.key }
+        keys
+    } catch (_: Exception) {
+        null
     }
 
     private fun render() {
@@ -126,8 +138,18 @@ class CallPlugin : BaseIslandPlugin() {
         val status = if (ringing) incomingLabel else elapsed(snap.startedAt)
         val photo = snap.photo
         val actions = CallActions(
-            answer = { guarded { if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context) } },
-            end = { guarded { if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context) } },
+            answer = {
+                guarded {
+                    if (snap.fromTelephony) CallControlUtil.acceptCall(context)
+                    else if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context)
+                }
+            },
+            end = {
+                guarded {
+                    if (snap.fromTelephony) CallControlUtil.endCall(context)
+                    else if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context)
+                }
+            },
             toggleMute = { guarded(false) { CallControlUtil.toggleMute(context) } },
             toggleSpeaker = { guarded(false) { CallControlUtil.toggleSpeaker(context) } },
             isMuted = { CallControlUtil.isMuted(context) },

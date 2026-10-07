@@ -88,6 +88,13 @@ object DeviceUtils {
 
     fun isMediatekDevice(): Boolean = isMediatekDeviceLazy
 
+    @Volatile
+    var torchRestrictionLifted: Boolean = false
+
+    fun isTorchRestrictedDevice(): Boolean = isTclDevice() || isMediatekDevice()
+
+    fun isTorchAccessRestricted(): Boolean = isTorchRestrictedDevice() && !torchRestrictionLifted
+
     fun isTclDevice(): Boolean = isTclDeviceLazy
 
     fun getDeviceInfo(context: Context): DeviceInfo {

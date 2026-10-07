@@ -278,7 +278,7 @@ class DuoOverlayView(context: Context) : View(context) {
             }
         }
 
-    private fun updateVisibilityAnimation() {
+    private fun shouldHideOverlay(): Boolean {
         val isScreenOffHiding = if (hideWhenScreenOff) {
             if (hideWhenScreenOffOnlyIdle) {
                 !isCustomProgressActive()
@@ -288,8 +288,12 @@ class DuoOverlayView(context: Context) : View(context) {
         } else {
             false
         }
-        val isNoActivityHiding = !showBattery && !isCustomProgressActive()
-        val shouldHide = isFullscreen || isYieldingToIsland || isShadeHidden || isLockedHidden || (isScreenOff && isScreenOffHiding) || isNoActivityHiding
+        val isNoActivityHiding = !showBattery && !showNetworks && !showTime && !isCustomProgressActive()
+        return isFullscreen || isYieldingToIsland || isShadeHidden || isLockedHidden || (isScreenOff && isScreenOffHiding) || isNoActivityHiding
+    }
+
+    private fun updateVisibilityAnimation() {
+        val shouldHide = shouldHideOverlay()
         if (shouldHide) {
             animateScreenOffVisibility(false)
         } else {
@@ -1044,7 +1048,7 @@ class DuoOverlayView(context: Context) : View(context) {
         animatedVisibilityAlpha = 0f
         animatedVisibilityScale = 0.35f
         animatedVisibilityRotation = -65f
-        animateScreenOffVisibility(true)
+        animateScreenOffVisibility(!shouldHideOverlay())
     }
 
     fun playExit(onEnd: () -> Unit) = animateScreenOffVisibility(false, onEnd)

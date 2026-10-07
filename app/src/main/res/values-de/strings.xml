@@ -1861,4 +1861,22 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="label_motion_blur_amount">Menge</string>
     <string name="setting_show_legacy_features_title">Legacy-Funktionen anzeigen</string>
     <string name="setting_show_legacy_features_desc">Diese Funktionen erhalten möglicherweise keine zukünftigen Updates aufgrund technischer Einschränkungen oder weil sie nicht essentiell sind.</string>
+    <string name="weather_units_title">Einheiten</string>
+    <string name="island_weather_effects_title">Wettereffekte</string>
+    <string name="island_weather_haptics_title">Haptik simulieren</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Tonmodus</string>
+    <string name="island_sound_mode_keep_icon_title">Symbol weiterhin anzeigen</string>
+    <string name="island_preview_ring_title">Ausrichtungshinweis anzeigen</string>
+    <string name="island_call_show_expanded">Erweitert</string>
+    <string name="island_call_show_peek">Vorschau</string>
+    <string name="island_preview_stage_title">Vorschau-Phase</string>
+    <string name="island_expanded_bottom_padding_title">Erweiterter unterer Abstand: 12 dp</string>
+    <string name="island_border_outline_title">Rahmenkontur</string>
+    <string name="island_border_outline_desc">Zeichnet eine dünne Kontur um die Insel</string>
+    <string name="island_pulse_shadow_title">Pulsierender Schatten bei Benachrichtigungen anzeigen</string>
+    <string name="island_pulse_shadow_desc">Leuchtet kurz hinter der Insel in der App-Farbe</string>
+    <string name="island_show_when_title">Anzeigen, wenn</string>
+    <string name="island_show_when_unlocked">Entsperrt</string>
+    <string name="island_show_when_screen_on">Bildschirm an</string>
+    <string name="island_show_when_always">Immer</string>
 </resources>

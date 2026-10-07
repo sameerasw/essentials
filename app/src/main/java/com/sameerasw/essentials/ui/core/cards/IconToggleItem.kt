@@ -10,6 +10,11 @@
 
 package com.sameerasw.essentials.ui.core.cards
 
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedContent
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -71,6 +76,8 @@ fun IconToggleItem(
     settingsIconRes: Int = R.drawable.rounded_settings_24,
     trailingContent: (@Composable () -> Unit)? = null,
     infoText: String? = null,
+    onInfoClick: (() -> Unit)? = null,
+    dragHandle: (@Composable () -> Unit)? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -171,15 +178,27 @@ fun IconToggleItem(
                             null
                         },
                     trailingContent = {
+                        AnimatedContent(
+                            targetState = dragHandle != null,
+                            transitionSpec = { fadeIn(tween(140)) togetherWith fadeOut(tween(140)) },
+                            label = "trailingSwap",
+                        ) { dragging ->
+                        if (dragging) {
+                            dragHandle?.invoke()
+                        } else {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
-                            if (infoText != null) {
+                            if (infoText != null || onInfoClick != null) {
                                 IconButton(
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
-                                        Toast.makeText(context, infoText, Toast.LENGTH_LONG).show()
+                                        if (onInfoClick != null) {
+                                            onInfoClick()
+                                        } else {
+                                            Toast.makeText(context, infoText, Toast.LENGTH_LONG).show()
+                                        }
                                     },
                                     modifier = Modifier.size(36.dp),
                                 ) {
@@ -209,6 +228,8 @@ fun IconToggleItem(
                                 enabled = enabled,
                             )
                         }
+                        }
+                    }
                     },
                     colors =
                         ListItemDefaults.colors(
@@ -229,7 +250,8 @@ fun IconToggleItem(
                 ListItem(
                     checked = finalIsChecked,
                     onCheckedChange = { c ->
-                        if (enabled) {
+                        if (dragHandle != null) {
+                        } else if (enabled) {
                             HapticUtil.performVirtualKeyHaptic(view)
                             onCheckedChange(c)
                             onCheckedChangeWithPosition?.invoke(c, switchCenterOffset)
@@ -268,15 +290,27 @@ fun IconToggleItem(
                             null
                         },
                     trailingContent = {
+                        AnimatedContent(
+                            targetState = dragHandle != null,
+                            transitionSpec = { fadeIn(tween(140)) togetherWith fadeOut(tween(140)) },
+                            label = "trailingSwap",
+                        ) { dragging ->
+                        if (dragging) {
+                            dragHandle?.invoke()
+                        } else {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            if (infoText != null) {
+                            if (infoText != null || onInfoClick != null) {
                                 IconButton(
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
-                                        Toast.makeText(context, infoText, Toast.LENGTH_LONG).show()
+                                        if (onInfoClick != null) {
+                                            onInfoClick()
+                                        } else {
+                                            Toast.makeText(context, infoText, Toast.LENGTH_LONG).show()
+                                        }
                                     },
                                     modifier = Modifier.size(36.dp),
                                 ) {
@@ -325,6 +359,8 @@ fun IconToggleItem(
                                 },
                             )
                         }
+                        }
+                    }
                     },
                     colors =
                         ListItemDefaults.colors(

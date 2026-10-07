@@ -85,12 +85,7 @@ fun DebuggingSettingsOverlay(onDismiss: () -> Unit) {
     val view = LocalView.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    fun isUsbDebuggingEnabled(): Boolean =
-        try {
-            Settings.Global.getInt(context.contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
-        } catch (_: Exception) {
-            false
-        }
+    fun isUsbDebuggingEnabled(): Boolean = com.sameerasw.essentials.utils.HiddenDebuggingUtils.isUsbDebuggingEnabled(context)
 
     fun isWifiDebuggingEnabled(): Boolean =
         try {

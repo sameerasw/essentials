@@ -100,6 +100,8 @@ import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.ChargingModeSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.NotificationLightingActionSheet
+import com.sameerasw.essentials.ui.core.sheets.OverlayControlSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
@@ -330,6 +332,8 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showDeviceEffectsSettings by remember { mutableStateOf(false) }
                 var showSoundModeSettings by remember { mutableStateOf(false) }
                 var showChargingModeSettings by remember { mutableStateOf(false) }
+                var showNotificationLightingSettings by remember { mutableStateOf(false) }
+                var showOverlayControlSettings by remember { mutableStateOf(false) }
                 var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
                 var showFreezeTagSettings by remember { mutableStateOf(false) }
                 var showOpenAppSettings by remember { mutableStateOf(false) }
@@ -488,6 +492,8 @@ class AutomationEditorActivity : ComponentActivity() {
                             "WRITE_SETTINGS" -> !viewModel.isWriteSettingsEnabled.value
                             "NOTIFICATION_POLICY" -> !viewModel.isNotificationPolicyAccessGranted.value
                             "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
+                            "DRAW_OVERLAYS" -> !viewModel.isOverlayPermissionGranted.value
+                            "ACCESSIBILITY" -> !viewModel.isAccessibilityEnabled.value
                             else -> false
                         }
                     }
@@ -1341,6 +1347,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     is Action.DeviceEffects -> showDeviceEffectsSettings = true
                                                                     is Action.SoundMode -> showSoundModeSettings = true
                                                                     is Action.SetChargingMode -> showChargingModeSettings = true
+                                                                    is Action.TriggerNotificationLighting -> showNotificationLightingSettings = true
+                                                                    is Action.OverlayControl -> showOverlayControlSettings = true
                                                                     is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                                                     is Action.FreezeTag -> showFreezeTagSettings = true
                                                                     is Action.OpenApp -> showOpenAppSettings = true
@@ -1633,6 +1641,64 @@ class AutomationEditorActivity : ComponentActivity() {
                                     },
                                 )
                             }
+                            if (showNotificationLightingSettings && configAction is Action.TriggerNotificationLighting) {
+                                NotificationLightingActionSheet(
+                                    initialAction = configAction as Action.TriggerNotificationLighting,
+                                    onDismiss = { showNotificationLightingSettings = false },
+                                    onSave = { newAction ->
+                                        showNotificationLightingSettings = false
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER -> selectedAction = newAction
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
+                                                selectedAction =
+                                                    newAction
+
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) {
+                                                    selectedInAction = newAction
+                                                } else {
+                                                    selectedOutAction = newAction
+                                                }
+                                            }
+                                        }
+                                        configAction = null
+                                    },
+                                )
+                            }
+                            if (showOverlayControlSettings && configAction is Action.OverlayControl) {
+                                OverlayControlSettingsSheet(
+                                    initialAction = configAction as Action.OverlayControl,
+                                    onDismiss = { showOverlayControlSettings = false },
+                                    onSave = { newAction ->
+                                        showOverlayControlSettings = false
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER -> selectedAction = newAction
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
+                                                selectedAction =
+                                                    newAction
+
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) {
+                                                    selectedInAction = newAction
+                                                } else {
+                                                    selectedOutAction = newAction
+                                                }
+                                            }
+                                        }
+                                        configAction = null
+                                    },
+                                )
+                            }
                             if (showSetVolumeSettings && configAction is Action.SetVolume) {
                                 SetVolumeSettingsSheet(
                                     initialAction = configAction as Action.SetVolume,
@@ -1762,6 +1828,8 @@ class AutomationEditorActivity : ComponentActivity() {
 
                             if (showFreezeAppsSettings && (configAction is Action.FreezeApps || configAction is Action.UnfreezeApps)) {
                                 AppSelectionSheet(
+                                    restrictSystemApps = !viewModel.isEnableUnsupportedFeatures.value,
+                                    showInvertSelection = false,
                                     onDismissRequest = {
                                         val finalAction =
                                             when (val action = configAction) {

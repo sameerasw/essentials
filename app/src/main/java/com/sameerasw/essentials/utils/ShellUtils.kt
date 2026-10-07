@@ -23,11 +23,37 @@ object ShellUtils {
     private var lastAlertTime = 0L
     private const val ALERT_COOLDOWN = 180000L // 3 minutes
 
-    fun isRootEnabled(context: Context): Boolean {
+    fun getSelectedMode(context: Context): PrivilegedMode {
         val prefs =
             context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(SettingsRepository.KEY_USE_ROOT, false)
+        val stored = prefs.getString(SettingsRepository.KEY_PRIVILEGED_MODE, null)
+        if (stored != null) return PrivilegedMode.fromKey(stored)
+        return if (prefs.getBoolean(SettingsRepository.KEY_USE_ROOT, false)) {
+            PrivilegedMode.ROOT
+        } else {
+            PrivilegedMode.AUTO
+        }
     }
+
+    fun resolveMode(context: Context): PrivilegedMode {
+        val selected = getSelectedMode(context)
+        if (selected != PrivilegedMode.AUTO) return selected
+        return when {
+            ShizukuUtils.isShizukuInstalled(context) -> PrivilegedMode.SHIZUKU
+            ShizukuUtils.isPorterInstalled(context) -> PrivilegedMode.PORTER
+            ShizukuUtils.isDhizukuInstalled(context) -> PrivilegedMode.DHIZUKU
+            else -> PrivilegedMode.SHIZUKU
+        }
+    }
+
+    fun isRootEnabled(context: Context): Boolean = resolveMode(context) == PrivilegedMode.ROOT
+
+    fun usesAuthToken(context: Context): Boolean =
+        when (resolveMode(context)) {
+            PrivilegedMode.SHIZUKU -> !ShizukuUtils.isSheveryFork(context)
+            PrivilegedMode.PORTER -> true
+            else -> false
+        }
 
     fun isAvailable(context: Context): Boolean =
         if (isRootEnabled(context)) {

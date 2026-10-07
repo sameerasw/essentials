@@ -27,6 +27,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object AppUtil {
+    fun hasSystemFlag(
+        context: Context,
+        packageName: String,
+    ): Boolean =
+        try {
+            (context.packageManager.getApplicationInfo(packageName, 0).flags and ApplicationInfo.FLAG_SYSTEM) != 0
+        } catch (_: Exception) {
+            false
+        }
+
     private const val TAG = "AppUtil"
 
     // Cache for extracted brand colors

@@ -98,15 +98,8 @@ object ActionRegistry {
         val essentialsActions =
             listOf(
                 Action.SometimesEssentials(),
-                Action.TurnOnDuo,
-                Action.TurnOffDuo,
-                Action.ToggleDuo,
-                Action.TurnOnIsland,
-                Action.TurnOffIsland,
-                Action.ToggleIsland,
-                Action.TurnOnStatusGlance,
-                Action.TurnOffStatusGlance,
-                Action.ToggleStatusGlance,
+                Action.TriggerNotificationLighting(),
+                Action.OverlayControl(),
                 Action.EssentialSearch,
             )
 

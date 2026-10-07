@@ -1,5 +1,11 @@
 package com.sameerasw.essentials.island.ui
 
+import com.sameerasw.essentials.island.model.SideBubble
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -165,6 +171,35 @@ fun IslandStackPill(
                         fontWeight = FontWeight.Bold,
                         fontSize = with(LocalDensity.current) { (iconSize * if (overflow > 9) 0.4f else 0.5f).toSp() },
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun IslandSideBubble(
+    ownerKey: String?,
+    bubbleFor: (String) -> SideBubble?,
+    size: Dp,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier.size(size)) {
+        AnimatedContent(
+            targetState = ownerKey,
+            transitionSpec = { fadeIn(tween(180)) togetherWith fadeOut(tween(180)) },
+            label = "sideBubble",
+        ) { key ->
+            val bubble = key?.let(bubbleFor)
+            if (bubble != null) {
+                val content = bubble.content
+                if (content != null) {
+                    Box(
+                        Modifier.size(size).clip(CircleShape).background(Color.Black),
+                        contentAlignment = Alignment.Center,
+                    ) { content(size * 0.72f) }
+                } else {
+                    IslandStackBubble(bubble.icons, size)
                 }
             }
         }

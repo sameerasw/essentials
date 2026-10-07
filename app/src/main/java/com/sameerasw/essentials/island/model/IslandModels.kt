@@ -31,6 +31,7 @@ object IslandPriority {
     const val WEATHER_ALERT = 48
     const val CALENDAR = 50
     const val SOUND_MODE = 55
+    const val SIGNAL = 57
     const val WEATHER = 58
     const val NETWORK = 60
     const val DEVICES = 62
@@ -85,6 +86,20 @@ class StackIcon(
     val content: @Composable (size: Dp) -> Unit,
 )
 
+class SideBubble(
+    val priority: Int,
+    val onOpen: () -> Unit,
+    val icons: List<StackIcon> = emptyList(),
+    val content: (@Composable (Dp) -> Unit)? = null,
+    val whenOccupiedOnly: Boolean = false,
+    val onDismiss: (() -> Unit)? = null,
+)
+
+object SideBubblePriority {
+    const val NOTIFICATION = 0
+    const val PROGRESS = 10
+}
+
 class QueueInfo(
     val next: IslandItem,
     val onAdvance: () -> Unit,
@@ -110,11 +125,16 @@ class IslandItem(
     val priorityOverride: Int? = null,
     
     val compactVisible: Boolean = true,
+    val needsCompanyAtCenter: Boolean = false,
+    val sideBubble: SideBubble? = null,
+    val companionOnly: Boolean = false,
     val bypassLauncherOnly: Boolean = false,
     
     val stack: List<StackIcon> = emptyList(),
 ) {
-    val effectivePriority: Int get() = priorityOverride ?: priority
+    var userPriority: Int? = null
+
+    val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority
 
     init {
         require(compact.size in 1..2) { "IslandItem $key must have 1..2 compact cells" }

@@ -89,6 +89,7 @@ import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
 import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.core.pickers.LanguagePicker
@@ -1050,14 +1051,27 @@ fun PreferencesStepContent(
                     AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
                     AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
                 )
-                SegmentedPicker(
-                    items = AppHapticMode.entries,
-                    selectedItem = hapticMode,
-                    onItemSelected = { HapticUtil.saveHapticMode(context, it) },
-                    labelProvider = { hapticModeLabels.getValue(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.label_haptic_feedback),
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                        .padding(top = 12.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.label_haptics_title),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                    SegmentedPicker(
+                        items = AppHapticMode.entries,
+                        selectedItem = hapticMode,
+                        onItemSelected = { HapticUtil.saveHapticMode(context, it) },
+                        labelProvider = { hapticModeLabels.getValue(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        title = stringResource(R.string.label_haptic_feedback),
+                    )
+                }
                 IconToggleItem(
                     iconRes = R.drawable.rounded_invert_colors_24,
                     title = stringResource(R.string.setting_pitch_black_theme_title),
@@ -1079,12 +1093,9 @@ fun PreferencesStepContent(
                     onCheckedChange = { viewModel.setBlurEnabled(it, context) },
                     enabled = !isBlurProblematic,
                 )
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_numbers_24,
-                    title = stringResource(R.string.setting_use_root_title),
-                    description = stringResource(R.string.setting_use_root_desc),
-                    isChecked = isRootEnabled,
-                    onCheckedChange = { viewModel.setRootEnabled(it, context) },
+                PrivilegedModePicker(
+                    selectedMode = viewModel.privilegedMode.value,
+                    onModeSelected = { viewModel.setPrivilegedMode(it, context) },
                 )
             }
 

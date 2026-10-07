@@ -85,7 +85,8 @@ fun DuoSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     val displayConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
-    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp) {
+    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp,
+        displayConfiguration.orientation) {
         viewModel.refreshDuoCameraPlacement()
     }
 
@@ -142,6 +143,8 @@ fun DuoSettingsUI(
                 "WRITE_SETTINGS" -> !viewModel.isWriteSettingsEnabled.value
                 "NOTIFICATION_POLICY" -> !viewModel.isNotificationPolicyAccessGranted.value
                 "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
+                "DRAW_OVERLAYS" -> !viewModel.isOverlayPermissionGranted.value
+                "ACCESSIBILITY" -> !viewModel.isAccessibilityEnabled.value
                 else -> false
             }
         }
@@ -207,6 +210,26 @@ fun DuoSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            if (viewModel.isFoldableCameraDevice.value) {
+                Text(
+                    text = stringResource(R.string.foldable_camera_profile_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_center_focus_strong_24,
+                    title = stringResource(R.string.foldable_orientation_profiles_title),
+                    isChecked = viewModel.isDuoOrientationProfiles.value,
+                    onCheckedChange = { viewModel.setDuoOrientationProfiles(it) },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_visibility_off_24,
+                    title = stringResource(R.string.foldable_hide_current_orientation_title),
+                    isChecked = viewModel.isDuoHiddenInCurrentOrientation.value,
+                    onCheckedChange = { viewModel.setDuoHiddenInCurrentOrientation(it) },
+                )
+            }
             IconToggleItem(
                 iconRes = R.drawable.rounded_center_focus_strong_24,
                 title = stringResource(R.string.duo_auto_detect_title),
@@ -1155,4 +1178,3 @@ fun DuoSettingsUI(
         )
     }
 }
-

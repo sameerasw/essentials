@@ -56,6 +56,7 @@ fun IslandTimeBatteryOptionsBottomSheet(
                 viewModel = viewModel,
                 onlyLow = viewModel.isIslandBatteryOnlyLow.value,
                 onOnlyLowChange = viewModel::setIslandBatteryOnlyLow,
+                showIconConditional = true,
             )
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY)
         }
@@ -68,6 +69,7 @@ fun IslandBatteryOptions(
     viewModel: MainViewModel,
     onlyLow: Boolean,
     onOnlyLowChange: (Boolean) -> Unit,
+    showIconConditional: Boolean = false,
 ) {
     val view = LocalView.current
     val styleLabel = if (viewModel.islandBatteryStyle.value == SettingsRepository.ISLAND_BATTERY_STYLE_ICON) {
@@ -108,6 +110,20 @@ fun IslandBatteryOptions(
                     },
                 )
             }
+            if (showIconConditional) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_filter_alt_24,
+                    title = stringResource(R.string.island_battery_icon_conditional_title),
+                    isChecked = viewModel.isIslandBatteryIconConditional.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandBatteryIconConditional(checked)
+                    },
+                )
+            }
+        }
+
+        RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_percent_24,
                 title = stringResource(R.string.island_battery_percentage_title),

@@ -831,9 +831,29 @@ object FeatureRegistry {
                             "island_notif_compact_heads_up",
                         ),
                         SearchSetting(
+                            R.string.island_notif_skip_silent_title,
+                            R.string.island_notification_options_title,
+                            "island_notif_skip_silent",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_filter_apps_title,
+                            R.string.island_notification_options_title,
+                            "island_notif_filter_apps",
+                        ),
+                        SearchSetting(
                             R.string.island_media_peek_song_change_title,
                             R.string.island_media_peek_song_change_desc,
                             "island_media_peek_song_change",
+                        ),
+                        SearchSetting(
+                            R.string.island_media_show_previous_title,
+                            R.string.duo_show_media_title,
+                            "island_media_show_previous",
+                        ),
+                        SearchSetting(
+                            R.string.island_media_show_like_title,
+                            R.string.duo_show_media_title,
+                            "island_media_show_like",
                         ),
                     ),
                 parentFeatureId = "Display",
@@ -1106,6 +1126,8 @@ object FeatureRegistry {
                 parentFeatureId = "Notifications",
                 animationRes = R.raw.flash_animation,
             ) {
+                override fun isDeviceSupported(context: Context) = !DeviceUtils.isTorchRestrictedDevice()
+
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isFlashlightPulseEnabled.value
 
                 override fun isToggleEnabled(
@@ -1183,6 +1205,8 @@ object FeatureRegistry {
                 hasMoreSettings = true,
                 animationRes = R.raw.flash_animation,
             ) {
+                override fun isDeviceSupported(context: Context) = !DeviceUtils.isTorchRestrictedDevice()
+
                 override fun isEnabled(viewModel: MainViewModel) = true
 
                 override fun onToggle(
@@ -2503,6 +2527,42 @@ object FeatureRegistry {
                 ) {}
 
                 override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
+            },
+            object : Feature(
+                id = "Face unlock brightness",
+                title = R.string.feat_face_unlock_brightness_title,
+                iconRes = R.drawable.rounded_face_24,
+                category = R.string.cat_tools,
+                description = R.string.feat_face_unlock_brightness_desc,
+                aboutDescription = R.string.feat_face_unlock_brightness_desc,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.flashlight_pulse_max_brightness,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_max_brightness",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_trigger_unlock_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_trigger_unlock",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_light_tint_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_light_tint",
+                        ),
+                    ),
+                parentFeatureId = "Security",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isFaceUnlockBrightnessEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setFaceUnlockBrightnessEnabled(enabled)
             },
             object : Feature(
                 id = "Lockdown mode",

@@ -388,6 +388,18 @@ class DuoOverlayHandler(
         updateState()
     }
 
+    private fun syncScreenOffFromDisplay() {
+        val displayManager = service.getSystemService(Context.DISPLAY_SERVICE) as? android.hardware.display.DisplayManager ?: return
+        val state = displayManager.getDisplay(android.view.Display.DEFAULT_DISPLAY)?.state ?: return
+        val off = state == android.view.Display.STATE_OFF ||
+            state == android.view.Display.STATE_DOZE ||
+            state == android.view.Display.STATE_DOZE_SUSPEND
+        if (off == isScreenOff) return
+        isScreenOff = off
+        overlayView?.isScreenOff = off
+        overlayView?.isLockedHidden = shouldHideForLock()
+    }
+
     private var lastKnownRotation = -1
     private var lastKnownDisplayProfile: String? = null
     private var isRotationListenerRegistered = false
@@ -400,6 +412,7 @@ class DuoOverlayHandler(
 
             override fun onDisplayChanged(displayId: Int) {
                 if (displayId != android.view.Display.DEFAULT_DISPLAY) return
+                syncScreenOffFromDisplay()
                 @Suppress("DEPRECATION")
                 val rotation = windowManager?.defaultDisplay?.rotation ?: return
                 val profile = settingsRepository.getDisplayProfileId()
@@ -784,6 +797,8 @@ class DuoOverlayHandler(
     private fun showOrUpdateOverlay() {
         mainHandler.post {
             val wm = windowManager ?: return@post
+            val hideForOrientation = settingsRepository.isFoldableDevice() &&
+                settingsRepository.isDuoHiddenInCurrentOrientation()
 
             val displayMetrics = DisplayMetrics()
             @Suppress("DEPRECATION")
@@ -940,6 +955,7 @@ class DuoOverlayHandler(
             } else {
                 overlayView?.invalidate()
             }
+            overlayView?.visibility = if (hideForOrientation) View.GONE else View.VISIBLE
 
             if (settingsRepository.isDuoShowTimeEnabled()) {
                 registerTimeReceiver()
@@ -948,13 +964,13 @@ class DuoOverlayHandler(
                 unregisterTimeReceiver()
             }
 
-            val isTouchEnabled = settingsRepository.getDuoTapAction() != null ||
+            val isTouchEnabled = !hideForOrientation && (settingsRepository.getDuoTapAction() != null ||
                 settingsRepository.isDuoTapForBriefActive() ||
                 settingsRepository.getDuoDoubleTapAction() != null ||
                 settingsRepository.getDuoLongPressAction() != null ||
                 settingsRepository.getDuoSwipeDownAction() != null ||
                 settingsRepository.getDuoSlideMode() != "none" ||
-                settingsRepository.isDuoSlideTrackEnabled()
+                settingsRepository.isDuoSlideTrackEnabled())
 
             if (isTouchEnabled) {
                 if (duoTouchHandler == null) {
@@ -1047,6 +1063,7 @@ class DuoOverlayHandler(
     private var maxFlashlightLevel: Int = -1
 
     private fun getCameraId(): String? {
+        if (com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) return null
         if (primaryCameraId != null) return primaryCameraId
         return try {
             val id = cameraManager.cameraIdList.firstOrNull { camId ->
@@ -1108,6 +1125,7 @@ class DuoOverlayHandler(
     }
 
     private fun registerTorchCallback() {
+        if (com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) return
         if (!isTorchCallbackRegistered) {
             try {
                 cameraManager.registerTorchCallback(torchCallback, mainHandler)
@@ -1367,6 +1385,11 @@ class DuoOverlayHandler(
         }
     }
 
+    fun restart() {
+        removeOverlay(animate = false)
+        updateState()
+    }
+
     fun destroy() {
         removeOverlay(animate = false)
         overlayView = null
@@ -1376,4 +1399,3 @@ class DuoOverlayHandler(
         flashlightIconBitmap = null
     }
 }
-

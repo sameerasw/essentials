@@ -167,6 +167,13 @@ object ChronometerRepository {
     @Synchronized
     fun onRemoved(key: String) = remove(key)
 
+    @Synchronized
+    fun clear() {
+        if (tracked.isEmpty()) return
+        tracked.clear()
+        publish()
+    }
+
     private fun remove(key: String) {
         if (tracked.remove(key) != null) publish()
     }

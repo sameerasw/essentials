@@ -300,8 +300,10 @@ class NotificationListener : NotificationListenerService() {
             }
 
             // Calls already in progress when the listener (re)connects.
+            CallStateRepository.clearNotificationCalls()
             safeActiveNotifications()?.filter { CallNotificationParser.isCall(it) && it.packageName != packageName }
                 ?.forEach { CallStateRepository.onCallNotificationPosted(applicationContext, it) }
+            ChronometerRepository.clear()
             safeActiveNotifications()?.filter { it.packageName != packageName && ChronometerRepository.isCandidate(it) }
                 ?.forEach { ChronometerRepository.onPosted(applicationContext, it) }
 
@@ -980,10 +982,12 @@ class NotificationListener : NotificationListenerService() {
     ) {
         // Skip our own app's notifications early to avoid flooding logs and redundant processing
         if (sbn.packageName == packageName) {
+            if (hasReadableExtras(sbn)) LiveUpdateSnoozer.onPosted(this, sbn)
             return
         }
         if (!hasReadableExtras(sbn)) return
 
+        LiveUpdateSnoozer.onPosted(this, sbn)
         val isRepost = NotificationRepostFilter.isUnchangedRepost(sbn)
         if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
         if (ChronometerRepository.isCandidate(sbn)) ChronometerRepository.onPosted(applicationContext, sbn)
@@ -998,8 +1002,8 @@ class NotificationListener : NotificationListenerService() {
             scheduleProgressRefresh()
         }
 
-        if (!isRepost && isHeadsUpNotification(sbn, rankingMap)) {
-            val alert = extractNotificationAlert(sbn)
+        if (!isRepost && isHeadsUpNotification(sbn, rankingMap, allowSilent = true)) {
+            val alert = extractNotificationAlert(sbn)?.copy(isSilent = isSilentNotification(sbn, rankingMap))
             if (alert != null) {
                 notifyAlertPosted(alert)
             }
@@ -1354,7 +1358,31 @@ class NotificationListener : NotificationListenerService() {
         }
     }
 
+    override fun onNotificationRemoved(
+        sbn: StatusBarNotification,
+        rankingMap: RankingMap,
+        reason: Int,
+    ) {
+        LiveUpdateSnoozer.onRemoved(sbn.key, reason)
+        super.onNotificationRemoved(sbn, rankingMap, reason)
+    }
+
+    fun feedSnoozedPosted(sbn: StatusBarNotification) {
+        if (sbn.packageName == packageName) return
+        if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
+        if (ChronometerRepository.isCandidate(sbn)) ChronometerRepository.onPosted(applicationContext, sbn)
+        scheduleProgressRefresh()
+    }
+
+    fun feedSnoozedRemoved(sbn: StatusBarNotification) {
+        if (sbn.packageName == packageName) return
+        CallStateRepository.onCallNotificationRemoved(sbn.key)
+        ChronometerRepository.onRemoved(sbn.key)
+        scheduleProgressRefresh()
+    }
+
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
+        if (LiveUpdateSnoozer.isSnoozedByUs(sbn.key)) return
         NotificationRepostFilter.forget(sbn.key)
         CallStateRepository.onCallNotificationRemoved(sbn.key)
         ChronometerRepository.onRemoved(sbn.key)
@@ -1822,8 +1850,10 @@ class NotificationListener : NotificationListenerService() {
             null
         }
 
+    fun refreshProgressNow() = scheduleProgressRefresh()
+
     fun extractLatestProgressNotification(): ProgressNotificationData? {
-        val active = safeActiveNotifications() ?: return null
+        val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
         val progressNotifs = active.mapNotNull { sbn ->
             if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
             extractProgressNotification(sbn)
@@ -1834,6 +1864,7 @@ class NotificationListener : NotificationListenerService() {
     fun isHeadsUpNotification(
         sbn: StatusBarNotification,
         rankingMap: RankingMap? = null,
+        allowSilent: Boolean = false,
     ): Boolean {
         if (sbn.isOngoing) return false
         if (sbn.packageName == packageName) return false
@@ -1842,6 +1873,7 @@ class NotificationListener : NotificationListenerService() {
         val notif = sbn.notification
         val isGroupSummary = (notif.flags and Notification.FLAG_GROUP_SUMMARY) != 0
         if (isGroupSummary) return false
+        if (allowSilent) return true
 
         try {
             val map = rankingMap ?: currentRanking

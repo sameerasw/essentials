@@ -104,6 +104,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
@@ -350,6 +351,7 @@ fun SettingsContent(
     val grantScope = rememberCoroutineScope()
     var showInstructionsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
+    var showHiddenDebuggingHelpSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
     var pendingPreReleaseState by remember { mutableStateOf(false) }
@@ -472,8 +474,26 @@ fun SettingsContent(
         UnsupportedFeaturesConfirmationSheet(
             onDismissRequest = { showUnsupportedFeaturesSheet = false },
             onConfirm = {
-                showUnsupportedFeaturesSheet = false
-                viewModel.setEnableUnsupportedFeatures(true, context)
+                val activity = context as? androidx.fragment.app.FragmentActivity
+                val canAuthenticate =
+                    androidx.biometric.BiometricManager
+                        .from(context)
+                        .canAuthenticate(com.sameerasw.essentials.utils.BiometricHelper.allowedAuthenticators) ==
+                        androidx.biometric.BiometricManager.BIOMETRIC_SUCCESS
+                if (activity == null || !canAuthenticate) {
+                    showUnsupportedFeaturesSheet = false
+                    viewModel.setEnableUnsupportedFeatures(true, context)
+                } else {
+                    com.sameerasw.essentials.utils.BiometricHelper.showBiometricPrompt(
+                        activity = activity,
+                        title = context.getString(R.string.unsupported_auth_title),
+                        subtitle = context.getString(R.string.unsupported_auth_subtitle),
+                        onSuccess = {
+                            showUnsupportedFeaturesSheet = false
+                            viewModel.setEnableUnsupportedFeatures(true, context)
+                        },
+                    )
+                }
             },
             featureTitleResIds = FeatureRegistry.getUnsupportedFeatures(context).map { it.title },
         )
@@ -509,6 +529,13 @@ fun SettingsContent(
             onConfirmMerge = {
                 onImportConfig(true)
             },
+        )
+    }
+
+    if (showHiddenDebuggingHelpSheet) {
+        com.sameerasw.essentials.ui.core.sheets.HiddenDebuggingHelpBottomSheet(
+            onDismissRequest = { showHiddenDebuggingHelpSheet = false },
+            onAutoDetected = { viewModel.setHiddenDebuggingSupport(true) },
         )
     }
 
@@ -711,14 +738,27 @@ fun SettingsContent(
                 AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
                 AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
             )
-            SegmentedPicker(
-                items = AppHapticMode.entries,
-                selectedItem = hapticMode,
-                onItemSelected = { HapticUtil.saveHapticMode(context, it) },
-                labelProvider = { hapticModeLabels.getValue(it) },
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.label_haptic_feedback),
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.label_haptics_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                SegmentedPicker(
+                    items = AppHapticMode.entries,
+                    selectedItem = hapticMode,
+                    onItemSelected = { HapticUtil.saveHapticMode(context, it) },
+                    labelProvider = { hapticModeLabels.getValue(it) },
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.label_haptic_feedback),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
@@ -889,15 +929,12 @@ fun SettingsContent(
                 }
             }
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_numbers_24,
-                title = stringResource(R.string.setting_use_root_title),
-                description = stringResource(R.string.setting_use_root_desc),
-                isChecked = viewModel.isRootEnabled.value,
-                onCheckedChange = { viewModel.setRootEnabled(it, context) },
+            PrivilegedModePicker(
+                selectedMode = viewModel.privilegedMode.value,
+                onModeSelected = { viewModel.setPrivilegedMode(it, context) },
             )
 
-            Row(
+            if (viewModel.usesAuthToken.value) Row(
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -962,6 +999,23 @@ fun SettingsContent(
                     )
                 }
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_adb_24,
+                title = stringResource(R.string.setting_hidden_debugging_title),
+                isChecked = viewModel.isHiddenDebuggingSupport.value,
+                onCheckedChange = { checked ->
+                    viewModel.setHiddenDebuggingSupport(checked)
+                    if (checked && !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)) {
+                        if (com.sameerasw.essentials.utils.ShizukuUtils.isShizukuAvailable()) {
+                            com.sameerasw.essentials.utils.ShizukuUtils.requestPermission()
+                        } else {
+                            Toast.makeText(context, R.string.shizuku_not_running_desc, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
+                onInfoClick = { showHiddenDebuggingHelpSheet = true },
+            )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_data_usage_24,

@@ -74,9 +74,9 @@
     <string name="essentials_on_display_random_shapes_desc">Utiliser des formes Material 3 variées pour la couverture de l\'album</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Toujours utiliser pendant la charge</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
-    <string name="label_size">Size</string>
+    <string name="label_size">Taille</string>
     <string name="feat_notification_glance_title">Aperçu des notifications</string>
     <string name="feat_notification_glance_desc">Garder le mode Always-on tant qu\'il y a des notifications</string>
     <string name="notification_glance_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
@@ -354,7 +354,7 @@
     <string name="hide_notification_icons_title">Masquer les notifications</string>
     <string name="hide_notification_icons_desc">Masquer toutes les icônes de notification entrantes</string>
     <string name="feat_hide_gesture_bar_title">Masquer la barre de gestes</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_desc">Dans la navigation par geste</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Afficher dans le lanceur</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Afficher la barre de gestes de manière dynamique uniquement sur l\'écran d\'accueil</string>
     <string name="feat_circle_to_search_gesture_title">Geste « Entourez pour rechercher »</string>
@@ -1436,7 +1436,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
     <string name="lock_screen_clock_default">Default</string>
     <string name="label_weight">Weight</string>
-    <string name="label_width">Width</string>
+    <string name="label_width">Largeur</string>
     <string name="label_grade">Grade</string>
     <string name="label_roundness">Roundness</string>
     <string name="label_color_tone">Lightness</string>
@@ -1638,4 +1638,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_action_tap_title">Appui</string>
     <string name="duo_action_swipe_down_title">Glissement vers le bas</string>
     <string name="duo_action_horizontal_slide_title">Glissement horizontal</string>
+    <string name="duo_hide_when_locked_title">Cacher quand verrouillé</string>
+    <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
+    <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
 </resources>

@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.features.system
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -82,6 +85,41 @@ fun ShutUpSettingsUI(
                 selectedMode = viewModel.shutUpRestoreMode.value,
                 onModeSelected = { viewModel.setShutUpRestoreMode(it) },
             )
+
+            val keyboards = remember { loadEnabledKeyboards(context) }
+            var keyboardMenuOpen by remember { mutableStateOf(false) }
+            val selectedKeyboard = viewModel.shutUpKeyboard.value
+            Box {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_keyboard_24,
+                    title = stringResource(R.string.shut_up_keyboard_title),
+                    description = keyboards.firstOrNull { it.first == selectedKeyboard }?.second
+                        ?: stringResource(R.string.shut_up_keyboard_skip),
+                    showToggle = false,
+                    onClick = { keyboardMenuOpen = true },
+                )
+                SegmentedDropdownMenu(
+                    expanded = keyboardMenuOpen,
+                    onDismissRequest = { keyboardMenuOpen = false },
+                ) {
+                    SegmentedDropdownMenuItem(
+                        text = { Text(stringResource(R.string.shut_up_keyboard_skip)) },
+                        onClick = {
+                            keyboardMenuOpen = false
+                            viewModel.setShutUpKeyboard("")
+                        },
+                    )
+                    keyboards.forEach { (id, label) ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text(label) },
+                            onClick = {
+                                keyboardMenuOpen = false
+                                viewModel.setShutUpKeyboard(id)
+                            },
+                        )
+                    }
+                }
+            }
 
             FeatureCard(
                 title = stringResource(R.string.shut_up_select_apps_title),
@@ -202,3 +240,11 @@ fun ShutUpSettingsUI(
         }
     }
 }
+
+private fun loadEnabledKeyboards(context: android.content.Context): List<Pair<String, String>> =
+    try {
+        val imm = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        imm.enabledInputMethodList.map { it.id to it.loadLabel(context.packageManager).toString() }
+    } catch (_: Exception) {
+        emptyList()
+    }

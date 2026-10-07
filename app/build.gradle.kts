@@ -116,7 +116,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 67
-        versionName = "18.5-beta.1"
+        versionName = "18.5-beta.3"
 
         val whatsNewCounter = 5
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
@@ -206,6 +206,7 @@ dependencies {
     // Shizuku
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
+    implementation("com.github.d4rken-org.porter-api:shizuku-bridge:+")
     implementation(libs.androidx.car.app)
 
     // Hidden API Bypass

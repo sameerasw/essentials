@@ -102,6 +102,7 @@
 
     <queries>
         <package android:name="com.sameerasw.overcast" />
+        <package android:name="eu.darken.porter" />
         <provider android:authorities="com.sameerasw.overcast.weather" />
     </queries>
 
@@ -1001,6 +1002,32 @@
             android:exported="true"
             android:icon="@drawable/rounded_nightlight_24"
             android:label="Dynamic Night Light"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+        <service
+            android:name=".services.tiles.DuoTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_motion_play_24"
+            android:label="@string/duo_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+        <service
+            android:name=".services.tiles.IslandTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_upcoming_24"
+            android:label="@string/island_title"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

@@ -1043,8 +1043,16 @@ class AppFlowHandler(
                     .canWriteSecureSettings(context)
             val canWriteSystem = Settings.System.canWrite(context)
 
+            val hiddenDebugging =
+                repository.getBoolean(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_HIDDEN_DEBUGGING_SUPPORT,
+                    false,
+                )
+            val hiddenDebuggingKeys = setOf("global:development_settings_enabled", "global:adb_enabled")
+
             originalSettings.forEach { (prefixedKey, value) ->
                 try {
+                    if (hiddenDebugging && prefixedKey in hiddenDebuggingKeys) return@forEach
                     val parts = prefixedKey.split(":", limit = 2)
                     if (parts.size < 2) return@forEach
 

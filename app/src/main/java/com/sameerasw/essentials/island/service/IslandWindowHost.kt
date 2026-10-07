@@ -44,6 +44,13 @@ class IslandWindowHost(
 
     var maxWidthPx: Int = 0
 
+    var hiddenTouch: ((MotionEvent) -> Boolean)? = null
+    private var alwaysGestures = false
+    private var gestureView: View? = null
+    private var gestureParams: WindowManager.LayoutParams? = null
+    private var gestureAdded = false
+    private var gestureTouching = false
+
     // Fired for touches anywhere outside the island, via FLAG_WATCH_OUTSIDE_TOUCH.
     var onOutsideTouch: (() -> Unit)? = null
 
@@ -116,6 +123,12 @@ class IslandWindowHost(
         layoutTouchWindow()
     }
 
+    fun setAlwaysGestures(enabled: Boolean) {
+        if (alwaysGestures == enabled) return
+        alwaysGestures = enabled
+        layoutTouchWindow()
+    }
+
     fun onStageChanged(stage: IslandStage) {
         this.stage = stage
         layoutTouchWindow()
@@ -129,6 +142,8 @@ class IslandWindowHost(
     fun detach() {
         textInput = false
         removeTouchWindow()
+        removeGestureWindow()
+        alwaysGestures = false
         drawRoot?.let {
             try {
                 wm.removeViewImmediate(it)
@@ -185,7 +200,55 @@ class IslandWindowHost(
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    private fun layoutGestureWindow() {
+        val geo = geometry
+        if (geo == null || drawParams == null || !alwaysGestures || (stage != IslandStage.Hidden && !gestureTouching) || textInput) {
+            removeGestureWindow()
+            return
+        }
+        val lp = gestureParams ?: baseParams(touchable = true).also { gestureParams = it }
+        val width = maxOf(geo.cameraSlotWidth + 48 * density, 96 * density).roundToInt()
+        lp.width = width
+        lp.height = (geo.compactHeight + 8 * density).roundToInt()
+        lp.x = (geo.centerX - width / 2f).roundToInt()
+        lp.y = geo.surfaceTop.roundToInt()
+        val view = gestureView ?: View(context).also { v ->
+            v.setOnTouchListener { _, event ->
+                when (event.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> gestureTouching = true
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        gestureTouching = false
+                        v.post { layoutGestureWindow() }
+                    }
+                }
+                hiddenTouch?.invoke(event) ?: false
+            }
+            gestureView = v
+        }
+        try {
+            if (gestureAdded) {
+                wm.updateViewLayout(view, lp)
+            } else {
+                wm.addView(view, lp)
+                gestureAdded = true
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to place island gesture window", e)
+        }
+    }
+
+    private fun removeGestureWindow() {
+        if (!gestureAdded) return
+        try {
+            gestureView?.let { wm.removeViewImmediate(it) }
+        } catch (_: Exception) {
+        }
+        gestureAdded = false
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private fun layoutTouchWindow() {
+        layoutGestureWindow()
         val draw = drawParams
         val bounds = targetBounds
         if (draw == null || bounds == null || stage == IslandStage.Hidden || textInput) {

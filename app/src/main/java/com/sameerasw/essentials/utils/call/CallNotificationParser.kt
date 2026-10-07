@@ -48,6 +48,8 @@ object CallNotificationParser {
         if (!isCall(sbn)) return null
         val n = sbn.notification
         val extras = n.extras
+        val declaredType = extras.getInt(EXTRA_CALL_TYPE, 0)
+        if (declaredType == 0 && !sbn.isOngoing && n.fullScreenIntent == null) return null
 
         val person: Person? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

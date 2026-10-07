@@ -36,6 +36,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL,
         SettingsRepository.KEY_ISLAND_BATTERY_ONLY_LOW,
+        SettingsRepository.KEY_ISLAND_BATTERY_ICON_CONDITIONAL,
         SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED,
         SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR,
         SettingsRepository.KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED,
@@ -153,6 +154,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             key = "time",
             priority = IslandPriority.TIME,
             placement = CompactPlacement.Pinned,
+            needsCompanyAtCenter = settings.isIslandBatteryIconConditional(),
             compact = listOf(
                 CompactCell("time") { RollingText(timeText) },
             ),
@@ -162,6 +164,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             priority = IslandPriority.BATTERY,
             placement = CompactPlacement.Pinned,
             outlineAccent = displayColor,
+            companionOnly = settings.isIslandBatteryIconConditional() && stateColor == null && System.currentTimeMillis() >= chargePeekUntil,
             compact = listOf(
                 CompactCell("battery") {
                     when {

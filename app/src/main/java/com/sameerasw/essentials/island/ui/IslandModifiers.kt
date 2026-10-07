@@ -16,22 +16,25 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.round
 import kotlinx.coroutines.launch
 
-// Animates a child to its new slot whenever the parent layout moves it
-fun Modifier.animatePlacement(): Modifier = composed {
+// Animates a child to its new slot, measured from the edge it hugs, so the parent resizing never reads as a move
+fun Modifier.animatePlacement(fromEnd: Boolean = false): Modifier = composed {
     val scope = rememberCoroutineScope()
     val holder = remember { arrayOfNulls<Animatable<IntOffset, AnimationVector2D>>(1) }
     this.layout { measurable, constraints ->
         val placeable = measurable.measure(constraints)
         layout(placeable.width, placeable.height) {
-            val target = coordinates?.positionInParent()?.round()
-            if (target == null || isLookingAhead) {
+            val position = coordinates?.positionInParent()?.round()
+            if (position == null || isLookingAhead) {
                 placeable.place(0, 0)
                 return@layout
             }
+            val parentWidth = coordinates?.parentLayoutCoordinates?.size?.width ?: 0
+            val target = if (fromEnd) IntOffset(parentWidth - position.x, position.y) else position
             val anim = holder[0] ?: Animatable(target, IntOffset.VectorConverter).also { holder[0] = it }
             if (anim.targetValue != target) scope.launch { anim.animateTo(target, IslandMotion.compactOffset) }
             val current = anim.value
-            placeable.place(current.x - target.x, current.y - target.y)
+            val dx = if (fromEnd) target.x - current.x else current.x - target.x
+            placeable.place(dx, current.y - target.y)
         }
     }
 }

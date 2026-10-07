@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
@@ -45,6 +46,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.UpdateRepository
@@ -61,6 +63,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
@@ -79,6 +82,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.weather.overcast.OvercastWeather
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.PrivilegedMode
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.SurfaceFlingerControl
@@ -126,10 +130,7 @@ class MainViewModel : ViewModel() {
     val isButtonRemapUseShizuku = mutableStateOf(false)
     val isButtonRemapPauseOnVolumeDialog = mutableStateOf(true)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
-    val volumeUpActionOff = mutableStateOf<Action?>(null)
-    val volumeDownActionOff = mutableStateOf<Action?>(null)
-    val volumeUpActionOn = mutableStateOf<Action?>(null)
-    val volumeDownActionOn = mutableStateOf<Action?>(null)
+    val remapActions = mutableStateMapOf<RemapSlot, List<Action>>()
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -141,6 +142,9 @@ class MainViewModel : ViewModel() {
     val isDuoTapForBrief = mutableStateOf(false)
     val isDuoHideOnShade = mutableStateOf(false)
     val isDuoAutoDetect = mutableStateOf(true)
+    val isFoldableCameraDevice = mutableStateOf(false)
+    val isDuoOrientationProfiles = mutableStateOf(false)
+    val isDuoHiddenInCurrentOrientation = mutableStateOf(false)
     val hasMultipleDuoDisplays = mutableStateOf(false)
     val duoCameraOffsetX = mutableFloatStateOf(50f)
     val duoCameraOffsetY = mutableFloatStateOf(3f)
@@ -184,6 +188,8 @@ class MainViewModel : ViewModel() {
 
     val isIslandEnabled = mutableStateOf(false)
     val isIslandAutoDetect = mutableStateOf(true)
+    val isIslandOrientationProfiles = mutableStateOf(false)
+    val isIslandHiddenInCurrentOrientation = mutableStateOf(false)
     val islandCameraOffsetX = mutableFloatStateOf(50f)
     val islandCameraOffsetY = mutableFloatStateOf(3f)
     val islandCameraSize = mutableFloatStateOf(1.0f)
@@ -194,14 +200,22 @@ class MainViewModel : ViewModel() {
     val islandFontScale = mutableFloatStateOf(1f)
     val isIslandHideInOwnerApp = mutableStateOf(false)
     val isIslandHideOnShade = mutableStateOf(false)
+    val isIslandKeepOnLandscape = mutableStateOf(false)
+    val isIslandBondEdge = mutableStateOf(false)
+    val islandMaxItems = mutableStateOf(2)
+    val isIslandAlwaysGestures = mutableStateOf(false)
+    val islandLandscapeTopSpacing = mutableFloatStateOf(0f)
     val isIslandDismissOnOutside = mutableStateOf(false)
+    val isIslandHideLiveUpdates = mutableStateOf(false)
     val islandExpandedScale = mutableFloatStateOf(1f)
     val islandCameraPosition = mutableStateOf(SettingsRepository.ISLAND_CAMERA_POSITION_CENTER)
     val isIslandShowCalls = mutableStateOf(true)
     val isIslandShowTimers = mutableStateOf(true)
     val isIslandShowWeather = mutableStateOf(false)
     val isIslandTimersShowScreenRecorder = mutableStateOf(true)
+    val isIslandTimersFilterApps = mutableStateOf(false)
     val isIslandShowNetwork = mutableStateOf(true)
+    val isIslandShowSignal = mutableStateOf(false)
     val isIslandShowSoundMode = mutableStateOf(true)
     val isIslandSoundModeKeepIcon = mutableStateOf(true)
     val isIslandShowAlarm = mutableStateOf(false)
@@ -218,15 +232,19 @@ class MainViewModel : ViewModel() {
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
     val isIslandSuppressSystemHeadsUp = mutableStateOf(false)
     val isIslandDynamicHideStatusBar = mutableStateOf(false)
+    val isIslandCompactHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
     val isIslandLineStageEnabled = mutableStateOf(true)
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
+    val isIslandMediaShowLike = mutableStateOf(true)
     val isIslandNotifCompactHeadsUp = mutableStateOf(true)
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
+    val isIslandNotifSkipSilent = mutableStateOf(true)
+    val isIslandNotifFilterApps = mutableStateOf(false)
     val isIslandShowNotifications = mutableStateOf(true)
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
@@ -251,6 +269,7 @@ class MainViewModel : ViewModel() {
     val islandBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
     val isIslandBatteryPercentageEnabled = mutableStateOf(false)
     val isIslandBatteryPercentageConditional = mutableStateOf(false)
+    val isIslandBatteryIconConditional = mutableStateOf(false)
     val isIslandBatteryOnlyLow = mutableStateOf(false)
     val isIslandDevicesBatteryOnlyLow = mutableStateOf(false)
     val islandLongPressAction = mutableStateOf<Action?>(null)
@@ -261,6 +280,8 @@ class MainViewModel : ViewModel() {
 
     val isStatusGlanceEnabled = mutableStateOf(false)
     val isStatusGlanceAutoDetect = mutableStateOf(true)
+    val isStatusGlanceOrientationProfiles = mutableStateOf(false)
+    val isStatusGlanceHiddenInCurrentOrientation = mutableStateOf(false)
     val statusGlanceOffsetX = mutableFloatStateOf(60f)
     val statusGlanceOffsetY = mutableFloatStateOf(2f)
     val statusGlanceMaxWidth = mutableFloatStateOf(180f)
@@ -341,6 +362,10 @@ class MainViewModel : ViewModel() {
     val isAodWallpaperKeepOnMedia = mutableStateOf(false)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
+    val isFaceUnlockBrightnessEnabled = mutableStateOf(false)
+    val faceUnlockMaxBrightness = mutableIntStateOf(100)
+    val isFaceUnlockTriggerUnlock = mutableStateOf(true)
+    val isFaceUnlockLightTint = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
     val pocketModeTriggerDelay = mutableFloatStateOf(3f) // seconds
     val isPocketModeLockScreenOnly = mutableStateOf(false)
@@ -402,6 +427,7 @@ class MainViewModel : ViewModel() {
     val isShutUpAttemptShizukuRestart = mutableStateOf(true)
     val shutUpRestoreDelay = mutableIntStateOf(10)
     val shutUpRestoreMode = mutableStateOf("Auto")
+    val shutUpKeyboard = mutableStateOf("")
     val shizukuAuthToken = mutableStateOf("")
     val edgeLightingSweepSelectedShapes = mutableStateOf<Set<String>>(emptySet())
 
@@ -447,6 +473,7 @@ class MainViewModel : ViewModel() {
     val consciousGateTitle = mutableStateOf("")
     val consciousGateMessage = mutableStateOf("")
     val isUseUsageAccess = mutableStateOf(false)
+    val isHiddenDebuggingSupport = mutableStateOf(false)
     val isFreezeWhenLockedEnabled = mutableStateOf(false)
     val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
     val freezePickedApps = mutableStateOf<List<NotificationApp>>(emptyList())
@@ -474,6 +501,8 @@ class MainViewModel : ViewModel() {
     val isUpdateNotificationEnabled = mutableStateOf(true)
     val isPreReleaseCheckEnabled = mutableStateOf(false)
     val isRootEnabled = mutableStateOf(false)
+    val privilegedMode = mutableStateOf(PrivilegedMode.AUTO)
+    val usesAuthToken = mutableStateOf(true)
     val isRootAvailable = mutableStateOf(false)
     val isRootPermissionGranted = mutableStateOf(false)
     val hasPendingUpdates = mutableStateOf(false)
@@ -854,11 +883,20 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS ->
                         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
 
+                    SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE ->
+                        isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
+
                     SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP ->
                         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
                         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT ->
+                        isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS ->
+                        isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
 
                     SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS ->
                         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
@@ -1025,9 +1063,7 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
-                    SettingsRepository.KEY_USE_ROOT ->
-                        isRootEnabled.value =
-                            settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_USE_ROOT, SettingsRepository.KEY_PRIVILEGED_MODE -> refreshPrivilegedMode()
 
                     SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED ->
                         isPreReleaseCheckEnabled.value =
@@ -1270,6 +1306,18 @@ class MainViewModel : ViewModel() {
                         isPocketModeEnabled.value =
                             settingsRepository.getBoolean(key)
 
+                    SettingsRepository.KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED ->
+                        isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
+
+                    SettingsRepository.KEY_FACE_UNLOCK_MAX_BRIGHTNESS ->
+                        faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
+
+                    SettingsRepository.KEY_FACE_UNLOCK_TRIGGER_UNLOCK ->
+                        isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
+
+                    SettingsRepository.KEY_FACE_UNLOCK_LIGHT_TINT ->
+                        isFaceUnlockLightTint.value = settingsRepository.isFaceUnlockLightTintEnabled()
+
                     SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR ->
                         isPocketModeUseLightSensor.value =
                             settingsRepository.getBoolean(key)
@@ -1370,6 +1418,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_SHUT_UP_RESTORE_DELAY -> {
                         shutUpRestoreDelay.intValue =
                             settingsRepository.getShutUpRestoreDelay()
+                    }
+
+                    SettingsRepository.KEY_SHUT_UP_KEYBOARD -> {
+                        shutUpKeyboard.value = settingsRepository.getShutUpKeyboard()
                     }
 
                     SettingsRepository.KEY_SHUT_UP_RESTORE_MODE -> {
@@ -1557,6 +1609,11 @@ class MainViewModel : ViewModel() {
      *
      * @param mode [String] Target mode.
      */
+    fun setShutUpKeyboard(ime: String) {
+        shutUpKeyboard.value = ime
+        settingsRepository.setShutUpKeyboard(ime)
+    }
+
     fun setShutUpRestoreMode(mode: String) {
         shutUpRestoreMode.value = mode
         settingsRepository.setShutUpRestoreMode(mode)
@@ -1707,6 +1764,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.isShutUpAttemptShizukuRestartEnabled()
         shutUpRestoreDelay.intValue =
             settingsRepository.getShutUpRestoreDelay()
+        shutUpKeyboard.value = settingsRepository.getShutUpKeyboard()
         shutUpRestoreMode.value =
             settingsRepository.getShutUpRestoreMode()
         shizukuAuthToken.value =
@@ -2067,6 +2125,8 @@ class MainViewModel : ViewModel() {
         notificationLightingColorMode.value = settingsRepository.getNotificationLightingColorMode()
         isUseUsageAccess.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
+        isHiddenDebuggingSupport.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_HIDDEN_DEBUGGING_SUPPORT)
         isOnboardingCompleted.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, false)
 
@@ -2091,7 +2151,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
         isAodEnabled.value = settingsRepository.isAodEnabled()
 
-        isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
+        refreshPrivilegedMode()
 
         if (isRootEnabled.value) {
             isRootAvailable.value = RootUtils.isRootAvailable()
@@ -2162,10 +2222,9 @@ class MainViewModel : ViewModel() {
                 false,
             ) // Default false here as key check logic
 
-        volumeUpActionOff.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF)
-        volumeDownActionOff.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF)
-        volumeUpActionOn.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON)
-        volumeDownActionOn.value = settingsRepository.getRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON)
+        RemapSlot.ALL.forEach { slot ->
+            remapActions[slot] = settingsRepository.getRemapActions(slot.prefKey)
+        }
 
         val hapticName =
             settingsRepository.getString(
@@ -2245,14 +2304,22 @@ class MainViewModel : ViewModel() {
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
         isIslandHideInOwnerApp.value = settingsRepository.isIslandHideInOwnerAppEnabled()
         isIslandHideOnShade.value = settingsRepository.isIslandHideOnShadeEnabled()
+        isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
+        isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        islandMaxItems.value = settingsRepository.getIslandMaxItems()
+        isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
+        islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
         isIslandDismissOnOutside.value = settingsRepository.isIslandDismissOnOutsideEnabled()
+        isIslandHideLiveUpdates.value = settingsRepository.isIslandHideLiveUpdatesEnabled()
         islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
         islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
         isIslandShowCalls.value = settingsRepository.isIslandShowCallsEnabled()
         isIslandShowTimers.value = settingsRepository.isIslandShowTimersEnabled()
         isIslandShowWeather.value = settingsRepository.isIslandShowWeatherEnabled()
         isIslandTimersShowScreenRecorder.value = settingsRepository.isIslandTimersShowScreenRecorderEnabled()
+        isIslandTimersFilterApps.value = settingsRepository.isIslandTimersFilterAppsEnabled()
         isIslandShowNetwork.value = settingsRepository.isIslandShowNetworkEnabled()
+        isIslandShowSignal.value = settingsRepository.isIslandShowSignalEnabled()
         isIslandShowSoundMode.value = settingsRepository.isIslandShowSoundModeEnabled()
         isIslandSoundModeKeepIcon.value = settingsRepository.isIslandSoundModeKeepIconEnabled()
         isIslandShowAlarm.value = settingsRepository.isIslandShowAlarmEnabled()
@@ -2276,15 +2343,23 @@ class MainViewModel : ViewModel() {
                 SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR,
                 false,
             )
+        isIslandCompactHideStatusBar.value =
+            settingsRepository.getBoolean(
+                SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR,
+                false,
+            )
         isIslandHideWhenScreenOff.value = settingsRepository.isIslandHideWhenScreenOffEnabled()
         islandTimeoutMs.longValue = settingsRepository.getIslandTimeoutMs()
         isIslandLineStageEnabled.value = settingsRepository.isIslandLineStageEnabled()
         isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
+        isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
+        isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
+        isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -2309,6 +2384,7 @@ class MainViewModel : ViewModel() {
         islandBatteryStyle.value = settingsRepository.getIslandBatteryStyle()
         isIslandBatteryPercentageEnabled.value = settingsRepository.isIslandBatteryPercentageEnabled()
         isIslandBatteryPercentageConditional.value = settingsRepository.isIslandBatteryPercentageConditional()
+        isIslandBatteryIconConditional.value = settingsRepository.isIslandBatteryIconConditional()
         isIslandBatteryOnlyLow.value = settingsRepository.isIslandBatteryOnlyLowEnabled()
         isIslandDevicesBatteryOnlyLow.value = settingsRepository.isIslandDevicesBatteryOnlyLowEnabled()
         islandLongPressAction.value = settingsRepository.getIslandLongPressAction()
@@ -2624,6 +2700,10 @@ class MainViewModel : ViewModel() {
         pixelSearchEngine.value = settingsRepository.getPixelSearchEngine()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
+        isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
+        faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
+        isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
+        isFaceUnlockLightTint.value = settingsRepository.isFaceUnlockLightTintEnabled()
         isPocketModeUseLightSensor.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR)
         pocketModeTriggerDelay.floatValue =
@@ -3051,13 +3131,21 @@ class MainViewModel : ViewModel() {
      * @param enabled [Boolean] Target enabled.
      * @param context [Context] Target context.
      */
-    fun setRootEnabled(
-        enabled: Boolean,
+    fun setPrivilegedMode(
+        mode: PrivilegedMode,
         context: Context,
     ) {
-        settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, enabled)
-        isRootEnabled.value = enabled
+        settingsRepository.putString(SettingsRepository.KEY_PRIVILEGED_MODE, mode.key)
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, mode == PrivilegedMode.ROOT)
+        refreshPrivilegedMode()
         check(context)
+    }
+
+    private fun refreshPrivilegedMode() {
+        val ctx = EssentialsApp.context
+        privilegedMode.value = ShellUtils.getSelectedMode(ctx)
+        isRootEnabled.value = ShellUtils.isRootEnabled(ctx)
+        usesAuthToken.value = ShellUtils.usesAuthToken(ctx)
     }
 
     /**
@@ -4856,62 +4944,14 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Executes the set volume up action off operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
+     * Sets the ordered actions for a Button Remap slot.
      */
-    fun setVolumeUpActionOff(
-        action: Action?,
-        context: Context,
+    fun setRemapActions(
+        slot: RemapSlot,
+        actions: List<Action>,
     ) {
-        volumeUpActionOff.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF, action)
-    }
-
-    /**
-     * Executes the set volume down action off operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeDownActionOff(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeDownActionOff.value = action
-        settingsRepository.setRemapAction(
-            SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF,
-            action,
-        )
-    }
-
-    /**
-     * Executes the set volume up action on operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeUpActionOn(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeUpActionOn.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON, action)
-    }
-
-    /**
-     * Executes the set volume down action on operation.
-     *
-     * @param action [Action?] Target action.
-     * @param context [Context] Target context.
-     */
-    fun setVolumeDownActionOn(
-        action: Action?,
-        context: Context,
-    ) {
-        volumeDownActionOn.value = action
-        settingsRepository.setRemapAction(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON, action)
+        remapActions[slot] = actions
+        settingsRepository.setRemapActions(slot.prefKey, actions)
     }
 
     /**
@@ -5012,10 +5052,43 @@ class MainViewModel : ViewModel() {
 
     fun refreshDuoCameraPlacement() {
         settingsRepository.markDisplayProfileSeen()
+        isFoldableCameraDevice.value = settingsRepository.isFoldableDevice()
+        isDuoOrientationProfiles.value = settingsRepository.isDuoOrientationProfilesEnabled()
+        isDuoHiddenInCurrentOrientation.value = settingsRepository.isDuoHiddenInCurrentOrientation()
         duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
         duoCameraOffsetY.floatValue = settingsRepository.getDuoCameraOffsetY()
         duoCameraSize.floatValue = settingsRepository.getDuoCameraSize()
-        hasMultipleDuoDisplays.value = settingsRepository.getKnownDisplayProfileCount() > 1
+        hasMultipleDuoDisplays.value = settingsRepository.isFoldableDevice()
+    }
+
+    fun setDuoOrientationProfiles(enabled: Boolean) {
+        settingsRepository.setDuoOrientationProfilesEnabled(enabled)
+        refreshDuoCameraPlacement()
+    }
+
+    fun setDuoHiddenInCurrentOrientation(hidden: Boolean) {
+        settingsRepository.setDuoHiddenInCurrentOrientation(hidden)
+        isDuoHiddenInCurrentOrientation.value = hidden
+    }
+
+    fun refreshIslandCameraPlacement() {
+        isFoldableCameraDevice.value = settingsRepository.isFoldableDevice()
+        isIslandOrientationProfiles.value = settingsRepository.isIslandOrientationProfilesEnabled()
+        isIslandHiddenInCurrentOrientation.value = settingsRepository.isIslandHiddenInCurrentOrientation()
+        islandCameraOffsetX.floatValue = settingsRepository.getIslandCameraOffsetX()
+        islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
+        islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
+        islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
+    }
+
+    fun setIslandOrientationProfiles(enabled: Boolean) {
+        settingsRepository.setIslandOrientationProfilesEnabled(enabled)
+        refreshIslandCameraPlacement()
+    }
+
+    fun setIslandHiddenInCurrentOrientation(hidden: Boolean) {
+        settingsRepository.setIslandHiddenInCurrentOrientation(hidden)
+        isIslandHiddenInCurrentOrientation.value = hidden
     }
 
     fun setDuoArcThickness(value: Float) {
@@ -5313,6 +5386,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandSoundModeKeepIconEnabled(enabled)
     }
 
+    fun setIslandShowSignal(enabled: Boolean) {
+        isIslandShowSignal.value = enabled
+        settingsRepository.setIslandShowSignalEnabled(enabled)
+    }
+
     fun setIslandShowNetwork(enabled: Boolean) {
         isIslandShowNetwork.value = enabled
         settingsRepository.setIslandShowNetworkEnabled(enabled)
@@ -5342,6 +5420,21 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandTimersShowScreenRecorderEnabled(enabled)
     }
 
+    fun setIslandTimersFilterApps(enabled: Boolean) {
+        isIslandTimersFilterApps.value = enabled
+        settingsRepository.setIslandTimersFilterAppsEnabled(enabled)
+    }
+
+    fun loadIslandTimersSelectedApps(context: Context): List<AppSelection> = settingsRepository.loadIslandTimersSelectedApps()
+
+    fun saveIslandTimersSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveIslandTimersSelectedApps(apps)
+    }
+
+    fun updateIslandTimersAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateIslandTimersAppSelection(packageName, enabled)
+    }
+
     fun setIslandShowCalls(enabled: Boolean) {
         isIslandShowCalls.value = enabled
         settingsRepository.setIslandShowCallsEnabled(enabled)
@@ -5357,6 +5450,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandExpandedScale(value)
     }
 
+    fun setIslandHideLiveUpdates(enabled: Boolean) {
+        isIslandHideLiveUpdates.value = enabled
+        settingsRepository.setIslandHideLiveUpdatesEnabled(enabled)
+    }
+
     fun setIslandDismissOnOutside(enabled: Boolean) {
         isIslandDismissOnOutside.value = enabled
         settingsRepository.setIslandDismissOnOutsideEnabled(enabled)
@@ -5365,6 +5463,31 @@ class MainViewModel : ViewModel() {
     fun setIslandHideInOwnerApp(enabled: Boolean) {
         isIslandHideInOwnerApp.value = enabled
         settingsRepository.setIslandHideInOwnerAppEnabled(enabled)
+    }
+
+    fun setIslandLandscapeTopSpacing(value: Float) {
+        islandLandscapeTopSpacing.floatValue = value
+        settingsRepository.setIslandLandscapeTopSpacing(value)
+    }
+
+    fun setIslandAlwaysGestures(enabled: Boolean) {
+        isIslandAlwaysGestures.value = enabled
+        settingsRepository.setIslandAlwaysGesturesEnabled(enabled)
+    }
+
+    fun setIslandMaxItems(value: Int) {
+        islandMaxItems.value = value
+        settingsRepository.setIslandMaxItems(value)
+    }
+
+    fun setIslandBondEdge(enabled: Boolean) {
+        isIslandBondEdge.value = enabled
+        settingsRepository.setIslandBondEdgeEnabled(enabled)
+    }
+
+    fun setIslandKeepOnLandscape(enabled: Boolean) {
+        isIslandKeepOnLandscape.value = enabled
+        settingsRepository.setIslandKeepOnLandscapeEnabled(enabled)
     }
 
     fun setIslandHideOnShade(enabled: Boolean) {
@@ -5405,6 +5528,11 @@ class MainViewModel : ViewModel() {
     fun setIslandSuppressSystemHeadsUp(enabled: Boolean) {
         isIslandSuppressSystemHeadsUp.value = enabled
         settingsRepository.setIslandSuppressSystemHeadsUpEnabled(enabled)
+    }
+
+    fun setIslandCompactHideStatusBar(enabled: Boolean) {
+        isIslandCompactHideStatusBar.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR, enabled)
     }
 
     fun setIslandDynamicHideStatusBar(
@@ -5451,6 +5579,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandMediaShowPreviousEnabled(enabled)
     }
 
+    fun setIslandMediaShowLike(enabled: Boolean) {
+        isIslandMediaShowLike.value = enabled
+        settingsRepository.setIslandMediaShowLikeEnabled(enabled)
+    }
+
     fun setIslandShowNotifications(enabled: Boolean) {
         isIslandShowNotifications.value = enabled
         settingsRepository.setIslandShowNotificationsEnabled(enabled)
@@ -5459,6 +5592,26 @@ class MainViewModel : ViewModel() {
     fun setIslandNotifQueue(enabled: Boolean) {
         isIslandNotifQueue.value = enabled
         settingsRepository.setIslandNotifQueueEnabled(enabled)
+    }
+
+    fun setIslandNotifSkipSilent(enabled: Boolean) {
+        isIslandNotifSkipSilent.value = enabled
+        settingsRepository.setIslandNotifSkipSilentEnabled(enabled)
+    }
+
+    fun setIslandNotifFilterApps(enabled: Boolean) {
+        isIslandNotifFilterApps.value = enabled
+        settingsRepository.setIslandNotifFilterAppsEnabled(enabled)
+    }
+
+    fun loadIslandNotifFilterApps(): List<AppSelection> = settingsRepository.loadIslandNotifFilterApps()
+
+    fun saveIslandNotifFilterApps(apps: List<AppSelection>) {
+        settingsRepository.saveIslandNotifFilterApps(apps)
+    }
+
+    fun updateIslandNotifFilterApp(packageName: String, enabled: Boolean) {
+        settingsRepository.updateIslandNotifFilterAppSelection(packageName, enabled)
     }
 
     fun setIslandNotifTapToOpen(enabled: Boolean) {
@@ -5607,6 +5760,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandBatteryOnlyLowEnabled(enabled)
     }
 
+    fun setIslandBatteryIconConditional(enabled: Boolean) {
+        isIslandBatteryIconConditional.value = enabled
+        settingsRepository.setIslandBatteryIconConditional(enabled)
+    }
+
     fun setIslandBatteryPercentageConditional(enabled: Boolean) {
         isIslandBatteryPercentageConditional.value = enabled
         settingsRepository.setIslandBatteryPercentageConditional(enabled)
@@ -5720,6 +5878,24 @@ class MainViewModel : ViewModel() {
     fun setStatusGlanceAutoDetect(enabled: Boolean) {
         isStatusGlanceAutoDetect.value = enabled
         settingsRepository.setStatusGlanceAutoDetectEnabled(enabled)
+    }
+
+    fun refreshStatusGlanceCameraPlacement() {
+        isFoldableCameraDevice.value = settingsRepository.isFoldableDevice()
+        isStatusGlanceOrientationProfiles.value = settingsRepository.isStatusGlanceOrientationProfilesEnabled()
+        isStatusGlanceHiddenInCurrentOrientation.value = settingsRepository.isStatusGlanceHiddenInCurrentOrientation()
+        statusGlanceOffsetX.floatValue = settingsRepository.getStatusGlanceOffsetX()
+        statusGlanceOffsetY.floatValue = settingsRepository.getStatusGlanceOffsetY()
+    }
+
+    fun setStatusGlanceOrientationProfiles(enabled: Boolean) {
+        settingsRepository.setStatusGlanceOrientationProfilesEnabled(enabled)
+        refreshStatusGlanceCameraPlacement()
+    }
+
+    fun setStatusGlanceHiddenInCurrentOrientation(hidden: Boolean) {
+        settingsRepository.setStatusGlanceHiddenInCurrentOrientation(hidden)
+        isStatusGlanceHiddenInCurrentOrientation.value = hidden
     }
 
     fun setStatusGlanceOffsetX(value: Float) {
@@ -6031,6 +6207,11 @@ class MainViewModel : ViewModel() {
      * @param enabled [Boolean] Target enabled.
      * @param context [Context] Target context.
      */
+    fun setHiddenDebuggingSupport(enabled: Boolean) {
+        isHiddenDebuggingSupport.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_HIDDEN_DEBUGGING_SUPPORT, enabled)
+    }
+
     fun setUseUsageAccess(
         enabled: Boolean,
         context: Context,
@@ -8778,11 +8959,12 @@ class MainViewModel : ViewModel() {
 
             // Filter out non-installed apps
             val pm = context.packageManager
+            val allowSystem = isEnableUnsupportedFeatures.value
             val installedApps =
                 importedApps.filter { app ->
                     try {
                         pm.getPackageInfo(app.packageName, 0)
-                        true
+                        allowSystem || !com.sameerasw.essentials.utils.AppUtil.hasSystemFlag(context, app.packageName)
                     } catch (e: Exception) {
                         false
                     }
@@ -9045,6 +9227,26 @@ class MainViewModel : ViewModel() {
             } catch (_: Throwable) {
             }
         }
+    }
+
+    fun setFaceUnlockBrightnessEnabled(enabled: Boolean) {
+        settingsRepository.setFaceUnlockBrightnessEnabled(enabled)
+        isFaceUnlockBrightnessEnabled.value = enabled
+    }
+
+    fun setFaceUnlockMaxBrightness(value: Int) {
+        settingsRepository.setFaceUnlockMaxBrightness(value)
+        faceUnlockMaxBrightness.intValue = value
+    }
+
+    fun setFaceUnlockTriggerUnlock(enabled: Boolean) {
+        settingsRepository.setFaceUnlockTriggerUnlockEnabled(enabled)
+        isFaceUnlockTriggerUnlock.value = enabled
+    }
+
+    fun setFaceUnlockLightTint(enabled: Boolean) {
+        settingsRepository.setFaceUnlockLightTintEnabled(enabled)
+        isFaceUnlockLightTint.value = enabled
     }
 
     /**

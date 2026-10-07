@@ -416,7 +416,7 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://github.com/thedjchi/Shizuku".toUri(),
+                                                "https://github.com/rushiranpise/Shizuku-Next".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)
@@ -728,7 +728,7 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://github.com/thedjchi/Shizuku".toUri(),
+                                                "https://github.com/rushiranpise/Shizuku-Next".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)

@@ -74,6 +74,8 @@ fun AppSelectionSheet(
     includeSelf: Boolean = false,
     context: Context = LocalContext.current,
     headerContent: (@Composable () -> Unit)? = null,
+    restrictSystemApps: Boolean = false,
+    showInvertSelection: Boolean = true,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val view = LocalView.current
@@ -82,6 +84,7 @@ fun AppSelectionSheet(
     var isLoadingApps by remember { mutableStateOf(true) }
     var showSystemApps by remember { mutableStateOf(false) }
     var initialEnabledPackageNames by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var restrictedPackages by remember { mutableStateOf<Set<String>>(emptySet()) }
     val scope = rememberCoroutineScope()
 
     // Load apps when sheet opens
@@ -103,7 +106,15 @@ fun AppSelectionSheet(
 
                 val merged = AppUtil.mergeWithSavedApps(allApps, selectionsToMerge)
 
+                val restricted =
+                    if (restrictSystemApps) {
+                        allApps.filter { AppUtil.hasSystemFlag(context, it.packageName) }.map { it.packageName }.toSet()
+                    } else {
+                        emptySet()
+                    }
+
                 withContext(Dispatchers.Main) {
+                    restrictedPackages = restricted
                     selectedApps = merged
                     initialEnabledPackageNames =
                         merged.filter { it.isEnabled }.map { it.packageName }.toSet()
@@ -129,7 +140,8 @@ fun AppSelectionSheet(
                 val isVisible =
                     !it.isSystemApp || showSystemApps || it.isEnabled // Always show if enabled, or if system toggle checks out
                 val isExcluded = excludePackages.contains(it.packageName)
-                matchesSearch && isVisible && !isExcluded
+                val isRestricted = it.packageName in restrictedPackages && !it.isEnabled
+                matchesSearch && isVisible && !isExcluded && !isRestricted
             }.sortedWith(
                 compareByDescending<NotificationApp> {
                     initialEnabledPackageNames.contains(
@@ -184,7 +196,7 @@ fun AppSelectionSheet(
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
                     )
-                    androidx.compose.material3.IconButton(
+                    if (showInvertSelection) androidx.compose.material3.IconButton(
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
                             val updatedList =
@@ -210,7 +222,7 @@ fun AppSelectionSheet(
                 }
             }
 
-            item(key = "system_toggle") {
+            if (!restrictSystemApps) item(key = "system_toggle") {
                 Row(
                     modifier =
                         Modifier
