@@ -796,7 +796,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="diy_start_time_label">Heure de début</string>
     <string name="diy_end_time_label">Heure de fin</string>
     <string name="diy_repeat_days_label">Répéter</string>
-    <string name="diy_state_charging">En charge</string>
+    <string name="diy_state_charging">Chargement</string>
     <string name="diy_state_screen_on">Écran allumé</string>
     <string name="diy_action_haptic">Vibreur</string>
     <string name="diy_action_notification">Afficher une notification</string>
@@ -1422,7 +1422,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
-    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_flex">Flexible</string>
     <string name="lock_screen_clock_growth">Growth</string>
     <string name="lock_screen_clock_handwritten">Handwritten</string>
     <string name="lock_screen_clock_inflate">Inflate</string>
@@ -1435,11 +1435,11 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
     <string name="lock_screen_clock_default">Default</string>
-    <string name="label_weight">Weight</string>
-    <string name="label_width">Largeur</string>
+    <string name="label_weight">Épaisseur</string>
+    <string name="label_width">Longueur </string>
     <string name="label_grade">Grade</string>
-    <string name="label_roundness">Roundness</string>
-    <string name="label_color_tone">Lightness</string>
+    <string name="label_roundness">Arrondissement </string>
+    <string name="label_color_tone">Luminance </string>
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
@@ -1638,7 +1638,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_action_tap_title">Appui</string>
     <string name="duo_action_swipe_down_title">Glissement vers le bas</string>
     <string name="duo_action_horizontal_slide_title">Glissement horizontal</string>
-    <string name="duo_hide_when_locked_title">Cacher quand verrouillé</string>
+    <string name="duo_hide_when_locked_title">Cacher lorsque l\'appareil est verrouillé</string>
     <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
     <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
     <string name="notification_lighting_sweep_select_shapes_title">Sélectionner les formes</string>
@@ -1653,4 +1653,12 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="perm_files_media_desc">Pour chercher et afficher les photos, vidéos, audios, et documents dans les résultats de Pixel Search, Essentials a besoin de cette permission pour accéder aux fichiers et médias.</string>
     <string name="perm_bubbles_title">Bulles flottantes</string>
     <string name="perm_overcast_weather_title">Accès à la météo via Overcast</string>
+    <string name="island_font_scale_title">Taille du texte</string>
+    <string name="duo_tap_for_brief_title">Appuyez pour un sommaire</string>
+    <string name="duo_battery_low_color_title">Batterie faible (&lt;20%)</string>
+    <string name="duo_battery_critical_color_title">Batterie très faible (&lt;10%)</string>
+    <string name="duo_battery_power_save_color_title">Économiseur d\'énergie</string>
+    <string name="feat_allow_overlays_in_settings_title">Autoriser les overlays dans les paramètres</string>
+    <string name="feat_allow_overlays_in_settings_desc">Permets aux applications d\'ajouter un/des overlays par dessus les paramètres système.</string>
+    <string name="app_icon_default">Par défaut</string>
 </resources>
