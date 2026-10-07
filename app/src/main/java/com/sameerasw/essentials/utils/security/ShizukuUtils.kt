@@ -27,6 +27,14 @@ object ShizukuUtils {
 
     fun isShizukuInstalled(context: Context): Boolean = shizukuPermissionInfo(context) != null
 
+    private const val PORTER_PACKAGE = "eu.darken.porter"
+    private const val PORTER_ACTION_START = "eu.darken.porter.START"
+    private const val PORTER_ACTION_STOP = "eu.darken.porter.STOP"
+    private const val PORTER_TOKEN_EXTRA = "auth"
+
+    fun isPorterInstalled(context: Context): Boolean =
+        runCatching { context.packageManager.getPackageInfo(PORTER_PACKAGE, 0) }.isSuccess
+
     fun getShizukuPackageName(context: Context): String =
         shizukuPermissionInfo(context)?.packageName ?: "moe.shizuku.privileged.api"
 
@@ -188,6 +196,11 @@ object ShizukuUtils {
         context: android.content.Context,
         start: Boolean,
     ) {
+        if (!isShizukuInstalled(context) && isPorterInstalled(context)) {
+            togglePorter(context, start)
+            return
+        }
+
         val shizukuPackage = getShizukuPackageName(context)
 
         if (isSheveryFork(context, shizukuPackage)) {
@@ -224,6 +237,31 @@ object ShizukuUtils {
             context.sendBroadcast(intent)
         } catch (e: Exception) {
             android.util.Log.e("ShizukuUtils", "Failed to ${if (start) "start" else "stop"} Shizuku", e)
+        }
+    }
+
+    private fun togglePorter(
+        context: Context,
+        start: Boolean,
+    ) {
+        val token =
+            com.sameerasw.essentials.data.repository
+                .SettingsRepository(context)
+                .getShizukuAuthToken()
+        if (token.isEmpty()) {
+            android.util.Log.w("ShizukuUtils", "Porter token is missing, cannot toggle Porter")
+            return
+        }
+        try {
+            val intent =
+                android.content.Intent(if (start) PORTER_ACTION_START else PORTER_ACTION_STOP).apply {
+                    `package` = PORTER_PACKAGE
+                    putExtra(PORTER_TOKEN_EXTRA, token)
+                    addFlags(android.content.Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                }
+            context.sendBroadcast(intent)
+        } catch (e: Exception) {
+            android.util.Log.e("ShizukuUtils", "Failed to ${if (start) "start" else "stop"} Porter", e)
         }
     }
 }

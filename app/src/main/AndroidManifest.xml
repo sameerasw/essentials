@@ -102,6 +102,7 @@
 
     <queries>
         <package android:name="com.sameerasw.overcast" />
+        <package android:name="eu.darken.porter" />
         <provider android:authorities="com.sameerasw.overcast.weather" />
     </queries>
 
