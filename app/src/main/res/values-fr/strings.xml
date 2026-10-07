@@ -1661,4 +1661,15 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="feat_allow_overlays_in_settings_title">Autoriser les overlays dans les paramètres</string>
     <string name="feat_allow_overlays_in_settings_desc">Permets aux applications d\'ajouter un/des overlays par dessus les paramètres système.</string>
     <string name="app_icon_default">Par défaut</string>
+    <string name="haptic_mode_stronger">Très fort</string>
+    <string name="conscious_gate_enable_title">Activer la barrière de conscience</string>
+    <string name="conscious_gate_select_apps_title">Sélectionnez les applications à accès restreint</string>
+    <string name="conscious_gate_select_apps_desc">Choisissez quels applications vont devoir afficher un écran d\'une barrière de conscience avant leurs ouvertures.</string>
+    <string name="conscious_gate_preview_button">Prévisualiser l\'écran de la barrière de conscience</string>
+    <string name="conscious_gate_delay_title">Délai de pause</string>
+    <string name="conscious_gate_feel_every_second_title">Sentir chaque seconde gaspillée</string>
+    <string name="conscious_gate_reappear_title">Réapparaît après l\'usage</string>
+    <string name="conscious_gate_reappear_desc">Remontre l\'écran de la barrière de conscience après une réutilisation.</string>
+    <string name="conscious_gate_delay_desc">Combien de temps le bouton \"Continuer\" doit être désactivé ?</string>
+    <string name="screen_locked_disable_notification_interactions_title">Désactiver les interactions avec les notifications</string>
 </resources>
