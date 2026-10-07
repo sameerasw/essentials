@@ -1641,4 +1641,5 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_hide_when_locked_title">Cacher quand verrouillé</string>
     <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
     <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Sélectionner les formes</string>
 </resources>
