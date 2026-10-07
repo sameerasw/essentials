@@ -46,6 +46,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.UpdateRepository
@@ -81,6 +82,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.weather.overcast.OvercastWeather
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.PrivilegedMode
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.SurfaceFlingerControl
@@ -498,6 +500,8 @@ class MainViewModel : ViewModel() {
     val isUpdateNotificationEnabled = mutableStateOf(true)
     val isPreReleaseCheckEnabled = mutableStateOf(false)
     val isRootEnabled = mutableStateOf(false)
+    val privilegedMode = mutableStateOf(PrivilegedMode.AUTO)
+    val usesAuthToken = mutableStateOf(true)
     val isRootAvailable = mutableStateOf(false)
     val isRootPermissionGranted = mutableStateOf(false)
     val hasPendingUpdates = mutableStateOf(false)
@@ -1058,9 +1062,7 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
-                    SettingsRepository.KEY_USE_ROOT ->
-                        isRootEnabled.value =
-                            settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_USE_ROOT, SettingsRepository.KEY_PRIVILEGED_MODE -> refreshPrivilegedMode()
 
                     SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED ->
                         isPreReleaseCheckEnabled.value =
@@ -2148,7 +2150,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
         isAodEnabled.value = settingsRepository.isAodEnabled()
 
-        isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
+        refreshPrivilegedMode()
 
         if (isRootEnabled.value) {
             isRootAvailable.value = RootUtils.isRootAvailable()
@@ -3127,13 +3129,21 @@ class MainViewModel : ViewModel() {
      * @param enabled [Boolean] Target enabled.
      * @param context [Context] Target context.
      */
-    fun setRootEnabled(
-        enabled: Boolean,
+    fun setPrivilegedMode(
+        mode: PrivilegedMode,
         context: Context,
     ) {
-        settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, enabled)
-        isRootEnabled.value = enabled
+        settingsRepository.putString(SettingsRepository.KEY_PRIVILEGED_MODE, mode.key)
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, mode == PrivilegedMode.ROOT)
+        refreshPrivilegedMode()
         check(context)
+    }
+
+    private fun refreshPrivilegedMode() {
+        val ctx = EssentialsApp.context
+        privilegedMode.value = ShellUtils.getSelectedMode(ctx)
+        isRootEnabled.value = ShellUtils.isRootEnabled(ctx)
+        usesAuthToken.value = ShellUtils.usesAuthToken(ctx)
     }
 
     /**

@@ -1783,6 +1783,12 @@
     <string name="setting_location_reached_full_screen_alarm_desc">Play alarm ringtone and show full-screen alert upon arrival</string>
     <string name="setting_use_root_title">Use Root</string>
     <string name="setting_use_root_desc">Instead of Shizuku</string>
+    <string name="setting_privileged_mode_title">Privileged access</string>
+    <string name="privileged_mode_auto">Auto</string>
+    <string name="privileged_mode_shizuku">Shizuku</string>
+    <string name="privileged_mode_dhizuku">Dhizuku</string>
+    <string name="privileged_mode_porter">Porter</string>
+    <string name="privileged_mode_root">Root</string>
     <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Keyboard</string>

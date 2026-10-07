@@ -27,10 +27,14 @@ object ShizukuUtils {
 
     fun isShizukuInstalled(context: Context): Boolean = shizukuPermissionInfo(context) != null
 
+    private const val DHIZUKU_PACKAGE = "com.rosan.dhizuku"
     private const val PORTER_PACKAGE = "eu.darken.porter"
     private const val PORTER_ACTION_START = "eu.darken.porter.START"
     private const val PORTER_ACTION_STOP = "eu.darken.porter.STOP"
     private const val PORTER_TOKEN_EXTRA = "auth"
+
+    fun isDhizukuInstalled(context: Context): Boolean =
+        runCatching { context.packageManager.getPackageInfo(DHIZUKU_PACKAGE, 0) }.isSuccess
 
     fun isPorterInstalled(context: Context): Boolean =
         runCatching { context.packageManager.getPackageInfo(PORTER_PACKAGE, 0) }.isSuccess
@@ -196,7 +200,7 @@ object ShizukuUtils {
         context: android.content.Context,
         start: Boolean,
     ) {
-        if (!isShizukuInstalled(context) && isPorterInstalled(context)) {
+        if (ShellUtils.resolveMode(context) == PrivilegedMode.PORTER) {
             togglePorter(context, start)
             return
         }

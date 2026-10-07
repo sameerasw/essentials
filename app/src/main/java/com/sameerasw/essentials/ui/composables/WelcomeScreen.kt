@@ -89,6 +89,7 @@ import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
 import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.core.pickers.LanguagePicker
@@ -1092,12 +1093,9 @@ fun PreferencesStepContent(
                     onCheckedChange = { viewModel.setBlurEnabled(it, context) },
                     enabled = !isBlurProblematic,
                 )
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_numbers_24,
-                    title = stringResource(R.string.setting_use_root_title),
-                    description = stringResource(R.string.setting_use_root_desc),
-                    isChecked = isRootEnabled,
-                    onCheckedChange = { viewModel.setRootEnabled(it, context) },
+                PrivilegedModePicker(
+                    selectedMode = viewModel.privilegedMode.value,
+                    onModeSelected = { viewModel.setPrivilegedMode(it, context) },
                 )
             }
 

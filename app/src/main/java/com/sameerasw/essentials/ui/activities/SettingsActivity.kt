@@ -104,6 +104,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
@@ -928,15 +929,12 @@ fun SettingsContent(
                 }
             }
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_numbers_24,
-                title = stringResource(R.string.setting_use_root_title),
-                description = stringResource(R.string.setting_use_root_desc),
-                isChecked = viewModel.isRootEnabled.value,
-                onCheckedChange = { viewModel.setRootEnabled(it, context) },
+            PrivilegedModePicker(
+                selectedMode = viewModel.privilegedMode.value,
+                onModeSelected = { viewModel.setPrivilegedMode(it, context) },
             )
 
-            Row(
+            if (viewModel.usesAuthToken.value) Row(
                 modifier =
                     Modifier
                         .fillMaxWidth()
