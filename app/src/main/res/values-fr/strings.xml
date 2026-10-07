@@ -601,7 +601,7 @@
     <string name="perm_write_settings_desc">Requise pour activer/désactiver la luminosité adaptative et d\'autres paramètres système</string>
     <string name="perm_overlay_title">Permission de superposition</string>
     <string name="perm_overlay_desc">Requise pour afficher la superposition de l\'illumination des notifications lumineuses sur l\'écran</string>
-    <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
+    <string name="perm_device_admin_title">Administrateur.rice de l\'appareil</string>
     <string name="perm_device_admin_desc">Requise pour faire un verrouillage forcé de l\'appareil (désactiver la biométrie) lors d\'accès non autorisés</string>
     <string name="perm_action_grant">Accorder la permission</string>
     <string name="perm_action_copy_adb">Copier la commande ADB</string>
@@ -1642,4 +1642,11 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
     <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
     <string name="notification_lighting_sweep_select_shapes_title">Sélectionner les formes</string>
+    <string name="feat_prefer_gpu_composing_title">Privilégier le GPU pour la composition d\'écran</string>
+    <string name="feat_prefer_gpu_composing_desc">Désactivez les superpositions matérielles pour forcer la composition d\'écran par le GPU. Réinitialisation au redémarrage de l\'appareil.</string>
+    <string name="perm_calendar_title">Calendrier</string>
+    <string name="perm_install_packages_title">Installation d\'applis inconnus</string>
+    <string name="perm_install_packages_desc">Requis pour installer les MàJ.</string>
+    <string name="perm_contacts_title">Contacts</string>
+    <string name="perm_contacts_desc">Pour montrer tes contacts dans les résultats de Pixel Search, Essentials a besoin de cette permission pour lire tes contacts.</string>
 </resources>
