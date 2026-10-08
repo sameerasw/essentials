@@ -396,7 +396,7 @@
     <string name="feat_maps_power_saving_title">Économie d\'énergie Maps</string>
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Notifications lumineuses</string>
-    <string name="feat_notification_lighting_desc">Illuminer l\'écran pour les notifications</string>
+    <string name="feat_notification_lighting_desc">Allumer la LED pour les nouvelles notifications</string>
     <string name="feat_flashlight_pulse_desc">Faire clignoter le flash à la réception de notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_call_vibrations_title">Vibrations pour les appels</string>
@@ -1693,4 +1693,11 @@ Note que en activant ça peut casser les widgets At a Glance du launcher (Comme 
     <string name="label_battery_section_specs">Spécifications</string>
     <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
     <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger</string>
+    <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application.</string>
+    <string name="hilight_only_screen_off_title">Activer seulement lorsque l\'écran est éteint.</string>
+    <string name="hilight_cooldown_title">Délai </string>
+    <string name="about_desc_hilight">Allume la LED HiLight à l\'arrière des Pixels 11 Pro (XL/Fold) quand une notification arrive, avec un effet différent pour chaque application que tu ajoutes.
+Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans les paramètres du remapage des boutons et des automatisations.
+À besoin de Shizuku, ou de permission root pour fonctionner.</string>
 </resources>
