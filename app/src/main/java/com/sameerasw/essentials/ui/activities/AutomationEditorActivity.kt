@@ -23,6 +23,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +42,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
@@ -81,6 +83,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.diy.Automation
@@ -144,7 +147,7 @@ class AutomationEditorActivity : ComponentActivity() {
             if (automationId != null) DIYRepository.getAutomation(automationId) else null
         val isEditMode = existingAutomation != null
 
-        val automationType =
+        val initialAutomationType =
             if (isEditMode) {
                 existingAutomation.type
             } else {
@@ -156,7 +159,7 @@ class AutomationEditorActivity : ComponentActivity() {
             }
 
         val titleRes =
-            when (automationType) {
+            when (initialAutomationType) {
                 Automation.Type.TRIGGER -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.ACTION_SHORTCUT -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.ACCESSIBILITY_SHORTCUT,
@@ -196,6 +199,9 @@ class AutomationEditorActivity : ComponentActivity() {
                         }
                 }
 
+                // The type can be changed on the first page; whatever was set up for the other types is kept until saving
+                var automationType by remember { mutableStateOf(initialAutomationType) }
+
                 // State for selections
                 // Initialize with existing data or defaults
                 var selectedTrigger by remember { mutableStateOf<Trigger?>(existingAutomation?.trigger) }
@@ -234,6 +240,24 @@ class AutomationEditorActivity : ComponentActivity() {
                         }
                     }.toSet()
                 }
+
+                val otherAutomations = remember { DIYRepository.automations.value.filter { it.id != existingAutomation?.id } }
+                val isPixelSearchbarEnabled = remember { SettingsRepository(context).getBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, false) }
+                val availableTypes =
+                    remember(usedAccessibilitySlots) {
+                        buildList {
+                            add(Automation.Type.TRIGGER)
+                            add(Automation.Type.STATE)
+                            add(Automation.Type.APP)
+                            if (otherAutomations.none { it.type == Automation.Type.ACTION_SHORTCUT }) add(Automation.Type.ACTION_SHORTCUT)
+                            if (usedAccessibilitySlots.size < 3) add(Automation.Type.ACCESSIBILITY_SHORTCUT_1)
+                            if ((isPixelSearchbarEnabled || initialAutomationType == Automation.Type.PIXEL_SEARCHBAR) &&
+                                otherAutomations.none { it.type == Automation.Type.PIXEL_SEARCHBAR }
+                            ) {
+                                add(Automation.Type.PIXEL_SEARCHBAR)
+                            }
+                        }
+                    }
 
                 var selectedAccessibilitySlot by remember {
                     val initialSlot = if (isEditMode) {
@@ -306,6 +330,21 @@ class AutomationEditorActivity : ComponentActivity() {
                 var selectedActions by remember { mutableStateOf(existingAutomation?.actionList.orEmpty()) }
                 var selectedInActions by remember { mutableStateOf(existingAutomation?.entryActionList.orEmpty()) }
                 var selectedOutActions by remember { mutableStateOf(existingAutomation?.exitActionList.orEmpty()) }
+
+                fun selectAutomationType(type: Automation.Type) {
+                    HapticUtil.performUIHaptic(view)
+                    if (type == Automation.Type.ACCESSIBILITY_SHORTCUT_1 && selectedAccessibilitySlot in usedAccessibilitySlots) {
+                        selectedAccessibilitySlot = (1..3).first { it !in usedAccessibilitySlots }
+                    }
+                    // Carry the actions across when moving between one sequence and separate in and out sequences
+                    val isInOut = { t: Automation.Type -> t == Automation.Type.STATE || t == Automation.Type.APP }
+                    if (isInOut(type) && !isInOut(automationType) && selectedInActions.isEmpty()) {
+                        selectedInActions = selectedActions
+                    } else if (!isInOut(type) && isInOut(automationType) && selectedActions.isEmpty()) {
+                        selectedActions = selectedInActions
+                    }
+                    automationType = type
+                }
 
                 // Tab for State Actions
                 var selectedActionTab by remember { mutableIntStateOf(0) } // 0: In, 1: Out
@@ -676,6 +715,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     modifier = Modifier.padding(horizontal = 12.dp),
                                                 )
 
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
+                                                )
+
                                                 // Search Bar
                                                 OutlinedTextField(
                                                     value = searchQuery,
@@ -797,6 +842,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     modifier = Modifier.padding(horizontal = 12.dp),
                                                 )
 
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
+                                                )
+
                                                 RoundedCardContainer(spacing = 2.dp) {
                                                     val slots = listOf(1, 2, 3)
                                                     slots.forEach { slot ->
@@ -870,6 +921,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     modifier = Modifier.padding(horizontal = 12.dp),
                                                 )
 
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
+                                                )
+
                                                 RoundedCardContainer(spacing = 2.dp) {
                                                     val editorTitle =
                                                         when (automationType) {
@@ -923,6 +980,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     fontWeight = FontWeight.Bold,
                                                     color = MaterialTheme.colorScheme.onSurface,
                                                     modifier = Modifier.padding(horizontal = 12.dp),
+                                                )
+
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
                                                 )
 
                                                 if (automationType == Automation.Type.TRIGGER) {
@@ -1351,6 +1414,58 @@ class AutomationEditorActivity : ComponentActivity() {
                                     .zIndex(1f),
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AutomationTypePicker(
+    selected: Automation.Type,
+    available: List<Automation.Type>,
+    onSelected: (Automation.Type) -> Unit,
+) {
+    val isAccessibility: (Automation.Type) -> Boolean = {
+        it == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+            it == Automation.Type.ACCESSIBILITY_SHORTCUT_1 ||
+            it == Automation.Type.ACCESSIBILITY_SHORTCUT_2 ||
+            it == Automation.Type.ACCESSIBILITY_SHORTCUT_3
+    }
+    val options =
+        listOf(
+            Automation.Type.TRIGGER to R.string.diy_type_trigger,
+            Automation.Type.STATE to R.string.diy_type_state,
+            Automation.Type.APP to R.string.diy_type_app,
+            Automation.Type.ACTION_SHORTCUT to R.string.diy_type_action_shortcut,
+            Automation.Type.ACCESSIBILITY_SHORTCUT_1 to R.string.diy_type_accessibility_shortcut,
+            Automation.Type.PIXEL_SEARCHBAR to R.string.diy_type_pixel_searchbar,
+        )
+    RoundedCardContainer {
+        FlowRow(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright)
+                    .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            options.forEach { (type, label) ->
+                val isSelected = type == selected || (isAccessibility(type) && isAccessibility(selected))
+                // Types already used by another automation stay visible but can't be picked, as in the new automation sheet
+                if (type in available || isSelected) {
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { if (!isSelected) onSelected(type) },
+                        label = { Text(stringResource(label)) },
+                    )
+                } else if (type != Automation.Type.PIXEL_SEARCHBAR) {
+                    FilterChip(
+                        selected = false,
+                        onClick = {},
+                        enabled = false,
+                        label = { Text(stringResource(label)) },
+                    )
                 }
             }
         }
