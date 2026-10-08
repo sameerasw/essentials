@@ -53,6 +53,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.model.HilightEffect
@@ -245,17 +246,23 @@ fun HilightStatus(modifier: Modifier = Modifier) {
     val isHilightDevice = remember { DeviceUtils.isHilightDevice() }
     var isArrayAvailable by remember { mutableStateOf<Boolean?>(null) }
     var hasShizukuAccess by remember { mutableStateOf(true) }
-    var shizukuBinderEvents by remember { mutableIntStateOf(0) }
+    var statusChecks by remember { mutableIntStateOf(0) }
 
     // Shizuku's binder can arrive after the screen opens, so check again once it does
     DisposableEffect(Unit) {
-        val listener = Shizuku.OnBinderReceivedListener { shizukuBinderEvents++ }
+        val listener = Shizuku.OnBinderReceivedListener { statusChecks++ }
         Shizuku.addBinderReceivedListenerSticky(listener)
         onDispose { Shizuku.removeBinderReceivedListener(listener) }
     }
 
+    // Access may have been granted in the Shizuku app while this screen was in the background
+    LifecycleResumeEffect(Unit) {
+        statusChecks++
+        onPauseOrDispose {}
+    }
+
     // Binder calls through Shizuku, so keep them off the main thread
-    LaunchedEffect(shizukuBinderEvents) {
+    LaunchedEffect(statusChecks) {
         if (!isHilightDevice) return@LaunchedEffect
         hasShizukuAccess = HilightLights.isAccessGranted()
         isArrayAvailable = withContext(Dispatchers.IO) { HilightController.isAvailable() }
