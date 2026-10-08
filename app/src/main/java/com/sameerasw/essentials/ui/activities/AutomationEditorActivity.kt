@@ -23,6 +23,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +42,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
@@ -81,6 +83,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.diy.Automation
@@ -93,21 +96,9 @@ import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.core.cards.AppToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
-import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.BluetoothDeviceSelectionSheet
-import com.sameerasw.essentials.ui.core.sheets.CustomSettingsSheet
-import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
-import com.sameerasw.essentials.ui.core.sheets.HilightEffectSettingsSheet
-import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
-import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
-import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
-import com.sameerasw.essentials.ui.core.sheets.ChargingModeSettingsSheet
-import com.sameerasw.essentials.ui.core.sheets.NotificationLightingActionSheet
-import com.sameerasw.essentials.ui.core.sheets.OverlayControlSettingsSheet
-import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
-import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
-import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
+import com.sameerasw.essentials.ui.features.system.ActionSequenceEditor
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
@@ -156,7 +147,7 @@ class AutomationEditorActivity : ComponentActivity() {
             if (automationId != null) DIYRepository.getAutomation(automationId) else null
         val isEditMode = existingAutomation != null
 
-        val automationType =
+        val initialAutomationType =
             if (isEditMode) {
                 existingAutomation.type
             } else {
@@ -168,7 +159,7 @@ class AutomationEditorActivity : ComponentActivity() {
             }
 
         val titleRes =
-            when (automationType) {
+            when (initialAutomationType) {
                 Automation.Type.TRIGGER -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.ACTION_SHORTCUT -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
                 Automation.Type.ACCESSIBILITY_SHORTCUT,
@@ -208,6 +199,9 @@ class AutomationEditorActivity : ComponentActivity() {
                         }
                 }
 
+                // The type can be changed on the first page; whatever was set up for the other types is kept until saving
+                var automationType by remember { mutableStateOf(initialAutomationType) }
+
                 // State for selections
                 // Initialize with existing data or defaults
                 var selectedTrigger by remember { mutableStateOf<Trigger?>(existingAutomation?.trigger) }
@@ -246,6 +240,24 @@ class AutomationEditorActivity : ComponentActivity() {
                         }
                     }.toSet()
                 }
+
+                val otherAutomations = remember { DIYRepository.automations.value.filter { it.id != existingAutomation?.id } }
+                val isPixelSearchbarEnabled = remember { SettingsRepository(context).getBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, false) }
+                val availableTypes =
+                    remember(usedAccessibilitySlots) {
+                        buildList {
+                            add(Automation.Type.TRIGGER)
+                            add(Automation.Type.STATE)
+                            add(Automation.Type.APP)
+                            if (otherAutomations.none { it.type == Automation.Type.ACTION_SHORTCUT }) add(Automation.Type.ACTION_SHORTCUT)
+                            if (usedAccessibilitySlots.size < 3) add(Automation.Type.ACCESSIBILITY_SHORTCUT_1)
+                            if ((isPixelSearchbarEnabled || initialAutomationType == Automation.Type.PIXEL_SEARCHBAR) &&
+                                otherAutomations.none { it.type == Automation.Type.PIXEL_SEARCHBAR }
+                            ) {
+                                add(Automation.Type.PIXEL_SEARCHBAR)
+                            }
+                        }
+                    }
 
                 var selectedAccessibilitySlot by remember {
                     val initialSlot = if (isEditMode) {
@@ -314,13 +326,25 @@ class AutomationEditorActivity : ComponentActivity() {
                             )
                     }
 
-                // Actions
-                // For Trigger type
-                var selectedAction by remember { mutableStateOf<Action?>(existingAutomation?.actions?.firstOrNull()) }
+                // Actions run in order: one list for triggers and shortcuts, in and out lists for states and apps
+                var selectedActions by remember { mutableStateOf(existingAutomation?.actionList.orEmpty()) }
+                var selectedInActions by remember { mutableStateOf(existingAutomation?.entryActionList.orEmpty()) }
+                var selectedOutActions by remember { mutableStateOf(existingAutomation?.exitActionList.orEmpty()) }
 
-                // For State type
-                var selectedInAction by remember { mutableStateOf<Action?>(existingAutomation?.entryAction) }
-                var selectedOutAction by remember { mutableStateOf<Action?>(existingAutomation?.exitAction) }
+                fun selectAutomationType(type: Automation.Type) {
+                    HapticUtil.performUIHaptic(view)
+                    if (type == Automation.Type.ACCESSIBILITY_SHORTCUT_1 && selectedAccessibilitySlot in usedAccessibilitySlots) {
+                        selectedAccessibilitySlot = (1..3).first { it !in usedAccessibilitySlots }
+                    }
+                    // Carry the actions across when moving between one sequence and separate in and out sequences
+                    val isInOut = { t: Automation.Type -> t == Automation.Type.STATE || t == Automation.Type.APP }
+                    if (isInOut(type) && !isInOut(automationType) && selectedInActions.isEmpty()) {
+                        selectedInActions = selectedActions
+                    } else if (!isInOut(type) && isInOut(automationType) && selectedActions.isEmpty()) {
+                        selectedActions = selectedInActions
+                    }
+                    automationType = type
+                }
 
                 // Tab for State Actions
                 var selectedActionTab by remember { mutableIntStateOf(0) } // 0: In, 1: Out
@@ -329,29 +353,11 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showMenu by remember { mutableStateOf(false) }
 
                 // Config Sheets
-                var showDimSettings by remember { mutableStateOf(false) }
-                var showScreenOffSettings by remember { mutableStateOf(false) }
-                var showDeviceEffectsSettings by remember { mutableStateOf(false) }
-                var showSoundModeSettings by remember { mutableStateOf(false) }
-                var showChargingModeSettings by remember { mutableStateOf(false) }
-                var showNotificationLightingSettings by remember { mutableStateOf(false) }
-                var showOverlayControlSettings by remember { mutableStateOf(false) }
-                var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
-                var showFreezeTagSettings by remember { mutableStateOf(false) }
-                var showOpenAppSettings by remember { mutableStateOf(false) }
-                var showOpenActivitySettings by remember { mutableStateOf(false) }
-                var showFreezeAppsSettings by remember { mutableStateOf(false) }
-                var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var showCalendarStateSettings by remember { mutableStateOf(false) }
                 var showBatteryLevelSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
-                var showSetKeyboardSheet by remember { mutableStateOf(false) }
-                var showCustomSettingsSettings by remember { mutableStateOf(false) }
-                var showSetVolumeSettings by remember { mutableStateOf(false) }
-                var showHilightSettings by remember { mutableStateOf(false) }
-                var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
                 val isTriggerConfigured =
                     when (val trigger = selectedTrigger) {
@@ -381,7 +387,7 @@ class AutomationEditorActivity : ComponentActivity() {
                     }
                 }
 
-                fun isActionConfigured(action: Action?): Boolean =
+                fun isActionConfigured(action: Action): Boolean =
                     when (action) {
                         is Action.OpenApp -> action.packageName.isNotBlank()
                         is Action.OpenActivity -> action.className.isNotBlank()
@@ -395,11 +401,9 @@ class AutomationEditorActivity : ComponentActivity() {
                     when (automationType) {
                         Automation.Type.TRIGGER ->
                             selectedTrigger != null &&
-                                selectedAction != null &&
+                                selectedActions.isNotEmpty() &&
                                 isTriggerConfigured &&
-                                isActionConfigured(
-                                    selectedAction,
-                                )
+                                selectedActions.all(::isActionConfigured)
 
                         Automation.Type.ACTION_SHORTCUT,
                         Automation.Type.ACCESSIBILITY_SHORTCUT,
@@ -407,26 +411,15 @@ class AutomationEditorActivity : ComponentActivity() {
                         Automation.Type.ACCESSIBILITY_SHORTCUT_2,
                         Automation.Type.ACCESSIBILITY_SHORTCUT_3,
                         Automation.Type.PIXEL_SEARCHBAR ->
-                            selectedAction != null &&
-                                isActionConfigured(
-                                    selectedAction,
-                                )
+                            selectedActions.isNotEmpty() && selectedActions.all(::isActionConfigured)
 
                         Automation.Type.STATE ->
                             selectedState != null &&
-                                (selectedInAction != null || selectedOutAction != null) &&
-                                isActionConfigured(
-                                    selectedInAction,
-                                ) &&
-                                isActionConfigured(selectedOutAction)
+                                (selectedInActions + selectedOutActions).let { it.isNotEmpty() && it.all(::isActionConfigured) }
 
                         Automation.Type.APP ->
                             selectedApps.isNotEmpty() &&
-                                (selectedInAction != null || selectedOutAction != null) &&
-                                isActionConfigured(
-                                    selectedInAction,
-                                ) &&
-                                isActionConfigured(selectedOutAction)
+                                (selectedInActions + selectedOutActions).let { it.isNotEmpty() && it.all(::isActionConfigured) }
                     }
 
                 var showDiscardDialog by remember { mutableStateOf(false) }
@@ -513,11 +506,8 @@ class AutomationEditorActivity : ComponentActivity() {
                             Automation.Type.ACCESSIBILITY_SHORTCUT_1,
                             Automation.Type.ACCESSIBILITY_SHORTCUT_2,
                             Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                            Automation.Type.PIXEL_SEARCHBAR ->
-                                listOfNotNull(
-                                    selectedAction,
-                                )
-                            else -> listOfNotNull(selectedInAction, selectedOutAction)
+                            Automation.Type.PIXEL_SEARCHBAR -> selectedActions
+                            else -> selectedInActions + selectedOutActions
                         }
                     val allMissingPermissions = actionsToCheck.flatMap { getMissingPermissionsHelper(it) }.distinct()
                     if (allMissingPermissions.isNotEmpty()) {
@@ -536,9 +526,10 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 .randomUUID()
                                                 .toString()
                                         },
+                                    isEnabled = existingAutomation?.isEnabled ?: true,
                                     type = Automation.Type.TRIGGER,
                                     trigger = selectedTrigger,
-                                    actions = listOfNotNull(selectedAction),
+                                    actions = selectedActions,
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
                         } else if (isAccessibilityShortcutType) {
@@ -558,8 +549,9 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 .randomUUID()
                                                 .toString()
                                         },
+                                    isEnabled = existingAutomation?.isEnabled ?: true,
                                     type = savedType,
-                                    actions = listOfNotNull(selectedAction),
+                                    actions = selectedActions,
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
                         } else if (
@@ -576,8 +568,9 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 .randomUUID()
                                                 .toString()
                                         },
+                                    isEnabled = existingAutomation?.isEnabled ?: true,
                                     type = automationType,
-                                    actions = listOfNotNull(selectedAction),
+                                    actions = selectedActions,
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
                         } else if (automationType == Automation.Type.STATE) {
@@ -591,10 +584,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 .randomUUID()
                                                 .toString()
                                         },
+                                    isEnabled = existingAutomation?.isEnabled ?: true,
                                     type = Automation.Type.STATE,
                                     state = selectedState,
-                                    entryAction = selectedInAction,
-                                    exitAction = selectedOutAction,
+                                    entryActions = selectedInActions,
+                                    exitActions = selectedOutActions,
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
                         } else if (automationType == Automation.Type.APP) {
@@ -608,10 +602,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 .randomUUID()
                                                 .toString()
                                         },
+                                    isEnabled = existingAutomation?.isEnabled ?: true,
                                     type = Automation.Type.APP,
                                     selectedApps = selectedApps,
-                                    entryAction = selectedInAction,
-                                    exitAction = selectedOutAction,
+                                    entryActions = selectedInActions,
+                                    exitActions = selectedOutActions,
                                 )
                             if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
                         }
@@ -718,6 +713,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     fontWeight = FontWeight.Bold,
                                                     color = MaterialTheme.colorScheme.onSurface,
                                                     modifier = Modifier.padding(horizontal = 12.dp),
+                                                )
+
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
                                                 )
 
                                                 // Search Bar
@@ -841,6 +842,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     modifier = Modifier.padding(horizontal = 12.dp),
                                                 )
 
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
+                                                )
+
                                                 RoundedCardContainer(spacing = 2.dp) {
                                                     val slots = listOf(1, 2, 3)
                                                     slots.forEach { slot ->
@@ -914,6 +921,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     modifier = Modifier.padding(horizontal = 12.dp),
                                                 )
 
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
+                                                )
+
                                                 RoundedCardContainer(spacing = 2.dp) {
                                                     val editorTitle =
                                                         when (automationType) {
@@ -967,6 +980,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     fontWeight = FontWeight.Bold,
                                                     color = MaterialTheme.colorScheme.onSurface,
                                                     modifier = Modifier.padding(horizontal = 12.dp),
+                                                )
+
+                                                AutomationTypePicker(
+                                                    selected = automationType,
+                                                    available = availableTypes,
+                                                    onSelected = ::selectAutomationType,
                                                 )
 
                                                 if (automationType == Automation.Type.TRIGGER) {
@@ -1215,170 +1234,27 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 )
                                             }
 
-                                            val currentSelection =
-                                                when (automationType) {
-                                                    Automation.Type.TRIGGER -> selectedAction
-                                                    Automation.Type.ACTION_SHORTCUT,
-                                                    Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                                    Automation.Type.PIXEL_SEARCHBAR -> selectedAction
-                                                    Automation.Type.STATE ->
-                                                        if (selectedActionTab ==
-                                                            0
-                                                        ) {
-                                                            selectedInAction
-                                                        } else {
-                                                            selectedOutAction
-                                                        }
-                                                    Automation.Type.APP ->
-                                                        if (selectedActionTab ==
-                                                            0
-                                                        ) {
-                                                            selectedInAction
-                                                        } else {
-                                                            selectedOutAction
-                                                        }
-                                                }
-
-                                            // None option
-                                            RoundedCardContainer(spacing = 2.dp) {
-                                                EditorActionItem(
-                                                    title = stringResource(R.string.haptic_none),
-                                                    iconRes = R.drawable.rounded_do_not_disturb_on_24,
-                                                    isSelected = currentSelection == null,
-                                                    onClick = {
-                                                        when (automationType) {
-                                                            Automation.Type.TRIGGER -> selectedAction = null
-                                                            Automation.Type.ACTION_SHORTCUT,
-                                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                                selectedAction =
-                                                                    null
-                                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                                if (selectedActionTab == 0) {
-                                                                    selectedInAction = null
-                                                                } else {
-                                                                    selectedOutAction = null
-                                                                }
-                                                            }
-                                                        }
+                                            val isInOut = automationType == Automation.Type.STATE || automationType == Automation.Type.APP
+                                            ActionSequenceEditor(
+                                                viewModel = viewModel,
+                                                actions =
+                                                    when {
+                                                        !isInOut -> selectedActions
+                                                        selectedActionTab == 0 -> selectedInActions
+                                                        else -> selectedOutActions
                                                     },
-                                                )
-                                            }
-
-                                            val actionCategories =
-                                                remember(currentSelection) {
-                                                    ActionRegistry.getCategories().map { it.titleRes to it.actions }
-                                                }
-
-                                            var expandedActionCategory by remember {
-                                                mutableStateOf<Int?>(
-                                                    actionCategories
-                                                        .firstOrNull { (_, list) ->
-                                                            list.any { currentSelection != null && it::class == currentSelection::class }
-                                                        }?.first ?: actionCategories.firstOrNull()?.first,
-                                                )
-                                            }
-
-                                            actionCategories.forEach { (categoryTitleRes, actions) ->
-                                                CategoryExpandableSection(
-                                                    title = stringResource(categoryTitleRes),
-                                                    itemCount = actions.size,
-                                                    isExpanded = expandedActionCategory == categoryTitleRes,
-                                                    onToggleExpand = {
-                                                        expandedActionCategory =
-                                                            if (expandedActionCategory == categoryTitleRes) null else categoryTitleRes
-                                                    },
-                                                ) {
-                                                    actions.forEach { action ->
-                                                        val resolvedAction =
-                                                            if (currentSelection != null &&
-                                                                currentSelection::class == action::class
-                                                            ) {
-                                                                currentSelection
-                                                            } else {
-                                                                action
-                                                            }
-                                                        val missing = getMissingPermissionsHelper(resolvedAction)
-
-                                                        fun showPermissionSheet() {
-                                                            permissionKeysToShow = missing
-                                                            permissionFeatureTitle = resolvedAction.title
-                                                            showPermissionSheet = true
-                                                        }
-
-                                                        EditorActionItem(
-                                                            title = stringResource(resolvedAction.title),
-                                                            iconRes = resolvedAction.icon,
-                                                            isSelected =
-                                                                currentSelection != null && currentSelection::class == resolvedAction::class,
-                                                            isConfigurable = resolvedAction.isConfigurable,
-                                                            onClick = {
-                                                                when (automationType) {
-                                                                    Automation.Type.TRIGGER -> selectedAction = resolvedAction
-                                                                    Automation.Type.ACTION_SHORTCUT,
-                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                                                    Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                                                    Automation.Type.PIXEL_SEARCHBAR ->
-                                                                        selectedAction =
-                                                                            resolvedAction
-                                                                    Automation.Type.STATE, Automation.Type.APP -> {
-                                                                        if (selectedActionTab == 0) {
-                                                                            selectedInAction = resolvedAction
-                                                                        } else {
-                                                                            selectedOutAction = resolvedAction
-                                                                        }
-                                                                    }
-                                                                }
-                                                                if (missing.isNotEmpty()) showPermissionSheet()
-                                                            },
-                                                            onSettingsClick = {
-                                                                if (missing.isNotEmpty()) {
-                                                                    showPermissionSheet()
-                                                                    return@EditorActionItem
-                                                                }
-
-                                                                configAction = resolvedAction
-                                                                when (resolvedAction) {
-                                                                    is Action.DimWallpaper -> showDimSettings = true
-                                                                    is Action.ScreenOff -> showScreenOffSettings = true
-                                                                    is Action.DeviceEffects -> showDeviceEffectsSettings = true
-                                                                    is Action.SoundMode -> showSoundModeSettings = true
-                                                                    is Action.SetChargingMode -> showChargingModeSettings = true
-                                                                    is Action.TriggerNotificationLighting -> showNotificationLightingSettings = true
-                                                                    is Action.OverlayControl -> showOverlayControlSettings = true
-                                                                    is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
-                                                                    is Action.FreezeTag -> showFreezeTagSettings = true
-                                                                    is Action.OpenApp -> showOpenAppSettings = true
-                                                                    is Action.OpenActivity -> showOpenActivitySettings = true
-                                                                    is Action.FreezeApps -> {
-                                                                        temporarySelectedAppsForAction = resolvedAction.packageNames
-                                                                        showFreezeAppsSettings = true
-                                                                    }
-                                                                    is Action.UnfreezeApps -> {
-                                                                        temporarySelectedAppsForAction = resolvedAction.packageNames
-                                                                        showFreezeAppsSettings = true
-                                                                    }
-                                                                    is Action.Keyboard -> {
-                                                                        showSetKeyboardSheet = true
-                                                                    }
-                                                                    is Action.SetVolume -> showSetVolumeSettings = true
-                                                                    is Action.Hilight -> showHilightSettings = true
-                                                                    is Action.CustomSettings -> showCustomSettingsSettings = true
-                                                                    else -> {}
-                                                                }
-                                                            },
-                                                        )
+                                                onActionsChange = {
+                                                    when {
+                                                        !isInOut -> selectedActions = it
+                                                        selectedActionTab == 0 -> selectedInActions = it
+                                                        else -> selectedOutActions = it
                                                     }
-                                                }
-                                            }
+                                                },
+                                                screenOnOnly = false,
+                                                listKey = if (isInOut) selectedActionTab else automationType,
+                                                emptyText = stringResource(R.string.diy_no_actions),
+                                                categories = remember { ActionRegistry.getCategories() },
+                                            )
                                             Spacer(
                                                 modifier =
                                                     Modifier.height(
@@ -1498,501 +1374,6 @@ class AutomationEditorActivity : ComponentActivity() {
                                     },
                                 )
                             }
-
-                            if (showDimSettings && configAction is Action.DimWallpaper) {
-                                DimWallpaperSettingsSheet(
-                                    initialAction = configAction as Action.DimWallpaper,
-                                    onDismiss = { showDimSettings = false },
-                                    onSave = { newAction ->
-                                        showDimSettings = false
-                                        // Update the selection with configured action
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showScreenOffSettings && configAction is Action.ScreenOff) {
-                                ScreenOffSettingsSheet(
-                                    initialAction = configAction as Action.ScreenOff,
-                                    onDismiss = { showScreenOffSettings = false },
-                                    onSave = { newAction ->
-                                        showScreenOffSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showDeviceEffectsSettings && configAction is Action.DeviceEffects) {
-                                com.sameerasw.essentials.ui.core.sheets.DeviceEffectsSettingsSheet(
-                                    initialAction = configAction as Action.DeviceEffects,
-                                    onDismiss = { showDeviceEffectsSettings = false },
-                                    onSave = { newAction ->
-                                        showDeviceEffectsSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showSoundModeSettings && configAction is Action.SoundMode) {
-                                SoundModeSettingsSheet(
-                                    initialAction = configAction as Action.SoundMode,
-                                    onDismiss = { showSoundModeSettings = false },
-                                    onSave = { newAction ->
-                                        showSoundModeSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-                            if (showChargingModeSettings && configAction is Action.SetChargingMode) {
-                                ChargingModeSettingsSheet(
-                                    initialAction = configAction as Action.SetChargingMode,
-                                    onDismiss = { showChargingModeSettings = false },
-                                    onSave = { newAction ->
-                                        showChargingModeSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-                            if (showNotificationLightingSettings && configAction is Action.TriggerNotificationLighting) {
-                                NotificationLightingActionSheet(
-                                    initialAction = configAction as Action.TriggerNotificationLighting,
-                                    onDismiss = { showNotificationLightingSettings = false },
-                                    onSave = { newAction ->
-                                        showNotificationLightingSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-                            if (showOverlayControlSettings && configAction is Action.OverlayControl) {
-                                OverlayControlSettingsSheet(
-                                    initialAction = configAction as Action.OverlayControl,
-                                    onDismiss = { showOverlayControlSettings = false },
-                                    onSave = { newAction ->
-                                        showOverlayControlSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-                            if (showSetVolumeSettings && configAction is Action.SetVolume) {
-                                SetVolumeSettingsSheet(
-                                    initialAction = configAction as Action.SetVolume,
-                                    onDismiss = { showSetVolumeSettings = false },
-                                    onSave = { newAction ->
-                                        showSetVolumeSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showHilightSettings && configAction is Action.Hilight) {
-                                HilightEffectSettingsSheet(
-                                    initialAction = configAction as Action.Hilight,
-                                    onDismiss = { showHilightSettings = false },
-                                    onSave = { newAction ->
-                                        showHilightSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showSometimesEssentialsSettings && configAction is Action.SometimesEssentials) {
-                                com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet(
-                                    initialAction = configAction as Action.SometimesEssentials,
-                                    onDismiss = { showSometimesEssentialsSettings = false },
-                                    onSave = { newAction ->
-                                        showSometimesEssentialsSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showFreezeTagSettings && configAction is Action.FreezeTag) {
-                                val availableTags =
-                                    remember {
-                                        com.sameerasw.essentials.data.repository
-                                            .SettingsRepository(context)
-                                            .getFreezeTags()
-                                    }
-                                com.sameerasw.essentials.ui.core.sheets.FreezeTagSettingsSheet(
-                                    initialAction = configAction as Action.FreezeTag,
-                                    availableTags = availableTags,
-                                    onDismiss = { showFreezeTagSettings = false },
-                                    onSave = { newAction ->
-                                        showFreezeTagSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showOpenAppSettings) {
-                                SingleAppSelectionSheet(
-                                    includeSelf = true,
-                                    onDismissRequest = { showOpenAppSettings = false },
-                                    onAppSelected = { app ->
-                                        val newAction = Action.OpenApp(packageName = app.packageName)
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showOpenActivitySettings) {
-                                OpenActivityPicker(
-                                    onDismiss = { showOpenActivitySettings = false },
-                                    onActivitySelected = { newAction ->
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
-
-                            if (showFreezeAppsSettings && (configAction is Action.FreezeApps || configAction is Action.UnfreezeApps)) {
-                                AppSelectionSheet(
-                                    restrictSystemApps = !viewModel.isEnableUnsupportedFeatures.value,
-                                    showInvertSelection = false,
-                                    onDismissRequest = {
-                                        val finalAction =
-                                            when (val action = configAction) {
-                                                is Action.FreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)
-                                                is Action.UnfreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)
-                                                else -> configAction
-                                            }
-                                        if (finalAction != null) {
-                                            when (automationType) {
-                                                Automation.Type.TRIGGER -> selectedAction = finalAction
-                                                Automation.Type.ACTION_SHORTCUT,
-                                                Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                                Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                                Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                                Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                                Automation.Type.PIXEL_SEARCHBAR ->
-                                                    selectedAction =
-                                                        finalAction
-                                                Automation.Type.STATE, Automation.Type.APP -> {
-                                                    if (selectedActionTab == 0) {
-                                                        selectedInAction = finalAction
-                                                    } else {
-                                                        selectedOutAction = finalAction
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        showFreezeAppsSettings = false
-                                        configAction = null
-                                    },
-                                    onLoadApps = {
-                                        temporarySelectedAppsForAction.map { AppSelection(it, true) }
-                                    },
-                                    onSaveApps = { _, selections ->
-                                        temporarySelectedAppsForAction = selections.filter { it.isEnabled }.map { it.packageName }
-                                    },
-                                    excludePackages = if (automationType == Automation.Type.APP) selectedApps else emptyList(),
-                                )
-                            }
-
-                            if (showSetKeyboardSheet && configAction is Action.Keyboard) {
-                                KeyboardSelectionSheet(
-                                    onDismissRequest = { newIme ->
-                                        showSetKeyboardSheet = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = Action.Keyboard(newIme)
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    Action.Keyboard(newIme)
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = Action.Keyboard(newIme)
-                                                } else {
-                                                    selectedOutAction = Action.Keyboard(newIme)
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                    selectedIme = (configAction as? Action.Keyboard)?.inputMethodId,
-                                )
-                            }
-
-                            if (showCustomSettingsSettings && configAction is Action.CustomSettings) {
-                                CustomSettingsSheet(
-                                    initialAction = configAction as Action.CustomSettings,
-                                    onDismiss = { showCustomSettingsSettings = false },
-                                    onSave = { newAction ->
-                                        showCustomSettingsSettings = false
-                                        when (automationType) {
-                                            Automation.Type.TRIGGER -> selectedAction = newAction
-                                            Automation.Type.ACTION_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
-                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
-                                            Automation.Type.PIXEL_SEARCHBAR ->
-                                                selectedAction =
-                                                    newAction
-
-                                            Automation.Type.STATE, Automation.Type.APP -> {
-                                                if (selectedActionTab == 0) {
-                                                    selectedInAction = newAction
-                                                } else {
-                                                    selectedOutAction = newAction
-                                                }
-                                            }
-                                        }
-                                        configAction = null
-                                    },
-                                )
-                            }
                         }
 
                         if (showPermissionSheet) {
@@ -2033,6 +1414,58 @@ class AutomationEditorActivity : ComponentActivity() {
                                     .zIndex(1f),
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AutomationTypePicker(
+    selected: Automation.Type,
+    available: List<Automation.Type>,
+    onSelected: (Automation.Type) -> Unit,
+) {
+    val isAccessibility: (Automation.Type) -> Boolean = {
+        it == Automation.Type.ACCESSIBILITY_SHORTCUT ||
+            it == Automation.Type.ACCESSIBILITY_SHORTCUT_1 ||
+            it == Automation.Type.ACCESSIBILITY_SHORTCUT_2 ||
+            it == Automation.Type.ACCESSIBILITY_SHORTCUT_3
+    }
+    val options =
+        listOf(
+            Automation.Type.TRIGGER to R.string.diy_type_trigger,
+            Automation.Type.STATE to R.string.diy_type_state,
+            Automation.Type.APP to R.string.diy_type_app,
+            Automation.Type.ACTION_SHORTCUT to R.string.diy_type_action_shortcut,
+            Automation.Type.ACCESSIBILITY_SHORTCUT_1 to R.string.diy_type_accessibility_shortcut,
+            Automation.Type.PIXEL_SEARCHBAR to R.string.diy_type_pixel_searchbar,
+        )
+    RoundedCardContainer {
+        FlowRow(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright)
+                    .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            options.forEach { (type, label) ->
+                val isSelected = type == selected || (isAccessibility(type) && isAccessibility(selected))
+                // Types already used by another automation stay visible but can't be picked, as in the new automation sheet
+                if (type in available || isSelected) {
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { if (!isSelected) onSelected(type) },
+                        label = { Text(stringResource(label)) },
+                    )
+                } else if (type != Automation.Type.PIXEL_SEARCHBAR) {
+                    FilterChip(
+                        selected = false,
+                        onClick = {},
+                        enabled = false,
+                        label = { Text(stringResource(label)) },
+                    )
                 }
             }
         }

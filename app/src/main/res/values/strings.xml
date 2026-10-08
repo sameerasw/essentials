@@ -1407,6 +1407,14 @@
     <string name="diy_select_action">Select Action</string>
     <string name="diy_in_action_label">In Action</string>
     <string name="diy_out_action_label">Out Action</string>
+    <string name="diy_more_actions">+%1$d</string>
+    <string name="diy_type_trigger">Trigger</string>
+    <string name="diy_type_state">State</string>
+    <string name="diy_type_app">App</string>
+    <string name="diy_type_action_shortcut">Action shortcut</string>
+    <string name="diy_type_accessibility_shortcut">Accessibility shortcut</string>
+    <string name="diy_type_pixel_searchbar">Search bar</string>
+    <string name="diy_no_actions">No actions yet. Add one or more actions; they run in order.</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>

@@ -84,9 +84,7 @@ class DisplayModule : AutomationModule {
             automations
                 .filter { it.type == Automation.Type.TRIGGER && it.trigger == trigger }
                 .forEach { automation ->
-                    automation.actions.forEach { action ->
-                        CombinedActionExecutor.execute(context, action)
-                    }
+                    CombinedActionExecutor.executeAll(context, automation.actionList)
                 }
         }
     }
@@ -102,20 +100,10 @@ class DisplayModule : AutomationModule {
                     if (automation.state is DIYState.ScreenOn) {
                         if (isActive) {
                             // Entry
-                            automation.entryAction?.let {
-                                CombinedActionExecutor.execute(
-                                    context,
-                                    it,
-                                )
-                            }
+                            CombinedActionExecutor.executeAll(context, automation.entryActionList)
                         } else {
                             // Exit
-                            automation.exitAction?.let {
-                                CombinedActionExecutor.execute(
-                                    context,
-                                    it,
-                                )
-                            }
+                            CombinedActionExecutor.executeAll(context, automation.exitActionList)
                         }
                     }
                 }

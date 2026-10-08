@@ -102,11 +102,11 @@ class CalendarModule : AutomationModule {
                     if (isActive && !wasActive) {
                         Log.d(ID, "State ${automation.id} became active")
                         activeStateAutomations.add(automation.id)
-                        automation.entryAction?.let { CombinedActionExecutor.execute(context, it) }
+                        CombinedActionExecutor.executeAll(context, automation.entryActionList)
                     } else if (!isActive && wasActive) {
                         Log.d(ID, "State ${automation.id} became inactive")
                         activeStateAutomations.remove(automation.id)
-                        automation.exitAction?.let { CombinedActionExecutor.execute(context, it) }
+                        CombinedActionExecutor.executeAll(context, automation.exitActionList)
                     }
                 }
 

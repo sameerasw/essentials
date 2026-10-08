@@ -545,9 +545,7 @@ class AppFlowHandler(
 
             exiting.forEach { automation ->
                 activeAppAutomationIds.remove(automation.id)
-                automation.exitAction?.let { action ->
-                    CombinedActionExecutor.execute(context, action)
-                }
+                CombinedActionExecutor.executeAll(context, automation.exitActionList)
             }
 
             // Entering Automations
@@ -559,9 +557,7 @@ class AppFlowHandler(
 
             entering.forEach { automation ->
                 activeAppAutomationIds.add(automation.id)
-                automation.entryAction?.let { action ->
-                    CombinedActionExecutor.execute(context, action)
-                }
+                CombinedActionExecutor.executeAll(context, automation.entryActionList)
             }
         }
     }

@@ -221,7 +221,7 @@ class ButtonRemapHandler(
                 triggerHapticFeedback()
             }
             actions.forEachIndexed { index, action ->
-                if (index > 0) delay(ACTION_SEQUENCE_GAP_MS)
+                if (index > 0) delay(CombinedActionExecutor.ACTION_SEQUENCE_GAP_MS)
                 try {
                     if (action is Action.ToggleFlashlight) {
                         flashlightHandler.toggleFlashlight()
@@ -274,7 +274,4 @@ class ButtonRemapHandler(
             false
         }
 
-    companion object {
-        private const val ACTION_SEQUENCE_GAP_MS = 150L
-    }
 }
