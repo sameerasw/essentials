@@ -32,7 +32,7 @@
     <string name="setting_use_usage_access_desc">À la place de l\'accessibilité (Gel, Verrouillage d\'applis, Éclairage nocturne dynamique)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Activer la réattribution de boutons</string>
-    <string name="button_remap_use_shizuku_title">Utiliser Shizuku ou l\'accès racine (root)</string>
+    <string name="button_remap_use_shizuku_title">Utiliser Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Fonctionne avec l\'écran éteint (Recommandé)</string>
     <string name="shizuku_not_running_toast">Shizuku n\'est pas actif</string>
     <string name="shizuku_detected_prefix"> %1$s Détecté</string>
@@ -717,7 +717,9 @@
     <string name="update_available_title">Mise à jour disponible</string>
     <string name="about_desc_your_android">Jetez un coup d\'œil aux spécifications matérielles et logicielles détaillées de votre appareil. Ces informations sont obtenues GSMArena et des propriétés système pour vous fournir un aperçu complet sur votre appareil Android.</string>
     <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">La fonctionnalité Notifications lumineuses ajoute un bel effet d\'éclairage des coins de l\'écran quand vous recevez une notification.\n\nYou pouvez personnaliser le style de l\'animation, les couleurs et le comportement. Cela marche même quand l\'écran est éteint (en fonction du constructeur de votre appareil) ou par dessus les applications actives. Choisissez des applis, des priorités de notifications, ou quoi que ce soit qui devrait la déclencher depuis les contrôles donnés. Si votre constructeur ne supporte pas les superpositions sur le mode Always-On, activez l\'option d\'éclairage ambiant trouvable ci-dessous.</string>
+    <string name="about_desc_notification_lighting">La fonctionnalité Notifications lumineuses ajoute un bel effet d\'éclairage des coins de l\'écran quand vous recevez une notification.
+
+Tu peux personnaliser le style de l\'animation, les couleurs et le comportement. Cela marche même quand l\'écran est éteint (en fonction du constructeur de ton appareil) ou par dessus les applications actives. Choisis des applis, des priorités de notifications, ou quoi que ce soit qui devrait la déclencher depuis les contrôles donnés. Si le constructeur ne supporte pas les superpositions sur le mode Always-On, activez l\'option d\'éclairage ambiant trouvable ci-dessous.</string>
     <string name="about_desc_screen_off_widget">Éteignez facilement l\'écran avec un appui sur un widget transparent redimensionnable qui n\'ajoute aucune icône ou indice sur votre écran d\'accueil. </string>
     <string name="about_desc_statusbar_icons">Prenez les pleins pouvoirs sur vos icônes de la barre d\'état.
 
@@ -1419,7 +1421,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Horloge de l\'écran de verrouillage </string>
     <string name="feat_lock_screen_clock_desc">Personnalisez l\'horloge de l\'écran de verrouillage des Pixels</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="about_desc_lock_screen_clock">Change le style de l\'horloge de l\'écran de verrouillage sur les appareils Pixels. Sélectionne parmis les styles d\'horloges fournis par l\'IU système. Quelques vieux styles ne peuvent pas être disponibles.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
     <string name="lock_screen_clock_flex">Flexible</string>
@@ -1443,7 +1445,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
-    <string name="about_title">About</string>
+    <string name="about_title">À propos</string>
     <string name="color_default">Default</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -1675,4 +1677,13 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_battery_tab_info">Informations</string>
     <string name="diy_category_apps">Applications</string>
     <string name="label_charging_mode_title">Mode de chargement</string>
+    <string name="setting_hidden_debugging_title">Support du débuguage caché</string>
+    <string name="label_online_help_media">Aide en ligne du média</string>
+    <string name="about_desc_pixel_searchbar">Remplace la barre de recherche par défaut du launcher Pixel. Tu peux customiser le contenu pour y afficher rien du tout, ou la date actuelle.
+
+Note que en activant ça peut casser les widgets At a Glance du launcher (Comme les widgets de sports et finances.) et que ce paramètre peut nécessiter à être appliqué plusieurs fois pour prendre effet.
+</string>
+    <string name="pixel_searchbar_settings_title">Customisation de la barre de recherche du launcher Pixel</string>
+    <string name="sound_mode_use_shizuku_desc">Utiliser Shizuku pour mettre le monde de sonnerie sans activer le mode Ne pas déranger.</string>
+    <string name="island_max_items_title">Nombre maximum d\'icônes à afficher</string>
 </resources>
