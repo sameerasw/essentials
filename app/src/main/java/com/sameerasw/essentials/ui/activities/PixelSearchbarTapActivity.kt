@@ -26,11 +26,9 @@ class PixelSearchbarTapActivity : ComponentActivity() {
         val automation =
             DIYRepository.automations.value.find { it.type == Automation.Type.PIXEL_SEARCHBAR }
 
-        if (automation != null && automation.actions.isNotEmpty() && automation.isEnabled) {
+        if (automation != null && automation.actionList.isNotEmpty() && automation.isEnabled) {
             lifecycleScope.launch {
-                automation.actions.forEach { action ->
-                    CombinedActionExecutor.execute(applicationContext, action)
-                }
+                CombinedActionExecutor.executeAll(applicationContext, automation.actionList)
                 finish()
             }
         } else {

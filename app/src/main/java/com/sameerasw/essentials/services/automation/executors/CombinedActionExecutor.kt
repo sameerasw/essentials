@@ -53,6 +53,7 @@ import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.overlay.fromPrefs
 import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.utils.performHapticFeedback
+import kotlinx.coroutines.delay
 import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
 
@@ -127,6 +128,23 @@ object CombinedActionExecutor {
         } catch (_: Exception) {
         }
     }
+
+    // Runs actions in order with a short gap, as Button remap does, so each can take effect
+    suspend fun executeAll(
+        context: Context,
+        actions: List<Action>,
+    ) {
+        actions.forEachIndexed { index, action ->
+            if (index > 0) delay(ACTION_SEQUENCE_GAP_MS)
+            try {
+                execute(context, action)
+            } catch (e: Exception) {
+                Log.e("CombinedActionExecutor", "Action ${action::class.simpleName} failed", e)
+            }
+        }
+    }
+
+    const val ACTION_SEQUENCE_GAP_MS = 150L
 
     suspend fun execute(
         context: Context,

@@ -67,9 +67,7 @@ object AutomationManager {
             automations
                 .filter { it.isEnabled && it.type == Automation.Type.TRIGGER && it.trigger == trigger }
                 .forEach { automation ->
-                    automation.actions.forEach { action ->
-                        CombinedActionExecutor.execute(context, action)
-                    }
+                    CombinedActionExecutor.executeAll(context, automation.actionList)
                 }
         }
     }
@@ -91,9 +89,7 @@ object AutomationManager {
                     )
                 }
                 .forEach { automation ->
-                    automation.actions.forEach { action ->
-                        CombinedActionExecutor.execute(context, action)
-                    }
+                    CombinedActionExecutor.executeAll(context, automation.actionList)
                 }
         }
     }
