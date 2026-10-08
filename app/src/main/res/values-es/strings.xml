@@ -1751,13 +1751,13 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="perm_overcast_weather_title">Permiso del clima de Overcast</string>
     <string name="perm_overcast_weather_desc">Essentials lee el ultimo clima de tu actual o guardada ubicacion de Overcast</string>
     <string name="setting_hidden_debugging_title">Ocultar soporte de deduperacion</string>
-    <string name="island_section_visuals">Visuales</string>
+    <string name="island_section_visuals">Diseño</string>
     <string name="island_section_duration">Duracion</string>
-    <string name="island_section_behavior">Opacidad</string>
-    <string name="island_section_placement">Posicion</string>
+    <string name="island_section_behavior">Comportamiento</string>
+    <string name="island_section_placement">Posición</string>
     <string name="island_brief_show_alarm_title">Mostrar las siguientes alarmas</string>
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>
-    <string name="diy_volume_channel_alarm">Alarmas</string>
+    <string name="diy_volume_channel_alarm">Alarma</string>
     <string name="island_launcher_only_title">Solo mostrar en el launcher</string>
     <string name="island_alarm_window_title">Mostrar alarmas dentro</string>
     <string name="island_battery_only_low_title">Solo mostrar si esta baja</string>
@@ -1765,4 +1765,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_battery_percentage_conditional_title">% solo para algunas condiciones</string>
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_weather_mode_title">Mostrar en Isla</string>
+    <string name="island_section_notifications">Notificaciones</string>
 </resources>
