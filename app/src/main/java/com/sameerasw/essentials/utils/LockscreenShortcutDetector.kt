@@ -21,8 +21,9 @@ object LockscreenShortcutDetector {
 
     private val LOCKSCREEN_MARKERS =
         listOf("element:lockscreen", "keyguard_root_view", "keyguard_bottom_area", "keyguard_indication_area")
+    // qs_frame isn't one: on Pixel 11 System UI it stays on screen with the shade closed
     private val OCCLUDING_MARKERS =
-        listOf("bouncer", "element:shade", "element:quickSettings", "qs_frame", "shade_header_root", "quick_qs_panel")
+        listOf("bouncer", "element:shade", "element:quickSettings", "shade_header_root", "quick_qs_panel", "quick_settings_panel")
     private val AFFORDANCE_IDS = listOf("start_button", "end_button")
     private val EXCLUDED_IDS = listOf("device_entry_icon", "lock_icon", "keyguard_indication", "date", "clock")
 
@@ -67,8 +68,8 @@ object LockscreenShortcutDetector {
                 if (!node.isVisibleToUser) continue
 
                 val id = node.viewIdResourceName?.substringAfter(":id/").orEmpty()
-                if (LOCKSCREEN_MARKERS.any { id == it }) lockscreenVisible = true
-                if (OCCLUDING_MARKERS.any { id.contains(it) }) occluded = true
+                if (isLockscreenMarker(id)) lockscreenVisible = true
+                if (isOccludingMarker(id)) occluded = true
 
                 node.getBoundsInScreen(bounds)
                 val isCandidate =
@@ -91,6 +92,10 @@ object LockscreenShortcutDetector {
             hasSystemShortcuts = hasShortcuts,
         )
     }
+
+    fun isLockscreenMarker(id: String): Boolean = LOCKSCREEN_MARKERS.any { id == it }
+
+    fun isOccludingMarker(id: String): Boolean = OCCLUDING_MARKERS.any { id.contains(it) }
 
     fun isShortcutCandidate(
         id: String,

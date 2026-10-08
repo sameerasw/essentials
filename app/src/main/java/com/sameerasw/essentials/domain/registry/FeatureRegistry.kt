@@ -1655,14 +1655,14 @@ object FeatureRegistry {
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isLockscreenShortcutsEnabled.value
 
-                // Can always be turned off; turning on needs a lock screen without system shortcuts
+                // Only blocked once system shortcuts are found; until the lock screen is checked the buttons just stay hidden
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
                     context: Context,
                 ) = viewModel.isAccessibilityEnabled.value &&
                     (
                         viewModel.isLockscreenShortcutsEnabled.value ||
-                            viewModel.lockscreenSystemShortcutsState.value == SystemShortcutsState.NONE
+                            viewModel.lockscreenSystemShortcutsState.value != SystemShortcutsState.PRESENT
                     )
 
                 override fun onToggle(
