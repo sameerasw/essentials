@@ -1322,13 +1322,14 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_transition_animation_scale">Échelle d\'animation des transitions </string>
     <string name="label_window_animation_scale">Échelle d\'animation des fenêtres </string>
     <string name="about_desc_text_animations">Ajustez la taille de la police, son épaisseur et les vitesses d\'animations pour tout le système. Veuillez noter que certains paramètres peuvent nécessiter des permissions avancées ou un redémarrage pour certaines applis afin d\'appliquer les modifications. \n\nDes permissions additionnelles comme Shizuku ou l\'accès racine (root) peuvent être nécessaires pour l\'ajustement des échelles</string>
-    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="about_desc_screen_refresh_rate">Permet de configurer un taux de rafraîchissement personnalisé en utilisant Shizuku. Le mode Fixé verrouille la valeur minimum et maximum du taux de rafraîchissement à la même valeur, pendant que le mode Fourchette permet de te laisser définir les deux valeurs séparées.
+Réinitialiser permet d\'effacer les valeurs personnalisées et le système gérera de nouveau ces valeurs.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
     <string name="refresh_rate_mode_fixed">Fixed</string>
     <string name="refresh_rate_mode_range">Range</string>
     <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_fixed_desc">Mettre le minimum et maximum à la même valeur.</string>
     <string name="refresh_rate_min_title">Minimum refresh rate</string>
     <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
     <string name="refresh_rate_peak_title">Peak refresh rate</string>
