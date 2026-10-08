@@ -14,9 +14,9 @@
     <string name="screen_off_widget_label">Giny de pantalla buida desactivada</string>
     <string name="app_freezing_tile_label">Congelació d\'aplicacions</string>
     <string name="flashlight_pulse_tile_label">Pols de llanterna</string>
-    <string name="check_pre_releases_label">Comproveu les versions prèvies</string>
+    <string name="check_pre_releases_label">Comprovar si hi han versions preliminars </string>
     <string name="check_pre_releases_desc">Pot ser inestable</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">Pestanya predeterminada </string>
     <!-- App Lock -->
     <string name="settings_section_security">Seguretat</string>
     <string name="app_lock_enable_title">Activa el bloqueig de l\'aplicació</string>
@@ -28,8 +28,8 @@
     <string name="app_lock_description">Assegureu les vostres aplicacions amb l\'autenticació biomètrica. Les aplicacions bloquejades requeriran autenticació quan s\'inicien, romandrà desbloquejada fins que la pantalla s\'apaga.</string>
     <string name="app_lock_warning">Tingueu en compte que aquesta no és una solució robusta, ja que només és una aplicació de tercers. Si necessiteu una seguretat forta, considereu utilitzar l\'espai privat o altres funcions d\'aquest tipus.</string>
     <string name="app_lock_biometric_note">Una altra nota, la sol·licitud d\'autenticació biomètrica només us permet utilitzar mètodes de classe segurs FORTS. Els mètodes de seguretat de desbloqueig facial de la classe WEAK en dispositius com ara Pixel 7 només podran utilitzar els altres mètodes d\'autenticació FORTES disponibles, com ara l\'empremta digital o el pin.</string>
-    <string name="setting_use_usage_access_title">Use usage access</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_title">Utilitzar l\'accés a les dades d\'ús</string>
+    <string name="setting_use_usage_access_desc">En lloc de l\'accessibilitat (Congelació, Bloqueig d\'Aplicacions, Llum Nocturna Dinámica)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Activa la reasignació de botons</string>
     <string name="button_remap_use_shizuku_title">Utilitzeu Shizuku o Root o Root</string>
@@ -89,7 +89,7 @@
     <string name="flashlight_fade_title">Esvaeix i surt</string>
     <string name="flashlight_fade_desc">Commuta suaument la llanterna</string>
     <string name="flashlight_global_title">Controls globals</string>
-    <string name="flashlight_global_desc">Llanterna esvaïda a nivell mundial</string>
+    <string name="flashlight_global_desc">Encesa gradual de la llanterna globalment</string>
     <string name="flashlight_adjust_intensity_title">Ajustar la intensitat</string>
     <string name="flashlight_adjust_intensity_desc">Volum + - ajusta la intensitat de la llanterna</string>
     <string name="flashlight_live_update_title">Actualització en directe</string>
@@ -420,8 +420,8 @@
     <string name="feat_snooze_notifications_desc">Posposa les notificacions persistents</string>
     <string name="feat_qs_tiles_title">Rajoles de configuració ràpida</string>
     <string name="feat_qs_tiles_desc">Veure-ho tot</string>
-    <string name="feat_button_remap_title">Remapa de botons</string>
-    <string name="feat_button_remap_desc">Remapeja les accions del botó de maquinari</string>
+    <string name="feat_button_remap_title">Reassignació de botons</string>
+    <string name="feat_button_remap_desc">Remapeja les accions dels botons físics</string>
     <string name="feat_dynamic_night_light_title">Llum nocturna dinàmica</string>
     <string name="feat_dynamic_night_light_desc">Activa o desactiva la llum nocturna segons l\'aplicació</string>
     <string name="feat_screen_locked_security_title">Seguretat amb pantalla bloquejada</string>
@@ -684,11 +684,11 @@
     <string name="preferences_title">Preferences</string>
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
-    <string name="label_app_language">Language</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_app_language">Idioma</string>
+    <string name="label_haptic_feedback">Resposta Hàptica</string>
     <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Auto check for updates</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="label_auto_check_updates">Comprovar automàticament si hi ha actualitzacions</string>
+    <string name="desc_auto_check_updates">Comprovar si hi ha actualitzacions en iniciar l\'aplicació</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
@@ -946,7 +946,7 @@
         <item>temps d\'espera</item>
     </string-array>
     <string name="label_keyboard_always_dark">Tema sempre fosc</string>
-    <string name="label_keyboard_pitch_black">Tema negre del to</string>
+    <string name="label_keyboard_pitch_black">Tema negre pur</string>
     <string name="label_keyboard_clipboard_enabled">Historial del porta-retalls</string>
     <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
     <string name="label_keyboard_accented_characters">Accented characters</string>
@@ -1346,7 +1346,7 @@
     <string name="tab_your_android">El teu Android</string>
     <string name="label_device_storage">Emmagatzematge</string>
     <string name="label_device_ram">Memòria</string>
-    <string name="label_use_blur">Utilitzeu el desenfocament</string>
+    <string name="label_use_blur">Utilitzar el desenfocament</string>
     <string name="desc_use_blur">Activa els elements de desenfocament progressiu a la interfície d\'usuari</string>
     <string name="msg_blur_compatibility_error">El desenfocament està desactivat en aquest dispositiu per evitar un error de visualització conegut als dispositius Samsung amb Android 15 o inferior.</string>
     <!-- Empty State Actions -->
@@ -1551,4 +1551,69 @@
     <string name="feat_power_battery_desc">Optimitza el consum d\'energia</string>
     <string name="feat_networks_title">Xarxes</string>
     <string name="feat_networks_desc">Controla les ràdios i les xarxes</string>
+    <string name="feat_flashlight_title">Llanterna</string>
+    <string name="feat_flashlight_desc">Millora el comportament de la llanterna</string>
+    <string name="flashlight_pocket_title">Detecció de butxaca </string>
+    <string name="flashlight_pocket_desc">Apagar la llanterna quan el mòbil es a la teva butxaca</string>
+    <string name="flashlight_overheat_title">Prevenció del sobreescalfament </string>
+    <string name="flashlight_overheat_desc">Redueix la brillantor després d\'un ús prolongat</string>
+    <string name="feat_lockscreen_shortcuts_title">Accessos directes de la pantalla de bloqueig</string>
+    <string name="feat_lockscreen_shortcuts_desc">Execute les teves accions des de la pantalla de bloqueig</string>
+    <string name="feat_conscious_gate_desc">Pausa abans d\'obrir les apps escollides</string>
+    <string name="conscious_gate_enable_title">Activar porta conscient</string>
+    <string name="conscious_gate_select_apps_title">Seleccionar les apps restringides</string>
+    <string name="conscious_gate_delay_title">Retard de la pausa</string>
+    <string name="conscious_gate_delay_desc">Temps que Continua es manté desactivat</string>
+    <string name="conscious_gate_reappear_title">Reapareix després de l\'ús</string>
+    <string name="conscious_gate_reappear_desc">Torna a mostrar la pantalla de porta conscient després d\'un ús continuat</string>
+    <string name="conscious_gate_feel_every_second_title">Sent cada segon perdut</string>
+    <string name="conscious_gate_preview_button">Previsualitzar la pantalla de porta conscient</string>
+    <string name="feat_power_saving_title">Estalvi d\'energia</string>
+    <string name="feat_power_saving_desc">Configura las políticas d\'estalvi d\'energia</string>
+    <string name="label_low_power_trigger_level">Llindar d\'activació personalitzat</string>
+    <string name="label_advertise_is_enabled">Emissió activada</string>
+    <string name="desc_advertise_is_enabled">Notifica a les aplicacions que l\'estalvi d\'energia està activat</string>
+    <string name="label_enable_firewall">Habilita el Firewall</string>
+    <string name="desc_enable_firewall">Activar el firewall de la xarxa per restringir l\'activitat en segon pla</string>
+    <string name="label_force_all_apps_standby">Força el mode d\'espera</string>
+    <string name="desc_force_all_apps_standby">Posa totes las aplicacions al grup d\'espera d\'aplicacions quan estigui actiu</string>
+    <string name="label_force_background_check">Força la comprovació en segon pla</string>
+    <string name="desc_force_background_check">Força restriccions estrictes als serveis en segon pla</string>
+    <string name="label_enable_brightness_adjustment">Activar la Reducció de Brillantor</string>
+    <string name="desc_enable_brightness_adjustment">Permetre abaixar el límit de brillantor de la pantalla quan l\'estalvi d\'energia estigui actiu</string>
+    <string name="label_adjust_brightness_factor">Factor d\'ajust de la brillantor</string>
+    <string name="label_disable_animation">Desactivar les animacions</string>
+    <string name="desc_disable_animation">Desactivar les animacions de finestra i les del sistema. </string>
+    <string name="label_disable_aod">Desactivar pantalla sempre encesa</string>
+    <string name="desc_disable_aod">Desactivar la pantalla sempre encesa / ambient</string>
+    <string name="label_enable_night_mode">Forçar el Mode Nit/Fosc</string>
+    <string name="desc_enable_night_mode">Forçar el tema fosc quan l\'estalvi de bateria estigui actiu.</string>
+    <string name="label_disable_launch_boost">Desactiva Launch Boost</string>
+    <string name="desc_disable_launch_boost">Redueix l\'impuls de la CPU durant l\'inici de l\'aplicació per estavliar energia.</string>
+    <string name="label_enable_quick_doze">Activa el Quick Doze</string>
+    <string name="desc_enable_quick_doze">Entra més ràpidament en el mode Doze quan s\'apaga la pantalla. </string>
+    <string name="label_disable_optional_sensors">Desactivar Sensors Opcionals</string>
+    <string name="desc_disable_optional_sensors">Desactiva sensors opcionals que consumeixen molta energia, com el de proximitat, el giroscopi, etc.</string>
+    <string name="desc_enable_datasaver">Activa l\'Estalviador de Dades per restringir l\'ús de dades en segon pla.</string>
+    <string name="label_defer_full_backup">Posposar la còpia de seguretat completa</string>
+    <string name="desc_defer_full_backup">Posposar les còpies de seguretat completes del sistema fins que es desactivi l\'estalvi d\'energia</string>
+    <string name="label_defer_keyvalue_backup">Posposar la còpia de seguretat de tipus Clau-Valor</string>
+    <string name="desc_defer_keyvalue_backup">Posposar les còpies de seguretat de clau-valor</string>
+    <string name="label_disable_vibration">Desactivar la Vibració</string>
+    <string name="desc_disable_vibration">Desactiva la resposta hàptica i les vibracions a tota l\'aplicació </string>
+    <string name="label_soundtrigger_mode">Mode d\'Activació per So</string>
+    <string name="desc_soundtrigger_mode">Restringeix la detecció de la paraula d\'activació de l\'assistent (p. ex, \"Hey Google\").</string>
+    <string name="label_apply_after_reboot">Aplicar després de reiniciar</string>
+    <string name="label_location_mode">GPS / Mode de Localització </string>
+    <string name="desc_location_mode">Restringeix les peticions d\'ubicació amb l\'estalvi d\'energia activat</string>
+    <string name="qs_secure_sensitive_tiles_title">Protegir les rajoles sensibles</string>
+    <string name="qs_secure_sensitive_tiles_desc">Requerir el desbloqueig del dispositiu per activar els QS sensibles des de la pantalla de bloqueig</string>
+    <string name="setting_app_icon_title">Icone de l\'app</string>
+    <string name="setting_swipe_tabs_title">Lliscar entre pestanyes</string>
+    <string name="haptic_mode_stronger">Intensa</string>
+    <string name="label_ripple_animation">Animació d\'ona</string>
+    <string name="label_online_help_media">Contingut d\'ajuda en línia</string>
+    <string name="setting_hidden_debugging_title">Suport de depuració ocult</string>
+    <string name="settings_translate_mode">Mode de Traducció</string>
+    <string name="settings_translate_mode_desc">Fes una pulsació llarga sobre qualsevol text per traduir-lo i contribuir a la comunitat</string>
 </resources>
