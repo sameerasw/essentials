@@ -56,8 +56,10 @@ import com.sameerasw.essentials.ui.core.sheets.DeviceEffectsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.FreezeTagSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.HilightEffectSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
@@ -111,11 +113,13 @@ fun DuoSettingsUI(
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
     var showFreezeTagSettings by remember { mutableStateOf(false) }
     var showOpenAppSettings by remember { mutableStateOf(false) }
+    var showOpenActivitySettings by remember { mutableStateOf(false) }
     var showFreezeAppsSettings by remember { mutableStateOf(false) }
     var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
     var showSetKeyboardSheet by remember { mutableStateOf(false) }
     var showCustomSettingsSettings by remember { mutableStateOf(false) }
     var showSetVolumeSettings by remember { mutableStateOf(false) }
+    var showHilightSettings by remember { mutableStateOf(false) }
     var configAction by remember { mutableStateOf<Action?>(null) }
 
     var showPermissionSheet by remember { mutableStateOf(false) }
@@ -880,6 +884,7 @@ fun DuoSettingsUI(
                                         is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                         is Action.FreezeTag -> showFreezeTagSettings = true
                                         is Action.OpenApp -> showOpenAppSettings = true
+                                        is Action.OpenActivity -> showOpenActivitySettings = true
                                         is Action.FreezeApps -> {
                                             temporarySelectedAppsForAction = resolvedAction.packageNames
                                             showFreezeAppsSettings = true
@@ -890,6 +895,7 @@ fun DuoSettingsUI(
                                         }
                                         is Action.Keyboard -> showSetKeyboardSheet = true
                                         is Action.SetVolume -> showSetVolumeSettings = true
+                                        is Action.Hilight -> showHilightSettings = true
                                         is Action.CustomSettings -> showCustomSettingsSettings = true
                                         else -> {}
                                     }
@@ -1024,6 +1030,18 @@ fun DuoSettingsUI(
         )
     }
 
+    if (showHilightSettings && configAction is Action.Hilight) {
+        HilightEffectSettingsSheet(
+            initialAction = configAction as Action.Hilight,
+            onDismiss = { showHilightSettings = false },
+            onSave = { newAction ->
+                showHilightSettings = false
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
     if (showSometimesEssentialsSettings && configAction is Action.SometimesEssentials) {
         SometimesEssentialsSettingsSheet(
             initialAction = configAction as Action.SometimesEssentials,
@@ -1058,6 +1076,16 @@ fun DuoSettingsUI(
             onDismissRequest = { showOpenAppSettings = false },
             onAppSelected = { app ->
                 val newAction = Action.OpenApp(packageName = app.packageName)
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
+    if (showOpenActivitySettings) {
+        OpenActivityPicker(
+            onDismiss = { showOpenActivitySettings = false },
+            onActivitySelected = { newAction ->
                 applyActionForGesture(activeConfigGesture, newAction)
                 configAction = null
             },

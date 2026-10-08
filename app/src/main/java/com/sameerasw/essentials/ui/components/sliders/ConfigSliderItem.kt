@@ -75,6 +75,7 @@ fun ConfigSliderItem(
     subtitle: String? = null,
     showValue: Boolean = true,
     allowDecimals: Boolean = increment < 1f,
+    trailingContent: (@Composable () -> Unit)? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -154,6 +155,7 @@ fun ConfigSliderItem(
                         )
                     }
                 }
+                trailingContent?.invoke()
             }
 
             if (showValueEntry) {

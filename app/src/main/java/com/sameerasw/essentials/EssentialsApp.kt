@@ -18,6 +18,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.services.receivers.SecurityReceiver
 import com.sameerasw.essentials.utils.ShizukuUtils
 import eu.darken.porter.bridge.PorterShizukuBridge
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +33,7 @@ class EssentialsApp : Application() {
             private set
     }
 
-    private val securityReceiver =
-        com.sameerasw.essentials.services.receivers
-            .SecurityReceiver()
+    private val securityReceiver = SecurityReceiver()
 
     override fun onCreate() {
         super.onCreate()
@@ -80,6 +79,7 @@ class EssentialsApp : Application() {
         val intentFilter =
             IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_OFF)
+                addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_USER_PRESENT)
             }
 

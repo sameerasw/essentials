@@ -1947,10 +1947,6 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="feat_conscious_gate_desc">Tạm dừng trước khi mở các ứng dụng đã chọn</string>
     <string name="label_unsupported">Không hỗ trợ</string>
     <string name="app_icon_legacy">Cũ</string>
-    <string name="watchface_promo_step1_title">1. Tham gia nhóm Google</string>
-    <string name="watchface_promo_step1_desc">Hãy tham gia nhóm thử nghiệm bằng tài khoản Gmail được liên kết với đồng hồ của bạn</string>
-    <string name="watchface_promo_step2_title">2. Tham gia Chương trình Beta</string>
-    <string name="watchface_promo_step2_desc">Đăng ký tham gia chương trình thử nghiệm nội bộ trên Google Play</string>
     <string name="watchface_promo_step3_title">3. Cài đặt trên đồng hồ</string>
     <string name="watchface_promo_step3_desc">Mở trực tiếp mục Play Store trên đồng hồ của bạn để cài đặt</string>
     <string name="island_section_placement">Vị trí</string>

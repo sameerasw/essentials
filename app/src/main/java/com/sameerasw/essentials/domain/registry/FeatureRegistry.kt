@@ -21,10 +21,12 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
+import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.hardware.HilightLights
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -386,6 +388,7 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = "Screen refresh rate",
+                contributors = listOf("DDOneApps"),
                 title = R.string.feat_screen_refresh_rate_title,
                 iconRes = R.drawable.rounded_shutter_speed_24,
                 category = R.string.cat_interface,
@@ -1100,6 +1103,42 @@ object FeatureRegistry {
                 ) = viewModel.setNotificationLightingEnabled(enabled, context)
             },
             object : Feature(
+                id = "Hilight",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_hilight_title,
+                iconRes = R.drawable.rounded_auto_awesome_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_hilight_desc,
+                permissionKeys = listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+                aboutDescription = R.string.about_desc_hilight,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_hilight_notifications_title,
+                            R.string.search_hilight_notifications_desc,
+                            "hilight_notifications",
+                        ),
+                    ),
+                parentFeatureId = "Notifications",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isHilightNotificationsEnabled.value
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = HilightLights.isModeSupported(context) &&
+                    viewModel.isShizukuPermissionGranted.value &&
+                    viewModel.isNotificationListenerEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setHilightNotificationsEnabled(enabled)
+            },
+            object : Feature(
                 id = "Flashlight pulse",
                 title = R.string.flashlight_pulse_title,
                 iconRes = R.drawable.rounded_flashlight_on_24,
@@ -1140,6 +1179,25 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setFlashlightPulseEnabled(enabled, context)
+            },
+            object : Feature(
+                id = "Activity launcher",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_activity_launcher_title,
+                iconRes = R.drawable.rounded_app_registration_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_activity_launcher_desc,
+                aboutDescription = R.string.about_desc_activity_launcher,
+                showToggle = false,
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = false
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
             },
             object : Feature(
                 id = "Link actions",
@@ -1518,6 +1576,7 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = "Button remap",
+                contributors = listOf("jawzf"),
                 title = R.string.feat_button_remap_title,
                 iconRes = R.drawable.rounded_switch_access_3_24,
                 category = R.string.cat_interaction,
@@ -1575,6 +1634,44 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setButtonRemapEnabled(enabled, context)
+            },
+            object : Feature(
+                id = "Lock screen shortcuts",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_lockscreen_shortcuts_title,
+                iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_lockscreen_shortcuts_desc,
+                aboutDescription = R.string.about_desc_lockscreen_shortcuts,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_lockscreen_shortcuts_enable_title,
+                            R.string.search_lockscreen_shortcuts_enable_desc,
+                            "enable_lockscreen_shortcuts",
+                            R.array.keywords_switch_master,
+                        ),
+                    ),
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isLockscreenShortcutsEnabled.value
+
+                // Can always be turned off; turning on needs a lock screen without system shortcuts
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value &&
+                    (
+                        viewModel.isLockscreenShortcutsEnabled.value ||
+                            viewModel.lockscreenSystemShortcutsState.value == SystemShortcutsState.NONE
+                    )
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setLockscreenShortcutsEnabled(enabled)
             },
             object : Feature(
                 id = "Dynamic night light",
@@ -1805,6 +1902,7 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = CONSCIOUS_GATE_FEATURE_ID,
+                contributors = listOf("thomasborgogno"),
                 title = R.string.feat_conscious_gate_title,
                 iconRes = R.drawable.rounded_pause_24,
                 category = R.string.cat_interaction,
@@ -2542,6 +2640,16 @@ object FeatureRegistry {
                             R.string.flashlight_pulse_max_brightness,
                             R.string.feat_face_unlock_brightness_title,
                             "face_unlock_max_brightness",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_ambient_threshold_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_ambient_threshold",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_auto_illuminate_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_auto_illuminate",
                         ),
                         SearchSetting(
                             R.string.face_unlock_trigger_unlock_title,

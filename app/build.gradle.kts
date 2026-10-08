@@ -115,10 +115,10 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 37
-        versionCode = 67
-        versionName = "18.5-beta.3"
+        versionCode = 68
+        versionName = "19.0"
 
-        val whatsNewCounter = 5
+        val whatsNewCounter = 6
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
         buildConfigField("int", "REQUIRED_WEAR_VERSION_CODE", "7")
 

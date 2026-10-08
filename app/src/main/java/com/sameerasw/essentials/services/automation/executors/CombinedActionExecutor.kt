@@ -10,9 +10,12 @@
 package com.sameerasw.essentials.services.automation.executors
 
 import android.app.ActivityManager
+import android.app.KeyguardManager
+import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.hardware.camera2.CameraManager
 import android.media.AudioManager
 import android.media.session.MediaController
@@ -20,21 +23,25 @@ import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
 import android.provider.Settings
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.domain.controller.HilightController
+import com.sameerasw.essentials.domain.controller.HotspotController
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.RippleConfig
 import com.sameerasw.essentials.services.NotificationLightingService
-import com.sameerasw.essentials.utils.overlay.fromPrefs
-import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.ui.activities.PixelSearchResultsActivity
@@ -42,6 +49,9 @@ import com.sameerasw.essentials.utils.DeviceLockUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.utils.ShizukuUtils
+import com.sameerasw.essentials.utils.overlay.fromPrefs
+import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.utils.performHapticFeedback
 import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
@@ -134,6 +144,7 @@ object CombinedActionExecutor {
                     HapticUtil.performCustomHaptic(context, 0.6f)
                 }
 
+                is Action.Hilight -> HilightController.play(action.toEffect())
                 is Action.TurnOnFlashlight -> toggleFlashlight(context, true)
                 is Action.TurnOffFlashlight -> toggleFlashlight(context, false)
                 is Action.ToggleFlashlight -> {
@@ -439,6 +450,50 @@ object CombinedActionExecutor {
                         .cycleNextMode()
                 }
 
+                is Action.ToggleDoNotDisturb -> {
+                    val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    if (nm.isNotificationPolicyAccessGranted) {
+                        nm.setInterruptionFilter(
+                            if (nm.currentInterruptionFilter == NotificationManager.INTERRUPTION_FILTER_ALL) {
+                                NotificationManager.INTERRUPTION_FILTER_PRIORITY
+                            } else {
+                                NotificationManager.INTERRUPTION_FILTER_ALL
+                            },
+                        )
+                    }
+                }
+
+                is Action.OpenCamera -> {
+                    // The secure camera opens over the lock screen without unlocking, like the Pixel shortcut
+                    val isLocked =
+                        (context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager)
+                            .isKeyguardLocked
+                    val cameraAction =
+                        if (isLocked) {
+                            MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA_SECURE
+                        } else {
+                            MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA
+                        }
+                    try {
+                        context.startActivity(Intent(cameraAction).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                is Action.OpenQrScanner -> openQrScanner(context)
+
+                is Action.OpenVideoCamera -> {
+                    try {
+                        context.startActivity(
+                            Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
                 is Action.ToggleMute -> {
                     val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                     val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
@@ -511,6 +566,8 @@ object CombinedActionExecutor {
                         e.printStackTrace()
                     }
                 }
+
+                is Action.OpenActivity -> openActivity(context, action)
 
                 is Action.TurnOnHotspot -> setHotspotEnabled(context, true)
                 is Action.TurnOffHotspot -> setHotspotEnabled(context, false)
@@ -959,6 +1016,14 @@ object CombinedActionExecutor {
         context: Context,
         enabled: Boolean,
     ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && ShellUtils.usesShizukuBinder(context) && ShizukuUtils.hasPermission()) {
+            try {
+                HotspotController.setEnabled(context, enabled)
+                return
+            } catch (e: Exception) {
+                Log.e("CombinedActionExecutor", "Tethering via Shizuku failed, falling back to shell", e)
+            }
+        }
         val command = if (enabled) "cmd wifi start-softap" else "cmd wifi stop-softap"
         ShellUtils.runCommand(
             context,
@@ -1113,6 +1178,74 @@ object CombinedActionExecutor {
                 }
             }
         } catch (_: Exception) {
+        }
+    }
+
+    private fun openActivity(
+        context: Context,
+        action: Action.OpenActivity,
+    ) {
+        if (action.packageName.isBlank() || action.className.isBlank()) return
+        val component = ComponentName(action.packageName, action.className)
+        // Single quotes keep the shell from expanding the $ in nested class names
+        val startCommand = "am start -n '${component.flattenToShortString()}'"
+        if (action.requiresRoot) {
+            if (ShellUtils.isRootEnabled(context)) {
+                ShellUtils.runCommand(context, startCommand, featureName = context.getString(action.title))
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(context, R.string.activity_picker_root_required_toast, Toast.LENGTH_SHORT).show()
+                }
+            }
+            return
+        }
+        try {
+            context.startActivity(Intent().setComponent(component).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (e: Exception) {
+            // Exported activities can still require a permission we lack
+            if (ShellUtils.isRootEnabled(context)) {
+                ShellUtils.runCommand(context, startCommand)
+            } else {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    // Same scanner System UI uses for its lock screen and Quick Settings QR shortcuts
+    private fun openQrScanner(context: Context) {
+        val configId =
+            Resources
+                .getSystem()
+                .getIdentifier("config_defaultQrCodeComponent", "string", "android")
+        val component =
+            if (configId != 0) {
+                Resources
+                    .getSystem()
+                    .getString(configId)
+                    .takeIf { it.isNotBlank() }
+                    ?.let { ComponentName.unflattenFromString(it) }
+            } else {
+                null
+            }
+        // Google's platform scanner closes itself for ordinary app callers, so start it as the shell user
+        if (component != null && ShellUtils.isAvailable(context) && ShellUtils.hasPermission(context)) {
+            ShellUtils.runCommand(
+                context,
+                "am start -n ${component.flattenToShortString()}",
+                featureName = context.getString(Action.OpenQrScanner.title),
+            )
+            return
+        }
+        val intent =
+            if (component != null) {
+                Intent().setComponent(component)
+            } else {
+                Intent("com.google.android.gms.mlkit_barcode_ui.SCAN_QR_CODE")
+            }
+        try {
+            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

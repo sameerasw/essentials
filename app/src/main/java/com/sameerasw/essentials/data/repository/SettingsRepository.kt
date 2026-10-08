@@ -21,11 +21,13 @@ import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
+import com.sameerasw.essentials.domain.model.HilightEffect
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
@@ -173,6 +175,11 @@ class SettingsRepository(
         const val KEY_MAPS_DISCOVERED_CHANNELS = "maps_discovered_channels"
         const val KEY_MAPS_DETECTION_CHANNELS = "maps_detection_channels"
         const val KEY_EDGE_LIGHTING_ENABLED = "edge_lighting_enabled"
+        const val KEY_HILIGHT_NOTIFICATIONS_ENABLED = "hilight_notifications_enabled"
+        const val KEY_HILIGHT_APP_EFFECTS = "hilight_app_effects"
+        const val KEY_HILIGHT_ONLY_SCREEN_OFF = "hilight_only_screen_off"
+        const val KEY_HILIGHT_COOLDOWN_SECONDS = "hilight_cooldown_seconds"
+        const val KEY_HILIGHT_SKIP_DND = "hilight_skip_dnd"
         const val KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF = "edge_lighting_only_screen_off"
         const val KEY_EDGE_LIGHTING_AMBIENT_DISPLAY = "edge_lighting_ambient_display"
         const val KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN =
@@ -233,6 +240,11 @@ class SettingsRepository(
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy
         const val KEY_BUTTON_REMAP_MIGRATION_DONE = "button_remap_action_migration_done"
         const val KEY_BUTTON_REMAP_PAUSE_ON_VOLUME_DIALOG = "button_remap_pause_on_volume_dialog"
+        const val KEY_PINNED_ACTION_PREFIX = "pinned_action_"
+        const val KEY_LOCKSCREEN_SHORTCUTS_ENABLED = "lockscreen_shortcuts_enabled"
+        const val KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS = "lockscreen_shortcut_left_actions"
+        const val KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS = "lockscreen_shortcut_right_actions"
+        const val KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE = "lockscreen_system_shortcuts_state"
 
         const val KEY_DYNAMIC_NIGHT_LIGHT_ENABLED = "dynamic_night_light_enabled"
         const val KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS = "dynamic_night_light_selected_apps"
@@ -256,6 +268,7 @@ class SettingsRepository(
             "flashlight_overheat_prevention_enabled"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
+        const val KEY_SCREEN_LOCKED_DISABLE_ON_EXTENDED_UNLOCK = "screen_locked_disable_on_extended_unlock"
         const val KEY_SCREEN_LOCKED_DISABLE_NOTIFICATION_INTERACTIONS =
             "screen_locked_disable_notification_interactions"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
@@ -392,6 +405,9 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_DISABLE_ON_DND = "aod_wallpaper_disable_on_dnd"
         const val KEY_AOD_WALLPAPER_KEEP_ON_MEDIA = "aod_wallpaper_keep_on_media"
         const val KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS = "aod_wallpaper_media_excluded_apps"
+        const val KEY_AOD_WALLPAPER_EXTENDED_MEDIA = "aod_wallpaper_extended_media"
+        const val KEY_AOD_WALLPAPER_EXTENDED_APP_ICON = "aod_wallpaper_extended_app_icon"
+        const val KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE = "aod_wallpaper_extended_text_scale"
         const val KEY_PIXEL_SEARCH_RESULT_APPS = "pixel_search_result_apps"
         const val KEY_PIXEL_SEARCH_RESULT_CONTACTS = "pixel_search_result_contacts"
         const val KEY_PIXEL_SEARCH_RESULT_SETTINGS = "pixel_search_result_settings"
@@ -714,6 +730,8 @@ class SettingsRepository(
         const val KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED = "face_unlock_brightness_enabled"
         const val KEY_FACE_UNLOCK_MAX_BRIGHTNESS = "face_unlock_max_brightness"
         const val KEY_FACE_UNLOCK_TRIGGER_UNLOCK = "face_unlock_trigger_unlock"
+        const val KEY_FACE_UNLOCK_AUTO_ILLUMINATE = "face_unlock_auto_illuminate"
+        const val KEY_FACE_UNLOCK_AMBIENT_THRESHOLD = "face_unlock_ambient_threshold_lux"
         const val KEY_FACE_UNLOCK_LIGHT_TINT = "face_unlock_light_tint"
         const val KEY_POCKET_MODE_USE_LIGHT_SENSOR = "pocket_mode_use_light_sensor"
         const val KEY_POCKET_MODE_EXCLUDED_APPS = "pocket_mode_excluded_apps"
@@ -1247,6 +1265,45 @@ class SettingsRepository(
     // Feature specific App selections
 
     fun loadNotificationLightingSelectedApps() = loadAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS)
+
+    // Each app the user adds gets its own effect; apps not in the map never light up
+    fun getHilightAppEffects(): Map<String, HilightEffect> =
+        getString(KEY_HILIGHT_APP_EFFECTS)?.let {
+            try {
+                gson
+                    .fromJson<Map<String, HilightEffect>>(it, object : TypeToken<Map<String, HilightEffect>>() {}.type)
+                    ?.mapValues { (_, effect) -> effect.withValidPattern() }
+            } catch (_: Exception) {
+                null
+            }
+        } ?: emptyMap()
+
+    fun getHilightEffectForApp(packageName: String): HilightEffect? = getHilightAppEffects()[packageName]
+
+    fun setHilightAppEffect(
+        packageName: String,
+        effect: HilightEffect?,
+    ) {
+        val effects = getHilightAppEffects().toMutableMap()
+        if (effect == null) effects.remove(packageName) else effects[packageName] = effect
+        putString(KEY_HILIGHT_APP_EFFECTS, gson.toJson(effects))
+    }
+
+    fun isHilightNotificationsEnabled(): Boolean = getBoolean(KEY_HILIGHT_NOTIFICATIONS_ENABLED, false)
+
+    fun setHilightNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_HILIGHT_NOTIFICATIONS_ENABLED, enabled)
+
+    fun isHilightOnlyWhenScreenOff(): Boolean = getBoolean(KEY_HILIGHT_ONLY_SCREEN_OFF, true)
+
+    fun setHilightOnlyWhenScreenOff(enabled: Boolean) = putBoolean(KEY_HILIGHT_ONLY_SCREEN_OFF, enabled)
+
+    fun isHilightSkipDnd(): Boolean = getBoolean(KEY_HILIGHT_SKIP_DND, true)
+
+    fun setHilightSkipDnd(enabled: Boolean) = putBoolean(KEY_HILIGHT_SKIP_DND, enabled)
+
+    fun getHilightCooldownSeconds(): Int = getInt(KEY_HILIGHT_COOLDOWN_SECONDS, 60)
+
+    fun setHilightCooldownSeconds(seconds: Int) = putInt(KEY_HILIGHT_COOLDOWN_SECONDS, seconds)
 
     /**
      * Executes the save notification lighting selected apps operation.
@@ -3424,6 +3481,18 @@ class SettingsRepository(
 
     fun setAodWallpaperKeepOnMedia(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, enabled)
 
+    fun isAodWallpaperExtendedMediaEnabled(): Boolean = getBoolean(KEY_AOD_WALLPAPER_EXTENDED_MEDIA, false)
+
+    fun setAodWallpaperExtendedMedia(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_EXTENDED_MEDIA, enabled)
+
+    fun isAodWallpaperExtendedAppIconEnabled(): Boolean = getBoolean(KEY_AOD_WALLPAPER_EXTENDED_APP_ICON, false)
+
+    fun setAodWallpaperExtendedAppIcon(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_EXTENDED_APP_ICON, enabled)
+
+    fun getAodWallpaperExtendedTextScale(): Float = getFloat(KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE, 1f)
+
+    fun setAodWallpaperExtendedTextScale(value: Float) = putFloat(KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE, value)
+
     fun isPixelSearchResultAppsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, true)
     fun setPixelSearchResultAppsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, enabled)
 
@@ -4048,7 +4117,11 @@ class SettingsRepository(
 
     fun getFaceUnlockMaxBrightness(): Int = getInt(KEY_FACE_UNLOCK_MAX_BRIGHTNESS, 100)
     fun setFaceUnlockMaxBrightness(value: Int) = putInt(KEY_FACE_UNLOCK_MAX_BRIGHTNESS, value)
+    fun getFaceUnlockAmbientThreshold(): Float = getFloat(KEY_FACE_UNLOCK_AMBIENT_THRESHOLD, 10f)
+    fun setFaceUnlockAmbientThreshold(value: Float) = putFloat(KEY_FACE_UNLOCK_AMBIENT_THRESHOLD, value)
 
+    fun isFaceUnlockAutoIlluminateEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_AUTO_ILLUMINATE, false)
+    fun setFaceUnlockAutoIlluminateEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_AUTO_ILLUMINATE, enabled)
     fun isFaceUnlockTriggerUnlockEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_TRIGGER_UNLOCK, true)
     fun setFaceUnlockTriggerUnlockEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_TRIGGER_UNLOCK, enabled)
 
@@ -4197,4 +4270,23 @@ class SettingsRepository(
 
     fun getStatusGlanceLongPressAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION)
     fun setStatusGlanceLongPressAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION, action)
+
+    // Home screen shortcuts only carry an id; the action itself never leaves the app
+    fun getPinnedAction(id: String): Action? = getRemapAction(KEY_PINNED_ACTION_PREFIX + id)
+
+    fun savePinnedAction(
+        id: String,
+        action: Action,
+    ) = setRemapAction(KEY_PINNED_ACTION_PREFIX + id, action)
+    fun isLockscreenShortcutsEnabled(): Boolean = getBoolean(KEY_LOCKSCREEN_SHORTCUTS_ENABLED, false)
+
+    fun setLockscreenShortcutsEnabled(enabled: Boolean) = putBoolean(KEY_LOCKSCREEN_SHORTCUTS_ENABLED, enabled)
+
+    fun getLockscreenSystemShortcutsState(): SystemShortcutsState =
+        SystemShortcutsState.entries.firstOrNull {
+            it.name == getString(KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE)
+        } ?: SystemShortcutsState.UNKNOWN
+
+    fun setLockscreenSystemShortcutsState(state: SystemShortcutsState) =
+        putString(KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE, state.name)
 }

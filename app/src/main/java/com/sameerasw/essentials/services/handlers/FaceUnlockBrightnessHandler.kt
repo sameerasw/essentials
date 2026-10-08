@@ -12,6 +12,7 @@ package com.sameerasw.essentials.services.handlers
 import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
 import android.app.KeyguardManager
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PixelFormat
@@ -19,10 +20,12 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.biometrics.BiometricManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -84,6 +87,7 @@ class FaceUnlockBrightnessHandler(
     private val powerManager = service.getSystemService(PowerManager::class.java)
     private val sensorManager = service.getSystemService(SensorManager::class.java)
     private val lightSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
+    private val proximitySensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
     private class PillOverlay(
         val view: View,
@@ -96,6 +100,11 @@ class FaceUnlockBrightnessHandler(
     private var tintView: View? = null
     private var isListening = false
     private var isLowLight = false
+    private var isListeningProximity = false
+    private var isProximityCovered: Boolean? = null
+    private var wakeTime = 0L
+    private var autoHandled = false
+    private var biometricsBlocked = false
 
     private val scanRunnable = Runnable { update() }
     private val endBumpRunnable = Runnable { endBump() }
@@ -107,7 +116,8 @@ class FaceUnlockBrightnessHandler(
             override fun onSensorChanged(event: SensorEvent) {
                 if (!canRun()) return
                 val lux = event.values[0]
-                val low = if (isLowLight) lux < ENOUGH_LUX_THRESHOLD else lux < LOW_LUX_THRESHOLD
+                val threshold = settings.getFaceUnlockAmbientThreshold()
+                val low = if (isLowLight) lux < threshold * ENOUGH_LUX_RATIO else lux < threshold
                 if (low == isLowLight) return
                 isLowLight = low
                 if (low) scheduleScans(SCREEN_ON_SCAN_DELAYS_MS) else update()
@@ -119,9 +129,33 @@ class FaceUnlockBrightnessHandler(
             ) {}
         }
 
+    private val proximityListener =
+        object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                val covered = event.values[0] < minOf(event.sensor.maximumRange, PROXIMITY_NEAR_CM)
+                if (covered == isProximityCovered) return
+                isProximityCovered = covered
+                if (!covered && isLowLight) scheduleScans(WINDOW_CHANGE_SCAN_DELAYS_MS)
+            }
+
+            override fun onAccuracyChanged(
+                sensor: Sensor?,
+                accuracy: Int,
+            ) {}
+        }
+
     fun onScreenOn() {
         resetState()
+        biometricsBlocked = !isFaceUnlockAvailable()
         if (!canRun()) return
+        wakeTime = SystemClock.elapsedRealtime()
+        checkStrongAuthRequired(wakeTime)
+        if (settings.isFaceUnlockAutoIlluminateEnabled()) {
+            proximitySensor?.let {
+                isListeningProximity =
+                    sensorManager?.registerListener(proximityListener, it, SensorManager.SENSOR_DELAY_NORMAL) == true
+            }
+        }
         val sensor = lightSensor ?: return
         isListening = sensorManager?.registerListener(sensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL) == true
     }
@@ -141,10 +175,48 @@ class FaceUnlockBrightnessHandler(
 
     fun onDestroy() = resetState()
 
+    // isDeviceLocked is false while a trust agent such as a watch keeps the device unlocked behind the lock screen
     private fun canRun() =
         settings.isFaceUnlockBrightnessEnabled() &&
             keyguardManager?.isKeyguardLocked == true &&
+            keyguardManager.isDeviceLocked &&
+            !biometricsBlocked &&
             powerManager?.isInteractive == true
+
+    private fun isFaceUnlockAvailable(): Boolean {
+        if (!service.packageManager.hasSystemFeature(PackageManager.FEATURE_FACE)) return false
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return true
+        val result =
+            service
+                .getSystemService(BiometricManager::class.java)
+                ?.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)
+        return result == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    private fun checkStrongAuthRequired(token: Long) {
+        if (!ShellUtils.isAvailable(service) || !ShellUtils.hasPermission(service)) return
+        thread {
+            val output =
+                ShellUtils.runCommandWithOutput(
+                    service,
+                    "settings get secure face_keyguard_enabled; dumpsys trust",
+                    notifyOnError = false,
+                ).orEmpty()
+            val faceDisabled = output.lineSequence().firstOrNull()?.trim() == "0"
+            val strongAuth =
+                output
+                    .lineSequence()
+                    .firstOrNull { "(current)" in it }
+                    ?.let { Regex("strongAuthRequired=0x([0-9a-fA-F]+)").find(it)?.groupValues?.get(1)?.toLongOrNull(16) }
+                    ?: 0L
+            if (!faceDisabled && strongAuth == 0L) return@thread
+            handler.post {
+                if (token != wakeTime) return@post
+                resetState()
+                biometricsBlocked = true
+            }
+        }
+    }
 
     private fun resetState() {
         handler.removeCallbacks(scanRunnable)
@@ -155,9 +227,15 @@ class FaceUnlockBrightnessHandler(
         endTint(animate = false)
         endBump()
         isLowLight = false
+        autoHandled = false
     }
 
     private fun stopListening() {
+        if (isListeningProximity) {
+            isListeningProximity = false
+            sensorManager?.unregisterListener(proximityListener)
+        }
+        isProximityCovered = null
         if (!isListening) return
         isListening = false
         sensorManager?.unregisterListener(sensorListener)
@@ -173,7 +251,31 @@ class FaceUnlockBrightnessHandler(
             removePill()
             return
         }
-        if (isMainLockscreenVisible()) showPill() else removePill()
+        if (!isMainLockscreenVisible()) {
+            removePill()
+            return
+        }
+        if (shouldAutoIlluminate()) {
+            autoHandled = true
+            illuminate(auto = true)
+        } else {
+            showPill()
+        }
+    }
+
+    // Only right after waking, and only once the proximity sensor reports the screen isn't covered
+    private fun shouldAutoIlluminate(): Boolean {
+        if (autoHandled || !settings.isFaceUnlockAutoIlluminateEnabled()) return false
+        if (SystemClock.elapsedRealtime() - wakeTime > AUTO_ILLUMINATE_WINDOW_MS) return false
+        return proximitySensor == null || isProximityCovered == false
+    }
+
+    // Auto illumination never triggers the unlock, so waking the screen doesn't also open the bouncer
+    private fun illuminate(auto: Boolean = false) {
+        removePill()
+        bump()
+        if (settings.isFaceUnlockLightTintEnabled()) showTint()
+        if (!auto && settings.isFaceUnlockTriggerUnlockEnabled()) showBouncer()
     }
 
     private fun isMainLockscreenVisible(): Boolean {
@@ -240,10 +342,7 @@ class FaceUnlockBrightnessHandler(
                         visibleState = visibleState,
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(container)
-                            removePill()
-                            bump()
-                            if (settings.isFaceUnlockLightTintEnabled()) showTint()
-                            if (settings.isFaceUnlockTriggerUnlockEnabled()) showBouncer()
+                            illuminate()
                         },
                     )
                 }
@@ -327,13 +426,18 @@ class FaceUnlockBrightnessHandler(
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun showTint() {
         if (tintView != null) return
         val view =
             View(service).apply {
                 setBackgroundColor(Color.WHITE)
                 alpha = 0f
-                setOnClickListener { endTint() }
+                // Not touchable so input reaches the lock screen; a touch landing on it is reported as outside
+                setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_OUTSIDE) endTint()
+                    false
+                }
             }
         val params =
             WindowManager.LayoutParams(
@@ -341,6 +445,8 @@ class FaceUnlockBrightnessHandler(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT,
@@ -442,8 +548,9 @@ class FaceUnlockBrightnessHandler(
     companion object {
         private const val SYSTEM_UI = "com.android.systemui"
         private const val MAX_NODES = 400
-        private const val LOW_LUX_THRESHOLD = 10f
-        private const val ENOUGH_LUX_THRESHOLD = 15f
+        private const val ENOUGH_LUX_RATIO = 1.5f
+        private const val AUTO_ILLUMINATE_WINDOW_MS = 3_000L
+        private const val PROXIMITY_NEAR_CM = 5f
         private const val BUMP_DURATION_MS = 5_000L
         private const val TINT_ALPHA = 0.5f
         private const val TINT_FADE_MS = 200L

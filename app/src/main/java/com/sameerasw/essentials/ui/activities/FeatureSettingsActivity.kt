@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -68,7 +69,10 @@ import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE
 import com.sameerasw.essentials.ui.features.security.AppLockSettingsUI
 import com.sameerasw.essentials.ui.features.system.AlwaysOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.BatteryNotificationSettingsUI
+import com.sameerasw.essentials.ui.features.system.ActivityLauncherSearchBar
+import com.sameerasw.essentials.ui.features.system.ActivityLauncherSettingsUI
 import com.sameerasw.essentials.ui.features.system.ButtonRemapSettingsUI
+import com.sameerasw.essentials.ui.features.system.LockscreenShortcutsSettingsUI
 import com.sameerasw.essentials.ui.features.system.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.features.system.CalendarSyncSettingsUI
 import com.sameerasw.essentials.ui.features.display.AodWallpaperPreviewCard
@@ -90,6 +94,7 @@ import com.sameerasw.essentials.ui.features.system.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.FlashlightPulseSettingsUI
 import com.sameerasw.essentials.ui.features.system.FlashlightSettingsUI
 import com.sameerasw.essentials.ui.features.system.FreezeSettingsUI
+import com.sameerasw.essentials.ui.features.system.HilightSettingsUI
 import com.sameerasw.essentials.ui.features.system.KeyboardSettingsUI
 import com.sameerasw.essentials.ui.features.system.LiveWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.system.LocationReachedSettingsUI
@@ -126,6 +131,7 @@ import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -260,6 +266,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     var showPermissionSheet by remember { mutableStateOf(false) }
                     var childFeatureForPermissions by remember { mutableStateOf<String?>(null) }
                     var standbyAppsSelectedPackages by remember { mutableStateOf(setOf<String>()) }
+                    var activityLauncherQuery by remember { mutableStateOf("") }
                     var isStandbyMoveSheetVisible by remember { mutableStateOf(false) }
 
                     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
@@ -358,9 +365,11 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         !isNotificationLightingAccessibilityEnabled ||
                                         !isNotificationListenerEnabled
                                 "Flashlight pulse" -> !isNotificationListenerEnabled
+                                "Hilight" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
                                 "Notification Sync" -> !isNotificationListenerEnabled
                                 "Button remap" -> !isAccessibilityEnabled
                                 "Face unlock brightness" -> !isAccessibilityEnabled
+                                "Lock screen shortcuts" -> !isAccessibilityEnabled
                                 "Pocket mode" -> !isAccessibilityEnabled
                                 "Dynamic night light" ->
                                     (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
@@ -554,6 +563,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
                     val scrollState = rememberScrollState()
 
+                    Box(modifier = Modifier.fillMaxSize()) {
                     Box(
                         modifier =
                             Modifier
@@ -567,6 +577,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     ) {
                         val hasScroll =
                             featureId != "Sound mode tile" &&
+                                featureId != "Activity launcher" &&
                                 featureId != "Quick settings tiles" &&
                                 featureId != "Location reached" &&
                                 featureId != "Watch Controls"
@@ -590,7 +601,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     ),
                         ) {
                             // Top padding for status bar
-                            if (featureId != "Quick settings tiles" && featureId != "Location reached") {
+                            if (featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "Activity launcher") {
                                 androidx.compose.foundation.layout.Spacer(
                                     modifier =
                                         Modifier.height(
@@ -674,6 +685,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         listOf(
                                                             "Notification lighting",
                                                             "Flashlight pulse",
+                                                            "Hilight",
                                                         ),
                                                         listOf(
                                                             "Notification snoozing",
@@ -697,6 +709,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         listOf(
                                                             "Button remap",
                                                             "Flashlight",
+                                                            "Activity launcher",
+                                                            "Lock screen shortcuts",
                                                         ),
                                                         listOf(
                                                             "Link actions",
@@ -796,8 +810,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                                     !isNotificationLightingAccessibilityEnabled ||
                                                                     !isNotificationListenerEnabled
                                                             "Flashlight pulse" -> !isNotificationListenerEnabled
+                                                            "Hilight" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
                                                             "Button remap" -> !isAccessibilityEnabled
                                                             "Face unlock brightness" -> !isAccessibilityEnabled
+                                                            "Lock screen shortcuts" -> !isAccessibilityEnabled
                                                             "Dynamic night light" ->
                                                                 (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
                                                                     !isWriteSecureSettingsEnabled
@@ -924,7 +940,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         context,
                                                     ),
                                                 showToggle = child.showToggle,
-                                                onDisabledToggleClick = { permissionAwareToggle(true) },
+                                                onDisabledToggleClick = {
+                                                    if (child.id == "Hilight" && !DeviceUtils.isHilightDevice()) {
+                                                        Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
+                                                    } else {
+                                                        permissionAwareToggle(true)
+                                                    }
+                                                },
                                                 hasMoreSettings = child.hasMoreSettings,
                                                 isBeta = child.isBeta,
                                                 isLegacy = child.isLegacy,
@@ -991,6 +1013,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    "Hilight" -> {
+                                        HilightSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
                                     "Notification lighting" -> {
                                         NotificationLightingSettingsUI(
                                             viewModel = viewModel,
@@ -1011,6 +1041,21 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Button remap" -> {
                                         ButtonRemapSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Activity launcher" -> {
+                                        ActivityLauncherSettingsUI(
+                                            query = activityLauncherQuery,
+                                            modifier = Modifier.nestedScroll(nestedScrollConnection),
+                                        )
+                                    }
+
+                                    "Lock screen shortcuts" -> {
+                                        LockscreenShortcutsSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
@@ -1445,6 +1490,18 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
                                 },
                         )
+                    }
+
+                    if (featureId == "Activity launcher") {
+                        ActivityLauncherSearchBar(
+                            query = activityLauncherQuery,
+                            onQueryChange = { activityLauncherQuery = it },
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopCenter)
+                                    .padding(start = 16.dp, end = 16.dp, top = statusBarHeight + 8.dp),
+                        )
+                    }
                     }
                 }
             }

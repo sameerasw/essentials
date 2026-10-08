@@ -11,11 +11,15 @@ package com.sameerasw.essentials.services
 
 import android.graphics.drawable.Icon
 import android.content.pm.LauncherApps
+import com.sameerasw.essentials.domain.controller.HilightController
+import com.sameerasw.essentials.utils.PriorityModeUtil
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.notification.NotificationRepostFilter
 import com.sameerasw.essentials.utils.chronometer.ChronometerRepository
 import com.sameerasw.essentials.utils.call.CallNotificationParser
 import com.sameerasw.essentials.utils.call.CallStateRepository
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.Person
 import android.content.Context
 import android.content.Intent
@@ -28,6 +32,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
+import android.os.SystemClock
 import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -53,6 +58,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.overlay.fromPrefs
 import com.sameerasw.essentials.utils.overlay.writeTo
 import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 import java.io.File
 import java.io.FileOutputStream
 
@@ -1107,6 +1113,8 @@ class NotificationListener : NotificationListenerService() {
                 return
             }
 
+            handleHilight(sbn)
+
             val prefs =
                 applicationContext.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
 
@@ -1312,6 +1320,26 @@ class NotificationListener : NotificationListenerService() {
     }
 
     private val lastCallVibrateTime = mutableMapOf<String, Long>()
+
+    private fun handleHilight(sbn: StatusBarNotification) {
+        if (!DeviceUtils.isHilightDevice()) return
+        val settings = SettingsRepository(applicationContext)
+        if (!settings.isHilightNotificationsEnabled()) return
+        val flags = sbn.notification.flags
+        val skipFlags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_FOREGROUND_SERVICE or Notification.FLAG_GROUP_SUMMARY
+        if (flags and skipFlags != 0) return
+        val ranking = Ranking()
+        if (currentRanking.getRanking(sbn.key, ranking) && ranking.importance <= NotificationManager.IMPORTANCE_LOW) return
+        if (settings.isHilightOnlyWhenScreenOff() && getSystemService(PowerManager::class.java)?.isInteractive == true) return
+        if (settings.isHilightSkipDnd() && PriorityModeUtil.isActive(applicationContext)) return
+        val effect = settings.getHilightEffectForApp(sbn.packageName) ?: return
+        val now = SystemClock.elapsedRealtime()
+        val last = lastHilightTime[sbn.packageName]
+        if (last != null && now - last < settings.getHilightCooldownSeconds() * 1000L) return
+        HilightController.play(effect) { lastHilightTime[sbn.packageName] = SystemClock.elapsedRealtime() }
+    }
+
+    private val lastHilightTime = ConcurrentHashMap<String, Long>()
 
     private fun handleCallVibrations(sbn: StatusBarNotification) {
         try {

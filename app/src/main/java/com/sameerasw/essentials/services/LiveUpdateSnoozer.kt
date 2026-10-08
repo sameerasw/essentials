@@ -57,10 +57,11 @@ object LiveUpdateSnoozer {
     }
 
     @Synchronized
-    fun isSnoozedByUs(key: String): Boolean = key in mine
+    fun isSnoozedByUs(key: String): Boolean = key in mine || LiveUpdateOpSuppressor.isReposting(key)
 
     @Synchronized
-    fun snoozedNotifications(): List<StatusBarNotification> = mine.values.toList()
+    fun snoozedNotifications(): List<StatusBarNotification> =
+        mine.values.toList() + LiveUpdateOpSuppressor.repostingNotifications()
 
     @Synchronized
     fun onIslandVisibility(
@@ -78,7 +79,10 @@ object LiveUpdateSnoozer {
 
     @Synchronized
     fun release() {
-        NotificationListener.instance?.let { unsnoozeAll(it) }
+        NotificationListener.instance?.let {
+            unsnoozeAll(it)
+            LiveUpdateOpSuppressor.restore(it)
+        }
         mine.clear()
         misses.clear()
         handler.removeCallbacks(poll)
@@ -89,6 +93,12 @@ object LiveUpdateSnoozer {
         val enabled = SettingsRepository(listener).isIslandHideLiveUpdatesEnabled()
         if (!enabled || !islandVisible) {
             unsnoozeAll(listener)
+            LiveUpdateOpSuppressor.restore(listener)
+            return
+        }
+        if (LiveUpdateOpSuppressor.isAvailable(listener)) {
+            unsnoozeAll(listener)
+            LiveUpdateOpSuppressor.suppress(listener)
             return
         }
         val active = try {

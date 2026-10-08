@@ -512,6 +512,23 @@
             android:taskAffinity=""
             android:theme="@style/Theme.Essentials.Translucent" />
 
+        <!-- Exported for launchers; pinned shortcuts only carry an id resolved from app storage -->
+        <activity
+            android:name=".ui.activities.PinnedActionActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
+            android:name=".ui.activities.LockscreenActionActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
         <activity
             android:name=".ui.activities.QSPreferencesActivity"
             android:excludeFromRecents="true"

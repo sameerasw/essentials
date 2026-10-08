@@ -48,6 +48,9 @@ object ShellUtils {
 
     fun isRootEnabled(context: Context): Boolean = resolveMode(context) == PrivilegedMode.ROOT
 
+    fun usesShizukuBinder(context: Context): Boolean =
+        resolveMode(context).let { it == PrivilegedMode.SHIZUKU || it == PrivilegedMode.PORTER }
+
     fun usesAuthToken(context: Context): Boolean =
         when (resolveMode(context)) {
             PrivilegedMode.SHIZUKU -> !ShizukuUtils.isSheveryFork(context)

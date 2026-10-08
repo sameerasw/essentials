@@ -1765,4 +1765,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_battery_percentage_conditional_title">% solo para algunas condiciones</string>
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_weather_mode_title">Mostrar en Isla</string>
+    <string name="island_section_notifications">Notificaciones</string>
 </resources>

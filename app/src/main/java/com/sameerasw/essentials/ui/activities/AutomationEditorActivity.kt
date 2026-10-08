@@ -97,7 +97,9 @@ import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.BluetoothDeviceSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.CustomSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.HilightEffectSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.ChargingModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.NotificationLightingActionSheet
@@ -337,6 +339,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
                 var showFreezeTagSettings by remember { mutableStateOf(false) }
                 var showOpenAppSettings by remember { mutableStateOf(false) }
+                var showOpenActivitySettings by remember { mutableStateOf(false) }
                 var showFreezeAppsSettings by remember { mutableStateOf(false) }
                 var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
                 var showTimeSettings by remember { mutableStateOf(false) }
@@ -347,6 +350,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showSetKeyboardSheet by remember { mutableStateOf(false) }
                 var showCustomSettingsSettings by remember { mutableStateOf(false) }
                 var showSetVolumeSettings by remember { mutableStateOf(false) }
+                var showHilightSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
                 val isTriggerConfigured =
@@ -380,6 +384,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 fun isActionConfigured(action: Action?): Boolean =
                     when (action) {
                         is Action.OpenApp -> action.packageName.isNotBlank()
+                        is Action.OpenActivity -> action.className.isNotBlank()
                         is Action.CustomSettings -> action.entries.isNotEmpty()
                         is Action.Keyboard -> !action.inputMethodId.isNullOrBlank()
                         else -> true
@@ -1352,6 +1357,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                                                     is Action.FreezeTag -> showFreezeTagSettings = true
                                                                     is Action.OpenApp -> showOpenAppSettings = true
+                                                                    is Action.OpenActivity -> showOpenActivitySettings = true
                                                                     is Action.FreezeApps -> {
                                                                         temporarySelectedAppsForAction = resolvedAction.packageNames
                                                                         showFreezeAppsSettings = true
@@ -1364,6 +1370,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                         showSetKeyboardSheet = true
                                                                     }
                                                                     is Action.SetVolume -> showSetVolumeSettings = true
+                                                                    is Action.Hilight -> showHilightSettings = true
                                                                     is Action.CustomSettings -> showCustomSettingsSettings = true
                                                                     else -> {}
                                                                 }
@@ -1729,6 +1736,36 @@ class AutomationEditorActivity : ComponentActivity() {
                                 )
                             }
 
+                            if (showHilightSettings && configAction is Action.Hilight) {
+                                HilightEffectSettingsSheet(
+                                    initialAction = configAction as Action.Hilight,
+                                    onDismiss = { showHilightSettings = false },
+                                    onSave = { newAction ->
+                                        showHilightSettings = false
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER -> selectedAction = newAction
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
+                                                selectedAction =
+                                                    newAction
+
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) {
+                                                    selectedInAction = newAction
+                                                } else {
+                                                    selectedOutAction = newAction
+                                                }
+                                            }
+                                        }
+                                        configAction = null
+                                    },
+                                )
+                            }
+
                             if (showSometimesEssentialsSettings && configAction is Action.SometimesEssentials) {
                                 com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet(
                                     initialAction = configAction as Action.SometimesEssentials,
@@ -1802,6 +1839,34 @@ class AutomationEditorActivity : ComponentActivity() {
                                     onDismissRequest = { showOpenAppSettings = false },
                                     onAppSelected = { app ->
                                         val newAction = Action.OpenApp(packageName = app.packageName)
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER -> selectedAction = newAction
+                                            Automation.Type.ACTION_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_1,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_2,
+                                            Automation.Type.ACCESSIBILITY_SHORTCUT_3,
+                                            Automation.Type.PIXEL_SEARCHBAR ->
+                                                selectedAction =
+                                                    newAction
+
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) {
+                                                    selectedInAction = newAction
+                                                } else {
+                                                    selectedOutAction = newAction
+                                                }
+                                            }
+                                        }
+                                        configAction = null
+                                    },
+                                )
+                            }
+
+                            if (showOpenActivitySettings) {
+                                OpenActivityPicker(
+                                    onDismiss = { showOpenActivitySettings = false },
+                                    onActivitySelected = { newAction ->
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = newAction
                                             Automation.Type.ACTION_SHORTCUT,

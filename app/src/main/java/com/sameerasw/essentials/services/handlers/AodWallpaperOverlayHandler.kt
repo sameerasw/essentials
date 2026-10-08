@@ -26,6 +26,7 @@ import android.graphics.PixelFormat
 import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.hardware.display.DisplayManager
 import android.media.MediaMetadata
@@ -37,16 +38,24 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
+import android.util.TypedValue
 import android.view.Display
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import com.sameerasw.essentials.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.PriorityModeUtil
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.AppUtil
@@ -62,7 +71,14 @@ class AodWallpaperOverlayHandler(
 ) {
     private var windowManager: WindowManager? = null
     private var overlayContainer: FrameLayout? = null
+    private var maskedContainer: FrameLayout? = null
     private var wallpaperImageView: ImageView? = null
+    private var extendedLayer: FrameLayout? = null
+    private var extendedInfoColumn: LinearLayout? = null
+    private var mediaTitleText: TextView? = null
+    private var mediaNoteIcon: ImageView? = null
+    private var appIconCachePackage: String? = null
+    private var mediaSubtitleText: TextView? = null
     private var isOverlayAdded = false
     private var isScreenOff = false
     private var cachedWallpaperBitmap: Bitmap? = null
@@ -238,8 +254,59 @@ class AodWallpaperOverlayHandler(
             }
         }
 
+    private val runtimeState by lazy {
+        service.getSharedPreferences("aod_wallpaper_runtime_state", Context.MODE_PRIVATE)
+    }
+
     init {
         registerWallpaperChangeListeners()
+        setLockScreenMediaSuppressed(false)
+    }
+
+    private fun hasSecureWritePermission(): Boolean =
+        service.checkSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) ==
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+
+    private var lockScreenMediaSuppressDesired = false
+
+    // The key is @hide and unreadable for apps on S+, so the previous value comes from the shell when available.
+    private fun readLockScreenMediaValue(): Int =
+        ShellUtils
+            .runCommandWithOutput(
+                service,
+                "settings get secure $LOCK_SCREEN_MEDIA_KEY",
+                notifyOnError = false,
+            )?.toIntOrNull() ?: 1
+
+    private fun writeLockScreenMediaValue(value: Int) {
+        try {
+            Settings.Secure.putInt(service.contentResolver, LOCK_SCREEN_MEDIA_KEY, value)
+        } catch (e: Exception) {
+            Log.e("AodWallpaperOverlay", "Failed to write lock screen media setting", e)
+        }
+    }
+
+    // Hides the system lock screen media player on AOD, restoring the user's value afterwards.
+    private fun setLockScreenMediaSuppressed(suppress: Boolean) {
+        lockScreenMediaSuppressDesired = suppress
+        val savedValue = runtimeState.getInt(KEY_SAVED_LOCK_SCREEN_MEDIA, NO_SAVED_VALUE)
+        if (suppress) {
+            if (savedValue != NO_SAVED_VALUE || !hasSecureWritePermission()) return
+            handlerScope.launch(Dispatchers.IO) {
+                val previous = readLockScreenMediaValue()
+                withContext(Dispatchers.Main) {
+                    if (!lockScreenMediaSuppressDesired) return@withContext
+                    if (runtimeState.getInt(KEY_SAVED_LOCK_SCREEN_MEDIA, NO_SAVED_VALUE) != NO_SAVED_VALUE) {
+                        return@withContext
+                    }
+                    runtimeState.edit().putInt(KEY_SAVED_LOCK_SCREEN_MEDIA, previous).apply()
+                    if (previous != 0) writeLockScreenMediaValue(0)
+                }
+            }
+        } else if (savedValue != NO_SAVED_VALUE) {
+            if (hasSecureWritePermission()) writeLockScreenMediaValue(savedValue)
+            runtimeState.edit().remove(KEY_SAVED_LOCK_SCREEN_MEDIA).apply()
+        }
     }
 
     private fun registerPriorityModeListener() {
@@ -381,6 +448,7 @@ class AodWallpaperOverlayHandler(
     }
 
     private fun applyBurnInShift(animated: Boolean) {
+        applyExtendedInfoShift(animated)
         val imageView = wallpaperImageView ?: return
         val maxShiftPx = (8 * service.resources.displayMetrics.density).toInt()
         val targetX = (-maxShiftPx..maxShiftPx).random().toFloat()
@@ -436,6 +504,179 @@ class AodWallpaperOverlayHandler(
             imageView.colorFilter = colorFilter
         }
     }
+
+    private fun applyExtendedInfoShift(animated: Boolean) {
+        val column = extendedInfoColumn ?: return
+        val maxShiftPx = (4 * service.resources.displayMetrics.density).toInt()
+        val targetX = (-maxShiftPx..maxShiftPx).random().toFloat()
+        val targetY = (-maxShiftPx..maxShiftPx).random().toFloat()
+        if (animated) {
+            column.animate().translationX(targetX).translationY(targetY).setDuration(1000).start()
+        } else {
+            column.translationX = targetX
+            column.translationY = targetY
+        }
+    }
+
+    private fun buildExtendedLayer(): FrameLayout {
+        val density = service.resources.displayMetrics.density
+        val typeface = ResourcesCompat.getFont(service, R.font.google_sans_flex)
+
+        fun label(
+            sizeSp: Float,
+            alphaValue: Float,
+            weight: Int,
+        ) = TextView(service).apply {
+            setTextColor(Color.WHITE)
+            alpha = alphaValue
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
+            setTypeface(typeface)
+            fontVariationSettings = "'wght' $weight, 'ROND' 100"
+            gravity = Gravity.CENTER
+            textAlignment = View.TEXT_ALIGNMENT_CENTER
+            setSingleLine(true)
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        }
+
+        val iconSizePx =
+            TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_SP, 34f, service.resources.displayMetrics)
+                .toInt()
+        val noteIcon =
+            ImageView(service).apply {
+                setImageResource(R.drawable.rounded_music_note_24)
+                setColorFilter(Color.WHITE)
+                alpha = 0.8f
+            }
+
+        val title = label(16f, 0.95f, 800)
+        val subtitle = label(14f, 0.7f, 550)
+
+        val column =
+            LinearLayout(service).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                val pad = (32 * density).toInt()
+                setPadding(pad, 0, pad, 0)
+                addView(
+                    noteIcon,
+                    LinearLayout.LayoutParams(iconSizePx, iconSizePx).apply {
+                        gravity = Gravity.CENTER_HORIZONTAL
+                        bottomMargin = (2 * density).toInt()
+                    },
+                )
+                addView(
+                    title,
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    ),
+                )
+                addView(
+                    subtitle,
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    ).apply { topMargin = (1 * density).toInt() },
+                )
+                layoutParams =
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.BOTTOM,
+                    ).apply { bottomMargin = (96 * density).toInt() }
+            }
+
+        mediaTitleText = title
+        mediaNoteIcon = noteIcon
+        mediaSubtitleText = subtitle
+        extendedInfoColumn = column
+
+        return FrameLayout(service).apply { addView(column) }
+    }
+
+    private fun applyExtendedTextScale() {
+        val scale = prefs.getFloat(SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE, 1f).coerceIn(0.7f, 2f)
+        mediaTitleText?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f * scale)
+        mediaSubtitleText?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f * scale)
+        val useAppIcon = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_APP_ICON, false)
+        val iconSizePx =
+            TypedValue
+                .applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    (if (useAppIcon) 44f else 34f) * scale,
+                    service.resources.displayMetrics,
+                ).toInt()
+        mediaNoteIcon?.let { icon ->
+            val params = icon.layoutParams
+            if (params != null && (params.width != iconSizePx || params.height != iconSizePx)) {
+                params.width = iconSizePx
+                params.height = iconSizePx
+                icon.layoutParams = params
+            }
+        }
+    }
+
+    private fun updateExtendedInfo() {
+        val layer = extendedLayer ?: return
+        applyExtendedTextScale()
+        val enabled = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_MEDIA, false)
+        setLockScreenMediaSuppressed(enabled && isScreenOff)
+
+        val metadata = activeMediaController?.metadata
+        val trackTitle = metadata?.getString(MediaMetadata.METADATA_KEY_TITLE)
+        if (enabled && isMediaPlaying && !trackTitle.isNullOrBlank()) {
+            val artist = metadata?.getString(MediaMetadata.METADATA_KEY_ARTIST)
+            val album = metadata?.getString(MediaMetadata.METADATA_KEY_ALBUM)
+            val subtitle = listOf(artist, album).filter { !it.isNullOrBlank() }.joinToString(" · ")
+            updateNoteIcon()
+            mediaTitleText?.text = trackTitle
+            mediaSubtitleText?.text = subtitle
+            mediaSubtitleText?.visibility = if (subtitle.isBlank()) View.GONE else View.VISIBLE
+            layer.visibility = View.VISIBLE
+        } else {
+            layer.visibility = View.GONE
+        }
+    }
+
+    // Prefers the themed monochrome layer on Android 13+, otherwise falls back to a grayscale icon.
+    private fun updateNoteIcon() {
+        val icon = mediaNoteIcon ?: return
+        val packageName = activeMediaController?.packageName
+        if (!prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_APP_ICON, false) || packageName == null) {
+            appIconCachePackage = null
+            icon.colorFilter = null
+            icon.setImageResource(R.drawable.rounded_music_note_24)
+            icon.setColorFilter(Color.WHITE)
+            return
+        }
+        if (appIconCachePackage == packageName) return
+        try {
+            val drawable = service.packageManager.getApplicationIcon(packageName)
+            val monochrome =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && drawable is AdaptiveIconDrawable) {
+                    drawable.monochrome
+                } else {
+                    null
+                }
+            if (monochrome != null) {
+                icon.setImageDrawable(monochrome)
+                icon.setColorFilter(Color.WHITE)
+            } else {
+                icon.setImageDrawable(drawable)
+                icon.colorFilter = android.graphics.ColorMatrixColorFilter(android.graphics.ColorMatrix().apply { setSaturation(0f) })
+            }
+            appIconCachePackage = packageName
+        } catch (_: Exception) {
+            appIconCachePackage = null
+            icon.setImageResource(R.drawable.rounded_music_note_24)
+            icon.setColorFilter(Color.WHITE)
+        }
+    }
+
+    private fun needsMediaSession(): Boolean =
+        prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false) ||
+            prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_MEDIA, false)
 
     private fun buildMaskedContainer(): FrameLayout {
         return object : FrameLayout(service) {
@@ -521,21 +762,29 @@ class AodWallpaperOverlayHandler(
             applyImageEffects(imageView, blurRadius, luminanceFilter)
             root.addView(imageView)
             wallpaperImageView = imageView
-            overlayContainer = root
+            maskedContainer = root
+            val layer = buildExtendedLayer()
+            extendedLayer = layer
+            overlayContainer =
+                FrameLayout(service).apply {
+                    addView(root)
+                    addView(layer)
+                }
         } else {
             val imageView = wallpaperImageView ?: return
             imageView.alpha = opacity
             applyImageEffects(imageView, blurRadius, luminanceFilter)
-            overlayContainer?.invalidate()
+            maskedContainer?.invalidate()
         }
 
-        if (prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)) {
+        if (needsMediaSession()) {
             registerMediaSessionListener()
         } else {
             unregisterMediaSessionListener()
         }
 
         loadAndApplyWallpaper()
+        updateExtendedInfo()
 
         if (windowManager == null) {
             windowManager = service.getSystemService(AccessibilityService.WINDOW_SERVICE) as? WindowManager
@@ -795,6 +1044,7 @@ class AodWallpaperOverlayHandler(
     }
 
     private fun evaluateAndApplyDisplayBitmap(animated: Boolean = false) {
+        updateExtendedInfo()
         val useAlbumArt = prefs.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART, false)
         val art = currentArtBitmap
         val shouldShowArt = useAlbumArt && isMediaPlaying && art != null
@@ -943,6 +1193,7 @@ class AodWallpaperOverlayHandler(
         fadeInAnimator?.cancel()
         fadeInAnimator = null
         unregisterDisplayListener()
+        setLockScreenMediaSuppressed(false)
         currentDisplayedBitmap = null
         handler.removeCallbacks(burnInShiftRunnable)
         handler.removeCallbacks(timeoutRunnable)
@@ -982,13 +1233,22 @@ class AodWallpaperOverlayHandler(
                         imageView?.translationY = 0f
                         imageView?.scaleX = 1.0f
                         imageView?.scaleY = 1.0f
+                        extendedInfoColumn?.translationX = 0f
+                        extendedInfoColumn?.translationY = 0f
                         try {
                             windowManager?.removeView(currentView)
                         } catch (_: Exception) {
                         }
                         isOverlayAdded = false
                         overlayContainer = null
+                        maskedContainer = null
                         wallpaperImageView = null
+                        extendedLayer = null
+                        extendedInfoColumn = null
+                                                        mediaTitleText = null
+                        mediaNoteIcon = null
+                        appIconCachePackage = null
+                        mediaSubtitleText = null
                     }
                 })
                 start()
@@ -1001,8 +1261,18 @@ class AodWallpaperOverlayHandler(
         handler.removeCallbacks(burnInShiftRunnable)
         handler.removeCallbacks(timeoutRunnable)
         hideOverlay()
+        setLockScreenMediaSuppressed(false)
         overlayContainer = null
+        maskedContainer = null
         wallpaperImageView = null
+        extendedLayer = null
+        extendedInfoColumn = null
         cachedWallpaperBitmap = null
+    }
+
+    private companion object {
+        const val LOCK_SCREEN_MEDIA_KEY = "media_controls_lock_screen"
+        const val KEY_SAVED_LOCK_SCREEN_MEDIA = "saved_lock_screen_media"
+        const val NO_SAVED_VALUE = -1
     }
 }

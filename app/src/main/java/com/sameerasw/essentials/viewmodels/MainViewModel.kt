@@ -58,6 +58,8 @@ import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
 import com.sameerasw.essentials.domain.model.DnsPreset
+import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.LockscreenShortcutSide
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
@@ -66,6 +68,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
+import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.AppUpdateWorker
@@ -131,6 +134,14 @@ class MainViewModel : ViewModel() {
     val isButtonRemapPauseOnVolumeDialog = mutableStateOf(true)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
     val remapActions = mutableStateMapOf<RemapSlot, List<Action>>()
+    val isHilightNotificationsEnabled = mutableStateOf(false)
+    val isHilightOnlyWhenScreenOff = mutableStateOf(true)
+    val isHilightSkipDnd = mutableStateOf(true)
+    val hilightCooldownSeconds = mutableIntStateOf(60)
+    val hilightAppEffects = mutableStateMapOf<String, HilightEffect>()
+    val isLockscreenShortcutsEnabled = mutableStateOf(false)
+    val lockscreenShortcutActions = mutableStateMapOf<LockscreenShortcutSide, List<Action>>()
+    val lockscreenSystemShortcutsState = mutableStateOf(SystemShortcutsState.UNKNOWN)
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -360,11 +371,16 @@ class MainViewModel : ViewModel() {
     val isAodWallpaperUseAlbumArt = mutableStateOf(false)
     val isAodWallpaperDisableOnDnd = mutableStateOf(false)
     val isAodWallpaperKeepOnMedia = mutableStateOf(false)
+    val isAodWallpaperExtendedMedia = mutableStateOf(false)
+    val isAodWallpaperExtendedAppIcon = mutableStateOf(false)
+    val aodWallpaperExtendedTextScale = mutableFloatStateOf(1f)
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isFaceUnlockBrightnessEnabled = mutableStateOf(false)
     val faceUnlockMaxBrightness = mutableIntStateOf(100)
+    val faceUnlockAmbientThreshold = mutableFloatStateOf(10f)
     val isFaceUnlockTriggerUnlock = mutableStateOf(true)
+    val isFaceUnlockAutoIlluminate = mutableStateOf(false)
     val isFaceUnlockLightTint = mutableStateOf(false)
     val isPocketModeUseLightSensor = mutableStateOf(false)
     val pocketModeTriggerDelay = mutableFloatStateOf(3f) // seconds
@@ -443,6 +459,7 @@ class MainViewModel : ViewModel() {
 
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDisableNotificationInteractions = mutableStateOf(false)
+    val isScreenLockedDisableOnExtendedUnlock = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
     val isNotificationPolicyAccessGranted = mutableStateOf(false)
@@ -1001,6 +1018,10 @@ class MainViewModel : ViewModel() {
                         isScreenLockedSecurityEnabled.value =
                             settingsRepository.getBoolean(key)
 
+                    SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_ON_EXTENDED_UNLOCK ->
+                        isScreenLockedDisableOnExtendedUnlock.value =
+                            settingsRepository.getBoolean(key)
+
                     SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED -> {
                         isMapsPowerSavingEnabled.value = settingsRepository.getBoolean(key)
                         MapsState.isEnabled = isMapsPowerSavingEnabled.value
@@ -1013,6 +1034,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_BUTTON_REMAP_ENABLED ->
                         isButtonRemapEnabled.value =
                             settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE ->
+                        lockscreenSystemShortcutsState.value =
+                            settingsRepository.getLockscreenSystemShortcutsState()
 
                     SettingsRepository.KEY_APP_LOCK_ENABLED -> {
                         isAppLockEnabled.value = settingsRepository.getBoolean(key)
@@ -1302,6 +1327,18 @@ class MainViewModel : ViewModel() {
                         isAodWallpaperKeepOnMedia.value =
                             settingsRepository.getBoolean(key)
 
+                    SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_MEDIA ->
+                        isAodWallpaperExtendedMedia.value =
+                            settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_APP_ICON ->
+                        isAodWallpaperExtendedAppIcon.value =
+                            settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE ->
+                        aodWallpaperExtendedTextScale.floatValue =
+                            settingsRepository.getAodWallpaperExtendedTextScale()
+
                     SettingsRepository.KEY_POCKET_MODE_ENABLED ->
                         isPocketModeEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -1312,8 +1349,14 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_FACE_UNLOCK_MAX_BRIGHTNESS ->
                         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
 
+                    SettingsRepository.KEY_FACE_UNLOCK_AMBIENT_THRESHOLD ->
+                        faceUnlockAmbientThreshold.floatValue = settingsRepository.getFaceUnlockAmbientThreshold()
+
                     SettingsRepository.KEY_FACE_UNLOCK_TRIGGER_UNLOCK ->
                         isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
+
+                    SettingsRepository.KEY_FACE_UNLOCK_AUTO_ILLUMINATE ->
+                        isFaceUnlockAutoIlluminate.value = settingsRepository.isFaceUnlockAutoIlluminateEnabled()
 
                     SettingsRepository.KEY_FACE_UNLOCK_LIGHT_TINT ->
                         isFaceUnlockLightTint.value = settingsRepository.isFaceUnlockLightTintEnabled()
@@ -2226,6 +2269,18 @@ class MainViewModel : ViewModel() {
             remapActions[slot] = settingsRepository.getRemapActions(slot.prefKey)
         }
 
+        isHilightNotificationsEnabled.value = settingsRepository.isHilightNotificationsEnabled()
+        isHilightOnlyWhenScreenOff.value = settingsRepository.isHilightOnlyWhenScreenOff()
+        isHilightSkipDnd.value = settingsRepository.isHilightSkipDnd()
+        hilightCooldownSeconds.intValue = settingsRepository.getHilightCooldownSeconds()
+        hilightAppEffects.clear()
+        hilightAppEffects.putAll(settingsRepository.getHilightAppEffects())
+        isLockscreenShortcutsEnabled.value = settingsRepository.isLockscreenShortcutsEnabled()
+        LockscreenShortcutSide.entries.forEach { side ->
+            lockscreenShortcutActions[side] = settingsRepository.getRemapActions(side.prefKey)
+        }
+        lockscreenSystemShortcutsState.value = settingsRepository.getLockscreenSystemShortcutsState()
+
         val hapticName =
             settingsRepository.getString(
                 SettingsRepository.KEY_BUTTON_REMAP_HAPTIC_TYPE,
@@ -2549,6 +2604,8 @@ class MainViewModel : ViewModel() {
                 SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_NOTIFICATION_INTERACTIONS,
                 false,
             )
+        isScreenLockedDisableOnExtendedUnlock.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_ON_EXTENDED_UNLOCK, false)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
 
         isAutoUpdateEnabled.value =
@@ -2689,6 +2746,12 @@ class MainViewModel : ViewModel() {
             )
         isAodWallpaperKeepOnMedia.value =
             settingsRepository.isAodWallpaperKeepOnMediaEnabled()
+        isAodWallpaperExtendedMedia.value =
+            settingsRepository.isAodWallpaperExtendedMediaEnabled()
+        isAodWallpaperExtendedAppIcon.value =
+            settingsRepository.isAodWallpaperExtendedAppIconEnabled()
+        aodWallpaperExtendedTextScale.floatValue =
+            settingsRepository.getAodWallpaperExtendedTextScale()
         pixelSearchResultApps.value = settingsRepository.isPixelSearchResultAppsEnabled()
         pixelSearchResultMedia.value = settingsRepository.isPixelSearchResultMediaEnabled()
         pixelSearchResultFiles.value = settingsRepository.isPixelSearchResultFilesEnabled()
@@ -2702,7 +2765,9 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
+        faceUnlockAmbientThreshold.floatValue = settingsRepository.getFaceUnlockAmbientThreshold()
         isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
+        isFaceUnlockAutoIlluminate.value = settingsRepository.isFaceUnlockAutoIlluminateEnabled()
         isFaceUnlockLightTint.value = settingsRepository.isFaceUnlockLightTintEnabled()
         isPocketModeUseLightSensor.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR)
@@ -4952,6 +5017,19 @@ class MainViewModel : ViewModel() {
     ) {
         remapActions[slot] = actions
         settingsRepository.setRemapActions(slot.prefKey, actions)
+    }
+
+    fun setLockscreenShortcutsEnabled(enabled: Boolean) {
+        isLockscreenShortcutsEnabled.value = enabled
+        settingsRepository.setLockscreenShortcutsEnabled(enabled)
+    }
+
+    fun setLockscreenShortcutActions(
+        side: LockscreenShortcutSide,
+        actions: List<Action>,
+    ) {
+        lockscreenShortcutActions[side] = actions
+        settingsRepository.setRemapActions(side.prefKey, actions)
     }
 
     /**
@@ -7980,6 +8058,39 @@ class MainViewModel : ViewModel() {
         settingsRepository.updateNotificationLightingAppSelection(packageName, enabled)
     }
 
+    fun setHilightNotificationsEnabled(enabled: Boolean) {
+        isHilightNotificationsEnabled.value = enabled
+        settingsRepository.setHilightNotificationsEnabled(enabled)
+    }
+
+    fun setHilightSkipDnd(enabled: Boolean) {
+        isHilightSkipDnd.value = enabled
+        settingsRepository.setHilightSkipDnd(enabled)
+    }
+
+    fun setHilightOnlyWhenScreenOff(enabled: Boolean) {
+        isHilightOnlyWhenScreenOff.value = enabled
+        settingsRepository.setHilightOnlyWhenScreenOff(enabled)
+    }
+
+    fun setHilightCooldownSeconds(seconds: Int) {
+        hilightCooldownSeconds.intValue = seconds
+        settingsRepository.setHilightCooldownSeconds(seconds)
+    }
+
+    fun setHilightAppEffect(
+        packageName: String,
+        effect: HilightEffect,
+    ) {
+        hilightAppEffects[packageName] = effect
+        settingsRepository.setHilightAppEffect(packageName, effect)
+    }
+
+    fun removeHilightApp(packageName: String) {
+        hilightAppEffects.remove(packageName)
+        settingsRepository.setHilightAppEffect(packageName, null)
+    }
+
     /**
      * Executes the load flashlight pulse selected apps operation.
      *
@@ -8744,6 +8855,11 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun setScreenLockedDisableOnExtendedUnlock(enabled: Boolean) {
+        isScreenLockedDisableOnExtendedUnlock.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_SCREEN_LOCKED_DISABLE_ON_EXTENDED_UNLOCK, enabled)
+    }
+
     fun setDisableNotificationInteractions(
         enabled: Boolean,
         context: Context,
@@ -9115,6 +9231,21 @@ class MainViewModel : ViewModel() {
         isAodWallpaperKeepOnMedia.value = enabled
     }
 
+    fun setAodWallpaperExtendedMedia(enabled: Boolean) {
+        settingsRepository.setAodWallpaperExtendedMedia(enabled)
+        isAodWallpaperExtendedMedia.value = enabled
+    }
+
+    fun setAodWallpaperExtendedTextScale(value: Float) {
+        settingsRepository.setAodWallpaperExtendedTextScale(value)
+        aodWallpaperExtendedTextScale.floatValue = value
+    }
+
+    fun setAodWallpaperExtendedAppIcon(enabled: Boolean) {
+        settingsRepository.setAodWallpaperExtendedAppIcon(enabled)
+        isAodWallpaperExtendedAppIcon.value = enabled
+    }
+
     fun loadAodWallpaperMediaApps(context: Context): List<AppSelection> = settingsRepository.loadAodWallpaperMediaExcludedApps()
 
     fun saveAodWallpaperMediaApps(
@@ -9234,9 +9365,19 @@ class MainViewModel : ViewModel() {
         isFaceUnlockBrightnessEnabled.value = enabled
     }
 
+    fun setFaceUnlockAmbientThreshold(value: Float) {
+        settingsRepository.setFaceUnlockAmbientThreshold(value)
+        faceUnlockAmbientThreshold.floatValue = value
+    }
+
     fun setFaceUnlockMaxBrightness(value: Int) {
         settingsRepository.setFaceUnlockMaxBrightness(value)
         faceUnlockMaxBrightness.intValue = value
+    }
+
+    fun setFaceUnlockAutoIlluminate(enabled: Boolean) {
+        settingsRepository.setFaceUnlockAutoIlluminateEnabled(enabled)
+        isFaceUnlockAutoIlluminate.value = enabled
     }
 
     fun setFaceUnlockTriggerUnlock(enabled: Boolean) {

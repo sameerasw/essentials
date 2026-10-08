@@ -323,6 +323,7 @@ fun SingleAppSelectionSheet(
     onAppSelected: (NotificationApp) -> Unit,
     includeSelf: Boolean = false,
     context: Context = LocalContext.current,
+    includeSystemApps: Boolean = false,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val view = LocalView.current
@@ -335,7 +336,8 @@ fun SingleAppSelectionSheet(
         withContext(Dispatchers.IO) {
             try {
                 // Get only user/downloaded apps
-                val installedApps = AppUtil.getInstalledApps(context, includeSelf).filter { !it.isSystemApp }
+                val installedApps =
+                    AppUtil.getInstalledApps(context, includeSelf).filter { includeSystemApps || !it.isSystemApp }
                 withContext(Dispatchers.Main) {
                     apps = installedApps
                 }

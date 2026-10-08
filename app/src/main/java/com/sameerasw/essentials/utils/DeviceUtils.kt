@@ -97,6 +97,9 @@ object DeviceUtils {
 
     fun isTclDevice(): Boolean = isTclDeviceLazy
 
+    // The Hilight LED array ships on the Pixel 11 Pro, Pro XL and Pro Fold
+    fun isHilightDevice(): Boolean = isGoogleDevice() && Build.MODEL.startsWith("Pixel 11 Pro")
+
     fun getDeviceInfo(context: Context): DeviceInfo {
         val deviceName =
             try {

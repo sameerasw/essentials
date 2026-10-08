@@ -140,6 +140,16 @@ fun ScreenLockedSecuritySettingsUI(
                         highlightSetting == "screen_locked_disable_notification_interactions",
                     ),
             )
+
+            IconToggleItem(
+                title = stringResource(R.string.screen_locked_keep_qs_on_extended_unlock_title),
+                isChecked = viewModel.isScreenLockedDisableOnExtendedUnlock.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setScreenLockedDisableOnExtendedUnlock(isChecked)
+                },
+                iconRes = R.drawable.rounded_lock_24,
+                modifier = Modifier.highlight(highlightSetting == "screen_locked_disable_on_extended_unlock"),
+            )
         }
     }
 }

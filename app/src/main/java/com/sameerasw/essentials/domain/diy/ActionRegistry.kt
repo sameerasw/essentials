@@ -11,6 +11,7 @@ package com.sameerasw.essentials.domain.diy
 
 import android.os.Build
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.DeviceUtils
 
 object ActionRegistry {
     data class ActionCategory(
@@ -55,12 +56,16 @@ object ActionRegistry {
         val appsActions =
             listOf(
                 Action.OpenApp(),
+                Action.OpenActivity(),
                 Action.AIAssistant,
                 Action.FreezeApps(),
                 Action.UnfreezeApps(),
                 Action.FreezeTag(),
                 Action.PinApp,
                 Action.Keyboard(),
+                Action.OpenCamera,
+                Action.OpenVideoCamera,
+                Action.OpenQrScanner,
             )
 
         val systemActions =
@@ -68,6 +73,7 @@ object ActionRegistry {
                 add(Action.TurnOnFlashlight)
                 add(Action.TurnOffFlashlight)
                 add(Action.ToggleFlashlight)
+                if (DeviceUtils.isHilightDevice()) add(Action.Hilight())
                 add(Action.TurnOnLowPower)
                 add(Action.TurnOffLowPower)
                 add(Action.SetChargingMode())
@@ -84,6 +90,7 @@ object ActionRegistry {
                 Action.SoundMode(),
                 Action.CycleSoundModes,
                 Action.ToggleMute,
+                Action.ToggleDoNotDisturb,
                 Action.ToggleVibrate,
                 Action.HapticVibration,
                 Action.ToggleMediaVolume,
@@ -112,4 +119,19 @@ object ActionRegistry {
             ActionCategory(R.string.diy_category_essentials, essentialsActions),
         )
     }
+
+    fun getLockscreenCategories(sdkInt: Int = Build.VERSION.SDK_INT): List<ActionCategory> =
+        listOf(
+            ActionCategory(
+                R.string.diy_category_pixel_shortcuts,
+                listOf(
+                    Action.ToggleFlashlight,
+                    Action.ToggleDoNotDisturb,
+                    Action.ToggleMute,
+                    Action.OpenCamera,
+                    Action.OpenVideoCamera,
+                    Action.OpenQrScanner,
+                ),
+            ),
+        ) + getCategories(sdkInt, screenOnOnly = true)
 }

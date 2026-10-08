@@ -13,10 +13,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import android.os.Build
+import androidx.core.graphics.applyCanvas
+import androidx.core.graphics.createBitmap
 import com.sameerasw.essentials.ShortcutHandlerActivity
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.ui.activities.PinnedActionActivity
+import java.util.UUID
 
 object ShortcutUtil {
     /**
@@ -61,6 +68,47 @@ object ShortcutUtil {
             }
         }
     }
+
+    // Shortcuts carry only an id so other apps cannot use the exported activity to run arbitrary actions
+    fun pinActionShortcut(
+        context: Context,
+        action: Action,
+        label: String,
+        icon: Bitmap,
+        adaptive: Boolean = false,
+    ): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
+        val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+        if (shortcutManager == null || !shortcutManager.isRequestPinShortcutSupported) return false
+
+        val id = UUID.randomUUID().toString()
+        SettingsRepository(context).savePinnedAction(id, action)
+        val intent =
+            Intent(context, PinnedActionActivity::class.java).apply {
+                this.action = Intent.ACTION_VIEW
+                putExtra(PinnedActionActivity.EXTRA_SHORTCUT_ID, id)
+            }
+        val shortcut =
+            ShortcutInfo
+                .Builder(context, id)
+                .setShortLabel(label)
+                .setLongLabel(label)
+                // Adaptive fills the launcher's icon shape instead of sitting small inside it
+                .setIcon(if (adaptive) Icon.createWithAdaptiveBitmap(padToAdaptive(icon)) else Icon.createWithBitmap(icon))
+                .setIntent(intent)
+                .build()
+        return shortcutManager.requestPinShortcut(shortcut, null)
+    }
+
+    // Launchers show only the middle 72 of an adaptive icon's 108 units, so the image goes there
+    private fun padToAdaptive(icon: Bitmap): Bitmap {
+        val size = icon.width * ADAPTIVE_FULL_SIZE / ADAPTIVE_VISIBLE_SIZE
+        val inset = (size - icon.width) / 2f
+        return createBitmap(size, size).applyCanvas { drawBitmap(icon, inset, inset, null) }
+    }
+
+    private const val ADAPTIVE_FULL_SIZE = 108
+    private const val ADAPTIVE_VISIBLE_SIZE = 72
 
     /**
      * Executes the update launcher dynamic shortcuts operation.

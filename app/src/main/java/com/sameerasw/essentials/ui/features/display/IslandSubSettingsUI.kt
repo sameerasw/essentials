@@ -681,7 +681,15 @@ fun IslandBehaviorSettingsUI(
                 isChecked = viewModel.isIslandHideLiveUpdates.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandHideLiveUpdates(checked)
+                    if (checked && !hasShellPermission) {
+                        requestingPermissionsFor =
+                            Pair(
+                                R.string.island_hide_live_updates_title,
+                                listOf(if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"),
+                            )
+                    } else {
+                        viewModel.setIslandHideLiveUpdates(checked)
+                    }
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_hide_live_updates"),
             )

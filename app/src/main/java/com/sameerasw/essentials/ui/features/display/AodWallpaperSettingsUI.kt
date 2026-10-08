@@ -319,6 +319,71 @@ fun AodWallpaperSettingsUI(
             }
         }
 
+        val isExtendedMedia = viewModel.isAodWallpaperExtendedMedia.value
+
+        Text(
+            text = stringResource(R.string.feat_aod_wallpaper_extended_section_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_note_24,
+                title = stringResource(R.string.feat_aod_wallpaper_extended_media),
+                isChecked = isExtendedMedia,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    val missing =
+                        buildList {
+                            if (!isNotificationListenerGranted) add("NOTIFICATION_LISTENER")
+                            if (!viewModel.isWriteSecureSettingsEnabled.value) add("WRITE_SECURE_SETTINGS")
+                        }
+                    if (checked && missing.isNotEmpty()) {
+                        requestingPermissionsFor =
+                            Pair(R.string.feat_aod_wallpaper_extended_media, missing)
+                    } else {
+                        viewModel.setAodWallpaperExtendedMedia(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_extended_media"),
+            )
+
+            AnimatedVisibility(
+                visible = isExtendedMedia,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_apps_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_extended_app_icon),
+                    isChecked = viewModel.isAodWallpaperExtendedAppIcon.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setAodWallpaperExtendedAppIcon(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "aod_wallpaper_extended_app_icon"),
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isExtendedMedia,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.status_glance_font_size_title),
+                    value = (viewModel.aodWallpaperExtendedTextScale.floatValue * 100f).coerceIn(70f, 200f),
+                    onValueChange = { viewModel.setAodWallpaperExtendedTextScale(it / 100f) },
+                    valueRange = 70f..200f,
+                    increment = 5f,
+                    valueFormatter = { "${it.toInt()}%" },
+                    iconRes = R.drawable.rounded_format_size_24,
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(80.dp))
 
         if (showMediaAppSelectionSheet) {
