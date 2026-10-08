@@ -4,7 +4,7 @@
  *
  * Feature Module: Lighting Features
  * File: HilightSettingsUI.kt
- * Description: Settings for lighting the Pixel Hilight LEDs on notifications, with a custom effect per app.
+ * Description: Hilight settings: the hub page, per-app notification effects and live notification progress.
  */
 
 package com.sameerasw.essentials.ui.features.system
@@ -75,67 +75,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import rikka.shizuku.Shizuku
 
+// Shown below the hub's two entries: the conditions both of them follow
 @Composable
 fun HilightSettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     highlightSetting: String? = null,
 ) {
-    val context = LocalContext.current
-    val isHilightDevice = remember { DeviceUtils.isHilightDevice() }
-    var isArrayAvailable by remember { mutableStateOf<Boolean?>(null) }
-    var hasShizukuAccess by remember { mutableStateOf(true) }
-    var showAppPicker by remember { mutableStateOf(false) }
-    // Package whose effect sheet is open; a new app goes straight from the picker to its sheet
-    var editingPackage by remember { mutableStateOf<String?>(null) }
-
-    var shizukuBinderEvents by remember { mutableIntStateOf(0) }
-
-    // Shizuku's binder can arrive after the screen opens, so check again once it does
-    DisposableEffect(Unit) {
-        val listener = Shizuku.OnBinderReceivedListener { shizukuBinderEvents++ }
-        Shizuku.addBinderReceivedListenerSticky(listener)
-        onDispose { Shizuku.removeBinderReceivedListener(listener) }
-    }
-
-    // Binder calls through Shizuku, so keep them off the main thread
-    LaunchedEffect(shizukuBinderEvents) {
-        if (!isHilightDevice) return@LaunchedEffect
-        hasShizukuAccess = HilightLights.isAccessGranted()
-        isArrayAvailable = withContext(Dispatchers.IO) { HilightController.isAvailable() }
-    }
-
     Column(
         modifier =
             modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        if (!isHilightDevice) {
-            StatusText(stringResource(R.string.hilight_status_no_device), isError = false)
-        } else if (!HilightLights.isModeSupported(context)) {
-            StatusText(stringResource(R.string.hilight_status_unsupported_mode), isError = true)
-        } else if (isArrayAvailable == false) {
-            StatusText(
-                stringResource(if (hasShizukuAccess) R.string.hilight_status_no_leds else R.string.hilight_status_no_access),
-                isError = true,
-            )
-        }
-
         RoundedCardContainer(spacing = 2.dp) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_notifications_unread_24,
-                title = stringResource(R.string.hilight_notifications_title),
-                description = stringResource(R.string.hilight_notifications_desc),
-                isChecked = viewModel.isHilightNotificationsEnabled.value,
-                onCheckedChange = { viewModel.setHilightNotificationsEnabled(it) },
-                enabled = isHilightDevice,
-                onDisabledClick = {
-                    Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier.highlight(highlightSetting == "hilight_notifications"),
-            )
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_lock_portrait_24,
                 title = stringResource(R.string.hilight_only_screen_off_title),
@@ -148,6 +102,51 @@ fun HilightSettingsUI(
                 isChecked = viewModel.isHilightSkipDnd.value,
                 onCheckedChange = { viewModel.setHilightSkipDnd(it) },
                 modifier = Modifier.highlight(highlightSetting == "hilight_skip_dnd"),
+            )
+        }
+
+        RoundedCardContainer {
+            Text(
+                text = stringResource(R.string.hilight_hint),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+fun HilightNotificationsSettingsUI(
+    viewModel: MainViewModel,
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null,
+) {
+    val context = LocalContext.current
+    val isHilightDevice = remember { DeviceUtils.isHilightDevice() }
+    var showAppPicker by remember { mutableStateOf(false) }
+    // Package whose effect sheet is open; a new app goes straight from the picker to its sheet
+    var editingPackage by remember { mutableStateOf<String?>(null) }
+
+    Column(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        RoundedCardContainer(spacing = 2.dp) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                title = stringResource(R.string.hilight_notifications_title),
+                description = stringResource(R.string.hilight_notifications_desc),
+                isChecked = viewModel.isHilightNotificationsEnabled.value,
+                onCheckedChange = { viewModel.setHilightNotificationsEnabled(it) },
+                enabled = isHilightDevice,
+                onDisabledClick = {
+                    Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier.highlight(highlightSetting == "hilight_notifications"),
             )
             ConfigSliderItem(
                 title = stringResource(R.string.hilight_cooldown_title),
@@ -195,21 +194,6 @@ fun HilightSettingsUI(
             }
             HilightAddAppItem(onClick = { showAppPicker = true })
         }
-
-        HilightProgressSection(
-            viewModel = viewModel,
-            isHilightDevice = isHilightDevice,
-            highlightSetting = highlightSetting,
-        )
-
-        RoundedCardContainer {
-            Text(
-                text = stringResource(R.string.hilight_hint),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(16.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
     }
 
     if (showAppPicker) {
@@ -230,6 +214,64 @@ fun HilightSettingsUI(
             },
             canTry = isHilightDevice,
         )
+    }
+}
+
+@Composable
+fun HilightProgressSettingsUI(
+    viewModel: MainViewModel,
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null,
+) {
+    Column(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        HilightProgressSection(
+            viewModel = viewModel,
+            isHilightDevice = remember { DeviceUtils.isHilightDevice() },
+            highlightSetting = highlightSetting,
+        )
+    }
+}
+
+// Shown above the hub's two entries when the LEDs can't be used
+@Composable
+fun HilightStatus(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val isHilightDevice = remember { DeviceUtils.isHilightDevice() }
+    var isArrayAvailable by remember { mutableStateOf<Boolean?>(null) }
+    var hasShizukuAccess by remember { mutableStateOf(true) }
+    var shizukuBinderEvents by remember { mutableIntStateOf(0) }
+
+    // Shizuku's binder can arrive after the screen opens, so check again once it does
+    DisposableEffect(Unit) {
+        val listener = Shizuku.OnBinderReceivedListener { shizukuBinderEvents++ }
+        Shizuku.addBinderReceivedListenerSticky(listener)
+        onDispose { Shizuku.removeBinderReceivedListener(listener) }
+    }
+
+    // Binder calls through Shizuku, so keep them off the main thread
+    LaunchedEffect(shizukuBinderEvents) {
+        if (!isHilightDevice) return@LaunchedEffect
+        hasShizukuAccess = HilightLights.isAccessGranted()
+        isArrayAvailable = withContext(Dispatchers.IO) { HilightController.isAvailable() }
+    }
+
+    Box(modifier = modifier) {
+        if (!isHilightDevice) {
+            StatusText(stringResource(R.string.hilight_status_no_device), isError = false)
+        } else if (!HilightLights.isModeSupported(context)) {
+            StatusText(stringResource(R.string.hilight_status_unsupported_mode), isError = true)
+        } else if (isArrayAvailable == false) {
+            StatusText(
+                stringResource(if (hasShizukuAccess) R.string.hilight_status_no_leds else R.string.hilight_status_no_access),
+                isError = true,
+            )
+        }
     }
 }
 
@@ -254,12 +296,6 @@ private fun HilightProgressSection(
     val mode = viewModel.hilightProgressColorMode.value
     val color = viewModel.hilightProgressColor.intValue
 
-    Text(
-        text = stringResource(R.string.hilight_progress_title),
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(start = 16.dp),
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
     RoundedCardContainer(spacing = 2.dp) {
         IconToggleItem(
             iconRes = R.drawable.rounded_downloading_24,
