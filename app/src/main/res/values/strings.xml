@@ -2638,7 +2638,7 @@
     <string name="watchface_glance_complications_title">Complications</string>
     <string name="watchface_glance_complications_desc">Choose what to show</string>
     <string name="watchface_glance_comp_battery_alerts_title">Low battery alert</string>
-    <string name="watchface_glance_comp_battery_alerts_desc">Show alert when watch or phone battery is below 20%</string>
+    <string name="watchface_glance_comp_battery_alerts_desc" formatted="false">Show alert when watch or phone battery is below 20%</string>
     <string name="watchface_glance_comp_flashlight_title">Flashlight</string>
     <string name="watchface_glance_comp_flashlight_desc">Show when phone flashlight is on</string>
     <string name="watchface_glance_comp_travel_title">Are We There (Travel ETA)</string>
@@ -2976,6 +2976,14 @@
     <string name="island_battery_style_title">Battery style</string>
     <string name="island_battery_style_ring">Ring</string>
     <string name="island_battery_style_icon">Icon</string>
+    <string name="island_battery_alerts_title">Battery alerts</string>
+    <string name="island_battery_alerts_options_title">Battery alert options</string>
+    <string name="island_battery_alert_charging_title">Charging connected</string>
+    <string name="island_battery_alert_low_title" formatted="false">Low battery (11-20%)</string>
+    <string name="island_battery_alert_critical_title" formatted="false">Critical battery (0-10%)</string>
+    <string name="island_battery_alert_charging">Charging</string>
+    <string name="island_battery_alert_low">Low battery</string>
+    <string name="island_battery_alert_critical">Critical battery</string>
     <string name="slider_value_label">Value</string>
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>

@@ -1762,7 +1762,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watchface_show_glow_desc">Dynamischer Farbverlauf am oberen Rand für bevorstehende Ereignisse und Reisen</string>
     <string name="watch_complications_desc">Komplikations-Widgets anpassen</string>
     <string name="watchface_glance_comp_battery_alerts_title">Warnung bei niedrigem Akkustand</string>
-    <string name="watchface_glance_comp_battery_alerts_desc">Warnung anzeigen, wenn der Akku der Uhr oder des Telefons unter 20 % liegt</string>
+    <string name="watchface_glance_comp_battery_alerts_desc" formatted="false">Warnung anzeigen, wenn der Akku der Uhr oder des Telefons unter 20 % liegt</string>
     <string name="watchface_glance_comp_travel_title">Sind wir da (Reise-ETA)</string>
     <string name="watchface_glance_comp_travel_desc">Verbleibende Zeit/Entfernung zum Ziel anzeigen</string>
     <string name="watchface_glance_comp_alarm_title">Nächster Alarm</string>

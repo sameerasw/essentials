@@ -15,6 +15,7 @@ object IslandPriority {
     const val CALL = -10
     const val TIME = 0
     const val BATTERY = 1
+    const val BATTERY_ALERT = 2
 
     const val TIMER_OVERRIDE = 5
     const val CALENDAR_OVERRIDE = 6

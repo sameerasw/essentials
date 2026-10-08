@@ -538,6 +538,10 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_ICON_CONDITIONAL = "island_battery_icon_conditional"
         const val KEY_ISLAND_BATTERY_ONLY_LOW = "island_battery_only_low"
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
+        const val KEY_ISLAND_SHOW_BATTERY_ALERTS = "island_show_battery_alerts"
+        const val KEY_ISLAND_BATTERY_ALERT_CHARGING = "island_battery_alert_charging"
+        const val KEY_ISLAND_BATTERY_ALERT_LOW = "island_battery_alert_low"
+        const val KEY_ISLAND_BATTERY_ALERT_CRITICAL = "island_battery_alert_critical"
         const val ISLAND_BATTERY_LOW_LEVEL = 20
         const val ISLAND_BATTERY_CRITICAL_LEVEL = 10
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
@@ -3895,6 +3899,9 @@ class SettingsRepository(
 
     fun isIslandShowTimeBatteryEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIME_BATTERY, false)
     fun setIslandShowTimeBatteryEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIME_BATTERY, enabled)
+
+    fun isIslandShowBatteryAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_BATTERY_ALERTS, true)
+    fun setIslandShowBatteryAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_BATTERY_ALERTS, enabled)
 
     fun getIslandBatteryStyle(): String =
         getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING

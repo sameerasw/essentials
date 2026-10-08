@@ -38,11 +38,18 @@ fun IslandLauncherOnlyToggle(settingKey: String, modifier: Modifier = Modifier) 
 }
 
 @Composable
-fun IslandPrefToggle(settingKey: String, iconRes: Int, title: String, modifier: Modifier = Modifier, onChanged: (Boolean) -> Unit = {}) {
+fun IslandPrefToggle(
+    settingKey: String,
+    iconRes: Int,
+    title: String,
+    modifier: Modifier = Modifier,
+    defaultValue: Boolean = false,
+    onChanged: (Boolean) -> Unit = {}
+) {
     val context = LocalContext.current
     val view = LocalView.current
     val settings = remember { SettingsRepository(context) }
-    var checked by remember { mutableStateOf(settings.getBoolean(settingKey, false)) }
+    var checked by remember { mutableStateOf(settings.getBoolean(settingKey, defaultValue)) }
     IconToggleItem(
         iconRes = iconRes,
         title = title,

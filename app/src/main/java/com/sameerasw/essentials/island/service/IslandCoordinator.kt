@@ -2,6 +2,7 @@ package com.sameerasw.essentials.island.service
 
 import android.provider.Settings
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
+import com.sameerasw.essentials.island.plugins.batteryalerts.BatteryAlertsPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.plugins.call.CallPlugin
 import android.accessibilityservice.AccessibilityService
@@ -139,6 +140,7 @@ class IslandCoordinator(
         SignalPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
+        BatteryAlertsPlugin(),
     )
 
     private var scope: CoroutineScope? = null

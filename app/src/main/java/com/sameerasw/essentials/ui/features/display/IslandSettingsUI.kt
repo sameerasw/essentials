@@ -69,6 +69,7 @@ import com.sameerasw.essentials.ui.features.display.actions.GestureActionPickerS
 import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeSheet
 import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescription
 import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandBatteryAlertsOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBorderOutlineOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
@@ -126,6 +127,7 @@ fun IslandSettingsUI(
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeBatteryOptionsSheet by remember { mutableStateOf(false) }
+    var showBatteryAlertsOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
     var showCallOptionsSheet by remember { mutableStateOf(false) }
     var showSignalOptionsSheet by remember { mutableStateOf(false) }
@@ -295,6 +297,18 @@ fun IslandSettingsUI(
                         },
                         onSettingsClick = { showTimeBatteryOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_time_battery"),
+                    )
+                    "battery_alerts" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.rounded_battery_alert_24,
+                        title = stringResource(R.string.island_battery_alerts_title),
+                        isChecked = viewModel.isIslandShowBatteryAlerts.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowBatteryAlerts(checked)
+                        },
+                        onSettingsClick = { showBatteryAlertsOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_battery_alerts"),
                     )
                     "flashlight" -> IconToggleItem(
                         dragHandle = handle,
@@ -809,6 +823,12 @@ fun IslandSettingsUI(
         IslandTimeBatteryOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showTimeBatteryOptionsSheet = false },
+        )
+    }
+
+    if (showBatteryAlertsOptionsSheet) {
+        IslandBatteryAlertsOptionsBottomSheet(
+            onDismissRequest = { showBatteryAlertsOptionsSheet = false },
         )
     }
 
