@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -50,13 +52,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.toColorInt
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.model.HilightEffect
 import com.sameerasw.essentials.domain.model.HilightPattern
+import com.sameerasw.essentials.domain.model.HilightProgressColorMode
+import com.sameerasw.essentials.domain.model.HilightProgressFrames
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.HilightEffectSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -189,6 +196,12 @@ fun HilightSettingsUI(
             HilightAddAppItem(onClick = { showAppPicker = true })
         }
 
+        HilightProgressSection(
+            viewModel = viewModel,
+            isHilightDevice = isHilightDevice,
+            highlightSetting = highlightSetting,
+        )
+
         RoundedCardContainer {
             Text(
                 text = stringResource(R.string.hilight_hint),
@@ -229,6 +242,118 @@ private fun formatCooldown(
         seconds % 60 == 0 -> context.getString(R.string.hilight_cooldown_minutes, seconds / 60)
         else -> context.getString(R.string.hilight_duration_value, seconds)
     }
+
+@Composable
+private fun HilightProgressSection(
+    viewModel: MainViewModel,
+    isHilightDevice: Boolean,
+    highlightSetting: String?,
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val mode = viewModel.hilightProgressColorMode.value
+    val color = viewModel.hilightProgressColor.intValue
+
+    Text(
+        text = stringResource(R.string.hilight_progress_title),
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.padding(start = 16.dp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    RoundedCardContainer(spacing = 2.dp) {
+        IconToggleItem(
+            iconRes = R.drawable.rounded_downloading_24,
+            title = stringResource(R.string.hilight_progress_toggle_title),
+            description = stringResource(R.string.hilight_progress_toggle_desc),
+            isChecked = viewModel.isHilightProgressEnabled.value,
+            onCheckedChange = { viewModel.setHilightProgressEnabled(it) },
+            enabled = isHilightDevice,
+            onDisabledClick = {
+                Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier.highlight(highlightSetting == "hilight_progress"),
+        )
+        SegmentedPicker(
+            items = HilightProgressColorMode.entries,
+            selectedItem = mode,
+            onItemSelected = {
+                HapticUtil.performUIHaptic(view)
+                viewModel.setHilightProgressColorMode(it)
+            },
+            labelProvider = { context.getString(it.title) },
+        )
+        HilightProgressPreview(mode = mode, color = color)
+        ConfigSliderItem(
+            title = stringResource(R.string.hilight_duration_title),
+            value = viewModel.hilightProgressDurationMs.longValue / 1000f,
+            onValueChange = { viewModel.setHilightProgressDurationMs((it * 1000).toLong()) },
+            valueRange = HilightEffect.MIN_DURATION_MS / 1000f..HilightEffect.MAX_DURATION_MS / 1000f,
+            increment = 1f,
+            steps = ((HilightEffect.MAX_DURATION_MS - HilightEffect.MIN_DURATION_MS) / 1000 - 1).toInt(),
+            valueFormatter = { context.getString(R.string.hilight_duration_value, it.toInt()) },
+            iconRes = R.drawable.rounded_timer_24,
+        )
+    }
+
+    // VIBGYOR gives every LED its own fixed hue, so a colour choice would have no effect
+    if (mode != HilightProgressColorMode.VIBGYOR) {
+        ColorSwatchPicker(
+            selectedColorHex = String.format("#%06X", color and 0xFFFFFF),
+            onColorSelected = { hex -> viewModel.setHilightProgressColor(hex.toColorInt()) },
+        )
+    }
+
+    OutlinedButton(
+        onClick = {
+            HapticUtil.performVirtualKeyHaptic(view)
+            val played =
+                HilightController.play(durationMs = HilightProgressFrames.demoDurationMs(LED_COUNT)) { elapsed, ledCount ->
+                    HilightProgressFrames.demo(elapsed, mode, color, ledCount)
+                }
+            if (!played) Toast.makeText(context, R.string.hilight_unavailable_toast, Toast.LENGTH_SHORT).show()
+        },
+        modifier = Modifier.fillMaxWidth(),
+        enabled = isHilightDevice,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.rounded_auto_awesome_24),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp),
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(stringResource(R.string.hilight_try_it))
+    }
+}
+
+// The eight LEDs as they look at 100%
+@Composable
+private fun HilightProgressPreview(
+    mode: HilightProgressColorMode,
+    color: Int,
+) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceBright,
+                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd),
+                ).padding(horizontal = 24.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        repeat(LED_COUNT) { i ->
+            Box(
+                modifier =
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(HilightProgressFrames.ledColor(mode, color, i, LED_COUNT))),
+            )
+        }
+    }
+}
+
+private const val LED_COUNT = 8
 
 @Composable
 private fun StatusText(

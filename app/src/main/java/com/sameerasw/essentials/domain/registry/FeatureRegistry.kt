@@ -1116,6 +1116,11 @@ object FeatureRegistry {
                             R.string.search_hilight_notifications_desc,
                             "hilight_notifications",
                         ),
+                        SearchSetting(
+                            R.string.search_hilight_progress_title,
+                            R.string.search_hilight_progress_desc,
+                            "hilight_progress",
+                        ),
                     ),
                 parentFeatureId = "Notifications",
             ) {

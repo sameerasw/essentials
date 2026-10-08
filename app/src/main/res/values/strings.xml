@@ -296,6 +296,14 @@
     <string name="hilight_pattern_flash">Flash</string>
     <string name="hilight_pattern_sweep">Sweep</string>
     <string name="hilight_pattern_rainbow">Rainbow</string>
+    <string name="hilight_progress_title">Live progress</string>
+    <string name="hilight_progress_toggle_title">Show live progress</string>
+    <string name="hilight_progress_toggle_desc">Light one more LED each time a download or live update passes another eighth, and blink when it finishes</string>
+    <string name="hilight_progress_mode_monochrome">Monochrome</string>
+    <string name="hilight_progress_mode_sequential">Sequential</string>
+    <string name="hilight_progress_mode_vibgyor">VIBGYOR</string>
+    <string name="search_hilight_progress_title">Hilight live progress</string>
+    <string name="search_hilight_progress_desc">Show download and live update progress on the rear LEDs</string>
     <string name="feat_lockscreen_shortcuts_title">Lock screen shortcuts</string>
     <string name="feat_lockscreen_shortcuts_desc">Run your own actions from the lock screen</string>
     <string name="about_desc_lockscreen_shortcuts">Adds Essentials shortcut buttons to the bottom corners of the lock screen. Touch and hold a shortcut to run its action. Only available while the system\'s own lock screen shortcuts are turned off.</string>
