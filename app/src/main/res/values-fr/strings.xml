@@ -1686,4 +1686,10 @@ Note que en activant ça peut casser les widgets At a Glance du launcher (Comme 
     <string name="pixel_searchbar_settings_title">Customisation de la barre de recherche du launcher Pixel</string>
     <string name="sound_mode_use_shizuku_desc">Utiliser Shizuku pour mettre le monde de sonnerie sans activer le mode Ne pas déranger.</string>
     <string name="island_max_items_title">Nombre maximum d\'icônes à afficher</string>
+    <string name="label_battery_technology">Technologie</string>
+    <string name="label_battery_section_health">Vie</string>
+    <string name="label_battery_section_charging">Chargement</string>
+    <string name="label_battery_section_specs">Spécifications</string>
+    <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
+    <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
 </resources>
