@@ -32,7 +32,7 @@
     <string name="setting_use_usage_access_desc">À la place de l\'accessibilité (Gel, Verrouillage d\'applis, Éclairage nocturne dynamique)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Activer la réattribution de boutons</string>
-    <string name="button_remap_use_shizuku_title">Utiliser Shizuku ou l\'accès racine (root)</string>
+    <string name="button_remap_use_shizuku_title">Utiliser Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Fonctionne avec l\'écran éteint (Recommandé)</string>
     <string name="shizuku_not_running_toast">Shizuku n\'est pas actif</string>
     <string name="shizuku_detected_prefix"> %1$s Détecté</string>
@@ -396,7 +396,7 @@
     <string name="feat_maps_power_saving_title">Économie d\'énergie Maps</string>
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Notifications lumineuses</string>
-    <string name="feat_notification_lighting_desc">Illuminer l\'écran pour les notifications</string>
+    <string name="feat_notification_lighting_desc">Allumer la LED pour les nouvelles notifications</string>
     <string name="feat_flashlight_pulse_desc">Faire clignoter le flash à la réception de notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_call_vibrations_title">Vibrations pour les appels</string>
@@ -717,7 +717,9 @@
     <string name="update_available_title">Mise à jour disponible</string>
     <string name="about_desc_your_android">Jetez un coup d\'œil aux spécifications matérielles et logicielles détaillées de votre appareil. Ces informations sont obtenues GSMArena et des propriétés système pour vous fournir un aperçu complet sur votre appareil Android.</string>
     <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">La fonctionnalité Notifications lumineuses ajoute un bel effet d\'éclairage des coins de l\'écran quand vous recevez une notification.\n\nYou pouvez personnaliser le style de l\'animation, les couleurs et le comportement. Cela marche même quand l\'écran est éteint (en fonction du constructeur de votre appareil) ou par dessus les applications actives. Choisissez des applis, des priorités de notifications, ou quoi que ce soit qui devrait la déclencher depuis les contrôles donnés. Si votre constructeur ne supporte pas les superpositions sur le mode Always-On, activez l\'option d\'éclairage ambiant trouvable ci-dessous.</string>
+    <string name="about_desc_notification_lighting">La fonctionnalité Notifications lumineuses ajoute un bel effet d\'éclairage des coins de l\'écran quand vous recevez une notification.
+
+Tu peux personnaliser le style de l\'animation, les couleurs et le comportement. Cela marche même quand l\'écran est éteint (en fonction du constructeur de ton appareil) ou par dessus les applications actives. Choisis des applis, des priorités de notifications, ou quoi que ce soit qui devrait la déclencher depuis les contrôles donnés. Si le constructeur ne supporte pas les superpositions sur le mode Always-On, activez l\'option d\'éclairage ambiant trouvable ci-dessous.</string>
     <string name="about_desc_screen_off_widget">Éteignez facilement l\'écran avec un appui sur un widget transparent redimensionnable qui n\'ajoute aucune icône ou indice sur votre écran d\'accueil. </string>
     <string name="about_desc_statusbar_icons">Prenez les pleins pouvoirs sur vos icônes de la barre d\'état.
 
@@ -1320,13 +1322,14 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_transition_animation_scale">Échelle d\'animation des transitions </string>
     <string name="label_window_animation_scale">Échelle d\'animation des fenêtres </string>
     <string name="about_desc_text_animations">Ajustez la taille de la police, son épaisseur et les vitesses d\'animations pour tout le système. Veuillez noter que certains paramètres peuvent nécessiter des permissions avancées ou un redémarrage pour certaines applis afin d\'appliquer les modifications. \n\nDes permissions additionnelles comme Shizuku ou l\'accès racine (root) peuvent être nécessaires pour l\'ajustement des échelles</string>
-    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="about_desc_screen_refresh_rate">Permet de configurer un taux de rafraîchissement personnalisé en utilisant Shizuku. Le mode Fixé verrouille la valeur minimum et maximum du taux de rafraîchissement à la même valeur, pendant que le mode Fourchette permet de te laisser définir les deux valeurs séparées.
+Réinitialiser permet d\'effacer les valeurs personnalisées et le système gérera de nouveau ces valeurs.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
     <string name="refresh_rate_mode_fixed">Fixed</string>
     <string name="refresh_rate_mode_range">Range</string>
     <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_fixed_desc">Mettre le minimum et maximum à la même valeur.</string>
     <string name="refresh_rate_min_title">Minimum refresh rate</string>
     <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
     <string name="refresh_rate_peak_title">Peak refresh rate</string>
@@ -1419,7 +1422,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Horloge de l\'écran de verrouillage </string>
     <string name="feat_lock_screen_clock_desc">Personnalisez l\'horloge de l\'écran de verrouillage des Pixels</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="about_desc_lock_screen_clock">Change le style de l\'horloge de l\'écran de verrouillage sur les appareils Pixels. Sélectionne parmis les styles d\'horloges fournis par l\'IU système. Quelques vieux styles ne peuvent pas être disponibles.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
     <string name="lock_screen_clock_flex">Flexible</string>
@@ -1443,7 +1446,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
-    <string name="about_title">About</string>
+    <string name="about_title">À propos</string>
     <string name="color_default">Default</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -1675,4 +1678,26 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_battery_tab_info">Informations</string>
     <string name="diy_category_apps">Applications</string>
     <string name="label_charging_mode_title">Mode de chargement</string>
+    <string name="setting_hidden_debugging_title">Support du débuguage caché</string>
+    <string name="label_online_help_media">Aide en ligne du média</string>
+    <string name="about_desc_pixel_searchbar">Remplace la barre de recherche par défaut du launcher Pixel. Tu peux customiser le contenu pour y afficher rien du tout, ou la date actuelle.
+
+Note que en activant ça peut casser les widgets At a Glance du launcher (Comme les widgets de sports et finances.) et que ce paramètre peut nécessiter à être appliqué plusieurs fois pour prendre effet.
+</string>
+    <string name="pixel_searchbar_settings_title">Customisation de la barre de recherche du launcher Pixel</string>
+    <string name="sound_mode_use_shizuku_desc">Utiliser Shizuku pour mettre le monde de sonnerie sans activer le mode Ne pas déranger.</string>
+    <string name="island_max_items_title">Nombre maximum d\'icônes à afficher</string>
+    <string name="label_battery_technology">Technologie</string>
+    <string name="label_battery_section_health">Vie</string>
+    <string name="label_battery_section_charging">Chargement</string>
+    <string name="label_battery_section_specs">Spécifications</string>
+    <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
+    <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger</string>
+    <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application.</string>
+    <string name="hilight_only_screen_off_title">Activer seulement lorsque l\'écran est éteint.</string>
+    <string name="hilight_cooldown_title">Délai </string>
+    <string name="about_desc_hilight">Allume la LED HiLight à l\'arrière des Pixels 11 Pro (XL/Fold) quand une notification arrive, avec un effet différent pour chaque application que tu ajoutes.
+Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans les paramètres du remapage des boutons et des automatisations.
+À besoin de Shizuku, ou de permission root pour fonctionner.</string>
 </resources>
