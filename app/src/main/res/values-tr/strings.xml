@@ -1782,4 +1782,5 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin</string>
     <string name="about_desc_activity_launcher">Herhangi bir uygulamadaki ekranlara (etkinliklere) göz atın, bunları doğrudan açın ve ana ekranınıza sabitleyin. Uygulamanın gizli tuttuğu ekranlar Yalnızca Root olarak işaretlenmiştir ve açılmaları için root yetkisi gerekir.</string>
     <string name="label_motion_blur_amount">Miktar</string>
+    <string name="screen_locked_keep_qs_on_extended_unlock_title">QS\'i genişletilmiş kilit açma modunda görüntüleyin</string>
 </resources>
