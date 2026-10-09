@@ -58,7 +58,7 @@
     <string name="action_ai_assistant">Yapay zeka asistanı</string>
     <string name="action_take_screenshot">Ekran görüntüsü al</string>
     <string name="action_cycle_sound_modes">Ses modlarını değiştir</string>
-    <string name="action_circle_to_search">Aramak için Daire</string>
+    <string name="action_circle_to_search">Seçerek Arat</string>
     <string name="action_like_song">Şu anki şarkıyı beğen</string>
     <string name="like_song_settings_title">Şarkıyı beğenme ayarları</string>
     <string name="like_song_settings_desc">Bu özellik, o anda oynatılan medyayı algılamak ve benzer eylemi tetiklemek için bildirim erişimi gerektirir. Lütfen aşağıdan etkinleştirin.</string>
@@ -216,7 +216,7 @@
     <string name="tile_ui_blur">Kullanıcı Arayüzü Bulanıklığı</string>
     <string name="tile_bubbles">Konuşma balonları</string>
     <string name="tile_sensitive_content">Hassas İçerik</string>
-    <string name="tile_tap_to_wake">Uyandırmak için dokunun</string>
+    <string name="tile_tap_to_wake">Uyandırmak için dokun</string>
     <string name="tile_aod">AOD</string>
     <string name="tile_caffeinate">Kafein</string>
     <string name="tile_sound_mode">Ses Modu</string>
@@ -1505,7 +1505,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="feat_pixel_searchbar_title">Arama çubuğunu değiştir</string>
     <string name="feat_pixel_searchbar_desc">Pixel Launcher\'ın varsayılan arama çubuğunu değiştirin.</string>
     <string name="tile_lock">Kilit</string>
-    <string name="tile_restart_systemui">SystemUI Yeniden Başlatma</string>
+    <string name="tile_restart_systemui">SystemUI\'ı Yeniden Başlat</string>
     <string name="about_desc_restart_systemui_tile">SystemUI\'ı Hızlı Ayarlar panelinizden kolayca yeniden başlatın. Durum çubuğu sorunlarını hızlıca çözmek veya sistem arayüzü değişikliklerini anında uygulamak için kullanışlıdır. Root veya Shizuku shell erişimi gerektirir.</string>
     <string name="label_low_power_trigger_level">Özel tetikleme seviyesi</string>
     <string name="desc_low_power_trigger_level">pil tasarrufu için</string>
@@ -1615,7 +1615,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="app_icon_google">Spektrum</string>
     <string name="watch_watchface_title">Saat kadranı</string>
     <string name="watch_watchface_desc">Saat kadranını özelleştirin</string>
-    <string name="tile_url_shortener">URL\'yi kısalt</string>
+    <string name="tile_url_shortener">URL\'i kısalt</string>
     <string name="tile_url_shortener_subtitle">Panoyu Kısalt</string>
     <string name="label_motion_blur">Hareket bulanıklığı</string>
     <string name="label_ripple_animation">Dalgalanma animasyonu</string>
@@ -1760,4 +1760,26 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="diy_set_keyboard_title">Klavyeyi Ayarla</string>
     <string name="screen_locked_disable_notification_interactions_desc">Kilitliyken bildirim panelinin ve Hızlı Ayarlar\'ın aşağı çekilmesini engelleyin</string>
     <string name="screen_locked_disable_notification_interactions_title">Bildirim etkileşimlerini devre dışı bırak</string>
+    <string name="setting_hidden_debugging_title">Gizli hata ayıklama desteği</string>
+    <string name="tile_haptics">Haptik</string>
+    <string name="about_desc_haptics">Sistem titreşimi ve dokunma geri bildirimini birlikte açıp kapatın. Sistem ayarlarını değiştirme izni gerektirir.</string>
+    <string name="about_desc_duo_tile">Hızlı Ayarlar\'dan Duo kamera halkası katmanını açın veya kapatın.</string>
+    <string name="about_desc_island_tile">Hızlı Ayarlar\'dan Ada bildirim katmanını açın veya kapatın.</string>
+    <string name="about_desc_data_sim">Mobil veriyi bir sonraki etkin SIM\'e geçirir. Telefon durumunu okuma izni ile birlikte Shizuku veya root erişimi gerektirir; seçilen SIM aynı zamanda mobil veri için etkinleştirilir.</string>
+    <string name="tile_data_sim">Veri SIM Kartı</string>
+    <string name="overlay_mode_skip">Atla</string>
+    <string name="duo_action_horizontal_slide_volume">Ses</string>
+    <string name="duo_action_horizontal_slide_brightness">Parlaklık</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Ses modu</string>
+    <string name="feat_hilight_title">Vurgu</string>
+    <string name="feat_hilight_desc">Bildirimler için arka LED\'leri yakın</string>
+    <string name="about_desc_hilight">Bildirim geldiğinde Pixel 11 Pro, Pro XL ve Pro Fold\'un arkasındaki Vurgu LED\'lerini, eklediğiniz her uygulama için özel bir efektle yakar. Vurgu efektleri, Tuş yeniden atama ve otomasyon işlemlerinde bir eylem olarak da kullanılabilir. Her yeniden başlatmadan sonra tekrar başlatılması gereken Shizuku gerektirir.</string>
+    <string name="feat_face_unlock_brightness_title">Yüz aydınlatması</string>
+    <string name="feat_face_unlock_brightness_desc">Düşük ışıkta parlaklığı artırın</string>
+    <string name="feat_lockscreen_shortcuts_title">Kilit ekranı kısayolları</string>
+    <string name="feat_lockscreen_shortcuts_desc">Kendi eylemlerinizi kilit ekranından çalıştırın</string>
+    <string name="about_desc_lockscreen_shortcuts">Kilit ekranının alt köşelerine Essentials kısayol düğmeleri ekler. İlgili işlemi gerçekleştirmek için bir kısayola dokunup basılı tutun. Yalnızca sistemin kendi kilit ekranı kısayolları kapalıyken kullanılabilir.</string>
+    <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin</string>
+    <string name="about_desc_activity_launcher">Herhangi bir uygulamadaki ekranlara (etkinliklere) göz atın, bunları doğrudan açın ve ana ekranınıza sabitleyin. Uygulamanın gizli tuttuğu ekranlar Yalnızca Root olarak işaretlenmiştir ve açılmaları için root yetkisi gerekir.</string>
+    <string name="label_motion_blur_amount">Miktar</string>
 </resources>
