@@ -1766,4 +1766,24 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_weather_mode_title">Mostrar en Isla</string>
     <string name="island_section_notifications">Notificaciones</string>
+    <string name="island_hide_on_shade_title">Ocultar cuando la barra de estado se expande</string>
+    <string name="island_hide_live_updates_title">Ocultar actualizaciones en vivo dinamicamente</string>
+    <string name="island_compact_hide_status_bar_title">
+Oculta todos los artículos en isla compacta</string>
+    <string name="island_dismiss_on_outside_title">Desestimar en actividad externa</string>
+    <string name="island_show_when_title">Mostrar cuando</string>
+    <string name="island_show_when_unlocked">Desbloqueado</string>
+    <string name="island_show_when_screen_on">Pantalla encendida</string>
+    <string name="island_show_when_always">Siempre</string>
+    <string name="island_line_peek_desc">Muestra brevemente las actualizaciones en toda la isla y luego vuelve a forma compacta</string>
+    <string name="island_expanded_scale_title">Escala de expansión</string>
+    <string name="island_font_scale_title">Tamaño de fuente</string>
+    <string name="island_expanded_roundness_title">Expansión de radio de esquina</string>
+    <string name="island_border_outline_title">Borde linea exterior</string>
+    <string name="island_show_glow_title">Mostrar brillo de acento</string>
+    <string name="island_pulse_shadow_title">Mostrar pulso de sombra en la notificación</string>
+    <string name="island_timeout_title">Duración de pantalla</string>
+    <string name="island_expanded_timeout_title">Tiempo de espera ampliado</string>
+    <string name="island_always_gestures_title">Gestos siempre disponibles</string>
+    <string name="island_always_gestures_desc">Mantenga el área de gestos disponible incluso mientras la isla está oculta</string>
 </resources>
