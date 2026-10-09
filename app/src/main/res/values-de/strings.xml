@@ -802,7 +802,9 @@ Das Always-on-Display schnell aktivieren oder deaktivieren, um Informationen auf
     <string name="about_desc_mono_audio">Kombiniere Audiokanäle zu Mono.
 
 Nützlich bei Verwendung eines einzelnen Ohrhörers oder für Barrierefreiheitszwecke</string>
-    <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
+    <string name="about_desc_flashlight_tile">Taschenlampe ein-/ausschalten.
+
+Langes Drücken öffnet die Steuerelemente zur Helligkeitsanpassung, die möglicherweise eine Hardware-Implementierung erfordert, die einigen Geräten fehlt</string>
     <string name="about_desc_stay_awake">Hält den Bildschirm während des Ladevorgangs aktiv.
 
 Verhindert, dass der Bildschirm in den Ruhezustand wechselt, solange das Gerät an eine Stromquelle angeschlossen ist. Dies ist für Entwickler während des Debuggens geeignet</string>
@@ -1667,7 +1669,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="watchface_hide_battery_title">Batterie ausblenden</string>
     <string name="watchface_hide_device_icons_title">Gerätesymbole ausblenden</string>
     <string name="watchface_complications_on_aod_title">Auf dem AOD anzeigen</string>
-    <string name="setting_app_icon_title">App-Icon</string>
+    <string name="setting_app_icon_title">App-Symbol</string>
     <string name="setting_app_icon_desc">Das App-Symbol auf dem Startbildschirm anpassen</string>
     <string name="pixel_searchbar_background_pill_title">Hintergrund-Pille</string>
     <string name="pixel_searchbar_background_pill_desc">Zeigt das Datum in einem Container</string>
@@ -1879,4 +1881,45 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_show_when_unlocked">Entsperrt</string>
     <string name="island_show_when_screen_on">Bildschirm an</string>
     <string name="island_show_when_always">Immer</string>
+    <string name="duo_hide_when_locked_title">Ausblenden, wenn gesperrt</string>
+    <string name="island_camera_position_title">Kamera Position</string>
+    <string name="island_camera_position_left">Links</string>
+    <string name="island_camera_position_center">Mittig</string>
+    <string name="island_camera_position_right">Rechts</string>
+    <string name="island_keep_on_landscape_title">Im Querformat behalten</string>
+    <string name="island_landscape_top_spacing_title">Oberer Abstand im Querformat</string>
+    <string name="island_bond_edge_title">Mit Display-Aussparung verbinden, wenn inaktiv</string>
+    <string name="island_hide_live_updates_title">Live-Updates dynamisch ausblenden</string>
+    <string name="island_compact_hide_status_bar_title">Alle Elemente für kompakte Inseln ausblenden</string>
+    <string name="island_max_items_title">Maximale Anzahl anzuzeigender Elemente</string>
+    <string name="island_section_notifications">Benachrichtigungen</string>
+    <string name="island_always_gestures_title">Immer verfügbare Gesten</string>
+    <string name="island_always_gestures_desc">Der Gestenbereich bleibt auch dann verfügbar, wenn die Insel ausgeblendet ist</string>
+    <string name="button_remap_pause_on_volume_dialog_title">Deaktiviert, solange der Lautstärkedialog geöffnet ist</string>
+    <string name="feat_activity_launcher_title">Aktivitätsstarter</string>
+    <string name="feat_activity_launcher_desc">Beliebigen App-Bildschirm öffnen oder anheften</string>
+    <string name="about_desc_activity_launcher">Durchsuchen Sie die Bildschirme (Aktivitäten) in jeder App, öffnen Sie sie direkt und heften Sie sie an Ihren Startbildschirm an. Bildschirme, die eine App privat hält, sind mit „Nur Root“ gekennzeichnet und benötigen Root-Zugriff zum Öffnen.</string>
+    <string name="feat_lockscreen_shortcuts_title">Sperrbildschirm-Verknüpfung</string>
+    <string name="feat_lockscreen_shortcuts_desc">Eigene Aktionen vom Sperrbildschirm ausführen</string>
+    <string name="about_desc_lockscreen_shortcuts">Fügt Essentials-Verknüpfungsschaltflächen in den unteren Ecken des Sperrbildschirms hinzu. Berühren und halten Sie eine Verknüpfung, um ihre Aktion auszuführen. Nur verfügbar, wenn die systemeigenen Sperrbildschirm-Verknüpfungen deaktiviert sind.</string>
+    <string name="lockscreen_shortcuts_enable_title">Sperrbildschirm-Verknüpfungen aktivieren</string>
+    <string name="about_desc_standby_apps">Verwalten Sie Android-App-Standby-Buckets, um die Ausführung von Hintergrund-Apps, die Netzwerknutzung und den Akkuverbrauch zu steuern.
+
+Aktiv – App wird verwendet oder erst kürzlich verwendet.
+
+Arbeitsset – Regelmäßig oder täglich verwendet; Aufgaben und Alarme werden leicht verzögert.
+
+Häufig – Wöchentlich verwendet; Hintergrundprozesse werden stärker verzögert.
+
+Selten – Selten verwendet; Aufgaben, Alarme und Internetnutzung im Hintergrund stark eingeschränkt.
+
+Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich gebündelte Aufgaben und ein Alarm pro Tag. Beste Akkuersparnis, unterbricht zeitnahe Benachrichtigungen</string>
+    <string name="feat_face_unlock_brightness_title">Gesichtsbeleuchtung</string>
+    <string name="feat_face_unlock_brightness_desc">Stoßhelligkeit bei schwachem Licht</string>
+    <string name="face_unlock_ambient_threshold_title">Umgebungslichtschwelle</string>
+    <string name="face_unlock_auto_illuminate_title">Automatische Beleuchtung beim Aufwachen</string>
+    <string name="face_unlock_trigger_unlock_title">Entsperren auslösen</string>
+    <string name="face_unlock_light_tint_title">Leichte Tönung</string>
+    <string name="label_online_help_media">Online-Hilfemedien</string>
+    <string name="haptic_mode_stronger">Stärkee</string>
 </resources>
