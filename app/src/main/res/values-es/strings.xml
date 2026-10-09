@@ -1767,4 +1767,5 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_weather_mode_title">Mostrar en Isla</string>
     <string name="island_section_notifications">Notificaciones</string>
     <string name="button_remap_pause_on_volume_dialog_title">Deshabilirar si el panel de volumen esta abierto</string>
+    <string name="haptic_mode_stronger">Fuerte</string>
 </resources>
