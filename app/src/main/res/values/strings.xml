@@ -3246,4 +3246,27 @@
     <string name="whats_new_overcast_status_not_installed">Not installed</string>
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
     <string name="island_media_show_like_title">Show like track button</string>
+    <!-- Widget stack -->
+    <string name="widget_stack_label">Widget stack</string>
+    <string name="widget_stack_description">Stack several widgets in one place and switch between them</string>
+    <string name="widget_stack_empty">Tap to add widgets to this stack</string>
+    <string name="widget_stack_previous">Previous widget</string>
+    <string name="widget_stack_next">Next widget</string>
+    <string name="widget_stack_loading">Loading %1$s…</string>
+    <string name="widget_stack_unsupported">%1$s can\'t be shown in a stack</string>
+    <string name="widget_stack_settings_title">Widget stack</string>
+    <string name="widget_stack_widgets_title">Widgets in this stack</string>
+    <string name="widget_stack_add_widget">Add widget</string>
+    <string name="widget_stack_remove_widget">Remove</string>
+    <string name="widget_stack_move_up">Move up</string>
+    <string name="widget_stack_move_down">Move down</string>
+    <string name="widget_stack_max_reached">A stack can hold up to %1$d widgets</string>
+    <string name="widget_stack_interval_title">Switch automatically</string>
+    <string name="widget_stack_interval_off">Off</string>
+    <string name="widget_stack_interval_seconds">%1$ds</string>
+    <string name="widget_stack_show_controls">Show page dots and arrows</string>
+    <string name="widget_stack_overlay_needed">Allow Essentials to display over other apps so the stacked widgets keep updating</string>
+    <string name="widget_stack_grant">Grant</string>
+    <string name="widget_stack_done">Done</string>
+    <string name="widget_stack_unknown_widget">Widget</string>
 </resources>
