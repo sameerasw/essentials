@@ -1826,4 +1826,14 @@
     <string name="label_battery_current_now">Скорость разрядки</string>
     <string name="label_thermal_system_thermals">Температуры</string>
     <string name="label_charging_mode_title">Режим зарядки</string>
+    <string name="feat_face_unlock_brightness_title">Подсветка лица </string>
+    <string name="feat_face_unlock_brightness_desc">Поднимает яркость когда света мало</string>
+    <string name="face_unlock_ambient_threshold_title">Порог срабатывания </string>
+    <string name="face_unlock_ambient_now">Сейчас: %1$s</string>
+    <string name="face_unlock_auto_illuminate_title">Автоматически подсветить при включении</string>
+    <string name="face_unlock_light_tint_title">Светлый оттенок </string>
+    <string name="face_unlock_trigger_unlock_title">Реакция на разблокировку</string>
+    <string name="island_hide_live_updates_title">Скрыыать live updates Динамично</string>
+    <string name="feat_activity_launcher_title">Запускаешь Activity</string>
+    <string name="feat_activity_launcher_desc">Откройте или закрепите любой экран приложения</string>
 </resources>
