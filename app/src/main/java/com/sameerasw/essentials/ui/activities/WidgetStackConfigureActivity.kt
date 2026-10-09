@@ -13,6 +13,7 @@ import android.app.Activity
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
+import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -25,47 +26,57 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
-import com.sameerasw.essentials.services.widgets.StackHostService
+import com.sameerasw.essentials.services.widgets.StackHost
 import com.sameerasw.essentials.services.widgets.StackWidgetProvider
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.viewmodels.MainViewModel
 
 class WidgetStackConfigureActivity : ComponentActivity() {
     private lateinit var repository: WidgetStackRepository
@@ -74,6 +85,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     private var stackWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private var config by mutableStateOf(WidgetStackConfig(AppWidgetManager.INVALID_APPWIDGET_ID))
     private var overlayGranted by mutableStateOf(true)
+    private var unsupported by mutableStateOf(emptySet<Int>())
     private var pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     private val pickLauncher =
@@ -92,7 +104,6 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         stackWidgetId =
             intent?.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
@@ -105,14 +116,21 @@ class WidgetStackConfigureActivity : ComponentActivity() {
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, stackWidgetId))
 
         repository = WidgetStackRepository(this)
-        widgetHost = AppWidgetHost(this, StackHostService.HOST_ID)
+        widgetHost = AppWidgetHost(this, StackHost.HOST_ID)
         awm = AppWidgetManager.getInstance(this)
         config = repository.get(stackWidgetId) ?: WidgetStackConfig(stackWidgetId).also { repository.save(it) }
-        StackHostService.refresh(this)
+        StackHost.refresh(this)
 
+        enableEdgeToEdge()
         setContent {
-            EssentialsTheme {
-                StackSettingsScreen()
+            val viewModel: MainViewModel =
+                androidx.lifecycle.viewmodel.compose
+                    .viewModel()
+            val context = LocalContext.current
+            LaunchedEffect(Unit) { viewModel.check(context) }
+            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
+                StackSettingsSheet()
             }
         }
     }
@@ -120,19 +138,12 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         overlayGranted = Settings.canDrawOverlays(this)
-        if (overlayGranted) StackHostService.refresh(this)
+        unsupported = StackHost.unsupported.toSet()
+        if (overlayGranted) StackHost.refresh(this)
     }
 
     private fun addWidget() {
-        if (config.hostedWidgetIds.size >= WidgetStackConfig.MAX_WIDGETS) {
-            Toast
-                .makeText(
-                    this,
-                    getString(R.string.widget_stack_max_reached, WidgetStackConfig.MAX_WIDGETS),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            return
-        }
+        if (config.hostedWidgetIds.size >= WidgetStackConfig.MAX_WIDGETS) return
         pendingWidgetId = widgetHost.allocateAppWidgetId()
         pickLauncher.launch(
             Intent(AppWidgetManager.ACTION_APPWIDGET_PICK).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, pendingWidgetId),
@@ -140,16 +151,21 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     }
 
     private fun onWidgetBound(info: AppWidgetProviderInfo) {
-        val widgetId = pendingWidgetId
+        if (info.provider == ComponentName(this, StackWidgetProvider::class.java)) {
+            Toast.makeText(this, R.string.widget_stack_cant_nest, Toast.LENGTH_SHORT).show()
+            discardPending()
+            return
+        }
+
         val configurationOptional =
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 info.widgetFeatures and AppWidgetProviderInfo.WIDGET_FEATURE_CONFIGURATION_OPTIONAL != 0
         if (info.configure != null && !configurationOptional) {
             try {
-                widgetHost.startAppWidgetConfigureActivityForResult(this, widgetId, 0, REQUEST_CONFIGURE, null)
+                widgetHost.startAppWidgetConfigureActivityForResult(this, pendingWidgetId, 0, REQUEST_CONFIGURE, null)
                 return
             } catch (e: Exception) {
-                Log.w(TAG, "Could not open the configuration screen of widget $widgetId", e)
+                Log.w(TAG, "Could not open the configuration screen of widget $pendingWidgetId", e)
             }
         }
         addPendingToStack()
@@ -182,7 +198,8 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
     private fun removeWidget(widgetId: Int) {
         widgetHost.deleteAppWidgetId(widgetId)
-        StackHostService.contents.remove(widgetId)
+        StackHost.contents.remove(widgetId)
+        StackHost.unsupported.remove(widgetId)
         updateConfig(config.copy(hostedWidgetIds = config.hostedWidgetIds - widgetId))
     }
 
@@ -201,136 +218,251 @@ class WidgetStackConfigureActivity : ComponentActivity() {
         config = updated
         repository.save(updated)
         StackWidgetProvider.render(this, stackWidgetId)
-        StackHostService.refresh(this)
+        StackHost.refresh(this)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
     @Composable
-    private fun StackSettingsScreen() {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.widget_stack_settings_title)) },
-                    actions = {
-                        TextButton(onClick = { finish() }) { Text(stringResource(R.string.widget_stack_done)) }
-                    },
-                )
-            },
-        ) { padding ->
+    private fun StackSettingsSheet() {
+        val view = LocalView.current
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val isFull = config.hostedWidgetIds.size >= WidgetStackConfig.MAX_WIDGETS
+
+        ModalBottomSheet(
+            onDismissRequest = { finish() },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        ) {
             Column(
                 modifier =
                     Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                if (!overlayGranted) {
-                    Card(modifier = Modifier.fillMaxWidth()) {
-                        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(stringResource(R.string.widget_stack_overlay_needed))
-                            Button(onClick = {
-                                startActivity(
-                                    Intent(
-                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                        Uri.parse("package:$packageName"),
-                                    ),
-                                )
-                            }) { Text(stringResource(R.string.widget_stack_grant)) }
-                        }
-                    }
-                }
-
-                Text(stringResource(R.string.widget_stack_widgets_title), style = MaterialTheme.typography.titleMedium)
-                config.hostedWidgetIds.forEachIndexed { index, widgetId ->
-                    HostedWidgetRow(
-                        widgetId = widgetId,
-                        canMoveUp = index > 0,
-                        canMoveDown = index < config.hostedWidgetIds.lastIndex,
-                        onMoveUp = { moveWidget(index, -1) },
-                        onMoveDown = { moveWidget(index, 1) },
-                        onRemove = { removeWidget(widgetId) },
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.rounded_widgets_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp),
+                    )
+                    Text(
+                        text = stringResource(R.string.widget_stack_settings_title),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
-                Button(
-                    onClick = { addWidget() },
-                    enabled = config.hostedWidgetIds.size < WidgetStackConfig.MAX_WIDGETS,
-                ) { Text(stringResource(R.string.widget_stack_add_widget)) }
 
-                Text(stringResource(R.string.widget_stack_interval_title), style = MaterialTheme.typography.titleMedium)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    WidgetStackConfig.INTERVAL_OPTIONS.forEach { seconds ->
-                        FilterChip(
-                            selected = config.intervalSeconds == seconds,
-                            onClick = { updateConfig(config.copy(intervalSeconds = seconds)) },
-                            label = {
-                                Text(
-                                    if (seconds == 0) {
-                                        stringResource(R.string.widget_stack_interval_off)
-                                    } else {
-                                        stringResource(R.string.widget_stack_interval_seconds, seconds)
+                Text(
+                    text = stringResource(R.string.widget_stack_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+
+                if (!overlayGranted) {
+                    RoundedCardContainer {
+                        ListItem(
+                            headlineContent = { Text(stringResource(R.string.widget_stack_overlay_needed)) },
+                            trailingContent = {
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        startActivity(
+                                            Intent(
+                                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                                Uri.parse("package:$packageName"),
+                                            ),
+                                        )
                                     },
-                                )
+                                    colors = ButtonDefaults.filledTonalButtonColors(),
+                                ) { Text(stringResource(R.string.widget_stack_grant)) }
                             },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                         )
                     }
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(stringResource(R.string.widget_stack_show_controls), modifier = Modifier.weight(1f))
-                    Switch(
-                        checked = config.showControls,
+                SectionTitle(stringResource(R.string.widget_stack_widgets_title))
+                RoundedCardContainer {
+                    config.hostedWidgetIds.forEachIndexed { index, widgetId ->
+                        HostedWidgetRow(
+                            widgetId = widgetId,
+                            isUnsupported = widgetId in unsupported,
+                            canMoveUp = index > 0,
+                            canMoveDown = index < config.hostedWidgetIds.lastIndex,
+                            onMove = { delta ->
+                                HapticUtil.performUIHaptic(view)
+                                moveWidget(index, delta)
+                            },
+                            onRemove = {
+                                HapticUtil.performUIHaptic(view)
+                                removeWidget(widgetId)
+                            },
+                        )
+                    }
+                    ListItem(
+                        modifier =
+                            Modifier.clickable(enabled = !isFull) {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                addWidget()
+                            },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_add_24),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        },
+                        headlineContent = { Text(stringResource(R.string.widget_stack_add_widget)) },
+                        supportingContent =
+                            if (isFull) {
+                                { Text(stringResource(R.string.widget_stack_max_reached, WidgetStackConfig.MAX_WIDGETS)) }
+                            } else {
+                                null
+                            },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                    )
+                }
+
+                SectionTitle(stringResource(R.string.widget_stack_interval_title))
+                RoundedCardContainer {
+                    ListItem(
+                        headlineContent = {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                WidgetStackConfig.INTERVAL_OPTIONS.forEach { seconds ->
+                                    FilterChip(
+                                        selected = config.intervalSeconds == seconds,
+                                        onClick = {
+                                            HapticUtil.performUIHaptic(view)
+                                            updateConfig(config.copy(intervalSeconds = seconds))
+                                        },
+                                        label = {
+                                            Text(
+                                                if (seconds == 0) {
+                                                    stringResource(R.string.widget_stack_interval_off)
+                                                } else {
+                                                    stringResource(R.string.widget_stack_interval_seconds, seconds)
+                                                },
+                                            )
+                                        },
+                                    )
+                                }
+                            }
+                        },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                    )
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_swap_vert_24,
+                        title = stringResource(R.string.widget_stack_show_controls),
+                        description = stringResource(R.string.widget_stack_show_controls_desc),
+                        isChecked = config.showControls,
                         onCheckedChange = { updateConfig(config.copy(showControls = it)) },
                     )
                 }
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Button(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        finish()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text(stringResource(R.string.widget_stack_done)) }
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
+    }
+
+    @Composable
+    private fun SectionTitle(text: String) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+        )
     }
 
     @Composable
     private fun HostedWidgetRow(
         widgetId: Int,
+        isUnsupported: Boolean,
         canMoveUp: Boolean,
         canMoveDown: Boolean,
-        onMoveUp: () -> Unit,
-        onMoveDown: () -> Unit,
+        onMove: (Int) -> Unit,
         onRemove: () -> Unit,
     ) {
         val info = remember(widgetId) { awm.getAppWidgetInfo(widgetId) }
         val label =
             remember(widgetId) { info?.loadLabel(packageManager) ?: getString(R.string.widget_stack_unknown_widget) }
+        val appName =
+            remember(widgetId) {
+                info?.provider?.packageName?.let { pkg ->
+                    try {
+                        packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
+                    } catch (_: Exception) {
+                        null
+                    }
+                }
+            }
         val icon =
             remember(widgetId) {
                 info?.loadIcon(this, resources.displayMetrics.densityDpi)?.toBitmap(96, 96)?.asImageBitmap()
             }
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+
+        ListItem(
+            leadingContent = {
                 if (icon != null) {
                     Image(bitmap = icon, contentDescription = null, modifier = Modifier.size(32.dp))
-                    Spacer(Modifier.size(12.dp))
+                } else {
+                    Icon(painter = painterResource(R.drawable.rounded_widgets_24), contentDescription = null)
                 }
-                Text(label, modifier = Modifier.weight(1f))
-                IconButton(onClick = onMoveUp, enabled = canMoveUp) {
-                    Icon(
-                        painterResource(R.drawable.rounded_arrow_back_24),
-                        contentDescription = stringResource(R.string.widget_stack_move_up),
-                        modifier = Modifier.rotate(90f),
-                    )
+            },
+            headlineContent = { Text(label) },
+            supportingContent = {
+                when {
+                    isUnsupported ->
+                        Text(
+                            stringResource(R.string.widget_stack_unsupported_short),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    appName != null -> Text(appName)
                 }
-                IconButton(onClick = onMoveDown, enabled = canMoveDown) {
-                    Icon(
-                        painterResource(R.drawable.rounded_arrow_back_24),
-                        contentDescription = stringResource(R.string.widget_stack_move_down),
-                        modifier = Modifier.rotate(-90f),
-                    )
+            },
+            trailingContent = {
+                Row {
+                    IconButton(onClick = { onMove(-1) }, enabled = canMoveUp) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_keyboard_arrow_up_24),
+                            contentDescription = stringResource(R.string.widget_stack_move_up),
+                        )
+                    }
+                    IconButton(onClick = { onMove(1) }, enabled = canMoveDown) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_keyboard_arrow_down_24),
+                            contentDescription = stringResource(R.string.widget_stack_move_down),
+                        )
+                    }
+                    IconButton(onClick = onRemove) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_delete_24),
+                            contentDescription = stringResource(R.string.widget_stack_remove_widget),
+                        )
+                    }
                 }
-                TextButton(onClick = onRemove) { Text(stringResource(R.string.widget_stack_remove_widget)) }
-            }
-        }
+            },
+            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+        )
     }
 
     companion object {

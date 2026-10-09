@@ -3,24 +3,24 @@
  * License: MIT License
  *
  * Feature Module: Background Services & Receivers
- * File: StackHostService.kt
+ * File: StackHost.kt
  * Description: Hosts the widgets placed in widget stacks and rotates each stack on its timer.
  */
 
 package com.sameerasw.essentials.services.widgets
 
-import android.app.Service
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
 import android.content.BroadcastReceiver
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Handler
-import android.os.IBinder
 import android.os.Looper
 import android.os.Parcel
 import android.os.PowerManager
@@ -31,12 +31,42 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 
-class StackHostService : Service() {
-    private inner class CapturingHostView(
+/**
+ * Lives in the app process rather than a service, so it can start whenever the process does
+ * (including after a reboot) without running into Android's background service limits.
+ */
+object StackHost {
+    private const val TAG = "StackHost"
+    const val HOST_ID = 1026
+    private const val KEEP_ALIVE_WORK = "widget_stack_keep_alive"
+
+    /** Latest content of every hosted widget, keyed by its app widget id. */
+    val contents = ConcurrentHashMap<Int, RemoteViews>()
+
+    /** Hosted widgets whose content can't be shown inside a stack. */
+    val unsupported: MutableSet<Int> = ConcurrentHashMap.newKeySet()
+
+    /** Index of the visible widget in each stack, keyed by the stack's app widget id. */
+    val positions = ConcurrentHashMap<Int, Int>()
+
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var appContext: Context
+    private lateinit var repository: WidgetStackRepository
+    private var host: CapturingWidgetHost? = null
+    private val hostViews = mutableMapOf<Int, CapturingHostView>()
+    private var overlayContainer: FrameLayout? = null
+    private val timers = mutableMapOf<Int, Runnable>()
+    private val pendingRenders = mutableMapOf<Int, Runnable>()
+
+    private class CapturingHostView(
         context: Context,
     ) : AppWidgetHostView(context) {
         // The launcher renders the content inside the stack, so it is captured here instead of shown.
@@ -47,7 +77,7 @@ class StackHostService : Service() {
                     contents.remove(id)
                     unsupported.remove(id)
                 }
-                canRender(remoteViews) -> {
+                canRender(context, remoteViews) -> {
                     contents[id] = remoteViews
                     unsupported.remove(id)
                 }
@@ -58,29 +88,9 @@ class StackHostService : Service() {
             }
             onHostedWidgetChanged(id)
         }
-
-        // Some content (such as a list backed by another app's service) breaks once it is nested in
-        // the stack and sent to the launcher, which then fails to show the whole stack. Nesting it the
-        // same way and rendering the delivered copy here catches that before it reaches the launcher.
-        private fun canRender(remoteViews: RemoteViews): Boolean {
-            val parcel = Parcel.obtain()
-            return try {
-                val probe = RemoteViews(packageName, R.layout.widget_stack)
-                probe.addView(R.id.stack_flipper, remoteViews)
-                probe.writeToParcel(parcel, 0)
-                parcel.setDataPosition(0)
-                RemoteViews.CREATOR.createFromParcel(parcel).apply(context, FrameLayout(context))
-                true
-            } catch (e: Throwable) {
-                Log.w(TAG, "Widget $appWidgetId can't be shown in a stack", e)
-                false
-            } finally {
-                parcel.recycle()
-            }
-        }
     }
 
-    private inner class CapturingWidgetHost(
+    private class CapturingWidgetHost(
         context: Context,
     ) : AppWidgetHost(context, HOST_ID) {
         override fun onCreateView(
@@ -89,74 +99,6 @@ class StackHostService : Service() {
             appWidget: AppWidgetProviderInfo?,
         ): AppWidgetHostView = CapturingHostView(context)
     }
-
-    companion object {
-        private const val TAG = "StackHostService"
-        const val HOST_ID = 1026
-
-        private const val ACTION_REFRESH = "com.sameerasw.essentials.action.WIDGET_STACK_REFRESH"
-
-        /** Latest content of every hosted widget, keyed by its app widget id. */
-        val contents = ConcurrentHashMap<Int, RemoteViews>()
-
-        /** Hosted widgets whose content can't be shown inside a stack. */
-        val unsupported: MutableSet<Int> = ConcurrentHashMap.newKeySet()
-
-        /** Index of the visible widget in each stack, keyed by the stack's app widget id. */
-        val positions = ConcurrentHashMap<Int, Int>()
-
-        @Volatile
-        private var instance: StackHostService? = null
-
-        fun refresh(context: Context) {
-            try {
-                context.startService(
-                    Intent(context, StackHostService::class.java).setAction(ACTION_REFRESH),
-                )
-            } catch (e: Exception) {
-                Log.w(TAG, "Could not start stack host", e)
-            }
-        }
-
-        fun stop(context: Context) {
-            context.stopService(Intent(context, StackHostService::class.java))
-        }
-
-        /** Moves a stack by [delta] widgets and restarts its timer. */
-        fun step(
-            context: Context,
-            stackWidgetId: Int,
-            delta: Int,
-        ) {
-            val service = instance
-            if (service != null) {
-                service.handler.post { service.advance(stackWidgetId, delta) }
-            } else {
-                moveIndex(context, stackWidgetId, delta)
-                StackWidgetProvider.render(context, stackWidgetId)
-                refresh(context)
-            }
-        }
-
-        private fun moveIndex(
-            context: Context,
-            stackWidgetId: Int,
-            delta: Int,
-        ) {
-            val count = WidgetStackRepository(context).get(stackWidgetId)?.hostedWidgetIds?.size ?: 0
-            if (count == 0) return
-            val current = positions[stackWidgetId] ?: 0
-            positions[stackWidgetId] = Math.floorMod(current + delta, count)
-        }
-    }
-
-    private val handler = Handler(Looper.getMainLooper())
-    private lateinit var repository: WidgetStackRepository
-    private var host: CapturingWidgetHost? = null
-    private val hostViews = mutableMapOf<Int, CapturingHostView>()
-    private var overlayContainer: FrameLayout? = null
-    private val timers = mutableMapOf<Int, Runnable>()
-    private val pendingRenders = mutableMapOf<Int, Runnable>()
 
     private val screenReceiver =
         object : BroadcastReceiver() {
@@ -171,15 +113,58 @@ class StackHostService : Service() {
             }
         }
 
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-        repository = WidgetStackRepository(this)
-        host = CapturingWidgetHost(this).also { it.startListening() }
+    // Stacked widgets were sized for the previous orientation.
+    private val configurationCallbacks =
+        object : ComponentCallbacks {
+            override fun onConfigurationChanged(newConfig: Configuration) {
+                repository.getAll().forEach { StackWidgetProvider.forwardSize(appContext, it) }
+            }
+
+            @Deprecated("Deprecated in Java")
+            override fun onLowMemory() {}
+        }
+
+    /** Starts hosting after a reboot or app update, if any stack is on the homescreen. */
+    fun startIfNeeded(context: Context) {
+        if (WidgetStackRepository(context).getAll().isNotEmpty()) refresh(context)
+    }
+
+    /** Matches the hosted widgets, renders and timers to the saved stacks, stopping when none are left. */
+    fun refresh(context: Context) {
+        val app = context.applicationContext
+        handler.post {
+            if (host == null) start(app)
+            sync()
+        }
+    }
+
+    /** Moves a stack by [delta] widgets and restarts its timer. */
+    fun step(
+        context: Context,
+        stackWidgetId: Int,
+        delta: Int,
+    ) {
+        val app = context.applicationContext
+        handler.post {
+            if (host == null) start(app)
+            advance(stackWidgetId, delta)
+        }
+    }
+
+    private fun start(context: Context) {
+        appContext = context
+        // Starts the app again every so often if the system stopped it, so stacks keep updating.
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            KEEP_ALIVE_WORK,
+            ExistingPeriodicWorkPolicy.KEEP,
+            PeriodicWorkRequestBuilder<StackHostWorker>(15, TimeUnit.MINUTES).build(),
+        )
+        repository = WidgetStackRepository(context)
+        host = CapturingWidgetHost(context).also { it.startListening() }
         removeOrphanedWidgets()
         attachOverlay()
         ContextCompat.registerReceiver(
-            this,
+            context,
             screenReceiver,
             IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_ON)
@@ -187,25 +172,39 @@ class StackHostService : Service() {
             },
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
+        context.registerComponentCallbacks(configurationCallbacks)
     }
 
-    override fun onStartCommand(
-        intent: Intent?,
-        flags: Int,
-        startId: Int,
-    ): Int {
-        syncHostedWidgets()
-        return START_STICKY
+    private fun stop() {
+        WorkManager.getInstance(appContext).cancelUniqueWork(KEEP_ALIVE_WORK)
+        handler.removeCallbacksAndMessages(null)
+        timers.clear()
+        pendingRenders.clear()
+        try {
+            appContext.unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
+        appContext.unregisterComponentCallbacks(configurationCallbacks)
+        detachOverlay()
+        hostViews.clear()
+        host?.stopListening()
+        host = null
     }
 
-    private fun syncHostedWidgets() {
+    private fun sync() {
         val stacks = repository.getAll()
         if (stacks.isEmpty()) {
-            stopSelf()
+            stop()
             return
         }
 
-        val awm = AppWidgetManager.getInstance(this)
+        // The overlay may have been allowed since hosting started.
+        if (overlayContainer == null) {
+            attachOverlay()
+            hostViews.values.forEach { overlayContainer?.addView(it, FrameLayout.LayoutParams(1, 1)) }
+        }
+
+        val awm = AppWidgetManager.getInstance(appContext)
         val wanted = stacks.flatMap { it.hostedWidgetIds }.toSet()
 
         (hostViews.keys - wanted).forEach { id ->
@@ -218,7 +217,7 @@ class StackHostService : Service() {
             if (hostViews.containsKey(id)) continue
             val info = awm.getAppWidgetInfo(id) ?: continue
             try {
-                val view = host?.createView(this, id, info) as? CapturingHostView ?: continue
+                val view = host?.createView(appContext, id, info) as? CapturingHostView ?: continue
                 hostViews[id] = view
                 overlayContainer?.addView(view, FrameLayout.LayoutParams(1, 1))
             } catch (e: Exception) {
@@ -227,8 +226,8 @@ class StackHostService : Service() {
         }
 
         for (stack in stacks) {
-            StackWidgetProvider.forwardSize(this, stack)
-            StackWidgetProvider.render(this, stack.stackWidgetId)
+            StackWidgetProvider.forwardSize(appContext, stack)
+            StackWidgetProvider.render(appContext, stack.stackWidgetId)
             scheduleTimer(stack.stackWidgetId)
         }
         (timers.keys - stacks.map { it.stackWidgetId }.toSet()).forEach { cancelTimer(it) }
@@ -247,6 +246,31 @@ class StackHostService : Service() {
         }
     }
 
+    // Some content (such as a list backed by another app's service) breaks once it is nested in
+    // the stack and sent to the launcher, which then fails to show the whole stack. Nesting it the
+    // same way and rendering the delivered copy here catches that before it reaches the launcher.
+    private fun canRender(
+        context: Context,
+        remoteViews: RemoteViews,
+    ): Boolean {
+        val parcel = Parcel.obtain()
+        return try {
+            val page = RemoteViews(context.packageName, R.layout.widget_stack_page)
+            page.addView(R.id.stack_page, remoteViews)
+            val probe = RemoteViews(context.packageName, R.layout.widget_stack)
+            probe.addView(R.id.stack_flipper, page)
+            probe.writeToParcel(parcel, 0)
+            parcel.setDataPosition(0)
+            RemoteViews.CREATOR.createFromParcel(parcel).apply(context, FrameLayout(context))
+            true
+        } catch (e: Throwable) {
+            Log.w(TAG, "Widget can't be shown in a stack: $e")
+            false
+        } finally {
+            parcel.recycle()
+        }
+    }
+
     private fun onHostedWidgetChanged(hostedWidgetId: Int) {
         repository
             .getAll()
@@ -257,7 +281,7 @@ class StackHostService : Service() {
                 val render =
                     Runnable {
                         pendingRenders.remove(stackId)
-                        StackWidgetProvider.render(this, stackId)
+                        StackWidgetProvider.render(appContext, stackId)
                     }
                 pendingRenders[stackId] = render
                 handler.postDelayed(render, 100L)
@@ -268,8 +292,12 @@ class StackHostService : Service() {
         stackWidgetId: Int,
         delta: Int,
     ) {
-        moveIndex(this, stackWidgetId, delta)
-        StackWidgetProvider.render(this, stackWidgetId)
+        val count = repository.get(stackWidgetId)?.hostedWidgetIds?.size ?: 0
+        if (count > 0) {
+            val current = positions[stackWidgetId] ?: 0
+            positions[stackWidgetId] = Math.floorMod(current + delta, count)
+        }
+        StackWidgetProvider.render(appContext, stackWidgetId)
         scheduleTimer(stackWidgetId)
     }
 
@@ -277,7 +305,7 @@ class StackHostService : Service() {
         cancelTimer(stackWidgetId)
         val stack = repository.get(stackWidgetId) ?: return
         if (stack.intervalSeconds <= 0 || stack.hostedWidgetIds.size < 2) return
-        val power = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val power = appContext.getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!power.isInteractive) return
 
         val tick = Runnable { advance(stackWidgetId, 1) }
@@ -296,10 +324,10 @@ class StackHostService : Service() {
 
     // A tiny invisible overlay keeps the process important enough to keep receiving widget updates.
     private fun attachOverlay() {
-        if (!Settings.canDrawOverlays(this)) return
+        if (!Settings.canDrawOverlays(appContext)) return
         try {
-            val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val container = FrameLayout(this)
+            val wm = appContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val container = FrameLayout(appContext)
             val params =
                 WindowManager.LayoutParams(
                     1,
@@ -324,27 +352,9 @@ class StackHostService : Service() {
     private fun detachOverlay() {
         val container = overlayContainer ?: return
         try {
-            (getSystemService(Context.WINDOW_SERVICE) as WindowManager).removeView(container)
+            (appContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager).removeView(container)
         } catch (_: Exception) {
         }
         overlayContainer = null
     }
-
-    override fun onDestroy() {
-        instance = null
-        handler.removeCallbacksAndMessages(null)
-        timers.clear()
-        pendingRenders.clear()
-        try {
-            unregisterReceiver(screenReceiver)
-        } catch (_: Exception) {
-        }
-        detachOverlay()
-        hostViews.clear()
-        host?.stopListening()
-        host = null
-        super.onDestroy()
-    }
-
-    override fun onBind(intent: Intent?): IBinder? = null
 }

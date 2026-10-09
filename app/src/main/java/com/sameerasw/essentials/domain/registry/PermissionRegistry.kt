@@ -135,6 +135,7 @@ fun initPermissionRegistry() {
 
     // Draw over other apps permission
     PermissionRegistry.register("DRAW_OVER_OTHER_APPS", R.string.feat_notification_lighting_title)
+    PermissionRegistry.register("DRAW_OVER_OTHER_APPS", R.string.feat_widget_stack_title)
 
     // Post notifications permission
     PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_caffeinate_title)

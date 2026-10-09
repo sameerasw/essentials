@@ -34,7 +34,7 @@ class StackWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray,
     ) {
         appWidgetIds.forEach { render(context, it) }
-        StackHostService.refresh(context)
+        StackHost.refresh(context)
     }
 
     override fun onAppWidgetOptionsChanged(
@@ -51,29 +51,33 @@ class StackWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray,
     ) {
         val repository = WidgetStackRepository(context)
-        val host = AppWidgetHost(context, StackHostService.HOST_ID)
+        val host = AppWidgetHost(context, StackHost.HOST_ID)
         for (stackId in appWidgetIds) {
             repository.get(stackId)?.hostedWidgetIds?.forEach { hostedId ->
                 try {
                     host.deleteAppWidgetId(hostedId)
                 } catch (_: Exception) {
                 }
-                StackHostService.contents.remove(hostedId)
+                StackHost.contents.remove(hostedId)
             }
             repository.delete(stackId)
-            StackHostService.positions.remove(stackId)
+            StackHost.positions.remove(stackId)
         }
-        StackHostService.refresh(context)
+        StackHost.refresh(context)
     }
 
     override fun onReceive(
         context: Context,
         intent: Intent,
     ) {
+        if (intent.action == Intent.ACTION_MY_PACKAGE_REPLACED) {
+            StackHost.startIfNeeded(context)
+            return
+        }
         if (intent.action == ACTION_STEP) {
             val stackId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             val delta = intent.getIntExtra(EXTRA_DELTA, 1)
-            if (stackId != AppWidgetManager.INVALID_APPWIDGET_ID) StackHostService.step(context, stackId, delta)
+            if (stackId != AppWidgetManager.INVALID_APPWIDGET_ID) StackHost.step(context, stackId, delta)
             return
         }
         super.onReceive(context, intent)
@@ -111,14 +115,16 @@ class StackWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.stack_empty, View.VISIBLE)
                 views.setOnClickPendingIntent(R.id.stack_empty, configurePendingIntent(context, stackWidgetId))
             } else {
-                val index = (StackHostService.positions[stackWidgetId] ?: 0).coerceIn(0, hosted.lastIndex)
-                StackHostService.positions[stackWidgetId] = index
+                val index = (StackHost.positions[stackWidgetId] ?: 0).coerceIn(0, hosted.lastIndex)
+                StackHost.positions[stackWidgetId] = index
 
                 views.setViewVisibility(R.id.stack_empty, View.GONE)
                 views.setViewVisibility(R.id.stack_flipper, View.VISIBLE)
                 hosted.forEach { hostedId ->
-                    val content = StackHostService.contents[hostedId] ?: placeholder(context, awm, hostedId)
-                    views.addView(R.id.stack_flipper, content)
+                    val content = StackHost.contents[hostedId] ?: placeholder(context, awm, hostedId)
+                    val page = RemoteViews(context.packageName, R.layout.widget_stack_page)
+                    page.addView(R.id.stack_page, content)
+                    views.addView(R.id.stack_flipper, page)
                 }
                 views.setDisplayedChild(R.id.stack_flipper, index)
 
@@ -197,7 +203,7 @@ class StackWidgetProvider : AppWidgetProvider() {
                 awm.getAppWidgetInfo(hostedWidgetId)?.loadLabel(context.packageManager)
                     ?: context.getString(R.string.widget_stack_unknown_widget)
             val text =
-                if (hostedWidgetId in StackHostService.unsupported) {
+                if (hostedWidgetId in StackHost.unsupported) {
                     context.getString(R.string.widget_stack_unsupported, label)
                 } else {
                     context.getString(R.string.widget_stack_loading, label)

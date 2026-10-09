@@ -3,6 +3,7 @@
     android:configure="com.sameerasw.essentials.ui.activities.WidgetStackConfigureActivity"
     android:description="@string/widget_stack_description"
     android:initialLayout="@layout/widget_stack"
+    android:previewLayout="@layout/widget_stack_preview"
     android:minWidth="110dp"
     android:minHeight="110dp"
     android:minResizeWidth="40dp"
