@@ -1760,4 +1760,7 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="diy_set_keyboard_title">Klavyeyi Ayarla</string>
     <string name="screen_locked_disable_notification_interactions_desc">Kilitliyken bildirim panelinin ve Hızlı Ayarlar\'ın aşağı çekilmesini engelleyin</string>
     <string name="screen_locked_disable_notification_interactions_title">Bildirim etkileşimlerini devre dışı bırak</string>
+    <string name="feat_hilight_desc">Bildirimler için arka LED\'leri yakın.</string>
+    <string name="feat_activity_launcher_title">Etkinlik başlatıcı</string>
+    <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin.</string>
 </resources>
