@@ -16,6 +16,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -209,7 +210,7 @@ class StackWidgetProvider : AppWidgetProvider() {
             // to the smallest, so each widget is given only the space it has right now.
             val reserved = if (reservesControls(config)) CONTROLS_SPACE_DP else 0
             val portrait =
-                context.resources.configuration.orientation != android.content.res.Configuration.ORIENTATION_LANDSCAPE
+                context.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
             val width =
                 options.getInt(
                     if (portrait) AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH else AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH,

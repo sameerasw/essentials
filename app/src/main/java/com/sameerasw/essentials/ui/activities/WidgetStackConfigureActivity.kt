@@ -67,6 +67,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
@@ -118,9 +119,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val viewModel: MainViewModel =
-                androidx.lifecycle.viewmodel.compose
-                    .viewModel()
+            val viewModel: MainViewModel = viewModel()
             val context = LocalContext.current
             LaunchedEffect(Unit) { viewModel.check(context) }
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
