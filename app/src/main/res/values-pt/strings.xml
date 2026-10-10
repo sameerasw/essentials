@@ -1660,4 +1660,11 @@ tempo e bateria</string>
     <string name="setting_hidden_debugging_title">esconder Suporte para depuração</string>
     <string name="freeze_tag_color_coded_title">Etiquetas com código de cores</string>
     <string name="freeze_tag_color_coded_desc">Exibir cores de etiquetas na grade do aplicativo</string>
+    <string name="feat_hilight_title">Destaque</string>
+    <string name="feat_hilight_desc">Acende os LEDs traseiros para notificações.</string>
+    <string name="hilight_only_screen_off_title">apenas quando a tela estiver desligada </string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Não ativar no modo Não Perturbe</string>
+    <string name="hilight_cooldown_desc">Aguarda esse tempo antes de acender novamente o mesmo aplicativo.</string>
+    <string name="feat_activity_launcher_title">atividade do launcher </string>
+    <string name="feat_activity_launcher_desc">Abra ou fixe qualquer tela de aplicativo</string>
 </resources>
