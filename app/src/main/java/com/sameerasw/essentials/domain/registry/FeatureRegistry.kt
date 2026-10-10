@@ -829,6 +829,11 @@ object FeatureRegistry {
                             "island_notif_compact_heads_up",
                         ),
                         SearchSetting(
+                            R.string.island_notif_condensed_info_title,
+                            R.string.island_notif_condensed_info_desc,
+                            "island_notif_condensed_info",
+                        ),
+                        SearchSetting(
                             R.string.island_notif_skip_silent_title,
                             R.string.island_notification_options_title,
                             "island_notif_skip_silent",

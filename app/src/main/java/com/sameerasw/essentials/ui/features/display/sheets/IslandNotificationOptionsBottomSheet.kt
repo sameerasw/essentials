@@ -137,6 +137,25 @@ fun IslandNotificationOptionsBottomSheet(
                     )
                 }
 
+                // Only reachable once a notification actually peeks as a line, which needs both toggles above.
+                AnimatedVisibility(
+                    visible = viewModel.isIslandLineStageEnabled.value && viewModel.isIslandNotifCompactHeadsUp.value,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically(),
+                ) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_view_headline_24,
+                        title = stringResource(R.string.island_notif_condensed_info_title),
+                        description = stringResource(R.string.island_notif_condensed_info_desc),
+                        isChecked = viewModel.isIslandNotifCondensedInfo.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandNotifCondensedInfo(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_notif_condensed_info"),
+                    )
+                }
+
                 IconToggleItem(
                     iconRes = R.drawable.rounded_downloading_24,
                     title = stringResource(R.string.island_notif_keep_progress_title),

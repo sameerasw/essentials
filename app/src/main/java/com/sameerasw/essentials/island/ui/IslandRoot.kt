@@ -206,7 +206,7 @@ fun IslandRoot(
         ?.takeIf { outlineAlpha > 0f && fade > 0f }
         ?.let { it.copy(alpha = it.alpha * outlineAlpha * fade) }
     val pulse = remember { Animatable(0f) }
-    LaunchedEffect(state.focusedKey, spec.pulseShadow) {
+    LaunchedEffect(state.focusedKey, state.items[state.focusedKey]?.contentId, spec.pulseShadow) {
         pulse.snapTo(0f)
         if (!spec.pulseShadow || state.focusedKey == null) return@LaunchedEffect
         pulse.animateTo(1f, tween(250, easing = LinearEasing))
@@ -410,11 +410,17 @@ fun IslandRoot(
         if (spec.growDirection == 0 && hasCompactCells) catchUpAnim.value.coerceAtLeast(0f) * (bubbleSizePx + bubbleGapPx) / 2f else 0f
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
-    fun surfaceLeft(width: Int): Int = windowWidth / 2 + lineShift.value.roundToInt() + catchShiftPx().roundToInt() - when {
-        spec.growDirection > 0 -> cameraSlotPx / 2
-        spec.growDirection < 0 -> width - cameraSlotPx / 2
-        else -> width / 2
+    val condensedLead = remember { Animatable(0f) }
+    val condensedLeadPx = with(density) {
+        (spec.cameraGap + spec.compactHeight * OPTICAL_INSET_RATIO + spec.cellSize).roundToPx()
     }
+    fun condensedShift(width: Int): Int = (width - cameraSlotPx) / 2 - condensedLeadPx
+    fun surfaceShiftFor(width: Int): Int = when {
+        spec.growDirection != 0 -> spec.growDirection * (width - cameraSlotPx) / 2
+        else -> lerp(0, condensedShift(width), condensedLead.value)
+    }
+    fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
+        lineShift.value.roundToInt() + catchShiftPx().roundToInt()
     fun bubbleX(width: Int): Int =
         if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - bubbleSizePx
     val focusedItem = state.focused
@@ -433,8 +439,16 @@ fun IslandRoot(
     val lineInsetActive = queueShown && stage == IslandStage.Line
     val lineInset = if (lineInsetActive) spec.compactHeight + spec.cameraGap else 0.dp
     val lineInsets = if (spec.growDirection > 0) 0.dp to lineInset else lineInset to 0.dp
-    LaunchedEffect(lineInsetActive, spec.growDirection) {
-        val shift = if (lineInsetActive && spec.growDirection == 0) (bubbleSizePx + bubbleGapPx) / 2f else 0f
+    val condensedLineActive = spec.growDirection == 0 && stage == IslandStage.Line && focusedItem?.line?.condensed == true
+    LaunchedEffect(condensedLineActive) {
+        condensedLead.animateTo(if (condensedLineActive) 1f else 0f, IslandMotion.float())
+    }
+    LaunchedEffect(lineInsetActive, spec.growDirection, condensedLineActive) {
+        val shift = if (lineInsetActive && spec.growDirection == 0 && !condensedLineActive) {
+            (bubbleSizePx + bubbleGapPx) / 2f
+        } else {
+            0f
+        }
         lineShift.animateTo(shift, IslandMotion.float())
     }
     var lastQueuedIcons by remember { mutableStateOf(emptyList<StackIcon>()) }
@@ -459,15 +473,23 @@ fun IslandRoot(
         }
     }
 
-    LaunchedEffect(target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells, bubbleOnlyLayout) {
+    LaunchedEffect(
+        target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
+        bubbleOnlyLayout, condensedLineActive,
+    ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
-        val shift = if ((lineInsetActive || (catchUpShown && hasCompactCells)) && spec.growDirection == 0) (bubbleSizePx + bubbleGapPx) / 2 else 0
-        val left = windowWidth / 2 + shift - when {
-            spec.growDirection > 0 -> cameraSlotPx / 2
-            spec.growDirection < 0 -> target.width - cameraSlotPx / 2
-            else -> target.width / 2
+        val shift = if ((lineInsetActive || (catchUpShown && hasCompactCells)) && spec.growDirection == 0 && !condensedLineActive) {
+            (bubbleSizePx + bubbleGapPx) / 2
+        } else {
+            0
         }
+        val settled = when {
+            spec.growDirection != 0 -> spec.growDirection * (target.width - cameraSlotPx) / 2
+            condensedLineActive -> condensedShift(target.width)
+            else -> 0
+        }
+        val left = windowWidth / 2 - target.width / 2 + settled + shift
         val top = (surfaceTopPx - g).coerceAtLeast(0)
         var bounds = IntRect(left, top, left + target.width, surfaceTopPx - g + target.height)
         if (queueShown && stage == IslandStage.Line) {
@@ -635,7 +657,7 @@ fun IslandRoot(
                 .padding(top = spec.surfaceTop)
                 .layout { measurable, constraints ->
                     val p = measurable.measure(constraints)
-                    val dx = spec.growDirection * (p.width - cameraSlotPx) / 2 + lineShift.value.roundToInt() + catchShiftPx().roundToInt()
+                    val dx = surfaceShiftFor(p.width) + lineShift.value.roundToInt() + catchShiftPx().roundToInt()
                     layout(p.width, p.height) { p.place(dx, 0) }
                 }
                 .offset { IntOffset(0, (squashPx / 2f * squash.value - edgeShift.floatValue - surfaceTopPx * bond).roundToInt()) }

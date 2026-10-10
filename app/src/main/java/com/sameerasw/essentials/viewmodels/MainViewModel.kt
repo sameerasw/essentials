@@ -253,6 +253,7 @@ class MainViewModel : ViewModel() {
     val isIslandMediaShowPrevious = mutableStateOf(false)
     val isIslandMediaShowLike = mutableStateOf(true)
     val isIslandNotifCompactHeadsUp = mutableStateOf(true)
+    val isIslandNotifCondensedInfo = mutableStateOf(false)
     val isIslandNotifKeepProgress = mutableStateOf(true)
     val isIslandNotifQueue = mutableStateOf(true)
     val isIslandNotifSkipSilent = mutableStateOf(true)
@@ -905,6 +906,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP ->
                         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_CONDENSED_INFO ->
+                        isIslandNotifCondensedInfo.value = settingsRepository.isIslandNotifCondensedInfoEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_QUEUE ->
                         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
@@ -2411,6 +2415,7 @@ class MainViewModel : ViewModel() {
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
         isIslandNotifCompactHeadsUp.value = settingsRepository.isIslandNotifCompactHeadsUpEnabled()
+        isIslandNotifCondensedInfo.value = settingsRepository.isIslandNotifCondensedInfoEnabled()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         isIslandNotifSkipSilent.value = settingsRepository.isIslandNotifSkipSilentEnabled()
@@ -5708,6 +5713,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNotifCompactHeadsUp(enabled: Boolean) {
         isIslandNotifCompactHeadsUp.value = enabled
         settingsRepository.setIslandNotifCompactHeadsUpEnabled(enabled)
+    }
+
+    fun setIslandNotifCondensedInfo(enabled: Boolean) {
+        isIslandNotifCondensedInfo.value = enabled
+        settingsRepository.setIslandNotifCondensedInfoEnabled(enabled)
     }
 
     fun setIslandCatchUpEnabled(enabled: Boolean) {
