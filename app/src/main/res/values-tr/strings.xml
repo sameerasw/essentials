@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Biyometri ile uygulamaları güvenli hale getirin</string>
     <string name="app_lock_auto_lock_delay_title">Otomatik kilitleme gecikmesi</string>
     <string name="app_lock_auto_lock_delay_desc">Uygulamadan çıktıktan sonra</string>
-    <string name="app_lock_auto_lock_delay_none">Hiçbiri</string>
+    <string name="app_lock_auto_lock_delay_none">Yok</string>
     <string name="app_lock_auto_lock_delay_1min">1 dakika</string>
     <string name="app_lock_auto_lock_delay_5min">5 dakika</string>
     <string name="app_lock_auto_lock_delay_10min">10 dakika</string>
@@ -1765,4 +1765,16 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin.</string>
     <string name="feat_face_unlock_brightness_title">Yüz aydınlatması</string>
     <string name="feat_face_unlock_brightness_desc">Düşük ışıkta parlaklığı artırın</string>
+    <string name="duo_hide_when_locked_title">Kilitliyken gizle</string>
+    <string name="duo_hide_when_screen_off_only_idle_title">Yalnızca boşta kalındığında AOD\'de gizle</string>
+    <string name="duo_hide_when_screen_off_title">Ekran kapalıyken gizle</string>
+    <string name="island_hide_on_shade_title">Durum çubuğu genişletildiğinde gizle</string>
+    <string name="duo_material_you_title">Material 3 Rengini Kullan</string>
+    <string name="duo_action_tap_title">Dokun</string>
+    <string name="island_show_network_title">Ağ</string>
+    <string name="island_section_notifications">Bildirimler</string>
+    <string name="island_show_time_battery_title">Saat Ve Batarya</string>
+    <string name="island_call_options_title">Çağrı</string>
+    <string name="island_devices_battery_section">Cihazlar</string>
+    <string name="island_like_while_playing_title">Müzik Oynarken Beğen</string>
 </resources>
