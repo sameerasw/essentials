@@ -12,6 +12,7 @@ package com.sameerasw.essentials.services
 import android.graphics.drawable.Icon
 import android.content.pm.LauncherApps
 import com.sameerasw.essentials.domain.controller.HilightController
+import com.sameerasw.essentials.domain.controller.HilightProgressTracker
 import com.sameerasw.essentials.utils.PriorityModeUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.notification.NotificationRepostFilter
@@ -1006,6 +1007,9 @@ class NotificationListener : NotificationListenerService() {
         val extras = sbn.notification.extras
         if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
             scheduleProgressRefresh()
+        } else if (HilightProgressTracker.isTracking(sbn.key)) {
+            // Its progress bar was replaced, e.g. by "Download complete"
+            scheduleProgressRefresh()
         }
 
         if (!isRepost && isHeadsUpNotification(sbn, rankingMap, allowSilent = true)) {
@@ -1853,6 +1857,7 @@ class NotificationListener : NotificationListenerService() {
                         Log.e("NotificationListener", "Failed to extract progress notification", e)
                         return@execute
                     }
+                HilightProgressTracker.onProgress(applicationContext, data)
                 progressHandler.post { notifyProgressListeners(data) }
             }
         }

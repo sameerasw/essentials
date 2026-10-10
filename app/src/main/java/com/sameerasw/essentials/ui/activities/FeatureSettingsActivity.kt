@@ -94,7 +94,10 @@ import com.sameerasw.essentials.ui.features.system.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.FlashlightPulseSettingsUI
 import com.sameerasw.essentials.ui.features.system.FlashlightSettingsUI
 import com.sameerasw.essentials.ui.features.system.FreezeSettingsUI
+import com.sameerasw.essentials.ui.features.system.HilightNotificationsSettingsUI
+import com.sameerasw.essentials.ui.features.system.HilightProgressSettingsUI
 import com.sameerasw.essentials.ui.features.system.HilightSettingsUI
+import com.sameerasw.essentials.ui.features.system.HilightStatus
 import com.sameerasw.essentials.ui.features.system.KeyboardSettingsUI
 import com.sameerasw.essentials.ui.features.system.LiveWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.system.LocationReachedSettingsUI
@@ -365,7 +368,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         !isNotificationLightingAccessibilityEnabled ||
                                         !isNotificationListenerEnabled
                                 "Flashlight pulse" -> !isNotificationListenerEnabled
-                                "Hilight" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
+                                "Hilight", "Hilight notifications", "Hilight live progress" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
                                 "Notification Sync" -> !isNotificationListenerEnabled
                                 "Button remap" -> !isAccessibilityEnabled
                                 "Face unlock brightness" -> !isAccessibilityEnabled
@@ -645,6 +648,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         viewModel.isShowLegacyFeatures.value,
                                     ).filter { it.parentFeatureId == featureId }
                             if (children.isNotEmpty() && featureId != "Networks" && featureId != "Island") {
+                                if (featureId == "Hilight") HilightStatus(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+
                         val sectionChildLists =
                                     run {
                                         val childMap = children.associateBy { it.id }
@@ -810,7 +815,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                                     !isNotificationLightingAccessibilityEnabled ||
                                                                     !isNotificationListenerEnabled
                                                             "Flashlight pulse" -> !isNotificationListenerEnabled
-                                                            "Hilight" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
+                                                            "Hilight", "Hilight notifications", "Hilight live progress" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
                                                             "Button remap" -> !isAccessibilityEnabled
                                                             "Face unlock brightness" -> !isAccessibilityEnabled
                                                             "Lock screen shortcuts" -> !isAccessibilityEnabled
@@ -941,7 +946,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                     ),
                                                 showToggle = child.showToggle,
                                                 onDisabledToggleClick = {
-                                                    if (child.id == "Hilight" && !DeviceUtils.isHilightDevice()) {
+                                                    if (child.id.startsWith("Hilight") && !DeviceUtils.isHilightDevice()) {
                                                         Toast.makeText(context, R.string.hilight_not_supported_toast, Toast.LENGTH_SHORT).show()
                                                     } else {
                                                         permissionAwareToggle(true)
@@ -978,6 +983,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
+
+                                if (featureId == "Hilight") {
+                                    HilightSettingsUI(
+                                        viewModel = viewModel,
+                                        highlightSetting = highlightSetting,
+                                    )
+                                }
                             } else {
                                 when (featureId) {
                                     "Screen off widget" -> {
@@ -1013,8 +1025,17 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
-                                    "Hilight" -> {
-                                        HilightSettingsUI(
+
+                                    "Hilight notifications" -> {
+                                        HilightNotificationsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Hilight live progress" -> {
+                                        HilightProgressSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
