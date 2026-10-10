@@ -54,6 +54,9 @@ object StackHost {
     /** Hosted widgets whose content can't be shown inside a stack. */
     val unsupported: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
+    /** Stacks too large to send whole, which get only their visible widget's content. */
+    val visibleOnlyStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
+
     /** Index of the visible widget in each stack, keyed by the stack's app widget id. */
     val positions = ConcurrentHashMap<Int, Int>()
 

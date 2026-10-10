@@ -216,6 +216,8 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
     private fun updateConfig(updated: WidgetStackConfig) {
         config = updated
+        // The new set of widgets may fit whole again.
+        StackHost.visibleOnlyStacks.remove(stackWidgetId)
         repository.save(updated)
         StackWidgetProvider.render(this, stackWidgetId)
         StackHost.refresh(this)

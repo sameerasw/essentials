@@ -62,6 +62,7 @@ class StackWidgetProvider : AppWidgetProvider() {
             }
             repository.delete(stackId)
             StackHost.positions.remove(stackId)
+            StackHost.visibleOnlyStacks.remove(stackId)
         }
         StackHost.refresh(context)
     }
@@ -103,6 +104,36 @@ class StackWidgetProvider : AppWidgetProvider() {
             stackWidgetId: Int,
         ) {
             val awm = AppWidgetManager.getInstance(context)
+            if (stackWidgetId !in StackHost.visibleOnlyStacks) {
+                try {
+                    awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = false))
+                    return
+                } catch (e: IllegalArgumentException) {
+                    // Every widget's images together went over the launcher's memory limit for one widget.
+                    Log.w(TAG, "Stack $stackWidgetId is too large, sending only the visible widget", e)
+                    StackHost.visibleOnlyStacks.add(stackWidgetId)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to update stack $stackWidgetId", e)
+                    return
+                }
+            }
+            try {
+                awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = true))
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to update stack $stackWidgetId", e)
+            }
+        }
+
+        /**
+         * With [visibleOnly], the hidden pages are left empty. Every switch renders the stack again, so
+         * the page being shown always has its content.
+         */
+        private fun build(
+            context: Context,
+            stackWidgetId: Int,
+            visibleOnly: Boolean,
+        ): RemoteViews {
+            val awm = AppWidgetManager.getInstance(context)
             val config = WidgetStackRepository(context).get(stackWidgetId)
             val hosted = config?.hostedWidgetIds.orEmpty()
             val views = RemoteViews(context.packageName, R.layout.widget_stack)
@@ -114,38 +145,35 @@ class StackWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.stack_controls, View.GONE)
                 views.setViewVisibility(R.id.stack_empty, View.VISIBLE)
                 views.setOnClickPendingIntent(R.id.stack_empty, configurePendingIntent(context, stackWidgetId))
+                return views
+            }
+
+            val index = (StackHost.positions[stackWidgetId] ?: 0).coerceIn(0, hosted.lastIndex)
+            StackHost.positions[stackWidgetId] = index
+
+            views.setViewVisibility(R.id.stack_empty, View.GONE)
+            views.setViewVisibility(R.id.stack_flipper, View.VISIBLE)
+            hosted.forEachIndexed { i, hostedId ->
+                val page = RemoteViews(context.packageName, R.layout.widget_stack_page)
+                if (!visibleOnly || i == index) {
+                    page.addView(R.id.stack_page, StackHost.contents[hostedId] ?: placeholder(context, awm, hostedId))
+                }
+                views.addView(R.id.stack_flipper, page)
+            }
+            views.setDisplayedChild(R.id.stack_flipper, index)
+
+            if (showsControls(config)) {
+                views.setViewVisibility(R.id.stack_controls, View.VISIBLE)
+                hosted.indices.forEach { i ->
+                    val dot = if (i == index) R.layout.widget_stack_dot_active else R.layout.widget_stack_dot
+                    views.addView(R.id.stack_dots, RemoteViews(context.packageName, dot))
+                }
+                views.setOnClickPendingIntent(R.id.stack_prev, stepPendingIntent(context, stackWidgetId, -1))
+                views.setOnClickPendingIntent(R.id.stack_next, stepPendingIntent(context, stackWidgetId, 1))
             } else {
-                val index = (StackHost.positions[stackWidgetId] ?: 0).coerceIn(0, hosted.lastIndex)
-                StackHost.positions[stackWidgetId] = index
-
-                views.setViewVisibility(R.id.stack_empty, View.GONE)
-                views.setViewVisibility(R.id.stack_flipper, View.VISIBLE)
-                hosted.forEach { hostedId ->
-                    val content = StackHost.contents[hostedId] ?: placeholder(context, awm, hostedId)
-                    val page = RemoteViews(context.packageName, R.layout.widget_stack_page)
-                    page.addView(R.id.stack_page, content)
-                    views.addView(R.id.stack_flipper, page)
-                }
-                views.setDisplayedChild(R.id.stack_flipper, index)
-
-                if (showsControls(config)) {
-                    views.setViewVisibility(R.id.stack_controls, View.VISIBLE)
-                    hosted.indices.forEach { i ->
-                        val dot = if (i == index) R.layout.widget_stack_dot_active else R.layout.widget_stack_dot
-                        views.addView(R.id.stack_dots, RemoteViews(context.packageName, dot))
-                    }
-                    views.setOnClickPendingIntent(R.id.stack_prev, stepPendingIntent(context, stackWidgetId, -1))
-                    views.setOnClickPendingIntent(R.id.stack_next, stepPendingIntent(context, stackWidgetId, 1))
-                } else {
-                    views.setViewVisibility(R.id.stack_controls, View.GONE)
-                }
+                views.setViewVisibility(R.id.stack_controls, View.GONE)
             }
-
-            try {
-                awm.updateAppWidget(stackWidgetId, views)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to update stack $stackWidgetId", e)
-            }
+            return views
         }
 
         /** Tells every widget in the stack how much space it has inside the stack. */
