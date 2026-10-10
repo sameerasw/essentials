@@ -1763,4 +1763,6 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="feat_hilight_desc">Bildirimler için arka LED\'leri yakın.</string>
     <string name="feat_activity_launcher_title">Etkinlik başlatıcı</string>
     <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin.</string>
+    <string name="feat_face_unlock_brightness_title">Yüz aydınlatması</string>
+    <string name="feat_face_unlock_brightness_desc">Düşük ışıkta parlaklığı artırın</string>
 </resources>
