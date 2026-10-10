@@ -1646,8 +1646,8 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_title">Isla</string>
     <string name="island_desc">Isla dinamica</string>
     <string name="island_tap_action_title">Accion del toque</string>
-    <string name="island_suppress_system_heads_up_title">Ocultar notificaciones emergentes del sistema</string>
-    <string name="island_dynamic_hide_status_bar_title">Oculta los iconos de la barra de estado</string>
+    <string name="island_suppress_system_heads_up_title">Desactivar notificaciones emergentes del sistema</string>
+    <string name="island_dynamic_hide_status_bar_title">Oculta los iconos del sistema de la barra de estado</string>
     <string name="status_glance_show_calendar_title">Eventos del calendario</string>
     <string name="status_glance_calendar_show_all_day_title">Mostrar eventos de todo el dia</string>
     <string name="status_glance_calendar_timeframe_title">Mostra eventos en</string>
@@ -1693,7 +1693,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_camera_position_left">Izquierda </string>
     <string name="island_camera_position_right">Derecha</string>
     <string name="island_camera_position_center">Centro</string>
-    <string name="island_hide_in_owner_app_title">Ocultar la complicación dentro de la aplicación</string>
+    <string name="island_hide_in_owner_app_title">Desactivar la notificación dentro de la aplicación</string>
     <string name="about_desc_conscious_gate">Agrega una breve pantalla de puerta de atención plena antes de abrir las aplicaciones que has elegido usar con más intencionalidad, como las redes sociales.
 
 El botón Continuar permanece deshabilitado durante unos segundos para que tengas un momento para decidir, y la pausa puede reaparecer opcionalmente si sigues usando la aplicación más allá de un tiempo determinado</string>
@@ -1759,15 +1759,15 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_battery_percentage_conditional_title">% solo para algunas condiciones</string>
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_section_notifications">Notificaciones</string>
-    <string name="island_hide_on_shade_title">Ocultar cuando la Barra de Estado se activa. </string>
+    <string name="island_hide_on_shade_title">Ocultar cuando Barra de Estado se desliza</string>
     <string name="island_hide_live_updates_title">Ocultar las notificaciones actuales dinámicamente. </string>
     <string name="island_compact_hide_status_bar_title">Ocultar todos los elementos para la isla compacta</string>
-    <string name="island_dismiss_on_outside_title">Descartar al tocar fuera de la Isla</string>
-    <string name="island_show_when_title">Visible estando:</string>
-    <string name="island_show_when_unlocked">Desbloqueado</string>
-    <string name="island_show_when_screen_on">Pantalla Encendida</string>
+    <string name="island_dismiss_on_outside_title">Ocultar al tocar fuera de la notificación</string>
+    <string name="island_show_when_title">Mostrar al</string>
+    <string name="island_show_when_unlocked">Desbloquear</string>
+    <string name="island_show_when_screen_on">Activar Pantalla</string>
     <string name="island_show_when_always">Siempre</string>
-    <string name="island_line_peek_desc">Muestra brevemente la(s) notificación(es) en toda la isla y luego vuelve a la vista compacta</string>
+    <string name="island_line_peek_desc">Vistas breve de la notificación en la Isla después regresa a forma compacta</string>
     <string name="island_expanded_scale_title">Escala Expandida</string>
     <string name="island_font_scale_title">Tamaño de Fuente</string>
     <string name="island_expanded_roundness_title">Radio de las Esquinas Expandida</string>
@@ -1804,7 +1804,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="duo_tap_for_brief_title">Ver Actividades</string>
     <string name="duo_dot_size_title">Tamaño del punto de estado</string>
     <string name="duo_arc_thickness_title">Grosor del Anillo</string>
-    <string name="island_line_peek_title">Vista previa compacta</string>
+    <string name="island_line_peek_title">Vista Previa</string>
     <string name="island_expanded_timeout_desc">Duración antes de volver a la notificación compacta (0 para infinito)</string>
     <string name="island_call_show_peek">Compacta</string>
     <string name="island_preview_ring_title">Mostrar sugerencia de alineación</string>
