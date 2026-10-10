@@ -12,4 +12,5 @@
     <dimen name="spacing_small">4dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
+    <dimen name="widget_stack_controls_height">28dp</dimen>
 </resources>

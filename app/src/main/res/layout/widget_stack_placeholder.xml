@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stack_placeholder_label"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_stack_empty_background"
+    android:gravity="center"
+    android:padding="16dp"
+    android:textColor="@android:color/white"
+    android:textSize="14sp" />

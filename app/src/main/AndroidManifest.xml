@@ -864,6 +864,31 @@
                 android:resource="@xml/qs_tiles_widget_info" />
         </receiver>
 
+        <activity
+            android:name=".ui.activities.WidgetStackConfigureActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/widget_stack_settings_title"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".services.widgets.StackWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_stack_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_stack_info" />
+        </receiver>
+
         <receiver
             android:name=".services.receivers.QsTileActionRouter"
             android:exported="false">

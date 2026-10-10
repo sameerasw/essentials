@@ -65,6 +65,7 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.battery.BatteriesSettingsUI
+import com.sameerasw.essentials.ui.features.widgets.WidgetStackSettingsUI
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.security.AppLockSettingsUI
 import com.sameerasw.essentials.ui.features.system.AlwaysOnDisplaySettingsUI
@@ -359,6 +360,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         val hasMissingPermissions =
                             when (featureId) {
                                 "Screen off widget" -> !isAccessibilityEnabled
+                                "Widget stack" -> !isOverlayPermissionGranted
                                 "Statusbar icons" -> !isWriteSecureSettingsEnabled
                                 "Notification lighting" ->
                                     !isOverlayPermissionGranted ||
@@ -701,6 +703,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         listOf(
                                                             "Screen off widget",
                                                             "Batteries",
+                                                            "Widget stack",
                                                         ),
                                                     )
 
@@ -1179,6 +1182,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     "Batteries" -> {
                                         BatteriesSettingsUI(
                                             viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                        )
+                                    }
+
+                                    "Widget stack" -> {
+                                        WidgetStackSettingsUI(
                                             modifier = Modifier.padding(top = 16.dp),
                                         )
                                     }

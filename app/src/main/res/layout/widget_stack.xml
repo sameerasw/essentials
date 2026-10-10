@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stack_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ViewFlipper
+            android:id="@+id/stack_flipper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inAnimation="@anim/widget_stack_in"
+            android:outAnimation="@anim/widget_stack_out" />
+
+        <TextView
+            android:id="@+id/stack_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/widget_stack_empty_background"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/widget_stack_empty"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Full-width strip so a hidden bar is easy to bring back with a tap. -->
+    <FrameLayout
+        android:id="@+id/stack_controls"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_stack_controls_height"
+        android:layout_marginTop="4dp">
+
+        <LinearLayout
+            android:id="@+id/stack_controls_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/widget_stack_controls_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/stack_prev"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/widget_stack_previous"
+                android:padding="4dp"
+                android:src="@drawable/rounded_chevron_backward_24"
+                android:tint="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/stack_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" />
+
+            <ImageView
+                android:id="@+id/stack_next"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/widget_stack_next"
+                android:padding="4dp"
+                android:src="@drawable/rounded_chevron_forward_24"
+                android:tint="@android:color/white" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/stack_controls_handle"
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/widget_stack_show_controls_handle"
+            android:src="@drawable/widget_stack_handle"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

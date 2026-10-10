@@ -2141,6 +2141,27 @@ object FeatureRegistry {
                 ) {}
             },
             object : Feature(
+                id = "Widget stack",
+                title = R.string.feat_widget_stack_title,
+                iconRes = R.drawable.rounded_widgets_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_widget_stack_desc,
+                aboutDescription = R.string.about_desc_widget_stack,
+                permissionKeys = listOf("DRAW_OVERLAYS"),
+                showToggle = false,
+                hasMoreSettings = true,
+                isBeta = true,
+                parentFeatureId = "Widgets",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
                 id = "Watermark",
                 title = R.string.feat_watermark_title,
                 iconRes = R.drawable.rounded_draw_24,
