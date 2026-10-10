@@ -63,6 +63,7 @@ class StackWidgetProvider : AppWidgetProvider() {
             repository.delete(stackId)
             StackHost.positions.remove(stackId)
             StackHost.visibleOnlyStacks.remove(stackId)
+            StackHost.revealedStacks.remove(stackId)
         }
         StackHost.refresh(context)
     }
@@ -73,6 +74,11 @@ class StackWidgetProvider : AppWidgetProvider() {
     ) {
         if (intent.action == Intent.ACTION_MY_PACKAGE_REPLACED) {
             StackHost.startIfNeeded(context)
+            return
+        }
+        if (intent.action == ACTION_REVEAL) {
+            val stackId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+            if (stackId != AppWidgetManager.INVALID_APPWIDGET_ID) StackHost.revealControls(context, stackId)
             return
         }
         if (intent.action == ACTION_STEP) {
@@ -87,6 +93,7 @@ class StackWidgetProvider : AppWidgetProvider() {
     companion object {
         private const val TAG = "StackWidgetProvider"
         private const val ACTION_STEP = "com.sameerasw.essentials.action.WIDGET_STACK_STEP"
+        private const val ACTION_REVEAL = "com.sameerasw.essentials.action.WIDGET_STACK_REVEAL"
         private const val EXTRA_DELTA = "delta"
 
         // Control bar height plus its top margin, in dp.
@@ -97,7 +104,9 @@ class StackWidgetProvider : AppWidgetProvider() {
                 .getInstance(context)
                 .getAppWidgetIds(ComponentName(context, StackWidgetProvider::class.java))
 
-        private fun showsControls(config: WidgetStackConfig) = config.showControls && config.hostedWidgetIds.size > 1
+        /** Whether the strip below the stack takes up space, even while its bar is auto-hidden. */
+        private fun reservesControls(config: WidgetStackConfig) =
+            config.controls != WidgetStackConfig.ControlsMode.HIDDEN && config.hostedWidgetIds.size > 1
 
         fun render(
             context: Context,
@@ -162,17 +171,28 @@ class StackWidgetProvider : AppWidgetProvider() {
             }
             views.setDisplayedChild(R.id.stack_flipper, index)
 
-            if (showsControls(config)) {
-                views.setViewVisibility(R.id.stack_controls, View.VISIBLE)
-                hosted.indices.forEach { i ->
-                    val dot = if (i == index) R.layout.widget_stack_dot_active else R.layout.widget_stack_dot
-                    views.addView(R.id.stack_dots, RemoteViews(context.packageName, dot))
-                }
-                views.setOnClickPendingIntent(R.id.stack_prev, stepPendingIntent(context, stackWidgetId, -1))
-                views.setOnClickPendingIntent(R.id.stack_next, stepPendingIntent(context, stackWidgetId, 1))
-            } else {
+            if (!reservesControls(config)) {
                 views.setViewVisibility(R.id.stack_controls, View.GONE)
+                return views
             }
+            views.setViewVisibility(R.id.stack_controls, View.VISIBLE)
+            val autoHide = config.controls == WidgetStackConfig.ControlsMode.AUTO_HIDE
+            if (autoHide) views.setOnClickPendingIntent(R.id.stack_controls, revealPendingIntent(context, stackWidgetId))
+
+            if (autoHide && stackWidgetId !in StackHost.revealedStacks) {
+                // Kept invisible rather than gone so the stacked widget doesn't resize when the bar returns.
+                views.setViewVisibility(R.id.stack_controls_bar, View.INVISIBLE)
+                views.setViewVisibility(R.id.stack_controls_handle, View.VISIBLE)
+                return views
+            }
+            views.setViewVisibility(R.id.stack_controls_bar, View.VISIBLE)
+            views.setViewVisibility(R.id.stack_controls_handle, View.GONE)
+            hosted.indices.forEach { i ->
+                val dot = if (i == index) R.layout.widget_stack_dot_active else R.layout.widget_stack_dot
+                views.addView(R.id.stack_dots, RemoteViews(context.packageName, dot))
+            }
+            views.setOnClickPendingIntent(R.id.stack_prev, stepPendingIntent(context, stackWidgetId, -1))
+            views.setOnClickPendingIntent(R.id.stack_next, stepPendingIntent(context, stackWidgetId, 1))
             return views
         }
 
@@ -187,7 +207,7 @@ class StackWidgetProvider : AppWidgetProvider() {
 
             // The launcher can't tell a nested widget which of its size variants to show and falls back
             // to the smallest, so each widget is given only the space it has right now.
-            val reserved = if (showsControls(config)) CONTROLS_SPACE_DP else 0
+            val reserved = if (reservesControls(config)) CONTROLS_SPACE_DP else 0
             val portrait =
                 context.resources.configuration.orientation != android.content.res.Configuration.ORIENTATION_LANDSCAPE
             val width =
@@ -255,6 +275,23 @@ class StackWidgetProvider : AppWidgetProvider() {
             return PendingIntent.getBroadcast(
                 context,
                 stackWidgetId * 2 + if (delta > 0) 1 else 0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+        }
+
+        private fun revealPendingIntent(
+            context: Context,
+            stackWidgetId: Int,
+        ): PendingIntent {
+            val intent =
+                Intent(context, StackWidgetProvider::class.java).apply {
+                    action = ACTION_REVEAL
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, stackWidgetId)
+                }
+            return PendingIntent.getBroadcast(
+                context,
+                stackWidgetId,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )

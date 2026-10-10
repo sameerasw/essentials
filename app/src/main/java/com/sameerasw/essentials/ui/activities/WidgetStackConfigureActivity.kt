@@ -72,8 +72,8 @@ import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
 import com.sameerasw.essentials.services.widgets.StackHost
 import com.sameerasw.essentials.services.widgets.StackWidgetProvider
-import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.features.widgets.WidgetPickerSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -88,18 +88,13 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     private var unsupported by mutableStateOf(emptySet<Int>())
     private var pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
-    private val pickLauncher =
+    private var showPicker by mutableStateOf(false)
+
+    // Asks the user to let this app show the chosen widget, the first time a widget from it is added.
+    private val bindLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val widgetId =
-                result.data?.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, pendingWidgetId) ?: pendingWidgetId
-            if (result.resultCode != RESULT_OK || widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-                discardPending()
-                return@registerForActivityResult
-            }
-            pendingWidgetId = widgetId
-            // The system picker binds the widget itself, so a picked widget already has its info.
-            val info = awm.getAppWidgetInfo(widgetId)
-            if (info != null) onWidgetBound(info) else discardPending()
+            val info = awm.getAppWidgetInfo(pendingWidgetId)
+            if (result.resultCode == RESULT_OK && info != null) onWidgetBound(info) else discardPending()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,6 +126,12 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 StackSettingsSheet()
+                if (showPicker) {
+                    WidgetPickerSheet(
+                        onPick = { onWidgetPicked(it) },
+                        onDismiss = { showPicker = false },
+                    )
+                }
             }
         }
     }
@@ -144,9 +145,22 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
     private fun addWidget() {
         if (config.hostedWidgetIds.size >= WidgetStackConfig.MAX_WIDGETS) return
+        showPicker = true
+    }
+
+    private fun onWidgetPicked(info: AppWidgetProviderInfo) {
+        showPicker = false
         pendingWidgetId = widgetHost.allocateAppWidgetId()
-        pickLauncher.launch(
-            Intent(AppWidgetManager.ACTION_APPWIDGET_PICK).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, pendingWidgetId),
+        if (awm.bindAppWidgetIdIfAllowed(pendingWidgetId, info.profile, info.provider, null)) {
+            onWidgetBound(info)
+            return
+        }
+        bindLauncher.launch(
+            Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, pendingWidgetId)
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, info.profile)
+            },
         )
     }
 
@@ -363,12 +377,32 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                         },
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                     )
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_swap_vert_24,
-                        title = stringResource(R.string.widget_stack_show_controls),
-                        description = stringResource(R.string.widget_stack_show_controls_desc),
-                        isChecked = config.showControls,
-                        onCheckedChange = { updateConfig(config.copy(showControls = it)) },
+                }
+
+                SectionTitle(stringResource(R.string.widget_stack_show_controls))
+                RoundedCardContainer {
+                    ListItem(
+                        headlineContent = {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                WidgetStackConfig.ControlsMode.entries.forEach { mode ->
+                                    FilterChip(
+                                        selected = config.controls == mode,
+                                        onClick = {
+                                            HapticUtil.performUIHaptic(view)
+                                            updateConfig(config.withControls(mode))
+                                        },
+                                        label = { Text(stringResource(controlsLabel(mode))) },
+                                    )
+                                }
+                            }
+                        },
+                        supportingContent =
+                            if (config.controls == WidgetStackConfig.ControlsMode.AUTO_HIDE) {
+                                { Text(stringResource(R.string.widget_stack_controls_auto_hide_desc)) }
+                            } else {
+                                null
+                            },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                     )
                 }
 
@@ -384,6 +418,13 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun controlsLabel(mode: WidgetStackConfig.ControlsMode) =
+        when (mode) {
+            WidgetStackConfig.ControlsMode.ALWAYS -> R.string.widget_stack_controls_always
+            WidgetStackConfig.ControlsMode.AUTO_HIDE -> R.string.widget_stack_controls_auto_hide
+            WidgetStackConfig.ControlsMode.HIDDEN -> R.string.widget_stack_controls_hidden
+        }
 
     @Composable
     private fun SectionTitle(text: String) {

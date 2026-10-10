@@ -36,6 +36,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
+import com.sameerasw.essentials.domain.model.WidgetStackConfig
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -56,6 +57,12 @@ object StackHost {
 
     /** Stacks too large to send whole, which get only their visible widget's content. */
     val visibleOnlyStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
+
+    /** Auto-hiding stacks whose arrows and dots are showing right now. */
+    val revealedStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
+
+    private const val REVEAL_MILLIS = 4000L
+    private val hideRunnables = mutableMapOf<Int, Runnable>()
 
     /** Index of the visible widget in each stack, keyed by the stack's app widget id. */
     val positions = ConcurrentHashMap<Int, Int>()
@@ -150,8 +157,36 @@ object StackHost {
         val app = context.applicationContext
         handler.post {
             if (host == null) start(app)
+            reveal(stackWidgetId)
             advance(stackWidgetId, delta)
         }
+    }
+
+    /** Shows an auto-hiding stack's arrows and dots, hiding them again after a few seconds without taps. */
+    fun revealControls(
+        context: Context,
+        stackWidgetId: Int,
+    ) {
+        val app = context.applicationContext
+        handler.post {
+            if (host == null) start(app)
+            reveal(stackWidgetId)
+            StackWidgetProvider.render(appContext, stackWidgetId)
+        }
+    }
+
+    private fun reveal(stackWidgetId: Int) {
+        if (repository.get(stackWidgetId)?.controls != WidgetStackConfig.ControlsMode.AUTO_HIDE) return
+        revealedStacks.add(stackWidgetId)
+        hideRunnables.remove(stackWidgetId)?.let { handler.removeCallbacks(it) }
+        val hide =
+            Runnable {
+                hideRunnables.remove(stackWidgetId)
+                revealedStacks.remove(stackWidgetId)
+                StackWidgetProvider.render(appContext, stackWidgetId)
+            }
+        hideRunnables[stackWidgetId] = hide
+        handler.postDelayed(hide, REVEAL_MILLIS)
     }
 
     private fun start(context: Context) {
@@ -183,6 +218,8 @@ object StackHost {
         handler.removeCallbacksAndMessages(null)
         timers.clear()
         pendingRenders.clear()
+        hideRunnables.clear()
+        revealedStacks.clear()
         try {
             appContext.unregisterReceiver(screenReceiver)
         } catch (_: Exception) {

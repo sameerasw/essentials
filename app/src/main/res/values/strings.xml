@@ -3256,7 +3256,6 @@
     <string name="widget_stack_unsupported">%1$s can\'t be shown in a stack</string>
     <string name="widget_stack_unsupported_short">Can\'t be shown in a stack</string>
     <string name="widget_stack_cant_nest">A widget stack can\'t hold another stack</string>
-    <string name="widget_stack_show_controls_desc">Switch widgets by tapping the arrows below the stack</string>
     <string name="feat_widget_stack_title">Widget stack</string>
     <string name="feat_widget_stack_desc">Stack widgets and switch between them</string>
     <string name="about_desc_widget_stack">Put several widgets from any app in one spot on your homescreen.\n\nThe stack switches to the next widget on a timer, or you can switch with the arrows below it. Widgets that show a scrolling list, such as a calendar agenda, can\'t be shown in a stack.</string>
@@ -3266,6 +3265,10 @@
     <string name="widget_stack_count_one">1 widget</string>
     <string name="widget_stack_count_many">%1$d widgets</string>
     <string name="widget_stack_count_none">No widgets yet</string>
+    <string name="widget_picker_title">Widgets</string>
+    <string name="widget_picker_search">Search</string>
+    <string name="widget_picker_size">%1$d × %2$d</string>
+    <string name="widget_picker_empty">No widgets found</string>
     <string name="widget_stack_pin_unsupported">Your launcher can\'t add widgets from here. Add \"Widget stack\" from the homescreen\'s widget list instead.</string>
     <string name="widget_stack_settings_title">Widget stack</string>
     <string name="widget_stack_widgets_title">Widgets in this stack</string>
@@ -3277,7 +3280,12 @@
     <string name="widget_stack_interval_title">Switch automatically</string>
     <string name="widget_stack_interval_off">Off</string>
     <string name="widget_stack_interval_seconds">%1$ds</string>
-    <string name="widget_stack_show_controls">Show page dots and arrows</string>
+    <string name="widget_stack_show_controls">Arrows and dots</string>
+    <string name="widget_stack_controls_always">Always</string>
+    <string name="widget_stack_controls_auto_hide">Auto-hide</string>
+    <string name="widget_stack_controls_hidden">Hidden</string>
+    <string name="widget_stack_controls_auto_hide_desc">Tap below the stack to show them. They hide again after a few seconds.</string>
+    <string name="widget_stack_show_controls_handle">Show arrows and dots</string>
     <string name="widget_stack_overlay_needed">Allow Essentials to display over other apps so the stacked widgets keep updating</string>
     <string name="widget_stack_grant">Grant</string>
     <string name="widget_stack_done">Done</string>
