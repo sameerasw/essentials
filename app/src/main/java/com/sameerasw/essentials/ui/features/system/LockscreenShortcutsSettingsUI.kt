@@ -116,14 +116,14 @@ fun LockscreenShortcutsSettingsUI(
             }
         }
 
-        // Can always be turned off; turning on needs a lock screen without system shortcuts
+        // Only blocked once system shortcuts are found; until the lock screen is checked the buttons just stay hidden
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_lock_portrait_24,
                 title = stringResource(R.string.lockscreen_shortcuts_enable_title),
                 isChecked = isEnabled,
                 onCheckedChange = { viewModel.setLockscreenShortcutsEnabled(it) },
-                enabled = isEnabled || systemState == SystemShortcutsState.NONE,
+                enabled = isEnabled || systemState != SystemShortcutsState.PRESENT,
                 onDisabledClick = { Toast.makeText(context, statusText, Toast.LENGTH_LONG).show() },
                 modifier = Modifier.highlight(highlightSetting == "enable_lockscreen_shortcuts"),
             )
