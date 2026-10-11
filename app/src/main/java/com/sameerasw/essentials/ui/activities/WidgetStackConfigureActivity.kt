@@ -59,6 +59,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -302,6 +303,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                 if (!overlayGranted) {
                     RoundedCardContainer {
                         ListItem(
+                            modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
                             headlineContent = { Text(stringResource(R.string.widget_stack_overlay_needed)) },
                             trailingContent = {
                                 Button(
@@ -342,10 +344,12 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                     }
                     ListItem(
                         modifier =
-                            Modifier.clickable(enabled = !isFull) {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                addWidget()
-                            },
+                            Modifier
+                                .clip(MaterialTheme.shapes.extraSmall)
+                                .clickable(enabled = !isFull) {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    addWidget()
+                                },
                         leadingContent = {
                             Icon(
                                 painter = painterResource(R.drawable.rounded_add_24),
@@ -367,6 +371,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                 SectionTitle(stringResource(R.string.widget_stack_interval_title))
                 RoundedCardContainer {
                     ListItem(
+                        modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
                         headlineContent = {
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 WidgetStackConfig.INTERVAL_OPTIONS.forEach { seconds ->
@@ -396,6 +401,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                 SectionTitle(stringResource(R.string.widget_stack_show_controls))
                 RoundedCardContainer {
                     ListItem(
+                        modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
                         headlineContent = {
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 WidgetStackConfig.ControlsMode.entries.forEach { mode ->
@@ -478,6 +484,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             }
 
         ListItem(
+            modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
             leadingContent = {
                 if (icon != null) {
                     Image(bitmap = icon, contentDescription = null, modifier = Modifier.size(32.dp))
