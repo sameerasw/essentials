@@ -3280,10 +3280,11 @@
     <string name="widget_stack_interval_title">Switch automatically</string>
     <string name="widget_stack_interval_off">Off</string>
     <string name="widget_stack_interval_seconds">%1$ds</string>
-    <string name="widget_stack_show_controls">Arrows and dots</string>
-    <string name="widget_stack_controls_always">Always</string>
+    <string name="widget_stack_show_controls">Switch</string>
+    <string name="widget_stack_controls_always">Arrows and dots</string>
     <string name="widget_stack_controls_auto_hide">Auto-hide</string>
     <string name="widget_stack_controls_hidden">Hidden</string>
+    <string name="widget_stack_controls_edges">Widget edges</string>
     <string name="widget_stack_controls_auto_hide_desc">Tap below the stack to show them. They hide again after a few seconds.</string>
     <string name="widget_stack_show_controls_handle">Show arrows and dots</string>
     <string name="widget_stack_overlay_needed">Allow Essentials to display over other apps so the stacked widgets keep updating</string>

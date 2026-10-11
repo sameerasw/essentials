@@ -15,6 +15,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <ImageView
+            android:id="@+id/stack_edge_prev"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:contentDescription="@string/widget_stack_previous"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/stack_edge_next"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:contentDescription="@string/widget_stack_next"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/stack_empty"
             android:layout_width="match_parent"

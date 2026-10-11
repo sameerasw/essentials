@@ -445,6 +445,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             WidgetStackConfig.ControlsMode.ALWAYS -> R.string.widget_stack_controls_always
             WidgetStackConfig.ControlsMode.AUTO_HIDE -> R.string.widget_stack_controls_auto_hide
             WidgetStackConfig.ControlsMode.HIDDEN -> R.string.widget_stack_controls_hidden
+            WidgetStackConfig.ControlsMode.EDGES -> R.string.widget_stack_controls_edges
         }
 
     @Composable

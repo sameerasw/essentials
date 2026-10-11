@@ -31,6 +31,7 @@ data class WidgetStackConfig(
         /** Hidden until the strip below the stack is tapped, then hidden again after a few seconds. */
         AUTO_HIDE,
         HIDDEN,
+        EDGES,
     }
 
     companion object {

@@ -112,7 +112,9 @@ class StackWidgetProvider : AppWidgetProvider() {
                 .getAppWidgetIds(ComponentName(context, StackWidgetProvider::class.java))
 
         private fun reservesControls(config: WidgetStackConfig) =
-            config.controls != WidgetStackConfig.ControlsMode.HIDDEN && config.hostedWidgetIds.size > 1
+            config.controls != WidgetStackConfig.ControlsMode.HIDDEN &&
+                config.controls != WidgetStackConfig.ControlsMode.EDGES &&
+                config.hostedWidgetIds.size > 1
 
         fun render(
             context: Context,
@@ -151,6 +153,8 @@ class StackWidgetProvider : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, if (animate) R.layout.widget_stack_animated else R.layout.widget_stack)
             views.removeAllViews(R.id.stack_flipper)
             views.removeAllViews(R.id.stack_dots)
+            views.setViewVisibility(R.id.stack_edge_prev, View.GONE)
+            views.setViewVisibility(R.id.stack_edge_next, View.GONE)
 
             if (config == null || hosted.isEmpty()) {
                 views.setViewVisibility(R.id.stack_flipper, View.GONE)
@@ -173,6 +177,13 @@ class StackWidgetProvider : AppWidgetProvider() {
                 views.addView(R.id.stack_flipper, page)
             }
             views.setDisplayedChild(R.id.stack_flipper, index)
+
+            if (config.controls == WidgetStackConfig.ControlsMode.EDGES && hosted.size > 1) {
+                views.setViewVisibility(R.id.stack_edge_prev, View.VISIBLE)
+                views.setViewVisibility(R.id.stack_edge_next, View.VISIBLE)
+                views.setOnClickPendingIntent(R.id.stack_edge_prev, stepPendingIntent(context, stackWidgetId, -1))
+                views.setOnClickPendingIntent(R.id.stack_edge_next, stepPendingIntent(context, stackWidgetId, 1))
+            }
 
             if (!reservesControls(config)) {
                 views.setViewVisibility(R.id.stack_controls, View.GONE)
