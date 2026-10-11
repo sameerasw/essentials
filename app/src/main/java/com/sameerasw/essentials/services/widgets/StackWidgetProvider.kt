@@ -62,6 +62,7 @@ class StackWidgetProvider : AppWidgetProvider() {
                 } catch (_: Exception) {
                 }
                 StackHost.contents.remove(hostedId)
+                StackHost.rawContents.remove(hostedId)
                 forwardedSizes.remove(hostedId)
             }
             repository.delete(stackId)
@@ -102,6 +103,8 @@ class StackWidgetProvider : AppWidgetProvider() {
         private val forwardedSizes = ConcurrentHashMap<Int, Pair<Int, Int>>()
 
         private const val CONTROLS_SPACE_DP = 32
+
+        fun innerSize(hostedId: Int): SizeF? = forwardedSizes[hostedId]?.let { SizeF(it.first.toFloat(), it.second.toFloat()) }
 
         fun stackIds(context: Context): IntArray =
             AppWidgetManager
@@ -233,7 +236,10 @@ class StackWidgetProvider : AppWidgetProvider() {
             config.hostedWidgetIds.forEach { hostedId ->
                 try {
                     awm.updateAppWidgetOptions(hostedId, forwarded)
-                    if (forwardedSizes.put(hostedId, size) != size) requestUpdate(context, awm, hostedId)
+                    if (forwardedSizes.put(hostedId, size) != size) {
+                        StackHost.onInnerSizeChanged(context, hostedId)
+                        requestUpdate(context, awm, hostedId)
+                    }
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to forward size to $hostedId", e)
                 }

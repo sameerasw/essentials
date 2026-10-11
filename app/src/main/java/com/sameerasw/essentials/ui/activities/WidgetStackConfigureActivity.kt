@@ -229,6 +229,7 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     private fun removeWidget(widgetId: Int) {
         widgetHost.deleteAppWidgetId(widgetId)
         StackHost.contents.remove(widgetId)
+        StackHost.rawContents.remove(widgetId)
         StackHost.unsupported.remove(widgetId)
         updateConfig(config.copy(hostedWidgetIds = config.hostedWidgetIds - widgetId))
     }

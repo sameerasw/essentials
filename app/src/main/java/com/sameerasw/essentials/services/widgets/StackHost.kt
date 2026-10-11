@@ -20,12 +20,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcel
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.util.SizeF
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.FrameLayout
@@ -57,6 +59,7 @@ object StackHost {
     private val hideRunnables = mutableMapOf<Int, Runnable>()
 
     val positions = ConcurrentHashMap<Int, Int>()
+    val rawContents = ConcurrentHashMap<Int, RemoteViews>()
     private val checkedLayouts = ConcurrentHashMap<Int, Int>()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -73,22 +76,14 @@ object StackHost {
     ) : AppWidgetHostView(context) {
         override fun updateAppWidget(remoteViews: RemoteViews?) {
             val id = appWidgetId
-            when {
-                remoteViews == null -> {
-                    contents.remove(id)
-                    unsupported.remove(id)
-                    checkedLayouts.remove(id)
-                }
-                checkedLayouts[id] == remoteViews.layoutId || canRender(context, remoteViews) -> {
-                    checkedLayouts[id] = remoteViews.layoutId
-                    contents[id] = remoteViews
-                    unsupported.remove(id)
-                }
-                else -> {
-                    checkedLayouts.remove(id)
-                    contents.remove(id)
-                    unsupported.add(id)
-                }
+            if (remoteViews == null) {
+                rawContents.remove(id)
+                contents.remove(id)
+                unsupported.remove(id)
+                checkedLayouts.remove(id)
+            } else {
+                rawContents[id] = remoteViews
+                accept(context, id, remoteViews)
             }
             onHostedWidgetChanged(id)
         }
@@ -211,6 +206,7 @@ object StackHost {
         positions.clear()
         visibleOnlyStacks.clear()
         contents.clear()
+        rawContents.clear()
         unsupported.clear()
         checkedLayouts.clear()
         try {
@@ -242,6 +238,7 @@ object StackHost {
         (hostViews.keys - wanted).forEach { id ->
             hostViews.remove(id)?.let { overlayContainer?.removeView(it) }
             contents.remove(id)
+            rawContents.remove(id)
             unsupported.remove(id)
             checkedLayouts.remove(id)
         }
@@ -276,6 +273,48 @@ object StackHost {
         } catch (e: Exception) {
             Log.w(TAG, "Failed to clean up orphaned widgets", e)
         }
+    }
+
+    private fun accept(
+        context: Context,
+        id: Int,
+        raw: RemoteViews,
+    ) {
+        val resolved = resolveSized(context, raw, StackWidgetProvider.innerSize(id))
+        if (checkedLayouts[id] == resolved.layoutId || canRender(context, resolved)) {
+            checkedLayouts[id] = resolved.layoutId
+            contents[id] = resolved
+            unsupported.remove(id)
+        } else {
+            checkedLayouts.remove(id)
+            contents.remove(id)
+            unsupported.add(id)
+        }
+    }
+
+    private fun resolveSized(
+        context: Context,
+        remoteViews: RemoteViews,
+        size: SizeF?,
+    ): RemoteViews {
+        if (size == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return remoteViews
+        return try {
+            RemoteViews::class.java
+                .getMethod("getRemoteViewsToApply", Context::class.java, SizeF::class.java)
+                .invoke(remoteViews, context, size) as? RemoteViews ?: remoteViews
+        } catch (e: Throwable) {
+            Log.w(TAG, "Couldn't pick a layout for $size", e)
+            remoteViews
+        }
+    }
+
+    fun onInnerSizeChanged(
+        context: Context,
+        hostedId: Int,
+    ) {
+        val raw = rawContents[hostedId] ?: return
+        accept(context, hostedId, raw)
+        onHostedWidgetChanged(hostedId)
     }
 
     private fun canRender(
