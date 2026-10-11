@@ -96,7 +96,7 @@ object GenAIAutomationService {
                     {
                       "type": "TRIGGER" or "STATE" or "APP",
                       "title": "Short descriptive title",
-                      "triggerType": "ScreenOff" or "ScreenOn" or "DeviceUnlock" or "ChargerConnected" or "ChargerDisconnected" or "PowerSavingOn" or "PowerSavingOff" or "Schedule" or "BluetoothConnected" or "BluetoothDisconnected" or "WifiConnected" or "WifiDisconnected",
+                      "triggerType": "ScreenOff" or "ScreenOn" or "DeviceUnlock" or "ChargerConnected" or "ChargerDisconnected" or "PowerSavingOn" or "PowerSavingOff" or "Schedule" or "BluetoothConnected" or "BluetoothDisconnected" or "WifiConnected" or "WifiDisconnected" or "AndroidAutoConnected" or "AndroidAutoDisconnected",
                       "stateType": "Charging" or "ScreenOn" or "PowerSaving" or "TimePeriod",
                       "actionTypes": ["HapticVibration", "ShowNotification", "RemoveNotification", "TurnOnFlashlight", "TurnOffFlashlight", "ToggleFlashlight", "DimWallpaper", "DeviceEffects", "SoundMode", "TurnOnLowPower", "TurnOffLowPower", "ScreenOff", "MediaPlayPause", "MediaNext", "MediaPrevious", "AIAssistant", "TakeScreenshot", "ToggleMediaVolume", "LikeCurrentSong", "OpenNowPlayingApp", "CircleToSearch", "PinApp", "SplitScreen", "SometimesEssentials", "FreezeTag"],
                       "explanation": "Brief 1-2 sentence description of what this automation does",

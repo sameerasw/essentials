@@ -1343,6 +1343,8 @@
     <string name="diy_notification_trigger_app">App</string>
     <string name="diy_notification_trigger_any_app">Any app</string>
     <string name="diy_notification_trigger_text">Text contains (optional)</string>
+    <string name="diy_trigger_android_auto_connected">Android Auto Connected</string>
+    <string name="diy_trigger_android_auto_disconnected">Android Auto Disconnected</string>
     <string name="diy_trigger_accessibility_button">Accessibility Shortcut</string>
     <string name="accessibility_shortcut_service_name">Essentials Shortcut</string>
     <string name="accessibility_shortcut_service_1_name">Essentials Shortcut 1</string>
