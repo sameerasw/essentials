@@ -3228,6 +3228,7 @@
     <string name="watchface_promo_step2_action">Join Beta Program</string>
     <string name="watchface_promo_step3_title">3. Install on Watch</string>
     <string name="watchface_promo_step3_desc">Open the Play Store listing directly on your watch to install</string>
+    <string name="watchface_promo_step3_action">Open on Watch</string>
     <!-- Overcast Separation What's New -->
     <string name="whats_new_overcast_section_title">Weather is Now Separate</string>
     <string name="whats_new_overcast_desc">Weather has been separated into my brand new app, Overcast. Install to continue having weather forecasts and effects in Island brief.</string>

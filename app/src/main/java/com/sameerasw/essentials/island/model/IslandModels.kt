@@ -71,7 +71,7 @@ class ExpandedContent(val content: @Composable (IslandExpandedScope) -> Unit)
 
 class InteractionOverrides(
     val onTap: (() -> Boolean)? = null,
-    val onLongPress: (() -> Unit)? = null,
+    val onLongPress: (() -> Any)? = null,
     val onExpandedTap: (() -> Boolean)? = null,
 ) {
     companion object {
