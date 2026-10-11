@@ -1433,7 +1433,7 @@
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
     <string name="lock_screen_clock_default">Default</string>
-    <string name="label_weight">高さ</string>
+    <string name="label_weight">太さ</string>
     <string name="label_width">幅</string>
     <string name="label_grade">Grade</string>
     <string name="label_roundness">角</string>
