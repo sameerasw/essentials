@@ -38,6 +38,8 @@ data class AutomationSuggestion(
             "BluetoothDisconnected",
             "WifiConnected",
             "WifiDisconnected",
+            "AndroidAutoConnected",
+            "AndroidAutoDisconnected",
         ],
     )
     val triggerType: String? = null,

@@ -186,6 +186,8 @@ class DIYViewModel(
                 "BluetoothDisconnected" -> Trigger.BluetoothDisconnected()
                 "WifiConnected" -> Trigger.WifiConnected()
                 "WifiDisconnected" -> Trigger.WifiDisconnected()
+                "AndroidAutoConnected" -> Trigger.AndroidAutoConnected
+                "AndroidAutoDisconnected" -> Trigger.AndroidAutoDisconnected
                 else -> if (type == Automation.Type.TRIGGER) Trigger.ScreenOff else null
             }
 

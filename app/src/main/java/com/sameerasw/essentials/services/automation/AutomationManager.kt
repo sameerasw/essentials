@@ -15,6 +15,7 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.services.automation.modules.AndroidAutoModule
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
 import com.sameerasw.essentials.services.automation.modules.BluetoothModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
@@ -114,6 +115,7 @@ object AutomationManager {
         val wifiAutomations = mutableListOf<Automation>()
         val calendarAutomations = mutableListOf<Automation>()
         val notificationAutomations = mutableListOf<Automation>()
+        val androidAutoAutomations = mutableListOf<Automation>()
 
         enabledAutomations.forEach { automation ->
             when (automation.type) {
@@ -147,6 +149,11 @@ object AutomationManager {
                         is Trigger.NotificationReceived, is Trigger.DndOn, is Trigger.DndOff -> {
                             requiredModuleIds.add(NotificationModule.ID)
                             notificationAutomations.add(automation)
+                        }
+
+                        is Trigger.AndroidAutoConnected, is Trigger.AndroidAutoDisconnected -> {
+                            requiredModuleIds.add(AndroidAutoModule.ID)
+                            androidAutoAutomations.add(automation)
                         }
 
                         else -> {}
@@ -280,6 +287,17 @@ object AutomationManager {
             module.updateAutomations(notificationAutomations)
         } else {
             activeModules.remove(NotificationModule.ID)?.stop(context)
+        }
+
+        // Android Auto Module
+        if (requiredModuleIds.contains(AndroidAutoModule.ID)) {
+            val module =
+                activeModules.getOrPut(AndroidAutoModule.ID) {
+                    AndroidAutoModule().also { it.start(context) }
+                }
+            module.updateAutomations(androidAutoAutomations)
+        } else {
+            activeModules.remove(AndroidAutoModule.ID)?.stop(context)
         }
     }
 
