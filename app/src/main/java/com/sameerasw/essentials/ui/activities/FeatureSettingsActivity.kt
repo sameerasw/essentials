@@ -65,7 +65,6 @@ import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.battery.BatteriesSettingsUI
-import com.sameerasw.essentials.ui.features.widgets.WidgetStackSettingsUI
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.security.AppLockSettingsUI
 import com.sameerasw.essentials.ui.features.system.AlwaysOnDisplaySettingsUI
@@ -129,6 +128,7 @@ import com.sameerasw.essentials.ui.features.watch.WatchNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchWirelessDebuggingSettingsUI
 import com.sameerasw.essentials.ui.features.watch.WatchfaceSettingsUI
+import com.sameerasw.essentials.ui.features.widgets.WidgetStackSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur

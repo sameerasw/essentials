@@ -40,32 +40,24 @@ import com.sameerasw.essentials.domain.model.WidgetStackConfig
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
-/**
- * Lives in the app process rather than a service, so it can start whenever the process does
- * (including after a reboot) without running into Android's background service limits.
- */
 object StackHost {
     private const val TAG = "StackHost"
     const val HOST_ID = 1026
     private const val KEEP_ALIVE_WORK = "widget_stack_keep_alive"
 
-    /** Latest content of every hosted widget, keyed by its app widget id. */
     val contents = ConcurrentHashMap<Int, RemoteViews>()
 
-    /** Hosted widgets whose content can't be shown inside a stack. */
     val unsupported: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
-    /** Stacks too large to send whole, which get only their visible widget's content. */
     val visibleOnlyStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
-    /** Auto-hiding stacks whose arrows and dots are showing right now. */
     val revealedStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
     private const val REVEAL_MILLIS = 4000L
     private val hideRunnables = mutableMapOf<Int, Runnable>()
 
-    /** Index of the visible widget in each stack, keyed by the stack's app widget id. */
     val positions = ConcurrentHashMap<Int, Int>()
+    private val checkedLayouts = ConcurrentHashMap<Int, Int>()
 
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var appContext: Context
@@ -79,19 +71,21 @@ object StackHost {
     private class CapturingHostView(
         context: Context,
     ) : AppWidgetHostView(context) {
-        // The launcher renders the content inside the stack, so it is captured here instead of shown.
         override fun updateAppWidget(remoteViews: RemoteViews?) {
             val id = appWidgetId
             when {
                 remoteViews == null -> {
                     contents.remove(id)
                     unsupported.remove(id)
+                    checkedLayouts.remove(id)
                 }
-                canRender(context, remoteViews) -> {
+                checkedLayouts[id] == remoteViews.layoutId || canRender(context, remoteViews) -> {
+                    checkedLayouts[id] = remoteViews.layoutId
                     contents[id] = remoteViews
                     unsupported.remove(id)
                 }
                 else -> {
+                    checkedLayouts.remove(id)
                     contents.remove(id)
                     unsupported.add(id)
                 }
@@ -123,7 +117,6 @@ object StackHost {
             }
         }
 
-    // Stacked widgets were sized for the previous orientation.
     private val configurationCallbacks =
         object : ComponentCallbacks {
             override fun onConfigurationChanged(newConfig: Configuration) {
@@ -134,12 +127,10 @@ object StackHost {
             override fun onLowMemory() {}
         }
 
-    /** Starts hosting after a reboot or app update, if any stack is on the homescreen. */
     fun startIfNeeded(context: Context) {
         if (WidgetStackRepository(context).getAll().isNotEmpty()) refresh(context)
     }
 
-    /** Matches the hosted widgets, renders and timers to the saved stacks, stopping when none are left. */
     fun refresh(context: Context) {
         val app = context.applicationContext
         handler.post {
@@ -148,7 +139,6 @@ object StackHost {
         }
     }
 
-    /** Moves a stack by [delta] widgets and restarts its timer. */
     fun step(
         context: Context,
         stackWidgetId: Int,
@@ -162,7 +152,6 @@ object StackHost {
         }
     }
 
-    /** Shows an auto-hiding stack's arrows and dots, hiding them again after a few seconds without taps. */
     fun revealControls(
         context: Context,
         stackWidgetId: Int,
@@ -191,7 +180,6 @@ object StackHost {
 
     private fun start(context: Context) {
         appContext = context
-        // Starts the app again every so often if the system stopped it, so stacks keep updating.
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             KEEP_ALIVE_WORK,
             ExistingPeriodicWorkPolicy.KEEP,
@@ -220,6 +208,11 @@ object StackHost {
         pendingRenders.clear()
         hideRunnables.clear()
         revealedStacks.clear()
+        positions.clear()
+        visibleOnlyStacks.clear()
+        contents.clear()
+        unsupported.clear()
+        checkedLayouts.clear()
         try {
             appContext.unregisterReceiver(screenReceiver)
         } catch (_: Exception) {
@@ -238,7 +231,6 @@ object StackHost {
             return
         }
 
-        // The overlay may have been allowed since hosting started.
         if (overlayContainer == null) {
             attachOverlay()
             hostViews.values.forEach { overlayContainer?.addView(it, FrameLayout.LayoutParams(1, 1)) }
@@ -251,6 +243,7 @@ object StackHost {
             hostViews.remove(id)?.let { overlayContainer?.removeView(it) }
             contents.remove(id)
             unsupported.remove(id)
+            checkedLayouts.remove(id)
         }
 
         for (id in wanted) {
@@ -273,7 +266,6 @@ object StackHost {
         (timers.keys - stacks.map { it.stackWidgetId }.toSet()).forEach { cancelTimer(it) }
     }
 
-    /** Releases widget ids this host still holds that no stack uses any more. */
     private fun removeOrphanedWidgets() {
         val currentHost = host ?: return
         val used = repository.getAll().flatMap { it.hostedWidgetIds }.toSet()
@@ -286,9 +278,6 @@ object StackHost {
         }
     }
 
-    // Some content (such as a list backed by another app's service) breaks once it is nested in
-    // the stack and sent to the launcher, which then fails to show the whole stack. Nesting it the
-    // same way and rendering the delivered copy here catches that before it reaches the launcher.
     private fun canRender(
         context: Context,
         remoteViews: RemoteViews,
@@ -362,7 +351,6 @@ object StackHost {
         timers.clear()
     }
 
-    // A tiny invisible overlay keeps the process important enough to keep receiving widget updates.
     private fun attachOverlay() {
         if (!Settings.canDrawOverlays(appContext)) return
         try {

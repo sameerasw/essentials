@@ -24,31 +24,47 @@ class WidgetStackRepository(
 
     fun getAll(): List<WidgetStackConfig> {
         val json = prefs.getString(KEY_STACKS, null) ?: return emptyList()
-        return try {
-            val type = object : TypeToken<List<WidgetStackConfig>>() {}.type
-            gson.fromJson<List<WidgetStackConfig>>(json, type) ?: emptyList()
-        } catch (_: Exception) {
-            emptyList()
+        synchronized(LOCK) {
+            if (json == cachedJson) return cachedStacks
         }
+        val parsed =
+            try {
+                val type = object : TypeToken<List<WidgetStackConfig>>() {}.type
+                gson.fromJson<List<WidgetStackConfig>>(json, type) ?: emptyList()
+            } catch (_: Exception) {
+                emptyList()
+            }
+        synchronized(LOCK) {
+            cachedJson = json
+            cachedStacks = parsed
+        }
+        return parsed
     }
 
     fun get(stackWidgetId: Int): WidgetStackConfig? = getAll().firstOrNull { it.stackWidgetId == stackWidgetId }
 
-    fun save(config: WidgetStackConfig) {
-        val updated = getAll().filterNot { it.stackWidgetId == config.stackWidgetId } + config
-        write(updated)
-    }
+    fun save(config: WidgetStackConfig) =
+        synchronized(LOCK) {
+            write(getAll().filterNot { it.stackWidgetId == config.stackWidgetId } + config)
+        }
 
-    fun delete(stackWidgetId: Int) {
-        write(getAll().filterNot { it.stackWidgetId == stackWidgetId })
-    }
+    fun delete(stackWidgetId: Int) =
+        synchronized(LOCK) {
+            write(getAll().filterNot { it.stackWidgetId == stackWidgetId })
+        }
 
     private fun write(stacks: List<WidgetStackConfig>) {
-        prefs.edit().putString(KEY_STACKS, gson.toJson(stacks)).apply()
+        val json = gson.toJson(stacks)
+        prefs.edit().putString(KEY_STACKS, json).apply()
+        cachedJson = json
+        cachedStacks = stacks
     }
 
     companion object {
         private const val PREFS_NAME = "widget_stack_prefs"
         private const val KEY_STACKS = "stacks"
+        private val LOCK = Any()
+        private var cachedJson: String? = null
+        private var cachedStacks: List<WidgetStackConfig> = emptyList()
     }
 }

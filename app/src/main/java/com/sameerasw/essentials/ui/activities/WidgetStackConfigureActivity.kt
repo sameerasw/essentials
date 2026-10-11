@@ -68,6 +68,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
@@ -91,7 +92,6 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
     private var showPicker by mutableStateOf(false)
 
-    // Asks the user to let this app show the chosen widget, the first time a widget from it is added.
     private val bindLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val info = awm.getAppWidgetInfo(pendingWidgetId)
@@ -104,11 +104,16 @@ class WidgetStackConfigureActivity : ComponentActivity() {
         stackWidgetId =
             intent?.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
                 ?: AppWidgetManager.INVALID_APPWIDGET_ID
-        if (stackWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        val provider = ComponentName(this, StackWidgetProvider::class.java)
+        if (stackWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID ||
+            AppWidgetManager.getInstance(this).getAppWidgetInfo(stackWidgetId)?.provider != provider
+        ) {
             finish()
             return
         }
-        // Keep the stack on the homescreen even if this screen is closed without changes.
+        pendingWidgetId =
+            savedInstanceState?.getInt(STATE_PENDING_WIDGET, AppWidgetManager.INVALID_APPWIDGET_ID)
+                ?: AppWidgetManager.INVALID_APPWIDGET_ID
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, stackWidgetId))
 
         repository = WidgetStackRepository(this)
@@ -122,6 +127,12 @@ class WidgetStackConfigureActivity : ComponentActivity() {
             val viewModel: MainViewModel = viewModel()
             val context = LocalContext.current
             LaunchedEffect(Unit) { viewModel.check(context) }
+            LaunchedEffect(Unit) {
+                while (true) {
+                    unsupported = StackHost.unsupported.toSet()
+                    delay(1000)
+                }
+            }
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 StackSettingsSheet()
@@ -133,6 +144,11 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(STATE_PENDING_WIDGET, pendingWidgetId)
     }
 
     override fun onResume() {
@@ -229,7 +245,6 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
     private fun updateConfig(updated: WidgetStackConfig) {
         config = updated
-        // The new set of widgets may fit whole again.
         StackHost.visibleOnlyStacks.remove(stackWidgetId)
         repository.save(updated)
         StackWidgetProvider.render(this, stackWidgetId)
@@ -510,5 +525,6 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     companion object {
         private const val TAG = "WidgetStackConfigure"
         private const val REQUEST_CONFIGURE = 4201
+        private const val STATE_PENDING_WIDGET = "pending_widget"
     }
 }

@@ -79,13 +79,13 @@ class StackWidgetProvider : AppWidgetProvider() {
         }
         if (intent.action == ACTION_REVEAL) {
             val stackId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-            if (stackId != AppWidgetManager.INVALID_APPWIDGET_ID) StackHost.revealControls(context, stackId)
+            if (stackId in stackIds(context)) StackHost.revealControls(context, stackId)
             return
         }
         if (intent.action == ACTION_STEP) {
             val stackId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             val delta = intent.getIntExtra(EXTRA_DELTA, 1)
-            if (stackId != AppWidgetManager.INVALID_APPWIDGET_ID) StackHost.step(context, stackId, delta)
+            if (stackId in stackIds(context)) StackHost.step(context, stackId, delta)
             return
         }
         super.onReceive(context, intent)
@@ -97,7 +97,6 @@ class StackWidgetProvider : AppWidgetProvider() {
         private const val ACTION_REVEAL = "com.sameerasw.essentials.action.WIDGET_STACK_REVEAL"
         private const val EXTRA_DELTA = "delta"
 
-        // Control bar height plus its top margin, in dp.
         private const val CONTROLS_SPACE_DP = 32
 
         fun stackIds(context: Context): IntArray =
@@ -105,7 +104,6 @@ class StackWidgetProvider : AppWidgetProvider() {
                 .getInstance(context)
                 .getAppWidgetIds(ComponentName(context, StackWidgetProvider::class.java))
 
-        /** Whether the strip below the stack takes up space, even while its bar is auto-hidden. */
         private fun reservesControls(config: WidgetStackConfig) =
             config.controls != WidgetStackConfig.ControlsMode.HIDDEN && config.hostedWidgetIds.size > 1
 
@@ -119,7 +117,6 @@ class StackWidgetProvider : AppWidgetProvider() {
                     awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = false))
                     return
                 } catch (e: IllegalArgumentException) {
-                    // Every widget's images together went over the launcher's memory limit for one widget.
                     Log.w(TAG, "Stack $stackWidgetId is too large, sending only the visible widget", e)
                     StackHost.visibleOnlyStacks.add(stackWidgetId)
                 } catch (e: Exception) {
@@ -134,10 +131,6 @@ class StackWidgetProvider : AppWidgetProvider() {
             }
         }
 
-        /**
-         * With [visibleOnly], the hidden pages are left empty. Every switch renders the stack again, so
-         * the page being shown always has its content.
-         */
         private fun build(
             context: Context,
             stackWidgetId: Int,
@@ -181,7 +174,6 @@ class StackWidgetProvider : AppWidgetProvider() {
             if (autoHide) views.setOnClickPendingIntent(R.id.stack_controls, revealPendingIntent(context, stackWidgetId))
 
             if (autoHide && stackWidgetId !in StackHost.revealedStacks) {
-                // Kept invisible rather than gone so the stacked widget doesn't resize when the bar returns.
                 views.setViewVisibility(R.id.stack_controls_bar, View.INVISIBLE)
                 views.setViewVisibility(R.id.stack_controls_handle, View.VISIBLE)
                 return views
@@ -197,7 +189,6 @@ class StackWidgetProvider : AppWidgetProvider() {
             return views
         }
 
-        /** Tells every widget in the stack how much space it has inside the stack. */
         fun forwardSize(
             context: Context,
             config: WidgetStackConfig,
@@ -206,8 +197,6 @@ class StackWidgetProvider : AppWidgetProvider() {
             val options = awm.getAppWidgetOptions(config.stackWidgetId)
             if (options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) == 0) return
 
-            // The launcher can't tell a nested widget which of its size variants to show and falls back
-            // to the smallest, so each widget is given only the space it has right now.
             val reserved = if (reservesControls(config)) CONTROLS_SPACE_DP else 0
             val portrait =
                 context.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE

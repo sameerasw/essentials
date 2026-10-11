@@ -158,7 +158,6 @@ fun WidgetPickerSheet(
                     val key = app.widgets.first().provider.packageName
                     WidgetAppGroup(
                         app = app,
-                        // Searching opens every matching app, as the launcher's picker does.
                         isExpanded = search.isNotEmpty() || key in expanded,
                         onToggle = { expanded = if (key in expanded) expanded - key else expanded + key },
                         onPick = onPick,
@@ -297,9 +296,6 @@ private fun WidgetOption(
 @Composable
 private fun WidgetPreview(info: AppWidgetProviderInfo) {
     val context = LocalContext.current
-    // A preview image is preferred: some apps only fill their preview layout once the widget is live,
-    // so it draws blank here. Otherwise draw the layout at the widget's own size and scale it down
-    // to fit, as the launcher does, rather than squeezing it into the preview box.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && info.previewLayout != 0 && info.previewImage == 0) {
         val (widthDp, heightDp) = remember(info) { previewSizeDp(context, info) }
         BoxWithConstraints(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -332,21 +328,23 @@ private fun WidgetPreview(info: AppWidgetProviderInfo) {
         return
     }
 
-    val image =
-        remember(info) {
-            try {
-                info.loadPreviewImage(context, 0)?.let { drawable ->
-                    val width = drawable.intrinsicWidth.coerceAtLeast(1)
-                    val height = drawable.intrinsicHeight.coerceAtLeast(1)
-                    val scale = (600f / maxOf(width, height)).coerceAtMost(1f)
-                    drawable.toBitmap((width * scale).roundToInt(), (height * scale).roundToInt()).asImageBitmap()
-                }
-            } catch (_: Exception) {
-                null
-            } ?: info.loadIcon(context, context.resources.displayMetrics.densityDpi)?.toBitmap(128, 128)?.asImageBitmap()
-        }
-    if (image != null) {
-        Image(bitmap = image, contentDescription = null, contentScale = ContentScale.Fit)
+    val image by produceState<ImageBitmap?>(null, info) {
+        value =
+            withContext(Dispatchers.IO) {
+                try {
+                    info.loadPreviewImage(context, 0)?.let { drawable ->
+                        val width = drawable.intrinsicWidth.coerceAtLeast(1)
+                        val height = drawable.intrinsicHeight.coerceAtLeast(1)
+                        val scale = (600f / maxOf(width, height)).coerceAtMost(1f)
+                        drawable.toBitmap((width * scale).roundToInt(), (height * scale).roundToInt()).asImageBitmap()
+                    }
+                } catch (_: Exception) {
+                    null
+                } ?: info.loadIcon(context, context.resources.displayMetrics.densityDpi)?.toBitmap(128, 128)?.asImageBitmap()
+            }
+    }
+    image?.let {
+        Image(bitmap = it, contentDescription = null, contentScale = ContentScale.Fit)
     }
 }
 
@@ -375,7 +373,6 @@ private fun loadWidgetApps(context: Context): List<WidgetApp> {
         }.sortedBy { it.label.lowercase() }
 }
 
-/** Roughly the size the widget would have on the homescreen, for drawing its preview. */
 private fun previewSizeDp(
     context: Context,
     info: AppWidgetProviderInfo,
@@ -387,11 +384,9 @@ private fun previewSizeDp(
     return width to height
 }
 
-// About the size of one cell on a phone's 4-column homescreen.
 private const val CELL_WIDTH_DP = 90f
 private const val CELL_HEIGHT_DP = 100f
 
-/** The widget's size in homescreen cells, from its own target size when it gives one. */
 private fun cellSize(
     context: Context,
     info: AppWidgetProviderInfo,
@@ -399,7 +394,6 @@ private fun cellSize(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && info.targetCellWidth > 0 && info.targetCellHeight > 0) {
         return info.targetCellWidth to info.targetCellHeight
     }
-    // Android's documented sizing: a widget n cells across needs about 70n - 30 dp.
     val density = context.resources.displayMetrics.density
     fun cells(px: Int) = (((px / density) + 30) / 70).roundToInt().coerceAtLeast(1)
     return cells(info.minWidth) to cells(info.minHeight)

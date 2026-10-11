@@ -55,7 +55,6 @@ fun WidgetStackSettingsUI(modifier: Modifier = Modifier) {
     val lifecycleOwner = LocalLifecycleOwner.current
     var stacks by remember { mutableStateOf(placedStacks(context)) }
 
-    // Stacks are added and edited outside this screen, so reload whenever it comes back.
     DisposableEffect(lifecycleOwner) {
         val observer =
             LifecycleEventObserver { _, event ->
@@ -129,7 +128,6 @@ fun WidgetStackSettingsUI(modifier: Modifier = Modifier) {
     }
 }
 
-/** Stacks still on the homescreen, in the order they were added. */
 private fun placedStacks(context: Context): List<WidgetStackConfig> {
     val placed = StackWidgetProvider.stackIds(context).toSet()
     return WidgetStackRepository(context).getAll().filter { it.stackWidgetId in placed }
@@ -159,7 +157,6 @@ private fun stackCount(
 
 private fun requestPinStack(context: Context) {
     val awm = AppWidgetManager.getInstance(context)
-    // Once placed, the system fills in the new stack's id and opens its settings to pick widgets.
     val openSettings =
         PendingIntent.getActivity(
             context,
