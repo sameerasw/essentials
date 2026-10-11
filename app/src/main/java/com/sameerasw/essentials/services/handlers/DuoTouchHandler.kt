@@ -50,6 +50,7 @@ class DuoTouchHandler(
     var ringRadiusScale: Float = 1.0f
     var openBrief: (() -> Unit)? = null
     var onSnippetTapAction: (() -> Unit)? = null
+    private var wasDownInSnippetPill: Boolean = false
 
     private var downX: Float = 0f
     private var downY: Float = 0f
@@ -115,6 +116,7 @@ class DuoTouchHandler(
                 val dist = hypot(x - cameraCenterX, y - cameraCenterY)
                 val isSnippet = overlayView?.isSnippetActive == true && onSnippetTapAction != null
                 val inSnippetPill = isSnippet && overlayView?.snippetPillRect?.contains(x, y) == true
+                wasDownInSnippetPill = inSnippetPill
                 if (dist > effectiveRadius && !inSnippetPill) {
                     isTouchActiveInCutout = false
                     return false
@@ -136,8 +138,7 @@ class DuoTouchHandler(
 
                 overlayView?.triggerTapAnimation()
 
-                if (isSnippet) {
-                    // Suppress ring gestures while snippet suggestion is interactive
+                if (inSnippetPill) {
                     return true
                 }
 
@@ -237,15 +238,18 @@ class DuoTouchHandler(
                     isSoundModeTriggered ||
                     isVolumeOrBrightnessAdjusted
 
-                val snippetTap = onSnippetTapAction
-                if (snippetTap != null && overlayView?.isSnippetActive == true) {
-                    if (totalDist < touchSlopPx * 2f && elapsed < 650L) {
-                        onSnippetTapAction = null
-                        overlayView?.resetInteractiveState(animate = true)
-                        HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
-                        snippetTap()
-                        isTouchActiveInCutout = false
-                        return true
+                if (wasDownInSnippetPill) {
+                    wasDownInSnippetPill = false
+                    val snippetTap = onSnippetTapAction
+                    if (snippetTap != null && overlayView?.isSnippetActive == true) {
+                        if (totalDist < touchSlopPx * 2f && elapsed < 650L) {
+                            onSnippetTapAction = null
+                            overlayView?.resetInteractiveState(animate = true)
+                            HapticUtil.performHapticForService(service, HapticFeedbackType.CLICK)
+                            snippetTap()
+                            isTouchActiveInCutout = false
+                            return true
+                        }
                     }
                 }
 

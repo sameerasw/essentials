@@ -4288,7 +4288,7 @@ class SettingsRepository(
     fun getStatusGlanceLongPressAction(): Action? = getRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION)
     fun setStatusGlanceLongPressAction(action: Action?) = setRemapAction(KEY_STATUS_GLANCE_LONG_PRESS_ACTION, action)
 
-    fun isSnippetsUniversalEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_ENABLED, true)
+    fun isSnippetsUniversalEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_ENABLED, false)
     fun setSnippetsUniversalEnabled(enabled: Boolean) = putBoolean(KEY_SNIPPETS_UNIVERSAL_ENABLED, enabled)
 
     fun isSnippetsUniversalAutoExpandEnabled(): Boolean = getBoolean(KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND, true)

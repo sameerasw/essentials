@@ -424,12 +424,12 @@ class ScreenOffAccessibilityService :
                         }
 
                         "CONSCIOUS_GATE_CONFIRMED" -> {
-                            intent.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
+                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateConfirmed(it) }
                             islandOverlayHandler.updateConsciousGateState()
                         }
 
                         "CONSCIOUS_GATE_CLOSED" -> {
-                            intent.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
+                            intent?.getStringExtra("package_name")?.let { appFlowHandler.onConsciousGateClosed(it) }
                             islandOverlayHandler.updateConsciousGateState()
                         }
 
@@ -705,13 +705,9 @@ class ScreenOffAccessibilityService :
 
     private fun isKeyboardPackage(pkg: String): Boolean {
         if (pkg.isEmpty()) return false
-        return pkg.contains("inputmethod", ignoreCase = true) ||
-            pkg.contains("keyboard", ignoreCase = true) ||
-            pkg == "com.google.android.inputmethod.latin" ||
-            pkg == "com.sec.android.inputmethod" ||
-            pkg == "com.touchtype.swiftkey" ||
-            pkg == "com.samsung.android.honeyboard" ||
-            pkg == packageName
+        if (pkg == packageName) return true
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+        return imm?.inputMethodList?.any { it.packageName == pkg } == true
     }
 
     override fun onInterrupt() {}

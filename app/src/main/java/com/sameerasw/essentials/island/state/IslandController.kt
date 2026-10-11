@@ -110,15 +110,7 @@ class IslandController(
                 collapse()
                 true
             }
-            IslandStage.Line -> {
-                val focused = current.focused
-                if (focused?.interactions?.onTap?.invoke() == true) {
-                    collapse()
-                    true
-                } else {
-                    current.focusedKey?.let { expand(it); true } ?: false
-                }
-            }
+            IslandStage.Line -> current.focusedKey?.let { expand(it); true } ?: false
             IslandStage.Compact -> {
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
@@ -135,12 +127,7 @@ class IslandController(
         val item = (if (current.stage == IslandStage.Compact) itemKey?.let { current.items[it] } else current.focused)
             ?: defaultTapTarget(current)
             ?: return
-        if (item.interactions.onLongPress != null) {
-            val handled = item.interactions.onLongPress.invoke()
-            if (handled != true) collapse()
-            return
-        }
-        val action = item.onOpen ?: return
+        val action = item.interactions.onLongPress ?: item.onOpen ?: return
         action()
         collapse()
     }

@@ -67,6 +67,7 @@ class SuggestionEngine(
     // Current word being looked up to handle sync/async merging
     private var currentWord: String = ""
     private var currentSymSpellSuggestions: List<Suggestion> = emptyList()
+    private var currentMatchingSnippets: List<Suggestion> = emptyList()
 
     fun initialize(scope: CoroutineScope) {
         // Init Android Session (Main Thread)
@@ -208,6 +209,8 @@ class SuggestionEngine(
                     )
                 }
 
+            currentMatchingSnippets = matchingSnippets
+
             // 1. SymSpell (Fast, Predictive - only for letter words)
             // Run on default dispatcher but wait for result to show immediately
             val symResults =
@@ -222,7 +225,7 @@ class SuggestionEngine(
                                     val type =
                                         if (userWords.containsKey(term)) SuggestionType.Learned else SuggestionType.Prediction
                                     Suggestion(term, type)
-                                }?.distinctBy { it.text }
+                                }?.distinctBy { it.text.lowercase() }
                                 ?.take(6) ?: emptyList()
                         } catch (e: Exception) {
                             emptyList<Suggestion>()
@@ -233,8 +236,8 @@ class SuggestionEngine(
                 }
 
             currentSymSpellSuggestions = symResults
-            // Update immediately with Snippets + SymSpell results (Native usually takes longer)
-            _suggestions.value = (matchingSnippets + symResults).distinctBy { it.text }
+            val uniqueSymResults = symResults.distinctBy { it.text.lowercase() }
+            _suggestions.value = matchingSnippets + uniqueSymResults
 
             // 2. Android (Corrective, Slower - only for letter words)
             val s = session
@@ -250,15 +253,9 @@ class SuggestionEngine(
         }
 
     override fun onGetSuggestions(results: Array<out SuggestionsInfo>?) {
-        // Runs on binder thread usually, switch to Main logic if needed, but StateFlow is thread safe.
-        // We want to merge with currentSymSpellSuggestions and keep snippet suggestions
-
-        if (results.isNullOrEmpty()) return
+        if (results.isNullOrEmpty() || currentWord.isBlank()) return
 
         val info = results[0]
-        // info.cookie or sequence is implementation dependent, assuming it matches 'currentWord' roughly
-        // Ideally we check validity but for simplicity we merge.
-
         val androidSuggestions = mutableListOf<String>()
         val count = info.suggestionsCount
         if (count > 0) {
@@ -268,14 +265,13 @@ class SuggestionEngine(
         }
 
         // Merge: Snippets + SymSpell (Prediction) + Android (Correction)
-        // Deduplicate
-        val snippetSuggestions = _suggestions.value.filter { it.type == SuggestionType.Snippet }
+        // Deduplicate dictionary suggestions without dropping snippets
         val androidSuggestionsList =
             androidSuggestions.map { Suggestion(it, SuggestionType.Correction) }
-        val merged =
-            (snippetSuggestions + currentSymSpellSuggestions + androidSuggestionsList)
-                .distinctBy { it.text }
-                .take(8)
+        val uniqueDictSuggestions =
+            (currentSymSpellSuggestions + androidSuggestionsList)
+                .distinctBy { it.text.lowercase() }
+        val merged = (currentMatchingSnippets + uniqueDictSuggestions).take(8)
 
         _suggestions.value = merged
     }
@@ -285,6 +281,8 @@ class SuggestionEngine(
     fun clearSuggestions() {
         _suggestions.value = emptyList()
         currentSymSpellSuggestions = emptyList()
+        currentMatchingSnippets = emptyList()
+        currentWord = ""
     }
 
     fun getUserWords() = userWords.toMap()

@@ -20,9 +20,6 @@ object SnippetExpander {
     private val DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
     private val TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault())
 
-    /**
-     * Replaces dynamic placeholders such as {date}, {time}, and {clipboard} with actual values.
-     */
     fun expand(template: String, context: Context?): String {
         var result = template
         if (result.contains("{date}", ignoreCase = true)) {

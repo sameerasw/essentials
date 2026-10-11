@@ -70,6 +70,8 @@ class SnippetAccessibilityHandler(
 
     private val dismissRunnable = Runnable { hideFloatingPill() }
 
+    private var isPerformingReplacement = false
+
     fun updateSettings() {
         isUniversalEnabled = settingsRepository.isSnippetsUniversalEnabled()
         isAutoExpandEnabled = settingsRepository.isSnippetsUniversalAutoExpandEnabled()
@@ -80,13 +82,17 @@ class SnippetAccessibilityHandler(
     }
 
     fun onTextChanged(event: AccessibilityEvent) {
-        if (!isUniversalEnabled) return
+        if (!isUniversalEnabled || isPerformingReplacement) return
+
+        val eventPkg = event.packageName?.toString().orEmpty()
+        if (eventPkg == service.packageName) return
 
         val sourceNode = event.source ?: return
         if (event.isPassword || sourceNode.isPassword) return
         if (!sourceNode.isEditable) return
 
-        activeNode = sourceNode
+        activeNode?.recycle()
+        activeNode = AccessibilityNodeInfo.obtain(sourceNode)
         val bounds = android.graphics.Rect()
         sourceNode.getBoundsInScreen(bounds)
         if (bounds.height() > 0 && bounds.top > 0) {
@@ -114,19 +120,20 @@ class SnippetAccessibilityHandler(
             if (candidateWord.isNotBlank()) {
                 val matchingSnippet =
                     snippetRepository.snippets.value.firstOrNull { snippet ->
-                        snippet.keyword.equals(candidateWord, ignoreCase = false)
+                        snippet.keyword.equals(candidateWord, ignoreCase = true)
                     }
 
                 if (matchingSnippet != null && matchingSnippet.autoExpandOnSpace) {
                     val expanded = SnippetExpander.expand(matchingSnippet.content, service)
-                    replaceKeywordInNode(
+                    val success = replaceKeywordInNode(
                         node = sourceNode,
-                        fullText = fullText,
                         targetWord = "$candidateWord ",
                         replacement = "$expanded ",
                     )
-                    dismissAllSuggestions()
-                    return
+                    if (success) {
+                        dismissAllSuggestions()
+                        return
+                    }
                 }
             }
         }
@@ -149,32 +156,50 @@ class SnippetAccessibilityHandler(
 
     private fun replaceKeywordInNode(
         node: AccessibilityNodeInfo,
-        fullText: String,
         targetWord: String,
         replacement: String,
-    ) {
-        val targetIndex = fullText.lastIndexOf(targetWord)
-        if (targetIndex < 0) return
+    ): Boolean {
+        isPerformingReplacement = true
+        try {
+            val fullText = node.text?.toString().orEmpty()
+            if (fullText.isEmpty()) return false
 
-        val newText =
-            fullText.substring(0, targetIndex) +
-                replacement +
-                fullText.substring(targetIndex + targetWord.length)
+            val cursor = node.textSelectionEnd
+            val targetIndex =
+                if (cursor in targetWord.length..fullText.length &&
+                    fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
+                ) {
+                    cursor - targetWord.length
+                } else {
+                    val lastIdx = fullText.lastIndexOf(targetWord, ignoreCase = true)
+                    if (lastIdx < 0) return false
+                    lastIdx
+                }
 
-        val args =
-            Bundle().apply {
-                putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, newText)
-            }
-        node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+            val newText =
+                fullText.substring(0, targetIndex) +
+                    replacement +
+                    fullText.substring(targetIndex + targetWord.length)
 
-        // Set cursor position at the end of replacement
-        val newCursorPos = targetIndex + replacement.length
-        val cursorArgs =
-            Bundle().apply {
-                putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, newCursorPos)
-                putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, newCursorPos)
-            }
-        node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, cursorArgs)
+            val args =
+                Bundle().apply {
+                    putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, newText)
+                }
+            val success = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+            if (!success) return false
+
+            // Set cursor position at the end of replacement
+            val newCursorPos = targetIndex + replacement.length
+            val cursorArgs =
+                Bundle().apply {
+                    putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, newCursorPos)
+                    putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, newCursorPos)
+                }
+            node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, cursorArgs)
+            return true
+        } finally {
+            mainHandler.postDelayed({ isPerformingReplacement = false }, 150L)
+        }
     }
 
     private fun calculateImeOffset(): Int {
@@ -221,12 +246,20 @@ class SnippetAccessibilityHandler(
         } ?: service.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
 
         if (targetNode != null) {
-            val text = targetNode.text?.toString().orEmpty()
+            val fullText = targetNode.text?.toString().orEmpty()
+            val cursor = targetNode.textSelectionEnd
+            val textBeforeCursor = if (cursor in 0..fullText.length) fullText.substring(0, cursor) else fullText
+            val candidateWord = textBeforeCursor.takeLastWhile { !it.isWhitespace() }
+            val targetWord = if (candidateWord.isNotBlank() && (snippet.keyword.startsWith(candidateWord, ignoreCase = true) || candidateWord.equals(lastTypedWord, ignoreCase = true))) {
+                candidateWord
+            } else {
+                lastTypedWord.ifBlank { snippet.keyword }
+            }
+
             val expanded = SnippetExpander.expand(snippet.content, service)
             replaceKeywordInNode(
                 node = targetNode,
-                fullText = text,
-                targetWord = lastTypedWord,
+                targetWord = targetWord,
                 replacement = "$expanded ",
             )
         }
@@ -443,6 +476,7 @@ class SnippetAccessibilityHandler(
 
     fun destroy() {
         dismissAllSuggestions()
+        activeNode?.recycle()
         activeNode = null
     }
 }
