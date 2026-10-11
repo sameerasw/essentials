@@ -110,11 +110,12 @@ class StackWidgetProvider : AppWidgetProvider() {
         fun render(
             context: Context,
             stackWidgetId: Int,
+            animate: Boolean = false,
         ) {
             val awm = AppWidgetManager.getInstance(context)
             if (stackWidgetId !in StackHost.visibleOnlyStacks) {
                 try {
-                    awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = false))
+                    awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = false, animate = animate))
                     return
                 } catch (e: IllegalArgumentException) {
                     Log.w(TAG, "Stack $stackWidgetId is too large, sending only the visible widget", e)
@@ -125,7 +126,7 @@ class StackWidgetProvider : AppWidgetProvider() {
                 }
             }
             try {
-                awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = true))
+                awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = true, animate = animate))
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to update stack $stackWidgetId", e)
             }
@@ -135,11 +136,12 @@ class StackWidgetProvider : AppWidgetProvider() {
             context: Context,
             stackWidgetId: Int,
             visibleOnly: Boolean,
+            animate: Boolean,
         ): RemoteViews {
             val awm = AppWidgetManager.getInstance(context)
             val config = WidgetStackRepository(context).get(stackWidgetId)
             val hosted = config?.hostedWidgetIds.orEmpty()
-            val views = RemoteViews(context.packageName, R.layout.widget_stack)
+            val views = RemoteViews(context.packageName, if (animate) R.layout.widget_stack_animated else R.layout.widget_stack)
             views.removeAllViews(R.id.stack_flipper)
             views.removeAllViews(R.id.stack_dots)
 

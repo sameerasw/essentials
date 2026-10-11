@@ -13,9 +13,7 @@
         <ViewFlipper
             android:id="@+id/stack_flipper"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inAnimation="@anim/widget_stack_in"
-            android:outAnimation="@anim/widget_stack_out" />
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/stack_empty"
