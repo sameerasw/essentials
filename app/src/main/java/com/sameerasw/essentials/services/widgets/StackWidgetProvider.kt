@@ -27,6 +27,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
 import com.sameerasw.essentials.ui.activities.WidgetStackConfigureActivity
+import java.util.concurrent.ConcurrentHashMap
 
 class StackWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
@@ -45,6 +46,7 @@ class StackWidgetProvider : AppWidgetProvider() {
         newOptions: Bundle,
     ) {
         WidgetStackRepository(context).get(appWidgetId)?.let { forwardSize(context, it) }
+        StackHost.refresh(context)
     }
 
     override fun onDeleted(
@@ -60,6 +62,7 @@ class StackWidgetProvider : AppWidgetProvider() {
                 } catch (_: Exception) {
                 }
                 StackHost.contents.remove(hostedId)
+                forwardedSizes.remove(hostedId)
             }
             repository.delete(stackId)
             StackHost.positions.remove(stackId)
@@ -96,6 +99,7 @@ class StackWidgetProvider : AppWidgetProvider() {
         private const val ACTION_STEP = "com.sameerasw.essentials.action.WIDGET_STACK_STEP"
         private const val ACTION_REVEAL = "com.sameerasw.essentials.action.WIDGET_STACK_REVEAL"
         private const val EXTRA_DELTA = "delta"
+        private val forwardedSizes = ConcurrentHashMap<Int, Pair<Int, Int>>()
 
         private const val CONTROLS_SPACE_DP = 32
 
@@ -225,13 +229,28 @@ class StackWidgetProvider : AppWidgetProvider() {
                 )
             }
 
+            val size = width to height
             config.hostedWidgetIds.forEach { hostedId ->
                 try {
                     awm.updateAppWidgetOptions(hostedId, forwarded)
+                    if (forwardedSizes.put(hostedId, size) != size) requestUpdate(context, awm, hostedId)
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to forward size to $hostedId", e)
                 }
             }
+        }
+
+        private fun requestUpdate(
+            context: Context,
+            awm: AppWidgetManager,
+            hostedId: Int,
+        ) {
+            val provider = awm.getAppWidgetInfo(hostedId)?.provider ?: return
+            context.sendBroadcast(
+                Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                    .setComponent(provider)
+                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(hostedId)),
+            )
         }
 
         private fun placeholder(
