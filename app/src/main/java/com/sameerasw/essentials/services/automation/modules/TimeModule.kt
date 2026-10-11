@@ -263,24 +263,14 @@ class TimeModule : AutomationModule {
                                     "State ${automation.id} became active. Executing entry actions.",
                                 )
                                 activeStateAutomations.add(automation.id)
-                                automation.entryAction?.let {
-                                    CombinedActionExecutor.execute(
-                                        context,
-                                        it,
-                                    )
-                                }
+                                CombinedActionExecutor.executeAll(context, automation.entryActionList)
                             } else if (!isActive && wasActive) {
                                 Log.d(
                                     ID,
                                     "State ${automation.id} became inactive. Executing exit actions.",
                                 )
                                 activeStateAutomations.remove(automation.id)
-                                automation.exitAction?.let {
-                                    CombinedActionExecutor.execute(
-                                        context,
-                                        it,
-                                    )
-                                }
+                                CombinedActionExecutor.executeAll(context, automation.exitActionList)
                             }
                         }
                     }

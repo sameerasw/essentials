@@ -26,11 +26,9 @@ class ActionShortcutActivity : ComponentActivity() {
         val automation =
             DIYRepository.automations.value.find { it.type == Automation.Type.ACTION_SHORTCUT }
 
-        if (automation != null && automation.actions.isNotEmpty()) {
+        if (automation != null && automation.actionList.isNotEmpty()) {
             lifecycleScope.launch {
-                automation.actions.forEach { action ->
-                    CombinedActionExecutor.execute(applicationContext, action)
-                }
+                CombinedActionExecutor.executeAll(applicationContext, automation.actionList)
                 finish()
             }
         } else {

@@ -48,14 +48,11 @@ class TimeAutomationReceiver : BroadcastReceiver() {
 
                 when (automation.type) {
                     Automation.Type.TRIGGER -> {
-                        automation.actions.forEach { action ->
-                            CombinedActionExecutor.execute(context, action)
-                        }
+                        CombinedActionExecutor.executeAll(context, automation.actionList)
                     }
 
                     Automation.Type.STATE -> {
-                        val action = if (isEntry) automation.entryAction else automation.exitAction
-                        action?.let { CombinedActionExecutor.execute(context, it) }
+                        CombinedActionExecutor.executeAll(context, if (isEntry) automation.entryActionList else automation.exitActionList)
                     }
 
                     else -> {}

@@ -151,9 +151,9 @@ class PowerModule : AutomationModule {
                 val inRange = level in state.minLevel..state.maxLevel
                 val previous = batteryStateActive.put(automation.id, inRange)
                 if (inRange == (previous ?: false)) return@forEach
-                val action = if (inRange) automation.entryAction else automation.exitAction
-                if (action == null) return@forEach
-                scope.launch { CombinedActionExecutor.execute(context, action) }
+                val actions = if (inRange) automation.entryActionList else automation.exitActionList
+                if (actions.isEmpty()) return@forEach
+                scope.launch { CombinedActionExecutor.executeAll(context, actions) }
             }
     }
 
@@ -165,9 +165,7 @@ class PowerModule : AutomationModule {
             automations
                 .filter { it.type == Automation.Type.TRIGGER && it.trigger == trigger }
                 .forEach { automation ->
-                    automation.actions.forEach { action ->
-                        CombinedActionExecutor.execute(context, action)
-                    }
+                    CombinedActionExecutor.executeAll(context, automation.actionList)
                 }
         }
     }
@@ -183,20 +181,10 @@ class PowerModule : AutomationModule {
                     if (automation.state is DIYState.Charging) {
                         if (isActive) {
                             // Entry
-                            automation.entryAction?.let {
-                                CombinedActionExecutor.execute(
-                                    context,
-                                    it,
-                                )
-                            }
+                            CombinedActionExecutor.executeAll(context, automation.entryActionList)
                         } else {
                             // Exit
-                            automation.exitAction?.let {
-                                CombinedActionExecutor.execute(
-                                    context,
-                                    it,
-                                )
-                            }
+                            CombinedActionExecutor.executeAll(context, automation.exitActionList)
                         }
                     }
                 }
@@ -214,20 +202,10 @@ class PowerModule : AutomationModule {
                     if (automation.state is DIYState.PowerSaving) {
                         if (isActive) {
                             // Entry
-                            automation.entryAction?.let {
-                                CombinedActionExecutor.execute(
-                                    context,
-                                    it,
-                                )
-                            }
+                            CombinedActionExecutor.executeAll(context, automation.entryActionList)
                         } else {
                             // Exit
-                            automation.exitAction?.let {
-                                CombinedActionExecutor.execute(
-                                    context,
-                                    it,
-                                )
-                            }
+                            CombinedActionExecutor.executeAll(context, automation.exitActionList)
                         }
                     }
                 }

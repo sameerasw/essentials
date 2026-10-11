@@ -21,6 +21,7 @@ import com.sameerasw.essentials.domain.diy.State
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
 import com.sameerasw.essentials.domain.genai.GenAIAutomationService
+import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -105,17 +106,12 @@ class DIYViewModel(
         val context = getApplication<Application>().applicationContext
         val actionsToTest =
             if (automation.type == Automation.Type.STATE || automation.type == Automation.Type.APP) {
-                listOfNotNull(automation.entryAction)
+                automation.entryActionList
             } else {
-                automation.actions
+                automation.actionList
             }
         viewModelScope.launch {
-            actionsToTest.forEach { action ->
-                com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor.execute(
-                    context,
-                    action,
-                )
-            }
+            CombinedActionExecutor.executeAll(context, actionsToTest)
         }
     }
 
@@ -281,8 +277,8 @@ class DIYViewModel(
             state = state,
             selectedApps = suggestion.selectedApps,
             actions = if (type == Automation.Type.TRIGGER) actions else emptyList(),
-            entryAction = if (type == Automation.Type.STATE || type == Automation.Type.APP) actions.firstOrNull() else null,
-            exitAction = if ((type == Automation.Type.STATE || type == Automation.Type.APP) && actions.size > 1) actions[1] else null,
+            entryActions = if (type == Automation.Type.STATE || type == Automation.Type.APP) listOfNotNull(actions.firstOrNull()) else null,
+            exitActions = if (type == Automation.Type.STATE || type == Automation.Type.APP) listOfNotNull(actions.getOrNull(1)) else null,
             isEnabled = true,
         )
     }

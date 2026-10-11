@@ -372,13 +372,13 @@ fun AutomationItem(
                         automation.type == Automation.Type.ACCESSIBILITY_SHORTCUT_3 ||
                         automation.type == Automation.Type.PIXEL_SEARCHBAR
                     ) {
-                        automation.actions.forEach { action ->
+                        automation.actionList.forEach { action ->
                             ActionItem(action = action)
                         }
                     } else {
-                        // State Actions (In/Out)
-                        ActionItem(action = automation.entryAction)
-                        ActionItem(action = automation.exitAction)
+                        // One row per side keeps them level with the in and out arrows
+                        ActionItem(action = automation.entryActionList.firstOrNull(), moreCount = automation.entryActionList.size - 1)
+                        ActionItem(action = automation.exitActionList.firstOrNull(), moreCount = automation.exitActionList.size - 1)
                     }
                 }
             }
@@ -390,6 +390,7 @@ fun AutomationItem(
 fun ActionItem(
     action: Action?,
     modifier: Modifier = Modifier,
+    moreCount: Int = 0,
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -421,7 +422,7 @@ fun ActionItem(
                 tint = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(id = action?.title ?: R.string.haptic_none),
                     style = MaterialTheme.typography.titleMedium,
@@ -448,6 +449,14 @@ fun ActionItem(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+            }
+            if (moreCount > 0) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.diy_more_actions, moreCount),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }
