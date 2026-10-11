@@ -11,13 +11,14 @@ package com.sameerasw.essentials.ime.snippets
 
 import android.content.ClipboardManager
 import android.content.Context
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 object SnippetExpander {
-    private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    private val TIME_FORMAT = SimpleDateFormat("h:mm a", Locale.getDefault())
+    private val DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+    private val TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault())
 
     /**
      * Replaces dynamic placeholders such as {date}, {time}, and {clipboard} with actual values.
@@ -25,10 +26,10 @@ object SnippetExpander {
     fun expand(template: String, context: Context?): String {
         var result = template
         if (result.contains("{date}", ignoreCase = true)) {
-            result = result.replace("{date}", DATE_FORMAT.format(Date()), ignoreCase = true)
+            result = result.replace("{date}", LocalDate.now().format(DATE_FORMAT), ignoreCase = true)
         }
         if (result.contains("{time}", ignoreCase = true)) {
-            result = result.replace("{time}", TIME_FORMAT.format(Date()), ignoreCase = true)
+            result = result.replace("{time}", LocalTime.now().format(TIME_FORMAT), ignoreCase = true)
         }
         if (result.contains("{clipboard}", ignoreCase = true)) {
             val clipText = context?.let { getClipboardText(it) } ?: ""
@@ -40,7 +41,12 @@ object SnippetExpander {
     private fun getClipboardText(context: Context): String {
         return try {
             val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-            cm?.primaryClip?.getItemAt(0)?.text?.toString().orEmpty()
+            val clip = cm?.primaryClip
+            if (clip != null && clip.itemCount > 0) {
+                clip.getItemAt(0)?.text?.toString().orEmpty()
+            } else {
+                ""
+            }
         } catch (_: Exception) {
             ""
         }

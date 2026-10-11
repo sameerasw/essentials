@@ -371,7 +371,8 @@ class DuoOverlayHandler(
                 restoreTouchAnchor()
             }
             val titleText = snippet.title.ifBlank { snippet.content.take(18) }
-            overlayView?.setInteractiveSnippet(keyword = "!${snippet.keyword}", title = titleText)
+            val displayKeyword = if (snippet.keyword.startsWith("!")) snippet.keyword else "!${snippet.keyword}"
+            overlayView?.setInteractiveSnippet(keyword = displayKeyword, title = titleText)
         }
     }
 

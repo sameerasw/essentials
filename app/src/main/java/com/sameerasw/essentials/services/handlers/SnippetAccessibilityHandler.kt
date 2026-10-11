@@ -83,6 +83,7 @@ class SnippetAccessibilityHandler(
         if (!isUniversalEnabled) return
 
         val sourceNode = event.source ?: return
+        if (event.isPassword || sourceNode.isPassword) return
         if (!sourceNode.isEditable) return
 
         activeNode = sourceNode
