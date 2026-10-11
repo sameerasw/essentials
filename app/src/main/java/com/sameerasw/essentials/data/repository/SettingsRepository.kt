@@ -3553,7 +3553,7 @@ class SettingsRepository(
     fun getPixelSearchEngine(): String = getString(KEY_PIXEL_SEARCH_ENGINE, "Google") ?: "Google"
     fun setPixelSearchEngine(engine: String) = putString(KEY_PIXEL_SEARCH_ENGINE, engine)
 
-    fun isPixelSearchWallpaperBackgroundEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_WALLPAPER_BG, false)
+    fun isPixelSearchWallpaperBackgroundEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_WALLPAPER_BG, true)
     fun setPixelSearchWallpaperBackgroundEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_WALLPAPER_BG, enabled)
 
     fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)

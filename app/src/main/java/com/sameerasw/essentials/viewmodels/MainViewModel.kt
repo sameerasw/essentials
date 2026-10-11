@@ -4505,7 +4505,7 @@ class MainViewModel : ViewModel() {
     val pixelSearchResultShortcuts = mutableStateOf(true)
     val pixelSearchResultWeb = mutableStateOf(true)
     val pixelSearchBubblesWeb = mutableStateOf(false)
-    val pixelSearchWallpaperBackground = mutableStateOf(false)
+    val pixelSearchWallpaperBackground = mutableStateOf(true)
     val pixelSearchEngine = mutableStateOf("Google")
 
     fun setPixelSearchResultAppsEnabled(enabled: Boolean) {
