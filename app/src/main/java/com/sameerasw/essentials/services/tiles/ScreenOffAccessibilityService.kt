@@ -81,6 +81,7 @@ class ScreenOffAccessibilityService :
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
+    private lateinit var snippetAccessibilityHandler: com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
 
     private var lightSensor: Sensor? = null
@@ -290,6 +291,10 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED
             ) {
                 statusGlanceHandler.updateState()
+            } else if (key?.startsWith("snippets_") == true) {
+                if (::snippetAccessibilityHandler.isInitialized) {
+                    snippetAccessibilityHandler.updateSettings()
+                }
             } else if (key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUTS_ENABLED ||
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS ||
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
@@ -325,6 +330,13 @@ class ScreenOffAccessibilityService :
         }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
+        snippetAccessibilityHandler =
+            com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler(
+                service = this,
+                scope = serviceScope,
+                islandCoordinator = islandOverlayHandler,
+                duoOverlayHandler = duoOverlayHandler,
+            )
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
 
         flashlightHandler.register()
@@ -536,6 +548,9 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.destroy()
         islandOverlayHandler.onDestroy()
         statusGlanceHandler.destroy()
+        if (::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.destroy()
+        }
         lockscreenShortcutsHandler.onDestroy()
         statusBarIconHandler.unregister()
         stopInputEventListener()
@@ -583,9 +598,21 @@ class ScreenOffAccessibilityService :
             islandOverlayHandler.updateConsciousGateState()
         }
 
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            if (::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onTextChanged(event)
+            }
+            return
+        }
+
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
+            val eventPkg = event.packageName?.toString().orEmpty()
+            val isImeEvent = isKeyboardPackage(eventPkg)
+            if (!isImeEvent && ::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onNonImeWindowChanged()
+            }
             checkFullscreenState()
             checkStatusBarExpansion()
             freezeHandler.removeCallbacks(shadeRecheckRunnable)
@@ -627,6 +654,9 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.setShadeExpanded(expanded)
         islandOverlayHandler.setShadeExpanded(expanded)
         duoOverlayHandler.setShadeExpanded(expanded)
+        if (expanded && ::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.hideFloatingPill()
+        }
     }
 
     private fun isShadeWindowVisible(): Boolean {
@@ -664,10 +694,20 @@ class ScreenOffAccessibilityService :
                         duoOverlayHandler.setFullscreen(isFullscreen)
                         statusGlanceHandler.setFullscreen(isFullscreen)
                         islandOverlayHandler.setFullscreen(isFullscreen)
+                        if (isFullscreen && ::snippetAccessibilityHandler.isInitialized) {
+                            snippetAccessibilityHandler.hideFloatingPill()
+                        }
                     }
                 }
             } catch (_: Exception) {}
         }
+    }
+
+    private fun isKeyboardPackage(pkg: String): Boolean {
+        if (pkg.isEmpty()) return false
+        if (pkg == packageName) return true
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+        return imm?.inputMethodList?.any { it.packageName == pkg } == true
     }
 
     override fun onInterrupt() {}
