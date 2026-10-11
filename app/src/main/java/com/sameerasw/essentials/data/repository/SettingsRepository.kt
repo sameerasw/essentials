@@ -22,6 +22,7 @@ import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.HilightProgressColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
@@ -179,6 +180,10 @@ class SettingsRepository(
         const val KEY_HILIGHT_APP_EFFECTS = "hilight_app_effects"
         const val KEY_HILIGHT_ONLY_SCREEN_OFF = "hilight_only_screen_off"
         const val KEY_HILIGHT_COOLDOWN_SECONDS = "hilight_cooldown_seconds"
+        const val KEY_HILIGHT_PROGRESS_ENABLED = "hilight_progress_enabled"
+        const val KEY_HILIGHT_PROGRESS_COLOR_MODE = "hilight_progress_color_mode"
+        const val KEY_HILIGHT_PROGRESS_COLOR = "hilight_progress_color"
+        const val KEY_HILIGHT_PROGRESS_DURATION_MS = "hilight_progress_duration_ms"
         const val KEY_HILIGHT_SKIP_DND = "hilight_skip_dnd"
         const val KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF = "edge_lighting_only_screen_off"
         const val KEY_EDGE_LIGHTING_AMBIENT_DISPLAY = "edge_lighting_ambient_display"
@@ -1300,6 +1305,24 @@ class SettingsRepository(
     fun getHilightCooldownSeconds(): Int = getInt(KEY_HILIGHT_COOLDOWN_SECONDS, 60)
 
     fun setHilightCooldownSeconds(seconds: Int) = putInt(KEY_HILIGHT_COOLDOWN_SECONDS, seconds)
+
+    fun isHilightProgressEnabled(): Boolean = getBoolean(KEY_HILIGHT_PROGRESS_ENABLED, false)
+
+    fun setHilightProgressEnabled(enabled: Boolean) = putBoolean(KEY_HILIGHT_PROGRESS_ENABLED, enabled)
+
+    fun getHilightProgressColorMode(): HilightProgressColorMode =
+        HilightProgressColorMode.entries.find { it.name == getString(KEY_HILIGHT_PROGRESS_COLOR_MODE) }
+            ?: HilightProgressColorMode.VIBGYOR
+
+    fun setHilightProgressColorMode(mode: HilightProgressColorMode) = putString(KEY_HILIGHT_PROGRESS_COLOR_MODE, mode.name)
+
+    fun getHilightProgressColor(): Int = getInt(KEY_HILIGHT_PROGRESS_COLOR, HilightEffect.DEFAULT_COLOR)
+
+    fun setHilightProgressColor(color: Int) = putInt(KEY_HILIGHT_PROGRESS_COLOR, color)
+
+    fun getHilightProgressDurationMs(): Long = getLong(KEY_HILIGHT_PROGRESS_DURATION_MS, HilightEffect.DEFAULT_DURATION_MS)
+
+    fun setHilightProgressDurationMs(durationMs: Long) = putLong(KEY_HILIGHT_PROGRESS_DURATION_MS, durationMs)
 
     /**
      * Executes the save notification lighting selected apps operation.

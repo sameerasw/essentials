@@ -60,6 +60,7 @@ import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.HilightProgressColorMode
 import com.sameerasw.essentials.domain.model.LockscreenShortcutSide
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -139,6 +140,10 @@ class MainViewModel : ViewModel() {
     val isHilightOnlyWhenScreenOff = mutableStateOf(true)
     val isHilightSkipDnd = mutableStateOf(true)
     val hilightCooldownSeconds = mutableIntStateOf(60)
+    val isHilightProgressEnabled = mutableStateOf(false)
+    val hilightProgressColorMode = mutableStateOf(HilightProgressColorMode.VIBGYOR)
+    val hilightProgressColor = mutableIntStateOf(HilightEffect.DEFAULT_COLOR)
+    val hilightProgressDurationMs = mutableLongStateOf(HilightEffect.DEFAULT_DURATION_MS)
     val hilightAppEffects = mutableStateMapOf<String, HilightEffect>()
     val isLockscreenShortcutsEnabled = mutableStateOf(false)
     val lockscreenShortcutActions = mutableStateMapOf<LockscreenShortcutSide, List<Action>>()
@@ -2273,6 +2278,10 @@ class MainViewModel : ViewModel() {
         isHilightOnlyWhenScreenOff.value = settingsRepository.isHilightOnlyWhenScreenOff()
         isHilightSkipDnd.value = settingsRepository.isHilightSkipDnd()
         hilightCooldownSeconds.intValue = settingsRepository.getHilightCooldownSeconds()
+        isHilightProgressEnabled.value = settingsRepository.isHilightProgressEnabled()
+        hilightProgressColorMode.value = settingsRepository.getHilightProgressColorMode()
+        hilightProgressColor.intValue = settingsRepository.getHilightProgressColor()
+        hilightProgressDurationMs.longValue = settingsRepository.getHilightProgressDurationMs()
         hilightAppEffects.clear()
         hilightAppEffects.putAll(settingsRepository.getHilightAppEffects())
         isLockscreenShortcutsEnabled.value = settingsRepository.isLockscreenShortcutsEnabled()
@@ -8071,6 +8080,26 @@ class MainViewModel : ViewModel() {
     fun setHilightCooldownSeconds(seconds: Int) {
         hilightCooldownSeconds.intValue = seconds
         settingsRepository.setHilightCooldownSeconds(seconds)
+    }
+
+    fun setHilightProgressEnabled(enabled: Boolean) {
+        isHilightProgressEnabled.value = enabled
+        settingsRepository.setHilightProgressEnabled(enabled)
+    }
+
+    fun setHilightProgressColorMode(mode: HilightProgressColorMode) {
+        hilightProgressColorMode.value = mode
+        settingsRepository.setHilightProgressColorMode(mode)
+    }
+
+    fun setHilightProgressColor(color: Int) {
+        hilightProgressColor.intValue = color
+        settingsRepository.setHilightProgressColor(color)
+    }
+
+    fun setHilightProgressDurationMs(durationMs: Long) {
+        hilightProgressDurationMs.longValue = durationMs
+        settingsRepository.setHilightProgressDurationMs(durationMs)
     }
 
     fun setHilightAppEffect(

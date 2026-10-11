@@ -36,10 +36,21 @@ object HilightController {
 
     fun isAvailable(): Boolean = HilightLights.array() != null
 
-    @Synchronized
     fun play(
         effect: HilightEffect,
         onStarted: (() -> Unit)? = null,
+    ): Boolean =
+        play(
+            durationMs = effect.durationMs.coerceAtLeast(HilightEffect.MIN_DURATION_MS),
+            onStarted = onStarted,
+        ) { elapsedMs, ledCount -> HilightFrames.frame(effect, elapsedMs, ledCount) }
+
+    // Shows frame(elapsedMs, ledCount) until durationMs, replacing whatever is playing
+    @Synchronized
+    fun play(
+        durationMs: Long,
+        onStarted: (() -> Unit)? = null,
+        frame: (Long, Int) -> IntArray,
     ): Boolean {
         if (!HilightLights.isAccessGranted()) return false
         val previous = job
@@ -49,7 +60,7 @@ object HilightController {
                     it.cancel()
                     it.join()
                 }
-                render(effect, onStarted)
+                render(durationMs.coerceAtMost(HilightEffect.MAX_DURATION_MS), frame, onStarted)
             }
         return true
     }
@@ -60,12 +71,12 @@ object HilightController {
     }
 
     private suspend fun render(
-        effect: HilightEffect,
+        durationMs: Long,
+        frame: (Long, Int) -> IntArray,
         onStarted: (() -> Unit)?,
     ) {
         val leds = HilightLights.array() ?: return
         val frameMs = leds.minUpdatePeriodMs.coerceIn(MIN_FRAME_MS, MAX_FRAME_MS)
-        val durationMs = effect.durationMs.coerceIn(HilightEffect.MIN_DURATION_MS, HilightEffect.MAX_DURATION_MS)
         // The session is held only while lit, since an open session hides Pixel's own Hilight effects
         val token = HilightLights.openSession() ?: return
         onStarted?.invoke()
@@ -76,7 +87,7 @@ object HilightController {
                 coroutineContext.ensureActive()
                 val elapsed = SystemClock.elapsedRealtime() - start
                 if (elapsed >= durationMs) break
-                val colors = HilightFrames.frame(effect, elapsed, leds.ids.size)
+                val colors = frame(elapsed, leds.ids.size)
                 if (!colors.contentEquals(last)) {
                     if (!HilightLights.setColors(token, leds.ids, colors)) break
                     last = colors
