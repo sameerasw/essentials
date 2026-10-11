@@ -296,7 +296,7 @@
             android:label="@string/essential_search_label"
             android:launchMode="singleInstance"
             android:taskAffinity="com.sameerasw.essentials.search"
-            android:theme="@style/Theme.Essentials.Translucent"
+            android:theme="@style/Theme.Essentials.WallpaperTranslucent"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <activity

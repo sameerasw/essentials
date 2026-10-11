@@ -23,11 +23,14 @@ import android.view.WindowInsetsAnimationController
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 
@@ -89,6 +92,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -154,10 +158,9 @@ class PixelSearchResultsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val repository = SettingsRepository(this)
-        if (repository.isPixelSearchWallpaperBackgroundEnabled()) {
-            setTheme(R.style.Theme_Essentials_WallpaperTranslucent)
-        } else {
+        if (!repository.isPixelSearchWallpaperBackgroundEnabled()) {
             setTheme(R.style.Theme_Essentials_Translucent)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
         }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
@@ -224,6 +227,24 @@ fun PixelSearchResultsScreen(
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val density = LocalDensity.current
+
+    val isWallpaperBg = remember { repository.isPixelSearchWallpaperBackgroundEnabled() }
+    val backProgress = remember { Animatable(0f) }
+
+    if (!isWallpaperBg) {
+        PredictiveBackHandler { progress ->
+            try {
+                progress.collect { backEvent ->
+                    backProgress.snapTo(backEvent.progress)
+                }
+                onFinish()
+            } catch (e: java.util.concurrent.CancellationException) {
+                scope.launch {
+                    backProgress.animateTo(0f, tween(250))
+                }
+            }
+        }
+    }
 
     var query by remember { mutableStateOf(initialQuery) }
     val focusRequester = remember { FocusRequester() }
@@ -648,6 +669,17 @@ fun PixelSearchResultsScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .graphicsLayer {
+                if (!isWallpaperBg && backProgress.value > 0f) {
+                    val p = backProgress.value
+                    val scale = 1f - (p * 0.08f)
+                    scaleX = scale
+                    scaleY = scale
+                    alpha = 1f - (p * 0.35f)
+                    shape = RoundedCornerShape((p * 28).dp)
+                    clip = true
+                }
+            }
             .background(scrimColor),
     ) {
         Box(
