@@ -989,15 +989,15 @@ fun PixelSearchbarSettingsUI(
                         }
                     }
 
-                    val wallpaperBgEnabled = viewModel.pixelSearchWallpaperBackground.value
+                    val blurEnabled = viewModel.pixelSearchBlur.value
                     IconToggleItem(
-                        iconRes = R.drawable.rounded_wallpaper_24,
-                        title = stringResource(R.string.pref_pixel_search_wallpaper_bg_title),
-                        description = stringResource(R.string.pref_pixel_search_wallpaper_bg_desc),
-                        isChecked = wallpaperBgEnabled,
+                        iconRes = R.drawable.rounded_blur_on_24,
+                        title = stringResource(R.string.pref_pixel_search_blur_title),
+                        description = stringResource(R.string.pref_pixel_search_blur_desc),
+                        isChecked = blurEnabled,
                         onCheckedChange = { checked ->
                             HapticUtil.performVirtualKeyHaptic(view)
-                            viewModel.setPixelSearchWallpaperBackgroundEnabled(checked)
+                            viewModel.setPixelSearchBlurEnabled(checked)
                         },
                     )
                 }
