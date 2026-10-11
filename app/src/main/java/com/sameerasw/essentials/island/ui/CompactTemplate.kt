@@ -35,6 +35,7 @@ fun CompactTemplate(
     spec: IslandLayoutSpec,
     onCellTap: (String) -> Unit,
     onCellLongPress: (String) -> Unit,
+    leftBias: () -> Int = { 0 },
 ) {
     val cells = buildMap {
         state.items.values.forEach { item -> item.compact.forEach { put(it.key, item.key to it) } }
@@ -88,7 +89,7 @@ fun CompactTemplate(
                             slideOutHorizontally(IslandMotion.compactOffset, towardCamera) +
                             scaleOut(IslandMotion.compactFloat(), targetScale = 0.6f),
                         modifier = Modifier
-                            .animatePlacement()
+                            .animatePlacement(fromEnd = spec.growDirection == 0 && !entry.before)
                             .pointerInput(entry.itemKey) {
                                 detectTapGestures(
                                     onTap = { onCellTap(entry.itemKey) },
@@ -133,8 +134,14 @@ fun CompactTemplate(
         // Cells hug the outer ends with the same edge padding on both sides; the slack sits around the camera.
         val leftInset = edgeInset(left.firstOrNull())
         val rightInset = edgeInset(right.lastOrNull())
-        val side = maxOf(content(left) + leftInset, content(right) + rightInset) + if (left.isEmpty() && right.isEmpty()) 0 else spacing
-        val width = side * 2 + cameraSlot
+        val hasCells = left.isNotEmpty() || right.isNotEmpty()
+        val edge = if (hasCells) spacing else 0
+        val needLeft = content(left) + leftInset + edge
+        val needRight = content(right) + rightInset + edge
+        val bias = if (hasCells) leftBias().coerceAtLeast(0) else 0
+        val rightSide = maxOf(needRight, needLeft + bias, if (bias == 0) needLeft else 0)
+        val leftSide = if (bias == 0) rightSide else rightSide - bias
+        val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
             var x = spacing + leftInset
             left.forEach {

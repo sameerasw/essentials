@@ -148,6 +148,14 @@ object QsTileRegistry {
                 R.drawable.rounded_link_24,
                 UrlShortenerTileService::class.java,
             ),
+            QsTileEntry(
+                R.drawable.rounded_motion_play_24,
+                DuoTileService::class.java,
+            ),
+            QsTileEntry(
+                R.drawable.rounded_upcoming_24,
+                IslandTileService::class.java,
+            ),
         )
 
     private val tilesMapByClassName: Map<String, QsTileEntry> by lazy {

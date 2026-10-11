@@ -49,7 +49,7 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec, startInset: Dp = 0.d
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
             ) {
-                icon()
+                if (line.showLeftIcon) icon()
                 LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
             }
             Spacer(Modifier.width(spec.cameraSlotWidth))
@@ -68,7 +68,7 @@ fun LineTemplate(line: LineContent, spec: IslandLayoutSpec, startInset: Dp = 0.d
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
             ) {
-                icon()
+                if (line.showLeftIcon) icon()
                 LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
                 LineText(line.end, TextAlign.End, FontWeight.Normal, Modifier.weight(1f))
                 endSlot()

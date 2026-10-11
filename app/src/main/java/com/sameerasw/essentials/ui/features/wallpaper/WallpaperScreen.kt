@@ -15,6 +15,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
+import com.sameerasw.essentials.ui.activities.WallpaperStagingActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -893,6 +894,7 @@ fun WallpaperHelpBottomSheet(
     onViewAuthor: () -> Unit,
     onViewCollection: () -> Unit,
 ) {
+    val context = LocalContext.current
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -983,11 +985,33 @@ fun WallpaperHelpBottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             colors =
                                 ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                ),
+                        ) {
+                            Text(text = "View Sameera's Collection")
+                        }
+
+                        Button(
+                            onClick = {
+                                onDismissRequest()
+                                val intent = Intent(context, WallpaperStagingActivity::class.java)
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors =
+                                ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                 ),
                         ) {
-                            Text(text = "View Sameera's Collection")
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_wallpaper_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = stringResource(R.string.feat_wallpaper_staging_title))
                         }
                     }
                 }

@@ -13,6 +13,7 @@ import android.Manifest
 import android.app.Activity
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -50,6 +51,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,6 +75,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.services.widgets.WidgetScraperService
+import com.sameerasw.essentials.ui.features.widgets.WidgetPickerSheet
+import kotlinx.coroutines.delay
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.animations.LottieFeatureAnimation
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -317,79 +321,96 @@ fun PixelSearchbarSettingsUI(
     val awm = remember { AppWidgetManager.getInstance(context) }
     val widgetHost = remember { AppWidgetHost(context, WidgetScraperService.HOST_ID) }
 
-    // Track the allocated ID so we can deallocate on cancel
     var pendingWidgetId by remember { mutableStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
+    var showWidgetPicker by remember { mutableStateOf(false) }
+    var isWidgetUnsupported by remember { mutableStateOf(false) }
+
+    LaunchedEffect(currentType) {
+        while (currentType == "widget") {
+            isWidgetUnsupported = WidgetScraperService.isUnsupported
+            delay(1000)
+        }
+        isWidgetUnsupported = false
+    }
+
+    fun discardPending() {
+        if (pendingWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+            widgetHost.deleteAppWidgetId(pendingWidgetId)
+            pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+        }
+    }
+
+    fun finishBinding() {
+        val widgetId = pendingWidgetId
+        pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return
+        val previousId = viewModel.pixelSearchbarWidgetId.intValue
+        if (previousId != AppWidgetManager.INVALID_APPWIDGET_ID && previousId != widgetId) {
+            widgetHost.deleteAppWidgetId(previousId)
+        }
+        val providerName = awm.getAppWidgetInfo(widgetId)?.provider?.flattenToString()
+        viewModel.setPixelSearchbarType("widget", context)
+        viewModel.setPixelSearchbarWidgetId(widgetId, providerName, context)
+        WidgetScraperService.start(context)
+    }
+
+    val configureLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) finishBinding() else discardPending()
+        }
+
+    fun configureOrFinish(info: AppWidgetProviderInfo) {
+        val configurationOptional =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                info.widgetFeatures and AppWidgetProviderInfo.WIDGET_FEATURE_CONFIGURATION_OPTIONAL != 0
+        val configure = info.configure
+        if (configure != null && !configurationOptional) {
+            try {
+                configureLauncher.launch(
+                    Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE).apply {
+                        component = configure
+                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, pendingWidgetId)
+                    },
+                )
+                return
+            } catch (_: Exception) {
+            }
+        }
+        finishBinding()
+    }
 
     val bindLauncher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val widgetId = pendingWidgetId
-                if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val info = awm.getAppWidgetInfo(widgetId)
-                    val providerName = info?.provider?.flattenToString()
-                    viewModel.setPixelSearchbarType("widget", context)
-                    viewModel.setPixelSearchbarWidgetId(widgetId, providerName, context)
-                    WidgetScraperService.start(context)
-                    pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-                }
-            } else {
-                if (pendingWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    widgetHost.deleteAppWidgetId(pendingWidgetId)
-                    pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-                }
-            }
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val info = awm.getAppWidgetInfo(pendingWidgetId)
+            if (result.resultCode == Activity.RESULT_OK && info != null) configureOrFinish(info) else discardPending()
         }
 
-    val pickerLauncher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data ?: return@rememberLauncherForActivityResult
-                val widgetId =
-                    data.getIntExtra(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID,
-                    )
-                if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val info = awm.getAppWidgetInfo(widgetId)
-                    val isBound = if (info?.provider != null) {
-                        awm.bindAppWidgetIdIfAllowed(widgetId, info.provider)
-                    } else true
-
-                    if (!isBound && info?.provider != null) {
-                        val bindIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
-                        }
-                        bindLauncher.launch(bindIntent)
-                    } else {
-                        val providerName = info?.provider?.flattenToString()
-                        viewModel.setPixelSearchbarType("widget", context)
-                        viewModel.setPixelSearchbarWidgetId(widgetId, providerName, context)
-                        WidgetScraperService.start(context)
-                        pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-                    }
-                }
-            } else {
-                // Deallocate the ID we pre-allocated if user cancelled
-                if (pendingWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    widgetHost.deleteAppWidgetId(pendingWidgetId)
-                    pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-                }
-            }
+    fun onWidgetPicked(info: AppWidgetProviderInfo) {
+        showWidgetPicker = false
+        discardPending()
+        pendingWidgetId = widgetHost.allocateAppWidgetId()
+        if (awm.bindAppWidgetIdIfAllowed(pendingWidgetId, info.profile, info.provider, null)) {
+            configureOrFinish(info)
+        } else {
+            bindLauncher.launch(
+                Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, pendingWidgetId)
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, info.profile)
+                },
+            )
         }
+    }
 
     fun openWidgetPicker() {
-        val allocatedId = widgetHost.allocateAppWidgetId()
-        pendingWidgetId = allocatedId
-        val pickIntent =
-            Intent(AppWidgetManager.ACTION_APPWIDGET_PICK).apply {
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, allocatedId)
-            }
-        pickerLauncher.launch(pickIntent)
+        showWidgetPicker = true
+    }
+
+    if (showWidgetPicker) {
+        WidgetPickerSheet(
+            onPick = { onWidgetPicked(it) },
+            onDismiss = { showWidgetPicker = false },
+        )
     }
 
     Column(
@@ -495,15 +516,28 @@ fun PixelSearchbarSettingsUI(
                                     )
                                 },
                                 supportingContent = {
+                                    val hostedInfo =
+                                        remember(viewModel.pixelSearchbarWidgetId.intValue) {
+                                            awm.getAppWidgetInfo(viewModel.pixelSearchbarWidgetId.intValue)
+                                        }
+                                    val widgetLabel =
+                                        remember(hostedInfo) { hostedInfo?.loadLabel(context.packageManager) }
                                     Text(
                                         text =
-                                            if (widgetProvider != null) {
-                                                widgetProvider.substringAfterLast("/")
-                                            } else {
-                                                stringResource(R.string.pixel_searchbar_widget_none)
+                                            when {
+                                                isWidgetUnsupported ->
+                                                    stringResource(R.string.pixel_searchbar_widget_unsupported, widgetLabel ?: "")
+                                                widgetLabel != null -> widgetLabel
+                                                widgetProvider != null -> widgetProvider.substringAfterLast("/")
+                                                else -> stringResource(R.string.pixel_searchbar_widget_none)
                                             },
                                         style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color =
+                                            if (isWidgetUnsupported) {
+                                                MaterialTheme.colorScheme.error
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            },
                                     )
                                 },
                                 colors =

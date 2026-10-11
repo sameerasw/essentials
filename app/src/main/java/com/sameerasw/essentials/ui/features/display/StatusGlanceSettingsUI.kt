@@ -56,8 +56,10 @@ import com.sameerasw.essentials.ui.core.sheets.DeviceEffectsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.FreezeTagSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.HilightEffectSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
@@ -82,6 +84,11 @@ fun StatusGlanceSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val displayConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
+    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp,
+        displayConfiguration.orientation) {
+        viewModel.refreshStatusGlanceCameraPlacement()
+    }
 
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
@@ -101,11 +108,13 @@ fun StatusGlanceSettingsUI(
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
     var showFreezeTagSettings by remember { mutableStateOf(false) }
     var showOpenAppSettings by remember { mutableStateOf(false) }
+    var showOpenActivitySettings by remember { mutableStateOf(false) }
     var showFreezeAppsSettings by remember { mutableStateOf(false) }
     var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
     var showSetKeyboardSheet by remember { mutableStateOf(false) }
     var showCustomSettingsSettings by remember { mutableStateOf(false) }
     var showSetVolumeSettings by remember { mutableStateOf(false) }
+    var showHilightSettings by remember { mutableStateOf(false) }
     var configAction by remember { mutableStateOf<Action?>(null) }
 
     var showPermissionSheet by remember { mutableStateOf(false) }
@@ -133,6 +142,8 @@ fun StatusGlanceSettingsUI(
                 "WRITE_SETTINGS" -> !viewModel.isWriteSettingsEnabled.value
                 "NOTIFICATION_POLICY" -> !viewModel.isNotificationPolicyAccessGranted.value
                 "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
+                "DRAW_OVERLAYS" -> !viewModel.isOverlayPermissionGranted.value
+                "ACCESSIBILITY" -> !viewModel.isAccessibilityEnabled.value
                 else -> false
             }
         }
@@ -208,6 +219,26 @@ fun StatusGlanceSettingsUI(
                     spacing = 2.dp,
                     cornerRadius = 24.dp,
                 ) {
+                    if (viewModel.isFoldableCameraDevice.value) {
+                        Text(
+                            text = stringResource(R.string.foldable_camera_profile_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                        IconToggleItem(
+                            title = stringResource(R.string.foldable_orientation_profiles_title),
+                            iconRes = R.drawable.rounded_center_focus_strong_24,
+                            isChecked = viewModel.isStatusGlanceOrientationProfiles.value,
+                            onCheckedChange = { viewModel.setStatusGlanceOrientationProfiles(it) },
+                        )
+                        IconToggleItem(
+                            title = stringResource(R.string.foldable_hide_current_orientation_title),
+                            iconRes = R.drawable.rounded_visibility_off_24,
+                            isChecked = viewModel.isStatusGlanceHiddenInCurrentOrientation.value,
+                            onCheckedChange = { viewModel.setStatusGlanceHiddenInCurrentOrientation(it) },
+                        )
+                    }
                     IconToggleItem(
                         title = stringResource(R.string.status_glance_auto_detect_button_title),
                         description = stringResource(R.string.status_glance_auto_detect_button_desc),
@@ -647,6 +678,7 @@ fun StatusGlanceSettingsUI(
                                         is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                         is Action.FreezeTag -> showFreezeTagSettings = true
                                         is Action.OpenApp -> showOpenAppSettings = true
+                                        is Action.OpenActivity -> showOpenActivitySettings = true
                                         is Action.FreezeApps -> {
                                             temporarySelectedAppsForAction = resolvedAction.packageNames
                                             showFreezeAppsSettings = true
@@ -657,6 +689,7 @@ fun StatusGlanceSettingsUI(
                                         }
                                         is Action.Keyboard -> showSetKeyboardSheet = true
                                         is Action.SetVolume -> showSetVolumeSettings = true
+                                        is Action.Hilight -> showHilightSettings = true
                                         is Action.CustomSettings -> showCustomSettingsSettings = true
                                         else -> {}
                                     }
@@ -789,6 +822,18 @@ fun StatusGlanceSettingsUI(
         )
     }
 
+    if (showHilightSettings && configAction is Action.Hilight) {
+        HilightEffectSettingsSheet(
+            initialAction = configAction as Action.Hilight,
+            onDismiss = { showHilightSettings = false },
+            onSave = { newAction ->
+                showHilightSettings = false
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
     if (showSometimesEssentialsSettings && configAction is Action.SometimesEssentials) {
         SometimesEssentialsSettingsSheet(
             initialAction = configAction as Action.SometimesEssentials,
@@ -819,6 +864,7 @@ fun StatusGlanceSettingsUI(
 
     if (showOpenAppSettings) {
         SingleAppSelectionSheet(
+            includeSelf = true,
             onDismissRequest = { showOpenAppSettings = false },
             onAppSelected = { app ->
                 val newAction = Action.OpenApp(packageName = app.packageName)
@@ -828,8 +874,20 @@ fun StatusGlanceSettingsUI(
         )
     }
 
+    if (showOpenActivitySettings) {
+        OpenActivityPicker(
+            onDismiss = { showOpenActivitySettings = false },
+            onActivitySelected = { newAction ->
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
     if (showFreezeAppsSettings && (configAction is Action.FreezeApps || configAction is Action.UnfreezeApps)) {
         AppSelectionSheet(
+            restrictSystemApps = !viewModel.isEnableUnsupportedFeatures.value,
+            showInvertSelection = false,
             onDismissRequest = {
                 val finalAction = when (val action = configAction) {
                     is Action.FreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)

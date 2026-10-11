@@ -19,6 +19,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -128,7 +132,9 @@ fun EqualizerBars(
 fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = false, size: Dp = if (showLevel) 24.dp else 18.dp) {
     val sweep by animateFloatAsState(360f * level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batterySweep")
     val ringColor by animateColorAsState(color, label = "batteryColor")
-    Box(modifier.squareFit(size), contentAlignment = Alignment.Center) {
+    var ringPx by remember { mutableStateOf(0) }
+    val density = LocalDensity.current
+    Box(modifier.squareFit(size).onSizeChanged { ringPx = minOf(it.width, it.height) }, contentAlignment = Alignment.Center) {
         Canvas(Modifier.matchParentSize()) {
             val diameter = this.size.minDimension
             val stroke = diameter * (if (showLevel) 0.12f else 0.16f)
@@ -139,11 +145,16 @@ fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLev
                 drawArc(ringColor, -90f, sweep, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
             }
         }
-        if (showLevel) {
+        if (showLevel && ringPx > 0) {
+            val label = level.coerceIn(0, 100).toString()
+            val innerPx = ringPx * (1f - 2f * 0.12f) * 0.8f
+            val fontPx = minOf(innerPx / (label.length * 0.62f), innerPx * 0.75f)
+            val fontSp = with(density) { fontPx.toSp() }
             Text(
-                text = level.coerceIn(0, 100).toString(),
-                style = IslandTextStyles.compact.copy(fontSize = 9.sp, lineHeight = 9.sp, fontWeight = FontWeight.Bold),
+                text = label,
+                style = IslandTextStyles.compact.copy(fontSize = fontSp, lineHeight = fontSp, fontWeight = FontWeight.Bold),
                 maxLines = 1,
+                softWrap = false,
             )
         }
     }

@@ -14,6 +14,8 @@ class IslandBackdropSlot {
     var content by mutableStateOf<(@Composable () -> Unit)?>(null)
 }
 
+val LocalIslandCollapse = staticCompositionLocalOf<() -> Float> { { 0f } }
+
 val LocalIslandBackdropSlot = staticCompositionLocalOf<IslandBackdropSlot?> { null }
 
 @Composable

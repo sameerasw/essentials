@@ -20,6 +20,8 @@ import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 
 @RequiresApi(Build.VERSION_CODES.N)
 class FlashlightTileService : BaseTileService() {
+    override fun isDeviceSupported(): Boolean = !com.sameerasw.essentials.utils.DeviceUtils.isTorchRestrictedDevice()
+
     private var isTorchOn = false
     private val cameraManager by lazy { getSystemService(CAMERA_SERVICE) as CameraManager }
 

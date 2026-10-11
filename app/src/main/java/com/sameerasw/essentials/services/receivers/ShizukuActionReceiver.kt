@@ -16,6 +16,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 class ShizukuActionReceiver : BroadcastReceiver() {
@@ -28,7 +29,7 @@ class ShizukuActionReceiver : BroadcastReceiver() {
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
             notificationManager?.cancel(9001)
 
-            if (!ShizukuUtils.isSheveryFork(context)) {
+            if (ShellUtils.usesAuthToken(context)) {
                 val token = SettingsRepository(context).getShizukuAuthToken()
                 if (token.isEmpty()) {
                     Toast

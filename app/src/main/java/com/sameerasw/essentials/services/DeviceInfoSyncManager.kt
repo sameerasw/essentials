@@ -128,8 +128,10 @@ object DeviceInfoSyncManager {
         )
 
         // Sync on flashlight change
-        val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        cameraManager.registerTorchCallback(torchCallback, handler)
+        if (!com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) {
+            val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            cameraManager.registerTorchCallback(torchCallback, handler)
+        }
 
         // Sync on AOD change
         val aodUri =

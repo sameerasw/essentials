@@ -169,6 +169,7 @@ class StatusGlanceHandler(
                 queryUpcomingCalendarEvent()
                 reEvaluateAndApplyMedia(isInitial = true)
                 syncConfigToView()
+                applyOrientationVisibility()
             } else {
                 removeOverlay()
                 unregisterTorchCallback()
@@ -178,6 +179,16 @@ class StatusGlanceHandler(
                 unregisterBatteryReceiver()
             }
         }
+    }
+
+    private fun isPlacementHidden(): Boolean =
+        if (settingsRepository.isFoldableDevice()) settingsRepository.isStatusGlanceHiddenInCurrentOrientation()
+        else isLandscape
+
+    private fun applyOrientationVisibility() {
+        glanceView?.isLandscape = isPlacementHidden()
+        glanceView?.visibility = if (isPlacementHidden()) View.GONE else View.VISIBLE
+        updateTouchAnchor()
     }
 
     fun setFullscreen(fullscreen: Boolean) {
@@ -263,7 +274,7 @@ class StatusGlanceHandler(
             v.mediaArtworkBitmap = cachedMediaArtwork
 
             isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            v.isLandscape = isLandscape
+            v.isLandscape = isPlacementHidden()
             v.isFullscreen = isFullscreen
             v.isShadeExpanded = isShadeExpanded
             v.isLocked = isLocked
@@ -287,6 +298,7 @@ class StatusGlanceHandler(
         val params = getOverlayLayoutParams()
 
         try {
+            glanceView?.playEnter()
             wm.addView(glanceView, params)
             isOverlayAdded = true
             updateGlancePosition()
@@ -344,7 +356,7 @@ class StatusGlanceHandler(
 
     @Suppress("DEPRECATION")
     private fun updateTouchAnchor() {
-        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || (isLocked && settingsRepository.isStatusGlanceHideWhenLockedEnabled()) || isLandscape || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
+        if (!settingsRepository.isStatusGlanceEnabled() || glanceView == null || windowManager == null || isScreenOff || (isLocked && settingsRepository.isStatusGlanceHideWhenLockedEnabled()) || isPlacementHidden() || (isFullscreen && settingsRepository.isStatusGlanceHideWhenFullscreenEnabled()) || (isShadeExpanded && settingsRepository.isStatusGlanceHideInQuickSettingsEnabled())) {
             removeTouchAnchor()
             return
         }
@@ -687,6 +699,7 @@ class StatusGlanceHandler(
     }
 
     private fun registerTorchCallback() {
+        if (com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) return
         if (isTorchCallbackRegistered) return
         try {
             cameraManager.registerTorchCallback(torchCallback, mainHandler)
@@ -939,6 +952,7 @@ class StatusGlanceHandler(
     }
 
     private fun getCameraId(): String? {
+        if (com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) return null
         return try {
             cameraManager.cameraIdList.firstOrNull { id ->
                 val chars = cameraManager.getCameraCharacteristics(id)
@@ -996,29 +1010,40 @@ class StatusGlanceHandler(
         val isNightMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         glanceView?.isDarkTheme = isNightMode
         isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-        glanceView?.isLandscape = isLandscape
+        applyOrientationVisibility()
         if (settingsRepository.isStatusGlanceEnabled()) {
             mainHandler.postDelayed({
                 updateGlancePosition()
+                applyOrientationVisibility()
             }, 300)
         }
     }
 
-    private fun removeOverlay() {
-        if (isOverlayAdded && glanceView != null && windowManager != null) {
-            try {
-                windowManager?.removeView(glanceView)
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun removeOverlay(animate: Boolean = true) {
+        val fading = glanceView
+        val wm = windowManager
+        if (isOverlayAdded && fading != null && wm != null) {
+            val remove = {
+                try {
+                    wm.removeView(fading)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
             isOverlayAdded = false
             glanceView = null
+            if (animate) fading.playExit(remove) else remove()
         }
         removeTouchAnchor()
     }
 
+    fun restart() {
+        removeOverlay(animate = false)
+        updateState()
+    }
+
     fun destroy() {
-        removeOverlay()
+        removeOverlay(animate = false)
         touchAnchorView = null
         touchHandler = null
         unregisterTorchCallback()

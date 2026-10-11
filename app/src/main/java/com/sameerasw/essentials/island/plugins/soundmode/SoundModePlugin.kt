@@ -21,7 +21,7 @@ import com.sameerasw.essentials.island.ui.components.IslandIcon
 class SoundModePlugin : BaseIslandPlugin() {
     override val id = "sound_mode"
 
-    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_SOUND_MODE)
+    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_SOUND_MODE, SettingsRepository.KEY_ISLAND_SOUND_MODE_KEEP_ICON)
 
     private val audioManager by lazy { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var mode = AudioManager.RINGER_MODE_NORMAL
@@ -99,6 +99,10 @@ class SoundModePlugin : BaseIslandPlugin() {
             return
         }
         if (mode == AudioManager.RINGER_MODE_NORMAL && !announcing) {
+            publish(null)
+            return
+        }
+        if (!announcing && !settings.isIslandSoundModeKeepIconEnabled()) {
             publish(null)
             return
         }

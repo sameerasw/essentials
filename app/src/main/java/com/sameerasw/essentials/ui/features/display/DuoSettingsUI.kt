@@ -56,8 +56,10 @@ import com.sameerasw.essentials.ui.core.sheets.DeviceEffectsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.FreezeTagSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.HilightEffectSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
@@ -86,7 +88,8 @@ fun DuoSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     val displayConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
-    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp) {
+    LaunchedEffect(displayConfiguration.screenWidthDp, displayConfiguration.screenHeightDp,
+        displayConfiguration.orientation) {
         viewModel.refreshDuoCameraPlacement()
     }
 
@@ -113,11 +116,13 @@ fun DuoSettingsUI(
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
     var showFreezeTagSettings by remember { mutableStateOf(false) }
     var showOpenAppSettings by remember { mutableStateOf(false) }
+    var showOpenActivitySettings by remember { mutableStateOf(false) }
     var showFreezeAppsSettings by remember { mutableStateOf(false) }
     var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
     var showSetKeyboardSheet by remember { mutableStateOf(false) }
     var showCustomSettingsSettings by remember { mutableStateOf(false) }
     var showSetVolumeSettings by remember { mutableStateOf(false) }
+    var showHilightSettings by remember { mutableStateOf(false) }
     var configAction by remember { mutableStateOf<Action?>(null) }
 
     var showPermissionSheet by remember { mutableStateOf(false) }
@@ -145,6 +150,8 @@ fun DuoSettingsUI(
                 "WRITE_SETTINGS" -> !viewModel.isWriteSettingsEnabled.value
                 "NOTIFICATION_POLICY" -> !viewModel.isNotificationPolicyAccessGranted.value
                 "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
+                "DRAW_OVERLAYS" -> !viewModel.isOverlayPermissionGranted.value
+                "ACCESSIBILITY" -> !viewModel.isAccessibilityEnabled.value
                 else -> false
             }
         }
@@ -210,6 +217,26 @@ fun DuoSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            if (viewModel.isFoldableCameraDevice.value) {
+                Text(
+                    text = stringResource(R.string.foldable_camera_profile_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_center_focus_strong_24,
+                    title = stringResource(R.string.foldable_orientation_profiles_title),
+                    isChecked = viewModel.isDuoOrientationProfiles.value,
+                    onCheckedChange = { viewModel.setDuoOrientationProfiles(it) },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_visibility_off_24,
+                    title = stringResource(R.string.foldable_hide_current_orientation_title),
+                    isChecked = viewModel.isDuoHiddenInCurrentOrientation.value,
+                    onCheckedChange = { viewModel.setDuoHiddenInCurrentOrientation(it) },
+                )
+            }
             IconToggleItem(
                 iconRes = R.drawable.rounded_center_focus_strong_24,
                 title = stringResource(R.string.duo_auto_detect_title),
@@ -898,6 +925,7 @@ fun DuoSettingsUI(
                                         is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                         is Action.FreezeTag -> showFreezeTagSettings = true
                                         is Action.OpenApp -> showOpenAppSettings = true
+                                        is Action.OpenActivity -> showOpenActivitySettings = true
                                         is Action.FreezeApps -> {
                                             temporarySelectedAppsForAction = resolvedAction.packageNames
                                             showFreezeAppsSettings = true
@@ -908,6 +936,7 @@ fun DuoSettingsUI(
                                         }
                                         is Action.Keyboard -> showSetKeyboardSheet = true
                                         is Action.SetVolume -> showSetVolumeSettings = true
+                                        is Action.Hilight -> showHilightSettings = true
                                         is Action.CustomSettings -> showCustomSettingsSettings = true
                                         else -> {}
                                     }
@@ -1042,6 +1071,18 @@ fun DuoSettingsUI(
         )
     }
 
+    if (showHilightSettings && configAction is Action.Hilight) {
+        HilightEffectSettingsSheet(
+            initialAction = configAction as Action.Hilight,
+            onDismiss = { showHilightSettings = false },
+            onSave = { newAction ->
+                showHilightSettings = false
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
     if (showSometimesEssentialsSettings && configAction is Action.SometimesEssentials) {
         SometimesEssentialsSettingsSheet(
             initialAction = configAction as Action.SometimesEssentials,
@@ -1072,9 +1113,20 @@ fun DuoSettingsUI(
 
     if (showOpenAppSettings) {
         SingleAppSelectionSheet(
+            includeSelf = true,
             onDismissRequest = { showOpenAppSettings = false },
             onAppSelected = { app ->
                 val newAction = Action.OpenApp(packageName = app.packageName)
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
+    if (showOpenActivitySettings) {
+        OpenActivityPicker(
+            onDismiss = { showOpenActivitySettings = false },
+            onActivitySelected = { newAction ->
                 applyActionForGesture(activeConfigGesture, newAction)
                 configAction = null
             },
@@ -1206,4 +1258,3 @@ fun DuoSettingsUI(
         )
     }
 }
-

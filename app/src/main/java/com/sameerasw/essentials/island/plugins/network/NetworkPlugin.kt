@@ -32,6 +32,7 @@ class NetworkPlugin : BaseIslandPlugin() {
 
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_SHOW_NETWORK,
+        SettingsRepository.KEY_ISLAND_NETWORK_ACTIVITY,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
     )
 
@@ -129,7 +130,7 @@ class NetworkPlugin : BaseIslandPlugin() {
 
     private fun announce(connected: Boolean) {
         val c = ctx ?: return
-        if (!settings.isIslandShowNetworkEnabled() || !settings.isIslandLineStageEnabled()) return
+        if (!activityEnabled() || !settings.isIslandLineStageEnabled()) return
         val duration = settings.getIslandPeekDurationMs()
         event = WifiEvent(connected, ssid ?: context.getString(R.string.island_network_wifi))
         render()
@@ -138,11 +139,13 @@ class NetworkPlugin : BaseIslandPlugin() {
         c.mainHandler.postDelayed(clearEvent, duration + 500L)
     }
 
+    private fun activityEnabled() = settings.isIslandShowNetworkEnabled() && settings.isIslandNetworkActivityEnabled()
+
     private fun readAirplane(): Boolean =
         Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1
 
     private fun render() {
-        if (ctx == null || !settings.isIslandShowNetworkEnabled()) {
+        if (ctx == null || !activityEnabled()) {
             publish(null)
             return
         }

@@ -64,46 +64,51 @@ object StatusBarManager {
     }
 
     private var lastAppliedCommand: String? = null
+    private val lock = Any()
+
+    private fun persistentFlags(context: Context, includeSystemIcons: Boolean): MutableSet<String> {
+        val flags = mutableSetOf<String>()
+        val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val isHideSystemIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
+        val isHideSystemIconsLockedOnly = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+        if (includeSystemIcons && isHideSystemIcons && !isHideSystemIconsLockedOnly) flags.add(FLAG_SYSTEM_ICONS)
+        if (prefs.getBoolean(SettingsRepository.KEY_HIDE_CLOCK, false)) flags.add(FLAG_CLOCK)
+        if (prefs.getBoolean(SettingsRepository.KEY_HIDE_NOTIFICATION_ICONS, false)) flags.add(FLAG_NOTIFICATION_ICONS)
+        if (prefs.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, false)) flags.add(FLAG_HOME)
+        return flags
+    }
+
+    private fun commandFor(flags: Set<String>) =
+        if (flags.isEmpty()) {
+            "cmd statusbar send-disable-flag none"
+        } else {
+            "cmd statusbar send-disable-flag ${flags.joinToString(" ")}"
+        }
 
     /**
      * Aggregate all active disable requests along with persistent settings and apply the final status bar state.
      */
     fun update(context: Context) {
+        synchronized(lock) {
+            applyLocked(context, force = false)
+        }
+    }
+
+    private fun applyLocked(context: Context, force: Boolean) {
         val allFlags = disableRequests.values.flatten().toMutableSet()
+        allFlags.addAll(persistentFlags(context, includeSystemIcons = true))
 
-        val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        val isHideSystemIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
-        val isHideSystemIconsLockedOnly = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
-        val isHideClock = prefs.getBoolean(SettingsRepository.KEY_HIDE_CLOCK, false)
-        val isHideNotificationIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_NOTIFICATION_ICONS, false)
+        val command = commandFor(allFlags)
 
-        if (isHideSystemIcons && !isHideSystemIconsLockedOnly) {
-            allFlags.add(FLAG_SYSTEM_ICONS)
-        }
-        if (isHideClock) {
-            allFlags.add(FLAG_CLOCK)
-        }
-        if (isHideNotificationIcons) {
-            allFlags.add(FLAG_NOTIFICATION_ICONS)
-        }
-
-        if (allFlags.isEmpty() && (lastAppliedCommand == null || lastAppliedCommand == "cmd statusbar send-disable-flag none")) {
+        if (!force && allFlags.isEmpty() && (lastAppliedCommand == null || lastAppliedCommand == commandFor(emptySet()))) {
             return
         }
 
-        // Don't execute shell commands if shell/Shizuku permission isn't available
         if (!ShellUtils.hasPermission(context)) {
             return
         }
 
-        val command =
-            if (allFlags.isEmpty()) {
-                "cmd statusbar send-disable-flag none"
-            } else {
-                "cmd statusbar send-disable-flag ${allFlags.joinToString(" ")}"
-            }
-
-        if (command == lastAppliedCommand) return
+        if (!force && command == lastAppliedCommand) return
         lastAppliedCommand = command
 
         ShellUtils.runCommand(
@@ -116,41 +121,32 @@ object StatusBarManager {
 
     /**
      * Re-assert status bar disable flags after keyguard unlock or transition.
-     * Forces a state delta in system_server so the disable event is dispatched
-     * to SystemUI to prevent system icons from unhiding.
+     * System UI can drop disable flags across keyguard transitions, so the last command is re-sent even when unchanged.
+     * When system icons are hidden, a delta without them is sent first so the disable event is dispatched to SystemUI.
      */
     fun reassertFlags(context: Context) {
         if (!ShellUtils.hasPermission(context)) return
 
         CoroutineScope(Dispatchers.IO).launch {
-            val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-            val isHideSystemIcons = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
-            val isHideSystemIconsLockedOnly = prefs.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+            val hidesSystemIcons = synchronized(lock) {
+                FLAG_SYSTEM_ICONS in persistentFlags(context, includeSystemIcons = true)
+            }
 
-            if (isHideSystemIcons && !isHideSystemIconsLockedOnly) {
-                // Allow SystemUI keyguard dismissal animation to complete
+            if (hidesSystemIcons) {
                 delay(250)
-
-                val tempFlags = disableRequests.values.flatten().toMutableSet()
-                if (prefs.getBoolean(SettingsRepository.KEY_HIDE_CLOCK, false)) tempFlags.add(FLAG_CLOCK)
-                if (prefs.getBoolean(SettingsRepository.KEY_HIDE_NOTIFICATION_ICONS, false)) tempFlags.add(FLAG_NOTIFICATION_ICONS)
-
-                val tempCmd =
-                    if (tempFlags.isEmpty()) {
-                        "cmd statusbar send-disable-flag none"
-                    } else {
-                        "cmd statusbar send-disable-flag ${tempFlags.joinToString(" ")}"
-                    }
-
-                ShellUtils.runCommand(
-                    context,
-                    tempCmd,
-                    featureName = context.getString(R.string.feat_statusbar_icons_title),
-                    notifyOnError = false,
-                )
+                synchronized(lock) {
+                    val tempFlags = disableRequests.values.flatten().toMutableSet()
+                    tempFlags.addAll(persistentFlags(context, includeSystemIcons = false))
+                    ShellUtils.runCommand(
+                        context,
+                        commandFor(tempFlags),
+                        featureName = context.getString(R.string.feat_statusbar_icons_title),
+                        notifyOnError = false,
+                    )
+                }
                 delay(50)
             }
-            update(context)
+            synchronized(lock) { applyLocked(context, force = true) }
         }
     }
 

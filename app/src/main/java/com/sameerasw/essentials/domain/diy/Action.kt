@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.domain.diy
 
+import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
 import androidx.annotation.StringRes
@@ -16,6 +17,12 @@ import com.google.gson.annotations.SerializedName
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.ScreenOffMethod
+import com.sameerasw.essentials.domain.model.ActivityIconSource
+import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.HilightPattern
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.utils.battery.ChargingMode
 
 @Keep
@@ -34,6 +41,22 @@ sealed interface Action {
     data object HapticVibration : Action {
         override val title: Int = R.string.diy_action_haptic
         override val icon: Int = R.drawable.rounded_mobile_vibrate_24
+    }
+
+    @Keep
+    data class Hilight(
+        @SerializedName("pattern") val pattern: HilightPattern = HilightPattern.GLOW,
+        @SerializedName("color") val color: Int = HilightEffect.DEFAULT_COLOR,
+        @SerializedName("durationMs") val durationMs: Long = HilightEffect.DEFAULT_DURATION_MS,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_hilight
+        override val icon: Int get() = R.drawable.rounded_auto_awesome_24
+        override val isConfigurable: Boolean get() = true
+        override val permissions: List<String> get() = listOf("SHIZUKU")
+
+        // Gson sets an unknown pattern name to null despite the non-null type
+        @Suppress("USELESS_ELVIS")
+        fun toEffect() = HilightEffect(pattern ?: HilightPattern.GLOW, color, durationMs)
     }
 
     @Keep
@@ -198,6 +221,32 @@ sealed interface Action {
     }
 
     @Keep
+    data object ToggleDoNotDisturb : Action {
+        override val title: Int = R.string.diy_action_toggle_dnd
+        override val icon: Int = R.drawable.rounded_do_not_disturb_on_24
+        override val permissions: List<String> = listOf("NOTIFICATION_POLICY")
+    }
+
+    @Keep
+    data object OpenCamera : Action {
+        override val title: Int = R.string.diy_action_open_camera
+        override val icon: Int = R.drawable.rounded_photo_camera_24
+    }
+
+    @Keep
+    data object OpenQrScanner : Action {
+        override val title: Int = R.string.diy_action_open_qr_scanner
+        override val icon: Int = R.drawable.rounded_qr_code_24
+        override val permissions: List<String> = listOf("SHIZUKU")
+    }
+
+    @Keep
+    data object OpenVideoCamera : Action {
+        override val title: Int = R.string.diy_action_open_video_camera
+        override val icon: Int = R.drawable.rounded_videocam_24
+    }
+
+    @Keep
     data object ToggleVibrate : Action {
         override val title: Int = R.string.diy_action_toggle_vibrate
         override val icon: Int = R.drawable.rounded_mobile_vibrate_24
@@ -320,12 +369,54 @@ sealed interface Action {
     }
 
     @Keep
+    data class TriggerNotificationLighting(
+        @SerializedName("style") val style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
+        @SerializedName("colorMode") val colorMode: NotificationLightingColorMode = NotificationLightingColorMode.SYSTEM,
+        @SerializedName("customColor") val customColor: Int = 0xFF6200EE.toInt(),
+        @SerializedName("pulseCount") val pulseCount: Int = 1,
+        @SerializedName("pulseDuration") val pulseDuration: Long = 3000L,
+        @SerializedName("glowSides") val glowSides: Set<NotificationLightingSide> =
+            setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT),
+        @SerializedName("systemMode") val systemMode: Int = 0,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_notification_lighting
+        override val icon: Int get() = R.drawable.rounded_magnify_fullscreen_24
+        override val isConfigurable: Boolean = true
+        override val permissions: List<String>
+            get() =
+                if (style == NotificationLightingStyle.SYSTEM) {
+                    listOf("SHIZUKU", "ROOT")
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    listOf("DRAW_OVERLAYS", "ACCESSIBILITY")
+                } else {
+                    listOf("DRAW_OVERLAYS")
+                }
+    }
+
+    @Keep
     data class OpenApp(
         @SerializedName("packageName") val packageName: String = "",
     ) : Action {
         override val title: Int get() = R.string.diy_action_open_app
         override val icon: Int get() = R.drawable.rounded_open_in_new_24
         override val isConfigurable: Boolean = true
+    }
+
+    @Keep
+    data class OpenActivity(
+        @SerializedName("packageName") val packageName: String = "",
+        @SerializedName("className") val className: String = "",
+        @SerializedName("label") val label: String = "",
+        @SerializedName("requiresRoot") val requiresRoot: Boolean = false,
+        @SerializedName("iconSource") val iconSource: ActivityIconSource = ActivityIconSource.ACTIVITY,
+        @SerializedName("customIconPath") val customIconPath: String = "",
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_open_activity
+        override val icon: Int get() = R.drawable.rounded_app_registration_24
+        override val isConfigurable: Boolean get() = true
+
+        // Shizuku's shell user is refused for other apps' non-exported activities, root is not
+        override val permissions: List<String> get() = if (requiresRoot) listOf("ROOT") else emptyList()
     }
 
     @Keep
@@ -340,6 +431,86 @@ sealed interface Action {
         override val title: Int = R.string.diy_action_hotspot_off
         override val icon: Int = R.drawable.rounded_wifi_tethering_24
         override val permissions: List<String> = listOf("shizuku", "root")
+    }
+
+    @Keep
+    data object TurnOnDuo : Action {
+        override val title: Int = R.string.diy_action_duo_turnon
+        override val icon: Int = R.drawable.rounded_motion_play_24
+    }
+
+    @Keep
+    data object TurnOffDuo : Action {
+        override val title: Int = R.string.diy_action_duo_turnoff
+        override val icon: Int = R.drawable.rounded_motion_play_24
+    }
+
+    @Keep
+    data object ToggleDuo : Action {
+        override val title: Int = R.string.diy_action_duo_toggle
+        override val icon: Int = R.drawable.rounded_motion_play_24
+    }
+
+    @Keep
+    data object TurnOnIsland : Action {
+        override val title: Int = R.string.diy_action_island_turnon
+        override val icon: Int = R.drawable.rounded_upcoming_24
+    }
+
+    @Keep
+    data object TurnOffIsland : Action {
+        override val title: Int = R.string.diy_action_island_turnoff
+        override val icon: Int = R.drawable.rounded_upcoming_24
+    }
+
+    @Keep
+    data object ToggleIsland : Action {
+        override val title: Int = R.string.diy_action_island_toggle
+        override val icon: Int = R.drawable.rounded_upcoming_24
+    }
+
+    @Keep
+    data object TurnOnStatusGlance : Action {
+        override val title: Int = R.string.diy_action_statusglance_turnon
+        override val icon: Int = R.drawable.rounded_ad_units_24
+    }
+
+    @Keep
+    data object TurnOffStatusGlance : Action {
+        override val title: Int = R.string.diy_action_statusglance_turnoff
+        override val icon: Int = R.drawable.rounded_ad_units_24
+    }
+
+    @Keep
+    data object ToggleStatusGlance : Action {
+        override val title: Int = R.string.diy_action_statusglance_toggle
+        override val icon: Int = R.drawable.rounded_ad_units_24
+    }
+
+    @Keep
+    enum class OverlayMode {
+        @SerializedName("SKIP")
+        SKIP,
+
+        @SerializedName("OFF")
+        OFF,
+
+        @SerializedName("ON")
+        ON,
+
+        @SerializedName("TOGGLE")
+        TOGGLE,
+    }
+
+    @Keep
+    data class OverlayControl(
+        @SerializedName("duo") val duo: OverlayMode = OverlayMode.SKIP,
+        @SerializedName("island") val island: OverlayMode = OverlayMode.SKIP,
+        @SerializedName("statusGlance") val statusGlance: OverlayMode = OverlayMode.SKIP,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_overlay_control
+        override val icon: Int get() = R.drawable.rounded_upcoming_24
+        override val isConfigurable: Boolean = true
     }
 
     @Keep

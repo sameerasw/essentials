@@ -5,7 +5,6 @@ import android.graphics.drawable.Icon
 import android.os.Handler
 import android.os.Looper
 import android.os.VibrationEffect
-import android.os.Vibrator
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.util.Log
@@ -54,7 +53,7 @@ class HapticsTileService : BaseTileService() {
         }
         if (value == 1) {
             runCatching {
-                getSystemService(Vibrator::class.java)?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                com.sameerasw.essentials.utils.HapticUtil.vibrate(this, VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
             }.onFailure { Log.w("HapticsTile", "Could not vibrate for confirmation", it) }
         }
     }

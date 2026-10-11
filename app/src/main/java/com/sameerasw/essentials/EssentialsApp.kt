@@ -18,7 +18,12 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.services.receivers.SecurityReceiver
 import com.sameerasw.essentials.utils.ShizukuUtils
+import eu.darken.porter.bridge.PorterShizukuBridge
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import io.sentry.android.core.SentryAndroid
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
@@ -28,13 +33,14 @@ class EssentialsApp : Application() {
             private set
     }
 
-    private val securityReceiver =
-        com.sameerasw.essentials.services.receivers
-            .SecurityReceiver()
+    private val securityReceiver = SecurityReceiver()
 
     override fun onCreate() {
         super.onCreate()
+        com.sameerasw.essentials.utils.DeviceUtils.torchRestrictionLifted =
+            com.sameerasw.essentials.data.repository.SettingsRepository(this).isEnableUnsupportedFeatures()
         context = applicationContext
+        com.sameerasw.essentials.utils.HapticUtil.initialize(this)
 
         try {
             resources?.configuration
@@ -46,6 +52,7 @@ class EssentialsApp : Application() {
         } catch (_: Throwable) {
         }
 
+        PorterShizukuBridge.start(CoroutineScope(SupervisorJob() + Dispatchers.Default))
         ShizukuUtils.initialize()
         com.sameerasw.essentials.utils.CarConnectionMonitor
             .initialize(this)
@@ -72,6 +79,7 @@ class EssentialsApp : Application() {
         val intentFilter =
             IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_OFF)
+                addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_USER_PRESENT)
             }
 

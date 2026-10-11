@@ -2,6 +2,7 @@ package com.sameerasw.essentials.island.service
 
 import android.provider.Settings
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
+import com.sameerasw.essentials.island.plugins.batteryalerts.BatteryAlertsPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.plugins.call.CallPlugin
 import com.sameerasw.essentials.island.plugins.snippets.SnippetIslandPlugin
@@ -26,24 +27,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import android.graphics.Color as AndroidColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.gestures.CompactGestureController
+import com.sameerasw.essentials.island.gestures.HiddenGestureDetector
 import com.sameerasw.essentials.island.gestures.CompactGestures
+import com.sameerasw.essentials.island.state.IslandUiState
 import com.sameerasw.essentials.island.model.IslandPlugin
+import com.sameerasw.essentials.island.model.IslandPriorityEntries
 import com.sameerasw.essentials.island.model.IslandPluginContext
 import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.plugins.calendar.CalendarPlugin
 import com.sameerasw.essentials.island.plugins.consciousgate.ConsciousGatePlugin
 import com.sameerasw.essentials.island.plugins.flashlight.FlashlightPlugin
 import com.sameerasw.essentials.island.plugins.network.NetworkPlugin
+import com.sameerasw.essentials.island.plugins.signal.SignalPlugin
 import com.sameerasw.essentials.island.plugins.devices.DevicesPlugin
 import com.sameerasw.essentials.island.plugins.brief.BriefPlugin
 import com.sameerasw.essentials.island.plugins.progress.ProgressPlugin
 import com.sameerasw.essentials.island.plugins.soundmode.SoundModePlugin
-import com.sameerasw.essentials.island.plugins.weather.WeatherPlugin
+import com.sameerasw.essentials.island.remote.ProviderPriorities
+import com.sameerasw.essentials.island.remote.RemoteProvidersPlugin
 import com.sameerasw.essentials.island.plugins.travel.TravelPlugin
 import com.sameerasw.essentials.island.plugins.caffeinate.CaffeinatePlugin
 import com.sameerasw.essentials.island.plugins.media.MediaPlugin
@@ -57,6 +64,7 @@ import com.sameerasw.essentials.island.state.IslandController
 import com.sameerasw.essentials.island.ui.IslandActions
 import com.sameerasw.essentials.island.ui.IslandFontFamily
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
+import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.IslandRoot
 import com.sameerasw.essentials.utils.ShellUtils
 import kotlinx.coroutines.CoroutineScope
@@ -99,8 +107,23 @@ class IslandCoordinator(
         },
         anchorProvider = { geometry?.anchor ?: CameraAnchor.Center },
     )
-
     private val snippetPlugin = SnippetIslandPlugin()
+    private val latestItems = HashMap<String, List<IslandItem>>()
+    private var userPriorities: Map<String, Int> = emptyMap()
+
+    private fun publishItems(pluginId: String, items: List<IslandItem>) {
+        latestItems[pluginId] = items
+        items.forEach { it.userPriority = userPriorities[it.priorityGroup ?: pluginId] }
+        controller.setItems(pluginId, items)
+    }
+
+    private fun resolvePriorities(): Map<String, Int> =
+        IslandPriorityEntries.resolve(settings.getIslandPriorityOrder(), ProviderPriorities.entries(service, settings))
+
+    private fun reloadPriorities() {
+        userPriorities = resolvePriorities()
+        latestItems.toMap().forEach { (id, items) -> publishItems(id, items) }
+    }
 
     private val plugins: List<IslandPlugin> = listOf(
         CallPlugin(),
@@ -114,12 +137,14 @@ class IslandCoordinator(
         TimerPlugin(),
         SoundModePlugin(),
         AlarmPlugin(),
-        WeatherPlugin(),
+        RemoteProvidersPlugin(),
         CaffeinatePlugin(),
         TravelPlugin(),
         NetworkPlugin(),
+        SignalPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
+        BatteryAlertsPlugin(),
         snippetPlugin,
     )
 
@@ -136,7 +161,12 @@ class IslandCoordinator(
     private var foregroundPackage: String? = null
     private var textInputActive = false
 
-    private val isWindowSuppressed get() = isLandscape || isFullscreenApp
+    private val isWindowSuppressed get() = isFullscreenApp ||
+        if (settings.isFoldableDevice()) {
+            settings.isIslandHiddenInCurrentOrientation()
+        } else {
+            isLandscape && !settings.isIslandKeepOnLandscapeEnabled()
+        }
     private val isContentSuppressed: Boolean
         get() = isWindowSuppressed ||
             when (settings.getIslandShowWhen()) {
@@ -152,6 +182,17 @@ class IslandCoordinator(
         scope = { scope },
         openBrief = { openBrief() },
     )
+
+    private val hiddenGestures = HiddenGestureDetector(
+        context = service,
+        gestures = { compactGestures },
+        onTap = { if (settings.isIslandBriefEnabled()) openBrief() },
+        onFeedback = { controller.setFeedbackActive(it) },
+    )
+
+    private fun syncGestureHitbox() {
+        windowHost.setAlwaysGestures(running && settings.isIslandAlwaysGesturesEnabled() && !isContentSuppressed)
+    }
 
     private val actions = object : IslandActions {
         override val compactGestures: CompactGestures get() = this@IslandCoordinator.compactGestures
@@ -206,7 +247,7 @@ class IslandCoordinator(
         controller.onStageChanged = { stage ->
             if (stage != IslandStage.Expanded) windowHost.setTextInput(false)
             windowHost.onStageChanged(stage)
-            syncStatusBar(stage)
+            syncStatusBar()
             reportVisibility(stage != IslandStage.Hidden)
         }
         settings.setIslandPreviewRingEnabled(false)
@@ -231,7 +272,7 @@ class IslandCoordinator(
     fun updateState() {
         mainHandler.post {
             val shouldRun = settings.isIslandEnabled() && !isWindowSuppressed
-            if (shouldRun) start() else stop()
+            if (shouldRun) start() else stop(animate = true)
             if (running) {
                 applyConfig()
                 applySuppression()
@@ -347,6 +388,13 @@ class IslandCoordinator(
         mainHandler.post { snippetPlugin.hideSnippet() }
     }
 
+    fun restart() {
+        mainHandler.post {
+            stop()
+            updateState()
+        }
+    }
+
     fun onDestroy() {
         mainHandler.removeCallbacks(applyForegroundPackage)
         mainHandler.removeCallbacks(applyFullscreen)
@@ -360,14 +408,23 @@ class IslandCoordinator(
     }
 
     private fun start() {
+        pendingStop?.let {
+            mainHandler.removeCallbacks(it)
+            pendingStop = null
+            hiding = false
+            applySuppression()
+        }
         if (running) return
         running = true
+        revealing = true
+        controller.setSuppressed(true)
         applyLauncherOnly()
         val newScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         scope = newScope
         applyConfig()
         val geo = geometry ?: return
         windowHost.onOutsideTouch = ::onOutsideTouch
+        windowHost.hiddenTouch = hiddenGestures::onTouch
         val attached = windowHost.attach(geo) {
             val state by controller.state.collectAsState()
             val layoutSpec by spec.collectAsState()
@@ -389,10 +446,12 @@ class IslandCoordinator(
         // Fails until the accessibility service is connected; onServiceConnected calls updateState() again.
         if (!attached) {
             running = false
+            revealing = false
             newScope.cancel()
             scope = null
             return
         }
+        mainHandler.postDelayed(endReveal, REVEAL_DELAY_MS)
         val context = IslandPluginContext(
             service = service,
             settings = settings,
@@ -403,9 +462,17 @@ class IslandCoordinator(
             currentStage = { controller.state.value.stage },
             focusedKey = { controller.state.value.focusedKey },
         )
+        latestItems.clear()
+        userPriorities = resolvePriorities()
         plugins.forEach { plugin ->
             plugin.start(context)
-            newScope.launch { plugin.items.collect { controller.setItems(plugin.id, it) } }
+            newScope.launch { plugin.items.collect { publishItems(plugin.id, it) } }
+        }
+        newScope.launch {
+            controller.state
+                .map { it.stage to complicationCount(it) }
+                .distinctUntilChanged()
+                .collect { syncStatusBar() }
         }
         newScope.launch {
             controller.state
@@ -463,8 +530,31 @@ class IslandCoordinator(
         compactVisible = false,
     )
 
-    private fun stop() {
+    private var revealing = false
+    private var hiding = false
+    private var pendingStop: Runnable? = null
+    private val endReveal = Runnable {
+        revealing = false
+        applySuppression()
+    }
+
+    private fun stop(animate: Boolean = false) {
         if (!running) return
+        if (animate) {
+            if (pendingStop != null) return
+            hiding = true
+            applySuppression()
+            val task = Runnable {
+                pendingStop = null
+                hiding = false
+                stop()
+            }
+            pendingStop = task
+            mainHandler.postDelayed(task, IslandMotion.COLLAPSE_MS + HIDE_SETTLE_MS)
+            return
+        }
+        mainHandler.removeCallbacks(endReveal)
+        revealing = false
         running = false
         controller.holdFocus = false
         controller.setItems(PREVIEW_SOURCE, emptyList())
@@ -491,7 +581,8 @@ class IslandCoordinator(
             CameraAnchor.Start -> screenWidthDp - (geo.centerX / density - slotDp / 2f) - 8f
             CameraAnchor.End -> geo.centerX / density + slotDp / 2f - 8f
         }.coerceAtLeast(slotDp * 3f)
-        val scale = settings.getIslandExpandedScale().coerceIn(1f, 1.3f)
+        val flatExpanded = !geo.hasCamera && settings.isIslandBondEdgeEnabled()
+        val scale = if (flatExpanded) 1f else settings.getIslandExpandedScale().coerceIn(1f, 1.3f)
         val lineWidth = minOf(settings.getIslandMaxWidth(), available)
         val expandedWidth = minOf(settings.getIslandExpandedWidth(), available / scale)
         spec.value = IslandLayoutSpec(
@@ -505,16 +596,21 @@ class IslandCoordinator(
             expandedPadding = settings.getIslandExpandedPadding().dp,
             expandedTopPadding = settings.getIslandExpandedTopPadding().dp,
             expandedBottomPadding = settings.getIslandExpandedBottomPadding().dp,
-            expandedScale = settings.getIslandExpandedScale().coerceIn(1f, 1.3f),
+            expandedScale = scale,
             fontScale = settings.getIslandFontScale().coerceIn(0.8f, 1.3f),
             expandedOutset = (expandedWidth * (scale - 1f) / 2f).dp,
             cameraAnchor = geo.anchor,
+            cameraPresence = if (geo.hasCamera) 1f else 0f,
+            landscape = isLandscape,
+            bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
+            maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
                 runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
                     .getOrElse { Color(AndroidColor.parseColor(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)) }
             } else {
                 null
             },
+            outlineDynamic = settings.isIslandBorderOutlineDynamicEnabled(),
             outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
             outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
             pulseShadow = settings.isIslandPulseShadowEnabled(),
@@ -523,32 +619,47 @@ class IslandCoordinator(
             pulseSpread = settings.getIslandPulseShadowSpread().coerceIn(1f, 4f),
             pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
         )
-        windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * settings.getIslandExpandedScale().coerceIn(1f, 1.3f)) * density).toInt()
+        windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * scale) * density).toInt()
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
+        controller.maxCells = settings.getIslandMaxItems() * 2
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
     }
 
     private fun applySuppression() {
-        controller.setSuppressed(isContentSuppressed)
+        controller.setSuppressed(isContentSuppressed || revealing || hiding)
+        syncGestureHitbox()
     }
 
-    private fun syncStatusBar(stage: IslandStage) {
-        val enabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, false)
-        if (!enabled || !ShellUtils.hasPermission(service)) {
+    private fun complicationCount(state: IslandUiState): Int =
+        state.arrangement.visibleItems.count { state.items[it]?.placement == CompactPlacement.Dynamic } +
+            if (state.sideBubble != null) 1 else 0
+
+    private fun syncStatusBar() {
+        val dynamic = settings.getBoolean(SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, false)
+        val compact = settings.getBoolean(SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR, false)
+        if ((!dynamic && !compact) || !ShellUtils.hasPermission(service)) {
             IslandStatusBarHider.restore(service)
             return
         }
-        IslandStatusBarHider.apply(service, stage == IslandStage.Line || stage == IslandStage.Expanded)
+        val state = controller.state.value
+        val peekOrExpanded = dynamic && (state.stage == IslandStage.Line || state.stage == IslandStage.Expanded)
+        val crowdedCompact = compact && state.stage == IslandStage.Compact && complicationCount(state) >= 2
+        IslandStatusBarHider.apply(service, peekOrExpanded || crowdedCompact)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         key ?: return
-        when (key) {
-            SettingsRepository.KEY_ISLAND_ENABLED -> updateState()
-            SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR -> syncStatusBar(controller.state.value.stage)
+        val baseKey = key.substringBefore('@')
+        when (baseKey) {
+            SettingsRepository.KEY_ISLAND_ENABLED, SettingsRepository.KEY_ISLAND_KEEP_ON_LANDSCAPE -> updateState()
+            SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
+            SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE -> updateState()
+            SettingsRepository.KEY_ISLAND_ALWAYS_GESTURES -> syncGestureHitbox()
+            SettingsRepository.KEY_ISLAND_PRIORITY_ORDER, SettingsRepository.KEY_ISLAND_PROVIDERS -> if (running) reloadPriorities()
+            SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR -> syncStatusBar()
             SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
             SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values -> applyLauncherOnly()
@@ -563,12 +674,13 @@ class IslandCoordinator(
     }
 
     private companion object {
+        const val REVEAL_DELAY_MS = 120L
+        const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
         val LAUNCHER_ONLY_KEYS = mapOf(
             "time_battery" to SettingsRepository.KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY,
-            "weather" to SettingsRepository.KEY_ISLAND_WEATHER_LAUNCHER_ONLY,
             "calendar" to SettingsRepository.KEY_ISLAND_CALENDAR_LAUNCHER_ONLY,
             "alarm" to SettingsRepository.KEY_ISLAND_ALARM_LAUNCHER_ONLY,
         )
@@ -582,6 +694,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_ENABLED,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_COLOR,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_DYNAMIC,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_THICKNESS,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED,
             SettingsRepository.KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION,
@@ -598,6 +711,12 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_SCALE,
             SettingsRepository.KEY_ISLAND_FONT_SCALE,
             SettingsRepository.KEY_ISLAND_CAMERA_POSITION,
+            SettingsRepository.KEY_ISLAND_ORIENTATION_PROFILES,
+            SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
+            SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE,
+            SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
+            SettingsRepository.KEY_ISLAND_BOND_EDGE,
+            SettingsRepository.KEY_ISLAND_MAX_ITEMS,
         )
     }
 }
@@ -614,4 +733,3 @@ private val IslandTypography = Typography().run {
         titleSmall = titleSmall.copy(fontFamily = IslandFontFamily),
     )
 }
-

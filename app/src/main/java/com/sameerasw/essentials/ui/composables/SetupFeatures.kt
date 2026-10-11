@@ -416,7 +416,17 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://github.com/thedjchi/Shizuku".toUri(),
+                                                "https://github.com/rushiranpise/Shizuku-Next".toUri(),
+                                            )
+                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                        context.startActivity(intent)
+                                    },
+                                    secondaryActionLabel = R.string.perm_porter_install_action,
+                                    secondaryAction = {
+                                        val intent =
+                                            Intent(
+                                                Intent.ACTION_VIEW,
+                                                "https://github.com/d4rken-org/porter".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)
@@ -728,7 +738,17 @@ fun SetupFeatures(
                                         val intent =
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                "https://github.com/thedjchi/Shizuku".toUri(),
+                                                "https://github.com/rushiranpise/Shizuku-Next".toUri(),
+                                            )
+                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                        context.startActivity(intent)
+                                    },
+                                    secondaryActionLabel = R.string.perm_porter_install_action,
+                                    secondaryAction = {
+                                        val intent =
+                                            Intent(
+                                                Intent.ACTION_VIEW,
+                                                "https://github.com/d4rken-org/porter".toUri(),
                                             )
                                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                         context.startActivity(intent)

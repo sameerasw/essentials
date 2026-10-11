@@ -130,7 +130,7 @@ fun StatusBarIconSettingsUI(
                             val intent =
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://github.com/thedjchi/Shizuku"),
+                                    Uri.parse("https://github.com/rushiranpise/Shizuku-Next"),
                                 )
                             context.startActivity(intent)
                         },

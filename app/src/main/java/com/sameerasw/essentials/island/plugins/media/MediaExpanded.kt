@@ -3,10 +3,6 @@ package com.sameerasw.essentials.island.plugins.media
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
-import com.sameerasw.essentials.island.ui.components.cameraClearance
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.draw.drawBehind
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
 import android.os.SystemClock
@@ -18,7 +14,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,10 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -64,7 +60,7 @@ class MediaActions(
     val playPause: () -> Unit,
     val next: () -> Unit,
     val previous: (() -> Unit)?,
-    val like: () -> Unit,
+    val like: (() -> Unit)?,
     val progress: () -> Float,
     val canSeek: () -> Boolean = { false },
     val seekTo: (Float) -> Unit = {},
@@ -79,7 +75,8 @@ class MediaSnapshot(
     val liked: Boolean,
     val actions: MediaActions,
     val open: () -> Unit,
-    val likable: Boolean = false
+    val canSkipBack: Boolean = true,
+    val canSkipForward: Boolean = true,
 )
 
 object IslandMediaState {
@@ -97,7 +94,8 @@ fun MediaExpanded(
     liked: Boolean,
     actions: MediaActions,
     scope: IslandExpandedScope,
-    likable: Boolean = true,
+    canSkipBack: Boolean = false,
+    canSkipForward: Boolean = false,
     drawBackground: Boolean = true,
 ) {
     val spec = scope.spec
@@ -126,22 +124,15 @@ fun MediaExpanded(
         if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
             scope.ArtworkBackdrop(image, Modifier.matchParentSize())
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(spec.expandedOutset)
-                .padding(start = 12.dp, end = 12.dp, bottom = spec.expandedBottomPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.height(spec.cameraDiameter + 28.dp + spec.expandedTopPadding))
+        val art: @Composable (Dp) -> Unit = { artSize ->
             AnimatedContent(
                 targetState = image,
                 transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
                 label = "playerArt",
-            ) { art ->
+            ) { bitmap ->
                 Box(
                     Modifier
-                        .size(88.dp)
+                        .size(artSize)
                         .clip(RoundedCornerShape(20.dp))
                         .background(Color.White.copy(alpha = 0.1f))
                         .clickable {
@@ -149,26 +140,13 @@ fun MediaExpanded(
                             scope.openApp()
                         },
                 ) {
-                    if (art != null) {
-                        Image(art, null, contentScale = ContentScale.Crop, modifier = Modifier.matchParentSize())
+                    if (bitmap != null) {
+                        Image(bitmap, null, contentScale = ContentScale.Crop, modifier = Modifier.matchParentSize())
                     }
                 }
             }
-            Spacer(Modifier.height(12.dp))
-            MarqueeText(
-                text = title,
-                style = IslandTextStyles.title.copy(fontSize = 16.sp),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-            )
-            Spacer(Modifier.height(4.dp))
-            MarqueeText(
-                text = artist,
-                style = IslandTextStyles.body,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-            )
-            Spacer(Modifier.height(4.dp))
+        }
+        val seekBar: @Composable () -> Unit = {
             IslandSeekBar(
                 value = progress,
                 color = accent,
@@ -182,19 +160,22 @@ fun MediaExpanded(
                     progress = target
                 },
             )
-            Spacer(Modifier.height(4.dp))
+        }
+        val controls: @Composable (Dp) -> Unit = { rowHeight ->
             ConnectedButtonRow(
-                height = 52.dp,
+                height = rowHeight,
                 items = listOfNotNull(
-                    ConnectedItem(actions.like, enabled = likable) {
-                        IslandIcon(
-                            if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                            tint = if (!likable) Color.LightGray else {if (liked) accent else Color.White},
-                            size = 24.dp,
-                        )
+                    actions.like?.let {
+                        ConnectedItem(it) {
+                            IslandIcon(
+                                if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
+                                tint = if (liked) accent else Color.White,
+                                size = 24.dp,
+                            )
+                        }
                     },
                     actions.previous?.let {
-                        ConnectedItem(it) {
+                        ConnectedItem(it, enabled = canSkipBack) {
                             IslandIcon(R.drawable.rounded_skip_previous_24, size = 24.dp)
                         }
                     },
@@ -207,9 +188,76 @@ fun MediaExpanded(
                             IslandIcon(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, size = 26.dp)
                         }
                     },
-                    ConnectedItem(actions.next) { IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp) },
+                    ConnectedItem(actions.next, enabled = canSkipForward) {
+                        IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp)
+                    },
                 ),
             )
+        }
+        if (spec.landscape) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(spec.expandedOutset)
+                    .padding(start = 16.dp, end = 16.dp, top = spec.expandedTopPadding + 12.dp, bottom = spec.expandedBottomPadding),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    art(72.dp)
+                    Column(Modifier.weight(1f)) {
+                        MarqueeText(
+                            text = title,
+                            style = IslandTextStyles.title.copy(fontSize = 16.sp),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(Modifier.height(2.dp))
+                        MarqueeText(
+                            text = artist,
+                            style = IslandTextStyles.body,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+                Column(Modifier.weight(1f)) {
+                    seekBar()
+                    Spacer(Modifier.height(4.dp))
+                    controls(44.dp)
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(spec.expandedOutset)
+                    .padding(start = 12.dp, end = 12.dp, bottom = spec.expandedBottomPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(Modifier.height(spec.cameraDiameter + 28.dp + spec.expandedTopPadding))
+                art(88.dp)
+                Spacer(Modifier.height(12.dp))
+                MarqueeText(
+                    text = title,
+                    style = IslandTextStyles.title.copy(fontSize = 16.sp),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                )
+                Spacer(Modifier.height(4.dp))
+                MarqueeText(
+                    text = artist,
+                    style = IslandTextStyles.body,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                )
+                Spacer(Modifier.height(4.dp))
+                seekBar()
+                Spacer(Modifier.height(4.dp))
+                controls(52.dp)
+            }
         }
     }
 }

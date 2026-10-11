@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.data.repository
 
+import com.sameerasw.essentials.ui.core.pickers.NetworkType
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
@@ -20,11 +21,14 @@ import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
+import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.HilightProgressColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
@@ -69,8 +73,7 @@ class SettingsRepository(
             )
         for (key in remapKeys) {
             val raw = prefs.getString(key, null) ?: continue
-            // Skip if already JSON (starts with '{') — already migrated or set by new code
-            if (raw.startsWith("{")) continue
+            if (raw.startsWith("{") || raw.startsWith("[")) continue
             val action: Action? =
                 when (raw) {
                     "Toggle flashlight" -> Action.ToggleFlashlight
@@ -123,6 +126,26 @@ class SettingsRepository(
         }
     }
 
+    fun getRemapActions(key: String): List<Action> {
+        val json = prefs.getString(key, null) ?: return emptyList()
+        return if (json.trimStart().startsWith("[")) {
+            ActionGsonAdapter.listFromJson(json)
+        } else {
+            listOfNotNull(ActionGsonAdapter.fromJson(json))
+        }
+    }
+
+    fun setRemapActions(
+        key: String,
+        actions: List<Action>,
+    ) {
+        when (actions.size) {
+            0 -> prefs.edit().remove(key).apply()
+            1 -> setRemapAction(key, actions.first())
+            else -> prefs.edit().putString(key, ActionGsonAdapter.listToJson(actions)).apply()
+        }
+    }
+
     companion object {
         const val PREFS_NAME = "essentials_prefs"
 
@@ -153,6 +176,15 @@ class SettingsRepository(
         const val KEY_MAPS_DISCOVERED_CHANNELS = "maps_discovered_channels"
         const val KEY_MAPS_DETECTION_CHANNELS = "maps_detection_channels"
         const val KEY_EDGE_LIGHTING_ENABLED = "edge_lighting_enabled"
+        const val KEY_HILIGHT_NOTIFICATIONS_ENABLED = "hilight_notifications_enabled"
+        const val KEY_HILIGHT_APP_EFFECTS = "hilight_app_effects"
+        const val KEY_HILIGHT_ONLY_SCREEN_OFF = "hilight_only_screen_off"
+        const val KEY_HILIGHT_COOLDOWN_SECONDS = "hilight_cooldown_seconds"
+        const val KEY_HILIGHT_PROGRESS_ENABLED = "hilight_progress_enabled"
+        const val KEY_HILIGHT_PROGRESS_COLOR_MODE = "hilight_progress_color_mode"
+        const val KEY_HILIGHT_PROGRESS_COLOR = "hilight_progress_color"
+        const val KEY_HILIGHT_PROGRESS_DURATION_MS = "hilight_progress_duration_ms"
+        const val KEY_HILIGHT_SKIP_DND = "hilight_skip_dnd"
         const val KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF = "edge_lighting_only_screen_off"
         const val KEY_EDGE_LIGHTING_AMBIENT_DISPLAY = "edge_lighting_ambient_display"
         const val KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN =
@@ -213,6 +245,11 @@ class SettingsRepository(
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy
         const val KEY_BUTTON_REMAP_MIGRATION_DONE = "button_remap_action_migration_done"
         const val KEY_BUTTON_REMAP_PAUSE_ON_VOLUME_DIALOG = "button_remap_pause_on_volume_dialog"
+        const val KEY_PINNED_ACTION_PREFIX = "pinned_action_"
+        const val KEY_LOCKSCREEN_SHORTCUTS_ENABLED = "lockscreen_shortcuts_enabled"
+        const val KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS = "lockscreen_shortcut_left_actions"
+        const val KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS = "lockscreen_shortcut_right_actions"
+        const val KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE = "lockscreen_system_shortcuts_state"
 
         const val KEY_DYNAMIC_NIGHT_LIGHT_ENABLED = "dynamic_night_light_enabled"
         const val KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS = "dynamic_night_light_selected_apps"
@@ -236,6 +273,7 @@ class SettingsRepository(
             "flashlight_overheat_prevention_enabled"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
+        const val KEY_SCREEN_LOCKED_DISABLE_ON_EXTENDED_UNLOCK = "screen_locked_disable_on_extended_unlock"
         const val KEY_SCREEN_LOCKED_DISABLE_NOTIFICATION_INTERACTIONS =
             "screen_locked_disable_notification_interactions"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
@@ -264,6 +302,7 @@ class SettingsRepository(
         const val KEY_CONSCIOUS_GATE_FEEL_EVERY_SECOND = "conscious_gate_feel_every_second"
         const val KEY_CONSCIOUS_GATE_TITLE = "conscious_gate_title"
         const val KEY_CONSCIOUS_GATE_MESSAGE = "conscious_gate_message"
+        const val KEY_HIDDEN_DEBUGGING_SUPPORT = "hidden_debugging_support"
         const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
@@ -282,6 +321,7 @@ class SettingsRepository(
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_APP_ICON = "app_icon_style"
         const val KEY_USE_ROOT = "use_root"
+        const val KEY_PRIVILEGED_MODE = "privileged_mode"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
         const val KEY_ENABLE_UNSUPPORTED_FEATURES = "enable_unsupported_features"
         const val KEY_SHOW_LEGACY_FEATURES = "show_legacy_features"
@@ -370,6 +410,9 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_DISABLE_ON_DND = "aod_wallpaper_disable_on_dnd"
         const val KEY_AOD_WALLPAPER_KEEP_ON_MEDIA = "aod_wallpaper_keep_on_media"
         const val KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS = "aod_wallpaper_media_excluded_apps"
+        const val KEY_AOD_WALLPAPER_EXTENDED_MEDIA = "aod_wallpaper_extended_media"
+        const val KEY_AOD_WALLPAPER_EXTENDED_APP_ICON = "aod_wallpaper_extended_app_icon"
+        const val KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE = "aod_wallpaper_extended_text_scale"
         const val KEY_PIXEL_SEARCH_RESULT_APPS = "pixel_search_result_apps"
         const val KEY_PIXEL_SEARCH_RESULT_CONTACTS = "pixel_search_result_contacts"
         const val KEY_PIXEL_SEARCH_RESULT_SETTINGS = "pixel_search_result_settings"
@@ -411,6 +454,9 @@ class SettingsRepository(
         const val KEY_DUO_CAMERA_OFFSET_X = "duo_camera_offset_x"
         const val KEY_DUO_CAMERA_OFFSET_Y = "duo_camera_offset_y"
         const val KEY_DUO_CAMERA_SIZE = "duo_camera_size"
+        const val KEY_DUO_ORIENTATION_PROFILES = "duo_orientation_profiles"
+        const val KEY_DUO_HIDE_PORTRAIT = "duo_hide_portrait"
+        const val KEY_DUO_HIDE_LANDSCAPE = "duo_hide_landscape"
         const val KEY_DUO_KNOWN_DISPLAY_PROFILES = "duo_known_display_profiles"
         const val KEY_DUO_ARC_THICKNESS = "duo_arc_thickness"
         const val KEY_DUO_DOT_SIZE = "duo_dot_size"
@@ -459,12 +505,14 @@ class SettingsRepository(
         const val KEY_ISLAND_CUTOUT_GAP = "island_cutout_gap"
         const val KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP = "island_suppress_system_heads_up"
         const val KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR = "island_dynamic_hide_status_bar"
+        const val KEY_ISLAND_COMPACT_HIDE_STATUS_BAR = "island_compact_hide_status_bar"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
         const val KEY_ISLAND_SHOW_WHEN = "island_show_when"
         const val ISLAND_SHOW_WHEN_UNLOCKED = "unlocked"
         const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
         const val ISLAND_SHOW_WHEN_ALWAYS = "always"
         const val KEY_ISLAND_NOTIF_CONCEAL_LOCKED = "island_notif_conceal_locked"
+        const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
@@ -481,6 +529,7 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_CALENDAR = "island_show_calendar"
         const val KEY_ISLAND_SHOW_CONSCIOUS_GATE = "island_show_conscious_gate"
         const val KEY_ISLAND_SHOW_TIME_BATTERY = "island_show_time_battery"
+        const val KEY_ISLAND_SHOW_BATTERY = "island_show_battery"
         const val KEY_ISLAND_SHOW_FLASHLIGHT = "island_show_flashlight"
         const val KEY_ISLAND_BATTERY_STYLE = "island_battery_style"
         const val ISLAND_BATTERY_STYLE_RING = "ring"
@@ -492,18 +541,34 @@ class SettingsRepository(
         const val KEY_ISLAND_LIKE_WHILE_PLAYING = "island_like_while_playing"
         const val KEY_ISLAND_SLIDE_INVERT_DIRECTION = "island_slide_invert_direction"
         const val KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL = "island_battery_percentage_conditional"
+        const val KEY_ISLAND_BATTERY_ICON_CONDITIONAL = "island_battery_icon_conditional"
         const val KEY_ISLAND_BATTERY_ONLY_LOW = "island_battery_only_low"
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
+        const val KEY_ISLAND_SHOW_BATTERY_ALERTS = "island_show_battery_alerts"
+        const val KEY_ISLAND_BATTERY_ALERT_CHARGING = "island_battery_alert_charging"
+        const val KEY_ISLAND_BATTERY_ALERT_LOW = "island_battery_alert_low"
+        const val KEY_ISLAND_BATTERY_ALERT_CRITICAL = "island_battery_alert_critical"
+        const val KEY_ISLAND_BATTERY_ALERT_ICON_POSITION = "island_battery_alert_icon_position"
+        const val ISLAND_BATTERY_ALERT_ICON_POSITION_RIGHT = "right"
+        const val ISLAND_BATTERY_ALERT_ICON_POSITION_LEFT = "left"
         const val ISLAND_BATTERY_LOW_LEVEL = 20
         const val ISLAND_BATTERY_CRITICAL_LEVEL = 10
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
         const val KEY_ISLAND_HIDE_ON_SHADE = "island_hide_on_shade"
+        const val KEY_ISLAND_KEEP_ON_LANDSCAPE = "island_keep_on_landscape"
+        const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
+        const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
+        const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
+        const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
+        const val KEY_ISLAND_HIDE_LIVE_UPDATES = "island_hide_live_updates"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
+        const val KEY_ISLAND_ORIENTATION_PROFILES = "island_orientation_profiles"
+        const val KEY_ISLAND_HIDE_PORTRAIT = "island_hide_portrait"
+        const val KEY_ISLAND_HIDE_LANDSCAPE = "island_hide_landscape"
         const val KEY_ISLAND_PREVIEW_RING = "island_preview_ring"
-        const val KEY_DEBUG_SIMULATED_WEATHER = "debug_simulated_weather"
         const val KEY_ISLAND_PREVIEW_STAGE = "island_preview_stage"
         const val ISLAND_PREVIEW_STAGE_AUTO = "auto"
         const val ISLAND_PREVIEW_STAGE_PEEK = "peek"
@@ -515,31 +580,25 @@ class SettingsRepository(
         const val ISLAND_CALL_SHOW_PEEK = "peek"
         const val ISLAND_CALL_SHOW_COMPACT = "compact"
         const val KEY_ISLAND_SHOW_TIMERS = "island_show_timers"
-        const val KEY_ISLAND_SHOW_WEATHER = "island_show_weather"
-        const val KEY_ISLAND_WEATHER_MODE = "island_weather_mode"
-        const val KEY_ISLAND_WEATHER_PEEK_ALERTS = "island_weather_peek_alerts"
-        const val KEY_ISLAND_WEATHER_EFFECTS = "island_weather_effects"
-        const val KEY_ISLAND_WEATHER_HAPTICS = "island_weather_haptics"
-        const val ISLAND_WEATHER_MODE_BRIEF = "brief"
-        const val ISLAND_WEATHER_MODE_COMPACT = "compact"
-        const val ISLAND_WEATHER_MODE_ALERTS = "alerts"
+        const val KEY_ISLAND_PROVIDERS = "island_providers"
 
-        const val KEY_WEATHER_PROVIDER = "weather_provider"
-        const val KEY_WEATHER_API_KEY = "weather_api_key"
-        const val KEY_WEATHER_LOCATION_MODE = "weather_location_mode"
-        const val KEY_WEATHER_MANUAL_LOCATION = "weather_manual_location"
-        const val KEY_WEATHER_UNITS = "weather_units"
-        const val KEY_WEATHER_REFRESH_MINUTES = "weather_refresh_minutes"
-        const val WEATHER_UNITS_SYSTEM = "system"
-        const val WEATHER_UNITS_CELSIUS = "celsius"
-        const val WEATHER_UNITS_FAHRENHEIT = "fahrenheit"
+        private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
         const val KEY_ISLAND_CALENDAR_EMOJIS = "island_calendar_emojis"
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
+        const val KEY_ISLAND_TIMERS_FILTER_APPS = "island_timers_filter_apps"
+        const val KEY_ISLAND_TIMERS_SELECTED_APPS = "island_timers_selected_apps"
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
+        const val KEY_ISLAND_SHOW_SIGNAL = "island_show_signal"
+        const val KEY_ISLAND_NETWORK_ACTIVITY = "island_network_activity"
+        const val KEY_ISLAND_SIGNAL_WIFI = "island_signal_wifi"
+        const val KEY_ISLAND_PRIORITY_ORDER = "island_priority_order"
+        const val KEY_ISLAND_SIGNAL_LOW_ONLY = "island_signal_low_only"
+        const val KEY_ISLAND_SIGNAL_NETWORK_TYPES = "island_signal_network_modes"
+        const val KEY_ISLAND_SIGNAL_SHOW_MODE = "island_signal_show_mode"
         const val KEY_ISLAND_SHOW_SOUND_MODE = "island_show_sound_mode"
+        const val KEY_ISLAND_SOUND_MODE_KEEP_ICON = "island_sound_mode_keep_icon"
         const val KEY_ISLAND_SHOW_ALARM = "island_show_alarm"
         const val KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY = "island_time_battery_launcher_only"
-        const val KEY_ISLAND_WEATHER_LAUNCHER_ONLY = "island_weather_launcher_only"
         const val KEY_ISLAND_CALENDAR_LAUNCHER_ONLY = "island_calendar_launcher_only"
         const val KEY_ISLAND_ALARM_LAUNCHER_ONLY = "island_alarm_launcher_only"
         const val KEY_ISLAND_ALARM_WINDOW_HOURS = "island_alarm_window_hours"
@@ -558,13 +617,18 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE = "island_media_peek_song_change"
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
+        const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_COMPACT_HEADS_UP = "island_notif_compact_heads_up"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
+        const val KEY_ISLAND_NOTIF_SKIP_SILENT = "island_notif_skip_silent"
+        const val KEY_ISLAND_NOTIF_FILTER_APPS = "island_notif_filter_apps"
+        const val KEY_ISLAND_NOTIF_FILTER_APPS_LIST = "island_notif_filter_apps_list"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
         const val KEY_ISLAND_BORDER_OUTLINE_COLOR = "island_border_outline_color"
+        const val KEY_ISLAND_BORDER_OUTLINE_DYNAMIC = "island_border_outline_dynamic"
         const val KEY_ISLAND_BORDER_OUTLINE_THICKNESS = "island_border_outline_thickness"
         const val KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED = "island_border_outline_hide_expanded"
         const val KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION = "island_pulse_shadow_on_notification"
@@ -579,6 +643,9 @@ class SettingsRepository(
         const val KEY_STATUS_GLANCE_USE_AUTO_DETECT = "status_glance_use_auto_detect"
         const val KEY_STATUS_GLANCE_OFFSET_X = "status_glance_offset_x"
         const val KEY_STATUS_GLANCE_OFFSET_Y = "status_glance_offset_y"
+        const val KEY_STATUS_GLANCE_ORIENTATION_PROFILES = "status_glance_orientation_profiles"
+        const val KEY_STATUS_GLANCE_HIDE_PORTRAIT = "status_glance_hide_portrait"
+        const val KEY_STATUS_GLANCE_HIDE_LANDSCAPE = "status_glance_hide_landscape"
         const val KEY_STATUS_GLANCE_MAX_WIDTH = "status_glance_max_width"
         const val KEY_STATUS_GLANCE_FONT_SIZE = "status_glance_font_size"
         const val KEY_STATUS_GLANCE_SHOW_FLASHLIGHT = "status_glance_show_flashlight"
@@ -620,6 +687,7 @@ class SettingsRepository(
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
         const val KEY_SHUT_UP_RESTORE_DELAY = "shut_up_restore_delay"
         const val KEY_SHUT_UP_RESTORE_MODE = "shut_up_restore_mode"
+        const val KEY_SHUT_UP_KEYBOARD = "shut_up_keyboard"
         const val KEY_SHIZUKU_AUTH_TOKEN = "shizuku_auth_token"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"
         const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
@@ -656,6 +724,12 @@ class SettingsRepository(
         const val KEY_LOCK_SCREEN_CLOCK_SEED_COLOR = "lock_screen_clock_seed_color"
         const val KEY_RECENT_SEARCHES = "recent_searches"
         const val KEY_POCKET_MODE_ENABLED = "pocket_mode_enabled"
+        const val KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED = "face_unlock_brightness_enabled"
+        const val KEY_FACE_UNLOCK_MAX_BRIGHTNESS = "face_unlock_max_brightness"
+        const val KEY_FACE_UNLOCK_TRIGGER_UNLOCK = "face_unlock_trigger_unlock"
+        const val KEY_FACE_UNLOCK_AUTO_ILLUMINATE = "face_unlock_auto_illuminate"
+        const val KEY_FACE_UNLOCK_AMBIENT_THRESHOLD = "face_unlock_ambient_threshold_lux"
+        const val KEY_FACE_UNLOCK_LIGHT_TINT = "face_unlock_light_tint"
         const val KEY_POCKET_MODE_USE_LIGHT_SENSOR = "pocket_mode_use_light_sensor"
         const val KEY_POCKET_MODE_EXCLUDED_APPS = "pocket_mode_excluded_apps"
         const val KEY_POCKET_MODE_TRIGGER_DELAY = "pocket_mode_trigger_delay"
@@ -667,6 +741,7 @@ class SettingsRepository(
         const val KEY_BUBBLE_WEB_FULLSCREEN = "bubble_web_fullscreen"
         const val KEY_SIM_NAMES_APPLY_ON_BOOT = "sim_names_apply_on_boot"
         const val KEY_POWER_SAVING_APPLY_ON_BOOT = "power_saving_apply_on_boot"
+        const val KEY_UNSPLASH_ACCESS_KEY = "unsplash_access_key"
 
         // Snippets Universal
         const val KEY_SNIPPETS_UNIVERSAL_ENABLED = "snippets_universal_enabled"
@@ -677,6 +752,16 @@ class SettingsRepository(
         const val SNIPPETS_DISPLAY_DYNAMIC_ISLAND = "island"
         const val SNIPPETS_DISPLAY_DUO = "duo"
         const val SNIPPETS_DISPLAY_BOTH = "both"
+    }
+
+    fun getUnsplashAccessKey(): String? = prefs.getString(KEY_UNSPLASH_ACCESS_KEY, null)
+
+    fun setUnsplashAccessKey(key: String?) {
+        if (key.isNullOrBlank()) {
+            prefs.edit().remove(KEY_UNSPLASH_ACCESS_KEY).apply()
+        } else {
+            prefs.edit().putString(KEY_UNSPLASH_ACCESS_KEY, key.trim()).apply()
+        }
     }
 
     fun isSimNamesApplyOnBootEnabled(): Boolean = getBoolean(KEY_SIM_NAMES_APPLY_ON_BOOT, false)
@@ -1188,6 +1273,63 @@ class SettingsRepository(
 
     fun loadNotificationLightingSelectedApps() = loadAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS)
 
+    // Each app the user adds gets its own effect; apps not in the map never light up
+    fun getHilightAppEffects(): Map<String, HilightEffect> =
+        getString(KEY_HILIGHT_APP_EFFECTS)?.let {
+            try {
+                gson
+                    .fromJson<Map<String, HilightEffect>>(it, object : TypeToken<Map<String, HilightEffect>>() {}.type)
+                    ?.mapValues { (_, effect) -> effect.withValidPattern() }
+            } catch (_: Exception) {
+                null
+            }
+        } ?: emptyMap()
+
+    fun getHilightEffectForApp(packageName: String): HilightEffect? = getHilightAppEffects()[packageName]
+
+    fun setHilightAppEffect(
+        packageName: String,
+        effect: HilightEffect?,
+    ) {
+        val effects = getHilightAppEffects().toMutableMap()
+        if (effect == null) effects.remove(packageName) else effects[packageName] = effect
+        putString(KEY_HILIGHT_APP_EFFECTS, gson.toJson(effects))
+    }
+
+    fun isHilightNotificationsEnabled(): Boolean = getBoolean(KEY_HILIGHT_NOTIFICATIONS_ENABLED, false)
+
+    fun setHilightNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_HILIGHT_NOTIFICATIONS_ENABLED, enabled)
+
+    fun isHilightOnlyWhenScreenOff(): Boolean = getBoolean(KEY_HILIGHT_ONLY_SCREEN_OFF, true)
+
+    fun setHilightOnlyWhenScreenOff(enabled: Boolean) = putBoolean(KEY_HILIGHT_ONLY_SCREEN_OFF, enabled)
+
+    fun isHilightSkipDnd(): Boolean = getBoolean(KEY_HILIGHT_SKIP_DND, true)
+
+    fun setHilightSkipDnd(enabled: Boolean) = putBoolean(KEY_HILIGHT_SKIP_DND, enabled)
+
+    fun getHilightCooldownSeconds(): Int = getInt(KEY_HILIGHT_COOLDOWN_SECONDS, 60)
+
+    fun setHilightCooldownSeconds(seconds: Int) = putInt(KEY_HILIGHT_COOLDOWN_SECONDS, seconds)
+
+    fun isHilightProgressEnabled(): Boolean = getBoolean(KEY_HILIGHT_PROGRESS_ENABLED, false)
+
+    fun setHilightProgressEnabled(enabled: Boolean) = putBoolean(KEY_HILIGHT_PROGRESS_ENABLED, enabled)
+
+    fun getHilightProgressColorMode(): HilightProgressColorMode =
+        HilightProgressColorMode.entries.find { it.name == getString(KEY_HILIGHT_PROGRESS_COLOR_MODE) }
+            ?: HilightProgressColorMode.VIBGYOR
+
+    fun setHilightProgressColorMode(mode: HilightProgressColorMode) = putString(KEY_HILIGHT_PROGRESS_COLOR_MODE, mode.name)
+
+    fun getHilightProgressColor(): Int = getInt(KEY_HILIGHT_PROGRESS_COLOR, HilightEffect.DEFAULT_COLOR)
+
+    fun setHilightProgressColor(color: Int) = putInt(KEY_HILIGHT_PROGRESS_COLOR, color)
+
+    fun getHilightProgressDurationMs(): Long = getLong(KEY_HILIGHT_PROGRESS_DURATION_MS, HilightEffect.DEFAULT_DURATION_MS)
+
+    fun setHilightProgressDurationMs(durationMs: Long) = putLong(KEY_HILIGHT_PROGRESS_DURATION_MS, durationMs)
+
     /**
      * Executes the save notification lighting selected apps operation.
      *
@@ -1635,7 +1777,7 @@ class SettingsRepository(
                     if (key == KEY_GITHUB_ACCESS_TOKEN ||
                         key == KEY_GITHUB_WORKFLOW_TOKEN ||
                         key == KEY_SHIZUKU_AUTH_TOKEN ||
-                        key == KEY_WEATHER_API_KEY ||
+                        key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX) ||
                         key.startsWith("mac_battery_") ||
                         key == "airsync_mac_connected" ||
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS ||
@@ -1712,7 +1854,7 @@ class SettingsRepository(
                         KEY_GITHUB_ACCESS_TOKEN,
                         KEY_GITHUB_WORKFLOW_TOKEN,
                         KEY_SHIZUKU_AUTH_TOKEN,
-                        KEY_WEATHER_API_KEY,
+                        LEGACY_WEATHER_API_KEY_PREFIX,
                         "airsync_mac_connected",
                         KEY_SNOOZE_DISCOVERED_CHANNELS,
                         KEY_MAPS_DISCOVERED_CHANNELS,
@@ -1752,7 +1894,7 @@ class SettingsRepository(
                             if (key == KEY_GITHUB_ACCESS_TOKEN ||
                                 key == KEY_GITHUB_WORKFLOW_TOKEN ||
                                 key == KEY_SHIZUKU_AUTH_TOKEN ||
-                                key == KEY_WEATHER_API_KEY
+                                key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX)
                             ) {
                                 return@forEach
                             }
@@ -2018,6 +2160,10 @@ class SettingsRepository(
      * Executes the get shut up restore mode operation.
      * @return The resulting String data.
      */
+    fun getShutUpKeyboard(): String = prefs.getString(KEY_SHUT_UP_KEYBOARD, "") ?: ""
+
+    fun setShutUpKeyboard(ime: String) = putString(KEY_SHUT_UP_KEYBOARD, ime)
+
     fun getShutUpRestoreMode(): String = prefs.getString(KEY_SHUT_UP_RESTORE_MODE, "Auto") ?: "Auto"
 
     /**
@@ -2191,6 +2337,7 @@ class SettingsRepository(
     fun incrementPixelSearchbarWidgetRevision() {
         val current = getPixelSearchbarWidgetRevision()
         prefs.edit().putInt(KEY_PIXEL_SEARCHBAR_WIDGET_REVISION, current + 1).apply()
+        com.sameerasw.essentials.services.widgets.SearchbarRenderState.bump()
     }
 
     /**
@@ -2408,7 +2555,10 @@ class SettingsRepository(
      *
      * @param enabled [Boolean] Target enabled.
      */
-    fun setEnableUnsupportedFeatures(enabled: Boolean) = putBoolean(KEY_ENABLE_UNSUPPORTED_FEATURES, enabled)
+    fun setEnableUnsupportedFeatures(enabled: Boolean) {
+        com.sameerasw.essentials.utils.DeviceUtils.torchRestrictionLifted = enabled
+        putBoolean(KEY_ENABLE_UNSUPPORTED_FEATURES, enabled)
+    }
 
     fun isShowLegacyFeatures(): Boolean = getBoolean(KEY_SHOW_LEGACY_FEATURES, true)
 
@@ -3357,6 +3507,18 @@ class SettingsRepository(
 
     fun setAodWallpaperKeepOnMedia(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_KEEP_ON_MEDIA, enabled)
 
+    fun isAodWallpaperExtendedMediaEnabled(): Boolean = getBoolean(KEY_AOD_WALLPAPER_EXTENDED_MEDIA, false)
+
+    fun setAodWallpaperExtendedMedia(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_EXTENDED_MEDIA, enabled)
+
+    fun isAodWallpaperExtendedAppIconEnabled(): Boolean = getBoolean(KEY_AOD_WALLPAPER_EXTENDED_APP_ICON, false)
+
+    fun setAodWallpaperExtendedAppIcon(enabled: Boolean) = putBoolean(KEY_AOD_WALLPAPER_EXTENDED_APP_ICON, enabled)
+
+    fun getAodWallpaperExtendedTextScale(): Float = getFloat(KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE, 1f)
+
+    fun setAodWallpaperExtendedTextScale(value: Float) = putFloat(KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE, value)
+
     fun isPixelSearchResultAppsEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, true)
     fun setPixelSearchResultAppsEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_RESULT_APPS, enabled)
 
@@ -3436,14 +3598,93 @@ class SettingsRepository(
 
     fun getKnownDisplayProfileCount(): Int = prefs.getStringSet(KEY_DUO_KNOWN_DISPLAY_PROFILES, emptySet())?.size ?: 0
 
-    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float {
-        val profileKey = "$baseKey@${getDisplayProfileId()}"
-        return if (contains(profileKey)) getFloat(profileKey, default) else getFloat(baseKey, default)
+    fun isFoldableDevice(): Boolean =
+        context.packageManager.hasSystemFeature("android.hardware.sensor.hinge_angle") ||
+            context.packageManager.hasSystemFeature("com.google.pixel.camera.concurrent_foldable_dual_front")
+
+    private fun orientationKey(baseKey: String): String {
+        val orientation = if (context.resources.configuration.orientation ==
+            android.content.res.Configuration.ORIENTATION_LANDSCAPE) "landscape" else "portrait"
+        return "$baseKey@${getDisplayProfileId()}@$orientation"
     }
 
+    private fun getCameraPlacementFloat(baseKey: String, default: Float, useOrientation: Boolean): Float {
+        val orientationKey = orientationKey(baseKey)
+        val displayKey = "$baseKey@${getDisplayProfileId()}"
+        return when {
+            useOrientation && contains(orientationKey) -> getFloat(orientationKey, default)
+            contains(displayKey) -> getFloat(displayKey, default)
+            else -> getFloat(baseKey, default)
+        }
+    }
+
+    private fun setCameraPlacementFloat(baseKey: String, value: Float, useOrientation: Boolean) {
+        if (useOrientation) {
+            putFloat(orientationKey(baseKey), value)
+        } else {
+            putFloat("$baseKey@${getDisplayProfileId()}", value)
+            putFloat(baseKey, value)
+        }
+    }
+
+    private fun getCameraPlacementString(baseKey: String, default: String, useOrientation: Boolean): String {
+        val displayKey = "$baseKey@${getDisplayProfileId()}"
+        return when {
+            useOrientation && contains(orientationKey(baseKey)) -> getString(orientationKey(baseKey), default)
+            contains(displayKey) -> getString(displayKey, default)
+            else -> getString(baseKey, default)
+        } ?: default
+    }
+
+    private fun setCameraPlacementString(baseKey: String, value: String, useOrientation: Boolean) {
+        if (useOrientation) putString(orientationKey(baseKey), value)
+        else {
+            putString("$baseKey@${getDisplayProfileId()}", value)
+            putString(baseKey, value)
+        }
+    }
+
+    private fun getCameraHidden(baseKey: String, default: Boolean): Boolean =
+        getBoolean("$baseKey@${getDisplayProfileId()}", getBoolean(baseKey, default))
+
+    private fun setCameraHidden(baseKey: String, hidden: Boolean) =
+        putBoolean("$baseKey@${getDisplayProfileId()}", hidden)
+
+    fun isDuoOrientationProfilesEnabled(): Boolean = getBoolean(KEY_DUO_ORIENTATION_PROFILES, false)
+    fun setDuoOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_DUO_ORIENTATION_PROFILES, enabled)
+    fun isDuoHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_DUO_HIDE_LANDSCAPE, false)
+        else getCameraHidden(KEY_DUO_HIDE_PORTRAIT, false)
+    fun setDuoHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_DUO_HIDE_LANDSCAPE else KEY_DUO_HIDE_PORTRAIT, hidden)
+
+    fun isIslandOrientationProfilesEnabled(): Boolean = getBoolean(KEY_ISLAND_ORIENTATION_PROFILES, false)
+    fun setIslandOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ORIENTATION_PROFILES, enabled)
+    fun isIslandHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_ISLAND_HIDE_LANDSCAPE, !isIslandKeepOnLandscapeEnabled())
+        else getCameraHidden(KEY_ISLAND_HIDE_PORTRAIT, false)
+    fun setIslandHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_ISLAND_HIDE_LANDSCAPE else KEY_ISLAND_HIDE_PORTRAIT, hidden)
+
+    fun isStatusGlanceOrientationProfilesEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_ORIENTATION_PROFILES, false)
+    fun setStatusGlanceOrientationProfilesEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_ORIENTATION_PROFILES, enabled)
+    fun isStatusGlanceHiddenInCurrentOrientation(): Boolean =
+        if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            getCameraHidden(KEY_STATUS_GLANCE_HIDE_LANDSCAPE, true)
+        else getCameraHidden(KEY_STATUS_GLANCE_HIDE_PORTRAIT, false)
+    fun setStatusGlanceHiddenInCurrentOrientation(hidden: Boolean) =
+        setCameraHidden(if (context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE)
+            KEY_STATUS_GLANCE_HIDE_LANDSCAPE else KEY_STATUS_GLANCE_HIDE_PORTRAIT, hidden)
+
+    private fun getDuoPlacementFloat(baseKey: String, default: Float): Float =
+        getCameraPlacementFloat(baseKey, default, isDuoOrientationProfilesEnabled())
+
     private fun setDuoPlacementFloat(baseKey: String, value: Float) {
-        putFloat("$baseKey@${getDisplayProfileId()}", value)
-        putFloat(baseKey, value)
+        setCameraPlacementFloat(baseKey, value, isDuoOrientationProfilesEnabled())
     }
 
     fun getDuoCameraOffsetX(): Float = getDuoPlacementFloat(KEY_DUO_CAMERA_OFFSET_X, 50f)
@@ -3574,14 +3815,14 @@ class SettingsRepository(
     fun isIslandAutoDetectEnabled(): Boolean = getBoolean(KEY_ISLAND_USE_AUTO_DETECT, true)
     fun setIslandAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_USE_AUTO_DETECT, enabled)
 
-    fun getIslandCameraOffsetX(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f)
-    fun setIslandCameraOffsetX(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_X, value)
+    fun getIslandCameraOffsetX(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraOffsetX(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandCameraOffsetY(): Float = getFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f)
-    fun setIslandCameraOffsetY(value: Float) = putFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value)
+    fun getIslandCameraOffsetY(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_Y, 3f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraOffsetY(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_Y, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandCameraSize(): Float = getFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f)
-    fun setIslandCameraSize(value: Float) = putFloat(KEY_ISLAND_CAMERA_SIZE, value)
+    fun getIslandCameraSize(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraSize(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, value, isIslandOrientationProfilesEnabled())
 
     fun getIslandMaxWidth(): Float = getFloat(KEY_ISLAND_MAX_WIDTH, 360f)
     fun setIslandMaxWidth(value: Float) = putFloat(KEY_ISLAND_MAX_WIDTH, value)
@@ -3612,6 +3853,9 @@ class SettingsRepository(
     fun getIslandBorderOutlineColor(): String =
         getString(KEY_ISLAND_BORDER_OUTLINE_COLOR, ISLAND_BORDER_OUTLINE_DEFAULT_COLOR) ?: ISLAND_BORDER_OUTLINE_DEFAULT_COLOR
     fun setIslandBorderOutlineColor(colorHex: String) = putString(KEY_ISLAND_BORDER_OUTLINE_COLOR, colorHex)
+
+    fun isIslandBorderOutlineDynamicEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_DYNAMIC, false)
+    fun setIslandBorderOutlineDynamicEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_DYNAMIC, enabled)
 
     fun isIslandBorderOutlineHiddenWhenExpanded(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, false)
     fun setIslandBorderOutlineHiddenWhenExpanded(hidden: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, hidden)
@@ -3682,6 +3926,18 @@ class SettingsRepository(
     fun isIslandShowTimeBatteryEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIME_BATTERY, false)
     fun setIslandShowTimeBatteryEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIME_BATTERY, enabled)
 
+    fun isIslandShowBatteryEnabled(): Boolean =
+        if (contains(KEY_ISLAND_SHOW_BATTERY)) getBoolean(KEY_ISLAND_SHOW_BATTERY, false) else isIslandShowTimeBatteryEnabled()
+    fun setIslandShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_BATTERY, enabled)
+
+    fun isIslandShowBatteryAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_BATTERY_ALERTS, true)
+    fun setIslandShowBatteryAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_BATTERY_ALERTS, enabled)
+
+    fun getIslandBatteryAlertIconPosition(): String =
+        getString(KEY_ISLAND_BATTERY_ALERT_ICON_POSITION, ISLAND_BATTERY_ALERT_ICON_POSITION_RIGHT) ?: ISLAND_BATTERY_ALERT_ICON_POSITION_RIGHT
+    fun setIslandBatteryAlertIconPosition(position: String) =
+        putString(KEY_ISLAND_BATTERY_ALERT_ICON_POSITION, position)
+
     fun getIslandBatteryStyle(): String =
         getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING
     fun setIslandBatteryStyle(value: String) = putString(KEY_ISLAND_BATTERY_STYLE, value)
@@ -3704,6 +3960,8 @@ class SettingsRepository(
     fun isIslandSlideInvertDirectionEnabled(): Boolean = getBoolean(KEY_ISLAND_SLIDE_INVERT_DIRECTION, true)
     fun setIslandSlideInvertDirection(enabled: Boolean) = putBoolean(KEY_ISLAND_SLIDE_INVERT_DIRECTION, enabled)
 
+    fun isIslandBatteryIconConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, false)
+    fun setIslandBatteryIconConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_ICON_CONDITIONAL, enabled)
     fun isIslandBatteryPercentageConditional(): Boolean = getBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, false)
 
     fun isIslandBatteryOnlyLowEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_ONLY_LOW, false)
@@ -3729,59 +3987,44 @@ class SettingsRepository(
         putString(KEY_ISLAND_CALENDAR_EMOJIS, json.toString())
     }
 
-    fun isIslandShowWeatherEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_WEATHER, false)
-    fun setIslandShowWeatherEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_WEATHER, enabled)
-
-    fun getIslandWeatherMode(): String = getString(KEY_ISLAND_WEATHER_MODE, ISLAND_WEATHER_MODE_BRIEF) ?: ISLAND_WEATHER_MODE_BRIEF
-    fun setIslandWeatherMode(mode: String) = putString(KEY_ISLAND_WEATHER_MODE, mode)
-
-    fun isIslandWeatherPeekAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_PEEK_ALERTS, true)
-    fun setIslandWeatherPeekAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_PEEK_ALERTS, enabled)
-
-    fun isIslandWeatherEffectsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_EFFECTS, true)
-    fun setIslandWeatherEffectsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_EFFECTS, enabled)
-
-    fun isIslandWeatherHapticsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_HAPTICS, true)
-    fun setIslandWeatherHapticsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_HAPTICS, enabled)
-
-    fun getWeatherProvider(): String? = getString(KEY_WEATHER_PROVIDER, null)
-    fun setWeatherProvider(id: String) = putString(KEY_WEATHER_PROVIDER, id)
-
-    fun getWeatherApiKey(): String? = getString(KEY_WEATHER_API_KEY, null)?.takeIf { it.isNotBlank() }
-    fun setWeatherApiKey(key: String?) = putString(KEY_WEATHER_API_KEY, key?.trim().orEmpty())
-
-    fun getWeatherLocationMode(): String = getString(KEY_WEATHER_LOCATION_MODE, "device") ?: "device"
-    fun setWeatherLocationMode(mode: String) = putString(KEY_WEATHER_LOCATION_MODE, mode)
-
-    // Stored as "lat|lon|name".
-    fun getWeatherManualLocation(): Triple<Double, Double, String>? {
-        val parts = getString(KEY_WEATHER_MANUAL_LOCATION, null)?.split("|", limit = 3) ?: return null
-        if (parts.size != 3) return null
-        val lat = parts[0].toDoubleOrNull() ?: return null
-        val lon = parts[1].toDoubleOrNull() ?: return null
-        return Triple(lat, lon, parts[2])
-    }
-
-    fun setWeatherManualLocation(latitude: Double, longitude: Double, name: String) =
-        putString(KEY_WEATHER_MANUAL_LOCATION, "$latitude|$longitude|${name.replace("|", " ")}")
-
-    fun getWeatherUnits(): String = getString(KEY_WEATHER_UNITS, WEATHER_UNITS_SYSTEM) ?: WEATHER_UNITS_SYSTEM
-    fun setWeatherUnits(units: String) = putString(KEY_WEATHER_UNITS, units)
-
-    fun getWeatherRefreshMinutes(): Int = getInt(KEY_WEATHER_REFRESH_MINUTES, 60)
-    fun setWeatherRefreshMinutes(minutes: Int) = putInt(KEY_WEATHER_REFRESH_MINUTES, minutes)
-
     fun isIslandShowTimersEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIMERS, true)
     fun setIslandShowTimersEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIMERS, enabled)
 
     fun isIslandTimersShowScreenRecorderEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER, true)
     fun setIslandTimersShowScreenRecorderEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER, enabled)
+    fun isIslandTimersFilterAppsEnabled(): Boolean = getBoolean(KEY_ISLAND_TIMERS_FILTER_APPS, false)
+    fun setIslandTimersFilterAppsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TIMERS_FILTER_APPS, enabled)
+    fun loadIslandTimersSelectedApps() = loadAppSelection(KEY_ISLAND_TIMERS_SELECTED_APPS)
+    fun saveIslandTimersSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_ISLAND_TIMERS_SELECTED_APPS, apps)
+    fun updateIslandTimersAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_ISLAND_TIMERS_SELECTED_APPS, packageName, enabled)
 
     fun isIslandShowNetworkEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NETWORK, true)
     fun setIslandShowNetworkEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NETWORK, enabled)
+    fun isIslandNetworkActivityEnabled(): Boolean = getBoolean(KEY_ISLAND_NETWORK_ACTIVITY, true)
+    fun setIslandNetworkActivityEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NETWORK_ACTIVITY, enabled)
+    fun isIslandSignalLowOnlyEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, false)
+    fun setIslandSignalLowOnlyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_LOW_ONLY, enabled)
+    fun getIslandPriorityOrder(): List<String>? =
+        getString(KEY_ISLAND_PRIORITY_ORDER, null)?.split(",")?.filter { it.isNotBlank() }?.takeIf { it.isNotEmpty() }
+    fun setIslandPriorityOrder(order: List<String>?) = putString(KEY_ISLAND_PRIORITY_ORDER, order?.joinToString(","))
+    fun isIslandSignalWifiEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_WIFI, false)
+    fun setIslandSignalWifiEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_WIFI, enabled)
+    fun isIslandShowSignalEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SIGNAL, false)
+    fun setIslandShowSignalEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_SIGNAL, enabled)
+    fun isIslandSignalShowModeEnabled(): Boolean = getBoolean(KEY_ISLAND_SIGNAL_SHOW_MODE, false)
+    fun setIslandSignalShowModeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SIGNAL_SHOW_MODE, enabled)
+    fun getIslandSignalNetworkTypes(): Set<NetworkType> =
+        (getString(KEY_ISLAND_SIGNAL_NETWORK_TYPES, "NETWORK_5G,NETWORK_4G,NETWORK_3G,NETWORK_OTHER") ?: "")
+            .split(",")
+            .mapNotNull { name -> NetworkType.entries.firstOrNull { it.name == name } }
+            .toSet()
+    fun setIslandSignalNetworkTypes(types: Set<NetworkType>) = putString(KEY_ISLAND_SIGNAL_NETWORK_TYPES, types.joinToString(",") { it.name })
 
     fun isIslandShowSoundModeEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SOUND_MODE, true)
     fun setIslandShowSoundModeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_SOUND_MODE, enabled)
+
+    fun isIslandSoundModeKeepIconEnabled(): Boolean = getBoolean(KEY_ISLAND_SOUND_MODE_KEEP_ICON, true)
+    fun setIslandSoundModeKeepIconEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SOUND_MODE_KEEP_ICON, enabled)
 
     fun isIslandShowAlarmEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_ALARM, false)
     fun setIslandShowAlarmEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_ALARM, enabled)
@@ -3813,8 +4056,9 @@ class SettingsRepository(
     fun setIslandShowCallsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_CALLS, enabled)
 
     fun getIslandCameraPosition(): String =
-        getString(KEY_ISLAND_CAMERA_POSITION, ISLAND_CAMERA_POSITION_CENTER) ?: ISLAND_CAMERA_POSITION_CENTER
-    fun setIslandCameraPosition(value: String) = putString(KEY_ISLAND_CAMERA_POSITION, value)
+        getCameraPlacementString(KEY_ISLAND_CAMERA_POSITION, ISLAND_CAMERA_POSITION_CENTER, isIslandOrientationProfilesEnabled())
+    fun setIslandCameraPosition(value: String) =
+        setCameraPlacementString(KEY_ISLAND_CAMERA_POSITION, value, isIslandOrientationProfilesEnabled())
 
     fun isIslandPreviewRingEnabled(): Boolean = getBoolean(KEY_ISLAND_PREVIEW_RING, false)
     fun setIslandPreviewRingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PREVIEW_RING, enabled)
@@ -3826,11 +4070,33 @@ class SettingsRepository(
     fun getIslandExpandedScale(): Float = getFloat(KEY_ISLAND_EXPANDED_SCALE, 1f)
     fun setIslandExpandedScale(value: Float) = putFloat(KEY_ISLAND_EXPANDED_SCALE, value)
 
+    fun isIslandHideLiveUpdatesEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, false)
+    fun setIslandHideLiveUpdatesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, enabled)
     fun isIslandDismissOnOutsideEnabled(): Boolean = getBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, false)
     fun setIslandDismissOnOutsideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, enabled)
 
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)
+
+    fun isIslandKeepOnLandscapeEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
+
+    fun setIslandKeepOnLandscapeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, enabled)
+
+    fun isIslandAlwaysGesturesEnabled(): Boolean = getBoolean(KEY_ISLAND_ALWAYS_GESTURES, false)
+
+    fun setIslandAlwaysGesturesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALWAYS_GESTURES, enabled)
+
+    fun getIslandMaxItems(): Int = getInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
+
+    fun setIslandMaxItems(value: Int) = putInt(KEY_ISLAND_MAX_ITEMS, value)
+
+    fun isIslandBondEdgeEnabled(): Boolean = getBoolean(KEY_ISLAND_BOND_EDGE, false)
+
+    fun setIslandBondEdgeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BOND_EDGE, enabled)
+
+    fun getIslandLandscapeTopSpacing(): Float = getFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, 0f)
+
+    fun setIslandLandscapeTopSpacing(value: Float) = putFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, value)
 
     fun isIslandHideOnShadeEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_ON_SHADE, false)
 
@@ -3854,11 +4120,41 @@ class SettingsRepository(
     fun isIslandMediaShowPreviousEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, false)
     fun setIslandMediaShowPreviousEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, enabled)
 
+    fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
+    fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)
+
     fun isIslandShowNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, true)
     fun setIslandShowNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, enabled)
 
     fun isIslandNotifQueueEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
     fun setIslandNotifQueueEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE, enabled)
+
+    fun isFaceUnlockBrightnessEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED, false)
+    fun setFaceUnlockBrightnessEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED, enabled)
+
+    fun getFaceUnlockMaxBrightness(): Int = getInt(KEY_FACE_UNLOCK_MAX_BRIGHTNESS, 100)
+    fun setFaceUnlockMaxBrightness(value: Int) = putInt(KEY_FACE_UNLOCK_MAX_BRIGHTNESS, value)
+    fun getFaceUnlockAmbientThreshold(): Float = getFloat(KEY_FACE_UNLOCK_AMBIENT_THRESHOLD, 10f)
+    fun setFaceUnlockAmbientThreshold(value: Float) = putFloat(KEY_FACE_UNLOCK_AMBIENT_THRESHOLD, value)
+
+    fun isFaceUnlockAutoIlluminateEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_AUTO_ILLUMINATE, false)
+    fun setFaceUnlockAutoIlluminateEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_AUTO_ILLUMINATE, enabled)
+    fun isFaceUnlockTriggerUnlockEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_TRIGGER_UNLOCK, true)
+    fun setFaceUnlockTriggerUnlockEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_TRIGGER_UNLOCK, enabled)
+
+    fun isFaceUnlockLightTintEnabled(): Boolean = getBoolean(KEY_FACE_UNLOCK_LIGHT_TINT, false)
+    fun setFaceUnlockLightTintEnabled(enabled: Boolean) = putBoolean(KEY_FACE_UNLOCK_LIGHT_TINT, enabled)
+
+    fun isIslandNotifSkipSilentEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_SKIP_SILENT, true)
+    fun setIslandNotifSkipSilentEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_SKIP_SILENT, enabled)
+
+    fun isIslandNotifFilterAppsEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_FILTER_APPS, false)
+    fun setIslandNotifFilterAppsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_FILTER_APPS, enabled)
+
+    fun loadIslandNotifFilterApps() = loadAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST)
+    fun saveIslandNotifFilterApps(apps: List<AppSelection>) = saveAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST, apps)
+    fun updateIslandNotifFilterAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST, packageName, enabled)
 
     fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
     fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
@@ -3893,11 +4189,11 @@ class SettingsRepository(
     fun isStatusGlanceAutoDetectEnabled(): Boolean = getBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, true)
     fun setStatusGlanceAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_STATUS_GLANCE_USE_AUTO_DETECT, enabled)
 
-    fun getStatusGlanceOffsetX(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f)
-    fun setStatusGlanceOffsetX(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_X, value)
+    fun getStatusGlanceOffsetX(): Float = getCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_X, 60f, isStatusGlanceOrientationProfilesEnabled())
+    fun setStatusGlanceOffsetX(value: Float) = setCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_X, value, isStatusGlanceOrientationProfilesEnabled())
 
-    fun getStatusGlanceOffsetY(): Float = getFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f)
-    fun setStatusGlanceOffsetY(value: Float) = putFloat(KEY_STATUS_GLANCE_OFFSET_Y, value)
+    fun getStatusGlanceOffsetY(): Float = getCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_Y, 2f, isStatusGlanceOrientationProfilesEnabled())
+    fun setStatusGlanceOffsetY(value: Float) = setCameraPlacementFloat(KEY_STATUS_GLANCE_OFFSET_Y, value, isStatusGlanceOrientationProfilesEnabled())
 
     fun getStatusGlanceMaxWidth(): Float = getFloat(KEY_STATUS_GLANCE_MAX_WIDTH, 180f)
     fun setStatusGlanceMaxWidth(value: Float) = putFloat(KEY_STATUS_GLANCE_MAX_WIDTH, value)
@@ -4020,5 +4316,23 @@ class SettingsRepository(
 
     fun setSnippetsSuggestionDisplayMode(mode: String) =
         putString(KEY_SNIPPETS_SUGGESTION_DISPLAY_MODE, mode)
-}
 
+    // Home screen shortcuts only carry an id; the action itself never leaves the app
+    fun getPinnedAction(id: String): Action? = getRemapAction(KEY_PINNED_ACTION_PREFIX + id)
+
+    fun savePinnedAction(
+        id: String,
+        action: Action,
+    ) = setRemapAction(KEY_PINNED_ACTION_PREFIX + id, action)
+    fun isLockscreenShortcutsEnabled(): Boolean = getBoolean(KEY_LOCKSCREEN_SHORTCUTS_ENABLED, false)
+
+    fun setLockscreenShortcutsEnabled(enabled: Boolean) = putBoolean(KEY_LOCKSCREEN_SHORTCUTS_ENABLED, enabled)
+
+    fun getLockscreenSystemShortcutsState(): SystemShortcutsState =
+        SystemShortcutsState.entries.firstOrNull {
+            it.name == getString(KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE)
+        } ?: SystemShortcutsState.UNKNOWN
+
+    fun setLockscreenSystemShortcutsState(state: SystemShortcutsState) =
+        putString(KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE, state.name)
+}

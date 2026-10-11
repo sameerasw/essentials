@@ -12,6 +12,8 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
 import com.sameerasw.essentials.domain.model.NotificationActionItem
+import com.sameerasw.essentials.island.model.SideBubble
+import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.ExpandedContent
@@ -37,9 +39,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
+        SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT,
+        SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS,
+        SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS_LIST,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
+        SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
@@ -48,6 +54,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private var manualPick = false
     
     private var pendingPopUp = false
+    private var catchingUp = false
 
     private fun busyElsewhere(): Boolean {
         val c = ctx ?: return false
@@ -55,7 +62,22 @@ class NotificationsPlugin : BaseIslandPlugin() {
         return c.focusedKey() != ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
     }
 
+    private var wasHere = false
+
     override fun onFocusChanged(stage: IslandStage, focusedKey: String?) {
+        val here = focusedKey == ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
+        val left = wasHere && !here
+        wasHere = here
+        if (left && !pendingPopUp && alerts.isNotEmpty() && settings.isIslandCatchUpEnabled()) {
+            val c = ctx
+            if (c != null) {
+                c.mainHandler.removeCallbacks(timeoutRunnable)
+                c.mainHandler.removeCallbacks(catchUpRunnable)
+                if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+            }
+            catchingUp = true
+        }
+        if (catchingUp) render()
         if (!pendingPopUp || alerts.isEmpty()) return
         if (stage == IslandStage.Line || stage == IslandStage.Expanded) return
         pendingPopUp = false
@@ -75,6 +97,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val c = ctx ?: return
         val index = alerts.indexOfFirst { it.key == key }
         if (index < 0) return
+        catchingUp = false
         val here = showingHere()
         if (here && index == currentIndex) return
         currentIndex = index
@@ -83,7 +106,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         scheduleTimeout()
         render()
         if (!here) {
-            if (c.currentStage() == IslandStage.Expanded) c.request(PluginRequest.Expand(ITEM_KEY)) else popUp()
+            autoExpanded = false
+            c.request(PluginRequest.Expand(ITEM_KEY))
         }
     }
     private var registered = false
@@ -134,13 +158,19 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
 
+    private fun passesFilters(alert: ActiveNotificationAlert): Boolean {
+        if (alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
+        if (!settings.isIslandNotifFilterAppsEnabled()) return true
+        return settings.loadIslandNotifFilterApps().any { it.isEnabled && it.packageName == alert.packageName }
+    }
+
     private fun concealed(): Boolean =
         settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED, false) &&
             (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
 
     private fun onPosted(alert: ActiveNotificationAlert) {
         val c = ctx ?: return
-        if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled()) return
+        if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled() || !passesFilters(alert)) return
         val existing = alerts.indexOfFirst { it.key == alert.key }
         if (existing >= 0) {
             alerts[existing] = alert
@@ -148,6 +178,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         c.mainHandler.removeCallbacks(catchUpRunnable)
+        catchingUp = false
         if (queueEnabled() && showingHere()) {
             alerts.addLast(alert)
             while (alerts.size > MAX_QUEUE) {
@@ -225,6 +256,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         }
         if (settings.isIslandCatchUpEnabled() && alerts.isNotEmpty()) {
             if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+            catchingUp = true
+            render()
             return
         }
         clearAll()
@@ -242,6 +275,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun clearAll() {
+        catchingUp = false
         cancelTimers()
         alerts.clear()
         currentIndex = 0
@@ -251,6 +285,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun popCurrent(reExpand: Boolean) {
+        catchingUp = false
         removeCurrent()
         if (alerts.isEmpty()) {
             clearAll()
@@ -270,9 +305,20 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val index = alerts.indexOf(alert)
         val next = if (queueEnabled()) alerts.getOrNull(index + 1) ?: alerts.getOrNull(index - 1) else null
         val stack = alerts.map { stackIconFor(it, current = it === alert) }
+        val bubble = if (settings.isIslandCatchUpEnabled()) {
+            SideBubble(
+                priority = SideBubblePriority.NOTIFICATION,
+                icons = alerts.map { stackIconFor(it, current = false) },
+                onOpen = { select(alert.key) },
+                onDismiss = { clearAll() },
+            )
+        } else {
+            null
+        }
         publish(
             itemFor(alert).let { current ->
                 current.withStack(
+                    sideBubble = bubble,
                     queue = next?.let {
                         QueueInfo(
                             next = itemFor(it).withStack(null, alerts.map { a -> stackIconFor(a, current = a === it) }),
@@ -340,8 +386,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
         )
     }
 
+    private fun hidesChatPictures() = settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES, false)
+
     private fun concealedItemFor(alert: ActiveNotificationAlert): IslandItem {
-        val icon = alert.appIcon ?: alert.icon
+        val hideChat = hidesChatPictures()
+        val icon = if (hideChat) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
         val open = {
             if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
             popCurrent(reExpand = false)
@@ -350,11 +399,17 @@ class NotificationsPlugin : BaseIslandPlugin() {
             key = ITEM_KEY,
             priority = IslandPriority.NOTIFICATION,
             placement = CompactPlacement.Dynamic,
-            compact = listOf(
-                CompactCell("notif.icon") {
-                    IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                },
-            ),
+            compact = buildList {
+                add(
+                    CompactCell("notif.icon") {
+                        IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                    },
+                )
+                val appIcon = alert.appIcon
+                if (!hideChat && alert.chatIcon != null && appIcon != null) {
+                    add(CompactCell("notif.app", soloOnly = true) { IslandBitmap(appIcon, 22.dp, circle = true) })
+                }
+            },
             line = LineContent(
                 icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
                 start = appNameFor(context, alert),
@@ -373,13 +428,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean): StackIcon {
-        val icon = if (concealed()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
+        val icon = if (concealed() && hidesChatPictures()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
         return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }) { size ->
             IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
         }
     }
 
-    private fun IslandItem.withStack(queue: QueueInfo?, stack: List<StackIcon>) = IslandItem(
+    private fun IslandItem.withStack(queue: QueueInfo?, stack: List<StackIcon>, sideBubble: SideBubble? = null) = IslandItem(
         key = key,
         priority = priority,
         placement = placement,
@@ -394,6 +449,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         queue = queue,
         sourcePackage = sourcePackage,
         stack = stack,
+        compactVisible = sideBubble == null,
+        sideBubble = sideBubble,
     )
 
     private fun sendReply(alert: ActiveNotificationAlert, action: NotificationActionItem, text: String) {

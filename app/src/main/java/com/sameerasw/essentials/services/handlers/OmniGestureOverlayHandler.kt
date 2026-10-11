@@ -147,13 +147,14 @@ class OmniGestureOverlayHandler(
     }
 
     private fun startRampingHaptic() {
+        if (!com.sameerasw.essentials.utils.HapticUtil.isAppHapticsEnabled.value) return
         val v = vibrator ?: return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             runCatching {
                 val effect =
                     VibrationEffect
                         .startComposition()
-                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, 0.6f)
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, com.sameerasw.essentials.utils.HapticUtil.boost(0.6f))
                         .compose()
                 v.vibrate(effect)
             }.onFailure { fallbackRampingWaveform(v) }
@@ -174,6 +175,7 @@ class OmniGestureOverlayHandler(
     }
 
     private fun triggerFinalTick() {
+        if (!com.sameerasw.essentials.utils.HapticUtil.isAppHapticsEnabled.value) return
         val v = vibrator ?: return
         runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

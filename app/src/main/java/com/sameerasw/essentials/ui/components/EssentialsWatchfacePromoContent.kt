@@ -151,3 +151,25 @@ fun EssentialsWatchfacePromoContent(
         }
     }
 }
+
+// Play Store version, to replace the internal testing steps above once the watchface is approved:
+// (the step 3 title string needs its "3. " prefix dropped again)
+/*
+@Composable
+fun EssentialsWatchfacePromoContent(
+    modifier: Modifier = Modifier,
+    watchViewModel: WatchViewModel = viewModel(),
+) {
+    val context = LocalContext.current
+
+    StackedActionCard(
+        iconRes = R.drawable.rounded_watch_24,
+        title = stringResource(R.string.watchface_promo_step3_title),
+        description = stringResource(R.string.watchface_promo_step3_desc),
+        actionLabel = stringResource(R.string.watchface_promo_step3_action),
+        actionIconRes = R.drawable.rounded_open_in_new_24,
+        onAction = { watchViewModel.openWatchfacePlayStoreOnWatch(context) },
+        modifier = modifier.fillMaxWidth(),
+    )
+}
+*/

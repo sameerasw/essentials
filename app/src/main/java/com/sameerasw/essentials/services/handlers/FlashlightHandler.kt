@@ -139,11 +139,11 @@ class FlashlightHandler(
 
     fun register() {
         if (com.sameerasw.essentials.utils.DeviceUtils
-                .isTclDevice()
+                .isTorchAccessRestricted()
         ) {
             Log.w(
                 "Flashlight",
-                "Disabling flashlight handler callbacks on TCL device to prevent HAL lock issue",
+                "Disabling flashlight handler callbacks on this device to prevent camera HAL issues",
             )
             return
         }
@@ -151,7 +151,9 @@ class FlashlightHandler(
     }
 
     fun unregister() {
-        torchCallback.let { cameraManager.unregisterTorchCallback(it) }
+        if (!com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) {
+            torchCallback.let { cameraManager.unregisterTorchCallback(it) }
+        }
         primaryCameraId = null
         stopOverheatPrevention()
     }

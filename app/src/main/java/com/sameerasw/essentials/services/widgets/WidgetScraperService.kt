@@ -17,6 +17,7 @@ import android.appwidget.AppWidgetProviderInfo
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.media.MediaMetadata
 import android.media.session.MediaController
@@ -28,9 +29,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.util.SizeF
 import android.view.Gravity
-import android.view.View
-import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.widget.RemoteViews
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -47,49 +47,8 @@ class WidgetScraperService : Service() {
     private inner class ScrapingHostView(
         context: Context,
     ) : AppWidgetHostView(context) {
-        private val drawListener =
-            ViewTreeObserver.OnDrawListener {
-                notifyWidgetChanged()
-            }
-
-        private val layoutListener =
-            ViewTreeObserver.OnGlobalLayoutListener {
-                notifyWidgetChanged()
-            }
-
         override fun updateAppWidget(remoteViews: RemoteViews?) {
-            super.updateAppWidget(remoteViews)
             if (remoteViews != null) onRemoteViewsReceived(remoteViews)
-        }
-
-        override fun onAttachedToWindow() {
-            super.onAttachedToWindow()
-            viewTreeObserver.addOnDrawListener(drawListener)
-            viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-            setOnHierarchyChangeListener(
-                object : OnHierarchyChangeListener {
-                    override fun onChildViewAdded(
-                        parent: View?,
-                        child: View?,
-                    ) {
-                        notifyWidgetChanged()
-                    }
-
-                    override fun onChildViewRemoved(
-                        parent: View?,
-                        child: View?,
-                    ) {
-                        notifyWidgetChanged()
-                    }
-                },
-            )
-        }
-
-        override fun onDetachedFromWindow() {
-            viewTreeObserver.removeOnDrawListener(drawListener)
-            viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
-            setOnHierarchyChangeListener(null)
-            super.onDetachedFromWindow()
         }
     }
 
@@ -110,6 +69,65 @@ class WidgetScraperService : Service() {
         @Volatile
         var currentRemoteViews: RemoteViews? = null
             private set
+
+        @Volatile
+        var isUnsupported = false
+            private set
+
+        @Volatile
+        private var rawRemoteViews: RemoteViews? = null
+
+        @Volatile
+        private var hostSizeDp: SizeF? = null
+
+        @Volatile
+        private var forwarded: Pair<Int, SizeF>? = null
+
+        @Volatile
+        private var instance: WidgetScraperService? = null
+
+        fun syncHostSize(context: Context) {
+            val awm = AppWidgetManager.getInstance(context)
+            val searchbarId =
+                awm
+                    .getAppWidgetIds(ComponentName(context, PixelSearchbarWidgetReceiver::class.java))
+                    .firstOrNull() ?: return
+            val settings = SettingsRepository(context)
+            val options = awm.getAppWidgetOptions(searchbarId)
+            val portrait = context.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            val width =
+                options.getInt(
+                    if (portrait) AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH else AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH,
+                ) - settings.getPixelSearchbarWidgetPaddingH() * 2
+            val height =
+                options.getInt(
+                    if (portrait) AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT else AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,
+                ) - settings.getPixelSearchbarWidgetPaddingV() * 2
+            if (width <= 0 || height <= 0) return
+
+            val size = SizeF(width.toFloat(), height.toFloat())
+            hostSizeDp = size
+
+            val hostedId = settings.getPixelSearchbarWidgetId()
+            if (settings.getPixelSearchbarType() != "widget" || hostedId == AppWidgetManager.INVALID_APPWIDGET_ID) return
+            if (forwarded == hostedId to size) return
+            forwarded = hostedId to size
+            try {
+                awm.updateAppWidgetOptions(
+                    hostedId,
+                    NestedWidgetSupport.sizedOptions(awm.getAppWidgetOptions(hostedId), width, height),
+                )
+                NestedWidgetSupport.requestUpdate(context, awm, hostedId)
+            } catch (e: Exception) {
+                Log.w("WidgetScraperService", "Failed to forward size to $hostedId", e)
+            }
+            instance?.let { service ->
+                service.handler.post {
+                    service.publishRemoteViews()
+                    service.notifyWidgetChanged()
+                }
+            }
+        }
 
         fun start(context: Context) {
             context.startService(Intent(context, WidgetScraperService::class.java))
@@ -152,6 +170,7 @@ class WidgetScraperService : Service() {
     override fun onCreate() {
         super.onCreate()
         settingsRepository = SettingsRepository(this)
+        instance = this
     }
 
     override fun onStartCommand(
@@ -229,6 +248,7 @@ class WidgetScraperService : Service() {
                         isViewAttached = true
                     }
                 }
+                syncHostSize(this)
             } catch (e: Exception) {
                 Log.e("WidgetScraperService", "Failed to create/attach ScrapingHostView", e)
             }
@@ -334,8 +354,25 @@ class WidgetScraperService : Service() {
     }
 
     private fun onRemoteViewsReceived(remoteViews: RemoteViews) {
-        currentRemoteViews = remoteViews
+        rawRemoteViews = remoteViews
+        publishRemoteViews()
         notifyWidgetChanged()
+    }
+
+    private var checkedLayoutId: Int? = null
+
+    private fun publishRemoteViews() {
+        val raw = rawRemoteViews ?: return
+        val resolved = NestedWidgetSupport.resolveSized(this, raw, hostSizeDp)
+        if (checkedLayoutId == resolved.layoutId || NestedWidgetSupport.canRender(this, resolved)) {
+            checkedLayoutId = resolved.layoutId
+            currentRemoteViews = resolved
+            isUnsupported = false
+        } else {
+            checkedLayoutId = null
+            currentRemoteViews = null
+            isUnsupported = true
+        }
     }
 
     private var updatePending = false
@@ -373,6 +410,9 @@ class WidgetScraperService : Service() {
         appWidgetHost?.stopListening()
         appWidgetHost = null
         currentRemoteViews = null
+        rawRemoteViews = null
+        checkedLayoutId = null
+        isUnsupported = false
     }
 
     private fun cleanupMediaListener() {
@@ -395,6 +435,7 @@ class WidgetScraperService : Service() {
     }
 
     override fun onDestroy() {
+        if (instance === this) instance = null
         handler.removeCallbacksAndMessages(null)
         cleanupWidgetListener()
         cleanupMediaListener()

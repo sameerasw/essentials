@@ -49,6 +49,7 @@ abstract class Feature(
     @StringRes val authSubtitle: Int = 0,
     @StringRes val aboutDescription: Int? = null,
     @androidx.annotation.RawRes val animationRes: Int = 0,
+    val contributors: List<String> = emptyList(),
 ) {
     val requiresAuth: Boolean = category == com.sameerasw.essentials.R.string.cat_protection
 

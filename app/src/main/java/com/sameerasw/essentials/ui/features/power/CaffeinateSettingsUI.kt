@@ -51,6 +51,7 @@ fun CaffeinateSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     val isCaffeinateActive by viewModel.isActive
+    val isCaffeinateStarting by viewModel.isStarting
 
     var showPermissionSheet by remember { mutableStateOf(false) }
 
@@ -113,7 +114,7 @@ fun CaffeinateSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_coffee_24,
                 title = stringResource(R.string.feat_caffeinate_title),
-                isChecked = isCaffeinateActive,
+                isChecked = isCaffeinateActive || isCaffeinateStarting,
                 onCheckedChange = { _ ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.toggle(context)

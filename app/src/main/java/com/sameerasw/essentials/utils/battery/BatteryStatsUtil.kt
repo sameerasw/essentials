@@ -87,8 +87,8 @@ object BatteryStatsUtil {
             val trimmed = line.trim()
             if (trimmed.startsWith("UID ")) {
                 val uid = currentUid
-                if (uid != null && currentMah > 0.0001) {
-                    val pkg = pm.getPackagesForUid(uid)?.firstOrNull()
+                if (uid != null && currentMah > 0.0001 && isVisibleUid(uid)) {
+                    val pkg = firstPackageForUid(pm, uid)
                     val label = getSystemUidLabel(uid, pkg)
                     val drawable = pkg?.let { getAppIcon(pm, it) }
                     list.add(
@@ -106,11 +106,11 @@ object BatteryStatsUtil {
                 val parts = trimmed.split(":")
                 currentUid =
                     parts[0].removePrefix("UID ").trim().let { uStr ->
-                        if (uStr.startsWith("u0a")) {
-                            10000 + (uStr.removePrefix("u0a").toIntOrNull() ?: 0)
-                        } else {
-                            uStr.toIntOrNull()
-                        }
+                        APP_UID_PATTERN.matchEntire(uStr)?.let { match ->
+                            val userId = match.groupValues[1].toIntOrNull() ?: 0
+                            val appId = match.groupValues[2].toIntOrNull() ?: 0
+                            userId * 100000 + 10000 + appId
+                        } ?: uStr.toIntOrNull()
                     }
                 currentMah =
                     parts
@@ -127,8 +127,8 @@ object BatteryStatsUtil {
         }
 
         val lastUid = currentUid
-        if (lastUid != null && currentMah > 0.0001) {
-            val pkg = pm.getPackagesForUid(lastUid)?.firstOrNull()
+        if (lastUid != null && currentMah > 0.0001 && isVisibleUid(lastUid)) {
+            val pkg = firstPackageForUid(pm, lastUid)
             val label = getSystemUidLabel(lastUid, pkg)
             val drawable = pkg?.let { getAppIcon(pm, it) }
             list.add(
@@ -146,6 +146,20 @@ object BatteryStatsUtil {
 
         return list.sortedByDescending { it.powerMah }
     }
+
+    private val APP_UID_PATTERN = Regex("u(\\d+)a(\\d+)")
+
+    private fun isVisibleUid(uid: Int): Boolean = uid < 10000 || uid / 100000 == android.os.Process.myUid() / 100000
+
+    private fun firstPackageForUid(
+        pm: PackageManager,
+        uid: Int,
+    ): String? =
+        try {
+            pm.getPackagesForUid(uid)?.firstOrNull()
+        } catch (_: SecurityException) {
+            null
+        }
 
     private fun getAppName(
         pm: PackageManager,

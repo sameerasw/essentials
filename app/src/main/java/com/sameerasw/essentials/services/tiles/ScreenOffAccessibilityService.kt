@@ -32,6 +32,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.InputEventListenerService
+import com.sameerasw.essentials.services.LiveUpdateSnoozer
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
 import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
@@ -43,8 +44,10 @@ import com.sameerasw.essentials.services.handlers.FlashlightHandler
 import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
+import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
 import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
+import com.sameerasw.essentials.services.handlers.LockscreenShortcutsHandler
 import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FreezeManager
@@ -73,11 +76,13 @@ class ScreenOffAccessibilityService :
     private lateinit var omniGestureOverlayHandler: OmniGestureOverlayHandler
     private lateinit var statusBarIconHandler: StatusBarIconHandler
     private lateinit var pocketModeHandler: PocketModeHandler
+    private lateinit var faceUnlockBrightnessHandler: FaceUnlockBrightnessHandler
     private lateinit var smartPixelsHandler: com.sameerasw.essentials.services.handlers.SmartPixelsHandler
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
     private lateinit var snippetAccessibilityHandler: com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler
+    private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -213,7 +218,9 @@ class ScreenOffAccessibilityService :
 
     private val preferenceChangeListener =
         android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == "circle_to_search_gesture_enabled" ||
+            if (key == SettingsRepository.KEY_ISLAND_HIDE_LIVE_UPDATES) {
+                LiveUpdateSnoozer.onSettingChanged()
+            } else if (key == "circle_to_search_gesture_enabled" ||
                 key == "circle_to_search_gesture_height" ||
                 key == "circle_to_search_gesture_width" ||
                 key == "circle_to_search_preview_enabled"
@@ -246,6 +253,9 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_MEDIA ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_APP_ICON ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS
             ) {
                 if (key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE) {
@@ -285,6 +295,11 @@ class ScreenOffAccessibilityService :
                 if (::snippetAccessibilityHandler.isInitialized) {
                     snippetAccessibilityHandler.updateSettings()
                 }
+            } else if (key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUTS_ENABLED ||
+                key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS ||
+                key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
+            ) {
+                lockscreenShortcutsHandler.updateState()
             }
         }
 
@@ -303,12 +318,16 @@ class ScreenOffAccessibilityService :
         omniGestureOverlayHandler = OmniGestureOverlayHandler(this)
         statusBarIconHandler = StatusBarIconHandler(this)
         pocketModeHandler = PocketModeHandler(this)
+        faceUnlockBrightnessHandler = FaceUnlockBrightnessHandler(this)
         smartPixelsHandler =
             com.sameerasw.essentials.services.handlers
                 .SmartPixelsHandler(this)
         duoOverlayHandler = DuoOverlayHandler(this)
         islandOverlayHandler = IslandCoordinator(this)
-        islandOverlayHandler.onVisibilityChanged = { duoOverlayHandler.setIslandVisible(it) }
+        islandOverlayHandler.onVisibilityChanged = {
+            duoOverlayHandler.setIslandVisible(it)
+            LiveUpdateSnoozer.onIslandVisibility(this, it)
+        }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
         snippetAccessibilityHandler =
@@ -318,6 +337,7 @@ class ScreenOffAccessibilityService :
                 islandCoordinator = islandOverlayHandler,
                 duoOverlayHandler = duoOverlayHandler,
             )
+        lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -346,6 +366,8 @@ class ScreenOffAccessibilityService :
                             aodWallpaperOverlayHandler.onScreenOn()
                             duoOverlayHandler.onScreenOn()
                             statusGlanceHandler.onScreenOn()
+                            faceUnlockBrightnessHandler.onScreenOn()
+                            lockscreenShortcutsHandler.onScreenOn()
                             islandOverlayHandler.updateState()
                             freezeHandler.removeCallbacks(freezeRunnable)
                             stopInputEventListener()
@@ -366,14 +388,18 @@ class ScreenOffAccessibilityService :
                             aodWallpaperOverlayHandler.onScreenOff()
                             duoOverlayHandler.onScreenOff()
                             statusGlanceHandler.onScreenOff()
+                            lockscreenShortcutsHandler.onScreenOff()
                             omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
                             pocketModeHandler.onScreenOff()
+                            faceUnlockBrightnessHandler.onScreenOff()
                             updatePocketModeSensors()
                         }
 
                         Intent.ACTION_USER_PRESENT -> {
-                            aodWallpaperOverlayHandler.onScreenOn()
+                            faceUnlockBrightnessHandler.onUserPresent()
+                            aodWallpaperOverlayHandler.onUserPresent()
                             statusGlanceHandler.onUserPresent()
+                            lockscreenShortcutsHandler.onUserPresent()
                             duoOverlayHandler.onUserPresent()
                             islandOverlayHandler.updateState()
                             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -478,9 +504,9 @@ class ScreenOffAccessibilityService :
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             }
         updateOmniOverlay()
-        duoOverlayHandler.updateState()
-        statusGlanceHandler.updateState()
-        islandOverlayHandler.updateState()
+        duoOverlayHandler.restart()
+        statusGlanceHandler.restart()
+        islandOverlayHandler.restart()
     }
 
     private fun updateOmniOverlay() {
@@ -508,12 +534,14 @@ class ScreenOffAccessibilityService :
             unregisterReceiver(screenReceiver)
         } catch (_: Exception) {
         }
+        LiveUpdateSnoozer.release()
         flashlightHandler.unregister()
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
         aodForceTurnOffHandler.removeOverlay()
         aodWallpaperOverlayHandler.removeOverlay()
         pocketModeHandler.removeOverlay()
+        faceUnlockBrightnessHandler.onDestroy()
         buttonRemapHandler.isVolumeDialogVisible = false
         omniGestureOverlayHandler.removeOverlay()
         smartPixelsHandler.destroy()
@@ -523,6 +551,7 @@ class ScreenOffAccessibilityService :
         if (::snippetAccessibilityHandler.isInitialized) {
             snippetAccessibilityHandler.destroy()
         }
+        lockscreenShortcutsHandler.onDestroy()
         statusBarIconHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
@@ -548,10 +577,14 @@ class ScreenOffAccessibilityService :
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
-        var detectedPackage = event.packageName?.toString()
+        val trustsEventPackage = event.eventType != AccessibilityEvent.TYPE_WINDOWS_CHANGED
+        var detectedPackage = if (trustsEventPackage) event.packageName?.toString() else null
         if (detectedPackage == null || detectedPackage == "android") {
             try {
-                val activePkg = rootInActiveWindow?.packageName?.toString()
+                val activePkg = windows
+                    ?.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
+                    ?.root?.packageName?.toString()
+                    ?: rootInActiveWindow?.packageName?.toString()
                     ?: windows?.firstOrNull { it.isFocused }?.root?.packageName?.toString()
                 if (activePkg != null) {
                     detectedPackage = activePkg
@@ -585,6 +618,8 @@ class ScreenOffAccessibilityService :
             freezeHandler.removeCallbacks(shadeRecheckRunnable)
             freezeHandler.postDelayed(shadeRecheckRunnable, 300)
             checkVolumeDialogState()
+            faceUnlockBrightnessHandler.onWindowsChanged()
+            lockscreenShortcutsHandler.onWindowsChanged()
         }
     }
 
@@ -804,6 +839,8 @@ class ScreenOffAccessibilityService :
         islandOverlayHandler.onConfigurationChanged()
         statusGlanceHandler.onConfigurationChanged(newConfig)
         ambientGlanceHandler.onConfigurationChanged()
+        faceUnlockBrightnessHandler.onConfigurationChanged()
+        lockscreenShortcutsHandler.onConfigurationChanged()
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {

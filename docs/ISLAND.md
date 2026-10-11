@@ -72,6 +72,8 @@ utils/chronometer/             Timer / stopwatch notification tracking
 utils/notification/            NotificationRepostFilter (group repost de-duplication)
 ```
 
+Provider apps are hosted from `island/remote/` (discovery, trust, connections, payload validation and the surface embed) and the shared contract lives in the `island-sdk` and `island-sdk-compose` modules at the repository root. See [ISLAND_PROVIDERS.md](ISLAND_PROVIDERS.md).
+
 Tests live in `app/src/test/java/com/sameerasw/essentials/island/` and cover the controller and the compact layout engine.
 
 ---
@@ -102,7 +104,7 @@ Rules worth knowing:
 - The surface stays centred on the camera; cells hug the outer ends with equal edge padding.
 - With an edge camera (`CameraAnchor.Start` / `End`) all cells go on the open side.
 
-Priorities are in `IslandPriority` (lower wins). Current order: Call, Time, Battery, Notification, Flashlight, Timer, Media, Conscious Gate, Caffeinate, Travel (Are we there yet), Calendar, Sound mode, Network, Devices.
+Priorities are in `IslandPriority` (lower wins). Current order: Call, Time, Battery, Notification, Flashlight, Timer, Media, Conscious Gate, Caffeinate, Travel (Are we there yet), Calendar, Sound mode, Network, Devices. Approved provider apps (for example Overcast weather) are added to the user-orderable list automatically at their declared default priority.
 
 An item can temporarily outrank its base priority by setting `priorityOverride` (layout uses `IslandItem.effectivePriority`). Override values live in `IslandPriority` with an `_OVERRIDE` suffix and rank just after the pinned time/battery:
 
@@ -128,6 +130,12 @@ A free-form composable supplied by the plugin through `ExpandedContent`. `Expand
 | `keepAlive()` | Holds off auto-collapse for non-touch activity such as typing |
 
 Expanded content owns its own padding so backgrounds can go full-bleed. It must pad its content by `spec.expandedOutset` and keep the camera row clear. Use the shared components rather than hand-rolling this.
+
+---
+
+## Provider apps
+
+Features that live in another app do not belong in this module. Instead of adding a plugin, the other app implements an island provider and Essentials hosts it through `RemoteProvidersPlugin`: the app sends compact and line data and draws its own expanded view, and the user approves it once. Weather comes from Overcast this way. The full contract, security model and a worked example are in [ISLAND_PROVIDERS.md](ISLAND_PROVIDERS.md).
 
 ---
 

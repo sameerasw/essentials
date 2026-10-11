@@ -21,8 +21,13 @@ data class IslandLayoutSpec(
     val expandedScale: Float = 1f,
     val fontScale: Float = 1f,
     val expandedOutset: Dp = 0.dp,
+    val maxExpandedHeight: Dp = Dp.Unspecified,
+    val cameraPresence: Float = 1f,
+    val bondEdge: Boolean = false,
+    val landscape: Boolean = false,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,
     val outlineColor: Color? = null,
+    val outlineDynamic: Boolean = false,
     val outlineThickness: Dp = 1.dp,
     val outlineHiddenWhenExpanded: Boolean = false,
     val pulseShadow: Boolean = false,
@@ -32,7 +37,7 @@ data class IslandLayoutSpec(
     val pulseDurationMs: Int = 1450,
 ) {
     val compactHeight: Dp get() = cameraDiameter + verticalGap * 2
-    val cameraSlotWidth: Dp get() = cameraDiameter + cameraGap * 2
+    val cameraSlotWidth: Dp get() = cameraDiameter * cameraPresence + cameraGap * 2
     val cellSize: Dp get() = cameraDiameter
     val cellSpacing: Dp get() = cameraGap
 

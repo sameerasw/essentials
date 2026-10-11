@@ -74,6 +74,8 @@ fun ConfigSliderItem(
     icon: Int? = null,
     subtitle: String? = null,
     showValue: Boolean = true,
+    allowDecimals: Boolean = increment < 1f,
+    trailingContent: (@Composable () -> Unit)? = null,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -85,8 +87,7 @@ fun ConfigSliderItem(
     var showValueEntry by remember { mutableStateOf(false) }
     var translationSheetKey by remember { mutableStateOf<String?>(null) }
 
-    // Whole-number ranges get the plain number pad
-    val decimals = increment < 1f
+    val decimals = allowDecimals
 
     Column(
         modifier =
@@ -154,6 +155,7 @@ fun ConfigSliderItem(
                         )
                     }
                 }
+                trailingContent?.invoke()
             }
 
             if (showValueEntry) {

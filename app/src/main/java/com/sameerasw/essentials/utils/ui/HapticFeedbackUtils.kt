@@ -27,6 +27,7 @@ fun performHapticFeedback(
     vibrator: Vibrator,
     feedbackType: HapticFeedbackType,
 ) {
+    if (!HapticUtil.isAppHapticsEnabled.value) return
     if (!vibrator.hasVibrator()) return
 
     when (feedbackType) {
@@ -37,8 +38,8 @@ fun performHapticFeedback(
                 vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_LOW_TICK)
             ) {
                 val effect = VibrationEffect.startComposition()
-                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, 0.5f)
-                    .compose()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_LOW_TICK, HapticUtil.boost(0.5f))
+                    .composeBoosted(vibrator)
                 vibrateWithTouchAttributes(vibrator, effect)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
@@ -54,8 +55,8 @@ fun performHapticFeedback(
                 vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_TICK)
             ) {
                 val effect = VibrationEffect.startComposition()
-                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_TICK, 1.0f)
-                    .compose()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_TICK, HapticUtil.boost(1.0f))
+                    .composeBoosted(vibrator)
                 vibrateWithTouchAttributes(vibrator, effect)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
@@ -71,8 +72,8 @@ fun performHapticFeedback(
                 vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_CLICK)
             ) {
                 val effect = VibrationEffect.startComposition()
-                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f)
-                    .compose()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, HapticUtil.boost(1.0f))
+                    .composeBoosted(vibrator)
                 vibrateWithTouchAttributes(vibrator, effect)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
@@ -88,9 +89,9 @@ fun performHapticFeedback(
                 vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_CLICK)
             ) {
                 val effect = VibrationEffect.startComposition()
-                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 0.7f)
-                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f, 60)
-                    .compose()
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, HapticUtil.boost(0.7f))
+                    .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, HapticUtil.boost(1.0f), 60)
+                    .composeBoosted(vibrator)
                 vibrateWithTouchAttributes(vibrator, effect)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)

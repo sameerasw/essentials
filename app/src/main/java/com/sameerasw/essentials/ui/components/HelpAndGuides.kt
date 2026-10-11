@@ -94,7 +94,8 @@ fun HelpAndGuidesContent() {
                 description = stringResource(R.string.instruction_section_shizuku_desc),
                 links =
                     listOf(
-                        stringResource(R.string.perm_shizuku_title) to "https://github.com/thedjchi/Shizuku",
+                        stringResource(R.string.perm_shizuku_title) to "https://github.com/rushiranpise/Shizuku-Next",
+                        stringResource(R.string.perm_porter_title) to "https://github.com/d4rken-org/porter",
                     ),
             ),
             InstructionSection(

@@ -10,7 +10,7 @@
 package com.sameerasw.essentials
 
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.weather.effects.WeatherSimulation
+import com.sameerasw.essentials.ui.activities.WallpaperStagingActivity
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import android.Manifest
 import android.content.ClipData
@@ -104,6 +104,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.pickers.PrivilegedModePicker
 import com.sameerasw.essentials.ui.core.cards.PermissionCard
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.AppIconPicker
@@ -124,6 +125,8 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.utils.AppHapticMode
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionGrantUtil
 import kotlinx.coroutines.withContext
@@ -289,7 +292,7 @@ class SettingsActivity : AppCompatActivity() {
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode in 1001..1006) {
+        if (requestCode in 1001..1007) {
             viewModel.check(this)
         }
     }
@@ -325,7 +328,7 @@ fun SettingsContent(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val isStoragePermissionGranted by viewModel.isStoragePermissionGranted
     val context = LocalContext.current
-    val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
+    val hapticMode by HapticUtil.hapticMode
     var isPermissionsExpanded by remember { mutableStateOf(expandPermissionsInitial) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
@@ -348,6 +351,7 @@ fun SettingsContent(
     val grantScope = rememberCoroutineScope()
     var showInstructionsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
+    var showHiddenDebuggingHelpSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
     var pendingPreReleaseState by remember { mutableStateOf(false) }
@@ -470,8 +474,26 @@ fun SettingsContent(
         UnsupportedFeaturesConfirmationSheet(
             onDismissRequest = { showUnsupportedFeaturesSheet = false },
             onConfirm = {
-                showUnsupportedFeaturesSheet = false
-                viewModel.setEnableUnsupportedFeatures(true, context)
+                val activity = context as? androidx.fragment.app.FragmentActivity
+                val canAuthenticate =
+                    androidx.biometric.BiometricManager
+                        .from(context)
+                        .canAuthenticate(com.sameerasw.essentials.utils.BiometricHelper.allowedAuthenticators) ==
+                        androidx.biometric.BiometricManager.BIOMETRIC_SUCCESS
+                if (activity == null || !canAuthenticate) {
+                    showUnsupportedFeaturesSheet = false
+                    viewModel.setEnableUnsupportedFeatures(true, context)
+                } else {
+                    com.sameerasw.essentials.utils.BiometricHelper.showBiometricPrompt(
+                        activity = activity,
+                        title = context.getString(R.string.unsupported_auth_title),
+                        subtitle = context.getString(R.string.unsupported_auth_subtitle),
+                        onSuccess = {
+                            showUnsupportedFeaturesSheet = false
+                            viewModel.setEnableUnsupportedFeatures(true, context)
+                        },
+                    )
+                }
             },
             featureTitleResIds = FeatureRegistry.getUnsupportedFeatures(context).map { it.title },
         )
@@ -507,6 +529,13 @@ fun SettingsContent(
             onConfirmMerge = {
                 onImportConfig(true)
             },
+        )
+    }
+
+    if (showHiddenDebuggingHelpSheet) {
+        com.sameerasw.essentials.ui.core.sheets.HiddenDebuggingHelpBottomSheet(
+            onDismissRequest = { showHiddenDebuggingHelpSheet = false },
+            onAutoDetected = { viewModel.setHiddenDebuggingSupport(true) },
         )
     }
 
@@ -704,15 +733,32 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_vibrate_24,
-                title = "Haptic Feedback",
-                isChecked = isAppHapticsEnabled.value,
-                onCheckedChange = { isChecked ->
-                    isAppHapticsEnabled.value = isChecked
-                    HapticUtil.saveAppHapticsEnabled(context, isChecked)
-                },
+            val hapticModeLabels = mapOf(
+                AppHapticMode.DISABLED to stringResource(R.string.haptic_mode_disabled),
+                AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
+                AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.label_haptics_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                SegmentedPicker(
+                    items = AppHapticMode.entries,
+                    selectedItem = hapticMode,
+                    onItemSelected = { HapticUtil.saveHapticMode(context, it) },
+                    labelProvider = { hapticModeLabels.getValue(it) },
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.label_haptic_feedback),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_invert_colors_24,
@@ -883,15 +929,12 @@ fun SettingsContent(
                 }
             }
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_numbers_24,
-                title = stringResource(R.string.setting_use_root_title),
-                description = stringResource(R.string.setting_use_root_desc),
-                isChecked = viewModel.isRootEnabled.value,
-                onCheckedChange = { viewModel.setRootEnabled(it, context) },
+            PrivilegedModePicker(
+                selectedMode = viewModel.privilegedMode.value,
+                onModeSelected = { viewModel.setPrivilegedMode(it, context) },
             )
 
-            Row(
+            if (viewModel.usesAuthToken.value) Row(
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -956,6 +999,23 @@ fun SettingsContent(
                     )
                 }
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_adb_24,
+                title = stringResource(R.string.setting_hidden_debugging_title),
+                isChecked = viewModel.isHiddenDebuggingSupport.value,
+                onCheckedChange = { checked ->
+                    viewModel.setHiddenDebuggingSupport(checked)
+                    if (checked && !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)) {
+                        if (com.sameerasw.essentials.utils.ShizukuUtils.isShizukuAvailable()) {
+                            com.sameerasw.essentials.utils.ShizukuUtils.requestPermission()
+                        } else {
+                            Toast.makeText(context, R.string.shizuku_not_running_desc, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
+                onInfoClick = { showHiddenDebuggingHelpSheet = true },
+            )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_data_usage_24,
@@ -1388,27 +1448,6 @@ fun SettingsContent(
                     }
                 }
 
-                val devSettings = remember { SettingsRepository(context) }
-                var simulatedWeather by remember {
-                    mutableStateOf(devSettings.getString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, WeatherSimulation.OFF) ?: WeatherSimulation.OFF)
-                }
-                ConfigPickerItem(
-                    title = stringResource(R.string.dev_simulate_weather_title),
-                    iconRes = R.drawable.rounded_partly_cloudy_day_24,
-                    selectedValue = WeatherSimulation.presets.firstOrNull { it.id == simulatedWeather }?.label.orEmpty(),
-                ) {
-                    WeatherSimulation.presets.forEach { preset ->
-                        SegmentedDropdownMenuItem(
-                            text = { Text(preset.label) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                simulatedWeather = preset.id
-                                devSettings.putString(SettingsRepository.KEY_DEBUG_SIMULATED_WEATHER, preset.id)
-                            },
-                        )
-                    }
-                }
-
                 Row(
                     modifier =
                         Modifier
@@ -1693,6 +1732,28 @@ fun SettingsContent(
                                         },
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
                                 )
+                            }
+
+                            Button(
+                                onClick = {
+                                    HapticUtil.performUIHaptic(view)
+                                    val intent = Intent(context, WallpaperStagingActivity::class.java)
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 44.dp),
+                                colors =
+                                    ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    ),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_wallpaper_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = stringResource(R.string.feat_wallpaper_staging_title))
                             }
                         }
                     }

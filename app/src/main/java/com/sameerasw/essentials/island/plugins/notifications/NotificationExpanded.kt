@@ -100,6 +100,12 @@ fun NotificationExpanded(
                         IslandBitmap(alert.chatIcon ?: alert.appIcon ?: alert.icon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
                         MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
+                    end = {
+                        val appIcon = alert.appIcon
+                        if (alert.chatIcon != null && appIcon != null) {
+                            IslandBitmap(appIcon, spec.cellSize, circle = true)
+                        }
+                    },
                 )
                 if (message.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))

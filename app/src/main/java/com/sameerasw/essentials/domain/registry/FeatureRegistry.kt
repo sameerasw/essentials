@@ -19,12 +19,15 @@ import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
+import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.hardware.HilightLights
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -386,6 +389,7 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = "Screen refresh rate",
+                contributors = listOf("DDOneApps"),
                 title = R.string.feat_screen_refresh_rate_title,
                 iconRes = R.drawable.rounded_shutter_speed_24,
                 category = R.string.cat_interface,
@@ -755,19 +759,20 @@ object FeatureRegistry {
                 searchableSettings =
                     listOf(
                         SearchSetting(
-                            R.string.island_show_time_battery_title,
-                            R.string.island_battery_style_title,
+                            R.string.island_show_time_title,
+                            R.string.island_show_time_title,
                             "island_show_time_battery",
+                        ),
+                        SearchSetting(
+                            R.string.island_show_battery_title,
+                            R.string.island_battery_style_title,
+                            "island_show_battery",
+                            R.array.keywords_battery,
                         ),
                         SearchSetting(
                             R.string.island_show_timers_title,
                             R.string.island_stopwatch_default,
                             "island_show_timers",
-                        ),
-                        SearchSetting(
-                            R.string.lock_screen_clock_weather,
-                            R.string.island_weather_options_title,
-                            "island_show_weather",
                         ),
                         SearchSetting(
                             R.string.feat_caffeinate_title,
@@ -825,9 +830,29 @@ object FeatureRegistry {
                             "island_notif_compact_heads_up",
                         ),
                         SearchSetting(
+                            R.string.island_notif_skip_silent_title,
+                            R.string.island_notification_options_title,
+                            "island_notif_skip_silent",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_filter_apps_title,
+                            R.string.island_notification_options_title,
+                            "island_notif_filter_apps",
+                        ),
+                        SearchSetting(
                             R.string.island_media_peek_song_change_title,
                             R.string.island_media_peek_song_change_desc,
                             "island_media_peek_song_change",
+                        ),
+                        SearchSetting(
+                            R.string.island_media_show_previous_title,
+                            R.string.duo_show_media_title,
+                            "island_media_show_previous",
+                        ),
+                        SearchSetting(
+                            R.string.island_media_show_like_title,
+                            R.string.duo_show_media_title,
+                            "island_media_show_like",
                         ),
                     ),
                 parentFeatureId = "Display",
@@ -1009,7 +1034,10 @@ object FeatureRegistry {
                 parentFeatureId = "Display",
                 animationRes = R.raw.caffeinate_animation,
             ) {
-                override fun isEnabled(viewModel: MainViewModel) = viewModel.isCaffeinateActive.value
+                override fun isEnabled(viewModel: MainViewModel) =
+                    viewModel.isCaffeinateActive.value ||
+                        CaffeinateController.isActive.value ||
+                        CaffeinateController.isStarting.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,
@@ -1074,6 +1102,102 @@ object FeatureRegistry {
                 ) = viewModel.setNotificationLightingEnabled(enabled, context)
             },
             object : Feature(
+                id = "Hilight",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_hilight_title,
+                iconRes = R.drawable.rounded_auto_awesome_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_hilight_desc,
+                permissionKeys = listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+                aboutDescription = R.string.about_desc_hilight,
+                parentFeatureId = "Notifications",
+                showToggle = false,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = "Hilight notifications",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_hilight_notifications_title,
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                category = R.string.cat_interface,
+                description = R.string.hilight_notifications_desc,
+                permissionKeys = listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+                aboutDescription = R.string.about_desc_hilight,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_hilight_notifications_title,
+                            R.string.search_hilight_notifications_desc,
+                            "hilight_notifications",
+                        ),
+                    ),
+                parentFeatureId = "Hilight",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isHilightNotificationsEnabled.value
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = DeviceUtils.isHilightDevice() &&
+                    HilightLights.isModeSupported(context) &&
+                    viewModel.isShizukuPermissionGranted.value &&
+                    viewModel.isNotificationListenerEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setHilightNotificationsEnabled(enabled)
+            },
+            object : Feature(
+                id = "Hilight live progress",
+                contributors = listOf("jawzf"),
+                title = R.string.hilight_progress_title,
+                iconRes = R.drawable.rounded_downloading_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_hilight_progress_desc,
+                permissionKeys = listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+                aboutDescription = R.string.about_desc_hilight_progress,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_hilight_progress_title,
+                            R.string.search_hilight_progress_desc,
+                            "hilight_progress",
+                        ),
+                    ),
+                parentFeatureId = "Hilight",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isHilightProgressEnabled.value
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = DeviceUtils.isHilightDevice() &&
+                    HilightLights.isModeSupported(context) &&
+                    viewModel.isShizukuPermissionGranted.value &&
+                    viewModel.isNotificationListenerEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setHilightProgressEnabled(enabled)
+            },
+            object : Feature(
                 id = "Flashlight pulse",
                 title = R.string.flashlight_pulse_title,
                 iconRes = R.drawable.rounded_flashlight_on_24,
@@ -1100,6 +1224,8 @@ object FeatureRegistry {
                 parentFeatureId = "Notifications",
                 animationRes = R.raw.flash_animation,
             ) {
+                override fun isDeviceSupported(context: Context) = !DeviceUtils.isTorchRestrictedDevice()
+
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isFlashlightPulseEnabled.value
 
                 override fun isToggleEnabled(
@@ -1112,6 +1238,25 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setFlashlightPulseEnabled(enabled, context)
+            },
+            object : Feature(
+                id = "Activity launcher",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_activity_launcher_title,
+                iconRes = R.drawable.rounded_app_registration_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_activity_launcher_desc,
+                aboutDescription = R.string.about_desc_activity_launcher,
+                showToggle = false,
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = false
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
             },
             object : Feature(
                 id = "Link actions",
@@ -1177,6 +1322,8 @@ object FeatureRegistry {
                 hasMoreSettings = true,
                 animationRes = R.raw.flash_animation,
             ) {
+                override fun isDeviceSupported(context: Context) = !DeviceUtils.isTorchRestrictedDevice()
+
                 override fun isEnabled(viewModel: MainViewModel) = true
 
                 override fun onToggle(
@@ -1488,6 +1635,7 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = "Button remap",
+                contributors = listOf("jawzf"),
                 title = R.string.feat_button_remap_title,
                 iconRes = R.drawable.rounded_switch_access_3_24,
                 category = R.string.cat_interaction,
@@ -1545,6 +1693,44 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setButtonRemapEnabled(enabled, context)
+            },
+            object : Feature(
+                id = "Lock screen shortcuts",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_lockscreen_shortcuts_title,
+                iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_lockscreen_shortcuts_desc,
+                aboutDescription = R.string.about_desc_lockscreen_shortcuts,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_lockscreen_shortcuts_enable_title,
+                            R.string.search_lockscreen_shortcuts_enable_desc,
+                            "enable_lockscreen_shortcuts",
+                            R.array.keywords_switch_master,
+                        ),
+                    ),
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isLockscreenShortcutsEnabled.value
+
+                // Only blocked once system shortcuts are found; until the lock screen is checked the buttons just stay hidden
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value &&
+                    (
+                        viewModel.isLockscreenShortcutsEnabled.value ||
+                            viewModel.lockscreenSystemShortcutsState.value != SystemShortcutsState.PRESENT
+                    )
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setLockscreenShortcutsEnabled(enabled)
             },
             object : Feature(
                 id = "Dynamic night light",
@@ -1775,6 +1961,7 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = CONSCIOUS_GATE_FEATURE_ID,
+                contributors = listOf("thomasborgogno"),
                 title = R.string.feat_conscious_gate_title,
                 iconRes = R.drawable.rounded_pause_24,
                 category = R.string.cat_interaction,
@@ -2004,6 +2191,28 @@ object FeatureRegistry {
                 permissionKeys = listOf("BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
                 showToggle = false,
                 hasMoreSettings = true,
+                parentFeatureId = "Widgets",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = "Widget stack",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_widget_stack_title,
+                iconRes = R.drawable.rounded_widgets_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_widget_stack_desc,
+                aboutDescription = R.string.about_desc_widget_stack,
+                permissionKeys = listOf("DRAW_OVERLAYS"),
+                showToggle = false,
+                hasMoreSettings = true,
+                isBeta = true,
                 parentFeatureId = "Widgets",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -2497,6 +2706,52 @@ object FeatureRegistry {
                 ) {}
 
                 override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
+            },
+            object : Feature(
+                id = "Face unlock brightness",
+                title = R.string.feat_face_unlock_brightness_title,
+                iconRes = R.drawable.rounded_face_24,
+                category = R.string.cat_tools,
+                description = R.string.feat_face_unlock_brightness_desc,
+                aboutDescription = R.string.feat_face_unlock_brightness_desc,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.flashlight_pulse_max_brightness,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_max_brightness",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_ambient_threshold_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_ambient_threshold",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_auto_illuminate_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_auto_illuminate",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_trigger_unlock_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_trigger_unlock",
+                        ),
+                        SearchSetting(
+                            R.string.face_unlock_light_tint_title,
+                            R.string.feat_face_unlock_brightness_title,
+                            "face_unlock_light_tint",
+                        ),
+                    ),
+                parentFeatureId = "Security",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isFaceUnlockBrightnessEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setFaceUnlockBrightnessEnabled(enabled)
             },
             object : Feature(
                 id = "Lockdown mode",

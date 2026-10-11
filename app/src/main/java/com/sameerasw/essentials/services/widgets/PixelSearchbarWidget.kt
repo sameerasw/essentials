@@ -10,7 +10,10 @@
 package com.sameerasw.essentials.services.widgets
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +49,8 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.DIYRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -61,32 +66,36 @@ class PixelSearchbarWidget : GlanceAppWidget() {
         id: GlanceId,
     ) {
         val settingsRepository = SettingsRepository(context)
-        val type = settingsRepository.getPixelSearchbarType()
-        val tapActionEnabled = settingsRepository.getPixelSearchbarTapActionEnabled()
-        val paddingH = settingsRepository.getPixelSearchbarWidgetPaddingH().dp
-        val paddingV = settingsRepository.getPixelSearchbarWidgetPaddingV().dp
-        val revision = settingsRepository.getPixelSearchbarWidgetRevision()
-
-        val musicBitmap =
-            if (type == "music") {
-                withContext(Dispatchers.IO) {
-                    runCatching {
-                        val file = File(context.filesDir, "music_artwork.png")
-                        if (file.exists()) BitmapFactory.decodeFile(file.absolutePath) else null
-                    }.getOrNull()
-                }
-            } else {
-                null
-            }
-
-        val globalTapAction =
-            if (tapActionEnabled) {
-                actionStartActivity(PixelSearchbarTapActivity::class.java)
-            } else {
-                actionStartActivity(PixelSearchResultsActivity::class.java)
-            }
 
         provideContent {
+            val revision = SearchbarRenderState.revision
+            val type = settingsRepository.getPixelSearchbarType()
+            val tapActionEnabled = settingsRepository.getPixelSearchbarTapActionEnabled()
+            val paddingH = settingsRepository.getPixelSearchbarWidgetPaddingH().dp
+            val paddingV = settingsRepository.getPixelSearchbarWidgetPaddingV().dp
+
+            val musicBitmapState by produceState<Bitmap?>(null, revision, type) {
+                value =
+                    if (type == "music") {
+                        withContext(Dispatchers.IO) {
+                            runCatching {
+                                val file = File(context.filesDir, "music_artwork.png")
+                                if (file.exists()) BitmapFactory.decodeFile(file.absolutePath) else null
+                            }.getOrNull()
+                        }
+                    } else {
+                        null
+                    }
+            }
+            val musicBitmap = musicBitmapState
+
+            val globalTapAction =
+                if (tapActionEnabled) {
+                    actionStartActivity(PixelSearchbarTapActivity::class.java)
+                } else {
+                    actionStartActivity(PixelSearchResultsActivity::class.java)
+                }
+
             GlanceTheme {
                 val boxModifier =
                     GlanceModifier
@@ -104,8 +113,28 @@ class PixelSearchbarWidget : GlanceAppWidget() {
 
                     "widget" -> {
                         val remoteViews = WidgetScraperService.currentRemoteViews
+                        val hasCustomTapAction =
+                            tapActionEnabled &&
+                                run {
+                                    DIYRepository.init(context)
+                                    DIYRepository.automations.value.any {
+                                        it.type == Automation.Type.PIXEL_SEARCHBAR && it.isEnabled && it.actionList.isNotEmpty()
+                                    }
+                                }
+                        val widgetModifier =
+                            GlanceModifier
+                                .fillMaxSize()
+                                .background(Color.Transparent)
+                                .padding(horizontal = paddingH, vertical = paddingV)
                         Box(
-                            modifier = boxModifier.cornerRadius(28.dp),
+                            modifier =
+                                (
+                                    if (hasCustomTapAction) {
+                                        widgetModifier.clickable(actionStartActivity(PixelSearchbarTapActivity::class.java))
+                                    } else {
+                                        widgetModifier
+                                    }
+                                ).cornerRadius(28.dp),
                             contentAlignment = Alignment.Center,
                         ) {
                             if (remoteViews != null) {
@@ -115,7 +144,13 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                 )
                             } else {
                                 val providerName = settingsRepository.getPixelSearchbarWidgetProvider()
-                                val label = providerName?.substringAfterLast(".")?.takeIf { it.isNotEmpty() } ?: context.getString(R.string.pixel_searchbar_style_widget)
+                                val providerLabel = providerName?.substringAfterLast(".")?.takeIf { it.isNotEmpty() } ?: context.getString(R.string.pixel_searchbar_style_widget)
+                                val label =
+                                    if (WidgetScraperService.isUnsupported) {
+                                        context.getString(R.string.pixel_searchbar_widget_unsupported, providerLabel)
+                                    } else {
+                                        providerLabel
+                                    }
                                 Row(
                                     modifier =
                                         GlanceModifier

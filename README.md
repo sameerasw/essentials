@@ -4,7 +4,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 
 <p align="center">
-<img width="99%" src="https://github.com/user-attachments/assets/c0849951-4cf0-4a91-9964-f7c212977af1" />
+<img width="99%" alt="essentials" src="https://github.com/user-attachments/assets/b14e1067-a414-42fd-80c5-6d1f6086ab38" />
 </p>
 
 <p align="center">
@@ -99,7 +99,7 @@ This is a new restriction on Android with sideloaded apps that can receive sensi
 # Shell Providers (Shizuku & Root)
 
 - Essentials supports both **Shizuku** and **Root** as shell providers for executing advanced system-level commands.
-- **Shizuku**: Make sure to get the latest version of Shizuku preferably from a fork such as [thedjchi/Shizuku](https://github.com/thedjchi/Shizuku) or other not from the Google Play as it is no longer well supported.
+- **Shizuku**: Make sure to get the latest version of Shizuku preferably from a fork such as [rushiranpise/Shizuku-Next](https://github.com/rushiranpise/Shizuku-Next) or other not from the Google Play as it is no longer well supported.
 - **Root**: If your device is rooted, Essentials can bypass Shizuku and use root privileges directly for features like Button Remap and App Freezing.
 
 # How to grant accessibility permissions

@@ -19,11 +19,22 @@ data class Automation(
     @SerializedName("trigger") val trigger: Trigger? = null,
     @SerializedName("state") val state: State? = null,
     @SerializedName("actions") val actions: List<Action> = emptyList(),
+    // Single actions saved before sequences were supported; new saves use entryActions and exitActions
     @SerializedName("entryAction") val entryAction: Action? = null,
     @SerializedName("exitAction") val exitAction: Action? = null,
     @SerializedName("isEnabled") val isEnabled: Boolean = true,
     @SerializedName("selectedApps") val selectedApps: List<String> = emptyList(),
+    @SerializedName("entryActions") val entryActions: List<Action>? = null,
+    @SerializedName("exitActions") val exitActions: List<Action>? = null,
 ) {
+    // Gson leaves missing lists null despite the defaults, so older automations come back as null
+    @Suppress("USELESS_ELVIS")
+    val actionList: List<Action> get() = actions ?: emptyList()
+
+    val entryActionList: List<Action> get() = entryActions ?: listOfNotNull(entryAction)
+
+    val exitActionList: List<Action> get() = exitActions ?: listOfNotNull(exitAction)
+
     @Keep
     enum class Type {
         @SerializedName("TRIGGER")

@@ -70,6 +70,8 @@ suspend fun PointerInputScope.detectCompactGestures(
     val commitThreshold = 56.dp.toPx()
     val slideStep = 18.dp.toPx()
     val tickStep = 12.dp.toPx()
+    val brightnessRange = 240.dp.toPx()
+    var lastBrightnessPercent = -1
     val tracker = VelocityTracker()
     var config: CompactGestures = CompactGestures.None
     var mode = SlideMode.None
@@ -95,6 +97,8 @@ suspend fun PointerInputScope.detectCompactGestures(
             tracker.resetTracking()
             config = gestures()
             mode = config.slideMode
+            config.slideBegin()
+            lastBrightnessPercent = config.levelPercent()
             publish(config, mode, 0f, armed = false)
         },
         onDrag = { change, amount ->
@@ -109,7 +113,15 @@ suspend fun PointerInputScope.detectCompactGestures(
                 val active = mode != SlideMode.None
                 scope.launch { jelly.stretchX.snapTo(if (active) dx else dx * 0.35f) }
                 when (mode) {
-                    SlideMode.Volume, SlideMode.Brightness -> if (abs(dx - lastStepX) >= slideStep) {
+                    SlideMode.Brightness -> {
+                        val percent = config.slideTo(dx, brightnessRange)
+                        if (percent != lastBrightnessPercent) {
+                            if (percent / 5 != lastBrightnessPercent / 5) IslandHaptics.sliderStep(context)
+                            lastBrightnessPercent = percent
+                            publish(config, mode, dx, armed = false)
+                        }
+                    }
+                    SlideMode.Volume -> if (abs(dx - lastStepX) >= slideStep) {
                         config.slideStep(forward = dx > lastStepX)
                         lastStepX = dx
                         IslandHaptics.sliderStep(context)

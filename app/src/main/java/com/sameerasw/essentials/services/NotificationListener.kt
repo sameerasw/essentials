@@ -11,11 +11,16 @@ package com.sameerasw.essentials.services
 
 import android.graphics.drawable.Icon
 import android.content.pm.LauncherApps
+import com.sameerasw.essentials.domain.controller.HilightController
+import com.sameerasw.essentials.domain.controller.HilightProgressTracker
+import com.sameerasw.essentials.utils.PriorityModeUtil
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.notification.NotificationRepostFilter
 import com.sameerasw.essentials.utils.chronometer.ChronometerRepository
 import com.sameerasw.essentials.utils.call.CallNotificationParser
 import com.sameerasw.essentials.utils.call.CallStateRepository
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.Person
 import android.content.Context
 import android.content.Intent
@@ -28,6 +33,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
+import android.os.SystemClock
 import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -53,6 +59,7 @@ import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.overlay.fromPrefs
 import com.sameerasw.essentials.utils.overlay.writeTo
 import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 import java.io.File
 import java.io.FileOutputStream
 
@@ -300,8 +307,10 @@ class NotificationListener : NotificationListenerService() {
             }
 
             // Calls already in progress when the listener (re)connects.
+            CallStateRepository.clearNotificationCalls()
             safeActiveNotifications()?.filter { CallNotificationParser.isCall(it) && it.packageName != packageName }
                 ?.forEach { CallStateRepository.onCallNotificationPosted(applicationContext, it) }
+            ChronometerRepository.clear()
             safeActiveNotifications()?.filter { it.packageName != packageName && ChronometerRepository.isCandidate(it) }
                 ?.forEach { ChronometerRepository.onPosted(applicationContext, it) }
 
@@ -980,10 +989,12 @@ class NotificationListener : NotificationListenerService() {
     ) {
         // Skip our own app's notifications early to avoid flooding logs and redundant processing
         if (sbn.packageName == packageName) {
+            if (hasReadableExtras(sbn)) LiveUpdateSnoozer.onPosted(this, sbn)
             return
         }
         if (!hasReadableExtras(sbn)) return
 
+        LiveUpdateSnoozer.onPosted(this, sbn)
         val isRepost = NotificationRepostFilter.isUnchangedRepost(sbn)
         if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
         if (ChronometerRepository.isCandidate(sbn)) ChronometerRepository.onPosted(applicationContext, sbn)
@@ -996,10 +1007,13 @@ class NotificationListener : NotificationListenerService() {
         val extras = sbn.notification.extras
         if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
             scheduleProgressRefresh()
+        } else if (HilightProgressTracker.isTracking(sbn.key)) {
+            // Its progress bar was replaced, e.g. by "Download complete"
+            scheduleProgressRefresh()
         }
 
-        if (!isRepost && isHeadsUpNotification(sbn, rankingMap)) {
-            val alert = extractNotificationAlert(sbn)
+        if (!isRepost && isHeadsUpNotification(sbn, rankingMap, allowSilent = true)) {
+            val alert = extractNotificationAlert(sbn)?.copy(isSilent = isSilentNotification(sbn, rankingMap))
             if (alert != null) {
                 notifyAlertPosted(alert)
             }
@@ -1102,6 +1116,8 @@ class NotificationListener : NotificationListenerService() {
                 handleCallVibrations(sbn)
                 return
             }
+
+            handleHilight(sbn)
 
             val prefs =
                 applicationContext.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -1309,6 +1325,26 @@ class NotificationListener : NotificationListenerService() {
 
     private val lastCallVibrateTime = mutableMapOf<String, Long>()
 
+    private fun handleHilight(sbn: StatusBarNotification) {
+        if (!DeviceUtils.isHilightDevice()) return
+        val settings = SettingsRepository(applicationContext)
+        if (!settings.isHilightNotificationsEnabled()) return
+        val flags = sbn.notification.flags
+        val skipFlags = Notification.FLAG_ONGOING_EVENT or Notification.FLAG_FOREGROUND_SERVICE or Notification.FLAG_GROUP_SUMMARY
+        if (flags and skipFlags != 0) return
+        val ranking = Ranking()
+        if (currentRanking.getRanking(sbn.key, ranking) && ranking.importance <= NotificationManager.IMPORTANCE_LOW) return
+        if (settings.isHilightOnlyWhenScreenOff() && getSystemService(PowerManager::class.java)?.isInteractive == true) return
+        if (settings.isHilightSkipDnd() && PriorityModeUtil.isActive(applicationContext)) return
+        val effect = settings.getHilightEffectForApp(sbn.packageName) ?: return
+        val now = SystemClock.elapsedRealtime()
+        val last = lastHilightTime[sbn.packageName]
+        if (last != null && now - last < settings.getHilightCooldownSeconds() * 1000L) return
+        HilightController.play(effect) { lastHilightTime[sbn.packageName] = SystemClock.elapsedRealtime() }
+    }
+
+    private val lastHilightTime = ConcurrentHashMap<String, Long>()
+
     private fun handleCallVibrations(sbn: StatusBarNotification) {
         try {
             val prefs =
@@ -1354,8 +1390,33 @@ class NotificationListener : NotificationListenerService() {
         }
     }
 
+    override fun onNotificationRemoved(
+        sbn: StatusBarNotification,
+        rankingMap: RankingMap,
+        reason: Int,
+    ) {
+        LiveUpdateSnoozer.onRemoved(sbn.key, reason)
+        super.onNotificationRemoved(sbn, rankingMap, reason)
+    }
+
+    fun feedSnoozedPosted(sbn: StatusBarNotification) {
+        if (sbn.packageName == packageName) return
+        if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
+        if (ChronometerRepository.isCandidate(sbn)) ChronometerRepository.onPosted(applicationContext, sbn)
+        scheduleProgressRefresh()
+    }
+
+    fun feedSnoozedRemoved(sbn: StatusBarNotification) {
+        if (sbn.packageName == packageName) return
+        CallStateRepository.onCallNotificationRemoved(sbn.key)
+        ChronometerRepository.onRemoved(sbn.key)
+        scheduleProgressRefresh()
+    }
+
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
+        if (LiveUpdateSnoozer.isSnoozedByUs(sbn.key)) return
         NotificationRepostFilter.forget(sbn.key)
+        HilightProgressTracker.onRemoved(sbn.key)
         CallStateRepository.onCallNotificationRemoved(sbn.key)
         ChronometerRepository.onRemoved(sbn.key)
         unreadNotifications.remove(sbn.key)
@@ -1797,6 +1858,7 @@ class NotificationListener : NotificationListenerService() {
                         Log.e("NotificationListener", "Failed to extract progress notification", e)
                         return@execute
                     }
+                HilightProgressTracker.onProgress(applicationContext, data)
                 progressHandler.post { notifyProgressListeners(data) }
             }
         }
@@ -1822,8 +1884,10 @@ class NotificationListener : NotificationListenerService() {
             null
         }
 
+    fun refreshProgressNow() = scheduleProgressRefresh()
+
     fun extractLatestProgressNotification(): ProgressNotificationData? {
-        val active = safeActiveNotifications() ?: return null
+        val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
         val progressNotifs = active.mapNotNull { sbn ->
             if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
             extractProgressNotification(sbn)
@@ -1834,6 +1898,7 @@ class NotificationListener : NotificationListenerService() {
     fun isHeadsUpNotification(
         sbn: StatusBarNotification,
         rankingMap: RankingMap? = null,
+        allowSilent: Boolean = false,
     ): Boolean {
         if (sbn.isOngoing) return false
         if (sbn.packageName == packageName) return false
@@ -1842,6 +1907,7 @@ class NotificationListener : NotificationListenerService() {
         val notif = sbn.notification
         val isGroupSummary = (notif.flags and Notification.FLAG_GROUP_SUMMARY) != 0
         if (isGroupSummary) return false
+        if (allowSilent) return true
 
         try {
             val map = rankingMap ?: currentRanking
@@ -2105,8 +2171,9 @@ class NotificationListener : NotificationListenerService() {
         )
     }
 
+    // Ranking.getConversationShortcutInfo is missing from Android 11 framework builds
     private fun conversationShortcutIcon(sbn: StatusBarNotification): Bitmap? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return null
         return try {
             val ranking = Ranking()
             if (!currentRanking.getRanking(sbn.key, ranking)) return null
@@ -2114,7 +2181,7 @@ class NotificationListener : NotificationListenerService() {
             val launcherApps = getSystemService(LauncherApps::class.java) ?: return null
             launcherApps.getShortcutIconDrawable(shortcut, resources.displayMetrics.densityDpi)
                 ?.let { AppUtil.drawableToBitmap(it) }
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             null
         }
     }

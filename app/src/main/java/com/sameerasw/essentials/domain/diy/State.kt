@@ -30,6 +30,15 @@ sealed interface State {
     }
 
     @Keep
+    data class BatteryLevel(
+        @SerializedName("minLevel") val minLevel: Int = 0,
+        @SerializedName("maxLevel") val maxLevel: Int = 20,
+    ) : State {
+        override val title: Int get() = R.string.diy_state_battery_level
+        override val icon: Int get() = R.drawable.rounded_battery_android_frame_3_24
+    }
+
+    @Keep
     data object ScreenOn : State {
         override val title: Int = R.string.diy_state_screen_on
         override val icon: Int = R.drawable.rounded_mobile_text_2_24

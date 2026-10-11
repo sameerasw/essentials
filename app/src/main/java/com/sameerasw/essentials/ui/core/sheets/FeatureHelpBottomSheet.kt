@@ -9,10 +9,13 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,11 +37,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.translation.TranslatableText
@@ -46,10 +54,11 @@ import com.sameerasw.essentials.ui.core.cards.FeatureTagIcon
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.media.FeatureHelpMediaViewer
 import com.sameerasw.essentials.utils.ColorUtil
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun FeatureHelpBottomSheet(
     onDismissRequest: () -> Unit,
@@ -58,6 +67,7 @@ fun FeatureHelpBottomSheet(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val view = LocalView.current
     val isUnsupported = !feature.isDeviceSupported(context)
 
     EssentialsBottomSheet(
@@ -151,6 +161,54 @@ fun FeatureHelpBottomSheet(
                         stringResId = descRes,
                         style = MaterialTheme.typography.bodyLarge,
                     )
+                }
+            }
+
+            if (feature.contributors.isNotEmpty()) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.label_feature_credits),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        feature.contributors.forEach { login ->
+                            AssistChip(
+                                onClick = {
+                                    HapticUtil.performUIHaptic(view)
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, "https://github.com/$login".toUri()),
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = "@$login",
+                                        style = MaterialTheme.typography.labelLarge,
+                                    )
+                                },
+                                leadingIcon = {
+                                    AsyncImage(
+                                        model = "https://github.com/$login.png?size=64",
+                                        contentDescription = login,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.size(24.dp).clip(CircleShape),
+                                    )
+                                },
+                                colors =
+                                    AssistChipDefaults.assistChipColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        labelColor = MaterialTheme.colorScheme.onSurface,
+                                    ),
+                                border = AssistChipDefaults.assistChipBorder(true),
+                            )
+                        }
+                    }
                 }
             }
 

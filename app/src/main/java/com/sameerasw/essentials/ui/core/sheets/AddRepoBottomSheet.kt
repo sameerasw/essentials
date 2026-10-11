@@ -250,6 +250,17 @@ fun AddRepoBottomSheet(
                 RoundedCardContainer {
                     // Repo Card
                     Surface(
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            runCatching {
+                                context.startActivity(
+                                    android.content.Intent(
+                                        android.content.Intent.ACTION_VIEW,
+                                        android.net.Uri.parse("https://github.com/${searchResult!!.fullName}"),
+                                    ).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+                                )
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         color = MaterialTheme.colorScheme.surfaceContainer,
                     ) {

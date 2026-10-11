@@ -23,6 +23,7 @@ import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.services.AppDetectionService
 import com.sameerasw.essentials.services.AppUpdateWorker
 import com.sameerasw.essentials.services.BatteryNotificationService
+import com.sameerasw.essentials.services.widgets.StackHost
 import com.sameerasw.essentials.utils.SimCarrierUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import java.util.concurrent.TimeUnit
@@ -43,6 +44,7 @@ object ServiceUtils {
         startBatteryNotificationServiceIfNeeded(context, settingsRepository)
         schedulePeriodicAppUpdateCheck(context, settingsRepository)
         applyPostRebootSettings(context, settingsRepository)
+        StackHost.startIfNeeded(context)
     }
 
     fun applyPostRebootSettings(

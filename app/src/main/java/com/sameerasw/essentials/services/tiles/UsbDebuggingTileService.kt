@@ -109,12 +109,7 @@ class UsbDebuggingTileService : BaseTileService() {
         return prefs.getString("debugging_tile_tap_action", "both") ?: "both"
     }
 
-    private fun isUsbDebuggingEnabled(): Boolean =
-        try {
-            Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
-        } catch (_: Exception) {
-            false
-        }
+    private fun isUsbDebuggingEnabled(): Boolean = com.sameerasw.essentials.utils.HiddenDebuggingUtils.isUsbDebuggingEnabled(this)
 
     private fun setUsbDebuggingEnabled(enabled: Boolean) {
         try {

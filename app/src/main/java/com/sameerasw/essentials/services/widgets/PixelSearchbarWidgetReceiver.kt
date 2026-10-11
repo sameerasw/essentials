@@ -25,6 +25,12 @@ class PixelSearchbarWidgetReceiver : GlanceAppWidgetReceiver() {
         super.onReceive(context, intent)
 
         val action = intent.action
+        if (action == android.appwidget.AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED ||
+            action == android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE ||
+            action == Intent.ACTION_CONFIGURATION_CHANGED
+        ) {
+            WidgetScraperService.syncHostSize(context)
+        }
         if (action == Intent.ACTION_CONFIGURATION_CHANGED ||
             action == android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
         ) {

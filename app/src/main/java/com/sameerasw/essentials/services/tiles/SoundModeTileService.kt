@@ -20,7 +20,9 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.handlers.SoundModeHandler
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -54,8 +56,14 @@ class SoundModeTileService : BaseTileService() {
         super.onDestroy()
     }
 
+    override val clickHaptic = false
+
     override fun onTileClick() {
-        SoundModeHandler(this).cycleNextMode()
+        when (SoundModeHandler(this).cycleNextMode()) {
+            AudioManager.RINGER_MODE_VIBRATE -> HapticUtil.performStrongDoubleHaptic(this)
+            AudioManager.RINGER_MODE_SILENT -> HapticUtil.performHapticForService(this, HapticFeedbackType.SUBTLE)
+            AudioManager.RINGER_MODE_NORMAL -> HapticUtil.performHapticForService(this, HapticFeedbackType.CLICK)
+        }
     }
 
     override fun getTileLabel(): String {

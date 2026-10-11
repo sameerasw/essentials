@@ -15,6 +15,7 @@ object IslandPriority {
     const val CALL = -10
     const val TIME = 0
     const val BATTERY = 1
+    const val BATTERY_ALERT = 2
 
     const val TIMER_OVERRIDE = 5
     const val CALENDAR_OVERRIDE = 6
@@ -27,10 +28,9 @@ object IslandPriority {
     const val CONSCIOUS_GATE = 40
     const val CAFFEINATE = 44
     const val TRAVEL = 45
-    const val WEATHER_ALERT = 48
     const val CALENDAR = 50
     const val SOUND_MODE = 55
-    const val WEATHER = 58
+    const val SIGNAL = 57
     const val NETWORK = 60
     const val DEVICES = 62
     const val ALARM = 90
@@ -49,11 +49,13 @@ class LineContent(
     val start: String,
     val end: String,
     val endSlot: (@Composable () -> Unit)? = null,
+    val showLeftIcon: Boolean = true,
 )
 
 interface IslandExpandedScope {
     val spec: IslandLayoutSpec
     val accent: Color
+    val current: Boolean get() = true
     fun collapse()
     fun dismiss()
     fun openApp()
@@ -69,7 +71,8 @@ class ExpandedContent(val content: @Composable (IslandExpandedScope) -> Unit)
 
 class InteractionOverrides(
     val onTap: (() -> Boolean)? = null,
-    val onLongPress: (() -> Any)? = null,
+    val onLongPress: (() -> Unit)? = null,
+    val onExpandedTap: (() -> Boolean)? = null,
 ) {
     companion object {
         val Default = InteractionOverrides()
@@ -82,6 +85,20 @@ class StackIcon(
     val onSelect: (() -> Unit)? = null,
     val content: @Composable (size: Dp) -> Unit,
 )
+
+class SideBubble(
+    val priority: Int,
+    val onOpen: () -> Unit,
+    val icons: List<StackIcon> = emptyList(),
+    val content: (@Composable (Dp) -> Unit)? = null,
+    val whenOccupiedOnly: Boolean = false,
+    val onDismiss: (() -> Unit)? = null,
+)
+
+object SideBubblePriority {
+    const val NOTIFICATION = 0
+    const val PROGRESS = 10
+}
 
 class QueueInfo(
     val next: IslandItem,
@@ -96,6 +113,7 @@ class IslandItem(
     val line: LineContent? = null,
     val expanded: ExpandedContent? = null,
     val accent: Color? = null,
+    val outlineAccent: Color? = null,
     val dismissible: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
     val onOpen: (() -> Unit)? = null,
@@ -107,11 +125,17 @@ class IslandItem(
     val priorityOverride: Int? = null,
     
     val compactVisible: Boolean = true,
+    val needsCompanyAtCenter: Boolean = false,
+    val sideBubble: SideBubble? = null,
+    val companionOnly: Boolean = false,
     val bypassLauncherOnly: Boolean = false,
     
     val stack: List<StackIcon> = emptyList(),
+    val priorityGroup: String? = null,
 ) {
-    val effectivePriority: Int get() = priorityOverride ?: priority
+    var userPriority: Int? = null
+
+    val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority
 
     init {
         require(compact.size in 1..2) { "IslandItem $key must have 1..2 compact cells" }

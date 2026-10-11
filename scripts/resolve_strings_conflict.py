@@ -15,8 +15,8 @@ def entries(text):
 
 
 def resolve(path):
-    base_text = show(3, path)
-    incoming = entries(show(2, path))
+    base_text = show(2, path)
+    incoming = entries(show(3, path))
     seen = set()
 
     def sub(m):

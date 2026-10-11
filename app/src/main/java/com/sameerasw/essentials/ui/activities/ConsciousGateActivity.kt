@@ -17,6 +17,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.Animatable
+import com.sameerasw.essentials.ui.features.consciousgate.UnscaledMotion
+import kotlinx.coroutines.withContext
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
@@ -93,10 +95,12 @@ class ConsciousGateActivity : AppCompatActivity() {
                 return@LaunchedEffect
             }
             progressAnimatable.snapTo(0f)
-            progressAnimatable.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = delaySeconds * 1000, easing = LinearEasing),
-            )
+            withContext(UnscaledMotion) {
+                progressAnimatable.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = delaySeconds * 1000, easing = LinearEasing),
+                )
+            }
         }
 
         ConsciousGatePauseScreen(

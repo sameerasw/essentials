@@ -60,6 +60,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -329,6 +330,25 @@ fun AboutSection(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                     maxItemsInEachRow = 3,
                 ) {
+                    OutlinedButton(
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            val websiteUrl = "https://github.com/sameerasw/Overcast"
+                            val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.overcast_logo),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.Unspecified,
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.app_overcast))
+                    }
+
                     OutlinedButton(
                         onClick = {
                             HapticUtil.performUIHaptic(view)

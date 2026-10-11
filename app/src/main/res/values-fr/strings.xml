@@ -32,7 +32,7 @@
     <string name="setting_use_usage_access_desc">À la place de l\'accessibilité (Gel, Verrouillage d\'applis, Éclairage nocturne dynamique)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Activer la réattribution de boutons</string>
-    <string name="button_remap_use_shizuku_title">Utiliser Shizuku ou l\'accès racine (root)</string>
+    <string name="button_remap_use_shizuku_title">Utiliser Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Fonctionne avec l\'écran éteint (Recommandé)</string>
     <string name="shizuku_not_running_toast">Shizuku n\'est pas actif</string>
     <string name="shizuku_detected_prefix"> %1$s Détecté</string>
@@ -74,9 +74,9 @@
     <string name="essentials_on_display_random_shapes_desc">Utiliser des formes Material 3 variées pour la couverture de l\'album</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Toujours utiliser pendant la charge</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
-    <string name="label_size">Size</string>
+    <string name="label_size">Taille</string>
     <string name="feat_notification_glance_title">Aperçu des notifications</string>
     <string name="feat_notification_glance_desc">Garder le mode Always-on tant qu\'il y a des notifications</string>
     <string name="notification_glance_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
@@ -354,7 +354,7 @@
     <string name="hide_notification_icons_title">Masquer les notifications</string>
     <string name="hide_notification_icons_desc">Masquer toutes les icônes de notification entrantes</string>
     <string name="feat_hide_gesture_bar_title">Masquer la barre de gestes</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_desc">Dans la navigation par geste</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Afficher dans le lanceur</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Afficher la barre de gestes de manière dynamique uniquement sur l\'écran d\'accueil</string>
     <string name="feat_circle_to_search_gesture_title">Geste « Entourez pour rechercher »</string>
@@ -396,7 +396,7 @@
     <string name="feat_maps_power_saving_title">Économie d\'énergie Maps</string>
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Notifications lumineuses</string>
-    <string name="feat_notification_lighting_desc">Illuminer l\'écran pour les notifications</string>
+    <string name="feat_notification_lighting_desc">Allumer la LED pour les nouvelles notifications</string>
     <string name="feat_flashlight_pulse_desc">Faire clignoter le flash à la réception de notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_call_vibrations_title">Vibrations pour les appels</string>
@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Protégez les applis avec la biométrie</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
-    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_none">Rien</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
@@ -601,7 +601,7 @@
     <string name="perm_write_settings_desc">Requise pour activer/désactiver la luminosité adaptative et d\'autres paramètres système</string>
     <string name="perm_overlay_title">Permission de superposition</string>
     <string name="perm_overlay_desc">Requise pour afficher la superposition de l\'illumination des notifications lumineuses sur l\'écran</string>
-    <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
+    <string name="perm_device_admin_title">Administrateur.rice de l\'appareil</string>
     <string name="perm_device_admin_desc">Requise pour faire un verrouillage forcé de l\'appareil (désactiver la biométrie) lors d\'accès non autorisés</string>
     <string name="perm_action_grant">Accorder la permission</string>
     <string name="perm_action_copy_adb">Copier la commande ADB</string>
@@ -717,7 +717,9 @@
     <string name="update_available_title">Mise à jour disponible</string>
     <string name="about_desc_your_android">Jetez un coup d\'œil aux spécifications matérielles et logicielles détaillées de votre appareil. Ces informations sont obtenues GSMArena et des propriétés système pour vous fournir un aperçu complet sur votre appareil Android.</string>
     <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">La fonctionnalité Notifications lumineuses ajoute un bel effet d\'éclairage des coins de l\'écran quand vous recevez une notification.\n\nYou pouvez personnaliser le style de l\'animation, les couleurs et le comportement. Cela marche même quand l\'écran est éteint (en fonction du constructeur de votre appareil) ou par dessus les applications actives. Choisissez des applis, des priorités de notifications, ou quoi que ce soit qui devrait la déclencher depuis les contrôles donnés. Si votre constructeur ne supporte pas les superpositions sur le mode Always-On, activez l\'option d\'éclairage ambiant trouvable ci-dessous.</string>
+    <string name="about_desc_notification_lighting">La fonctionnalité Notifications lumineuses ajoute un bel effet d\'éclairage des coins de l\'écran quand vous recevez une notification.
+
+Tu peux personnaliser le style de l\'animation, les couleurs et le comportement. Cela marche même quand l\'écran est éteint (en fonction du constructeur de ton appareil) ou par dessus les applications actives. Choisis des applis, des priorités de notifications, ou quoi que ce soit qui devrait la déclencher depuis les contrôles donnés. Si le constructeur ne supporte pas les superpositions sur le mode Always-On, activez l\'option d\'éclairage ambiant trouvable ci-dessous.</string>
     <string name="about_desc_screen_off_widget">Éteignez facilement l\'écran avec un appui sur un widget transparent redimensionnable qui n\'ajoute aucune icône ou indice sur votre écran d\'accueil. </string>
     <string name="about_desc_statusbar_icons">Prenez les pleins pouvoirs sur vos icônes de la barre d\'état.
 
@@ -796,7 +798,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="diy_start_time_label">Heure de début</string>
     <string name="diy_end_time_label">Heure de fin</string>
     <string name="diy_repeat_days_label">Répéter</string>
-    <string name="diy_state_charging">En charge</string>
+    <string name="diy_state_charging">Chargement</string>
     <string name="diy_state_screen_on">Écran allumé</string>
     <string name="diy_action_haptic">Vibreur</string>
     <string name="diy_action_notification">Afficher une notification</string>
@@ -1320,13 +1322,14 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="label_transition_animation_scale">Échelle d\'animation des transitions </string>
     <string name="label_window_animation_scale">Échelle d\'animation des fenêtres </string>
     <string name="about_desc_text_animations">Ajustez la taille de la police, son épaisseur et les vitesses d\'animations pour tout le système. Veuillez noter que certains paramètres peuvent nécessiter des permissions avancées ou un redémarrage pour certaines applis afin d\'appliquer les modifications. \n\nDes permissions additionnelles comme Shizuku ou l\'accès racine (root) peuvent être nécessaires pour l\'ajustement des échelles</string>
-    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="about_desc_screen_refresh_rate">Permet de configurer un taux de rafraîchissement personnalisé en utilisant Shizuku. Le mode Fixé verrouille la valeur minimum et maximum du taux de rafraîchissement à la même valeur, pendant que le mode Fourchette permet de te laisser définir les deux valeurs séparées.
+Réinitialiser permet d\'effacer les valeurs personnalisées et le système gérera de nouveau ces valeurs.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
     <string name="refresh_rate_mode_fixed">Fixed</string>
     <string name="refresh_rate_mode_range">Range</string>
     <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
-    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_fixed_desc">Mettre le minimum et maximum à la même valeur.</string>
     <string name="refresh_rate_min_title">Minimum refresh rate</string>
     <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
     <string name="refresh_rate_peak_title">Peak refresh rate</string>
@@ -1419,31 +1422,31 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Horloge de l\'écran de verrouillage </string>
     <string name="feat_lock_screen_clock_desc">Personnalisez l\'horloge de l\'écran de verrouillage des Pixels</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="about_desc_lock_screen_clock">Change le style de l\'horloge de l\'écran de verrouillage sur les appareils Pixels. Sélectionne parmis les styles d\'horloges fournis par l\'IU système. Quelques vieux styles ne peuvent pas être disponibles.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
-    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_flex">Flexible</string>
     <string name="lock_screen_clock_growth">Growth</string>
     <string name="lock_screen_clock_handwritten">Handwritten</string>
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Météo</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
     <string name="lock_screen_clock_default">Default</string>
-    <string name="label_weight">Weight</string>
-    <string name="label_width">Width</string>
+    <string name="label_weight">Épaisseur</string>
+    <string name="label_width">Longueur </string>
     <string name="label_grade">Grade</string>
-    <string name="label_roundness">Roundness</string>
-    <string name="label_color_tone">Lightness</string>
+    <string name="label_roundness">Arrondissement </string>
+    <string name="label_color_tone">Luminance </string>
     <string name="label_variation">Variation</string>
     <string name="label_color">Color</string>
     <string name="label_style_font">Style &amp; Font</string>
-    <string name="about_title">About</string>
+    <string name="about_title">À propos</string>
     <string name="color_default">Default</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -1477,7 +1480,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="feat_mobile_data_always_on_title">Données mobiles toujours activées</string>
     <string name="feat_mobile_data_always_on_desc">Gardez les données mobiles actives même lorsque le Wi-Fi est connecté.</string>
     <string name="feat_networks_title">Réseaux </string>
-    <string name="feat_networks_desc">Contrôler la radio et le réseau </string>
+    <string name="feat_networks_desc">Contrôler les radios et réseaux</string>
     <string name="feat_network_download_rate_limit_title">Limite de vitesse de téléchargement</string>
     <string name="feat_network_download_rate_limit_desc">Limiter la vitesse de téléchargement à l\'échelle du système</string>
     <string name="feat_sim_names_title">Nom des cartes SIM</string>
@@ -1572,7 +1575,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="watch_complications_desc">Customiser les widgets des complications </string>
     <string name="watch_notif_sync_choose_apps_desc">Seulement les applications sélectionnées seront synchronisées avec la montre</string>
     <string name="watch_notif_sync_choose_apps">Choisir les applications </string>
-    <string name="watch_call_sync_desc">Seulement pour la launcher</string>
+    <string name="watch_call_sync_desc">Seulement pour le launcher</string>
     <string name="watch_notif_sync_desc">Seulement pour le launcher</string>
     <string name="watch_call_sync_title">Appels</string>
     <string name="feat_sync_location_reached_title">Statut de On est arrivés ?</string>
@@ -1599,7 +1602,7 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="duo_material_you_title">Utiliser les couleurs Material You</string>
     <string name="duo_hide_when_screen_off_title">Cacher quand l\'écran est éteint</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Seulement cacher quand l\'AOD est éteint</string>
-    <string name="duo_desc">Ça ne se plie pas</string>
+    <string name="duo_desc">Il ne se plie pas, mais fait des trucs vraiment cool</string>
     <string name="duo_auto_detect_desc">Trouver automatiquement l\'emplacement du trou de la caméra</string>
     <string name="duo_show_battery_percentage_title">Pourcentage de batterie</string>
     <string name="duo_show_battery_title">Batterie</string>
@@ -1612,4 +1615,87 @@ Option nativement disponible sur les appareils Samsung (appli QuickStar)</string
     <string name="setting_show_legacy_features_desc">Ces fonctionnalités pourraient ne pas bénéficier de futures mises à jour en raison de limitations techniques ou parce qu\'elles ne sont pas essentielles.</string>
     <string name="duo_rotate_album_art_title">Faire pivoter la pochette d\'album</string>
     <string name="island_hide_on_shade_title">Masquer lorsque la barre d\'état est déployée</string>
+    <string name="status_glance_bold_text_title">Texte en gras</string>
+    <string name="status_glance_bold_text_desc">Le texte en gras pour une meilleure lisibilité </string>
+    <string name="status_glance_album_art_colors_title">Couleurs de l\'album</string>
+    <string name="status_glance_hide_in_quick_settings_title">Cacher dans les paramètres rapides</string>
+    <string name="status_glance_hide_when_locked_title">Cacher sur l\'écran de verrouillage</string>
+    <string name="island_action_tap_title">Appui simple</string>
+    <string name="duo_action_double_tap_title">Double appui</string>
+    <string name="duo_action_long_press_title">Appui long</string>
+    <string name="status_glance_action_swipe_right_title">Swiper vers la droite </string>
+    <string name="status_glance_show_calendar_title">Évenements</string>
+    <string name="feat_aod_wallpaper_title">Fond d\'écran sur AOD</string>
+    <string name="island_enable_title">Activer Island</string>
+    <string name="island_show_calls_title">Appels</string>
+    <string name="island_show_timers_title">Minuteurs et chronomètres</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Mode son</string>
+    <string name="island_devices_battery_section">Appareils</string>
+    <string name="island_show_network_title">Activité réseau</string>
+    <string name="feat_status_glance_title">Aperçu du statut</string>
+    <string name="feat_status_glance_desc">Affichage rapide du statut de certaines options de l\'appareil</string>
+    <string name="feat_conscious_gate_title">Barrière de conscience</string>
+    <string name="feat_conscious_gate_desc">Faites une pause avant d\'ouvrir certaines applications</string>
+    <string name="duo_enable_desc">Il ne se plie pas, mais fait des trucs vraiment cool</string>
+    <string name="duo_action_tap_title">Appui</string>
+    <string name="duo_action_swipe_down_title">Glissement vers le bas</string>
+    <string name="duo_action_horizontal_slide_title">Glissement horizontal</string>
+    <string name="duo_hide_when_locked_title">Cacher lorsque l\'appareil est verrouillé</string>
+    <string name="feat_aod_wallpaper_use_album_art">Utiliser la pochette de l\'album</string>
+    <string name="setting_swipe_tabs_title">Glisser entre les onglets</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Sélectionner les formes</string>
+    <string name="feat_prefer_gpu_composing_title">Privilégier le GPU pour la composition d\'écran</string>
+    <string name="feat_prefer_gpu_composing_desc">Désactivez les superpositions matérielles pour forcer la composition d\'écran par le GPU. Réinitialisation au redémarrage de l\'appareil.</string>
+    <string name="perm_calendar_title">Calendrier</string>
+    <string name="perm_install_packages_title">Installation d\'applis inconnus</string>
+    <string name="perm_install_packages_desc">Requis pour installer les MàJ.</string>
+    <string name="perm_contacts_title">Contacts</string>
+    <string name="perm_contacts_desc">Pour montrer tes contacts dans les résultats de Pixel Search, Essentials a besoin de cette permission pour lire tes contacts.</string>
+    <string name="perm_storage_title">Accès à tout les fichiers</string>
+    <string name="perm_files_media_desc">Pour chercher et afficher les photos, vidéos, audios, et documents dans les résultats de Pixel Search, Essentials a besoin de cette permission pour accéder aux fichiers et médias.</string>
+    <string name="perm_bubbles_title">Bulles flottantes</string>
+    <string name="island_font_scale_title">Taille du texte</string>
+    <string name="duo_tap_for_brief_title">Appuyez pour un sommaire</string>
+    <string name="duo_battery_low_color_title">Batterie faible (&lt;20%)</string>
+    <string name="duo_battery_critical_color_title">Batterie très faible (&lt;10%)</string>
+    <string name="duo_battery_power_save_color_title">Économiseur d\'énergie</string>
+    <string name="feat_allow_overlays_in_settings_title">Autoriser les overlays dans les paramètres</string>
+    <string name="feat_allow_overlays_in_settings_desc">Permets aux applications d\'ajouter un/des overlays par dessus les paramètres système.</string>
+    <string name="app_icon_default">Par défaut</string>
+    <string name="haptic_mode_stronger">Très fort</string>
+    <string name="conscious_gate_enable_title">Activer la barrière de conscience</string>
+    <string name="conscious_gate_select_apps_title">Sélectionnez les applications à accès restreint</string>
+    <string name="conscious_gate_select_apps_desc">Choisissez quels applications vont devoir afficher un écran d\'une barrière de conscience avant leurs ouvertures.</string>
+    <string name="conscious_gate_preview_button">Prévisualiser l\'écran de la barrière de conscience</string>
+    <string name="conscious_gate_delay_title">Délai de pause</string>
+    <string name="conscious_gate_feel_every_second_title">Sentir chaque seconde gaspillée</string>
+    <string name="conscious_gate_reappear_title">Réapparaît après l\'usage</string>
+    <string name="conscious_gate_reappear_desc">Remontre l\'écran de la barrière de conscience après une réutilisation.</string>
+    <string name="conscious_gate_delay_desc">Combien de temps le bouton \"Continuer\" doit être désactivé ?</string>
+    <string name="screen_locked_disable_notification_interactions_title">Désactiver les interactions avec les notifications</string>
+    <string name="label_battery_tab_info">Informations</string>
+    <string name="diy_category_apps">Applications</string>
+    <string name="label_charging_mode_title">Mode de chargement</string>
+    <string name="setting_hidden_debugging_title">Support du débuguage caché</string>
+    <string name="label_online_help_media">Aide en ligne du média</string>
+    <string name="about_desc_pixel_searchbar">Remplace la barre de recherche par défaut du launcher Pixel. Tu peux customiser le contenu pour y afficher rien du tout, ou la date actuelle.
+
+Note que en activant ça peut casser les widgets At a Glance du launcher (Comme les widgets de sports et finances.) et que ce paramètre peut nécessiter à être appliqué plusieurs fois pour prendre effet.
+</string>
+    <string name="pixel_searchbar_settings_title">Customisation de la barre de recherche du launcher Pixel</string>
+    <string name="sound_mode_use_shizuku_desc">Utiliser Shizuku pour mettre le monde de sonnerie sans activer le mode Ne pas déranger.</string>
+    <string name="island_max_items_title">Nombre maximum d\'icônes à afficher</string>
+    <string name="label_battery_technology">Technologie</string>
+    <string name="label_battery_section_health">Vie</string>
+    <string name="label_battery_section_charging">Chargement</string>
+    <string name="label_battery_section_specs">Spécifications</string>
+    <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
+    <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger</string>
+    <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application.</string>
+    <string name="hilight_only_screen_off_title">Activer seulement lorsque l\'écran est éteint.</string>
+    <string name="hilight_cooldown_title">Délai </string>
+    <string name="about_desc_hilight">Allume la LED HiLight à l\'arrière des Pixels 11 Pro (XL/Fold) quand une notification arrive, avec un effet différent pour chaque application que tu ajoutes.
+Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans les paramètres du remapage des boutons et des automatisations.
+À besoin de Shizuku, ou de permission root pour fonctionner.</string>
 </resources>

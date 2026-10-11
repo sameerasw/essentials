@@ -32,7 +32,7 @@ enum class BlurDirection {
 }
 
 /**
- * Applies native progressive blur to the specified edge of the element.
+ * Applies native progressive blur to the specified edge of the element; a zero height (e.g. no status bar in a floating or split window) applies nothing.
  */
 fun Modifier.progressiveBlur(
     blurRadius: Float,
@@ -42,6 +42,7 @@ fun Modifier.progressiveBlur(
     edgeTreatment: BlurredEdgeTreatment = BlurredEdgeTreatment.Rectangle,
 ): Modifier =
     composed {
+        if (height <= 0f) return@composed this
         val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
         val context = LocalContext.current
         val density = LocalDensity.current
