@@ -38,6 +38,7 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.controller.HotspotController
+import com.sameerasw.essentials.domain.controller.ZenModeController
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
@@ -479,6 +480,12 @@ object CombinedActionExecutor {
                     com.sameerasw.essentials.services.handlers
                         .SoundModeHandler(context)
                         .cycleNextMode()
+                }
+
+                is Action.SetMode -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ShizukuUtils.hasPermission()) {
+                        ZenModeController.setActive(action.modeId, action.modeName, action.active)
+                    }
                 }
 
                 is Action.ToggleDoNotDisturb -> {
