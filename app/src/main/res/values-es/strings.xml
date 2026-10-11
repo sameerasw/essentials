@@ -1778,13 +1778,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_expanded_timeout_title">Tiempo de espera expandido</string>
     <string name="island_always_gestures_title">Gestos siempre disponibles</string>
     <string name="island_always_gestures_desc">Mantener activa el área de la Isla para los Gestos</string>
-    <string name="island_show_time_battery_title">Hora y bateria</string>
-    <string name="weather_units_title">Unidades</string>
-    <string name="island_weather_effects_title">Efectos del clima</string>
-    <string name="island_weather_haptics_title">Háptica de simulación</string>
-    <string name="perm_overcast_weather_title">Permiso del clima de Overcast</string>
-    <string name="perm_overcast_weather_desc">Essentials lee el ultimo clima de tu actual o guardada ubicacion de Overcast</string>
-    <string name="island_weather_mode_title">Mostrar en Isla</string>
     <string name="settings_genai_automation_desc">Use Gemini Nano en el dispositivo para ayudar a crear automatizaciones a partir de descripciones</string>
     <string name="settings_genai_automation_title">Activar el uso de GenAI</string>
     <string name="label_ripple_animation">Animación de onda</string>
