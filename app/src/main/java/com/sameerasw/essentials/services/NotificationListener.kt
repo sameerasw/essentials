@@ -1416,6 +1416,7 @@ class NotificationListener : NotificationListenerService() {
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         if (LiveUpdateSnoozer.isSnoozedByUs(sbn.key)) return
         NotificationRepostFilter.forget(sbn.key)
+        HilightProgressTracker.onRemoved(sbn.key)
         CallStateRepository.onCallNotificationRemoved(sbn.key)
         ChronometerRepository.onRemoved(sbn.key)
         unreadNotifications.remove(sbn.key)

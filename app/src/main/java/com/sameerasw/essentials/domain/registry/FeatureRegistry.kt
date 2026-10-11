@@ -1114,6 +1114,8 @@ object FeatureRegistry {
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
 
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
+
                 override fun onToggle(
                     viewModel: MainViewModel,
                     context: Context,
@@ -1140,6 +1142,8 @@ object FeatureRegistry {
                 parentFeatureId = "Hilight",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isHilightNotificationsEnabled.value
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
 
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
@@ -1175,6 +1179,8 @@ object FeatureRegistry {
                 parentFeatureId = "Hilight",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isHilightProgressEnabled.value
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isHilightDevice()
 
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,

@@ -29,6 +29,12 @@ object HilightProgressTracker {
 
     fun isTracking(key: String): Boolean = synchronized(this) { key == latestKey }
 
+    fun onRemoved(key: String) =
+        synchronized(this) {
+            shown.remove(key)
+            completed.remove(key)
+        }
+
     // Called off the main thread with the newest progress notification, or null once none are left
     fun onProgress(
         context: Context,
