@@ -1796,7 +1796,6 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_action_tap_title">Dokun</string>
     <string name="island_show_network_title">Ağ</string>
     <string name="island_section_notifications">Bildirimler</string>
-    <string name="island_show_time_battery_title">Saat Ve Batarya</string>
     <string name="island_call_options_title">Çağrı</string>
     <string name="island_devices_battery_section">Cihazlar</string>
     <string name="island_like_while_playing_title">Müzik Oynarken Beğen</string>
