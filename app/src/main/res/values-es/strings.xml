@@ -1833,5 +1833,4 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_pulse_shadow_desc">Brilla brevemente detrás de la isla el color de la app</string>
     <string name="island_border_outline_dynamic_title">Colores dinamicos</string>
     <string name="button_remap_pause_on_volume_dialog_title">Deshabilirar si el panel de volumen esta abierto</string>
-    <string name="haptic_mode_stronger">Fuerte</string>
 </resources>
