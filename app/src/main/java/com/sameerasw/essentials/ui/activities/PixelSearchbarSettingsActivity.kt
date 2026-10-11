@@ -988,6 +988,18 @@ fun PixelSearchbarSettingsUI(
                             }
                         }
                     }
+
+                    val wallpaperBgEnabled = viewModel.pixelSearchWallpaperBackground.value
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_wallpaper_24,
+                        title = stringResource(R.string.pref_pixel_search_wallpaper_bg_title),
+                        description = stringResource(R.string.pref_pixel_search_wallpaper_bg_desc),
+                        isChecked = wallpaperBgEnabled,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setPixelSearchWallpaperBackgroundEnabled(checked)
+                        },
+                    )
                 }
             }
         }

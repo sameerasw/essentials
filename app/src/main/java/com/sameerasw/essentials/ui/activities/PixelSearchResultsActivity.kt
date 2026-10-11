@@ -153,6 +153,12 @@ import kotlinx.coroutines.withContext
 class PixelSearchResultsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val repository = SettingsRepository(this)
+        if (repository.isPixelSearchWallpaperBackgroundEnabled()) {
+            setTheme(R.style.Theme_Essentials_WallpaperTranslucent)
+        } else {
+            setTheme(R.style.Theme_Essentials_Translucent)
+        }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(

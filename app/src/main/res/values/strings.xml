@@ -2666,6 +2666,8 @@
     <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
     <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
     <string name="pixel_searchbar_style_music">Music</string>
+    <string name="pref_pixel_search_wallpaper_bg_title">Show wallpaper in background</string>
+    <string name="pref_pixel_search_wallpaper_bg_desc">Blur the home screen wallpaper instead of the active screen</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
 
