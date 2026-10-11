@@ -53,6 +53,7 @@ abstract class BaseTileService : TileService() {
 
     override fun onStartListening() {
         super.onStartListening()
+        secureSettingsCache.clear()
         setTileAddedState(true)
         updateTile()
     }
