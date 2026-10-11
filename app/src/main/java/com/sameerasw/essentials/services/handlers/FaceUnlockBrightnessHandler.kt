@@ -74,6 +74,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.service.OverlayLifecycleOwner
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.LockscreenShortcutDetector
 import com.sameerasw.essentials.utils.ShellUtils
 import kotlin.concurrent.thread
 
@@ -299,8 +300,8 @@ class FaceUnlockBrightnessHandler(
                 if (refreshEachNode) node.refresh()
                 if (!node.isVisibleToUser) continue
                 val id = node.viewIdResourceName?.substringAfter(":id/").orEmpty()
-                if (LOCKSCREEN_MARKERS.any { id == it }) lockscreenVisible = true
-                if (OCCLUDING_MARKERS.any { id.contains(it, ignoreCase = true) }) occluded = true
+                if (LockscreenShortcutDetector.isLockscreenMarker(id)) lockscreenVisible = true
+                if (LockscreenShortcutDetector.isOccludingMarker(id)) occluded = true
                 for (i in 0 until node.childCount) {
                     node.getChild(i)?.let { queue.add(it) }
                 }
@@ -559,10 +560,6 @@ class FaceUnlockBrightnessHandler(
         private const val PILL_TRAVEL_DP = 24f
         private const val ENTER_DURATION_MS = 350
         private const val EXIT_DURATION_MS = 250L
-        private val LOCKSCREEN_MARKERS =
-            listOf("element:lockscreen", "keyguard_root_view", "keyguard_bottom_area", "keyguard_indication_area")
-        private val OCCLUDING_MARKERS =
-            listOf("bouncer", "element:shade", "element:quickSettings", "qs_frame", "shade_header_root", "quick_qs_panel")
         private val SCREEN_ON_SCAN_DELAYS_MS = listOf(300L, 900L, 1800L)
         private val WINDOW_CHANGE_SCAN_DELAYS_MS = listOf(150L, 600L)
         private val AFTER_BUMP_SCAN_DELAYS_MS = listOf(250L)
