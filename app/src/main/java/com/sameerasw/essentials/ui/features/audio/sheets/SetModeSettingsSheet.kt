@@ -11,6 +11,7 @@
 package com.sameerasw.essentials.ui.features.audio.sheets
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -70,7 +71,9 @@ fun SetModeSettingsSheet(
     LaunchedEffect(Unit) {
         modes =
             withContext(Dispatchers.IO) {
-                runCatching { ZenModeController.getModes() }.getOrDefault(emptyList())
+                runCatching { ZenModeController.getModes() }
+                    .onFailure { Log.e("SetModeSettingsSheet", "Failed to load modes", it) }
+                    .getOrDefault(emptyList())
             }
     }
 
