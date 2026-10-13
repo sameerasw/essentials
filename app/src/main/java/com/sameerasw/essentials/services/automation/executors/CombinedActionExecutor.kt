@@ -32,6 +32,7 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
@@ -483,9 +484,7 @@ object CombinedActionExecutor {
                 }
 
                 is Action.SetMode -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ShizukuUtils.hasPermission()) {
-                        ZenModeController.setActive(action.modeId, action.modeName, action.active)
-                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) setMode(context, action)
                 }
 
                 is Action.ToggleDoNotDisturb -> {
@@ -1055,6 +1054,31 @@ object CombinedActionExecutor {
             e.printStackTrace()
             false
         }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    private fun setMode(
+        context: Context,
+        action: Action.SetMode,
+    ) {
+        val featureName = context.getString(R.string.diy_action_set_mode)
+        val error =
+            when {
+                !ShizukuUtils.isShizukuAvailable() -> context.getString(R.string.shizuku_not_running_feature_desc, featureName)
+                !ShizukuUtils.hasPermission() -> context.getString(R.string.shizuku_permission_missing_feature_desc, featureName)
+                else ->
+                    try {
+                        if (ZenModeController.setActive(action.modeId, action.modeName, action.active)) {
+                            null
+                        } else {
+                            context.getString(R.string.diy_set_mode_not_found, action.modeName)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("CombinedActionExecutor", "Set Mode failed", e)
+                        context.getString(R.string.diy_set_mode_failed, action.modeName)
+                    }
+            }
+        error?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+    }
 
     private fun setHotspotEnabled(
         context: Context,
