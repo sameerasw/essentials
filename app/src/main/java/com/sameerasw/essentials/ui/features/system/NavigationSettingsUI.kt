@@ -16,7 +16,9 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -32,8 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
@@ -330,6 +334,30 @@ fun NavigationSettingsUI(
                     valueFormatter = { "${it.toInt()} dp" },
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            FeatureCard(
+                title = R.string.feat_back_gesture_title,
+                description = R.string.feat_back_gesture_desc,
+                iconRes = R.drawable.rounded_arrow_back_24,
+                isEnabled = true,
+                showToggle = false,
+                onToggle = {},
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    context.startActivity(
+                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                            putExtra("feature", BACK_GESTURE_FEATURE_ID)
+                        },
+                    )
+                },
+            )
         }
     }
 }

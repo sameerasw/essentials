@@ -24,6 +24,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
@@ -52,6 +53,7 @@ class AppFlowHandler(
     private var appLockSessionActive = false
     private var appLockLeftAt = 0L
     private val lastLeaveTimes = mutableMapOf<String, Long>()
+    private var backGestureAppliedFor: String? = null
     private val activeCountdowns = mutableMapOf<String, Job>()
 
     private val shutUpReceiver =
@@ -216,6 +218,7 @@ class AppFlowHandler(
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
+            checkBackGestureApps(packageName)
         }
     }
 
@@ -592,6 +595,20 @@ class AppFlowHandler(
                 "GestureBarAutomation",
                 setOf(StatusBarManager.FLAG_HOME),
             )
+        }
+    }
+
+    private fun checkBackGestureApps(packageName: String) {
+        val settingsRepository = SettingsRepository(context)
+        val config = settingsRepository.loadBackGestureAppConfigs().find { it.packageName == packageName }
+        if (config?.packageName == backGestureAppliedFor) return
+        backGestureAppliedFor = config?.packageName
+        scope.launch(Dispatchers.IO) {
+            if (config != null) {
+                settingsRepository.applyBackGestureScales(config.leftScale, config.rightScale)
+            } else {
+                settingsRepository.applyDefaultBackGesture()
+            }
         }
     }
 

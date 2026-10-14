@@ -12,6 +12,7 @@ package com.sameerasw.essentials.data.repository
 import com.sameerasw.essentials.ui.core.pickers.NetworkType
 import android.content.Context
 import android.content.SharedPreferences
+import android.provider.Settings
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.domain.HapticFeedbackType
@@ -19,6 +20,7 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.BackGestureAppConfig
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.HilightEffect
@@ -32,6 +34,7 @@ import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -730,6 +733,11 @@ class SettingsRepository(
         const val KEY_PREFER_GPU_COMPOSING = "prefer_gpu_composing"
         const val KEY_TRANSPARENT_NAVIGATION_BAR = "transparent_navigation_bar"
         const val KEY_SPLIT_SCREEN_GESTURE = "split_screen_gesture"
+        const val SECURE_BACK_GESTURE_INSET_SCALE_LEFT = "back_gesture_inset_scale_left"
+        const val SECURE_BACK_GESTURE_INSET_SCALE_RIGHT = "back_gesture_inset_scale_right"
+        const val KEY_BACK_GESTURE_LEFT_SCALE = "back_gesture_left_scale"
+        const val KEY_BACK_GESTURE_RIGHT_SCALE = "back_gesture_right_scale"
+        const val KEY_BACK_GESTURE_APP_CONFIGS = "back_gesture_app_configs"
         const val KEY_STANDBY_APPS = "standby_apps"
         const val KEY_PIXEL_SEARCHBAR = "pixel_searchbar"
         const val KEY_PIXEL_SEARCHBAR_TYPE = "pixel_searchbar_type"
@@ -2822,6 +2830,61 @@ class SettingsRepository(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun getBackGestureScale(left: Boolean): Float =
+        getFloat(
+            if (left) KEY_BACK_GESTURE_LEFT_SCALE else KEY_BACK_GESTURE_RIGHT_SCALE,
+            readSecureFloat(if (left) SECURE_BACK_GESTURE_INSET_SCALE_LEFT else SECURE_BACK_GESTURE_INSET_SCALE_RIGHT),
+        )
+
+    fun setBackGestureScale(
+        left: Boolean,
+        scale: Float,
+    ) {
+        putFloat(if (left) KEY_BACK_GESTURE_LEFT_SCALE else KEY_BACK_GESTURE_RIGHT_SCALE, scale)
+        applyDefaultBackGesture()
+    }
+
+    fun loadBackGestureAppConfigs(): List<BackGestureAppConfig> =
+        try {
+            gson.fromJson(getString(KEY_BACK_GESTURE_APP_CONFIGS), Array<BackGestureAppConfig>::class.java)?.toList()
+                ?: emptyList()
+        } catch (_: Exception) {
+            emptyList()
+        }
+
+    fun saveBackGestureAppConfigs(configs: List<BackGestureAppConfig>) = putString(KEY_BACK_GESTURE_APP_CONFIGS, gson.toJson(configs))
+
+    fun applyDefaultBackGesture() = applyBackGestureScales(getBackGestureScale(left = true), getBackGestureScale(left = false))
+
+    fun applyBackGestureScales(
+        left: Float,
+        right: Float,
+    ) {
+        // Snapshot the system widths before the first override so restoring the default never reads back our own value
+        if (!prefs.contains(KEY_BACK_GESTURE_LEFT_SCALE)) putFloat(KEY_BACK_GESTURE_LEFT_SCALE, getBackGestureScale(left = true))
+        if (!prefs.contains(KEY_BACK_GESTURE_RIGHT_SCALE)) putFloat(KEY_BACK_GESTURE_RIGHT_SCALE, getBackGestureScale(left = false))
+        writeSecureFloat(SECURE_BACK_GESTURE_INSET_SCALE_LEFT, left)
+        writeSecureFloat(SECURE_BACK_GESTURE_INSET_SCALE_RIGHT, right)
+    }
+
+    private fun readSecureFloat(key: String): Float =
+        try {
+            Settings.Secure.getFloat(context.contentResolver, key, 1f)
+        } catch (_: Exception) {
+            1f
+        }
+
+    private fun writeSecureFloat(
+        key: String,
+        value: Float,
+    ) {
+        try {
+            Settings.Secure.putFloat(context.contentResolver, key, value)
+        } catch (_: SecurityException) {
+            ShellUtils.runCommand(context, "settings put secure $key $value")
+        } catch (_: Exception) {}
     }
 
     /**

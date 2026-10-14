@@ -57,6 +57,7 @@ import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.BackGestureAppConfig
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.HilightEffect
@@ -413,6 +414,9 @@ class MainViewModel : ViewModel() {
     val isCircleToSearchGestureEnabled = mutableStateOf(false)
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val circleToSearchGestureWidth = mutableFloatStateOf(240f)
+    val backGestureLeftScale = mutableFloatStateOf(1f)
+    val backGestureRightScale = mutableFloatStateOf(1f)
+    val backGestureAppConfigs = mutableStateOf<List<BackGestureAppConfig>>(emptyList())
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
     val isAllowOverlaysInSettingsEnabled = mutableStateOf(false)
@@ -3757,6 +3761,45 @@ class MainViewModel : ViewModel() {
     fun setCircleToSearchGestureHeight(height: Float) {
         circleToSearchGestureHeight.floatValue = height
         settingsRepository.putFloat(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT, height)
+    }
+
+    fun refreshBackGestureState() {
+        backGestureLeftScale.floatValue = settingsRepository.getBackGestureScale(left = true)
+        backGestureRightScale.floatValue = settingsRepository.getBackGestureScale(left = false)
+        backGestureAppConfigs.value = settingsRepository.loadBackGestureAppConfigs()
+    }
+
+    fun applyBackGestureScale(left: Boolean) {
+        val scale = if (left) backGestureLeftScale.floatValue else backGestureRightScale.floatValue
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setBackGestureScale(left, scale)
+        }
+    }
+
+    fun updateBackGestureAppConfig(
+        config: BackGestureAppConfig,
+        context: Context,
+    ) {
+        val current = backGestureAppConfigs.value
+        val configs =
+            if (current.any { it.packageName == config.packageName }) {
+                current.map { if (it.packageName == config.packageName) config else it }
+            } else {
+                current + config
+            }
+        backGestureAppConfigs.value = configs
+        settingsRepository.saveBackGestureAppConfigs(configs)
+        updateAppDetectionService(context)
+    }
+
+    fun removeBackGestureAppConfig(
+        packageName: String,
+        context: Context,
+    ) {
+        val configs = backGestureAppConfigs.value.filterNot { it.packageName == packageName }
+        backGestureAppConfigs.value = configs
+        settingsRepository.saveBackGestureAppConfigs(configs)
+        updateAppDetectionService(context)
     }
 
     /**
