@@ -10,8 +10,10 @@
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
+import android.content.ComponentName
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.res.Resources
 import android.net.Uri
 import android.provider.MediaStore
 import android.view.accessibility.AccessibilityEvent
@@ -36,24 +38,18 @@ class ScreenshotShareCleanupHandler(
     private var targetPackage: String? = null
 
     private val shareDescription by lazy { systemUiString("screenshot_share_description") ?: "Share screenshot" }
+    private val imageEditorPackage by lazy { systemImageEditorPackage() ?: MARKUP }
 
     fun onViewClicked(
         event: AccessibilityEvent,
         foregroundPackage: String?,
     ) {
         if (!settings.isScreenshotShareCleanupEnabled()) return
-        when (event.packageName) {
-            SYSTEM_UI ->
-                if (event.contentDescription?.toString() == shareDescription) {
-                    stage = Stage.SHARE_TAPPED
-                    sharedAt = System.currentTimeMillis()
-                    originPackage = foregroundPackage
-                    targetPackage = null
-                }
-
-            // Edit opens the markup app from the sheet without sharing
-            SHARE_SHEET ->
-                if (event.source?.viewIdResourceName == "$SHARE_SHEET:id/edit") reset()
+        if (event.packageName == SYSTEM_UI && event.contentDescription?.toString() == shareDescription) {
+            stage = Stage.SHARE_TAPPED
+            sharedAt = System.currentTimeMillis()
+            originPackage = foregroundPackage
+            targetPackage = null
         }
     }
 
@@ -64,8 +60,8 @@ class ScreenshotShareCleanupHandler(
                 when {
                     packageName == SHARE_SHEET -> stage = Stage.CHOOSER_OPEN
                     stage == Stage.SHARE_TAPPED -> Unit
-                    // Back on the app under the screenshot means the sheet was dismissed
-                    packageName == originPackage -> reset()
+                    // The app under the screenshot means the sheet was dismissed; the image editor means Edit was tapped
+                    packageName == originPackage || packageName == imageEditorPackage -> reset()
                     else -> {
                         targetPackage = packageName
                         stage = Stage.IN_TARGET
@@ -135,9 +131,17 @@ class ScreenshotShareCleanupHandler(
             if (id != 0) res.getString(id) else null
         }.getOrNull()
 
+    private fun systemImageEditorPackage(): String? =
+        runCatching {
+            val res = Resources.getSystem()
+            val id = res.getIdentifier("config_systemImageEditor", "string", "android")
+            if (id != 0) ComponentName.unflattenFromString(res.getString(id))?.packageName else null
+        }.getOrNull()
+
     companion object {
         private const val SYSTEM_UI = "com.android.systemui"
         private const val SHARE_SHEET = "com.android.intentresolver"
+        private const val MARKUP = "com.google.android.markup"
         private const val SCREENSHOT_LOOKBACK_SECONDS = 120L
         private const val SCREENSHOT_LOOKAHEAD_SECONDS = 5L
     }
