@@ -43,7 +43,7 @@ class ScreenshotShareCleanupHandler(
         foregroundPackage: String?,
     ) {
         if (!settings.isScreenshotShareCleanupEnabled()) return
-        if (event.packageName == SYSTEM_UI && event.contentDescription?.toString() == shareDescription) {
+        if (event.packageName == SYSTEM_UI && event.contentDescription?.startsWith(shareDescription) == true) {
             val now = System.currentTimeMillis()
             tracker.onShareTapped(now, foregroundPackage)
             screenshotUri = null
