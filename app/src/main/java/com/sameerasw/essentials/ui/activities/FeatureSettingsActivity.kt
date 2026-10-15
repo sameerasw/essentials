@@ -783,6 +783,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         listOf(
                                                             "Lockdown mode",
                                                             "Face unlock brightness",
+                                                            "Screenshot share cleanup",
                                                         ),
                                                     )
 
