@@ -17,6 +17,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
@@ -24,10 +25,12 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.BackGestureAppConfig
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.FreezeManager
@@ -53,6 +56,13 @@ class AppFlowHandler(
     private var appLockLeftAt = 0L
     private val lastLeaveTimes = mutableMapOf<String, Long>()
     private val activeCountdowns = mutableMapOf<String, Job>()
+    private val settingsRepository by lazy { SettingsRepository(context) }
+    private val backGestureDispatcher = Dispatchers.IO.limitedParallelism(1)
+    private var backGestureConfigs: Map<String, BackGestureAppConfig>? = null
+    private val backGestureConfigsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == SettingsRepository.KEY_BACK_GESTURE_APP_CONFIGS) backGestureConfigs = null
+        }
 
     private val shutUpReceiver =
         object : BroadcastReceiver() {
@@ -108,6 +118,7 @@ class AppFlowHandler(
         } else {
             context.registerReceiver(shutUpReceiver, filter)
         }
+        settingsRepository.registerOnSharedPreferenceChangeListener(backGestureConfigsListener)
     }
 
     // App Lock State
@@ -216,6 +227,7 @@ class AppFlowHandler(
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
+            checkBackGestureApps(packageName)
         }
     }
 
@@ -592,6 +604,14 @@ class AppFlowHandler(
                 "GestureBarAutomation",
                 setOf(StatusBarManager.FLAG_HOME),
             )
+        }
+    }
+
+    private fun checkBackGestureApps(packageName: String) {
+        val configs = backGestureConfigs ?: settingsRepository.loadBackGestureAppConfigs().associateBy { it.packageName }.also { backGestureConfigs = it }
+        if (configs.isEmpty() && settingsRepository.backGesture.overrideOwner == null) return
+        scope.launch(backGestureDispatcher) {
+            settingsRepository.backGesture.onAppChanged(packageName, configs)
         }
     }
 

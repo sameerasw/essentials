@@ -2510,6 +2510,30 @@
     <string name="feat_transparent_navigation_bar_desc">Make system navigation bar background transparent</string>
     <string name="cat_navigation">Navigation</string>
     <string name="feat_navigation_desc">Gesture bar, navigation gestures and navigation bar tweaks</string>
+    <string name="feat_back_gesture_title">Back gesture</string>
+    <string name="feat_back_gesture_left_title">Left edge width</string>
+    <string name="feat_back_gesture_right_title">Right edge width</string>
+    <string name="feat_back_gesture_width_desc">How far in from the edge a swipe triggers back</string>
+    <string name="feat_back_gesture_default_width_desc">How far in from the edge a swipe triggers back. Same as Back sensitivity in system settings.</string>
+    <string name="feat_back_gesture_off">Off</string>
+    <string name="feat_back_gesture_desc">Edge widths and per-app back gesture</string>
+    <string name="back_gesture_apps_section">Apps</string>
+    <string name="back_gesture_add_app">Add app</string>
+    <string name="back_gesture_add_app_desc">Use different edge widths while an app is open</string>
+    <string name="back_gesture_app_summary">Left %1$s · Right %2$s</string>
+    <string name="back_gesture_app_sheet_desc">These widths apply while this app is open. Set an edge to Off so swipes from it go to the app.</string>
+    <string name="back_gesture_both_off_title">Both edges are off</string>
+    <string name="back_gesture_both_off_desc">Back swipes won\'t work from either side. Use an app\'s own back button, or turn an edge back on here.</string>
+    <string name="back_gesture_automation_note">The Turn Off Back Gesture automation action overrides these apps until Turn On Back Gesture runs.</string>
+    <string name="diy_action_back_gesture_off">Turn Off Back Gesture</string>
+    <string name="diy_action_back_gesture_on">Turn On Back Gesture</string>
+    <string-array name="keywords_back_gesture">
+        <item>back</item>
+        <item>swipe</item>
+        <item>edge</item>
+        <item>gesture</item>
+        <item>sensitivity</item>
+    </string-array>
     <string name="feat_standby_apps_title">Standby apps</string>
     <string name="feat_standby_apps_desc">Optimize app background activities</string>
     <string name="about_desc_networks">Configure network download speed limits, keep mobile data continuously active even when connected to Wi-Fi, and enable wireless display certification settings.</string>
