@@ -668,6 +668,11 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_FILTER_APPS_LIST = "island_notif_filter_apps_list"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
+        const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
+        const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
+        const val KEY_ISLAND_OTP_DISMISS_AFTER_COPY = "island_otp_dismiss_after_copy"
+        const val KEY_ISLAND_OTP_BYPASS_FILTER = "island_otp_bypass_filter"
+        const val KEY_ISLAND_OTP_TIMEOUT_MS = "island_otp_timeout_ms"
         const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
         const val KEY_ISLAND_BORDER_OUTLINE_COLOR = "island_border_outline_color"
         const val KEY_ISLAND_BORDER_OUTLINE_DYNAMIC = "island_border_outline_dynamic"
@@ -4326,6 +4331,13 @@ class SettingsRepository(
 
     fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
     fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
+
+    fun isIslandOtpEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_ENABLED, true)
+    fun isIslandOtpTapToCopyEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_TAP_TO_COPY, true)
+    fun isIslandOtpDismissAfterCopyEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_DISMISS_AFTER_COPY, false)
+    fun isIslandOtpBypassFilterEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_BYPASS_FILTER, true)
+    fun getIslandOtpTimeoutMs(): Long = getLong(KEY_ISLAND_OTP_TIMEOUT_MS, 60_000L)
+    fun setIslandOtpTimeoutMs(ms: Long) = putLong(KEY_ISLAND_OTP_TIMEOUT_MS, ms)
 
     fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
     fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, enabled)

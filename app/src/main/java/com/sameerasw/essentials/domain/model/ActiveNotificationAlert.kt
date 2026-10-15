@@ -28,5 +28,6 @@ data class ActiveNotificationAlert(
     val chatIcon: Bitmap? = null,
     val isSilent: Boolean = false,
     val blockedByDnd: Boolean = false,
+    val otpCode: String? = null,
 )
 

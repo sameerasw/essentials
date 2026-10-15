@@ -68,6 +68,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceCalendarO
 import com.sameerasw.essentials.ui.features.display.sheets.rememberIslandShowsWhileLocked
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionGrantUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
@@ -883,6 +884,13 @@ fun IslandNotificationSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showFilterAppsSheet by remember { mutableStateOf(false) }
+    var otpEnabled by remember {
+        mutableStateOf(SettingsRepository(context).isIslandOtpEnabled())
+    }
+    var otpTimeoutMs by remember {
+        mutableStateOf(SettingsRepository(context).getIslandOtpTimeoutMs())
+    }
+    var otpReadable by remember { mutableStateOf(PermissionGrantUtil.hasSensitiveNotifications(context)) }
     var showQueueSheet by remember {
         mutableStateOf(
             viewModel.isIslandNotifQueue.value &&
@@ -1136,6 +1144,74 @@ fun IslandNotificationSettingsUI(
             }
         }
 
+        IslandSettingsSection(R.string.island_otp_section) {
+            IslandPrefToggle(
+                settingKey = SettingsRepository.KEY_ISLAND_OTP_ENABLED,
+                iconRes = R.drawable.rounded_vpn_key_24,
+                title = stringResource(R.string.island_otp_enabled_title),
+                description = stringResource(R.string.island_otp_enabled_desc),
+                defaultValue = true,
+                onChanged = { otpEnabled = it },
+            )
+            AnimatedVisibility(
+                visible = otpEnabled,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    if (!otpReadable) {
+                        val featureName = stringResource(R.string.island_otp_section)
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_vpn_key_24,
+                            title = stringResource(R.string.island_otp_grant_title),
+                            description = stringResource(R.string.island_otp_grant_desc),
+                            showToggle = false,
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                Thread {
+                                    PermissionGrantUtil.grantSensitiveNotifications(context, featureName)
+                                    val granted = PermissionGrantUtil.hasSensitiveNotifications(context)
+                                    view.post { otpReadable = granted }
+                                }.start()
+                            },
+                        )
+                    }
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_OTP_TAP_TO_COPY,
+                        iconRes = R.drawable.rounded_content_copy_24,
+                        title = stringResource(R.string.island_otp_tap_to_copy_title),
+                        description = stringResource(R.string.island_otp_tap_to_copy_desc),
+                        defaultValue = true,
+                    )
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_OTP_DISMISS_AFTER_COPY,
+                        iconRes = R.drawable.rounded_check_circle_24,
+                        title = stringResource(R.string.island_otp_dismiss_after_copy_title),
+                    )
+                    ConfigSliderItem(
+                        title = stringResource(R.string.island_otp_timeout_title),
+                        value = OTP_TIMEOUT_STEPS_MS.indexOfClosest(otpTimeoutMs).toFloat(),
+                        onValueChange = {
+                            HapticUtil.performUIHaptic(view)
+                            otpTimeoutMs = OTP_TIMEOUT_STEPS_MS[it.toInt().coerceIn(OTP_TIMEOUT_STEPS_MS.indices)]
+                            SettingsRepository(context).setIslandOtpTimeoutMs(otpTimeoutMs)
+                        },
+                        valueRange = 0f..OTP_TIMEOUT_STEPS_MS.lastIndex.toFloat(),
+                        increment = 1f,
+                        iconRes = R.drawable.rounded_timer_24,
+                        valueFormatter = { formatCatchUp(OTP_TIMEOUT_STEPS_MS[it.toInt().coerceIn(OTP_TIMEOUT_STEPS_MS.indices)], "") },
+                    )
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_OTP_BYPASS_FILTER,
+                        iconRes = R.drawable.rounded_filter_alt_24,
+                        title = stringResource(R.string.island_otp_bypass_filter_title),
+                        description = stringResource(R.string.island_otp_bypass_filter_desc),
+                        defaultValue = true,
+                    )
+                }
+            }
+        }
+
         if (rememberIslandShowsWhileLocked()) {
             IslandSettingsSection(R.string.island_notif_section_lock_screen) {
                 IslandPrefToggle(
@@ -1197,6 +1273,10 @@ private fun IslandSettingsSection(titleRes: Int, content: @Composable ColumnScop
 
 private val CATCH_UP_STEPS_MS =
     longArrayOf(5_000, 10_000, 15_000, 20_000, 30_000, 45_000, 60_000, 120_000, 180_000, 300_000, 600_000, 900_000, 0)
+
+private val OTP_TIMEOUT_STEPS_MS = longArrayOf(15_000, 30_000, 60_000, 120_000, 180_000, 300_000)
+
+private fun LongArray.indexOfClosest(ms: Long): Int = indices.minBy { kotlin.math.abs(this[it] - ms) }
 
 private fun catchUpStepIndex(ms: Long): Int =
     if (ms <= 0L) CATCH_UP_STEPS_MS.lastIndex

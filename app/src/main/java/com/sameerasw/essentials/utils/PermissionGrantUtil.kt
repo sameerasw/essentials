@@ -9,9 +9,11 @@
 
 package com.sameerasw.essentials.utils
 
+import android.app.AppOpsManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Process
 import android.provider.Settings
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
@@ -48,7 +50,33 @@ object PermissionGrantUtil {
         }
 
         ShellUtils.runCommandWithOutput(context, commands.joinToString("; ") { "$it >/dev/null 2>&1" }, notifyOnError = false)
+        if (!hasSensitiveNotifications(context)) grantSensitiveNotifications(context)
         return true
+    }
+
+    private const val OP_SENSITIVE_NOTIFICATIONS = "android:receive_sensitive_notifications"
+
+    // Android 15+ redacts OTP notifications for listeners without this op
+    fun hasSensitiveNotifications(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return true
+        return try {
+            val appOps = context.getSystemService(AppOpsManager::class.java)
+            appOps.unsafeCheckOpNoThrow(OP_SENSITIVE_NOTIFICATIONS, Process.myUid(), context.packageName) == AppOpsManager.MODE_ALLOWED
+        } catch (_: Exception) {
+            true
+        }
+    }
+
+    // Trust is resolved when the listener binds, so rebind after granting
+    fun grantSensitiveNotifications(context: Context, featureName: String? = null) {
+        val pkg = context.packageName
+        val listener = "$pkg/${NotificationListener::class.java.name}"
+        ShellUtils.runCommandWithOutput(
+            context,
+            "appops set $pkg RECEIVE_SENSITIVE_NOTIFICATIONS allow; " +
+                "cmd notification disallow_listener $listener; cmd notification allow_listener $listener",
+            featureName = featureName,
+        )
     }
 
     private fun requestedPermissions(context: Context): List<String> = try {

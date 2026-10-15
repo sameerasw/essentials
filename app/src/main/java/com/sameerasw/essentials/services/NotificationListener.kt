@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services
 
+import com.sameerasw.essentials.island.plugins.notifications.OtpExtractor
 import android.graphics.drawable.Icon
 import android.content.pm.LauncherApps
 import com.sameerasw.essentials.domain.controller.HilightController
@@ -278,6 +279,20 @@ class NotificationListener : NotificationListenerService() {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
                 ranking.suppressedVisualEffects and NotificationManager.Policy.SUPPRESSED_EFFECT_PEEK != 0
         return !ranking.matchesInterruptionFilter() || peekSuppressed
+    }
+
+    // Every text field that can carry a code
+    private fun otpSourceText(sbn: StatusBarNotification): String {
+        val extras = sbn.notification.extras ?: return ""
+        return listOf(
+            Notification.EXTRA_TITLE,
+            Notification.EXTRA_TITLE_BIG,
+            Notification.EXTRA_TEXT,
+            Notification.EXTRA_BIG_TEXT,
+        ).mapNotNull { extras.getCharSequence(it)?.toString() }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .joinToString("\n")
     }
 
     private fun populateActiveUnreadNotifications() {
@@ -1030,6 +1045,7 @@ class NotificationListener : NotificationListenerService() {
             val alert = extractNotificationAlert(sbn)?.copy(
                 isSilent = isSilentNotification(sbn, rankingMap),
                 blockedByDnd = isBlockedByDnd(sbn, rankingMap),
+                otpCode = OtpExtractor.extract(otpSourceText(sbn)),
             )
             val callHidden = CallNotificationParser.isCall(sbn) && !SettingsRepository(applicationContext).isIslandShowCallsEnabled()
             if (alert != null && !callHidden) {
