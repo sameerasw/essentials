@@ -194,6 +194,18 @@ sealed interface Trigger {
         override val icon: Int = R.drawable.rounded_do_not_disturb_on_24
     }
 
+    @Keep
+    data object AndroidAutoConnected : Trigger {
+        override val title: Int = R.string.diy_trigger_android_auto_connected
+        override val icon: Int = R.drawable.rounded_directions_car_24
+    }
+
+    @Keep
+    data object AndroidAutoDisconnected : Trigger {
+        override val title: Int = R.string.diy_trigger_android_auto_disconnected
+        override val icon: Int = R.drawable.rounded_directions_car_24
+    }
+
     companion object {
         const val DEFAULT_LOCATION_RADIUS_METERS = 200
         const val MIN_LOCATION_RADIUS_METERS = 100

@@ -1037,6 +1037,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                             ssid =
                                                                                 (selectedTrigger as? Trigger.WifiDisconnected)?.ssid ?: "",
                                                                         ),
+                                                                        Trigger.AndroidAutoConnected,
+                                                                        Trigger.AndroidAutoDisconnected,
                                                                     ),
                                                                 R.string.diy_category_notifications to
                                                                     listOf(
