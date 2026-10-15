@@ -253,11 +253,14 @@ class DuoOverlayHandler(
                 val isPlugged = plugged > 0
                 val isChargingStatus = isPlugged && (status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL)
+                val currentLevel = if (level >= 0 && scale > 0) (level * 100) / scale else 0
+                val isLimitShield =
+                    com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(service, currentLevel, isChargingStatus || action == Intent.ACTION_POWER_CONNECTED)
 
                 val isNowCharging = when (action) {
                     Intent.ACTION_POWER_DISCONNECTED -> false
-                    Intent.ACTION_POWER_CONNECTED -> true
-                    else -> isChargingStatus
+                    Intent.ACTION_POWER_CONNECTED -> !isLimitShield
+                    else -> isChargingStatus && !isLimitShield
                 }
 
                 val isFastCharging = isFastCharging(batteryIntent, plugged)
@@ -1265,7 +1268,8 @@ class DuoOverlayHandler(
                     val isPlugged = plugged > 0
                     val isChargingStatus = isPlugged && (status == BatteryManager.BATTERY_STATUS_CHARGING ||
                         status == BatteryManager.BATTERY_STATUS_FULL)
-                    if (isChargingStatus) {
+                    val initialLevel = if (level >= 0 && scale > 0) (level * 100) / scale else 0
+                    if (isChargingStatus && !com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(service, initialLevel, true)) {
                         isChargingState = true
                         val isFast = isFastCharging(it, plugged)
                         isFastChargingState = isFast

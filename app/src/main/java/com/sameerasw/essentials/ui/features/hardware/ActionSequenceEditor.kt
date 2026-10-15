@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +64,7 @@ import com.sameerasw.essentials.ui.core.sheets.NotificationLightingActionSheet
 import com.sameerasw.essentials.ui.core.sheets.OverlayControlSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
+import com.sameerasw.essentials.ui.features.audio.sheets.SetModeSettingsSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -94,6 +96,7 @@ fun ActionSequenceEditor(
     var showDeviceEffectsSettings by remember { mutableStateOf(false) }
     var showSoundModeSettings by remember { mutableStateOf(false) }
     var showChargingModeSettings by remember { mutableStateOf(false) }
+    var showSetModeSettings by remember { mutableStateOf(false) }
     var showNotificationLightingSettings by remember { mutableStateOf(false) }
     var showOverlayControlSettings by remember { mutableStateOf(false) }
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
@@ -199,6 +202,7 @@ fun ActionSequenceEditor(
             is Action.DeviceEffects -> showDeviceEffectsSettings = true
             is Action.SoundMode -> showSoundModeSettings = true
             is Action.SetChargingMode -> showChargingModeSettings = true
+            is Action.SetMode -> showSetModeSettings = true
             is Action.TriggerNotificationLighting -> showNotificationLightingSettings = true
             is Action.OverlayControl -> showOverlayControlSettings = true
             is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
@@ -438,6 +442,18 @@ fun ActionSequenceEditor(
             onDismiss = { showChargingModeSettings = false },
             onSave = { newAction ->
                 showChargingModeSettings = false
+                onActionSelected(newAction)
+                configAction = null
+            },
+        )
+    }
+
+    if (showSetModeSettings && configAction is Action.SetMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        SetModeSettingsSheet(
+            initialAction = configAction as Action.SetMode,
+            onDismiss = { showSetModeSettings = false },
+            onSave = { newAction ->
+                showSetModeSettings = false
                 onActionSelected(newAction)
                 configAction = null
             },

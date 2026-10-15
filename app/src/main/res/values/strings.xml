@@ -317,6 +317,15 @@
     <string name="lockscreen_shortcuts_open_wallpaper_style">Open Wallpaper &amp; style</string>
     <string name="diy_category_pixel_shortcuts">Pixel shortcuts</string>
     <string name="diy_action_toggle_dnd">Toggle Do Not Disturb</string>
+    <string name="diy_action_set_mode">Set Mode</string>
+    <string name="diy_set_mode_desc">Turn one of your Modes from Settings on or off.</string>
+    <string name="diy_set_mode_turn_on">Turn on</string>
+    <string name="diy_set_mode_turn_off">Turn off</string>
+    <string name="diy_set_mode_disabled">Disabled in Settings</string>
+    <string name="diy_set_mode_empty">No modes found. Check that Shizuku is running.</string>
+    <string name="diy_set_mode_not_found">Mode \"%1$s\" no longer exists</string>
+    <string name="diy_set_mode_failed">Couldn\'t change mode \"%1$s\": %2$s</string>
+    <string name="diy_set_mode_no_condition">Mode \"%1$s\" can\'t be switched by apps</string>
     <string name="diy_action_open_camera">Open Camera</string>
     <string name="diy_action_open_video_camera">Open Video Camera</string>
     <string name="diy_action_open_qr_scanner">Open QR Code Scanner</string>
@@ -842,6 +851,8 @@
     <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
     <string name="limit_max_devices">Max shown devices</string>
     <string name="limit_max_devices_summary">Adjust max devices shown in the widget, notification and island</string>
+    <string name="widget_center_items_title">Center items</string>
+    <string name="island_battery_charge_limited">Charge limit</string>
     <string name="battery_show_percentage_title">Show percentage</string>
     <string name="batteries_notification_title">Batteries notification</string>
     <string name="widget_background_title">Widget background</string>
@@ -1341,6 +1352,8 @@
     <string name="diy_notification_trigger_app">App</string>
     <string name="diy_notification_trigger_any_app">Any app</string>
     <string name="diy_notification_trigger_text">Text contains (optional)</string>
+    <string name="diy_trigger_android_auto_connected">Android Auto Connected</string>
+    <string name="diy_trigger_android_auto_disconnected">Android Auto Disconnected</string>
     <string name="diy_trigger_accessibility_button">Accessibility Shortcut</string>
     <string name="accessibility_shortcut_service_name">Essentials Shortcut</string>
     <string name="accessibility_shortcut_service_1_name">Essentials Shortcut 1</string>

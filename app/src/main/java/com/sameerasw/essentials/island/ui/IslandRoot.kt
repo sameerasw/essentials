@@ -332,6 +332,7 @@ fun IslandRoot(
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
     val cameraSlotPx = with(density) { spec.cameraSlotWidth.roundToPx() }
+    val layerSizes = remember { HashMap<Any, IntSize>() }
     val contentOriginX = when {
         spec.growDirection > 0 -> 0f
         spec.growDirection < 0 -> 1f
@@ -801,7 +802,12 @@ fun IslandRoot(
                     val range = (expandedHeight[0] - minSurfaceHeight).toFloat()
                     val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
                     edgeShift.floatValue = outsetPx * p
-                    layout(w, h) { child.place((w - child.width) / 2, 0) }
+                    val childX = when {
+                        spec.growDirection > 0 -> 0
+                        spec.growDirection < 0 -> w - child.width
+                        else -> (w - child.width) / 2
+                    }
+                    layout(w, h) { child.place(childX, 0) }
                 }
                 .onSizeChanged { surfaceSize = it }
                 .animateContentSize(
@@ -810,7 +816,11 @@ fun IslandRoot(
                         stage == IslandStage.Compact && compactSettled -> IslandMotion.compactSize
                         else -> IslandMotion.collapseSize
                     },
-                    alignment = Alignment.TopCenter,
+                    alignment = when {
+                        spec.growDirection > 0 -> Alignment.TopStart
+                        spec.growDirection < 0 -> Alignment.TopEnd
+                        else -> Alignment.TopCenter
+                    },
                     finishedListener = { _, _ ->
                         if (dragCommitted && currentState.stage != IslandStage.Expanded && currentState.stage != IslandStage.Line) {
                             dragCommitted = false
@@ -1074,6 +1084,7 @@ fun IslandRoot(
                         }
                         .onSizeChanged {
                             target = it
+                            layerSizes[layerKey] = it
                             if (key.stage == IslandStage.Compact) compactSize = it
                         }
                         .graphicsLayer {
@@ -1096,7 +1107,8 @@ fun IslandRoot(
                 } else {
                     Modifier
                         .layout { measurable, _ ->
-                            val p = measurable.measure(Constraints())
+                            val last = layerSizes[layerKey]
+                            val p = measurable.measure(if (last != null) Constraints.fixed(last.width, last.height) else Constraints())
                             val x = when {
                                 spec.growDirection > 0 -> 0
                                 spec.growDirection < 0 -> -p.width

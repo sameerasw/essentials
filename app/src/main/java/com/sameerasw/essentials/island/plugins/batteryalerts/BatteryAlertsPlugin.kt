@@ -94,8 +94,9 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
 
         val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         level = (raw * 100f / scale).toInt()
-        isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+        val plugged = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL
+        isCharging = plugged && !com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(context, level, plugged)
     }
 
     private fun currentAlertState(): String {

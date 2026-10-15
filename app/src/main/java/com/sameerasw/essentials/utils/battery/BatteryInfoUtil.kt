@@ -360,17 +360,7 @@ object BatteryInfoUtil {
         ) {
             return R.drawable.battery_android_frame_alert_24px
         }
-        val isChargeLimitEnabled =
-            try {
-                android.provider.Settings.Secure.getInt(
-                    context.contentResolver,
-                    "charge_optimization_mode",
-                    0,
-                ) == 1
-            } catch (e: Exception) {
-                false
-            }
-        if (isCharging && level >= 80 && isChargeLimitEnabled) {
+        if (ChargeLimitUtil.isShielded(context, level, isCharging)) {
             return R.drawable.battery_android_frame_shield_24px
         }
         if (level >= 100) {

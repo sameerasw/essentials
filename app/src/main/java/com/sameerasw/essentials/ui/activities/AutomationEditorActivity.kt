@@ -401,6 +401,7 @@ class AutomationEditorActivity : ComponentActivity() {
                         is Action.OpenActivity -> action.className.isNotBlank()
                         is Action.CustomSettings -> action.entries.isNotEmpty()
                         is Action.Keyboard -> !action.inputMethodId.isNullOrBlank()
+                        is Action.SetMode -> action.modeId.isNotBlank()
                         else -> true
                     }
 
@@ -1037,6 +1038,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                             ssid =
                                                                                 (selectedTrigger as? Trigger.WifiDisconnected)?.ssid ?: "",
                                                                         ),
+                                                                        Trigger.AndroidAutoConnected,
+                                                                        Trigger.AndroidAutoDisconnected,
                                                                     ),
                                                                 R.string.diy_category_notifications to
                                                                     listOf(

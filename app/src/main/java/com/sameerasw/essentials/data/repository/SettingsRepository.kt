@@ -355,6 +355,7 @@ class SettingsRepository(
         const val KEY_SHOW_BLUETOOTH_DEVICES = "show_bluetooth_devices"
         const val KEY_BATTERY_SEPARATE_CHANNELS = "battery_separate_channels"
         const val KEY_BATTERY_SHOW_PERCENTAGE = "battery_show_percentage"
+        const val KEY_BATTERY_WIDGET_CENTER_ITEMS = "battery_widget_center_items"
         const val KEY_BATTERY_WIDGET_MAX_DEVICES = "battery_widget_max_devices"
         const val KEY_BATTERY_WIDGET_BACKGROUND_ENABLED = "battery_widget_background_enabled"
 
