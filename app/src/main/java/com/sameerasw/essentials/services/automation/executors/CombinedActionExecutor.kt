@@ -58,7 +58,9 @@ import com.sameerasw.essentials.utils.SplitScreenUtil
 import com.sameerasw.essentials.utils.overlay.fromPrefs
 import com.sameerasw.essentials.utils.overlay.writeTo
 import com.sameerasw.essentials.utils.performHapticFeedback
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
 
@@ -148,7 +150,7 @@ object CombinedActionExecutor {
                 return@forEachIndexed
             }
             try {
-                execute(context, action)
+                execute(context, action, fromAutomation = true)
             } catch (e: Exception) {
                 Log.e("CombinedActionExecutor", "Action ${action::class.simpleName} failed", e)
                 AutomationFailureNotifier.notifyFailure(context, action, e.message ?: e::class.java.simpleName)
@@ -161,6 +163,7 @@ object CombinedActionExecutor {
     suspend fun execute(
         context: Context,
         action: Action,
+        fromAutomation: Boolean = false,
     ) {
         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
             when (action) {
@@ -484,7 +487,14 @@ object CombinedActionExecutor {
                 }
 
                 is Action.SetMode -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) setMode(context, action)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                        try {
+                            setMode(context, action)
+                        } catch (e: Exception) {
+                            if (fromAutomation) throw e
+                            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
 
                 is Action.ToggleDoNotDisturb -> {
@@ -1056,28 +1066,25 @@ object CombinedActionExecutor {
         }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    private fun setMode(
+    private suspend fun setMode(
         context: Context,
         action: Action.SetMode,
     ) {
         val featureName = context.getString(R.string.diy_action_set_mode)
-        val error =
-            when {
-                !ShizukuUtils.isShizukuAvailable() -> context.getString(R.string.shizuku_not_running_feature_desc, featureName)
-                !ShizukuUtils.hasPermission() -> context.getString(R.string.shizuku_permission_missing_feature_desc, featureName)
-                else ->
-                    try {
-                        if (ZenModeController.setActive(action.modeId, action.modeName, action.active)) {
-                            null
-                        } else {
-                            context.getString(R.string.diy_set_mode_not_found, action.modeName)
-                        }
-                    } catch (e: Exception) {
-                        Log.e("CombinedActionExecutor", "Set Mode failed", e)
-                        context.getString(R.string.diy_set_mode_failed, action.modeName)
-                    }
+        if (!ShizukuUtils.isShizukuAvailable()) error(context.getString(R.string.shizuku_not_running_feature_desc, featureName))
+        if (!ShizukuUtils.hasPermission()) error(context.getString(R.string.shizuku_permission_missing_feature_desc, featureName))
+        val result =
+            try {
+                withContext(Dispatchers.IO) { ZenModeController.setActive(action.modeId, action.modeName, action.active) }
+            } catch (e: Exception) {
+                Log.e("CombinedActionExecutor", "Set Mode failed", e)
+                error(context.getString(R.string.diy_set_mode_failed, action.modeName, "${e::class.java.simpleName}: ${e.message}"))
             }
-        error?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+        when (result) {
+            ZenModeController.Result.DONE -> {}
+            ZenModeController.Result.NOT_FOUND -> error(context.getString(R.string.diy_set_mode_not_found, action.modeName))
+            ZenModeController.Result.NO_CONDITION -> error(context.getString(R.string.diy_set_mode_no_condition, action.modeName))
+        }
     }
 
     private fun setHotspotEnabled(

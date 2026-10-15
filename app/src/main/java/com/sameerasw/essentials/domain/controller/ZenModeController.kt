@@ -18,16 +18,11 @@ import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
 import java.lang.reflect.InvocationTargetException
 
-// Apps can only switch modes they own; shell holds MANAGE_NOTIFICATIONS, which covers every mode
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 internal object ZenModeController {
     private const val MANAGER = "android.app.INotificationManager"
-
-    // Android 17 moves modes to their own service when refactor_modes_code is on; the old calls then throw
     private const val MODES_SERVICE = "contextual_mode"
     private const val MODES_MANAGER = "android.app.modes.IContextualModeManager"
-
-    // Rules apps create when they call setInterruptionFilter, not modes the user sees in Settings
     private const val IMPLICIT_RULE_PREFIX = "implicit_"
 
     data class Mode(
@@ -36,50 +31,38 @@ internal object ZenModeController {
         val isEnabled: Boolean,
     )
 
+    enum class Result { DONE, NOT_FOUND, NO_CONDITION }
+
     fun getModes(): List<Mode> =
-        rules()
-            .filterKeys { !it.startsWith(IMPLICIT_RULE_PREFIX) }
+        modeRules()
             .map { (id, rule) -> Mode(id, rule.name?.toString().orEmpty(), rule.isEnabled) }
             .sortedBy { it.name.lowercase() }
 
-    // Falls back to the name so the action survives the mode being recreated with a new id
     fun setActive(
         modeId: String,
         modeName: String,
         active: Boolean,
-    ): Boolean {
-        val rules = rules()
+    ): Result {
+        val rules = modeRules()
         val (id, rule) =
             rules.entries.firstOrNull { it.key == modeId }?.toPair()
-                ?: rules.entries.firstOrNull { it.value.name?.toString() == modeName }?.toPair()
-                ?: return false
+                ?: rules.entries.singleOrNull { it.value.name?.toString() == modeName }?.toPair()
+                ?: return Result.NOT_FOUND
+        val conditionId = rule.conditionId ?: return Result.NO_CONDITION
         val condition =
             Condition(
-                rule.conditionId,
+                conditionId,
                 rule.name?.toString().orEmpty(),
                 if (active) Condition.STATE_TRUE else Condition.STATE_FALSE,
                 Condition.SOURCE_USER_ACTION,
             )
         invoke("setAutomaticZenRuleState", arrayOf(String::class.java, Condition::class.java), id, condition)
-        return true
+        return Result.DONE
     }
 
-    // Older releases return a map; newer ones a ParceledListSlice of AutomaticZenRule.AzrWithId
-    @Suppress("UNCHECKED_CAST")
-    private fun rules(): Map<String, AutomaticZenRule> =
-        when (val result = invoke("getAutomaticZenRules", emptyArray())) {
-            is Map<*, *> -> result as Map<String, AutomaticZenRule>
-            null -> emptyMap()
-            else -> {
-                val list = result.javaClass.getMethod("getList").invoke(result) as List<Any>
-                list.associate { item ->
-                    val cls = item.javaClass
-                    val id = cls.getDeclaredField("mId").apply { isAccessible = true }.get(item) as String
-                    val rule = cls.getDeclaredField("mRule").apply { isAccessible = true }.get(item) as AutomaticZenRule
-                    id to rule
-                }
-            }
-        }
+    private fun modeRules(): Map<String, AutomaticZenRule> =
+        parseZenRules<AutomaticZenRule>(invoke("getAutomaticZenRules", emptyArray()))
+            .filterKeys { !it.startsWith(IMPLICIT_RULE_PREFIX) }
 
     private fun invoke(
         name: String,
@@ -90,7 +73,6 @@ internal object ZenModeController {
             try {
                 return invoke(binder, MODES_MANAGER, name, types, *args)
             } catch (_: IllegalStateException) {
-                // Registered but not handling modes yet, so use the notification service
             }
         }
         val binder = requireNotNull(SystemServiceHelper.getSystemService("notification")) { "notification unavailable" }
@@ -108,7 +90,15 @@ internal object ZenModeController {
             Class.forName("$managerName\$Stub")
                 .getMethod("asInterface", IBinder::class.java)
                 .invoke(null, ShizukuBinderWrapper(binder))!!
-        val method = Class.forName(managerName).getMethod(name, *types)
+        val managerClass = Class.forName(managerName)
+        val method =
+            managerClass.methods.firstOrNull { it.name == name && it.parameterTypes.contentEquals(types) }
+                ?: throw NoSuchMethodException(
+                    "$managerName.$name(${types.joinToString { it.simpleName }}) not found, available: " +
+                        managerClass.methods
+                            .filter { it.name == name }
+                            .joinToString { m -> "(${m.parameterTypes.joinToString { it.simpleName }})" },
+                )
         return try {
             method.invoke(manager, *args)
         } catch (e: InvocationTargetException) {
