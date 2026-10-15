@@ -37,6 +37,7 @@ import com.sameerasw.essentials.utils.BatteryRingDrawer
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.sameerasw.essentials.utils.BluetoothDeviceIcons
 import com.sameerasw.essentials.utils.BluetoothDeviceOrder
+import com.sameerasw.essentials.utils.battery.ChargeLimitUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 
@@ -57,8 +58,10 @@ private class PreviewItem(
 private fun statusIcon(
     level: Int,
     charging: Boolean,
+    shielded: Boolean = false,
 ): Int? =
     when {
+        shielded -> R.drawable.rounded_shield_filled_24
         charging -> R.drawable.rounded_bolt_filled_24
         level <= 15 -> R.drawable.rounded_battery_android_frame_alert_24
         else -> null
@@ -74,7 +77,7 @@ private fun previewItems(
     val manager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
     val phoneLevel = manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
     val phoneCharging = manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING
-    keyed += BluetoothDeviceOrder.PHONE to PreviewItem(phoneLevel, R.drawable.rounded_mobile_24, statusIcon(phoneLevel, phoneCharging))
+    keyed += BluetoothDeviceOrder.PHONE to PreviewItem(phoneLevel, R.drawable.rounded_mobile_24, statusIcon(phoneLevel, phoneCharging, ChargeLimitUtil.isShielded(context, phoneLevel, phoneCharging)))
 
     val macLevel = settings.getInt(SettingsRepository.KEY_MAC_BATTERY_LEVEL, -1)
     if (settings.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED) &&
@@ -184,8 +187,8 @@ fun BatteriesPreviewCard(
                             px,
                             percentText = if (showPercentage) "${item.level}" else null,
                             percentIcon =
-                                if (showPercentage && item.statusIconRes == R.drawable.rounded_bolt_filled_24) {
-                                    ContextCompat.getDrawable(context, R.drawable.rounded_bolt_filled_24)
+                                if (showPercentage && (item.statusIconRes == R.drawable.rounded_bolt_filled_24 || item.statusIconRes == R.drawable.rounded_shield_filled_24)) {
+                                    ContextCompat.getDrawable(context, item.statusIconRes)
                                 } else {
                                     null
                                 },

@@ -10,6 +10,7 @@ import android.os.PowerManager
 import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.CompactCell
@@ -22,6 +23,7 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
 import com.sameerasw.essentials.island.ui.components.BatteryRing
+import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.RollingText
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -54,6 +56,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     private var time = ""
     private var level = -1
     private var charging = false
+    private var shielded = false
     private var powerSave = false
     private var registered = false
     private var chargePeekUntil = 0L
@@ -70,9 +73,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         override fun onReceive(c: Context?, intent: Intent?) {
             when (intent?.action) {
                 Intent.ACTION_BATTERY_CHANGED -> {
-                    val wasCharging = charging
+                    val wasPlugged = charging || shielded
                     readBattery(intent)
-                    if (charging && !wasCharging && level >= 0) {
+                    if ((charging || shielded) && !wasPlugged && level >= 0) {
                         render()
                         peekCharging()
                         return
@@ -152,7 +155,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         if (raw < 0 || scale <= 0) return
         val status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         level = (raw * 100f / scale).toInt()
-        charging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+        val plugged = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+        shielded = com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(context, level, plugged)
+        charging = plugged && !shielded
         powerSave = (context.getSystemService(Context.POWER_SERVICE) as? PowerManager)?.isPowerSaveMode ?: false
     }
 
@@ -208,7 +213,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     }
                 },
             ),
-            line = if (charging) {
+            line = if (charging || shielded) {
                 LineContent(
                     icon = {
                         when {
@@ -217,7 +222,12 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                         }
                     },
                     start = "$batteryLevel%",
-                    end = context.getString(R.string.island_battery_charging),
+                    end = context.getString(if (shielded) R.string.island_battery_charge_limited else R.string.island_battery_charging),
+                    endSlot = if (shielded) {
+                        { IslandIcon(R.drawable.rounded_shield_filled_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) }
+                    } else {
+                        null
+                    },
                 )
             } else {
                 null

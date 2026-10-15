@@ -302,8 +302,8 @@ class BatteryNotificationService : Service() {
                     itemSize,
                     percentText = if (showPercentage) "${item.level}" else null,
                     percentIcon =
-                        if (showPercentage && item.statusIconRes == R.drawable.rounded_bolt_filled_24) {
-                            ContextCompat.getDrawable(this, R.drawable.rounded_bolt_filled_24)
+                        if (showPercentage && (item.statusIconRes == R.drawable.rounded_bolt_filled_24 || item.statusIconRes == R.drawable.rounded_shield_filled_24)) {
+                            ContextCompat.getDrawable(this, item.statusIconRes)
                         } else {
                             null
                         },

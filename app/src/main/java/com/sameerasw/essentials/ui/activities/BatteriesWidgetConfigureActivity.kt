@@ -81,12 +81,16 @@ private fun BatteriesWidgetConfigureSheet(
     val view = LocalView.current
     val scope = rememberCoroutineScope()
     val key = booleanPreferencesKey(SettingsRepository.KEY_BATTERY_WIDGET_BACKGROUND_ENABLED)
+    val centerKey = booleanPreferencesKey(SettingsRepository.KEY_BATTERY_WIDGET_CENTER_ITEMS)
     var background by remember { mutableStateOf(true) }
+    var centerItems by remember { mutableStateOf(false) }
 
     LaunchedEffect(appWidgetId) {
         try {
             val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(appWidgetId)
-            background = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)[key] ?: true
+            val state = getAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId)
+            background = state[key] ?: true
+            centerItems = state[centerKey] ?: false
         } catch (_: Exception) {
         }
     }
@@ -111,6 +115,15 @@ private fun BatteriesWidgetConfigureSheet(
                         background = it
                     },
                 )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_format_align_center_24,
+                    title = stringResource(R.string.widget_center_items_title),
+                    isChecked = centerItems,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        centerItems = it
+                    },
+                )
             }
             Button(
                 onClick = {
@@ -119,7 +132,10 @@ private fun BatteriesWidgetConfigureSheet(
                         try {
                             val manager = GlanceAppWidgetManager(context)
                             val glanceId = manager.getGlanceIdBy(appWidgetId)
-                            updateAppWidgetState(context, glanceId) { it[key] = background }
+                            updateAppWidgetState(context, glanceId) {
+                                it[key] = background
+                                it[centerKey] = centerItems
+                            }
                             BatteriesWidget().update(context, glanceId)
                         } catch (_: Exception) {
                         }

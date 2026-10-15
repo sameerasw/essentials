@@ -842,6 +842,8 @@
     <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
     <string name="limit_max_devices">Max shown devices</string>
     <string name="limit_max_devices_summary">Adjust max devices shown in the widget, notification and island</string>
+    <string name="widget_center_items_title">Center items</string>
+    <string name="island_battery_charge_limited">Charge limit</string>
     <string name="battery_show_percentage_title">Show percentage</string>
     <string name="batteries_notification_title">Batteries notification</string>
     <string name="widget_background_title">Widget background</string>
