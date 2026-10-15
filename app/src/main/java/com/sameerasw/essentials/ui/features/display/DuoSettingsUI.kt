@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.display
 
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -63,6 +64,7 @@ import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
+import com.sameerasw.essentials.ui.features.audio.sheets.SetModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.features.display.sheets.DuoBatteryOptionsBottomSheet
@@ -110,6 +112,7 @@ fun DuoSettingsUI(
     var showScreenOffSettings by remember { mutableStateOf(false) }
     var showDeviceEffectsSettings by remember { mutableStateOf(false) }
     var showSoundModeSettings by remember { mutableStateOf(false) }
+    var showSetModeSettings by remember { mutableStateOf(false) }
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
     var showFreezeTagSettings by remember { mutableStateOf(false) }
     var showOpenAppSettings by remember { mutableStateOf(false) }
@@ -907,6 +910,7 @@ fun DuoSettingsUI(
                                         is Action.ScreenOff -> showScreenOffSettings = true
                                         is Action.DeviceEffects -> showDeviceEffectsSettings = true
                                         is Action.SoundMode -> showSoundModeSettings = true
+                                        is Action.SetMode -> showSetModeSettings = true
                                         is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                         is Action.FreezeTag -> showFreezeTagSettings = true
                                         is Action.OpenApp -> showOpenAppSettings = true
@@ -1038,6 +1042,18 @@ fun DuoSettingsUI(
             onDismiss = { showSoundModeSettings = false },
             onSave = { newAction ->
                 showSoundModeSettings = false
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
+    if (showSetModeSettings && configAction is Action.SetMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        SetModeSettingsSheet(
+            initialAction = configAction as Action.SetMode,
+            onDismiss = { showSetModeSettings = false },
+            onSave = { newAction ->
+                showSetModeSettings = false
                 applyActionForGesture(activeConfigGesture, newAction)
                 configAction = null
             },
