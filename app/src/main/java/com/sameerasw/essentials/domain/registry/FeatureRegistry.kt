@@ -27,6 +27,7 @@ import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
+import com.sameerasw.essentials.ui.features.system.BACK_GESTURE_FEATURE_ID
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.hardware.HilightLights
 import com.sameerasw.essentials.utils.ShellUtils
@@ -286,6 +287,47 @@ object FeatureRegistry {
                 showToggle = false,
                 parentFeatureId = "Input",
                 animationRes = R.raw.navigation_animation,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = BACK_GESTURE_FEATURE_ID,
+                contributors = listOf("jawzf"),
+                title = R.string.feat_back_gesture_title,
+                iconRes = R.drawable.rounded_arrow_back_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_back_gesture_desc,
+                permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+                showToggle = false,
+                parentFeatureId = "Navigation",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.feat_back_gesture_left_title,
+                            R.string.feat_back_gesture_width_desc,
+                            "back_gesture_left_width",
+                            R.array.keywords_back_gesture,
+                        ),
+                        SearchSetting(
+                            R.string.feat_back_gesture_right_title,
+                            R.string.feat_back_gesture_width_desc,
+                            "back_gesture_right_width",
+                            R.array.keywords_back_gesture,
+                        ),
+                        SearchSetting(
+                            R.string.back_gesture_add_app,
+                            R.string.back_gesture_add_app_desc,
+                            "back_gesture_apps",
+                            R.array.keywords_back_gesture,
+                        ),
+                    ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
 
