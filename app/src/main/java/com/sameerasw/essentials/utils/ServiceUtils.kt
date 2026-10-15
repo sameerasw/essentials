@@ -103,6 +103,7 @@ object ServiceUtils {
             settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
         val isHideGestureBarOnLauncherEnabled =
             settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED)
+        val hasBackGestureApps = settingsRepository.loadBackGestureAppConfigs().isNotEmpty()
         val isUseUsageAccess =
             settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
 
@@ -117,7 +118,7 @@ object ServiceUtils {
         val shouldRun =
             (
                 isUseUsageAccess &&
-                    (isAppLockEnabled || isConsciousGateEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations)
+                    (isAppLockEnabled || isConsciousGateEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasBackGestureApps || hasAppAutomations)
             ) ||
                 hasShutUpApps
 
