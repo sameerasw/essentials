@@ -2905,6 +2905,32 @@ object FeatureRegistry {
                 ) = viewModel.setFaceUnlockBrightnessEnabled(enabled)
             },
             object : Feature(
+                id = "Screenshot share cleanup",
+                title = R.string.feat_screenshot_share_cleanup_title,
+                iconRes = R.drawable.rounded_screenshot_region_24,
+                category = R.string.cat_tools,
+                description = R.string.feat_screenshot_share_cleanup_desc,
+                aboutDescription = R.string.about_desc_screenshot_share_cleanup,
+                permissionKeys = listOf("ACCESSIBILITY", "STORAGE"),
+                hasMoreSettings = false,
+                parentFeatureId = "Security",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isScreenshotShareCleanupEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value && viewModel.isStoragePermissionGranted.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setScreenshotShareCleanupEnabled(enabled)
+
+                override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
+            },
+            object : Feature(
                 id = "Lockdown mode",
                 title = R.string.tile_lockdown_mode,
                 iconRes = R.drawable.rounded_lock_24,

@@ -394,6 +394,7 @@ class MainViewModel : ViewModel() {
     val currentWallpaperBitmap = mutableStateOf<Bitmap?>(null)
     val isPocketModeEnabled = mutableStateOf(false)
     val isFaceUnlockBrightnessEnabled = mutableStateOf(false)
+    val isScreenshotShareCleanupEnabled = mutableStateOf(false)
     val faceUnlockMaxBrightness = mutableIntStateOf(100)
     val faceUnlockAmbientThreshold = mutableFloatStateOf(10f)
     val isFaceUnlockTriggerUnlock = mutableStateOf(true)
@@ -1379,6 +1380,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_FACE_UNLOCK_BRIGHTNESS_ENABLED ->
                         isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
+
+                    SettingsRepository.KEY_SCREENSHOT_SHARE_CLEANUP_ENABLED ->
+                        isScreenshotShareCleanupEnabled.value = settingsRepository.isScreenshotShareCleanupEnabled()
 
                     SettingsRepository.KEY_FACE_UNLOCK_MAX_BRIGHTNESS ->
                         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
@@ -2815,6 +2819,7 @@ class MainViewModel : ViewModel() {
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
+        isScreenshotShareCleanupEnabled.value = settingsRepository.isScreenshotShareCleanupEnabled()
         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
         faceUnlockAmbientThreshold.floatValue = settingsRepository.getFaceUnlockAmbientThreshold()
         isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
@@ -9569,6 +9574,11 @@ class MainViewModel : ViewModel() {
     fun setFaceUnlockBrightnessEnabled(enabled: Boolean) {
         settingsRepository.setFaceUnlockBrightnessEnabled(enabled)
         isFaceUnlockBrightnessEnabled.value = enabled
+    }
+
+    fun setScreenshotShareCleanupEnabled(enabled: Boolean) {
+        settingsRepository.setScreenshotShareCleanupEnabled(enabled)
+        isScreenshotShareCleanupEnabled.value = enabled
     }
 
     fun setFaceUnlockAmbientThreshold(value: Float) {

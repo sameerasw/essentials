@@ -46,6 +46,7 @@ import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
+import com.sameerasw.essentials.services.handlers.ScreenshotShareCleanupHandler
 import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
 import com.sameerasw.essentials.services.handlers.LockscreenShortcutsHandler
 import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
@@ -86,6 +87,7 @@ class ScreenOffAccessibilityService :
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
+    private lateinit var screenshotShareCleanupHandler: ScreenshotShareCleanupHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
 
     private var lightSensor: Sensor? = null
@@ -332,6 +334,7 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
+        screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -372,6 +375,7 @@ class ScreenOffAccessibilityService :
                         Intent.ACTION_SCREEN_OFF -> {
                             isScreenOn = false
                             volumeStepsHandler.stop()
+                            screenshotShareCleanupHandler.onScreenOff()
                             statusGlanceHandler.setShadeExpanded(false)
                             islandOverlayHandler.setShadeExpanded(false)
                             duoOverlayHandler.setShadeExpanded(false)
@@ -578,6 +582,10 @@ class ScreenOffAccessibilityService :
             applyDetectedPackage(detectedPackage)
         }
 
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            screenshotShareCleanupHandler.onViewClicked(event, appFlowHandler.currentPackage)
+        }
+
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
@@ -593,6 +601,7 @@ class ScreenOffAccessibilityService :
 
     private fun applyDetectedPackage(detectedPackage: String) {
         appFlowHandler.onPackageChanged(detectedPackage)
+        screenshotShareCleanupHandler.onForegroundPackage(appFlowHandler.currentPackage)
         islandOverlayHandler.onForegroundPackage(detectedPackage)
         islandOverlayHandler.updateConsciousGateState()
     }

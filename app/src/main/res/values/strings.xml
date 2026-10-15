@@ -3339,6 +3339,10 @@
     <string name="island_notification_options_title">Notification options</string>
     <string name="feat_face_unlock_brightness_title">Face illumination</string>
     <string name="feat_face_unlock_brightness_desc">Bump brightness in low light</string>
+    <string name="feat_screenshot_share_cleanup_title">Delete shared screenshots</string>
+    <string name="feat_screenshot_share_cleanup_desc">Trash screenshots after sharing</string>
+    <string name="about_desc_screenshot_share_cleanup">After you share a screenshot from the screenshot preview, it is moved to the trash a minute after you leave the app you shared it to. Trashed screenshots can be restored from Files or Photos for 30 days.</string>
+    <string name="screenshot_share_cleanup_trashed">Shared screenshot moved to trash</string>
     <string name="face_unlock_illuminate">Illuminate</string>
     <string name="face_unlock_ambient_threshold_title">Ambient threshold</string>
     <string name="face_unlock_ambient_now">Now: %1$s</string>
