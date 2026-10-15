@@ -477,14 +477,14 @@ sealed interface Action {
     data object TurnOffBackGesture : Action {
         override val title: Int = R.string.diy_action_back_gesture_off
         override val icon: Int = R.drawable.rounded_arrow_back_24
-        override val permissions: List<String> = listOf("WRITE_SECURE_SETTINGS")
+        override val permissions: List<String> = listOf("SHIZUKU")
     }
 
     @Keep
     data object TurnOnBackGesture : Action {
         override val title: Int = R.string.diy_action_back_gesture_on
         override val icon: Int = R.drawable.rounded_arrow_back_24
-        override val permissions: List<String> = listOf("WRITE_SECURE_SETTINGS")
+        override val permissions: List<String> = listOf("SHIZUKU")
     }
 
     @Keep

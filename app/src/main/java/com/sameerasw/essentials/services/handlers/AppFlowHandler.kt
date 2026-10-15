@@ -17,6 +17,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +30,7 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.BackGestureAppConfig
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.FreezeManager
@@ -53,8 +55,14 @@ class AppFlowHandler(
     private var appLockSessionActive = false
     private var appLockLeftAt = 0L
     private val lastLeaveTimes = mutableMapOf<String, Long>()
-    private var backGestureAppliedFor: String? = null
     private val activeCountdowns = mutableMapOf<String, Job>()
+    private val settingsRepository by lazy { SettingsRepository(context) }
+    private val backGestureDispatcher = Dispatchers.IO.limitedParallelism(1)
+    private var backGestureConfigs: Map<String, BackGestureAppConfig>? = null
+    private val backGestureConfigsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == SettingsRepository.KEY_BACK_GESTURE_APP_CONFIGS) backGestureConfigs = null
+        }
 
     private val shutUpReceiver =
         object : BroadcastReceiver() {
@@ -110,6 +118,7 @@ class AppFlowHandler(
         } else {
             context.registerReceiver(shutUpReceiver, filter)
         }
+        settingsRepository.registerOnSharedPreferenceChangeListener(backGestureConfigsListener)
     }
 
     // App Lock State
@@ -599,16 +608,10 @@ class AppFlowHandler(
     }
 
     private fun checkBackGestureApps(packageName: String) {
-        val settingsRepository = SettingsRepository(context)
-        val config = settingsRepository.loadBackGestureAppConfigs().find { it.packageName == packageName }
-        if (config?.packageName == backGestureAppliedFor) return
-        backGestureAppliedFor = config?.packageName
-        scope.launch(Dispatchers.IO) {
-            if (config != null) {
-                settingsRepository.applyBackGestureScales(config.leftScale, config.rightScale)
-            } else {
-                settingsRepository.applyDefaultBackGesture()
-            }
+        val configs = backGestureConfigs ?: settingsRepository.loadBackGestureAppConfigs().associateBy { it.packageName }.also { backGestureConfigs = it }
+        if (configs.isEmpty() && settingsRepository.backGesture.overrideOwner == null) return
+        scope.launch(backGestureDispatcher) {
+            settingsRepository.backGesture.onAppChanged(packageName, configs)
         }
     }
 

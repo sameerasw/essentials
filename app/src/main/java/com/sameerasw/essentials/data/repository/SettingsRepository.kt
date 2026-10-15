@@ -13,9 +13,12 @@ import com.sameerasw.essentials.ui.core.pickers.NetworkType
 import android.content.Context
 import android.content.SharedPreferences
 import android.provider.Settings
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.domain.controller.BackGestureController
+import com.sameerasw.essentials.domain.controller.BackGestureStore
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
 import com.sameerasw.essentials.domain.model.AppIcon
@@ -39,6 +42,7 @@ import com.sameerasw.essentials.utils.ShizukuUtils
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlin.math.abs
 
 class SettingsRepository(
     private val context: Context,
@@ -735,8 +739,9 @@ class SettingsRepository(
         const val KEY_SPLIT_SCREEN_GESTURE = "split_screen_gesture"
         const val SECURE_BACK_GESTURE_INSET_SCALE_LEFT = "back_gesture_inset_scale_left"
         const val SECURE_BACK_GESTURE_INSET_SCALE_RIGHT = "back_gesture_inset_scale_right"
-        const val KEY_BACK_GESTURE_LEFT_SCALE = "back_gesture_left_scale"
-        const val KEY_BACK_GESTURE_RIGHT_SCALE = "back_gesture_right_scale"
+        const val KEY_BACK_GESTURE_OVERRIDE_OWNER = "back_gesture_override_owner"
+        const val KEY_BACK_GESTURE_RESTORE_LEFT_SCALE = "back_gesture_restore_left_scale"
+        const val KEY_BACK_GESTURE_RESTORE_RIGHT_SCALE = "back_gesture_restore_right_scale"
         const val KEY_BACK_GESTURE_APP_CONFIGS = "back_gesture_app_configs"
         const val KEY_STANDBY_APPS = "standby_apps"
         const val KEY_PIXEL_SEARCHBAR = "pixel_searchbar"
@@ -2832,19 +2837,58 @@ class SettingsRepository(
         }
     }
 
-    fun getBackGestureScale(left: Boolean): Float =
-        getFloat(
-            if (left) KEY_BACK_GESTURE_LEFT_SCALE else KEY_BACK_GESTURE_RIGHT_SCALE,
-            readSecureFloat(if (left) SECURE_BACK_GESTURE_INSET_SCALE_LEFT else SECURE_BACK_GESTURE_INSET_SCALE_RIGHT),
-        )
+    val backGesture by lazy {
+        BackGestureController(
+            object : BackGestureStore {
+                override fun readSystemScale(left: Boolean): Float =
+                    try {
+                        Settings.Secure.getFloat(context.contentResolver, secureBackGestureKey(left), 1f)
+                    } catch (_: Exception) {
+                        1f
+                    }
 
-    fun setBackGestureScale(
-        left: Boolean,
-        scale: Float,
-    ) {
-        putFloat(if (left) KEY_BACK_GESTURE_LEFT_SCALE else KEY_BACK_GESTURE_RIGHT_SCALE, scale)
-        applyDefaultBackGesture()
+                override fun writeSystemScale(
+                    left: Boolean,
+                    scale: Float,
+                ): Boolean {
+                    val key = secureBackGestureKey(left)
+                    try {
+                        return Settings.Secure.putFloat(context.contentResolver, key, scale)
+                    } catch (_: SecurityException) {
+                        ShellUtils.runCommand(context, "settings put secure $key $scale", notifyOnError = false)
+                    } catch (e: Exception) {
+                        Log.w("BackGesture", "Failed to write $key", e)
+                        return false
+                    }
+                    val written = readSystemScale(left)
+                    if (abs(written - scale) >= 0.001f) {
+                        Log.w("BackGesture", "Failed to write $key over shell, still $written")
+                        return false
+                    }
+                    return true
+                }
+
+                override fun getOverrideOwner(): String? = getString(KEY_BACK_GESTURE_OVERRIDE_OWNER)
+
+                override fun setOverrideOwner(owner: String?) {
+                    if (owner == null) remove(KEY_BACK_GESTURE_OVERRIDE_OWNER) else putString(KEY_BACK_GESTURE_OVERRIDE_OWNER, owner)
+                }
+
+                override fun getRestoreScale(left: Boolean): Float = getFloat(restoreBackGestureKey(left), 1f)
+
+                override fun setRestoreScale(
+                    left: Boolean,
+                    scale: Float,
+                ) = putFloat(restoreBackGestureKey(left), scale)
+            },
+        )
     }
+
+    private fun secureBackGestureKey(left: Boolean) =
+        if (left) SECURE_BACK_GESTURE_INSET_SCALE_LEFT else SECURE_BACK_GESTURE_INSET_SCALE_RIGHT
+
+    private fun restoreBackGestureKey(left: Boolean) =
+        if (left) KEY_BACK_GESTURE_RESTORE_LEFT_SCALE else KEY_BACK_GESTURE_RESTORE_RIGHT_SCALE
 
     fun loadBackGestureAppConfigs(): List<BackGestureAppConfig> =
         try {
@@ -2855,37 +2899,6 @@ class SettingsRepository(
         }
 
     fun saveBackGestureAppConfigs(configs: List<BackGestureAppConfig>) = putString(KEY_BACK_GESTURE_APP_CONFIGS, gson.toJson(configs))
-
-    fun applyDefaultBackGesture() = applyBackGestureScales(getBackGestureScale(left = true), getBackGestureScale(left = false))
-
-    fun applyBackGestureScales(
-        left: Float,
-        right: Float,
-    ) {
-        // Snapshot the system widths before the first override so restoring the default never reads back our own value
-        if (!prefs.contains(KEY_BACK_GESTURE_LEFT_SCALE)) putFloat(KEY_BACK_GESTURE_LEFT_SCALE, getBackGestureScale(left = true))
-        if (!prefs.contains(KEY_BACK_GESTURE_RIGHT_SCALE)) putFloat(KEY_BACK_GESTURE_RIGHT_SCALE, getBackGestureScale(left = false))
-        writeSecureFloat(SECURE_BACK_GESTURE_INSET_SCALE_LEFT, left)
-        writeSecureFloat(SECURE_BACK_GESTURE_INSET_SCALE_RIGHT, right)
-    }
-
-    private fun readSecureFloat(key: String): Float =
-        try {
-            Settings.Secure.getFloat(context.contentResolver, key, 1f)
-        } catch (_: Exception) {
-            1f
-        }
-
-    private fun writeSecureFloat(
-        key: String,
-        value: Float,
-    ) {
-        try {
-            Settings.Secure.putFloat(context.contentResolver, key, value)
-        } catch (_: SecurityException) {
-            ShellUtils.runCommand(context, "settings put secure $key $value")
-        } catch (_: Exception) {}
-    }
 
     /**
      * Executes the get smallest width operation.

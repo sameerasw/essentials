@@ -12,16 +12,20 @@ package com.sameerasw.essentials.ui.features.system
 import android.content.Intent
 import android.net.Uri
 import android.view.WindowManager
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -139,6 +143,7 @@ fun BackGestureSettingsUI(
                     }
                 },
                 modifier = Modifier.highlight(highlightSetting == "back_gesture_left_width"),
+                description = R.string.feat_back_gesture_default_width_desc,
             )
             EdgeWidthSlider(
                 left = false,
@@ -157,7 +162,12 @@ fun BackGestureSettingsUI(
                     }
                 },
                 modifier = Modifier.highlight(highlightSetting == "back_gesture_right_width"),
+                description = R.string.feat_back_gesture_default_width_desc,
             )
+        }
+
+        if (viewModel.backGestureLeftScale.floatValue == 0f && viewModel.backGestureRightScale.floatValue == 0f) {
+            BothEdgesOffNotice(modifier = Modifier.padding(top = 8.dp))
         }
 
         Text(
@@ -227,6 +237,13 @@ fun BackGestureSettingsUI(
                 hasMoreSettings = false,
             )
         }
+
+        Text(
+            text = stringResource(R.string.back_gesture_automation_note),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        )
     }
 
     if (showAppPicker) {
@@ -320,6 +337,9 @@ private fun BackGestureAppSheet(
                     },
                 )
             }
+            if (current.leftScale == 0f && current.rightScale == 0f) {
+                BothEdgesOffNotice()
+            }
             Text(
                 text = stringResource(R.string.back_gesture_app_sheet_desc),
                 style = MaterialTheme.typography.bodyMedium,
@@ -336,12 +356,50 @@ private fun BackGestureAppSheet(
 }
 
 @Composable
+private fun BothEdgesOffNotice(modifier: Modifier = Modifier) {
+    RoundedCardContainer(
+        modifier = modifier.fillMaxWidth(),
+        containerColor = MaterialTheme.colorScheme.errorContainer,
+        cornerRadius = 24.dp,
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.rounded_info_24),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(24.dp),
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = stringResource(R.string.back_gesture_both_off_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                )
+                Text(
+                    text = stringResource(R.string.back_gesture_both_off_desc),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun EdgeWidthSlider(
     left: Boolean,
     value: Float,
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: () -> Unit,
     modifier: Modifier = Modifier,
+    @StringRes description: Int = R.string.feat_back_gesture_width_desc,
 ) {
     val offLabel = stringResource(R.string.feat_back_gesture_off)
     ConfigSliderItem(
@@ -353,7 +411,7 @@ private fun EdgeWidthSlider(
         steps = 9,
         increment = 0.1f,
         iconRes = if (left) R.drawable.rounded_border_left_24 else R.drawable.rounded_border_right_24,
-        description = stringResource(R.string.feat_back_gesture_width_desc),
+        description = stringResource(description),
         valueFormatter = { formatEdgeScale(it, offLabel) },
         modifier = modifier,
     )

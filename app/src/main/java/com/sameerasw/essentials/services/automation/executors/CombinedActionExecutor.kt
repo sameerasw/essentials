@@ -635,8 +635,8 @@ object CombinedActionExecutor {
                     resolve(action.island, settings.isIslandEnabled())?.let(settings::setIslandEnabled)
                     resolve(action.statusGlance, settings.isStatusGlanceEnabled())?.let(settings::setStatusGlanceEnabled)
                 }
-                is Action.TurnOffBackGesture -> SettingsRepository(context).applyBackGestureScales(0f, 0f)
-                is Action.TurnOnBackGesture -> SettingsRepository(context).applyDefaultBackGesture()
+                is Action.TurnOffBackGesture -> withContext(Dispatchers.IO) { SettingsRepository(context).backGesture.turnOff() }
+                is Action.TurnOnBackGesture -> withContext(Dispatchers.IO) { SettingsRepository(context).backGesture.turnOn() }
                 is Action.TurnOnDuo -> SettingsRepository(context).setDuoEnabled(true)
                 is Action.TurnOffDuo -> SettingsRepository(context).setDuoEnabled(false)
                 is Action.ToggleDuo -> SettingsRepository(context).let { it.setDuoEnabled(!it.isDuoEnabled()) }
