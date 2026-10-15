@@ -249,6 +249,18 @@ sealed interface Action {
     }
 
     @Keep
+    data class SetMode(
+        @SerializedName("modeId") val modeId: String = "",
+        @SerializedName("modeName") val modeName: String = "",
+        @SerializedName("active") val active: Boolean = true,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_set_mode
+        override val icon: Int get() = R.drawable.rounded_do_not_disturb_on_24
+        override val permissions: List<String> get() = listOf("SHIZUKU")
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
     data object OpenCamera : Action {
         override val title: Int = R.string.diy_action_open_camera
         override val icon: Int = R.drawable.rounded_photo_camera_24
