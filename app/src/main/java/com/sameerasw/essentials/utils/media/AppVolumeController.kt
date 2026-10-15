@@ -33,6 +33,7 @@ object AppVolumeController {
     private const val TAG = "AppVolumeController"
     private const val AUDIO_SERVICE = "android.media.IAudioService"
     private const val DISPATCHER = "android.media.IPlaybackConfigDispatcher"
+    private const val PLAYER_STATE_STARTED = 2
 
     private val handler = Handler(Looper.getMainLooper())
     private val appliedVolumes = mutableMapOf<Int, Float>()
@@ -122,7 +123,8 @@ object AppVolumeController {
     private fun onConfigs(updated: List<AudioPlaybackConfiguration>) {
         configs = updated
         apply()
-        _playingPackages.value = updated.filter { invoke(it, "isActive") == true }.mapNotNull { packageOf(it) }.distinct()
+        // isActive is false for a muted player, so a started player still counts as playing at 0%
+        _playingPackages.value = updated.filter { invoke(it, "getPlayerState") == PLAYER_STATE_STARTED }.mapNotNull { packageOf(it) }.distinct()
     }
 
     private fun apply() {
