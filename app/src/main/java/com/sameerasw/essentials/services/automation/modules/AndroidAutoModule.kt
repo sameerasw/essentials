@@ -16,6 +16,7 @@ import com.sameerasw.essentials.services.automation.executors.CombinedActionExec
 import com.sameerasw.essentials.utils.CarConnectionMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 class AndroidAutoModule : AutomationModule {
@@ -46,6 +47,7 @@ class AndroidAutoModule : AutomationModule {
 
     override fun stop(context: Context) {
         CarConnectionMonitor.removeListener(listener)
+        scope.coroutineContext.cancelChildren()
         appContext = null
     }
 
