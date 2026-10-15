@@ -375,6 +375,7 @@ class ScreenOffAccessibilityService :
                         Intent.ACTION_SCREEN_OFF -> {
                             isScreenOn = false
                             volumeStepsHandler.stop()
+                            screenshotShareCleanupHandler.onScreenOff()
                             statusGlanceHandler.setShadeExpanded(false)
                             islandOverlayHandler.setShadeExpanded(false)
                             duoOverlayHandler.setShadeExpanded(false)
