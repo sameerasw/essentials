@@ -3148,6 +3148,8 @@
     <string name="island_show_calls_title">Calls</string>
     <string name="island_show_timers_title">Timers and stopwatches</string>
     <string name="island_timer_options_title">Timer options</string>
+    <string name="island_caffeinate_options_title">Caffeinate options</string>
+    <string name="island_caffeinate_show_time_title">Show time</string>
     <string name="island_timers_show_screen_recorder_title">Show screen recorder</string>
     <string name="island_timers_filter_apps_title">Filter for apps</string>
     <string name="island_reorder_title">Re-order</string>

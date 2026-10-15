@@ -82,6 +82,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryB
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSignalOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceCalendarOptionsBottomSheet
@@ -118,6 +119,7 @@ fun IslandSettingsUI(
     var showTimeOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
+    var showCaffeinateOptionsSheet by remember { mutableStateOf(false) }
     var showCallOptionsSheet by remember { mutableStateOf(false) }
     var showSignalOptionsSheet by remember { mutableStateOf(false) }
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
@@ -363,6 +365,7 @@ fun IslandSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandShowCaffeinate(checked)
                         },
+                        onSettingsClick = { showCaffeinateOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_caffeinate"),
                     )
                     "travel" -> IconToggleItem(
@@ -813,6 +816,10 @@ fun IslandSettingsUI(
             viewModel = viewModel,
             onDismissRequest = { showTimerOptionsSheet = false },
         )
+    }
+
+    if (showCaffeinateOptionsSheet) {
+        IslandCaffeinateOptionsBottomSheet(onDismissRequest = { showCaffeinateOptionsSheet = false })
     }
 
     if (showTimeOptionsSheet) {
