@@ -122,7 +122,7 @@ object AppVolumeController {
     private fun onConfigs(updated: List<AudioPlaybackConfiguration>) {
         configs = updated
         apply()
-        _playingPackages.value = updated.filter { it.isActive }.mapNotNull { packageOf(it) }.distinct()
+        _playingPackages.value = updated.filter { invoke(it, "isActive") == true }.mapNotNull { packageOf(it) }.distinct()
     }
 
     private fun apply() {
