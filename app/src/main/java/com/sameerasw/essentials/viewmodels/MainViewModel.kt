@@ -151,6 +151,8 @@ class MainViewModel : ViewModel() {
     val lockscreenSystemShortcutsState = mutableStateOf(SystemShortcutsState.UNKNOWN)
     val isVolumeStepsEnabled = mutableStateOf(false)
     val volumeStepsPerPress = mutableIntStateOf(2)
+    val isAppVolumeEnabled = mutableStateOf(false)
+    val appVolumeLevels = mutableStateOf<Map<String, Float>>(emptyMap())
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSmartPixelsEnabled = mutableStateOf(false)
@@ -2321,6 +2323,8 @@ class MainViewModel : ViewModel() {
         isLockscreenShortcutsEnabled.value = settingsRepository.isLockscreenShortcutsEnabled()
         isVolumeStepsEnabled.value = settingsRepository.isVolumeStepsEnabled()
         volumeStepsPerPress.intValue = settingsRepository.getVolumeStepsPerPress()
+        isAppVolumeEnabled.value = settingsRepository.isAppVolumeEnabled()
+        appVolumeLevels.value = settingsRepository.getAppVolumeLevels()
         LockscreenShortcutSide.entries.forEach { side ->
             lockscreenShortcutActions[side] = settingsRepository.getRemapActions(side.prefKey)
         }
@@ -5173,6 +5177,24 @@ class MainViewModel : ViewModel() {
     fun setVolumeStepsPerPress(steps: Int) {
         volumeStepsPerPress.intValue = steps
         settingsRepository.setVolumeStepsPerPress(steps)
+    }
+
+    fun setAppVolumeEnabled(enabled: Boolean) {
+        isAppVolumeEnabled.value = enabled
+        settingsRepository.setAppVolumeEnabled(enabled)
+    }
+
+    fun setAppVolumeLevel(
+        packageName: String,
+        level: Float,
+    ) {
+        appVolumeLevels.value = appVolumeLevels.value + (packageName to level)
+        settingsRepository.setAppVolumeLevels(appVolumeLevels.value)
+    }
+
+    fun removeAppVolumeLevel(packageName: String) {
+        appVolumeLevels.value = appVolumeLevels.value - packageName
+        settingsRepository.setAppVolumeLevels(appVolumeLevels.value)
     }
 
     fun setLockscreenShortcutsEnabled(enabled: Boolean) {

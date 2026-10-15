@@ -114,6 +114,7 @@ import com.sameerasw.essentials.ui.features.system.OtherCustomizationsSettingsUI
 import com.sameerasw.essentials.ui.features.system.FaceUnlockBrightnessSettingsUI
 import com.sameerasw.essentials.ui.features.system.PocketModeSettingsUI
 import com.sameerasw.essentials.ui.features.system.VolumeStepsSettingsUI
+import com.sameerasw.essentials.ui.features.system.AppVolumeSettingsUI
 import com.sameerasw.essentials.ui.features.system.PowerAndBatterySettingsUI
 import com.sameerasw.essentials.ui.features.system.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.features.system.RefreshRateSettingsUI
@@ -382,6 +383,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 "Face unlock brightness" -> !isAccessibilityEnabled
                                 "Lock screen shortcuts" -> !isAccessibilityEnabled
                                 "Volume steps" -> !isAccessibilityEnabled
+                                "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
                                 "Pocket mode" -> !isAccessibilityEnabled
                                 "Dynamic night light" ->
                                     (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
@@ -840,6 +842,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Face unlock brightness" -> !isAccessibilityEnabled
                                                             "Lock screen shortcuts" -> !isAccessibilityEnabled
                                                             "Volume steps" -> !isAccessibilityEnabled
+                                                            "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
                                                             "Dynamic night light" ->
                                                                 (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) ||
                                                                     !isWriteSecureSettingsEnabled
@@ -1102,6 +1105,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Volume steps" -> {
                                         VolumeStepsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "App volume" -> {
+                                        AppVolumeSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,

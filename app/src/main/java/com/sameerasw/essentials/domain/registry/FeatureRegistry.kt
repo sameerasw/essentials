@@ -1860,6 +1860,45 @@ object FeatureRegistry {
                 ) = viewModel.setVolumeStepsEnabled(enabled)
             },
             object : Feature(
+                id = "App volume",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_app_volume_title,
+                iconRes = R.drawable.rounded_speaker_group_24,
+                category = R.string.cat_system,
+                description = R.string.feat_app_volume_desc,
+                aboutDescription = R.string.about_desc_app_volume,
+                permissionKeys = listOf("SHIZUKU", "ACCESSIBILITY"),
+                showToggle = true,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_app_volume_enable_title,
+                            R.string.search_app_volume_enable_desc,
+                            "enable_app_volume",
+                            R.array.keywords_switch_master,
+                        ),
+                        SearchSetting(
+                            R.string.app_volume_apps_section,
+                            R.string.search_app_volume_apps_desc,
+                            "app_volume_apps",
+                        ),
+                    ),
+                parentFeatureId = "Sound",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppVolumeEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value && viewModel.isShizukuPermissionGranted.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setAppVolumeEnabled(enabled)
+            },
+            object : Feature(
                 id = "Dynamic night light",
                 title = R.string.feat_dynamic_night_light_title,
                 iconRes = R.drawable.rounded_nightlight_24,

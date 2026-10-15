@@ -259,6 +259,8 @@ class SettingsRepository(
         const val KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE = "lockscreen_system_shortcuts_state"
         const val KEY_VOLUME_STEPS_ENABLED = "volume_steps_enabled"
         const val KEY_VOLUME_STEPS_PER_PRESS = "volume_steps_per_press"
+        const val KEY_APP_VOLUME_ENABLED = "app_volume_enabled"
+        const val KEY_APP_VOLUME_LEVELS = "app_volume_levels"
 
         const val KEY_DYNAMIC_NIGHT_LIGHT_ENABLED = "dynamic_night_light_enabled"
         const val KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS = "dynamic_night_light_selected_apps"
@@ -4484,4 +4486,19 @@ class SettingsRepository(
     fun getVolumeStepsPerPress(): Int = getInt(KEY_VOLUME_STEPS_PER_PRESS, 2)
 
     fun setVolumeStepsPerPress(steps: Int) = putInt(KEY_VOLUME_STEPS_PER_PRESS, steps)
+
+    fun isAppVolumeEnabled(): Boolean = getBoolean(KEY_APP_VOLUME_ENABLED, false)
+
+    fun setAppVolumeEnabled(enabled: Boolean) = putBoolean(KEY_APP_VOLUME_ENABLED, enabled)
+
+    fun getAppVolumeLevels(): Map<String, Float> =
+        getString(KEY_APP_VOLUME_LEVELS)?.let {
+            try {
+                gson.fromJson<Map<String, Float>>(it, object : TypeToken<Map<String, Float>>() {}.type)
+            } catch (_: Exception) {
+                null
+            }
+        } ?: emptyMap()
+
+    fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
 }
