@@ -178,7 +178,10 @@ fun AppVolumeSettingsUI(
             level = levels[packageName] ?: 1f,
             onLevelChange = { AppVolumeController.preview(packageName, it) },
             onLevelChangeFinished = { viewModel.setAppVolumeLevel(packageName, it) },
-            onDismiss = { editingPackage = null },
+            onDismiss = {
+                editingPackage = null
+                AppVolumeController.refresh()
+            },
         )
     }
 }

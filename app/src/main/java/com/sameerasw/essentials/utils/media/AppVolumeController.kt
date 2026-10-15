@@ -72,13 +72,16 @@ object AppVolumeController {
         apply()
     }
 
-    // Applies a level while the slider is still moving, before it is saved
     fun preview(
         packageName: String,
         level: Float,
     ) {
         levels = levels + (packageName to level)
         apply()
+    }
+
+    fun refresh() {
+        appContext?.let { updateState(it) }
     }
 
     fun stop() {
@@ -88,7 +91,7 @@ object AppVolumeController {
             runCatching {
                 val service = audioService()
                 service.javaClass.getMethod("unregisterPlaybackCallback", Class.forName(DISPATCHER)).invoke(service, callback)
-            }
+            }.onFailure { Log.w(TAG, "Could not unregister playback callback", it) }
         }
         dispatcher = null
         configs = emptyList()
@@ -122,19 +125,18 @@ object AppVolumeController {
 
     private fun onConfigs(updated: List<AudioPlaybackConfiguration>) {
         configs = updated
-        apply()
-        // isActive is false for a muted player, so a started player still counts as playing at 0%
+        apply(force = true)
         _playingPackages.value = updated.filter { invoke(it, "getPlayerState") == PLAYER_STATE_STARTED }.mapNotNull { packageOf(it) }.distinct()
     }
 
-    private fun apply() {
+    private fun apply(force: Boolean = false) {
         val active = if (enabled) levels else emptyMap()
         val ids = mutableSetOf<Int>()
         configs.forEach { config ->
             val id = invoke(config, "getPlayerInterfaceId") as? Int ?: return@forEach
             ids += id
             val target = packageOf(config)?.let { active[it] }?.let { it * it } ?: 1f
-            if ((appliedVolumes[id] ?: 1f) == target) return@forEach
+            if (!force && (appliedVolumes[id] ?: 1f) == target) return@forEach
             try {
                 val proxy = invoke(config, "getPlayerProxy") ?: return@forEach
                 proxy.javaClass.getMethod("setVolume", Float::class.javaPrimitiveType).invoke(proxy, target)
@@ -149,7 +151,8 @@ object AppVolumeController {
     private fun packageOf(config: AudioPlaybackConfiguration): String? {
         val uid = invoke(config, "getClientUid") as? Int ?: return null
         if (uid < Process.FIRST_APPLICATION_UID) return null
-        return appContext?.packageManager?.getPackagesForUid(uid)?.firstOrNull()
+        val packages = appContext?.packageManager?.getPackagesForUid(uid) ?: return null
+        return packages.firstOrNull { it in levels } ?: packages.firstOrNull()
     }
 
     private fun invoke(
@@ -167,12 +170,11 @@ object AppVolumeController {
 
     private fun applyHiddenApiExemptions() {
         if (Build.VERSION.SDK_INT >= 28 && !exemptionsApplied) {
-            check(HiddenApiBypass.addHiddenApiExemptions("Landroid/media/"))
-            exemptionsApplied = true
+            exemptionsApplied = HiddenApiBypass.addHiddenApiExemptions("Landroid/media/")
+            if (!exemptionsApplied) Log.w(TAG, "Hidden API exemptions were not applied")
         }
     }
 
-    // The dispatcher stub is hidden, so the oneway callback is read straight off the parcel
     private class PlaybackDispatcher : Binder() {
         private val dispatchCode =
             Class
