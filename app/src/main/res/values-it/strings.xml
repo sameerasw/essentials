@@ -1514,4 +1514,6 @@
     <string name="feat_wireless_display_certification_desc">Mostra le opzioni per la certificazione del display wireless</string>
     <string name="qs_secure_sensitive_tiles_title">Proteggi i riquadri sensibili</string>
     <string name="tile_lockdown_mode_desc">Schermo spento e Tile Quick Settings</string>
+    <string name="label_motion_blur">Sfocatura al movimento</string>
+    <string name="setting_hidden_debugging_title">Supporto per il debug nascosto</string>
 </resources>
