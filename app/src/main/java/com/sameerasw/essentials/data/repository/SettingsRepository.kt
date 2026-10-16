@@ -637,6 +637,13 @@ class SettingsRepository(
         const val KEY_ISLAND_CAFFEINATE_SHOW_TIME = "island_caffeinate_show_time"
         const val KEY_ISLAND_SHOW_DEVICES = "island_show_devices"
         const val KEY_ISLAND_SHOW_HOTSPOT = "island_show_hotspot"
+        const val KEY_ISLAND_SHOW_RECORDING = "island_show_recording"
+        const val KEY_ISLAND_RECORDING_SCREEN = "island_recording_screen"
+        const val KEY_ISLAND_RECORDING_MICROPHONE = "island_recording_microphone"
+        const val KEY_ISLAND_RECORDING_CAMERA = "island_recording_camera"
+        const val KEY_ISLAND_RECORDING_PEEK = "island_recording_peek"
+        const val KEY_ISLAND_RECORDING_SHOW_TIME = "island_recording_show_time"
+        const val KEY_ISLAND_RECORDING_FOCUS = "island_recording_focus"
         const val KEY_ISLAND_BRIEF_ENABLED = "island_brief_enabled"
         const val KEY_ISLAND_BRIEF_SHOW_ALARM = "island_brief_show_alarm"
         const val KEY_ISLAND_BRIEF_TWO_LINE_HEADER = "island_brief_two_line_header"
@@ -4186,6 +4193,21 @@ class SettingsRepository(
 
     fun isIslandShowHotspotEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_HOTSPOT, false)
     fun setIslandShowHotspotEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_HOTSPOT, enabled)
+
+    fun isIslandShowRecordingEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_RECORDING, false)
+    fun setIslandShowRecordingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_RECORDING, enabled)
+    fun isIslandRecordingScreenEnabled(): Boolean = getBoolean(KEY_ISLAND_RECORDING_SCREEN, true)
+    fun setIslandRecordingScreenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_RECORDING_SCREEN, enabled)
+    fun isIslandRecordingMicrophoneEnabled(): Boolean = getBoolean(KEY_ISLAND_RECORDING_MICROPHONE, true)
+    fun setIslandRecordingMicrophoneEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_RECORDING_MICROPHONE, enabled)
+    fun isIslandRecordingCameraEnabled(): Boolean = getBoolean(KEY_ISLAND_RECORDING_CAMERA, true)
+    fun setIslandRecordingCameraEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_RECORDING_CAMERA, enabled)
+    fun isIslandRecordingPeekEnabled(): Boolean = getBoolean(KEY_ISLAND_RECORDING_PEEK, true)
+    fun setIslandRecordingPeekEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_RECORDING_PEEK, enabled)
+    fun isIslandRecordingShowTimeEnabled(): Boolean = getBoolean(KEY_ISLAND_RECORDING_SHOW_TIME, true)
+    fun setIslandRecordingShowTimeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_RECORDING_SHOW_TIME, enabled)
+    fun isIslandRecordingFocusEnabled(): Boolean = getBoolean(KEY_ISLAND_RECORDING_FOCUS, false)
+    fun setIslandRecordingFocusEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_RECORDING_FOCUS, enabled)
 
     fun isIslandBriefEnabled(): Boolean = getBoolean(KEY_ISLAND_BRIEF_ENABLED, false)
     fun setIslandBriefEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BRIEF_ENABLED, enabled)

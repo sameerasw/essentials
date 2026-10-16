@@ -23,6 +23,7 @@ object IslandPriority {
     const val NOTIFICATION = 10
     const val PROGRESS = 15
     const val FLASHLIGHT = 20
+    const val RECORDING = 22
     const val TIMER = 25
     const val MEDIA = 30
     const val CONSCIOUS_GATE = 40
@@ -138,6 +139,8 @@ class IslandItem(
     val stack: List<StackIcon> = emptyList(),
     val queued: List<StackIcon>? = null,
     val priorityGroup: String? = null,
+    // Hides every other item while shown, except calls.
+    val exclusive: Boolean = false,
 ) {
     var userPriority: Int? = null
 

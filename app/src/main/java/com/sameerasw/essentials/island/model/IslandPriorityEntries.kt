@@ -7,6 +7,7 @@ object IslandPriorityEntries {
         Entry("battery", setOf("battery_alerts_plugin", "battery"), IslandPriority.BATTERY_ALERT),
         Entry("notifications", setOf("notifications"), IslandPriority.NOTIFICATION),
         Entry("flashlight", setOf("flashlight"), IslandPriority.FLASHLIGHT),
+        Entry("recording", setOf("recording"), IslandPriority.RECORDING),
         Entry("timer", setOf("timer"), IslandPriority.TIMER),
         Entry("media", setOf("media"), IslandPriority.MEDIA),
         Entry("conscious_gate", setOf("conscious_gate"), IslandPriority.CONSCIOUS_GATE),

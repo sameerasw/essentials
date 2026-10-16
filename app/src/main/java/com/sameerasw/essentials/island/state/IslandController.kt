@@ -3,6 +3,7 @@ package com.sameerasw.essentials.island.state
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.IslandItem
+import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.model.PluginRequest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -250,8 +251,8 @@ class IslandController(
         expandedKey = null
     }
 
-    private fun allItems(): Map<String, IslandItem> =
-        itemsBySource
+    private fun allItems(): Map<String, IslandItem> {
+        val items = itemsBySource
             .flatMap { (source, items) ->
                 when {
                     onLauncher -> items
@@ -260,7 +261,9 @@ class IslandController(
                 }
             }
             .filter { hiddenPackage == null || it.sourcePackage != hiddenPackage }
-            .associateBy { it.key }
+        val visible = if (items.any { it.exclusive }) items.filter { it.exclusive || it.effectivePriority < IslandPriority.TIME } else items
+        return visible.associateBy { it.key }
+    }
 
     private fun recompute() {
         val items = if (suppressed) emptyMap() else allItems()
