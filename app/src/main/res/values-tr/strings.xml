@@ -31,7 +31,7 @@
     <string name="setting_use_usage_access_title">Kullanım erişimini kullan</string>
     <string name="setting_use_usage_access_desc">Erişilebilirlik yerine (Dondur, Uygulama Kilidi, Dinamik Gece Işığı)</string>
     <!-- Button Remap -->
-    <string name="button_remap_enable_title">Düğme Yeniden Eşlemesini Etkinleştir</string>
+    <string name="button_remap_enable_title">Düğme Yeniden Eşlemeyi etkinleştir</string>
     <string name="button_remap_use_shizuku_title">Shizuku kullan</string>
     <string name="button_remap_use_shizuku_desc">Ekran kapalıyken çalışır (Önerilen)</string>
     <string name="shizuku_not_running_toast">Shizuku çalışmıyor</string>
@@ -216,7 +216,7 @@
     <string name="tile_ui_blur">Kullanıcı Arayüzü Bulanıklığı</string>
     <string name="tile_bubbles">Konuşma balonları</string>
     <string name="tile_sensitive_content">Hassas İçerik</string>
-    <string name="tile_tap_to_wake">Uyandırmak için dokunun</string>
+    <string name="tile_tap_to_wake">Uyandırmak için dokun</string>
     <string name="tile_aod">AOD</string>
     <string name="tile_caffeinate">Kafein</string>
     <string name="tile_sound_mode">Ses Modu</string>
@@ -420,7 +420,7 @@
     <string name="feat_snooze_notifications_desc">Kalıcı bildirimleri ertele</string>
     <string name="feat_qs_tiles_title">Hızlı ayar kutucukları</string>
     <string name="feat_qs_tiles_desc">Tümünü görüntüle</string>
-    <string name="feat_button_remap_title">Düğme yeniden eşlemesi</string>
+    <string name="feat_button_remap_title">Düğme yeniden eşleme</string>
     <string name="feat_button_remap_desc">Donanım düğmesi eylemlerini yeniden eşleyin</string>
     <string name="feat_dynamic_night_light_title">Dinamik gece lambası</string>
     <string name="feat_dynamic_night_light_desc">Uygulamaya göre gece ışığını değiştir</string>
@@ -1818,4 +1818,23 @@ Yığın, bir zamanlayıcıyla bir sonraki widget\'a geçer veya altındaki okla
     <string name="duo_action_swipe_down_title">Aşağı kaydırma</string>
     <string name="duo_action_horizontal_slide_title">Yatay kaydırma</string>
     <string name="face_unlock_trigger_unlock_title">Kilit açmayı tetikle</string>
+    <string name="feat_screenshot_share_cleanup_title">Paylaşılan ekran görüntülerini sil</string>
+    <string name="feat_screenshot_share_cleanup_desc">Paylaştıktan sonra ekran görüntülerini silin</string>
+    <string name="feat_app_volume_desc">Her uygulama için ayrı bir ses seviyesi belirleyin</string>
+    <string name="feat_app_volume_title">Uygulama ses seviyesi</string>
+    <string name="feat_volume_steps_title">Ses seviyesi adımları</string>
+    <string name="feat_volume_steps_desc">Her tuş vuruşunda medya ses seviyesini daha hızlı değiştirin</string>
+    <string name="volume_steps_enable_title">Ses seviyesi adımlarını etkinleştirin</string>
+    <string name="volume_steps_per_press_title">Her basış başına adım sayısı</string>
+    <string name="app_volume_enable_title">Uygulama ses seviyesini etkinleştirin</string>
+    <string name="app_volume_add_app">Uygulama ekle</string>
+    <string name="app_volume_add_app_desc">Uygulama oynatmaya başlamadan önce ses seviyesini belirleyin</string>
+    <string name="app_volume_overlay_title">Kontrol arayüzü katmanı</string>
+    <string name="about_desc_app_volume">Bir uygulamanın sesini, diğer her şeyin medya ses seviyesini değiştirmeden, kendi başına kısar. Her uygulama için bir seviye seçin ve bu seviye, uygulama ses çaldığında, arka planda da dahil olmak üzere, her seferinde uygulanır.
+
+Seviyeler yalnızca normal ses seviyesinin altına inebilir, asla üstüne çıkamaz. Bazı oyunlar ve düşük gecikmeli ses uygulamaları seviyeyi dikkate almayabilir. Yeni seviyelerin uygulanması için Shizuku\'nun çalışıyor olması gerekir, bu nedenle yeniden başlatmanın ardından tekrar başlatın.</string>
+    <string name="about_desc_volume_steps">Ses seviyesi tuşuna her bastığınızda medya ses seviyesinin kaç adım ilerleyeceğini ayarlar. Tuşa basılı tutmak, bırakana kadar adım adım ilerlemeye devam eder. Aramalar, zil sesleri, alarmlar ve kamera uygulamaları normal ses seviyesi davranışını korur.
+
+Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o tuşa basılı tutmak ses seviyesini değiştirmek yerine eylemi çalıştırır ve kısa basma yine de ses seviyesini adım boyutu kadar değiştirir. Ses paneli açıkken, Düğme yeniden eşleme varsayılan olarak duraklatılır, bu nedenle tuşa basılı tutmak ses seviyesini değiştirir. Eylemin her zaman öncelikli olmasını istiyorsanız, Düğme yeniden eşlemede \"Ses iletişim kutusu açıkken devre dışı bırak\" seçeneğini kapatın.</string>
+    <string name="button_remap_pause_on_volume_dialog_title">Ses iletişim kutusu açıkken devre dışı bırak</string>
 </resources>
