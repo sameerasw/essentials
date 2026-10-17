@@ -13,6 +13,7 @@ import androidx.compose.runtime.key
 import androidx.compose.material3.IconButton
 import sh.calvin.reorderable.ReorderableColumn
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.diy.displayName
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
 import com.sameerasw.essentials.island.remote.ProviderDiscovery
 import com.sameerasw.essentials.island.remote.ProviderPriorities
@@ -584,8 +585,7 @@ fun IslandSettingsUI(
                 description = if (viewModel.isIslandBriefEnabled.value) {
                     stringResource(R.string.island_brief_title)
                 } else {
-                    viewModel.islandLongPressAction.value?.let { stringResource(it.title) }
-                        ?: stringResource(R.string.duo_action_none)
+                    viewModel.islandLongPressAction.value?.displayName(context) ?: stringResource(R.string.duo_action_none)
                 },
                 showToggle = false,
                 enabled = !viewModel.isIslandBriefEnabled.value,

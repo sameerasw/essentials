@@ -378,6 +378,12 @@
             android:theme="@android:style/Theme.NoDisplay"
             android:excludeFromRecents="true" />
 
+        <activity
+            android:name=".ui.activities.MacroEditorActivity"
+            android:exported="false"
+            android:label="@string/diy_new_macro"
+            android:theme="@style/Theme.Essentials" />
+
 
         <service
             android:name=".services.LocationReachedService"

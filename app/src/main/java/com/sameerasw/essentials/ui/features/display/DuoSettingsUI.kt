@@ -45,6 +45,8 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.diy.displayName
+import com.sameerasw.essentials.domain.diy.matches
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
@@ -612,7 +614,7 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_pan_tool_alt_24,
                 title = stringResource(R.string.duo_action_tap_title),
-                description = tapAction?.let { stringResource(it.title) } ?: stringResource(R.string.duo_action_none),
+                description = tapAction?.displayName(context) ?: stringResource(R.string.duo_action_none),
                 showToggle = false,
                 enabled = !tapForBriefActive,
                 onClick = {
@@ -643,7 +645,7 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_touch_app_24,
                 title = stringResource(R.string.duo_action_double_tap_title),
-                description = doubleTapAction?.let { stringResource(it.title) } ?: stringResource(R.string.duo_action_none),
+                description = doubleTapAction?.displayName(context) ?: stringResource(R.string.duo_action_none),
                 showToggle = false,
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -656,7 +658,7 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_front_hand_24,
                 title = stringResource(R.string.duo_action_long_press_title),
-                description = longPressAction?.let { stringResource(it.title) } ?: stringResource(R.string.duo_action_none),
+                description = longPressAction?.displayName(context) ?: stringResource(R.string.duo_action_none),
                 showToggle = false,
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -669,7 +671,7 @@ fun DuoSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_south_24,
                 title = stringResource(R.string.duo_action_swipe_down_title),
-                description = swipeDownAction?.let { stringResource(it.title) } ?: stringResource(R.string.duo_action_none),
+                description = swipeDownAction?.displayName(context) ?: stringResource(R.string.duo_action_none),
                 showToggle = false,
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -841,13 +843,13 @@ fun DuoSettingsUI(
                 }
 
                 val actionCategories = remember {
-                    ActionRegistry.getCategories()
+                    ActionRegistry.getCategories() + listOfNotNull(ActionRegistry.getMacroCategory())
                 }
 
                 var expandedActionCategory by remember {
                     mutableStateOf<Int?>(
                         actionCategories.firstOrNull { category ->
-                            category.actions.any { currentAction != null && it::class == currentAction::class }
+                            category.actions.any { it.matches(currentAction) }
                         }?.titleRes ?: actionCategories.firstOrNull()?.titleRes
                     )
                 }
@@ -864,9 +866,9 @@ fun DuoSettingsUI(
                     ) {
                         category.actions.forEach { action ->
                             val resolvedAction =
-                                if (currentAction != null && currentAction::class == action::class) currentAction else action
+                                currentAction?.takeIf { action.matches(it) } ?: action
                             val isSelected =
-                                currentAction != null && currentAction::class == resolvedAction::class
+                                action.matches(currentAction)
                             val missing = getMissingPermissionsHelper(resolvedAction)
 
                             fun showMissingPermissionSheet() {
@@ -876,7 +878,7 @@ fun DuoSettingsUI(
                             }
 
                             RemapActionItem(
-                                title = stringResource(resolvedAction.title),
+                                title = resolvedAction.displayName(context),
                                 iconRes = resolvedAction.icon,
                                 isSelected = isSelected,
                                 hasSettings = resolvedAction.isConfigurable ||
