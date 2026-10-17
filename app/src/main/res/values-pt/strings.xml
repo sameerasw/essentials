@@ -1691,4 +1691,6 @@
     <string name="face_unlock_auto_illuminate_title">Iluminação automática ao despertar</string>
     <string name="face_unlock_trigger_unlock_title">Desbloqueio por gatilho</string>
     <string name="face_unlock_light_tint_title">Tonalidade clara</string>
+    <string name="island_landscape_top_spacing_title">Espaçamento superior da paisagem</string>
+    <string name="island_bond_edge_title">Conecte com o entalhe quando inativo</string>
 </resources>
