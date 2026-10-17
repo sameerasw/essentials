@@ -257,6 +257,8 @@ class SettingsRepository(
         const val KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS = "lockscreen_shortcut_left_actions"
         const val KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS = "lockscreen_shortcut_right_actions"
         const val KEY_LOCKSCREEN_SYSTEM_SHORTCUTS_STATE = "lockscreen_system_shortcuts_state"
+        const val KEY_QUICK_TAP_ENABLED = "quick_tap_enabled"
+        const val KEY_QUICK_TAP_ACTIONS = "quick_tap_actions"
         const val KEY_VOLUME_STEPS_ENABLED = "volume_steps_enabled"
         const val KEY_VOLUME_STEPS_PER_PRESS = "volume_steps_per_press"
         const val KEY_APP_VOLUME_ENABLED = "app_volume_enabled"
@@ -4476,6 +4478,10 @@ class SettingsRepository(
     fun isLockscreenShortcutsEnabled(): Boolean = getBoolean(KEY_LOCKSCREEN_SHORTCUTS_ENABLED, false)
 
     fun setLockscreenShortcutsEnabled(enabled: Boolean) = putBoolean(KEY_LOCKSCREEN_SHORTCUTS_ENABLED, enabled)
+
+    fun isQuickTapEnabled(): Boolean = getBoolean(KEY_QUICK_TAP_ENABLED, false)
+
+    fun setQuickTapEnabled(enabled: Boolean) = putBoolean(KEY_QUICK_TAP_ENABLED, enabled)
 
     fun getLockscreenSystemShortcutsState(): SystemShortcutsState =
         SystemShortcutsState.entries.firstOrNull {

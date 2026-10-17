@@ -337,6 +337,17 @@
     <string name="lockscreen_shortcut_content_desc">Essentials shortcut: %1$s</string>
     <string name="search_lockscreen_shortcuts_enable_title">Lock screen shortcuts</string>
     <string name="search_lockscreen_shortcuts_enable_desc">Custom shortcut buttons on the lock screen</string>
+    <string name="feat_quick_tap_title">Quick Tap+</string>
+    <string name="feat_quick_tap_desc">Run your own actions when you double-tap the back of your Pixel</string>
+    <string name="about_desc_quick_tap">Publishes an Essentials app shortcut that runs your custom action sequence when selected in Pixel Quick Tap settings. Double-tap the back of your phone to trigger the actions without opening any app interface.</string>
+    <string name="quick_tap_enable_title">Enable Quick Tap+</string>
+    <string name="quick_tap_no_actions">No actions. Quick Tap+ does nothing.</string>
+    <string name="quick_tap_hint">Quick Tap only works on Pixel phones. Go to Settings › System › Gestures › Quick Tap, choose Open app, tap the settings icon next to Essentials and pick Quick Tap+. Leave the Quick Tap settings screen before trying it, since taps there only play a demo.</string>
+    <string name="quick_tap_shortcut_short_label">Quick Tap+</string>
+    <string name="quick_tap_shortcut_long_label">Run Quick Tap+ actions</string>
+    <string name="quick_tap_not_set_up">Quick Tap+ has no actions set</string>
+    <string name="search_quick_tap_enable_title">Quick Tap+</string>
+    <string name="search_quick_tap_enable_desc">Run your own actions when you double-tap the back of your Pixel</string>
     <string name="feat_volume_steps_title">Volume steps</string>
     <string name="feat_volume_steps_desc">Change media volume faster with each key press</string>
     <string name="about_desc_volume_steps">Sets how many steps the media volume moves each time you press a volume key. Holding a key keeps stepping until you let go. Calls, ringing, alarms and camera apps keep the normal volume behavior.\n\nIf Button remap has a long press action for a volume key, holding that key runs the action instead of changing the volume, and a short press still moves the volume by your step size. While the volume panel is showing, Button remap pauses by default, so holding the key then changes the volume. Turn off \"Disabled while volume dialog open\" in Button remap if you want the action to always win.</string>

@@ -146,6 +146,30 @@ object ShortcutUtil {
                     .build()
             shortcuts.add(wallpaperShortcut)
 
+            // Quick Tap+ (picked in Pixel Settings › Quick Tap › Open app)
+            if (repository.isQuickTapEnabled()) {
+                val quickTapIntent =
+                    Intent(
+                        context,
+                        com.sameerasw.essentials.ui.activities.QuickTapActivity::class.java,
+                    ).apply {
+                        action = Intent.ACTION_VIEW
+                    }
+                val quickTapShortcut =
+                    ShortcutInfo
+                        .Builder(context, "quick_tap_plus")
+                        .setShortLabel(context.getString(com.sameerasw.essentials.R.string.quick_tap_shortcut_short_label))
+                        .setLongLabel(context.getString(com.sameerasw.essentials.R.string.quick_tap_shortcut_long_label))
+                        .setIcon(
+                            Icon.createWithResource(
+                                context,
+                                com.sameerasw.essentials.R.drawable.rounded_touch_app_24,
+                            ),
+                        ).setIntent(quickTapIntent)
+                        .build()
+                shortcuts.add(quickTapShortcut)
+            }
+
             // Dynamic shortcuts
             val pinnedKeys = repository.getPinnedFeatures()
             val featuresMap =

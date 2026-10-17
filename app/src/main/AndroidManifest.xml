@@ -407,6 +407,16 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
+            android:name=".ui.activities.QuickTapActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:icon="@drawable/rounded_touch_app_24"
+            android:label="@string/quick_tap_shortcut_short_label"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.sameerasw.essentials.quicktap"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
             android:name=".ui.activities.PixelSearchbarTapActivity"
             android:excludeFromRecents="true"
             android:exported="true"

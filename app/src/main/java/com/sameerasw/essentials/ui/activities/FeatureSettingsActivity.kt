@@ -117,6 +117,7 @@ import com.sameerasw.essentials.ui.features.system.VolumeStepsSettingsUI
 import com.sameerasw.essentials.ui.features.system.AppVolumeSettingsUI
 import com.sameerasw.essentials.ui.features.system.PowerAndBatterySettingsUI
 import com.sameerasw.essentials.ui.features.system.QuickSettingsTilesSettingsUI
+import com.sameerasw.essentials.ui.features.system.QuickTapSettingsUI
 import com.sameerasw.essentials.ui.features.system.RefreshRateSettingsUI
 import com.sameerasw.essentials.ui.features.system.RemoteLockSettingsUI
 import com.sameerasw.essentials.ui.features.system.ScreenLockedSecuritySettingsUI
@@ -735,6 +736,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Flashlight",
                                                             "Activity launcher",
                                                             "Lock screen shortcuts",
+                                                            "Quick Tap+",
                                                         ),
                                                         listOf(
                                                             "Navigation",
@@ -1097,6 +1099,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Lock screen shortcuts" -> {
                                         LockscreenShortcutsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Quick Tap+" -> {
+                                        QuickTapSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,

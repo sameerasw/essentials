@@ -149,6 +149,8 @@ class MainViewModel : ViewModel() {
     val isLockscreenShortcutsEnabled = mutableStateOf(false)
     val lockscreenShortcutActions = mutableStateMapOf<LockscreenShortcutSide, List<Action>>()
     val lockscreenSystemShortcutsState = mutableStateOf(SystemShortcutsState.UNKNOWN)
+    val isQuickTapEnabled = mutableStateOf(false)
+    val quickTapActions = mutableStateOf<List<Action>>(emptyList())
     val isVolumeStepsEnabled = mutableStateOf(false)
     val volumeStepsPerPress = mutableIntStateOf(2)
     val isAppVolumeEnabled = mutableStateOf(false)
@@ -2323,6 +2325,8 @@ class MainViewModel : ViewModel() {
         hilightAppEffects.clear()
         hilightAppEffects.putAll(settingsRepository.getHilightAppEffects())
         isLockscreenShortcutsEnabled.value = settingsRepository.isLockscreenShortcutsEnabled()
+        isQuickTapEnabled.value = settingsRepository.isQuickTapEnabled()
+        quickTapActions.value = settingsRepository.getRemapActions(SettingsRepository.KEY_QUICK_TAP_ACTIONS)
         isVolumeStepsEnabled.value = settingsRepository.isVolumeStepsEnabled()
         volumeStepsPerPress.intValue = settingsRepository.getVolumeStepsPerPress()
         isAppVolumeEnabled.value = settingsRepository.isAppVolumeEnabled()
@@ -5217,6 +5221,21 @@ class MainViewModel : ViewModel() {
     ) {
         lockscreenShortcutActions[side] = actions
         settingsRepository.setRemapActions(side.prefKey, actions)
+    }
+
+    fun setQuickTapEnabled(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        isQuickTapEnabled.value = enabled
+        settingsRepository.setQuickTapEnabled(enabled)
+        com.sameerasw.essentials.utils.ShortcutUtil
+            .updateLauncherDynamicShortcuts(context)
+    }
+
+    fun setQuickTapActions(actions: List<Action>) {
+        quickTapActions.value = actions
+        settingsRepository.setRemapActions(SettingsRepository.KEY_QUICK_TAP_ACTIONS, actions)
     }
 
     /**

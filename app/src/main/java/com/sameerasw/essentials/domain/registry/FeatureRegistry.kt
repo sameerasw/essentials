@@ -1821,6 +1821,33 @@ object FeatureRegistry {
                 ) = viewModel.setLockscreenShortcutsEnabled(enabled)
             },
             object : Feature(
+                id = "Quick Tap+",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_quick_tap_title,
+                iconRes = R.drawable.rounded_touch_app_24,
+                category = R.string.cat_interaction,
+                description = R.string.feat_quick_tap_desc,
+                aboutDescription = R.string.about_desc_quick_tap,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_quick_tap_enable_title,
+                            R.string.search_quick_tap_enable_desc,
+                            "enable_quick_tap",
+                            R.array.keywords_switch_master,
+                        ),
+                    ),
+                parentFeatureId = "Input",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isQuickTapEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setQuickTapEnabled(enabled, context)
+            },
+            object : Feature(
                 id = "Volume steps",
                 contributors = listOf("jawzf"),
                 title = R.string.feat_volume_steps_title,
