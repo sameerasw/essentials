@@ -1844,8 +1844,8 @@
     <string name="watchface_glance_comp_events_desc">Покажите предстоящие сегодняшние встречи </string>
     <string name="watchface_glance_comp_travel_title">Мы здесь (Travel ETA) </string>
     <string name="watchface_glance_comp_travel_desc">Показать оставшееся время / расстояние до пункта назначения </string>
-    <string name="feat_lockscreen_shortcuts_title">Ярлыки экрана блокировки </string>
-    <string name="feat_lockscreen_shortcuts_desc">Запустите свои собственные действия с экрана блокировки </string>
+    <string name="feat_lockscreen_shortcuts_title">Быстрые действия на экране блокировки</string>
+    <string name="feat_lockscreen_shortcuts_desc">Запускайте собственные действия с экрана блокировки</string>
     <string name="feat_navigation_desc">Бар жестов, навигационные жесты и настройки панели навигации </string>
     <string name="feat_hilight_desc">Подсветите задние светодиоды для уведомлений и живого прогресса </string>
     <string name="widget_stack_interval_seconds">Уведомлять о новых уведомлениях</string>
