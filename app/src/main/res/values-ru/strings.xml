@@ -1857,4 +1857,7 @@
     <string name="freeze_tag_never_auto_freeze_desc">Приложения в этой метке будут заблокированы от автоматического замораживания </string>
     <string name="freeze_tag_color_coded_title">Тег цветовая кодировка</string>
     <string name="freeze_tag_color_coded_desc">Показать цвета тегов в сетке приложения </string>
+    <string name="duo_slide_mirror_direction_title">Инвертировать направления</string>
+    <string name="island_always_gestures_title">Всегда доступные жесты</string>
+    <string name="island_always_gestures_desc">Оставлять пространство для жестов даже когда остров спрятан</string>
 </resources>
