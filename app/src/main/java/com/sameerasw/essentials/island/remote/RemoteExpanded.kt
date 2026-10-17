@@ -76,7 +76,8 @@ fun RemoteExpanded(
     val collapse = LocalIslandCollapse.current
     val paused = LocalRemotePaused.current
     val dragging by remember { derivedStateOf { collapse() > 0.02f || paused() } }
-    val fade by animateFloatAsState(if (revealed && !dragging) 1f else 0f, if (revealed && !dragging) tween(160) else snap(), label = "remoteFade")
+    val showLive = revealed && !dragging && session.hasSurface
+    val fade by animateFloatAsState(if (showLive) 1f else 0f, if (showLive) tween(160) else snap(), label = "remoteFade")
     val cornerPx = with(density) { scope.spec.expandedCorner.toPx() }
     val current = remember { intArrayOf(0, 0) }
     val corner = remember { floatArrayOf(0f) }

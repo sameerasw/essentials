@@ -262,7 +262,7 @@ class MainViewModel : ViewModel() {
     val isIslandCompactHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
-    val isIslandLineStageEnabled = mutableStateOf(true)
+    val isIslandLineStageEnabled = mutableStateOf(false)
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
@@ -299,6 +299,7 @@ class MainViewModel : ViewModel() {
     val isIslandShowBattery = mutableStateOf(false)
     val isIslandShowFlashlight = mutableStateOf(true)
     val islandBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
+    val islandDevicesBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
     val isIslandBatteryPercentageEnabled = mutableStateOf(false)
     val isIslandBatteryPercentageConditional = mutableStateOf(false)
     val isIslandBatteryIconConditional = mutableStateOf(false)
@@ -2497,6 +2498,7 @@ class MainViewModel : ViewModel() {
         isIslandShowBattery.value = settingsRepository.isIslandShowBatteryEnabled()
         isIslandShowFlashlight.value = settingsRepository.isIslandShowFlashlightEnabled()
         islandBatteryStyle.value = settingsRepository.getIslandBatteryStyle()
+        islandDevicesBatteryStyle.value = settingsRepository.getIslandDevicesBatteryStyle()
         isIslandBatteryPercentageEnabled.value = settingsRepository.isIslandBatteryPercentageEnabled()
         isIslandBatteryPercentageConditional.value = settingsRepository.isIslandBatteryPercentageConditional()
         isIslandBatteryIconConditional.value = settingsRepository.isIslandBatteryIconConditional()
@@ -6043,6 +6045,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBatteryStyle(value: String) {
         islandBatteryStyle.value = value
         settingsRepository.setIslandBatteryStyle(value)
+    }
+
+    fun setIslandDevicesBatteryStyle(value: String) {
+        islandDevicesBatteryStyle.value = value
+        settingsRepository.setIslandDevicesBatteryStyle(value)
     }
 
     fun setIslandShowBattery(enabled: Boolean) {

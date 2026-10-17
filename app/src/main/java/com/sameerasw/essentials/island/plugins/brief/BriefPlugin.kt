@@ -130,6 +130,7 @@ class BriefPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
+        SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_STYLE,
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
         SettingsRepository.KEY_ISLAND_BRIEF_SHOW_ALARM,
         SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER,
@@ -142,6 +143,7 @@ class BriefPlugin : BaseIslandPlugin() {
             return
         }
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
+        val devicesIconStyle = settings.getIslandDevicesBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val alarmHours = if (settings.isIslandBriefShowAlarmEnabled()) settings.getIslandAlarmWindowHours() else null
         val calendarIds = settings.getStatusGlanceCalendarSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
@@ -156,7 +158,7 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader) { open ->
+                    BriefExpanded(scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader) { open ->
                         pageOpen = open
                     }
                 },
@@ -175,6 +177,7 @@ class BriefPlugin : BaseIslandPlugin() {
 private fun BriefExpanded(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
+    devicesIconStyle: Boolean,
     alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
@@ -222,6 +225,7 @@ private fun BriefExpanded(
                     BriefPage.Overview -> BriefOverview(
                         scope = scope,
                         iconStyle = iconStyle,
+                        devicesIconStyle = devicesIconStyle,
                         alarmHours = alarmHours,
                         calendarEnabled = calendarEnabled,
                         calendarIds = calendarIds,
@@ -394,6 +398,7 @@ private fun openEvent(context: Context, event: UpcomingCalendarEvent) {
 private fun BriefOverview(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
+    devicesIconStyle: Boolean,
     alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
@@ -489,7 +494,7 @@ private fun BriefOverview(
             val devicesBlock: @Composable () -> Unit = {
                 if (devices.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
-                    BriefDeviceRows(devices, iconStyle, accent, Modifier.fillMaxWidth().padding(horizontal = blockPadding))
+                    BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth().padding(horizontal = blockPadding))
                 }
             }
             val calendarBlock: @Composable () -> Unit = {
@@ -524,7 +529,7 @@ private fun BriefOverview(
                     }
                     if (devices.isNotEmpty()) {
                         add {
-                            BriefDeviceRows(devices, iconStyle, accent, Modifier.fillMaxWidth())
+                            BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth())
                         }
                     }
                     if (calendarEnabled) {

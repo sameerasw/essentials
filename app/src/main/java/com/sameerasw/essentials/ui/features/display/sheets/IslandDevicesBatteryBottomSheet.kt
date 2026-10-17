@@ -68,6 +68,7 @@ fun IslandDevicesBatteryBottomSheet(
                 viewModel = viewModel,
                 onlyLow = viewModel.isIslandDevicesBatteryOnlyLow.value,
                 onOnlyLowChange = viewModel::setIslandDevicesBatteryOnlyLow,
+                devices = true,
             )
 
             Row(

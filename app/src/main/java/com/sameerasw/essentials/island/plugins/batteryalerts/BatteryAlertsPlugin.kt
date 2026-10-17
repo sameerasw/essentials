@@ -55,7 +55,7 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
                 readBattery(intent)
                 val newAlertState = currentAlertState()
 
-                if ((isCharging && !wasCharging) || (newAlertState != prevAlertState && newAlertState.isNotEmpty())) {
+                if ((isCharging && !wasCharging && newAlertState == "charging") || (newAlertState != prevAlertState && newAlertState.isNotEmpty())) {
                     peekAlert()
                 } else if (!peeking) {
                     render()

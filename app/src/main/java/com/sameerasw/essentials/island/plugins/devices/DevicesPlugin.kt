@@ -37,6 +37,7 @@ class DevicesPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_DEVICES,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
+        SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_STYLE,
         SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_ORDER,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL,
@@ -228,7 +229,7 @@ class DevicesPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
-        val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
+        val iconStyle = settings.getIslandDevicesBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val items = mutableListOf<IslandItem>()
         batteryDevice?.let { d ->
             val color = levelColor(d.level)
