@@ -58,6 +58,7 @@ import com.sameerasw.essentials.ui.core.sheets.ScreenOffSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.WaitSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.SendNotificationSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.formatWait
 import com.sameerasw.essentials.ui.core.sheets.ChargingModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.NotificationLightingActionSheet
@@ -110,6 +111,7 @@ fun ActionSequenceEditor(
     var showSetVolumeSettings by remember { mutableStateOf(false) }
     var showHilightSettings by remember { mutableStateOf(false) }
     var showWaitSettings by remember { mutableStateOf(false) }
+    var showSendNotificationSettings by remember { mutableStateOf(false) }
     var configAction by remember { mutableStateOf<Action?>(null) }
     var configIndex by remember { mutableStateOf<Int?>(null) }
     var showAddActionSheet by remember { mutableStateOf(false) }
@@ -146,6 +148,7 @@ fun ActionSequenceEditor(
                 "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
                 "DRAW_OVERLAYS" -> !viewModel.isOverlayPermissionGranted.value
                 "ACCESSIBILITY" -> !viewModel.isAccessibilityEnabled.value
+                "POST_NOTIFICATIONS" -> !viewModel.isPostNotificationsEnabled.value
                 else -> false
             }
         }
@@ -222,6 +225,7 @@ fun ActionSequenceEditor(
             is Action.Hilight -> showHilightSettings = true
             is Action.CustomSettings -> showCustomSettingsSettings = true
             is Action.Wait -> showWaitSettings = true
+            is Action.SendNotification -> showSendNotificationSettings = true
             else -> {}
         }
     }
@@ -623,6 +627,18 @@ fun ActionSequenceEditor(
         )
     }
 
+    if (showSendNotificationSettings && configAction is Action.SendNotification) {
+        SendNotificationSettingsSheet(
+            initialAction = configAction as Action.SendNotification,
+            onDismiss = { showSendNotificationSettings = false },
+            onSave = { newAction ->
+                showSendNotificationSettings = false
+                onActionSelected(newAction)
+                configAction = null
+            },
+        )
+    }
+
     if (showPermissionSheet) {
         val permissionItems =
             com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItems(
@@ -655,7 +671,14 @@ private fun RemapSequenceItem(
     onRemove: () -> Unit,
 ) {
     val view = LocalView.current
-    val title = stringResource(action.title).let { if (action is Action.Wait) "$it · ${formatWait(action.seconds)}" else it }
+    val title =
+        stringResource(action.title).let { baseTitle ->
+            when {
+                action is Action.Wait -> "$baseTitle · ${formatWait(action.seconds)}"
+                action is Action.SendNotification && action.notificationTitle.isNotBlank() -> "$baseTitle · ${action.notificationTitle}"
+                else -> baseTitle
+            }
+        }
     Row(
         modifier =
             Modifier

@@ -1457,6 +1457,11 @@
     <string name="diy_action_wait">Wait</string>
     <string name="diy_wait_duration">Duration</string>
     <string name="diy_wait_desc">Pause before the next action runs</string>
+    <string name="diy_action_send_notification">Send notification</string>
+    <string name="diy_send_notification_title">Title</string>
+    <string name="diy_send_notification_body">Message</string>
+    <string name="diy_send_notification_label">Label</string>
+    <string name="diy_send_notification_label_desc">Shown next to the app name</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_set_charging_mode">Set Charging Mode</string>
     <string name="diy_action_notification_lighting">Trigger notification lighting</string>
@@ -1607,6 +1612,7 @@
 
     <!-- Notifications -->
     <string name="automation_channel_name">Automations</string>
+    <string name="automation_notifications_channel_name">Automation notifications</string>
     <string name="automation_failed_title">Automation failed</string>
     <string name="automation_failed_text">%1$s: %2$s</string>
     <string name="automation_failed_missing">Missing permission: %1$s</string>

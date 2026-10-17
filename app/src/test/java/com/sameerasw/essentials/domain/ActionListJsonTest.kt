@@ -22,4 +22,20 @@ class ActionListJsonTest {
     fun invalidJsonGivesEmptyList() {
         assertEquals(emptyList<Action>(), ActionGsonAdapter.listFromJson("not json"))
     }
+
+    @Test
+    fun sendNotificationRoundTrip() {
+        val actions = listOf(Action.SendNotification(notificationTitle = "Title", body = "Body", label = "Label"))
+        assertEquals(actions, ActionGsonAdapter.listFromJson(ActionGsonAdapter.listToJson(actions)))
+    }
+
+    @Test
+    fun sendNotificationMissingFieldsLoadEmpty() {
+        val singleAction = ActionGsonAdapter.fromJson("""{"type":"SendNotification","title":"Hi"}""")
+        assertEquals(Action.SendNotification(notificationTitle = "Hi", body = "", label = ""), singleAction)
+
+        val json = """[{"type":"SendNotification","title":"Hi"}]"""
+        val expected = listOf(Action.SendNotification(notificationTitle = "Hi", body = "", label = ""))
+        assertEquals(expected, ActionGsonAdapter.listFromJson(json))
+    }
 }

@@ -157,6 +157,18 @@ sealed interface Action {
     }
 
     @Keep
+    data class SendNotification(
+        @SerializedName("title") val notificationTitle: String = "",
+        @SerializedName("body") val body: String = "",
+        @SerializedName("label") val label: String = "",
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_send_notification
+        override val icon: Int get() = R.drawable.rounded_notifications_unread_24
+        override val permissions: List<String> get() = listOf("POST_NOTIFICATIONS")
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
     data object TurnOffLowPower : Action {
         override val title: Int = R.string.diy_action_low_power_off
         override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
