@@ -173,9 +173,16 @@ class PixelSearchResultsActivity : ComponentActivity() {
         val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
         val dimAmount = if (isSystemDark) 0.2f else 0.08f
 
+        val repository = SettingsRepository(this)
+        val isBlurEnabled = repository.isPixelSearchBlurEnabled()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-            window.attributes.blurBehindRadius = 60
+            if (isBlurEnabled) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                window.attributes.blurBehindRadius = 60
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+            }
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             window.setDimAmount(dimAmount)
         } else {

@@ -2823,6 +2823,7 @@ class MainViewModel : ViewModel() {
         pixelSearchResultShortcuts.value = settingsRepository.isPixelSearchResultShortcutsEnabled()
         pixelSearchResultWeb.value = settingsRepository.isPixelSearchResultWebEnabled()
         pixelSearchBubblesWeb.value = settingsRepository.isPixelSearchBubblesWebEnabled()
+        pixelSearchBlur.value = settingsRepository.isPixelSearchBlurEnabled()
         pixelSearchEngine.value = settingsRepository.getPixelSearchEngine()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
@@ -4610,6 +4611,7 @@ class MainViewModel : ViewModel() {
     val pixelSearchResultShortcuts = mutableStateOf(true)
     val pixelSearchResultWeb = mutableStateOf(true)
     val pixelSearchBubblesWeb = mutableStateOf(false)
+    val pixelSearchBlur = mutableStateOf(true)
     val pixelSearchEngine = mutableStateOf("Google")
 
     fun setPixelSearchResultAppsEnabled(enabled: Boolean) {
@@ -4650,6 +4652,11 @@ class MainViewModel : ViewModel() {
     fun setPixelSearchBubblesWebEnabled(enabled: Boolean) {
         pixelSearchBubblesWeb.value = enabled
         settingsRepository.setPixelSearchBubblesWebEnabled(enabled)
+    }
+
+    fun setPixelSearchBlurEnabled(enabled: Boolean) {
+        pixelSearchBlur.value = enabled
+        settingsRepository.setPixelSearchBlurEnabled(enabled)
     }
 
     fun setPixelSearchEngine(engine: String) {

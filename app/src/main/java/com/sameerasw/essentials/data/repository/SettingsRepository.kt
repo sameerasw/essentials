@@ -438,6 +438,7 @@ class SettingsRepository(
         const val KEY_PIXEL_SEARCH_RESULT_FILES = "pixel_search_result_files"
         const val KEY_PIXEL_SEARCH_BUBBLES_WEB = "pixel_search_bubbles_web"
         const val KEY_PIXEL_SEARCH_ENGINE = "pixel_search_engine"
+        const val KEY_PIXEL_SEARCH_BLUR = "pixel_search_blur_enabled"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
@@ -3679,6 +3680,9 @@ class SettingsRepository(
 
     fun getPixelSearchEngine(): String = getString(KEY_PIXEL_SEARCH_ENGINE, "Google") ?: "Google"
     fun setPixelSearchEngine(engine: String) = putString(KEY_PIXEL_SEARCH_ENGINE, engine)
+
+    fun isPixelSearchBlurEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_BLUR, true)
+    fun setPixelSearchBlurEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_BLUR, enabled)
 
     fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)
     fun setBubbleWebFullscreen(fullscreen: Boolean) = putBoolean(KEY_BUBBLE_WEB_FULLSCREEN, fullscreen)

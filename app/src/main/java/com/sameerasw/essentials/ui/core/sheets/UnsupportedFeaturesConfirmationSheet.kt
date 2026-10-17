@@ -74,7 +74,10 @@ fun UnsupportedFeaturesConfirmationSheet(
             )
 
             RoundedCardContainer(
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false),
             ) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
