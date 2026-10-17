@@ -249,6 +249,13 @@ class MainViewModel : ViewModel() {
     val isIslandShowTravel = mutableStateOf(true)
     val isIslandShowCaffeinate = mutableStateOf(true)
     val isIslandShowHotspot = mutableStateOf(false)
+    val isIslandShowRecording = mutableStateOf(false)
+    val isIslandRecordingScreen = mutableStateOf(true)
+    val isIslandRecordingMicrophone = mutableStateOf(true)
+    val isIslandRecordingCamera = mutableStateOf(true)
+    val isIslandRecordingPeek = mutableStateOf(true)
+    val isIslandRecordingShowTime = mutableStateOf(true)
+    val isIslandRecordingFocus = mutableStateOf(false)
     val isIslandShowDevices = mutableStateOf(true)
     val isIslandBriefEnabled = mutableStateOf(false)
     val isIslandBriefShowAlarm = mutableStateOf(true)
@@ -2440,6 +2447,13 @@ class MainViewModel : ViewModel() {
         isDuoDisableInteractionsInFullscreen.value = settingsRepository.isDuoDisableInteractionsInFullscreenEnabled()
         isIslandShowCaffeinate.value = settingsRepository.isIslandShowCaffeinateEnabled()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
+        isIslandShowRecording.value = settingsRepository.isIslandShowRecordingEnabled()
+        isIslandRecordingScreen.value = settingsRepository.isIslandRecordingScreenEnabled()
+        isIslandRecordingMicrophone.value = settingsRepository.isIslandRecordingMicrophoneEnabled()
+        isIslandRecordingCamera.value = settingsRepository.isIslandRecordingCameraEnabled()
+        isIslandRecordingPeek.value = settingsRepository.isIslandRecordingPeekEnabled()
+        isIslandRecordingShowTime.value = settingsRepository.isIslandRecordingShowTimeEnabled()
+        isIslandRecordingFocus.value = settingsRepository.isIslandRecordingFocusEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
         isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
         isIslandBriefShowAlarm.value = settingsRepository.isIslandBriefShowAlarmEnabled()
@@ -5636,6 +5650,41 @@ class MainViewModel : ViewModel() {
     fun setIslandShowHotspot(enabled: Boolean) {
         isIslandShowHotspot.value = enabled
         settingsRepository.setIslandShowHotspotEnabled(enabled)
+    }
+
+    fun setIslandShowRecording(enabled: Boolean) {
+        isIslandShowRecording.value = enabled
+        settingsRepository.setIslandShowRecordingEnabled(enabled)
+    }
+
+    fun setIslandRecordingScreen(enabled: Boolean) {
+        isIslandRecordingScreen.value = enabled
+        settingsRepository.setIslandRecordingScreenEnabled(enabled)
+    }
+
+    fun setIslandRecordingMicrophone(enabled: Boolean) {
+        isIslandRecordingMicrophone.value = enabled
+        settingsRepository.setIslandRecordingMicrophoneEnabled(enabled)
+    }
+
+    fun setIslandRecordingCamera(enabled: Boolean) {
+        isIslandRecordingCamera.value = enabled
+        settingsRepository.setIslandRecordingCameraEnabled(enabled)
+    }
+
+    fun setIslandRecordingPeek(enabled: Boolean) {
+        isIslandRecordingPeek.value = enabled
+        settingsRepository.setIslandRecordingPeekEnabled(enabled)
+    }
+
+    fun setIslandRecordingShowTime(enabled: Boolean) {
+        isIslandRecordingShowTime.value = enabled
+        settingsRepository.setIslandRecordingShowTimeEnabled(enabled)
+    }
+
+    fun setIslandRecordingFocus(enabled: Boolean) {
+        isIslandRecordingFocus.value = enabled
+        settingsRepository.setIslandRecordingFocusEnabled(enabled)
     }
 
     fun setIslandShowCaffeinate(enabled: Boolean) {

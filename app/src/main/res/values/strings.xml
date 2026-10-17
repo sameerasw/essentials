@@ -3300,6 +3300,22 @@
         <item quantity="one">%d device</item>
         <item quantity="other">%d devices</item>
     </plurals>
+    <string name="island_show_recording_title">Recording</string>
+    <string name="island_recording_desc">Shows while your screen, camera or microphone is recording</string>
+    <string name="island_recording_options_title">Recording</string>
+    <string name="island_recording_screen">Screen recording</string>
+    <string name="island_recording_camera">Recording video</string>
+    <string name="island_recording_microphone">Microphone in use</string>
+    <string name="island_recording_paused">Recording paused</string>
+    <string name="island_recording_saved">Recording saved</string>
+    <string name="island_recording_sources_title">Show</string>
+    <string name="island_recording_source_screen">Screen</string>
+    <string name="island_recording_source_camera">Camera</string>
+    <string name="island_recording_source_microphone">Microphone</string>
+    <string name="island_recording_peek_title">Peek when recording starts</string>
+    <string name="island_recording_show_time_title">Show elapsed time</string>
+    <string name="island_recording_focus_title">Focus on recording</string>
+    <string name="island_recording_focus_desc">Hide other modules while recording. Calls still show</string>
     <string name="island_devices_connected">Connected</string>
     <string name="island_devices_disconnected">Disconnected</string>
     <string name="island_devices_unknown">Bluetooth device</string>

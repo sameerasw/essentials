@@ -80,6 +80,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandAppOptionsBotto
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandRecordingOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
@@ -123,6 +124,7 @@ fun IslandSettingsUI(
     var showCallOptionsSheet by remember { mutableStateOf(false) }
     var showSignalOptionsSheet by remember { mutableStateOf(false) }
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
+    var showRecordingOptionsSheet by remember { mutableStateOf(false) }
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
     var pickingGesture by remember { mutableStateOf<String?>(null) }
     var showSlideModeSheet by remember { mutableStateOf(false) }
@@ -447,6 +449,18 @@ fun IslandSettingsUI(
                             }
                         },
                         modifier = Modifier.highlight(highlightSetting == "island_show_hotspot"),
+                    )
+                    "recording" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.rounded_fiber_smart_record_24,
+                        title = stringResource(R.string.island_show_recording_title),
+                        isChecked = viewModel.isIslandShowRecording.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowRecording(checked)
+                        },
+                        onSettingsClick = { showRecordingOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_recording"),
                     )
                     "devices" -> IconToggleItem(
                         dragHandle = handle,
@@ -796,6 +810,13 @@ fun IslandSettingsUI(
         IslandAlarmOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showAlarmOptionsSheet = false },
+        )
+    }
+
+    if (showRecordingOptionsSheet) {
+        IslandRecordingOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showRecordingOptionsSheet = false },
         )
     }
 

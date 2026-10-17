@@ -47,6 +47,8 @@ class TimerPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER,
         SettingsRepository.KEY_ISLAND_TIMERS_FILTER_APPS,
         SettingsRepository.KEY_ISLAND_TIMERS_SELECTED_APPS,
+        SettingsRepository.KEY_ISLAND_SHOW_RECORDING,
+        SettingsRepository.KEY_ISLAND_RECORDING_SCREEN,
     )
 
     private var allEntries: List<ChronometerEntry> = emptyList()
@@ -92,11 +94,16 @@ class TimerPlugin : BaseIslandPlugin() {
     private fun visible(all: List<ChronometerEntry>): List<ChronometerEntry> {
         val live = all.filterNot(::isExpired)
         val byRecorder =
-            if (settings.isIslandTimersShowScreenRecorderEnabled()) live else live.filterNot { isScreenRecorder(it.packageName) }
+            if (showsScreenRecorder()) live else live.filterNot { isScreenRecorder(it.packageName) }
         if (!settings.isIslandTimersFilterAppsEnabled()) return byRecorder
         val allowed = settings.loadIslandTimersSelectedApps().filter { it.isEnabled }.map { it.packageName }.toSet()
         return byRecorder.filter { it.packageName in allowed }
     }
+
+    // The recording item already covers the screen recorder, so its chronometer would only duplicate it.
+    private fun showsScreenRecorder(): Boolean =
+        settings.isIslandTimersShowScreenRecorderEnabled() &&
+            !(settings.isIslandShowRecordingEnabled() && settings.isIslandRecordingScreenEnabled())
 
     private fun isScreenRecorder(packageName: String): Boolean =
         packageName == "com.android.systemui" || packageName.contains("screenrecord", ignoreCase = true)
