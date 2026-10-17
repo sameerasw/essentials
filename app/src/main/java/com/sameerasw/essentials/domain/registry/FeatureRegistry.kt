@@ -826,6 +826,11 @@ object FeatureRegistry {
                             "island_show_timers",
                         ),
                         SearchSetting(
+                            R.string.island_show_navigation_title,
+                            R.string.island_navigation_desc,
+                            "island_show_navigation",
+                        ),
+                        SearchSetting(
                             R.string.island_show_hotspot_title,
                             R.string.island_hotspot_desc,
                             "island_show_hotspot",
