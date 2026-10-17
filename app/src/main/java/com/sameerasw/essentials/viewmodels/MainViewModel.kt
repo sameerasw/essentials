@@ -87,6 +87,7 @@ import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.ScreenshotCleaner
 import com.sameerasw.essentials.utils.PrivilegedMode
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -399,6 +400,11 @@ class MainViewModel : ViewModel() {
     val isPocketModeEnabled = mutableStateOf(false)
     val isFaceUnlockBrightnessEnabled = mutableStateOf(false)
     val isScreenshotShareCleanupEnabled = mutableStateOf(false)
+    val screenshotShareCleanupDelayMinutes = mutableIntStateOf(0)
+    val isScreenshotAutoCleanEnabled = mutableStateOf(false)
+    val screenshotAutoCleanDays = mutableIntStateOf(7)
+    val screenshotsCleanedCount = mutableIntStateOf(0)
+    val screenshotsCleanedBytes = mutableLongStateOf(0L)
     val faceUnlockMaxBrightness = mutableIntStateOf(100)
     val faceUnlockAmbientThreshold = mutableFloatStateOf(10f)
     val isFaceUnlockTriggerUnlock = mutableStateOf(true)
@@ -1387,6 +1393,21 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_SCREENSHOT_SHARE_CLEANUP_ENABLED ->
                         isScreenshotShareCleanupEnabled.value = settingsRepository.isScreenshotShareCleanupEnabled()
+
+                    SettingsRepository.KEY_SCREENSHOT_SHARE_CLEANUP_DELAY ->
+                        screenshotShareCleanupDelayMinutes.intValue = settingsRepository.getScreenshotShareCleanupDelayMinutes()
+
+                    SettingsRepository.KEY_SCREENSHOT_AUTO_CLEAN_ENABLED ->
+                        isScreenshotAutoCleanEnabled.value = settingsRepository.isScreenshotAutoCleanEnabled()
+
+                    SettingsRepository.KEY_SCREENSHOT_AUTO_CLEAN_DAYS ->
+                        screenshotAutoCleanDays.intValue = settingsRepository.getScreenshotAutoCleanDays()
+
+                    SettingsRepository.KEY_SCREENSHOTS_CLEANED_COUNT ->
+                        screenshotsCleanedCount.intValue = settingsRepository.getScreenshotsCleanedCount()
+
+                    SettingsRepository.KEY_SCREENSHOTS_CLEANED_BYTES ->
+                        screenshotsCleanedBytes.longValue = settingsRepository.getScreenshotsCleanedBytes()
 
                     SettingsRepository.KEY_FACE_UNLOCK_MAX_BRIGHTNESS ->
                         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
@@ -2828,6 +2849,11 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
         isScreenshotShareCleanupEnabled.value = settingsRepository.isScreenshotShareCleanupEnabled()
+        screenshotShareCleanupDelayMinutes.intValue = settingsRepository.getScreenshotShareCleanupDelayMinutes()
+        isScreenshotAutoCleanEnabled.value = settingsRepository.isScreenshotAutoCleanEnabled()
+        screenshotAutoCleanDays.intValue = settingsRepository.getScreenshotAutoCleanDays()
+        screenshotsCleanedCount.intValue = settingsRepository.getScreenshotsCleanedCount()
+        screenshotsCleanedBytes.longValue = settingsRepository.getScreenshotsCleanedBytes()
         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
         faceUnlockAmbientThreshold.floatValue = settingsRepository.getFaceUnlockAmbientThreshold()
         isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
@@ -9615,6 +9641,23 @@ class MainViewModel : ViewModel() {
     fun setScreenshotShareCleanupEnabled(enabled: Boolean) {
         settingsRepository.setScreenshotShareCleanupEnabled(enabled)
         isScreenshotShareCleanupEnabled.value = enabled
+        if (!enabled) appContext?.let { ScreenshotCleaner.cancelAll(it, ScreenshotCleaner.TAG_SHARED) }
+    }
+
+    fun setScreenshotShareCleanupDelayMinutes(minutes: Int) {
+        settingsRepository.setScreenshotShareCleanupDelayMinutes(minutes)
+        screenshotShareCleanupDelayMinutes.intValue = minutes
+    }
+
+    fun setScreenshotAutoCleanEnabled(enabled: Boolean) {
+        settingsRepository.setScreenshotAutoCleanEnabled(enabled)
+        isScreenshotAutoCleanEnabled.value = enabled
+        if (!enabled) appContext?.let { ScreenshotCleaner.cancelAll(it, ScreenshotCleaner.TAG_AUTO_CLEAN) }
+    }
+
+    fun setScreenshotAutoCleanDays(days: Int) {
+        settingsRepository.setScreenshotAutoCleanDays(days)
+        screenshotAutoCleanDays.intValue = days
     }
 
     fun setFaceUnlockAmbientThreshold(value: Float) {

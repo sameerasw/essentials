@@ -16,6 +16,7 @@ import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
@@ -2950,30 +2951,50 @@ object FeatureRegistry {
                 ) = viewModel.setFaceUnlockBrightnessEnabled(enabled)
             },
             object : Feature(
-                id = "Screenshot share cleanup",
-                title = R.string.feat_screenshot_share_cleanup_title,
+                id = "Screenshots",
+                title = R.string.feat_screenshots_title,
                 iconRes = R.drawable.rounded_screenshot_region_24,
                 category = R.string.cat_tools,
-                description = R.string.feat_screenshot_share_cleanup_desc,
-                aboutDescription = R.string.about_desc_screenshot_share_cleanup,
+                description = R.string.feat_screenshots_desc,
+                aboutDescription = R.string.about_desc_screenshots,
                 permissionKeys = listOf("ACCESSIBILITY", "STORAGE"),
-                hasMoreSettings = false,
+                showToggle = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.feat_screenshot_share_cleanup_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_share_cleanup_enabled",
+                        ),
+                        SearchSetting(
+                            R.string.screenshot_share_cleanup_delay_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_share_cleanup_delay",
+                        ),
+                        SearchSetting(
+                            R.string.screenshot_auto_clean_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_auto_clean_enabled",
+                        ),
+                        SearchSetting(
+                            R.string.screenshot_auto_clean_days_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_auto_clean_days",
+                        ),
+                    ),
                 parentFeatureId = "Security",
             ) {
-                override fun isEnabled(viewModel: MainViewModel) = viewModel.isScreenshotShareCleanupEnabled.value
-
-                override fun isToggleEnabled(
-                    viewModel: MainViewModel,
-                    context: Context,
-                ) = viewModel.isAccessibilityEnabled.value && viewModel.isStoragePermissionGranted.value
+                override fun isEnabled(viewModel: MainViewModel) =
+                    viewModel.isScreenshotShareCleanupEnabled.value || viewModel.isScreenshotAutoCleanEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,
                     context: Context,
                     enabled: Boolean,
-                ) = viewModel.setScreenshotShareCleanupEnabled(enabled)
+                ) {}
 
-                override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
+                override fun isDeviceSupported(context: Context) =
+                    DeviceUtils.isGoogleDevice() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
             },
             object : Feature(
                 id = "Lockdown mode",

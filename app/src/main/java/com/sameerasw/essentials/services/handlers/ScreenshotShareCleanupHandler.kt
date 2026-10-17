@@ -4,23 +4,20 @@
  *
  * Feature Module: Background Services & Receivers
  * File: ScreenshotShareCleanupHandler.kt
- * Description: Moves a screenshot to the trash after it is shared from the screenshot preview.
+ * Description: Moves a screenshot to the trash after it is shared from the screenshot preview, right away or after a delay.
  */
 
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
 import android.content.ComponentName
-import android.content.ContentUris
-import android.content.ContentValues
 import android.content.res.Resources
-import android.net.Uri
-import android.os.Environment
-import android.provider.MediaStore
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.utils.ScreenshotCleaner
+import com.sameerasw.essentials.utils.ScreenshotCleanupNotifier
 import com.sameerasw.essentials.utils.ScreenshotShareTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +31,7 @@ class ScreenshotShareCleanupHandler(
 ) {
     private val settings = SettingsRepository(service)
     private val tracker by lazy { ScreenshotShareTracker(SHARE_SHEET, systemImageEditorPackage() ?: MARKUP) }
-    private var screenshotUri: Uri? = null
+    private var screenshotId: Long? = null
 
     private val shareDescription by lazy { systemUiString("screenshot_share_description") ?: "Share screenshot" }
 
@@ -46,8 +43,8 @@ class ScreenshotShareCleanupHandler(
         if (event.packageName == SYSTEM_UI && event.contentDescription?.startsWith(shareDescription) == true) {
             val now = System.currentTimeMillis()
             tracker.onShareTapped(now, foregroundPackage)
-            screenshotUri = null
-            scope.launch(Dispatchers.IO) { screenshotUri = findScreenshot(now) }
+            screenshotId = null
+            scope.launch(Dispatchers.IO) { screenshotId = findScreenshot(now) }
         }
     }
 
@@ -55,53 +52,41 @@ class ScreenshotShareCleanupHandler(
         if (packageName == null) return
         val sharedAt = tracker.sharedAt
         if (tracker.onForegroundPackage(packageName, System.currentTimeMillis())) {
-            trashScreenshot(screenshotUri, sharedAt)
+            trashScreenshot(screenshotId, sharedAt)
         }
     }
 
     fun onScreenOff() = tracker.onScreenOff()
 
     private fun trashScreenshot(
-        capturedUri: Uri?,
+        capturedId: Long?,
         sharedAt: Long,
     ) {
         scope.launch {
-            delay(TRASH_DELAY_MS)
-            val trashed =
+            val delayMinutes = settings.getScreenshotShareCleanupDelayMinutes()
+            if (delayMinutes <= 0) delay(TRASH_DELAY_MS)
+            val outcome =
                 withContext(Dispatchers.IO) {
-                    val uri = capturedUri ?: findScreenshot(sharedAt) ?: return@withContext false
-                    runCatching {
-                        val values = ContentValues().apply { put(MediaStore.MediaColumns.IS_TRASHED, 1) }
-                        service.contentResolver.update(uri, values, null) > 0
-                    }.getOrDefault(false)
+                    val mediaId = capturedId ?: findScreenshot(sharedAt) ?: return@withContext null
+                    ScreenshotCleanupNotifier.dismiss(service, mediaId)
+                    if (delayMinutes > 0) {
+                        ScreenshotCleaner.schedule(service, mediaId, delayMinutes.toLong(), ScreenshotCleaner.TAG_SHARED)
+                        return@withContext R.string.screenshot_share_cleanup_scheduled
+                    }
+                    ScreenshotCleaner.cancel(service, mediaId)
+                    if (ScreenshotCleaner.trash(service, mediaId)) R.string.screenshot_share_cleanup_trashed else null
                 }
-            if (trashed) {
-                Toast.makeText(service, R.string.screenshot_share_cleanup_trashed, Toast.LENGTH_SHORT).show()
-            }
+            outcome?.let { Toast.makeText(service, it, Toast.LENGTH_SHORT).show() }
         }
     }
 
-    private fun findScreenshot(sharedAt: Long): Uri? {
-        val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val selection =
-            "${MediaStore.MediaColumns.RELATIVE_PATH} = ? AND ${MediaStore.MediaColumns.DATE_ADDED} BETWEEN ? AND ?"
+    private fun findScreenshot(sharedAt: Long): Long? {
         val sharedAtSeconds = sharedAt / 1000
-        val args =
-            arrayOf(
-                SCREENSHOTS_PATH,
-                (sharedAtSeconds - SCREENSHOT_LOOKBACK_SECONDS).toString(),
-                (sharedAtSeconds + SCREENSHOT_LOOKAHEAD_SECONDS).toString(),
-            )
-        return service.contentResolver
-            .query(
-                collection,
-                arrayOf(MediaStore.MediaColumns._ID),
-                selection,
-                args,
-                "${MediaStore.MediaColumns.DATE_ADDED} DESC",
-            )?.use { cursor ->
-                if (cursor.moveToFirst()) ContentUris.withAppendedId(collection, cursor.getLong(0)) else null
-            }
+        return ScreenshotCleaner.findScreenshotAddedBetween(
+            service,
+            sharedAtSeconds - SCREENSHOT_LOOKBACK_SECONDS,
+            sharedAtSeconds + SCREENSHOT_LOOKAHEAD_SECONDS,
+        )
     }
 
     private fun systemUiString(name: String): String? =
@@ -122,7 +107,6 @@ class ScreenshotShareCleanupHandler(
         private const val SYSTEM_UI = "com.android.systemui"
         private const val SHARE_SHEET = "com.android.intentresolver"
         private const val MARKUP = "com.google.android.markup"
-        private val SCREENSHOTS_PATH = "${Environment.DIRECTORY_PICTURES}/${Environment.DIRECTORY_SCREENSHOTS}/"
         private const val SCREENSHOT_LOOKBACK_SECONDS = 120L
         private const val SCREENSHOT_LOOKAHEAD_SECONDS = 5L
         private const val TRASH_DELAY_MS = 60_000L

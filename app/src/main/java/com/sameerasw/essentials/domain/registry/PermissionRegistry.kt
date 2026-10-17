@@ -199,9 +199,10 @@ fun initPermissionRegistry() {
     // AOD Wallpaper feature
     PermissionRegistry.register("STORAGE", R.string.feat_aod_wallpaper_title)
 
-    // Screenshot share cleanup feature
-    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_screenshot_share_cleanup_title)
-    PermissionRegistry.register("STORAGE", R.string.feat_screenshot_share_cleanup_title)
+    // Screenshots feature
+    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_screenshots_title)
+    PermissionRegistry.register("STORAGE", R.string.feat_screenshots_title)
+    PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_screenshots_title)
 
     // Pixel Search features
     PermissionRegistry.register("STORAGE", R.string.pixel_search_results_files_title)
