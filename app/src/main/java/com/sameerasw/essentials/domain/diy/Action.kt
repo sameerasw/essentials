@@ -157,6 +157,14 @@ sealed interface Action {
     }
 
     @Keep
+    data class RunMacro(
+        @SerializedName("macroId") val macroId: String = "",
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_run_macro
+        override val icon: Int get() = R.drawable.rounded_bolt_24
+    }
+
+    @Keep
     data object TurnOffLowPower : Action {
         override val title: Int = R.string.diy_action_low_power_off
         override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24

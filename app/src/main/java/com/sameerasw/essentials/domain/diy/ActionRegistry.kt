@@ -141,4 +141,10 @@ object ActionRegistry {
                 ),
             ),
         ) + getCategories(sdkInt, screenOnOnly = true)
+
+    // Saved macros as RunMacro actions, or null when there are none
+    fun getMacroCategory(): ActionCategory? =
+        DIYRepository.macros.value
+            .takeIf { it.isNotEmpty() }
+            ?.let { macros -> ActionCategory(R.string.diy_category_macros, macros.map { Action.RunMacro(it.id) }) }
 }

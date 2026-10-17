@@ -63,6 +63,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.diy.displayName
 import com.sameerasw.essentials.domain.model.LockscreenShortcutSide
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.island.service.OverlayLifecycleOwner
@@ -240,7 +241,7 @@ class LockscreenShortcutsHandler(
                 else -> null
             }
         val label =
-            service.getString(R.string.lockscreen_shortcut_content_desc, app?.label ?: service.getString(action.title))
+            service.getString(R.string.lockscreen_shortcut_content_desc, app?.label ?: action.displayName(service))
         container.addView(
             ComposeView(service).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)

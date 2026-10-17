@@ -41,6 +41,7 @@ import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.controller.HotspotController
 import com.sameerasw.essentials.domain.controller.ZenModeController
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.RippleConfig
@@ -171,6 +172,7 @@ object CombinedActionExecutor {
                 is Action.TurnOnCaffeinate -> CaffeinateController.start(context)
                 is Action.TurnOffCaffeinate -> CaffeinateController.cancelAll(context)
                 is Action.Wait -> delay(action.seconds * 1000L)
+                is Action.RunMacro -> runMacro(context, action)
                 is Action.TurnOffLowPower -> setLowPowerMode(context, false)
                 is Action.SetChargingMode ->
                     com.sameerasw.essentials.utils.battery.ChargingModeUtil
@@ -1031,6 +1033,20 @@ object CombinedActionExecutor {
                 }
             }
         }
+    }
+
+    private suspend fun runMacro(
+        context: Context,
+        action: Action.RunMacro,
+    ) {
+        DIYRepository.init(context)
+        val macro = DIYRepository.getMacro(action.macroId)
+        if (macro == null) {
+            AutomationFailureNotifier.notifyFailure(context, action, context.getString(R.string.diy_macro_not_found))
+            return
+        }
+        // Macros can't contain macros; skipping them rules out loops from edited JSON
+        executeAll(context, macro.actionList.filterNot { it is Action.RunMacro })
     }
 
     private fun toggleFlashlight(
