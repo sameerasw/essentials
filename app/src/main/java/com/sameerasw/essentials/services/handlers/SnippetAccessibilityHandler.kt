@@ -288,6 +288,11 @@ class SnippetAccessibilityHandler(
         val onExpand = { expandSnippet(snippet) }
 
         when (mode) {
+            SettingsRepository.SNIPPETS_DISPLAY_NONE -> {
+                hideFloatingPill()
+                islandCoordinator?.hideSnippet()
+                duoOverlayHandler?.hideSnippetSuggestion()
+            }
             SettingsRepository.SNIPPETS_DISPLAY_FLOATING_PILL -> {
                 islandCoordinator?.hideSnippet()
                 duoOverlayHandler?.hideSnippetSuggestion()

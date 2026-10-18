@@ -3592,6 +3592,8 @@
     <string name="snippets_universal_floating_pill_desc">Show floating pill above keyboard when trigger prefix is typed</string>
     <string name="snippets_display_style_title">Suggestion display style</string>
     <string name="snippets_display_style_desc">Choose where snippet suggestions appear when typing</string>
+    <string name="snippets_display_none_title">None (Silent)</string>
+    <string name="snippets_display_none_desc">Expand on space only without showing suggestion overlays</string>
     <string name="snippets_display_pill_title">Floating Pill</string>
     <string name="snippets_display_pill_desc">Floating chip positioned directly above keyboard</string>
     <string name="snippets_display_island_title">Dynamic Island</string>

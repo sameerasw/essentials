@@ -372,12 +372,14 @@ fun KeyboardSettingsUI(
 
             if (universalOn) {
                 val modeLabel = when (suggestionDisplayMode) {
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_NONE -> stringResource(R.string.snippets_display_none_title)
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
                     else -> stringResource(R.string.snippets_display_pill_title)
                 }
                 val modeIcon = when (suggestionDisplayMode) {
+                    com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_NONE -> R.drawable.rounded_visibility_off_24
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> R.drawable.rounded_bolt_24
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DUO -> R.drawable.rounded_circle_24
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_BOTH -> R.drawable.rounded_auto_awesome_24

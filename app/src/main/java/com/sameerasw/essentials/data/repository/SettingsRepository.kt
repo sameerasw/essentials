@@ -821,6 +821,7 @@ class SettingsRepository(
         const val KEY_SNIPPETS_UNIVERSAL_AUTO_EXPAND = "snippets_universal_auto_expand"
         const val KEY_SNIPPETS_UNIVERSAL_FLOATING_PILL = "snippets_universal_floating_pill"
         const val KEY_SNIPPETS_SUGGESTION_DISPLAY_MODE = "snippets_suggestion_display_mode"
+        const val SNIPPETS_DISPLAY_NONE = "none"
         const val SNIPPETS_DISPLAY_FLOATING_PILL = "pill"
         const val SNIPPETS_DISPLAY_DYNAMIC_ISLAND = "island"
         const val SNIPPETS_DISPLAY_DUO = "duo"

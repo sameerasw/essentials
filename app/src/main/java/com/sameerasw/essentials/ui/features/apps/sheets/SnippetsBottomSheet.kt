@@ -243,12 +243,14 @@ fun SnippetsBottomSheet(
                         )
 
                         val modeLabel = when (suggestionDisplayMode) {
+                            SettingsRepository.SNIPPETS_DISPLAY_NONE -> stringResource(R.string.snippets_display_none_title)
                             SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
                             SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
                             SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
                             else -> stringResource(R.string.snippets_display_pill_title)
                         }
                         val modeIcon = when (suggestionDisplayMode) {
+                            SettingsRepository.SNIPPETS_DISPLAY_NONE -> R.drawable.rounded_visibility_off_24
                             SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> R.drawable.rounded_bolt_24
                             SettingsRepository.SNIPPETS_DISPLAY_DUO -> R.drawable.rounded_circle_24
                             SettingsRepository.SNIPPETS_DISPLAY_BOTH -> R.drawable.rounded_auto_awesome_24
@@ -614,6 +616,14 @@ fun SnippetDisplayStyleSheet(
             RoundedCardContainer(spacing = 2.dp) {
                 val options =
                     listOf(
+                        Triple(
+                            SettingsRepository.SNIPPETS_DISPLAY_NONE,
+                            Pair(
+                                stringResource(R.string.snippets_display_none_title),
+                                stringResource(R.string.snippets_display_none_desc),
+                            ),
+                            R.drawable.rounded_visibility_off_24,
+                        ),
                         Triple(
                             SettingsRepository.SNIPPETS_DISPLAY_FLOATING_PILL,
                             Pair(

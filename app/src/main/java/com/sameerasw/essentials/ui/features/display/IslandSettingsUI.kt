@@ -249,6 +249,7 @@ fun IslandSettingsUI(
                 iconRes = R.drawable.rounded_text_snippet_24,
                 title = stringResource(R.string.label_keyboard_snippets),
                 description = when (snippetDisplayMode) {
+                    SettingsRepository.SNIPPETS_DISPLAY_NONE -> stringResource(R.string.snippets_display_none_title)
                     SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
                     SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
                     SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
