@@ -389,7 +389,7 @@
     <string name="feat_screen_off_widget_desc">用于关闭屏幕的隐形小组件</string>
     <string name="feat_statusbar_icons_title">状态栏图标</string>
     <string name="feat_statusbar_icons_desc">控制状态栏图标的可见性</string>
-    <string name="feat_caffeinate_title">屏幕常亮</string>
+    <string name="feat_caffeinate_title">保持唤醒</string>
     <string name="feat_caffeinate_desc">保持屏幕常亮</string>
     <string name="feat_maps_power_saving_title">地图省电模式</string>
     <string name="feat_maps_power_saving_desc">适用于任何 Android 设备</string>
@@ -1641,7 +1641,7 @@
     <string name="island_hide_on_shade_title">下拉状态栏时隐藏图标</string>
     <string name="duo_hide_when_locked_title">锁定时隐藏</string>
     <string name="duo_action_tap_title">輕點</string>
-    <string name="duo_action_double_tap_title">双击</string>
+    <string name="duo_action_double_tap_title">點兩下</string>
     <string name="duo_action_swipe_down_title">下滑</string>
     <string name="feat_allow_overlays_in_settings_desc">允許各種應用程式在系統設定上方繪製覆蓋層</string>
     <string name="cat_navigation">導覽操作</string>
@@ -1652,8 +1652,8 @@
     <string name="island_pulse_shadow_size_title">边框发散光影</string>
     <string name="island_pulse_shadow_duration_title">持续时间</string>
     <string name="island_pulse_shadow_spread_title">扩散范围</string>
-    <string name="duo_camera_offset_x_title">水平位置</string>
-    <string name="duo_camera_offset_y_title">垂直位置</string>
+    <string name="duo_camera_offset_x_title">平移</string>
+    <string name="duo_camera_offset_y_title">水平</string>
     <string name="duo_ring_radius_title">圆环半径</string>
     <string name="duo_arc_thickness_title">圆环粗细</string>
     <string name="duo_dot_size_title">播放器大小</string>
@@ -1665,7 +1665,7 @@
     <string name="duo_desc">它不能被折叠</string>
     <string name="feat_status_glance_title">状态快照</string>
     <string name="feat_status_glance_desc">以覆盖层的形式</string>
-    <string name="feat_aod_wallpaper_title">息屏壁纸</string>
+    <string name="feat_aod_wallpaper_title">息屏的壁纸</string>
     <string name="duo_title">Duo（镜头交互环）</string>
     <string name="island_brief_title">简报</string>
     <string name="island_brief_desc">获取当前正在发生事情的简报</string>
@@ -1717,4 +1717,14 @@
     <string name="feat_widget_stack_desc">将多个小部件叠放在一起，并在它们之间滑动切换</string>
     <string name="feat_face_unlock_brightness_title">人脸补光</string>
     <string name="feat_face_unlock_brightness_desc">在较暗时自动调高亮度</string>
+    <string name="island_preview_stage_title">预览</string>
+    <string name="app_colors_auto">自动</string>
+    <string name="island_cutout_gap_title">摄像头宽度</string>
+    <string name="island_keep_on_landscape_title">保持显示</string>
+    <string name="island_timeout_title">显示时长</string>
+    <string name="feat_aod_wallpaper_desc">通过使用叠加层</string>
+    <string name="watch_esim_install_title">安装 eSIM</string>
+    <string name="watch_esim_install_desc">即使在不支持的地区/国家</string>
+    <string name="feat_hilight_title">高光</string>
+    <string name="feat_activity_launcher_title">活动启动器</string>
 </resources>
