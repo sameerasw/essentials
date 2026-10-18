@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -66,6 +67,24 @@ fun IslandNotificationHubOptionsBottomSheet(
                     },
                     title = R.string.island_notif_hub_order_title,
                     modifier = Modifier.fillMaxWidth(),
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notifications_off_24,
+                    title = stringResource(R.string.island_notif_hub_include_silent),
+                    isChecked = viewModel.isIslandNotifHubIncludeSilent.value,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifHubIncludeSilent(it)
+                    },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_apps_24,
+                    title = stringResource(R.string.island_notif_hub_group_apps),
+                    isChecked = viewModel.isIslandNotifHubGroupByApps.value,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifHubGroupByApps(it)
+                    },
                 )
                 ConfigSliderItem(
                     title = stringResource(R.string.island_hide_icon_notifications),

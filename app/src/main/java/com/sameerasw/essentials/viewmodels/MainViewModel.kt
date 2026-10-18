@@ -290,6 +290,8 @@ class MainViewModel : ViewModel() {
     val isIslandShowNotifications = mutableStateOf(true)
     val isIslandNotifHub = mutableStateOf(false)
     val islandNotifHubIcons = mutableIntStateOf(0)
+    val isIslandNotifHubIncludeSilent = mutableStateOf(false)
+    val isIslandNotifHubGroupByApps = mutableStateOf(false)
     val islandNotifHubOrder = mutableStateOf(SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC)
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
@@ -987,6 +989,12 @@ class MainViewModel : ViewModel() {
                         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB -> syncIslandNotifHubState()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_SILENT ->
+                        isIslandNotifHubIncludeSilent.value = settingsRepository.isIslandNotifHubIncludeSilent()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_GROUP ->
+                        isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB_ORDER ->
                         islandNotifHubOrder.value = settingsRepository.getIslandNotifHubOrder()
@@ -2559,6 +2567,8 @@ class MainViewModel : ViewModel() {
         isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
         islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
         islandNotifHubOrder.value = settingsRepository.getIslandNotifHubOrder()
+        isIslandNotifHubIncludeSilent.value = settingsRepository.isIslandNotifHubIncludeSilent()
+        isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
@@ -6017,6 +6027,16 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNotifHubEnabled(enabled)
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
         syncIslandNotifHubState()
+    }
+
+    fun setIslandNotifHubIncludeSilent(enabled: Boolean) {
+        isIslandNotifHubIncludeSilent.value = enabled
+        settingsRepository.setIslandNotifHubIncludeSilent(enabled)
+    }
+
+    fun setIslandNotifHubGroupByApps(enabled: Boolean) {
+        isIslandNotifHubGroupByApps.value = enabled
+        settingsRepository.setIslandNotifHubGroupByApps(enabled)
     }
 
     fun setIslandNotifHubOrder(value: String) {

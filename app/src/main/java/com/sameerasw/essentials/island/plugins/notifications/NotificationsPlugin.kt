@@ -56,6 +56,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_HUB,
         SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
         SettingsRepository.KEY_ISLAND_NOTIF_HUB_ORDER,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_SILENT,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_GROUP,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
         SettingsRepository.KEY_ISLAND_OTP_ENABLED,
@@ -459,8 +461,9 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun bubbleCells(): Int {
         if (!hub() || settings.getIslandNotifQueueStyle() != SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) return 1
         val cap = settings.getIslandNotifHubIcons().let { if (it == 0) AUTO_CELL_ICONS else it }
-        val shown = alerts.size.coerceIn(1, cap)
-        val overflow = if (alerts.size > cap) 0.3f else 0f
+        val count = hubEntries().size
+        val shown = count.coerceIn(1, cap)
+        val overflow = if (count > cap) 0.3f else 0f
         return ceil(1f + 0.55f * (shown - 1) + overflow).toInt()
     }
 
@@ -471,15 +474,48 @@ class NotificationsPlugin : BaseIslandPlugin() {
         else -> 2
     }
 
-    private fun hubOrdered(): List<ActiveNotificationAlert> {
+    private class HubEntry(val key: String, val alerts: List<ActiveNotificationAlert>, val grouped: Boolean) {
+        val lead = alerts.first()
+        val timestamp = alerts.maxOf { it.timestamp }
+    }
+
+    private fun entryRank(entry: HubEntry) = if (entry.grouped) {
+        if (entry.alerts.all { it.isSilent }) 3 else 2
+    } else {
+        priorityRank(entry.lead)
+    }
+
+    // Live updates and conversations always stand alone, everything else can fold into one entry per app
+    private fun hubEntries(): List<HubEntry> {
+        val shown = alerts
+            .filter { settings.isIslandNotifHubIncludeSilent() || !it.isSilent || it.ongoing }
+            .sortedByDescending { it.timestamp }
+        val entries = if (settings.isIslandNotifHubGroupByApps()) {
+            val standalone = shown.filter { it.ongoing || it.isConversation }.map { HubEntry(it.key, listOf(it), grouped = false) }
+            val groups = shown.filterNot { it.ongoing || it.isConversation }
+                .groupBy { it.packageName }
+                .map { (pkg, members) -> if (members.size == 1) HubEntry(members.first().key, members, grouped = false) else HubEntry("group:$pkg", members, grouped = true) }
+            standalone + groups
+        } else {
+            shown.map { HubEntry(it.key, listOf(it), grouped = false) }
+        }
         val mode = settings.getIslandNotifHubOrder()
-        val recent = alerts.sortedByDescending { it.timestamp }
+        val recent = entries.sortedByDescending { it.timestamp }
         if (mode == SettingsRepository.ISLAND_NOTIF_HUB_ORDER_RECENT) return recent
-        val byPriority = recent.sortedBy(::priorityRank)
+        val byPriority = recent.sortedBy(::entryRank)
         val pinned = pinnedKey
             ?.takeIf { mode == SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC }
-            ?.let { key -> byPriority.firstOrNull { it.key == key } }
+            ?.let { key -> byPriority.firstOrNull { entry -> entry.alerts.any { it.key == key } } }
         return if (pinned != null) listOf(pinned) + byPriority.filter { it !== pinned } else byPriority
+    }
+
+    private fun hubIconFor(entry: HubEntry): StackIcon {
+        val highlight = pinnedKey?.let { key -> entry.alerts.any { it.key == key } } == true
+        if (!entry.grouped) return stackIconFor(entry.lead, current = false, highlight = highlight)
+        val icon = entry.lead.appIcon ?: entry.lead.icon
+        return StackIcon(entry.key, onSelect = { select(entry.lead.key) }, highlight = highlight) { size ->
+            IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
+        }
     }
 
     private fun scheduleTimeout() {
@@ -554,10 +590,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 onDismiss = { clearWaiting() },
             )
             minimal -> null
+            hub() && hubEntries().isEmpty() -> null
             settings.isIslandCatchUpEnabled() -> SideBubble(
                 priority = SideBubblePriority.NOTIFICATION,
                 icons = if (hub()) {
-                    hubOrdered().map { stackIconFor(it, current = false, highlight = it.key == pinnedKey) }
+                    hubEntries().map { hubIconFor(it) }
                 } else {
                     alerts.map { stackIconFor(it, current = false) }
                 },
