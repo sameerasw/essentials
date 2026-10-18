@@ -2670,7 +2670,6 @@
     <string name="pref_pixel_search_blur_desc">Blur the background of search results</string>
     <string name="pixel_search_blur_options_title">Blur options</string>
     <string name="pref_pixel_search_wallpaper_bg_title">Show wallpaper in background</string>
-    <string name="pref_pixel_search_wallpaper_bg_desc">Blur the home screen wallpaper instead of the active screen</string>
     <string name="pref_pixel_search_blur_intensity_title">Blur intensity</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
