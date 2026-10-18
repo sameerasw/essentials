@@ -170,6 +170,37 @@ class PixelSearchResultsActivity : ComponentActivity() {
             window.isNavigationBarContrastEnforced = false
         }
 
+        applyBlur()
+
+        val initialQuery = intent.getStringExtra(SearchManager.QUERY)
+            ?: intent.getStringExtra("query")
+            ?: ""
+
+        setContent {
+            val repository = remember { SettingsRepository(this) }
+            val isPitchBlack by repository.isPitchBlackThemeEnabled.collectAsState(initial = false)
+
+            EssentialsTheme(pitchBlackTheme = isPitchBlack) {
+                PixelSearchResultsScreen(
+                    initialQuery = initialQuery,
+                    onFinish = { finish() },
+                )
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyBlur()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        applyBlur()
+    }
+
+    private fun applyBlur() {
         val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
         val dimAmount = if (isSystemDark) 0.2f else 0.08f
 
@@ -189,27 +220,6 @@ class PixelSearchResultsActivity : ComponentActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             window.setDimAmount(if (isSystemDark) 0.35f else 0.15f)
         }
-
-        val initialQuery = intent.getStringExtra(SearchManager.QUERY)
-            ?: intent.getStringExtra("query")
-            ?: ""
-
-        setContent {
-            val repository = remember { SettingsRepository(this) }
-            val isPitchBlack by repository.isPitchBlackThemeEnabled.collectAsState(initial = false)
-
-            EssentialsTheme(pitchBlackTheme = isPitchBlack) {
-                PixelSearchResultsScreen(
-                    initialQuery = initialQuery,
-                    onFinish = { finish() },
-                )
-            }
-        }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
     }
 }
 
@@ -644,7 +654,9 @@ fun PixelSearchResultsScreen(
         }
     }
 
-    val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.55f)
+    val isBlurEnabled = remember { repository.isPixelSearchBlurEnabled() }
+    val scrimAlpha = if (isBlurEnabled) 0.55f else 0.85f
+    val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = scrimAlpha)
 
     Box(
         modifier = Modifier
