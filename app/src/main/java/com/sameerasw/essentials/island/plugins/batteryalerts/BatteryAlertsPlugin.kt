@@ -24,6 +24,7 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
     override val id = "battery_alerts_plugin"
 
     override val settingKeys = setOf(
+        SettingsRepository.KEY_ISLAND_SHOW_BATTERY,
         SettingsRepository.KEY_ISLAND_SHOW_BATTERY_ALERTS,
         SettingsRepository.KEY_ISLAND_BATTERY_ALERT_CHARGING,
         SettingsRepository.KEY_ISLAND_BATTERY_ALERT_LOW,
@@ -55,7 +56,10 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
                 readBattery(intent)
                 val newAlertState = currentAlertState()
 
-                if ((isCharging && !wasCharging && newAlertState == "charging") || (newAlertState != prevAlertState && newAlertState.isNotEmpty())) {
+                if (!enabled()) {
+                    if (peeking) stopPeek()
+                    render()
+                } else if ((isCharging && !wasCharging && newAlertState == "charging") || (newAlertState != prevAlertState && newAlertState.isNotEmpty())) {
                     peekAlert()
                 } else if (!peeking) {
                     render()
@@ -80,7 +84,16 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
 
     override fun refresh() {
         readBattery(null)
+        if (!enabled() && peeking) stopPeek()
         render()
+    }
+
+    private fun enabled() =
+        settings.isIslandShowBatteryEnabled() && settings.isIslandShowBatteryAlertsEnabled()
+
+    private fun stopPeek() {
+        ctx?.mainHandler?.removeCallbacks(endPeek)
+        peeking = false
     }
 
     private fun readBattery(intent: Intent?) {
@@ -140,6 +153,7 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
 
     private fun peekAlert() {
         val c = ctx ?: return
+        if (!enabled()) return
         val duration = settings.getIslandPeekDurationMs()
         peeking = true
         render()
@@ -154,8 +168,7 @@ class BatteryAlertsPlugin : BaseIslandPlugin() {
             return
         }
 
-        val masterEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_SHOW_BATTERY_ALERTS, true)
-        if (!masterEnabled || !peeking || level < 0) {
+        if (!enabled() || !peeking || level < 0) {
             publish(emptyList())
             return
         }

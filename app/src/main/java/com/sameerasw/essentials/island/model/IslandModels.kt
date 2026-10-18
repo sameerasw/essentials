@@ -77,6 +77,7 @@ class InteractionOverrides(
     val onTap: (() -> Boolean)? = null,
     val onLongPress: (() -> Any)? = null,
     val onExpandedTap: (() -> Boolean)? = null,
+    val onLineTap: (() -> Boolean)? = null,
 ) {
     companion object {
         val Default = InteractionOverrides()

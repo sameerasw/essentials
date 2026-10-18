@@ -26,6 +26,7 @@ import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
+import com.sameerasw.essentials.utils.DuoBatteryLevels
 import com.sameerasw.essentials.domain.model.HilightEffect
 import com.sameerasw.essentials.domain.model.HilightProgressColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -493,6 +494,8 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_IDLE_COLOR = "island_battery_idle_color"
         const val KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED = "duo_battery_critical_color_enabled"
         const val KEY_DUO_BATTERY_CRITICAL_COLOR = "duo_battery_critical_color"
+        const val KEY_DUO_BATTERY_LOW_LEVEL = "duo_battery_low_level"
+        const val KEY_DUO_BATTERY_CRITICAL_LEVEL = "duo_battery_critical_level"
         const val KEY_DUO_SHOW_NETWORKS = "duo_show_networks"
         const val KEY_DUO_DIFFERENTIATE_WIFI = "duo_differentiate_wifi"
         const val KEY_DUO_SHOW_TIME = "duo_show_time"
@@ -587,6 +590,7 @@ class SettingsRepository(
         const val KEY_ISLAND_DISABLE_INTERACTIONS_IN_FULLSCREEN = "island_disable_interactions_in_fullscreen"
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
+        const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
         const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
@@ -676,6 +680,11 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_FILTER_APPS_LIST = "island_notif_filter_apps_list"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
+        const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
+        const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
+        const val KEY_ISLAND_OTP_DISMISS_AFTER_COPY = "island_otp_dismiss_after_copy"
+        const val KEY_ISLAND_OTP_BYPASS_FILTER = "island_otp_bypass_filter"
+        const val KEY_ISLAND_OTP_TIMEOUT_MS = "island_otp_timeout_ms"
         const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
         const val KEY_ISLAND_BORDER_OUTLINE_COLOR = "island_border_outline_color"
         const val KEY_ISLAND_BORDER_OUTLINE_DYNAMIC = "island_border_outline_dynamic"
@@ -3913,6 +3922,14 @@ class SettingsRepository(
     fun getDuoBatteryCriticalColor(): String = getString(KEY_DUO_BATTERY_CRITICAL_COLOR, "#F44336") ?: "#F44336"
     fun setDuoBatteryCriticalColor(colorHex: String) = putString(KEY_DUO_BATTERY_CRITICAL_COLOR, colorHex)
 
+    fun getDuoBatteryLowLevel(): Int = getInt(KEY_DUO_BATTERY_LOW_LEVEL, DuoBatteryLevels.DEFAULT_LOW)
+    fun getDuoBatteryCriticalLevel(): Int = getInt(KEY_DUO_BATTERY_CRITICAL_LEVEL, DuoBatteryLevels.DEFAULT_CRITICAL)
+
+    fun setDuoBatteryLevels(low: Int, critical: Int) {
+        putInt(KEY_DUO_BATTERY_LOW_LEVEL, low)
+        putInt(KEY_DUO_BATTERY_CRITICAL_LEVEL, critical)
+    }
+
     fun isDuoShowNetworksEnabled(): Boolean = getBoolean(KEY_DUO_SHOW_NETWORKS, true)
     fun setDuoShowNetworksEnabled(enabled: Boolean) = putBoolean(KEY_DUO_SHOW_NETWORKS, enabled)
 
@@ -4289,6 +4306,10 @@ class SettingsRepository(
 
     fun setIslandBondEdgeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BOND_EDGE, enabled)
 
+    fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
+
+    fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
+
     fun getIslandLandscapeTopSpacing(): Float = getFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, 0f)
 
     fun setIslandLandscapeTopSpacing(value: Float) = putFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, value)
@@ -4389,6 +4410,14 @@ class SettingsRepository(
 
     fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
     fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
+
+    fun isIslandOtpEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_ENABLED, false)
+    fun setIslandOtpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_OTP_ENABLED, enabled)
+    fun isIslandOtpTapToCopyEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_TAP_TO_COPY, true)
+    fun isIslandOtpDismissAfterCopyEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_DISMISS_AFTER_COPY, false)
+    fun isIslandOtpBypassFilterEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_BYPASS_FILTER, true)
+    fun getIslandOtpTimeoutMs(): Long = getLong(KEY_ISLAND_OTP_TIMEOUT_MS, 60_000L)
+    fun setIslandOtpTimeoutMs(ms: Long) = putLong(KEY_ISLAND_OTP_TIMEOUT_MS, ms)
 
     fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
     fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, enabled)

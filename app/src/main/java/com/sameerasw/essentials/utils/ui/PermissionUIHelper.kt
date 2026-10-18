@@ -23,6 +23,7 @@ import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.utils.PermissionUtils
+import kotlinx.coroutines.launch
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 object PermissionUIHelper {
@@ -516,6 +517,37 @@ object PermissionUIHelper {
                     isGranted = isGranted,
                 )
             }
+
+            AppPermission.SENSITIVE_NOTIFICATIONS ->
+                PermissionItem(
+                    iconRes = permission.iconRes,
+                    title = permission.titleRes,
+                    description = R.string.perm_sensitive_notifications_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures(permission),
+                    actionLabel = if (viewModel.isSensitiveNotificationsGranted.value) R.string.perm_action_granted else R.string.perm_action_copy_adb,
+                    action = {
+                        val adbCommand = "adb shell appops set ${context.packageName} RECEIVE_SENSITIVE_NOTIFICATIONS allow"
+                        val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                        clipboard.setPrimaryClip(ClipData.newPlainText("adb_command", adbCommand))
+                    },
+                    secondaryActionLabel = R.string.perm_action_check,
+                    secondaryAction = { viewModel.check(context) },
+                    isGranted = viewModel.isSensitiveNotificationsGranted.value,
+                    shizukuActionLabel = if (viewModel.isRootEnabled.value) R.string.perm_action_grant_root else R.string.perm_action_grant_shizuku,
+                    shizukuActionEnabled =
+                        if (viewModel.isRootEnabled.value) {
+                            viewModel.isRootAvailable.value
+                        } else {
+                            ShizukuUtils.hasPermission()
+                        },
+                    shizukuAction = {
+                        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                            PermissionGrantUtil.grantSensitiveNotifications(context)
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { viewModel.check(context) }
+                        }
+                    },
+                    instructions = R.string.perm_sensitive_notifications_instructions,
+                )
 
             AppPermission.NOTIFICATION_BUBBLES ->
                 PermissionItem(

@@ -61,4 +61,18 @@ class CompactLayoutEngineTest {
 
     @Test fun soloCellIgnoredWhenAnchoredToSide() =
         assertEquals("| notif.icon", visual(listOf(chatCatchUp), CameraAnchor.Start))
+
+    private fun withBubble(entries: List<CompactEntry>, balance: Boolean): String {
+        val a = CompactLayoutEngine.arrange(entries, CameraAnchor.Center, leftExtra = 1, balance = balance)
+        return (a.before.reversed() + "|" + a.after).joinToString(" ")
+    }
+
+    @Test fun bubbleWithoutBalanceKeepsLeftItems() =
+        assertEquals("flash.icon notif.icon | media.eq media.art", withBubble(listOf(catchUp, flash, media), balance = false))
+
+    @Test fun bubbleBalanceMovesLowestPriorityRight() =
+        assertEquals("notif.icon | media.eq media.art flash.icon", withBubble(listOf(catchUp, flash, media), balance = true))
+
+    @Test fun balanceLeavesPinnedOnLeft() =
+        assertEquals("time | media.eq media.art flash.icon", withBubble(listOf(time, flash, media), balance = true))
 }

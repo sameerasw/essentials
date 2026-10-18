@@ -51,6 +51,7 @@ import com.sameerasw.essentials.domain.model.NavigationNotificationData
 import com.sameerasw.essentials.domain.model.NavigationParser
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.domain.model.RippleConfig
+import com.sameerasw.essentials.island.plugins.notifications.OtpExtractor
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.widgets.PixelSearchbarWidget
@@ -82,6 +83,18 @@ class NotificationListener : NotificationListenerService() {
     companion object {
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
         private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
+        private val OTP_SKIPPED_CATEGORIES = setOf(
+            Notification.CATEGORY_CALL,
+            Notification.CATEGORY_TRANSPORT,
+            Notification.CATEGORY_PROGRESS,
+            Notification.CATEGORY_NAVIGATION,
+            Notification.CATEGORY_ALARM,
+            Notification.CATEGORY_STOPWATCH,
+            Notification.CATEGORY_SERVICE,
+            Notification.CATEGORY_SYSTEM,
+            Notification.CATEGORY_STATUS,
+            Notification.CATEGORY_WORKOUT,
+        )
 
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
@@ -304,6 +317,24 @@ class NotificationListener : NotificationListenerService() {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
                 ranking.suppressedVisualEffects and NotificationManager.Policy.SUPPRESSED_EFFECT_PEEK != 0
         return !ranking.matchesInterruptionFilter() || peekSuppressed
+    }
+
+    private fun otpCodeOf(sbn: StatusBarNotification): String? {
+        if (sbn.notification.category in OTP_SKIPPED_CATEGORIES) return null
+        return OtpExtractor.extract(otpSourceText(sbn))
+    }
+
+    private fun otpSourceText(sbn: StatusBarNotification): String {
+        val extras = sbn.notification.extras ?: return ""
+        return listOf(
+            Notification.EXTRA_TITLE,
+            Notification.EXTRA_TITLE_BIG,
+            Notification.EXTRA_TEXT,
+            Notification.EXTRA_BIG_TEXT,
+        ).mapNotNull { extras.getCharSequence(it)?.toString() }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .joinToString("\n")
     }
 
     private fun populateActiveUnreadNotifications() {
@@ -1058,6 +1089,7 @@ class NotificationListener : NotificationListenerService() {
             val alert = extractNotificationAlert(sbn)?.copy(
                 isSilent = isSilentNotification(sbn, rankingMap),
                 blockedByDnd = isBlockedByDnd(sbn, rankingMap),
+                otpCode = otpCodeOf(sbn),
             )
             val callHidden = CallNotificationParser.isCall(sbn) && !SettingsRepository(applicationContext).isIslandShowCallsEnabled()
             if (alert != null && !callHidden) {

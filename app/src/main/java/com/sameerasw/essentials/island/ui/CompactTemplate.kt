@@ -39,6 +39,7 @@ fun CompactTemplate(
     onCellTap: (String) -> Unit,
     onCellLongPress: (String) -> Unit,
     sideBubble: () -> Float = { 0f },
+    bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
 ) {
     val cells = buildMap {
@@ -123,6 +124,22 @@ fun CompactTemplate(
         val squareCell = spec.cellSize.roundToPx()
         val opticalInset = (height * OPTICAL_INSET_RATIO).toInt()
         fun edgeInset(outer: Placeable?) = if (outer != null && outer.width > squareCell) opticalInset else 0
+        if (cameraSlot == 0) {
+            val cells = left + right
+            onSlack(0)
+            if (cells.isEmpty()) return@Layout layout(0, height) {}
+            val pad = ((height - squareCell) / 2).coerceAtLeast(0)
+            val startInset = edgeInset(cells.first())
+            val endInset = edgeInset(cells.last())
+            val width = pad * 2 + startInset + endInset + content(cells)
+            return@Layout layout(width, height) {
+                var x = pad + startInset
+                cells.forEach {
+                    it.place(x, (height - it.height) / 2)
+                    x += it.width + spacing
+                }
+            }
+        }
         if (spec.growDirection != 0) {
             val cells = left + right
             val inset = edgeInset(if (spec.growDirection > 0) cells.lastOrNull() else cells.firstOrNull())
@@ -145,9 +162,12 @@ fun CompactTemplate(
         val needRight = content(right) + rightInset + edge
         val t = if (hasCells) sideBubble().coerceIn(0f, 1f) else 0f
         val mirrored = maxOf(needLeft, needRight)
-        onSlack(needRight - needLeft)
-        val leftSide = (mirrored + (needLeft - mirrored) * t).roundToInt()
-        val rightSide = (mirrored + (needRight - mirrored) * t).roundToInt()
+        val extent = if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0
+        val balancedLeft = if (spec.balanceCompact) maxOf(needLeft, needRight - extent) else needLeft
+        val balancedRight = if (spec.balanceCompact) balancedLeft + extent else needRight
+        onSlack(if (spec.balanceCompact) extent else needRight - needLeft)
+        val leftSide = (mirrored + (balancedLeft - mirrored) * t).roundToInt()
+        val rightSide = (mirrored + (balancedRight - mirrored) * t).roundToInt()
         val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
             var x = spacing + leftInset

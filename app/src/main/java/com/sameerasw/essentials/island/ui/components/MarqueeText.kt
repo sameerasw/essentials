@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
@@ -23,6 +24,17 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MarqueeText(
     text: String,
+    style: TextStyle,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start,
+    fadeStart: Boolean = true,
+    fadeEnd: Boolean = true,
+    fadeWidth: Dp = 14.dp,
+) = MarqueeText(AnnotatedString(text), style, modifier, textAlign, fadeStart, fadeEnd, fadeWidth)
+
+@Composable
+fun MarqueeText(
+    text: AnnotatedString,
     style: TextStyle,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,

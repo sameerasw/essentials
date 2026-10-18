@@ -946,6 +946,8 @@ class DuoOverlayHandler(
                 try {
                     this.batteryPowerSaveColor = Color.parseColor(settingsRepository.getDuoBatteryPowerSaveColor())
                 } catch (_: Exception) {}
+                this.batteryLowLevel = settingsRepository.getDuoBatteryLowLevel()
+                this.batteryCriticalLevel = settingsRepository.getDuoBatteryCriticalLevel()
                 this.isBatteryLowColorEnabled = settingsRepository.isDuoBatteryLowColorEnabled()
                 try {
                     this.batteryLowColor = Color.parseColor(settingsRepository.getDuoBatteryLowColor())

@@ -1008,6 +1008,11 @@ object FeatureRegistry {
                             R.string.island_line_peek_desc,
                             "island_line_stage_enabled",
                         ),
+                        SearchSetting(
+                            R.string.island_balance_compact_title,
+                            R.string.island_section_behavior,
+                            "island_balance_compact",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -1083,6 +1088,31 @@ object FeatureRegistry {
                             R.string.island_catch_up_title,
                             R.string.island_catch_up_desc,
                             "island_catch_up",
+                        ),
+                        SearchSetting(
+                            R.string.island_otp_enabled_title,
+                            R.string.island_otp_enabled_desc,
+                            "island_otp_enabled",
+                        ),
+                        SearchSetting(
+                            R.string.island_otp_tap_to_copy_title,
+                            R.string.island_otp_tap_to_copy_desc,
+                            "island_otp_tap_to_copy",
+                        ),
+                        SearchSetting(
+                            R.string.island_otp_dismiss_after_copy_title,
+                            R.string.island_otp_section,
+                            "island_otp_dismiss_after_copy",
+                        ),
+                        SearchSetting(
+                            R.string.island_otp_timeout_title,
+                            R.string.island_otp_section,
+                            "island_otp_timeout_ms",
+                        ),
+                        SearchSetting(
+                            R.string.island_otp_bypass_filter_title,
+                            R.string.island_otp_bypass_filter_desc,
+                            "island_otp_bypass_filter",
                         ),
                     ),
             ) {
