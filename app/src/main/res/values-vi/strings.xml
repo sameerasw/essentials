@@ -1946,7 +1946,7 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_section_behavior">Hành vi</string>
     <string name="setting_hidden_debugging_title">Hỗ trợ gỡ lỗi ẩn</string>
     <string name="island_always_gestures_title">Cử chỉ luôn khả dụng</string>
-    <string name="island_always_gestures_desc">Giữ cho vùng cử chỉ hoạt động ngay cả khi đảo bị ẩn</string>
+    <string name="island_always_gestures_desc">Giữ cho vùng cử chỉ hoạt động ngay cả khi Island bị ẩn </string>
     <string name="island_keep_on_landscape_title">Duy trì hướng ngang</string>
     <string name="island_balance_compact_title">Cân bằng trực quan island thu gọn</string>
     <string name="island_secondary_bubble_title">Bong bóng phụ</string>
