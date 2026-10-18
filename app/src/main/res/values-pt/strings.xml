@@ -1743,4 +1743,22 @@
     <string name="watchface_hide_battery_desc">Ocultar rastros de arco e indicadores da bateria</string>
     <string name="watchface_hide_device_icons_title">esconder ícones do dispositivo </string>
     <string name="watchface_hide_device_icons_desc">Ocultar ícones de relógio e telefone na parte inferior</string>
+    <string name="watchface_show_complications_title">mostrar compilações </string>
+    <string name="watchface_show_complications_desc">Exibir widgets laterais esquerdo e direito</string>
+    <string name="watchface_complications_on_aod_title">mostrar no AOD</string>
+    <string name="watchface_complications_on_aod_desc">manter compilações visíveis mesmo no AOD</string>
+    <string name="watchface_complication_outline_title">esboço das compilações </string>
+    <string name="watchface_complication_outline_desc">mostrar uma borda circular ao redor dos itens</string>
+    <string name="watchface_left_complication_title">compilação esquerda </string>
+    <string name="watchface_right_complication_title">compilação direita</string>
+    <string name="watchface_show_glow_title">Mostrar brilho</string>
+    <string name="watchface_show_glow_desc">Gradiente dinâmico de destaque superior para eventos e viagens.</string>
+    <string name="watchface_glance_complications_desc">escolha o que mostrar</string>
+    <string name="watchface_glance_comp_battery_alerts_title">alerta de bateria baixa</string>
+    <string name="watchface_glance_comp_battery_alerts_desc">Exibir alerta quando a bateria do relógio ou do telefone estiver abaixo de 20%.</string>
+    <string name="watchface_glance_comp_travel_title">Já chegamos? (Previsão de chegada da viagem)</string>
+    <string name="watchface_glance_comp_travel_desc">mostrar tempo restante/distância para a destinação </string>
+    <string name="watchface_glance_comp_events_desc">Mostrar as próximas reuniões de hoje</string>
+    <string name="watchface_glance_comp_alarm_title">próximo alarme </string>
+    <string name="watchface_glance_comp_alarm_desc">Exibir o horário do alarme quando não houver eventos.</string>
 </resources>
