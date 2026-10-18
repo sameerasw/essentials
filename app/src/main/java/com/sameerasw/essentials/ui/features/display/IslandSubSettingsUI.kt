@@ -606,6 +606,17 @@ fun IslandBehaviorSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                title = stringResource(R.string.island_secondary_bubble_title),
+                isChecked = viewModel.isIslandSecondaryBubble.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandSecondaryBubble(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_secondary_bubble"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_format_align_center_24,
                 title = stringResource(R.string.island_balance_compact_title),
                 isChecked = viewModel.isIslandBalanceCompact.value,

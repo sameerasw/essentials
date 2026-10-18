@@ -727,13 +727,21 @@ class IslandCoordinator(
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
         controller.maxCells = settings.getIslandMaxItems() * 2
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
+        controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
     }
 
+    private var lastContentSuppressed = false
+
     private fun applySuppression() {
-        controller.setSuppressed(isContentSuppressed || revealing || hiding)
+        val contentSuppressed = isContentSuppressed
+        if (contentSuppressed != lastContentSuppressed) {
+            lastContentSuppressed = contentSuppressed
+            plugins.forEach { it.onSuppressionChanged(contentSuppressed) }
+        }
+        controller.setSuppressed(contentSuppressed || revealing || hiding)
         windowHost.setInteractionsDisabled(
             isFullscreenApp && settings.isIslandKeepInFullscreenEnabled() && settings.isIslandDisableInteractionsInFullscreenEnabled(),
         )
@@ -847,6 +855,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
         )
     }

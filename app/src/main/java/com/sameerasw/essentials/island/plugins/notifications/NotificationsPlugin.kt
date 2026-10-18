@@ -153,8 +153,12 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private var autoExpanded = false
 
     private val timeoutRunnable = Runnable { onTimeout() }
-    private val catchUpRunnable = Runnable { clearAll() }
+    private val catchUpRunnable = Runnable {
+        if (ctx?.isContentSuppressed?.invoke() == true) catchUpPaused = true else clearAll()
+    }
 
+    private val replied = HashMap<String, Long>()
+    private var catchUpPaused = false
     private var copiedKey: String? = null
     private var postedWhileCopied = false
     private val copiedRunnable = Runnable { finishCopy() }
@@ -189,6 +193,21 @@ class NotificationsPlugin : BaseIslandPlugin() {
     override fun refresh() {
         if (ctx == null) return
         if (!settings.isIslandShowNotificationsEnabled()) clearAll() else render()
+    }
+
+    override fun onSuppressionChanged(suppressed: Boolean) {
+        val c = ctx ?: return
+        if (suppressed) {
+            if (catchingUp) {
+                c.mainHandler.removeCallbacks(catchUpRunnable)
+                catchUpPaused = true
+            }
+        } else if (catchUpPaused) {
+            catchUpPaused = false
+            if (alerts.isNotEmpty() && catchingUp && !settings.isIslandCatchUpInfinite()) {
+                c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+            }
+        }
     }
 
     override fun onUserInteraction(focusedKey: String?) {
@@ -234,6 +253,9 @@ class NotificationsPlugin : BaseIslandPlugin() {
             render()
             return
         }
+        val now = System.currentTimeMillis()
+        replied.values.removeAll { now - it > REPLY_REPOST_WINDOW_MS }
+        if (replied.containsKey(alert.key)) return
         if (copiedKey != null) {
             alerts.addLast(alert)
             while (alerts.size > MAX_QUEUE) alerts.removeFirst()
@@ -359,6 +381,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun clearAll() {
         catchingUp = false
+        catchUpPaused = false
         copiedKey = null
         postedWhileCopied = false
         cancelTimers()
@@ -720,11 +743,19 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val sent = canCarryText && NotificationListener.instance?.performNotificationAction(action, text) == true
         if (sent) {
             Toast.makeText(context, R.string.island_reply_sent, Toast.LENGTH_SHORT).show()
-            if (currentAlert()?.key == alert.key) popCurrent(reExpand = false)
+            dismissAfterReply(alert)
         } else {
-            popCurrent(reExpand = false)
+            dismissAfterReply(alert)
             context.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
         }
+    }
+
+    private fun dismissAfterReply(alert: ActiveNotificationAlert) {
+        val c = ctx ?: return
+        replied[alert.key] = System.currentTimeMillis()
+        val wasFocused = c.focusedKey() == ITEM_KEY
+        onRemoved(alert.key)
+        if (wasFocused) c.request(PluginRequest.Collapse(ITEM_KEY))
     }
 
     private fun runAction(alert: ActiveNotificationAlert, action: NotificationActionItem) {
@@ -742,6 +773,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         const val ITEM_KEY = "notifications"
         private const val MAX_QUEUE = 20
         private const val COPIED_MS = 1_500L
+        private const val REPLY_REPOST_WINDOW_MS = 10_000L
 
         private val GENERIC_TITLES = setOf(
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",

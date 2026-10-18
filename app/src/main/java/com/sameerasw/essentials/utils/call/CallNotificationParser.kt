@@ -33,6 +33,7 @@ data class NotificationCall(
     val contentIntent: PendingIntent?,
     val postedAt: Long,
     val extraActions: List<CallNotificationAction> = emptyList(),
+    val allActions: List<CallNotificationAction> = emptyList(),
 )
 
 object CallNotificationParser {
@@ -134,6 +135,7 @@ object CallNotificationParser {
             contentIntent = n.contentIntent,
             postedAt = sbn.postTime,
             extraActions = extraActions,
+            allActions = classified.filter { it.title.isNotBlank() },
         )
     }
 

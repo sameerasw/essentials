@@ -29,6 +29,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.ui.features.consciousgate.ConsciousGatePauseScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.utils.HapticUtil
 
 class ConsciousGateActivity : AppCompatActivity() {
     private var packageToGate: String? = null
@@ -154,6 +155,16 @@ class ConsciousGateActivity : AppCompatActivity() {
         startService(serviceIntent)
 
         finishAndTransition()
+    }
+
+    override fun onPause() {
+        HapticUtil.stopHoldHaptic(this)
+        super.onPause()
+    }
+
+    override fun onStop() {
+        HapticUtil.stopHoldHaptic(this)
+        super.onStop()
     }
 
     @Deprecated("Deprecated in Java")

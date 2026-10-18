@@ -58,6 +58,8 @@ class DevicesPlugin : BaseIslandPlugin() {
     private var batteryDevice: BatteryDevice? = null
     private var registered = false
     private val pendingDisconnects = mutableMapOf<String, Runnable>()
+    private val pendingConnects = mutableMapOf<String, Runnable>()
+    private val announcedConnected = mutableSetOf<String>()
     private val clearEvent = Runnable {
         event = null
         render()
@@ -73,14 +75,28 @@ class DevicesPlugin : BaseIslandPlugin() {
                     if (pending != null) {
                         ctx?.mainHandler?.removeCallbacks(pending)
                     } else {
-                        announce(device, connected = true)
+                        pendingConnects.remove(device.address)?.let { ctx?.mainHandler?.removeCallbacks(it) }
+                        val confirm = Runnable {
+                            pendingConnects.remove(device.address)
+                            if (isConnected(device)) {
+                                announcedConnected += device.address
+                                announce(device, connected = true)
+                            }
+                        }
+                        pendingConnects[device.address] = confirm
+                        ctx?.mainHandler?.postDelayed(confirm, CONNECT_SETTLE_MS)
                     }
                 }
                 BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
+                    val unconfirmed = pendingConnects.remove(device.address)
+                    if (unconfirmed != null) {
+                        ctx?.mainHandler?.removeCallbacks(unconfirmed)
+                        return
+                    }
                     pendingDisconnects.remove(device.address)?.let { ctx?.mainHandler?.removeCallbacks(it) }
                     val confirm = Runnable {
                         pendingDisconnects.remove(device.address)
-                        announce(device, connected = false)
+                        if (announcedConnected.remove(device.address)) announce(device, connected = false)
                     }
                     pendingDisconnects[device.address] = confirm
                     ctx?.mainHandler?.postDelayed(confirm, DISCONNECT_SETTLE_MS)
@@ -105,6 +121,7 @@ class DevicesPlugin : BaseIslandPlugin() {
             }
             context.registerReceiver(receiver, filter)
             registered = true
+            seedConnected()
         } catch (_: Exception) {
         }
     }
@@ -113,6 +130,9 @@ class DevicesPlugin : BaseIslandPlugin() {
         ctx?.mainHandler?.removeCallbacks(clearEvent)
         pendingDisconnects.values.forEach { ctx?.mainHandler?.removeCallbacks(it) }
         pendingDisconnects.clear()
+        pendingConnects.values.forEach { ctx?.mainHandler?.removeCallbacks(it) }
+        pendingConnects.clear()
+        announcedConnected.clear()
         event = null
         batteryDevice = null
         if (registered) {
@@ -126,7 +146,25 @@ class DevicesPlugin : BaseIslandPlugin() {
 
     override fun refresh() {
         ctx ?: return
+        seedConnected()
         refreshBattery()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun seedConnected() {
+        if (!hasPermission()) return
+        val bonded = try {
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter?.bondedDevices
+        } catch (_: SecurityException) {
+            null
+        }.orEmpty()
+        bonded.filter { isConnected(it) }.forEach { announcedConnected += it.address }
+    }
+
+    private fun isConnected(device: BluetoothDevice): Boolean = try {
+        device.javaClass.getMethod("isConnected").invoke(device) as Boolean
+    } catch (_: Exception) {
+        true
     }
 
     @SuppressLint("MissingPermission")
@@ -315,6 +353,7 @@ class DevicesPlugin : BaseIslandPlugin() {
         const val BATTERY_KEY = "devices.battery"
         private const val BATTERY_SETTLE_MS = 1500L
         private const val DISCONNECT_SETTLE_MS = 2000L
+        private const val CONNECT_SETTLE_MS = 3000L
         private const val ACTION_BATTERY_LEVEL_CHANGED = "android.bluetooth.device.action.BATTERY_LEVEL_CHANGED"
         private const val EXTRA_BATTERY_LEVEL = "android.bluetooth.device.extra.BATTERY_LEVEL"
     }

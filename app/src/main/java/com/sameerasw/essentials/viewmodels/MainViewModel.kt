@@ -235,6 +235,7 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
     val islandLandscapeTopSpacing = mutableFloatStateOf(0f)
@@ -606,6 +607,7 @@ class MainViewModel : ViewModel() {
     val isCalendarPermissionGranted = mutableStateOf(false)
     val isBubblePermissionGranted = mutableStateOf(false)
     val isSensitiveNotificationsGranted = mutableStateOf(true)
+    val isLocalNetworkGranted = mutableStateOf(true)
     val isUserDictionaryEnabled = mutableStateOf(false)
     val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
     val isUserDictionarySheetVisible = mutableStateOf(false)
@@ -1871,6 +1873,7 @@ class MainViewModel : ViewModel() {
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isBubblePermissionGranted.value = PermissionUtils.hasBubblePermission(context)
         isSensitiveNotificationsGranted.value = PermissionGrantUtil.hasSensitiveNotifications(context)
+        isLocalNetworkGranted.value = PermissionUtils.hasLocalNetworkPermission(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         if (cachedIsUpdateAvailable) {
@@ -2476,6 +2479,7 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
         islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
@@ -5863,6 +5867,11 @@ class MainViewModel : ViewModel() {
     fun setIslandMaxItems(value: Int) {
         islandMaxItems.value = value
         settingsRepository.setIslandMaxItems(value)
+    }
+
+    fun setIslandSecondaryBubble(enabled: Boolean) {
+        isIslandSecondaryBubble.value = enabled
+        settingsRepository.setIslandSecondaryBubbleEnabled(enabled)
     }
 
     fun setIslandBalanceCompact(enabled: Boolean) {

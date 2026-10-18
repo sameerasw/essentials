@@ -37,6 +37,7 @@ class IslandController(
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
     var balanceCompact: Boolean = true
+    var secondaryBubbleEnabled: Boolean = true
     private var feedbackActive = false
 
     fun setFeedbackActive(active: Boolean) {
@@ -275,7 +276,7 @@ class IslandController(
         if (peekKey != null && items[peekKey]?.line == null) cancelPeek()
 
         val bubbleOwner = items.values
-            .filter { it.sideBubble != null }
+            .filter { secondaryBubbleEnabled && it.sideBubble != null }
             .sortedBy { it.sideBubble!!.priority }
             .firstOrNull { candidate ->
                 !candidate.sideBubble!!.whenOccupiedOnly || items.values.any {

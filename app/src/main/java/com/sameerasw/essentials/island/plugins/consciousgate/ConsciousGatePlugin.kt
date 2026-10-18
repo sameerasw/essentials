@@ -2,6 +2,7 @@ package com.sameerasw.essentials.island.plugins.consciousgate
 
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.content.Context
+import android.os.PowerManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -108,7 +109,8 @@ class ConsciousGatePlugin : BaseIslandPlugin() {
         if (lastHapticSecond != totalSec) {
             lastHapticSecond = totalSec
             val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-            if (prefs.getBoolean("conscious_gate_feel_every_second", false)) {
+            val interactive = context.getSystemService(PowerManager::class.java)?.isInteractive != false
+            if (interactive && prefs.getBoolean("conscious_gate_feel_every_second", false)) {
                 HapticUtil.performHapticForService(context, HapticFeedbackType.SUBTLE)
             }
         }

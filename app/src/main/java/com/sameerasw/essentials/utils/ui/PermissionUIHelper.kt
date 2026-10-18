@@ -518,6 +518,17 @@ object PermissionUIHelper {
                 )
             }
 
+            AppPermission.LOCAL_NETWORK ->
+                PermissionItem(
+                    iconRes = permission.iconRes,
+                    title = permission.titleRes,
+                    description = R.string.perm_local_network_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures(permission),
+                    actionLabel = if (viewModel.isLocalNetworkGranted.value) R.string.perm_action_granted else R.string.perm_action_grant,
+                    action = { PermissionUtils.requestLocalNetwork(context, activity) },
+                    isGranted = viewModel.isLocalNetworkGranted.value,
+                )
+
             AppPermission.SENSITIVE_NOTIFICATIONS ->
                 PermissionItem(
                     iconRes = permission.iconRes,

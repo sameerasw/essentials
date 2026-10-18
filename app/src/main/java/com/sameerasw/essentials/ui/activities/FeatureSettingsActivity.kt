@@ -383,6 +383,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 "Button remap" -> !isAccessibilityEnabled
                                 "Face unlock brightness" -> !isAccessibilityEnabled
                                 "Screenshots" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
+                                "Watch Wireless Debugging" -> android.os.Build.VERSION.SDK_INT >= 37 && !viewModel.isLocalNetworkGranted.value
                                 "Lock screen shortcuts" -> !isAccessibilityEnabled
                                 "Volume steps" -> !isAccessibilityEnabled
                                 "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
@@ -843,6 +844,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Button remap" -> !isAccessibilityEnabled
                                                             "Face unlock brightness" -> !isAccessibilityEnabled
                                                             "Screenshots" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
+                                                            "Watch Wireless Debugging" -> android.os.Build.VERSION.SDK_INT >= 37 && !viewModel.isLocalNetworkGranted.value
                                                             "Lock screen shortcuts" -> !isAccessibilityEnabled
                                                             "Volume steps" -> !isAccessibilityEnabled
                                                             "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
