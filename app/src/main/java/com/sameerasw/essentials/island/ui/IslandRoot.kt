@@ -298,7 +298,7 @@ fun IslandRoot(
             delay(IslandMotion.COLLAPSE_MS + 400L)
             if (dragCommitted) {
                 dragCommitted = false
-                collapse.snapTo(0f)
+                collapse.animateTo(0f, IslandMotion.settle())
             }
             return@LaunchedEffect
         }
@@ -855,7 +855,7 @@ fun IslandRoot(
                     finishedListener = { _, _ ->
                         if (dragCommitted && currentState.stage != IslandStage.Expanded && currentState.stage != IslandStage.Line) {
                             dragCommitted = false
-                            scope.launch { collapse.snapTo(0f) }
+                            scope.launch { collapse.animateTo(0f, IslandMotion.settle()) }
                         }
                     },
                 )
