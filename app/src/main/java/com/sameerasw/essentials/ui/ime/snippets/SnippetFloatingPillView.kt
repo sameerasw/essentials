@@ -49,6 +49,7 @@ fun SnippetFloatingPillView(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val view = androidx.compose.ui.platform.LocalView.current
     AnimatedVisibility(
         visible = true,
         enter = fadeIn() + scaleIn(initialScale = 0.88f),
@@ -59,7 +60,10 @@ fun SnippetFloatingPillView(
                 modifier
                     .shadow(elevation = 10.dp, shape = CircleShape)
                     .clip(CircleShape)
-                    .clickable { onExpand() },
+                    .clickable {
+                        com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                        onExpand()
+                    },
             color = MaterialTheme.colorScheme.surfaceBright,
             contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 6.dp,
@@ -121,7 +125,10 @@ fun SnippetFloatingPillView(
                             .size(24.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                            .clickable { onDismiss() },
+                            .clickable {
+                                com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                                onDismiss()
+                            },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(

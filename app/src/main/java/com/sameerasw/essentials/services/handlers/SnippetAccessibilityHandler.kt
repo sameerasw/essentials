@@ -88,8 +88,16 @@ class SnippetAccessibilityHandler(
         }
     }
 
+    private var lastImeCheckTime = 0L
+    private var cachedIsEssentialsIme = false
+
     private fun isEssentialsImeActive(): Boolean {
-        return try {
+        val now = System.currentTimeMillis()
+        if (now - lastImeCheckTime < 2000L) {
+            return cachedIsEssentialsIme
+        }
+        lastImeCheckTime = now
+        cachedIsEssentialsIme = try {
             val currentIme = Settings.Secure.getString(
                 service.contentResolver,
                 Settings.Secure.DEFAULT_INPUT_METHOD,
@@ -98,6 +106,7 @@ class SnippetAccessibilityHandler(
         } catch (_: Exception) {
             false
         }
+        return cachedIsEssentialsIme
     }
 
     fun onTextChanged(event: AccessibilityEvent) {
@@ -107,7 +116,7 @@ class SnippetAccessibilityHandler(
         if (eventPkg == service.packageName) return
 
         val sourceNode = event.source ?: return
-        if (event.isPassword || sourceNode.isPassword) return
+        if (event.isPassword || sourceNode.isPassword || isPasswordField(sourceNode)) return
         if (!sourceNode.isEditable) return
 
         activeNode?.recycle()
@@ -219,6 +228,16 @@ class SnippetAccessibilityHandler(
         } finally {
             mainHandler.postDelayed({ isPerformingReplacement = false }, REPLACEMENT_DEBOUNCE_MS)
         }
+    }
+
+    private fun isPasswordField(node: AccessibilityNodeInfo): Boolean {
+        val inputType = node.inputType
+        val variation = inputType and android.text.InputType.TYPE_MASK_VARIATION
+        return variation == android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD ||
+            variation == android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD ||
+            variation == android.text.InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD ||
+            (inputType and android.text.InputType.TYPE_MASK_CLASS == android.text.InputType.TYPE_CLASS_NUMBER &&
+                variation == android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD)
     }
 
     private fun calculateImeOffset(): Int {
