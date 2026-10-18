@@ -256,6 +256,7 @@ fun IslandRoot(
     val revealDirection by remember { derivedStateOf { if (dismissOffset.value >= 0f) 1f else -1f } }
     val dismissThresholdPx = with(density) { 48.dp.toPx() }
     val jelly = rememberCompactJellyState()
+    val surfaceLiquid = rememberLiquidBody()
     val jellyRangePx = with(density) { 90.dp.toPx() }
     var compactLongPressed by remember { mutableStateOf(false) }
     var compactSettled by remember { mutableStateOf(false) }
@@ -643,6 +644,7 @@ fun IslandRoot(
         val bubbleData = lastCatchUp
         if (bubbleData != null && catchUpAnim.value > 0.001f) {
             val dragX = remember { Animatable(0f) }
+            val bubbleLiquid = rememberLiquidBody(LiquidSpec.Droplet)
             val towardCamera = if (spec.growDirection > 0) -1f else 1f
             val maxDrag = with(density) { 56.dp.toPx() }
             val threshold = with(density) { 28.dp.toPx() }
@@ -666,6 +668,7 @@ fun IslandRoot(
                                 IntOffset((startX + (endX - startX) * v + dragX.value).roundToInt(), surfaceTopPx)
                             }
                         }
+                        .liquid(bubbleLiquid)
                         .graphicsLayer {
                             val appear = if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 1f
                             alpha = (1f - (abs(dragX.value) / maxDrag).coerceIn(0f, 0.8f)) * appear
@@ -717,6 +720,7 @@ fun IslandRoot(
                 }
                 .offset { IntOffset(0, (squashPx / 2f * squash.value - edgeShift.floatValue - surfaceTopPx * bond).roundToInt()) }
                 .compactJelly(jelly, jellyRangePx)
+                .liquid(surfaceLiquid, TransformOrigin(0.5f, 0f))
                 .drawBehind {
                     if (bond <= 0f) return@drawBehind
                     val f = compactHeightPx * 0.4f * bond
