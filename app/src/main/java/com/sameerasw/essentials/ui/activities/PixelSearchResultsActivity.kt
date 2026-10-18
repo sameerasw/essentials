@@ -14,6 +14,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.graphics.PixelFormat
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -155,6 +157,8 @@ class PixelSearchResultsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        window.setFormat(PixelFormat.TRANSLUCENT)
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
                 android.graphics.Color.TRANSPARENT,
@@ -665,6 +669,7 @@ fun PixelSearchResultsScreen(
         }
     }
 
+    val isWallpaperBg = remember { repository.isPixelSearchWallpaperBackgroundEnabled() }
     val isBlurEffective = remember(context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val windowManager = context.getSystemService(WindowManager::class.java)
@@ -673,7 +678,11 @@ fun PixelSearchResultsScreen(
             false
         }
     }
-    val scrimAlpha = if (isBlurEffective) 0.55f else 0.85f
+    val scrimAlpha = when {
+        !isBlurEffective -> 0.85f
+        !isWallpaperBg -> 0.45f
+        else -> 0.55f
+    }
     val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = scrimAlpha)
 
     Box(
