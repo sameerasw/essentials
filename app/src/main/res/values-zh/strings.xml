@@ -1667,4 +1667,7 @@
     <string name="feat_status_glance_desc">以覆盖层的形式</string>
     <string name="feat_aod_wallpaper_title">息屏的壁纸</string>
     <string name="duo_title">Duo（镜头交互环）</string>
+    <string name="island_brief_title">简报</string>
+    <string name="island_brief_desc">获取当前正在发生事情的简报</string>
+    <string name="island_like_while_playing_title">播放时点赞</string>
 </resources>
