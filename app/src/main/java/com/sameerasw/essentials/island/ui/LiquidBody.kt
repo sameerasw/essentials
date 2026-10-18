@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -16,7 +15,9 @@ import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.node.GlobalPositionAwareModifierNode
+import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.channels.Channel
@@ -24,6 +25,7 @@ import androidx.compose.runtime.withFrameNanos
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.math.tanh
 
 @Immutable
 data class LiquidSpec(
@@ -70,10 +72,17 @@ class LiquidBody(private val spec: LiquidSpec, private val field: LiquidField? =
         val growY = (h - lastHeight) / lastHeight / dt
         val travelX = abs(position.x - lastPosition.x) / lastWidth / dt
         val travelY = abs(position.y - lastPosition.y) / lastHeight / dt
-        targetX = (spec.sizeGain * growX + spec.travelGain * travelX).coerceIn(-spec.maxStretch, spec.maxStretch)
-        targetY = (spec.sizeGain * growY + spec.travelGain * travelY).coerceIn(-spec.maxStretch, spec.maxStretch)
+        targetX = soft(spec.sizeGain * growX + spec.travelGain * travelX)
+        targetY = soft(spec.sizeGain * growY + spec.travelGain * travelY)
         store(w, h, position, now)
         wake.trySend(Unit)
+    }
+
+    private fun soft(raw: Float, max: Float = spec.maxStretch) = max * tanh(raw / max)
+
+    fun release() {
+        if (field != null && bond != null) field.remove(bond.id)
+        lastSample = 0L
     }
 
     private fun store(w: Float, h: Float, position: Offset, now: Long) {
@@ -107,8 +116,8 @@ class LiquidBody(private val spec: LiquidSpec, private val field: LiquidField? =
             val h = minOf(remaining, SUBSTEP)
             velocityX += (spec.stiffness * (targetX - stretchX) - damping * velocityX) * h
             velocityY += (spec.stiffness * (targetY - stretchY) - damping * velocityY) * h
-            stretchX = (stretchX + velocityX * h).coerceIn(-limit, limit)
-            stretchY = (stretchY + velocityY * h).coerceIn(-limit, limit)
+            stretchX = soft(stretchX + velocityX * h, limit)
+            stretchY = soft(stretchY + velocityY * h, limit)
             remaining -= h
         }
         val settled = abs(stretchX) < EPSILON && abs(stretchY) < EPSILON &&
@@ -153,12 +162,27 @@ fun rememberLiquidBody(
 ): LiquidBody {
     val body = remember(spec, field, bond?.id) { LiquidBody(spec, field, bond) }
     LaunchedEffect(body) { body.run() }
-    if (field != null && bond != null) {
-        DisposableEffect(field, bond.id) { onDispose { field.remove(bond.id) } }
-    }
     return body
 }
 
 fun Modifier.liquid(body: LiquidBody, origin: TransformOrigin = TransformOrigin.Center): Modifier =
-    onGloballyPositioned { body.observe(it.size, it.positionInRoot()) }
-        .graphicsLayer { body.applyTo(this, origin) }
+    this.then(LiquidTrackElement(body)).graphicsLayer { body.applyTo(this, origin) }
+
+private class LiquidTrackElement(val body: LiquidBody) : ModifierNodeElement<LiquidTrackNode>() {
+    override fun create() = LiquidTrackNode(body)
+    override fun update(node: LiquidTrackNode) {
+        node.body = body
+    }
+    override fun equals(other: Any?) = other is LiquidTrackElement && other.body === body
+    override fun hashCode() = body.hashCode()
+}
+
+private class LiquidTrackNode(var body: LiquidBody) : Modifier.Node(), GlobalPositionAwareModifierNode {
+    override fun onGloballyPositioned(coordinates: LayoutCoordinates) {
+        body.observe(coordinates.size, coordinates.positionInRoot())
+    }
+
+    override fun onDetach() {
+        body.release()
+    }
+}

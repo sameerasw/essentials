@@ -567,6 +567,18 @@ fun IslandRoot(
         onTargetBoundsChanged(bounds)
     }
 
+    val queuePresence = animateFloatAsState(if (queueShown) 1f else 0f, IslandMotion.expressiveFastEffects(), label = "queuePresence")
+    val queueBond = remember {
+        LiquidBond("queue", presence = {
+            queuePresence.value * (1f - queueBelow.value * 2f).coerceIn(0f, 1f) * (1f - collapse.value).coerceIn(0f, 1f)
+        })
+    }
+    val pillBond = remember {
+        LiquidBond("pill", presence = {
+            queuePresence.value * ((queueBelow.value - 0.3f) / 0.7f).coerceIn(0f, 1f) * (1f - collapse.value).coerceIn(0f, 1f)
+        })
+    }
+
     CompositionLocalProvider(LocalLiquidField provides liquidField) {
     Box(
         Modifier
@@ -628,7 +640,7 @@ fun IslandRoot(
                         outlineColor = outlineFor(1f),
                         outlineThickness = spec.outlineThickness,
                         modifier = queueModifier,
-                        bondId = "queue",
+                        bond = queueBond,
                     )
                     QueueStyle.Overlap -> IslandStackOverlap(
                         icons = lastQueuedIcons,
@@ -636,7 +648,7 @@ fun IslandRoot(
                         outlineColor = outlineFor(1f),
                         outlineThickness = spec.outlineThickness,
                         modifier = queueModifier,
-                        bondId = "queue",
+                        bond = queueBond,
                     )
                 }
                 IslandStackPill(
@@ -646,7 +658,7 @@ fun IslandRoot(
                     interactive = stage == IslandStage.Expanded,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
-                    bondId = "pill",
+                    bond = pillBond,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
                         .onSizeChanged { pillSize = it },
