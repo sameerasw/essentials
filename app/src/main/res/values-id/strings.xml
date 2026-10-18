@@ -117,4 +117,19 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="label_window_animation_scale">Skala animasi jendela</string>
     <string name="setting_app_icon_title">Ikon aplikasi </string>
     <string name="setting_app_icon_desc">Sesuaikan ikon peluncur layar beranda.</string>
+    <string name="feat_hilight_notifications_title">Efek notifikasi </string>
+    <string name="hilight_notifications_desc">Putar efek masing-masing aplikasi saat notifikasi tiba.</string>
+    <string name="feat_hilight_progress_desc">Tampilkan kemajuan pengunduhan dan pembaruan langsung pada LED.</string>
+    <string name="hilight_only_screen_off_title">Hanya ketika layar mati</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Jangan memicu di mode DND</string>
+    <string name="feat_volume_steps_desc">Ubah volume media lebih cepat dengan setiap penekanan tombol.</string>
+    <string name="volume_steps_enable_title">Aktifkan volume steps</string>
+    <string name="volume_steps_per_press_title">langkah per tekanan</string>
+    <string name="feat_app_volume_title">Volume aplikasi </string>
+    <string name="feat_app_volume_desc">Atur volume terpisah untuk setiap aplikasi.</string>
+    <string name="app_volume_enable_title">Aktifkan volume aplikasi</string>
+    <string name="app_volume_overlay_title">Kontrol UI overlay</string>
+    <string name="app_volume_add_app">Tambah aplikasi </string>
+    <string name="app_volume_add_app_desc">Atur volume sebelum aplikasi mulai memutar musik.</string>
+    <string name="app_volume_playing_summary">Sedang memutar · %1$s</string>
 </resources>
