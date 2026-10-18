@@ -43,6 +43,8 @@ class NetworkPlugin : BaseIslandPlugin() {
     private var ssid: String? = null
     private var airplane = false
     private var event: WifiEvent? = null
+    private var pendingLost: Runnable? = null
+    private var lostSsid: String? = null
     private val clearEvent = Runnable {
         event = null
         render()
@@ -81,6 +83,9 @@ class NetworkPlugin : BaseIslandPlugin() {
 
     override fun onStop() {
         ctx?.mainHandler?.removeCallbacks(clearEvent)
+        pendingLost?.let { ctx?.mainHandler?.removeCallbacks(it) }
+        pendingLost = null
+        lostSsid = null
         try {
             connectivity.unregisterNetworkCallback(callback)
         } catch (_: Exception) {
@@ -103,16 +108,38 @@ class NetworkPlugin : BaseIslandPlugin() {
             return
         }
         val name = ssidFrom(caps) ?: WifiUtil.getCurrentSsid(context)
+        val pending = pendingLost
+        if (pending != null) {
+            ctx?.mainHandler?.removeCallbacks(pending)
+            pendingLost = null
+            val previous = lostSsid
+            lostSsid = null
+            if (previous == null || name == null || previous == name) {
+                wifiNetwork = network
+                ssid = name ?: previous
+                return
+            }
+            announce(connected = false)
+        }
+        val sameNetwork = ssid != null && name == ssid
         wifiNetwork = network
         ssid = name
-        announce(connected = true)
+        if (!sameNetwork) announce(connected = true)
     }
 
     private fun onWifiLost(network: Network) {
-        if (ctx == null || network != wifiNetwork) return
+        val c = ctx ?: return
+        if (network != wifiNetwork) return
         wifiNetwork = null
-        announce(connected = false)
-        ssid = null
+        lostSsid = ssid
+        val confirm = Runnable {
+            pendingLost = null
+            lostSsid = null
+            announce(connected = false)
+            ssid = null
+        }
+        pendingLost = confirm
+        c.mainHandler.postDelayed(confirm, WIFI_LOST_SETTLE_MS)
     }
 
     private fun ssidFrom(caps: NetworkCapabilities): String? {
@@ -180,5 +207,6 @@ class NetworkPlugin : BaseIslandPlugin() {
     companion object {
         const val WIFI_KEY = "network.wifi"
         const val AIRPLANE_KEY = "network.airplane"
+        private const val WIFI_LOST_SETTLE_MS = 4000L
     }
 }

@@ -2,7 +2,6 @@ package com.sameerasw.essentials.island.service
 
 import android.provider.Settings
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
-import com.sameerasw.essentials.island.plugins.batteryalerts.BatteryAlertsPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
 import com.sameerasw.essentials.island.plugins.call.CallPlugin
@@ -47,6 +46,7 @@ import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.plugins.calendar.CalendarPlugin
 import com.sameerasw.essentials.island.plugins.consciousgate.ConsciousGatePlugin
 import com.sameerasw.essentials.island.plugins.flashlight.FlashlightPlugin
+import com.sameerasw.essentials.island.plugins.navigation.NavigationPlugin
 import com.sameerasw.essentials.island.plugins.hotspot.HotspotPlugin
 import com.sameerasw.essentials.island.plugins.recording.RecordingPlugin
 import com.sameerasw.essentials.island.plugins.network.NetworkPlugin
@@ -152,13 +152,13 @@ class IslandCoordinator(
         RemoteProvidersPlugin(),
         CaffeinatePlugin(),
         TravelPlugin(),
+        NavigationPlugin(),
         NetworkPlugin(),
         SignalPlugin(),
         HotspotPlugin(),
         RecordingPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
-        BatteryAlertsPlugin(),
     )
 
     private var scope: CoroutineScope? = null
@@ -690,6 +690,7 @@ class IslandCoordinator(
             cameraPresence = if (geo.hasCamera) 1f else 0f,
             landscape = isLandscape,
             bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
+            balanceCompact = settings.isIslandBalanceCompactEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
                 runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
@@ -715,13 +716,22 @@ class IslandCoordinator(
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
         controller.maxCells = settings.getIslandMaxItems() * 2
+        controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
+        controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
     }
 
+    private var lastContentSuppressed = false
+
     private fun applySuppression() {
-        controller.setSuppressed(isContentSuppressed || revealing || hiding)
+        val contentSuppressed = isContentSuppressed
+        if (contentSuppressed != lastContentSuppressed) {
+            lastContentSuppressed = contentSuppressed
+            plugins.forEach { it.onSuppressionChanged(contentSuppressed) }
+        }
+        controller.setSuppressed(contentSuppressed || revealing || hiding)
         windowHost.setInteractionsDisabled(
             isFullscreenApp && settings.isIslandKeepInFullscreenEnabled() && settings.isIslandDisableInteractionsInFullscreenEnabled(),
         )
@@ -834,6 +844,8 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE,
             SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
+            SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
         )
     }

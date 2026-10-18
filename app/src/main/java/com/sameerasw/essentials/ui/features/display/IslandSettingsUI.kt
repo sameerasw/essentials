@@ -81,6 +81,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBott
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandRecordingOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandNavigationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
@@ -125,6 +126,7 @@ fun IslandSettingsUI(
     var showSignalOptionsSheet by remember { mutableStateOf(false) }
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
     var showRecordingOptionsSheet by remember { mutableStateOf(false) }
+    var showNavigationOptionsSheet by remember { mutableStateOf(false) }
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
     var pickingGesture by remember { mutableStateOf<String?>(null) }
     var showSlideModeSheet by remember { mutableStateOf(false) }
@@ -432,6 +434,18 @@ fun IslandSettingsUI(
                         },
                         onSettingsClick = { showAlarmOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_alarm"),
+                    )
+                    "navigation" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.round_navigation_24,
+                        title = stringResource(R.string.island_show_navigation_title),
+                        isChecked = viewModel.isIslandShowNavigation.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowNavigation(checked)
+                        },
+                        onSettingsClick = { showNavigationOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_navigation"),
                     )
                     "hotspot" -> IconToggleItem(
                         dragHandle = handle,
@@ -803,6 +817,13 @@ fun IslandSettingsUI(
         IslandSoundModeOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showSoundModeOptionsSheet = false },
+        )
+    }
+
+    if (showNavigationOptionsSheet) {
+        IslandNavigationOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showNavigationOptionsSheet = false },
         )
     }
 

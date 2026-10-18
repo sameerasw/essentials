@@ -78,6 +78,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -219,9 +220,9 @@ fun PixelSearchResultsScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val density = LocalDensity.current
 
-    var query by remember { mutableStateOf(initialQuery) }
+    var query by rememberSaveable { mutableStateOf(initialQuery) }
     val focusRequester = remember { FocusRequester() }
-    var selectedTab by remember { mutableStateOf(PixelSearchTab.ALL) }
+    var selectedTab by rememberSaveable { mutableStateOf(PixelSearchTab.ALL) }
     val isAllTab = selectedTab == PixelSearchTab.ALL
 
     var dragOffsetY by remember { mutableFloatStateOf(0f) }

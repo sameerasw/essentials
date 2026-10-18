@@ -46,6 +46,7 @@ import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
+import com.sameerasw.essentials.services.handlers.ScreenshotAutoCleanHandler
 import com.sameerasw.essentials.services.handlers.ScreenshotShareCleanupHandler
 import com.sameerasw.essentials.services.handlers.AppVolumeOverlayHandler
 import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
@@ -90,6 +91,7 @@ class ScreenOffAccessibilityService :
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
     private lateinit var screenshotShareCleanupHandler: ScreenshotShareCleanupHandler
+    private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
 
@@ -343,9 +345,11 @@ class ScreenOffAccessibilityService :
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
+        screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
+        screenshotAutoCleanHandler.register()
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
@@ -562,6 +566,7 @@ class ScreenOffAccessibilityService :
         lockscreenShortcutsHandler.onDestroy()
         appVolumeOverlayHandler.onDestroy()
         statusBarIconHandler.unregister()
+        screenshotAutoCleanHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
         if (isProximityRegistered) {

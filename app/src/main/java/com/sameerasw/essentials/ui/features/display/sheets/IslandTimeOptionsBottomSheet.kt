@@ -84,9 +84,12 @@ fun IslandBatteryOptions(
     onlyLow: Boolean,
     onOnlyLowChange: (Boolean) -> Unit,
     showIconConditional: Boolean = false,
+    devices: Boolean = false,
 ) {
     val view = LocalView.current
-    val styleLabel = if (viewModel.islandBatteryStyle.value == SettingsRepository.ISLAND_BATTERY_STYLE_ICON) {
+    val currentStyle = if (devices) viewModel.islandDevicesBatteryStyle.value else viewModel.islandBatteryStyle.value
+    val setStyle: (String) -> Unit = if (devices) viewModel::setIslandDevicesBatteryStyle else viewModel::setIslandBatteryStyle
+    val styleLabel = if (currentStyle == SettingsRepository.ISLAND_BATTERY_STYLE_ICON) {
         stringResource(R.string.island_battery_style_icon)
     } else {
         stringResource(R.string.island_battery_style_ring)
@@ -113,14 +116,14 @@ fun IslandBatteryOptions(
                     text = { Text(stringResource(R.string.island_battery_style_ring)) },
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandBatteryStyle(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
+                        setStyle(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
                     },
                 )
                 SegmentedDropdownMenuItem(
                     text = { Text(stringResource(R.string.island_battery_style_icon)) },
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandBatteryStyle(SettingsRepository.ISLAND_BATTERY_STYLE_ICON)
+                        setStyle(SettingsRepository.ISLAND_BATTERY_STYLE_ICON)
                     },
                 )
             }
@@ -164,6 +167,6 @@ fun IslandBatteryOptions(
             }
         }
 
-        BatteryColorOptions(viewModel, showIdleColor = true)
+        BatteryColorOptions(viewModel, showIdleColor = true, showLevels = true)
     }
 }

@@ -30,6 +30,7 @@ object CompactLayoutEngine {
         anchor: CameraAnchor = CameraAnchor.Center,
         maxCells: Int = MAX_CELLS,
         leftExtra: Int = 0,
+        balance: Boolean = false,
     ): CompactArrangement {
         val base = entries.filterNot { it.companionOnly }
         val companions = entries.filter { it.companionOnly }
@@ -59,15 +60,46 @@ object CompactLayoutEngine {
         val twoCell = dynamic.filter { it.cellKeys.size == 2 }
         val oneCell = dynamic.filter { it.cellKeys.size == 1 }
 
+        val movable = mutableListOf<CompactEntry>()
         if (twoCell.isNotEmpty()) {
             after += twoCell[0].cellKeys.reversed()
             pinned.forEach { before += it.cellKeys }
-            twoCell.drop(1).forEach { before += it.cellKeys.reversed() }
-            oneCell.forEach { if (before.size + leftExtra <= after.size) before += it.cellKeys else after += it.cellKeys }
+            twoCell.drop(1).forEach {
+                before += it.cellKeys.reversed()
+                movable += it
+            }
+            oneCell.forEach {
+                if (before.size + leftExtra <= after.size) {
+                    before += it.cellKeys
+                    movable += it
+                } else {
+                    after += it.cellKeys
+                }
+            }
         } else {
             pinned.getOrNull(0)?.let { before += it.cellKeys }
             pinned.getOrNull(1)?.let { after += it.cellKeys }
-            oneCell.forEach { if (after.size <= before.size + leftExtra) after += it.cellKeys else before += it.cellKeys }
+            oneCell.forEach {
+                if (after.size <= before.size + leftExtra) {
+                    after += it.cellKeys
+                } else {
+                    before += it.cellKeys
+                    movable += it
+                }
+            }
+        }
+
+        if (balance && leftExtra > 0) {
+            for (entry in movable.sortedByDescending { it.priority }) {
+                val size = entry.cellKeys.size
+                val left = before.size + leftExtra
+                val right = after.size
+                val gap = kotlin.math.abs(left - right)
+                val movedGap = kotlin.math.abs((left - size) - (right + size))
+                if (movedGap > gap || (movedGap == gap && left <= right)) break
+                before.removeAll(entry.cellKeys.toSet())
+                after += if (size == 2) entry.cellKeys.reversed() else entry.cellKeys
+            }
         }
 
         val solo = selected.singleOrNull()

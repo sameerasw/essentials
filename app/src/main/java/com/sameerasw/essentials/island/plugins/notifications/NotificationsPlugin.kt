@@ -30,6 +30,7 @@ import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandStackBubble
 import com.sameerasw.essentials.island.ui.IslandStackOverlap
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
+import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -53,9 +54,15 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
+        SettingsRepository.KEY_ISLAND_OTP_ENABLED,
+        SettingsRepository.KEY_ISLAND_OTP_TAP_TO_COPY,
+        SettingsRepository.KEY_ISLAND_OTP_DISMISS_AFTER_COPY,
+        SettingsRepository.KEY_ISLAND_OTP_BYPASS_FILTER,
+        SettingsRepository.KEY_ISLAND_OTP_TIMEOUT_MS,
     )
 
     private val alerts = ArrayDeque<ActiveNotificationAlert>()
+    private val seen = HashSet<String>()
     private var currentIndex = 0
     
     private var manualPick = false
@@ -100,9 +107,28 @@ class NotificationsPlugin : BaseIslandPlugin() {
         return alerts.drop(index + 1) + alerts.take(index).asReversed()
     }
 
+    private fun markSeen() {
+        currentAlert()?.let { seen.add(it.key) }
+    }
+
     private fun advanceCurrent() {
         if (alerts.size < 2) return
         currentIndex = (currentIndex.coerceIn(0, alerts.size - 1) + 1) % alerts.size
+        markSeen()
+    }
+
+    private fun advanceToUnseen(): Boolean {
+        if (alerts.size < 2) return false
+        val start = currentIndex.coerceIn(0, alerts.size - 1)
+        for (offset in 1 until alerts.size) {
+            val index = (start + offset) % alerts.size
+            if (alerts[index].key !in seen) {
+                currentIndex = index
+                markSeen()
+                return true
+            }
+        }
+        return false
     }
 
     private fun select(key: String) {
@@ -113,6 +139,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val here = showingHere()
         if (here && index == currentIndex) return
         currentIndex = index
+        markSeen()
         manualPick = true
         pendingPopUp = false
         scheduleTimeout()
@@ -126,7 +153,15 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private var autoExpanded = false
 
     private val timeoutRunnable = Runnable { onTimeout() }
-    private val catchUpRunnable = Runnable { clearAll() }
+    private val catchUpRunnable = Runnable {
+        if (ctx?.isContentSuppressed?.invoke() == true) catchUpPaused = true else clearAll()
+    }
+
+    private val replied = HashMap<String, Long>()
+    private var catchUpPaused = false
+    private var copiedKey: String? = null
+    private var postedWhileCopied = false
+    private val copiedRunnable = Runnable { finishCopy() }
 
     private val listener = object : NotificationListener.NotificationAlertListener {
         override fun onNotificationAlertPosted(alert: ActiveNotificationAlert) {
@@ -152,11 +187,27 @@ class NotificationsPlugin : BaseIslandPlugin() {
         }
         cancelTimers()
         alerts.clear()
+        seen.clear()
     }
 
     override fun refresh() {
         if (ctx == null) return
         if (!settings.isIslandShowNotificationsEnabled()) clearAll() else render()
+    }
+
+    override fun onSuppressionChanged(suppressed: Boolean) {
+        val c = ctx ?: return
+        if (suppressed) {
+            if (catchingUp) {
+                c.mainHandler.removeCallbacks(catchUpRunnable)
+                catchUpPaused = true
+            }
+        } else if (catchUpPaused) {
+            catchUpPaused = false
+            if (alerts.isNotEmpty() && catchingUp && !settings.isIslandCatchUpInfinite()) {
+                c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+            }
+        }
     }
 
     override fun onUserInteraction(focusedKey: String?) {
@@ -173,9 +224,21 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun passesFilters(alert: ActiveNotificationAlert): Boolean {
         if (alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
         if (alert.blockedByDnd && settings.isIslandNotifFollowDndEnabled()) return false
+        if (isOtp(alert) && settings.isIslandOtpBypassFilterEnabled()) return true
         if (!settings.isIslandNotifFilterAppsEnabled()) return true
         return settings.loadIslandNotifFilterApps().any { it.isEnabled && it.packageName == alert.packageName }
     }
+
+    private fun otpCodeOf(alert: ActiveNotificationAlert) = alert.otpCode?.takeIf { settings.isIslandOtpEnabled() }
+
+    private fun isOtp(alert: ActiveNotificationAlert) = otpCodeOf(alert) != null
+
+    private fun timeoutMs(): Long {
+        val base = settings.getIslandTimeoutMs()
+        return if (currentAlert()?.let(::otpCodeOf) != null) settings.getIslandOtpTimeoutMs() else base
+    }
+
+    private fun maskOtp(code: String) = formatOtp(code).map { if (it == ' ') ' ' else '•' }.joinToString("")
 
     private fun concealed(): Boolean =
         settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED, false) &&
@@ -188,6 +251,15 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (existing >= 0) {
             alerts[existing] = alert
             render()
+            return
+        }
+        val now = System.currentTimeMillis()
+        replied.values.removeAll { now - it > REPLY_REPOST_WINDOW_MS }
+        if (replied.containsKey(alert.key)) return
+        if (copiedKey != null) {
+            alerts.addLast(alert)
+            while (alerts.size > MAX_QUEUE) alerts.removeFirst()
+            postedWhileCopied = true
             return
         }
         c.mainHandler.removeCallbacks(catchUpRunnable)
@@ -233,9 +305,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun popUp() {
         val c = ctx ?: return
         if (minimal()) return
-        val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()
+        val otpNeedsExpand = currentAlert()?.let(::isOtp) == true && !settings.isIslandOtpTapToCopyEnabled()
+        val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled() && !otpNeedsExpand
+        markSeen()
         c.request(
-            if (lineAvailable) PluginRequest.Peek(ITEM_KEY, settings.getIslandTimeoutMs(), sticky = true)
+            if (lineAvailable) PluginRequest.Peek(ITEM_KEY, timeoutMs(), sticky = true)
             else PluginRequest.Expand(ITEM_KEY).also { autoExpanded = true },
         )
     }
@@ -243,7 +317,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun onRemoved(key: String) {
         val index = alerts.indexOfFirst { it.key == key }
         if (index < 0) return
-        alerts.removeAt(index)
+        alerts.removeAt(index).also { seen.remove(it.key) }
         if (index < currentIndex) currentIndex--
         currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
         if (alerts.isEmpty()) clearAll() else render()
@@ -252,8 +326,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun onTimeout() {
         val c = ctx ?: return
         if (pendingPopUp) return
-        if (showingHere() && alerts.size > 1 && !manualPick) {
-            advanceCurrent()
+        if (showingHere() && alerts.size > 1 && !manualPick && advanceToUnseen()) {
             scheduleTimeout()
             render()
             if (c.currentStage() == IslandStage.Line) popUp()
@@ -297,18 +370,23 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun scheduleTimeout() {
         val handler = ctx?.mainHandler ?: return
         handler.removeCallbacks(timeoutRunnable)
-        handler.postDelayed(timeoutRunnable, settings.getIslandTimeoutMs())
+        handler.postDelayed(timeoutRunnable, timeoutMs())
     }
 
     private fun cancelTimers() {
         ctx?.mainHandler?.removeCallbacks(timeoutRunnable)
         ctx?.mainHandler?.removeCallbacks(catchUpRunnable)
+        ctx?.mainHandler?.removeCallbacks(copiedRunnable)
     }
 
     private fun clearAll() {
         catchingUp = false
+        catchUpPaused = false
+        copiedKey = null
+        postedWhileCopied = false
         cancelTimers()
         alerts.clear()
+        seen.clear()
         currentIndex = 0
         manualPick = false
         pendingPopUp = false
@@ -335,6 +413,10 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun render() {
+        if (copiedKey != null) {
+            publish(copiedItem())
+            return
+        }
         val alert = currentAlert()
         if (alert == null) {
             publish(null)
@@ -394,6 +476,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun clearWaiting() {
         val current = currentAlert() ?: return
         alerts.removeAll { it !== current }
+        seen.retainAll { it == current.key }
         currentIndex = 0
         render()
     }
@@ -411,6 +494,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun itemFor(alert: ActiveNotificationAlert): IslandItem {
         if (concealed()) return concealedItemFor(alert)
+        val code = otpCodeOf(alert)
+        if (code != null) return otpItemFor(alert, code)
         val (sender, message) = senderAndMessage(context, alert)
         val showGlow = settings.isIslandShowGlowEnabled()
         val tapToOpen = settings.isIslandNotifTapToOpenEnabled()
@@ -488,12 +573,21 @@ class NotificationsPlugin : BaseIslandPlugin() {
                     add(CompactCell("notif.app", soloOnly = true) { IslandBitmap(appIcon, 22.dp, circle = true) })
                 }
             },
-            line = LineContent(
-                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
-                start = appNameFor(context, alert),
-                end = "",
-                condensed = condensedLine(),
-            ),
+            line = if (isOtp(alert)) {
+                LineContent(
+                    icon = { IslandBitmap(alert.appIcon ?: alert.icon, 24.dp, fallbackRes = R.drawable.rounded_lock_24) },
+                    start = "${appNameFor(context, alert)} · ${context.getString(R.string.island_otp_label)}",
+                    end = alert.otpCode?.let(::maskOtp).orEmpty(),
+                    endSlot = { IslandIcon(R.drawable.rounded_lock_24, size = 18.dp) },
+                )
+            } else {
+                LineContent(
+                    icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                    start = appNameFor(context, alert),
+                    end = "",
+                    condensed = condensedLine(),
+                )
+            },
             accent = alert.appColor?.let { Color(soften(it)) },
             dismissible = true,
             onDismiss = {
@@ -505,6 +599,108 @@ class NotificationsPlugin : BaseIslandPlugin() {
             sourcePackage = alert.packageName,
             contentId = alert.key,
         )
+    }
+
+    private fun otpItemFor(alert: ActiveNotificationAlert, code: String): IslandItem {
+        val (sender, message) = senderAndMessage(context, alert)
+        val showGlow = settings.isIslandShowGlowEnabled()
+        val icon = alert.appIcon ?: alert.icon
+        val copy = { copyCode(alert, code) }
+        val dismiss = {
+            NotificationListener.dismissNotification(alert.key)
+            popCurrent(reExpand = false)
+        }
+        return IslandItem(
+            key = ITEM_KEY,
+            priority = IslandPriority.NOTIFICATION,
+            placement = CompactPlacement.Dynamic,
+            compact = listOf(
+                CompactCell("notif.icon") {
+                    IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                },
+            ),
+            line = LineContent(
+                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                start = sender,
+                end = formatOtp(code),
+                endSlot = { IslandIcon(R.drawable.rounded_content_copy_24, size = 18.dp) },
+            ),
+            expanded = ExpandedContent { scope ->
+                OtpExpanded(
+                    alert = alert,
+                    code = code,
+                    sender = sender,
+                    message = message,
+                    showGlow = showGlow,
+                    onCopy = copy,
+                    onDismiss = dismiss,
+                    scope = scope,
+                )
+            },
+            accent = alert.appColor?.let { Color(soften(it)) },
+            dismissible = true,
+            onDismiss = dismiss,
+            onOpen = {
+                if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
+                popCurrent(reExpand = false)
+            },
+            interactions = if (settings.isIslandOtpTapToCopyEnabled()) {
+                InteractionOverrides(onTap = { copy(); true }, onLineTap = { copy(); true })
+            } else {
+                InteractionOverrides.Default
+            },
+            sourcePackage = alert.packageName,
+            contentId = alert.key,
+        )
+    }
+
+    private fun copiedItem() = IslandItem(
+        key = ITEM_KEY,
+        priority = IslandPriority.NOTIFICATION,
+        placement = CompactPlacement.Dynamic,
+        compact = listOf(CompactCell("notif.copied") { IslandIcon(R.drawable.rounded_check_24, size = 20.dp) }),
+        line = LineContent(
+            icon = { IslandIcon(R.drawable.rounded_check_24, size = 22.dp) },
+            start = context.getString(R.string.island_otp_copied),
+            end = "",
+        ),
+        contentId = "otp.copied",
+    )
+
+    private fun copyCode(alert: ActiveNotificationAlert, code: String) {
+        val c = ctx ?: return
+        if (!OtpClipboard.copy(context, code)) return
+        HapticUtil.performStrongTickHaptic(context)
+        cancelTimers()
+        copiedKey = alert.key
+        render()
+        c.request(PluginRequest.Collapse(ITEM_KEY))
+        c.request(PluginRequest.Peek(ITEM_KEY, COPIED_MS))
+        c.mainHandler.postDelayed(copiedRunnable, COPIED_MS)
+    }
+
+    private fun finishCopy() {
+        val key = copiedKey ?: return
+        copiedKey = null
+        if (settings.isIslandOtpDismissAfterCopyEnabled()) NotificationListener.dismissNotification(key)
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index >= 0) currentIndex = alerts.removeKeepingCurrent(index, currentIndex)
+        if (alerts.isEmpty()) {
+            clearAll()
+            return
+        }
+        if (postedWhileCopied) {
+            postedWhileCopied = false
+            if (!queueEnabled()) while (alerts.size > 1) alerts.removeFirst()
+            currentIndex = alerts.lastIndex
+            manualPick = false
+            scheduleTimeout()
+            render()
+            popUp()
+            return
+        }
+        scheduleTimeout()
+        render()
     }
 
     private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean): StackIcon {
@@ -547,11 +743,19 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val sent = canCarryText && NotificationListener.instance?.performNotificationAction(action, text) == true
         if (sent) {
             Toast.makeText(context, R.string.island_reply_sent, Toast.LENGTH_SHORT).show()
-            if (currentAlert()?.key == alert.key) popCurrent(reExpand = false)
+            dismissAfterReply(alert)
         } else {
-            popCurrent(reExpand = false)
+            dismissAfterReply(alert)
             context.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
         }
+    }
+
+    private fun dismissAfterReply(alert: ActiveNotificationAlert) {
+        val c = ctx ?: return
+        replied[alert.key] = System.currentTimeMillis()
+        val wasFocused = c.focusedKey() == ITEM_KEY
+        onRemoved(alert.key)
+        if (wasFocused) c.request(PluginRequest.Collapse(ITEM_KEY))
     }
 
     private fun runAction(alert: ActiveNotificationAlert, action: NotificationActionItem) {
@@ -568,6 +772,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
     companion object {
         const val ITEM_KEY = "notifications"
         private const val MAX_QUEUE = 20
+        private const val COPIED_MS = 1_500L
+        private const val REPLY_REPOST_WINDOW_MS = 10_000L
 
         private val GENERIC_TITLES = setOf(
             "you", "whatsapp", "messages", "telegram", "gmail", "instagram", "slack", "discord", "essentials",

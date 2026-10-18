@@ -177,7 +177,7 @@
     <string name="flashlight_pulse_title">Pulso de lanterna</string>
     <string name="flashlight_pulse_facedown_title">Somente enquanto estiver voltado para baixo</string>
     <string name="flashlight_pulse_same_as_lighting_title">Os mesmos aplicativos da iluminação de notificação</string>
-    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_max_brightness">brilho máximo </string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Estilo</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajuste de curso</string>
@@ -1670,4 +1670,25 @@
     <string name="island_max_items_title">maximo de itens para mostrar </string>
     <string name="island_always_gestures_title">Gestos sempre disponíveis</string>
     <string name="island_always_gestures_desc">Mantenha a área de gestos disponível mesmo quando a ilha estiver oculta</string>
+    <string name="feat_back_gesture_title">gesto de voltar</string>
+    <string name="feat_back_gesture_desc">Larguras das bordas e gesto de voltar por aplicativo</string>
+    <string name="feat_back_gesture_left_title">Largura da borda esquerda</string>
+    <string name="feat_back_gesture_right_title">largura da borda direita</string>
+    <string name="feat_back_gesture_default_width_desc">A distância a partir da borda em que um gesto de deslizar aciona o retorno. É o mesmo que a sensibilidade de retorno nas configurações do sistema.</string>
+    <string name="back_gesture_add_app">adicionar um app</string>
+    <string name="back_gesture_add_app_desc">Use larguras de borda diferentes enquanto o aplicativo estiver aberto.</string>
+    <string name="feat_widget_stack_title">Pilha de widgets</string>
+    <string name="feat_widget_stack_desc">Empilhe widgets e alterne entre eles.</string>
+    <string name="feat_volume_steps_title">Etapas de volume</string>
+    <string name="feat_volume_steps_desc">Ajuste o volume da mídia mais rapidamente a cada pressionamento de tecla.</string>
+    <string name="feat_app_volume_title">Volume do aplicativo</string>
+    <string name="feat_app_volume_desc">Defina um volume separado para cada aplicativo.</string>
+    <string name="feat_face_unlock_brightness_title">Iluminação facial</string>
+    <string name="feat_face_unlock_brightness_desc">Aumente o brilho em ambientes com pouca luz.</string>
+    <string name="feat_screenshot_share_cleanup_title">Excluir capturas de tela compartilhadas</string>
+    <string name="feat_screenshot_share_cleanup_desc">Capturas de tela da lixeira após o compartilhamento</string>
+    <string name="face_unlock_ambient_threshold_title">Limiar ambiental</string>
+    <string name="face_unlock_auto_illuminate_title">Iluminação automática ao despertar</string>
+    <string name="face_unlock_trigger_unlock_title">Desbloqueio por gatilho</string>
+    <string name="face_unlock_light_tint_title">Tonalidade clara</string>
 </resources>

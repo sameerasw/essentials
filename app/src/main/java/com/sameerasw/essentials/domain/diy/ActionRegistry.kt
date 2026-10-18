@@ -82,6 +82,7 @@ object ActionRegistry {
                 add(Action.SetChargingMode())
                 add(Action.CustomSettings())
                 add(Action.Wait())
+                add(Action.SendNotification())
                 add(Action.CircleToSearch)
                 add(Action.TurnOffBackGesture)
                 add(Action.TurnOnBackGesture)

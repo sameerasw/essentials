@@ -1363,7 +1363,7 @@ fun SetupFeatures(
                         viewModel = viewModel,
                     )
                 }
-            } else if (isFocused && searchQuery.isNotEmpty()) {
+            } else if (searchQuery.isNotEmpty()) {
                 if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty() && matchingFrozenApps.isEmpty()) {
                     item {
                         Column(

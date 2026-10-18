@@ -59,6 +59,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -102,11 +105,14 @@ fun ConsciousGatePauseScreen(
     var isHolding by remember { mutableStateOf(false) }
 
     val view = LocalView.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(isHolding) {
-        while (isActive) {
-            delay(1000L)
-            if (!isHolding && !isActionInvoked) {
-                HapticUtil.performLightHaptic(view)
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            while (isActive) {
+                delay(1000L)
+                if (!isHolding && !isActionInvoked) {
+                    HapticUtil.performLightHaptic(view)
+                }
             }
         }
     }
@@ -301,10 +307,13 @@ internal fun HoldToContinueButton(
                                     }
                                 }
 
-                            tryAwaitRelease()
-                            onHoldingChange(false)
-                            animJob.cancel()
-                            HapticUtil.stopHoldHaptic(context)
+                            try {
+                                tryAwaitRelease()
+                            } finally {
+                                onHoldingChange(false)
+                                animJob.cancel()
+                                HapticUtil.stopHoldHaptic(context)
+                            }
 
                             if (completed || holdProgress.value >= 0.99f) {
                                 HapticUtil.performCustomHaptic(view, 1.0f)

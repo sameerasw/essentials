@@ -1139,6 +1139,7 @@ fun IslandRoot(
                             onCellTap = ::handleTap,
                             onCellLongPress = ::handleLongPress,
                             sideBubble = ::sideBubbleProgress,
+                            bubbleExtent = { bubbleGapPx + sideWidthLive() },
                             onSlack = { if (current) compactSlack.intValue = it },
                         )
                     }
@@ -1167,7 +1168,14 @@ fun IslandRoot(
                         },
                     contentAlignment = layerAlign,
                 ) {
-                    CompactTemplate(state = state, spec = spec, onCellTap = {}, onCellLongPress = {}, sideBubble = ::sideBubbleProgress)
+                    CompactTemplate(
+                        state = state,
+                        spec = spec,
+                        onCellTap = {},
+                        onCellLongPress = {},
+                        sideBubble = ::sideBubbleProgress,
+                        bubbleExtent = { bubbleGapPx + sideWidthLive() },
+                    )
                 }
             }
             }
@@ -1262,6 +1270,7 @@ private fun StageContent(
     onCellTap: (String) -> Unit = {},
     onCellLongPress: (String) -> Unit = {},
     sideBubble: () -> Float = { 0f },
+    bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
 ) {
     val a = if (interactive) actions else NoActions
@@ -1279,6 +1288,7 @@ private fun StageContent(
                     onCellTap = { if (interactive) onCellTap(it) },
                     onCellLongPress = { if (interactive) onCellLongPress(it) },
                     sideBubble = sideBubble,
+                    bubbleExtent = bubbleExtent,
                     onSlack = onSlack,
                 )
             }

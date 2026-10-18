@@ -67,6 +67,7 @@ import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.battery.BatteriesSettingsUI
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.security.AppLockSettingsUI
+import com.sameerasw.essentials.ui.features.security.ScreenshotsSettingsUI
 import com.sameerasw.essentials.ui.features.system.AlwaysOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.BACK_GESTURE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.system.BackGestureSettingsUI
@@ -381,6 +382,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 "Notification Sync" -> !isNotificationListenerEnabled
                                 "Button remap" -> !isAccessibilityEnabled
                                 "Face unlock brightness" -> !isAccessibilityEnabled
+                                "Screenshots" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
+                                "Watch Wireless Debugging" -> android.os.Build.VERSION.SDK_INT >= 37 && !viewModel.isLocalNetworkGranted.value
                                 "Lock screen shortcuts" -> !isAccessibilityEnabled
                                 "Volume steps" -> !isAccessibilityEnabled
                                 "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
@@ -785,7 +788,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                         listOf(
                                                             "Lockdown mode",
                                                             "Face unlock brightness",
-                                                            "Screenshot share cleanup",
+                                                            "Screenshots",
                                                         ),
                                                     )
 
@@ -840,6 +843,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Hilight", "Hilight notifications", "Hilight live progress" -> !isNotificationListenerEnabled || !isShizukuPermissionGranted
                                                             "Button remap" -> !isAccessibilityEnabled
                                                             "Face unlock brightness" -> !isAccessibilityEnabled
+                                                            "Screenshots" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
+                                                            "Watch Wireless Debugging" -> android.os.Build.VERSION.SDK_INT >= 37 && !viewModel.isLocalNetworkGranted.value
                                                             "Lock screen shortcuts" -> !isAccessibilityEnabled
                                                             "Volume steps" -> !isAccessibilityEnabled
                                                             "App volume" -> !isAccessibilityEnabled || !isShizukuPermissionGranted
@@ -1169,6 +1174,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Face unlock brightness" -> {
                                         FaceUnlockBrightnessSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Screenshots" -> {
+                                        ScreenshotsSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,

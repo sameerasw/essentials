@@ -77,6 +77,28 @@ fun WhatsNewCustomContent(
         modifier = Modifier.fillMaxWidth(),
     ) {
         WhatsNewSectionCard(
+            title = stringResource(R.string.whats_new_watchface_title),
+            summary = stringResource(R.string.whats_new_watchface_summary),
+            expanded = expandedSection == 1,
+            onToggle = { toggle(1) },
+            icon = { SectionIcon(R.drawable.rounded_watch_24) },
+        ) {
+            Text(
+                text = stringResource(R.string.whats_new_watchface_desc),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            EssentialsWatchfacePromoContent()
+        }
+
+        Text(
+            text = stringResource(R.string.whats_new_previous_updates),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+        )
+
+        WhatsNewSectionCard(
             title = stringResource(R.string.whats_new_overcast_card_title),
             summary = stringResource(R.string.whats_new_overcast_section_title),
             expanded = expandedSection == 0,
@@ -117,23 +139,6 @@ fun WhatsNewCustomContent(
                 },
             )
         }
-
-        /*
-        WhatsNewSectionCard(
-            title = stringResource(R.string.whats_new_watchface_title),
-            summary = stringResource(R.string.whats_new_watchface_summary),
-            expanded = expandedSection == 1,
-            onToggle = { toggle(1) },
-            icon = { SectionIcon(R.drawable.rounded_watch_24) },
-        ) {
-            Text(
-                text = stringResource(R.string.whats_new_watchface_desc),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            EssentialsWatchfacePromoContent()
-        }
-        */
 
         WhatsNewSectionCard(
             title = stringResource(R.string.setting_hidden_debugging_title),

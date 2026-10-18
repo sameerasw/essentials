@@ -127,6 +127,7 @@ fun NotificationExpanded(
                         accent = glowColor,
                         onSend = { text ->
                             scope.setTextInput(false)
+                            replyAction = null
                             onReply(replying, text)
                         },
                         onCancel = {
@@ -181,6 +182,7 @@ private fun ReplyField(
         if (value.isEmpty()) return
         IslandHaptics.button(context)
         keyboard?.hide()
+        text = ""
         onSend(value)
     }
     Row(

@@ -96,15 +96,19 @@ object ChronometerRepository {
         if (n.extras.containsKey(Notification.EXTRA_MEDIA_SESSION)) return false
         val chronometer = n.extras.getBoolean(Notification.EXTRA_SHOW_CHRONOMETER) || timeMetric(n.extras) != null
         
-        return (chronometer && sbn.isOngoing) || synchronized(this) { tracked.containsKey(sbn.key) }
+        return (chronometer && sbn.isOngoing && !hasProgress(n.extras)) || synchronized(this) { tracked.containsKey(sbn.key) }
     }
+
+    private fun hasProgress(extras: Bundle): Boolean =
+        extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 ||
+            extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE, false)
 
     @Synchronized
     fun onPosted(context: Context, sbn: StatusBarNotification) {
         val n = sbn.notification
         val extras = n.extras
         val previous = tracked[sbn.key]
-        if (!sbn.isOngoing) {
+        if (!sbn.isOngoing || hasProgress(extras)) {
             remove(sbn.key)
             return
         }

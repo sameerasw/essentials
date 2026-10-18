@@ -27,7 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.font.Font
@@ -90,7 +94,7 @@ fun LineTemplate(
                 endSlot()
             }
         } else {
-            if (spec.growDirection > 0) Spacer(Modifier.width(spec.cameraSlotWidth - spec.cameraGap))
+            if (spec.growDirection > 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
@@ -98,11 +102,15 @@ fun LineTemplate(
             ) {
                 leadingSlot()
                 if (line.showLeftIcon) icon()
-                LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
-                LineText(line.end, TextAlign.End, FontWeight.Normal, Modifier.weight(1f))
+                MarqueeText(
+                    text = mergedLineText(line),
+                    style = IslandTextStyles.line,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(1f),
+                )
                 endSlot()
             }
-            if (spec.growDirection < 0) Spacer(Modifier.width(spec.cameraSlotWidth - spec.cameraGap))
+            if (spec.growDirection < 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
         }
     }
 }
@@ -176,11 +184,11 @@ private fun CondensedLine(line: LineContent, spec: IslandLayoutSpec, startInset:
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
         ) {
-            if (spec.growDirection > 0) Spacer(Modifier.width(spec.cameraSlotWidth - spec.cameraGap))
+            if (spec.growDirection > 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
             leadingSlot()
             icon()
             title(natural.coerceAtMost(maxText))
-            if (spec.growDirection < 0) Spacer(Modifier.width(spec.cameraSlotWidth - spec.cameraGap))
+            if (spec.growDirection < 0) Spacer(Modifier.width((spec.cameraSlotWidth - spec.cameraGap).coerceAtLeast(0.dp)))
         }
     }
 }
@@ -200,6 +208,14 @@ private fun LeadingSlot(leading: LineLeading?, spec: IslandLayoutSpec) {
             fadeOut(IslandMotion.expressiveFastEffects()),
     ) {
         Box(Modifier.width(width).height(spec.cellSize), contentAlignment = Alignment.Center) { last?.content?.invoke() }
+    }
+}
+
+private fun mergedLineText(line: LineContent): AnnotatedString = buildAnnotatedString {
+    withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) { append(line.start) }
+    if (line.end.isNotBlank()) {
+        if (line.start.isNotBlank()) append("  ·  ")
+        withStyle(SpanStyle(fontWeight = FontWeight.Normal)) { append(line.end) }
     }
 }
 

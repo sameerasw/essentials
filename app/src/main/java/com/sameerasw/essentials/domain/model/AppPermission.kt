@@ -13,6 +13,7 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.PermissionGrantUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
 
@@ -131,6 +132,17 @@ enum class AppPermission(
         iconRes = R.drawable.rounded_image_24,
         aliases = listOf("READ_MEDIA_IMAGES", "READ_MEDIA_VIDEO", "READ_MEDIA_AUDIO", "READ_EXTERNAL_STORAGE", "MANAGE_EXTERNAL_STORAGE"),
     ),
+    SENSITIVE_NOTIFICATIONS(
+        key = "SENSITIVE_NOTIFICATIONS",
+        titleRes = R.string.perm_sensitive_notifications_title,
+        iconRes = R.drawable.rounded_vpn_key_24,
+    ),
+    LOCAL_NETWORK(
+        key = "LOCAL_NETWORK",
+        titleRes = R.string.perm_local_network_title,
+        iconRes = R.drawable.rounded_lan_24,
+        aliases = listOf("ACCESS_LOCAL_NETWORK"),
+    ),
     NOTIFICATION_BUBBLES(
         key = "NOTIFICATION_BUBBLES",
         titleRes = R.string.perm_bubbles_title,
@@ -145,6 +157,8 @@ enum class AppPermission(
             DRAW_OVERLAYS -> PermissionUtils.canDrawOverlays(context)
             WRITE_SETTINGS -> PermissionUtils.canWriteSystemSettings(context)
             NOTIFICATION_POLICY -> PermissionUtils.hasNotificationPolicyAccess(context)
+            SENSITIVE_NOTIFICATIONS -> PermissionGrantUtil.hasSensitiveNotifications(context)
+            LOCAL_NETWORK -> PermissionUtils.hasLocalNetworkPermission(context)
             ROOT, SHIZUKU -> ShellUtils.isAvailable(context) && ShellUtils.hasPermission(context)
             else -> true
         }

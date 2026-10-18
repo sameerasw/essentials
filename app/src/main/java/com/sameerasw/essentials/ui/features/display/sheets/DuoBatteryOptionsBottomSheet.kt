@@ -27,10 +27,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
+import com.sameerasw.essentials.utils.DuoBatteryLevels
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -38,10 +40,10 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 fun BatteryColorOptions(
     viewModel: MainViewModel,
     showIdleColor: Boolean = false,
+    showLevels: Boolean = false,
 ) {
     val view = LocalView.current
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        // Low Battery (< 20%)
         RoundedCardContainer(
             spacing = 2.dp,
             cornerRadius = 24.dp,
@@ -60,16 +62,25 @@ fun BatteryColorOptions(
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
-                ColorSwatchPicker(
-                    selectedColorHex = viewModel.duoBatteryLowColor.value,
-                    onColorSelected = { hex ->
-                        viewModel.setDuoBatteryLowColor(hex)
-                    },
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    if (showLevels) {
+                        LevelSlider(
+                            title = stringResource(R.string.duo_battery_low_level_title),
+                            level = viewModel.duoBatteryLowLevel.intValue,
+                            range = (DuoBatteryLevels.MIN + 1)..DuoBatteryLevels.MAX,
+                            onLevelChange = viewModel::setDuoBatteryLowLevel,
+                        )
+                    }
+                    ColorSwatchPicker(
+                        selectedColorHex = viewModel.duoBatteryLowColor.value,
+                        onColorSelected = { hex ->
+                            viewModel.setDuoBatteryLowColor(hex)
+                        },
+                    )
+                }
             }
         }
 
-        // Critically Low Battery (< 10%)
         RoundedCardContainer(
             spacing = 2.dp,
             cornerRadius = 24.dp,
@@ -88,12 +99,22 @@ fun BatteryColorOptions(
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
-                ColorSwatchPicker(
-                    selectedColorHex = viewModel.duoBatteryCriticalColor.value,
-                    onColorSelected = { hex ->
-                        viewModel.setDuoBatteryCriticalColor(hex)
-                    },
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    if (showLevels) {
+                        LevelSlider(
+                            title = stringResource(R.string.duo_battery_critical_level_title),
+                            level = viewModel.duoBatteryCriticalLevel.intValue,
+                            range = DuoBatteryLevels.MIN..(DuoBatteryLevels.MAX - 1),
+                            onLevelChange = viewModel::setDuoBatteryCriticalLevel,
+                        )
+                    }
+                    ColorSwatchPicker(
+                        selectedColorHex = viewModel.duoBatteryCriticalColor.value,
+                        onColorSelected = { hex ->
+                            viewModel.setDuoBatteryCriticalColor(hex)
+                        },
+                    )
+                }
             }
         }
 
@@ -185,6 +206,28 @@ fun BatteryColorOptions(
     }
 }
 
+@Composable
+private fun LevelSlider(
+    title: String,
+    level: Int,
+    range: IntRange,
+    onLevelChange: (Int) -> Unit,
+) {
+    val view = LocalView.current
+    ConfigSliderItem(
+        title = title,
+        value = level.toFloat(),
+        onValueChange = {
+            HapticUtil.performUIHaptic(view)
+            onLevelChange(it.toInt().coerceIn(range))
+        },
+        valueRange = range.first.toFloat()..range.last.toFloat(),
+        increment = 1f,
+        iconRes = R.drawable.rounded_percent_24,
+        valueFormatter = { "${it.toInt()}%" },
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DuoBatteryOptionsBottomSheet(
@@ -209,7 +252,7 @@ fun DuoBatteryOptionsBottomSheet(
                 modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
             )
 
-            BatteryColorOptions(viewModel)
+            BatteryColorOptions(viewModel, showLevels = true)
         }
     }
 }

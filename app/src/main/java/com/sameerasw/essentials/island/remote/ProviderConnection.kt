@@ -113,6 +113,7 @@ class ProviderConnection(
                     stub.attach(host, hostInfo().toBundle())
                 } catch (_: Exception) {
                 }
+                sessions.values.forEach { it.onProviderReady() }
             }
         }
 
@@ -192,7 +193,7 @@ class ProviderConnection(
 
     private fun clear() {
         provider = null
-        sessions.clear()
+        sessions.values.forEach { it.onProviderLost() }
         scopes.clear()
         heights.clear()
         snapshots.clear()

@@ -48,8 +48,11 @@ import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.NavigationNotificationData
+import com.sameerasw.essentials.domain.model.NavigationParser
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.domain.model.RippleConfig
+import com.sameerasw.essentials.island.plugins.notifications.OtpExtractor
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.widgets.PixelSearchbarWidget
@@ -69,6 +72,10 @@ class NotificationListener : NotificationListenerService() {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
     }
 
+    interface NavigationNotificationListener {
+        fun onNavigationNotificationUpdated(data: NavigationNotificationData?)
+    }
+
     interface NotificationAlertListener {
         fun onNotificationAlertPosted(alert: ActiveNotificationAlert)
         fun onNotificationAlertRemoved(key: String)
@@ -76,6 +83,19 @@ class NotificationListener : NotificationListenerService() {
 
     companion object {
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
+        private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
+        private val OTP_SKIPPED_CATEGORIES = setOf(
+            Notification.CATEGORY_CALL,
+            Notification.CATEGORY_TRANSPORT,
+            Notification.CATEGORY_PROGRESS,
+            Notification.CATEGORY_NAVIGATION,
+            Notification.CATEGORY_ALARM,
+            Notification.CATEGORY_STOPWATCH,
+            Notification.CATEGORY_SERVICE,
+            Notification.CATEGORY_SYSTEM,
+            Notification.CATEGORY_STATUS,
+            Notification.CATEGORY_WORKOUT,
+        )
 
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
@@ -88,6 +108,25 @@ class NotificationListener : NotificationListenerService() {
 
         private val progressListeners = mutableListOf<ProgressNotificationListener>()
         private val alertListeners = mutableListOf<NotificationAlertListener>()
+        private val navigationListeners = mutableListOf<NavigationNotificationListener>()
+
+        fun addNavigationNotificationListener(listener: NavigationNotificationListener) {
+            synchronized(navigationListeners) {
+                if (!navigationListeners.contains(listener)) navigationListeners.add(listener)
+            }
+        }
+
+        fun removeNavigationNotificationListener(listener: NavigationNotificationListener) {
+            synchronized(navigationListeners) { navigationListeners.remove(listener) }
+        }
+
+        fun notifyNavigationListeners(data: NavigationNotificationData?) {
+            val listenersCopy = synchronized(navigationListeners) { navigationListeners.toList() }
+            listenersCopy.forEach { it.onNavigationNotificationUpdated(data) }
+        }
+
+        fun getLatestNavigationNotification(): NavigationNotificationData? =
+            instance?.extractLatestNavigationNotification()
 
         fun addNotificationAlertListener(listener: NotificationAlertListener) {
             synchronized(alertListeners) {
@@ -279,6 +318,24 @@ class NotificationListener : NotificationListenerService() {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
                 ranking.suppressedVisualEffects and NotificationManager.Policy.SUPPRESSED_EFFECT_PEEK != 0
         return !ranking.matchesInterruptionFilter() || peekSuppressed
+    }
+
+    private fun otpCodeOf(sbn: StatusBarNotification): String? {
+        if (sbn.notification.category in OTP_SKIPPED_CATEGORIES) return null
+        return OtpExtractor.extract(otpSourceText(sbn))
+    }
+
+    private fun otpSourceText(sbn: StatusBarNotification): String {
+        val extras = sbn.notification.extras ?: return ""
+        return listOf(
+            Notification.EXTRA_TITLE,
+            Notification.EXTRA_TITLE_BIG,
+            Notification.EXTRA_TEXT,
+            Notification.EXTRA_BIG_TEXT,
+        ).mapNotNull { extras.getCharSequence(it)?.toString() }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .joinToString("\n")
     }
 
     private fun populateActiveUnreadNotifications() {
@@ -1025,6 +1082,8 @@ class NotificationListener : NotificationListenerService() {
         val extras = sbn.notification.extras
         if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
             scheduleProgressRefresh()
+        } else if (sbn.isOngoing && isNavigationNotification(sbn)) {
+            scheduleProgressRefresh()
         } else if (HilightProgressTracker.isTracking(sbn.key)) {
             // Its progress bar was replaced, e.g. by "Download complete"
             scheduleProgressRefresh()
@@ -1034,6 +1093,7 @@ class NotificationListener : NotificationListenerService() {
             val alert = extractNotificationAlert(sbn)?.copy(
                 isSilent = isSilentNotification(sbn, rankingMap),
                 blockedByDnd = isBlockedByDnd(sbn, rankingMap),
+                otpCode = otpCodeOf(sbn),
             )
             val callHidden = CallNotificationParser.isCall(sbn) && !SettingsRepository(applicationContext).isIslandShowCallsEnabled()
             if (alert != null && !callHidden) {
@@ -1875,6 +1935,14 @@ class NotificationListener : NotificationListenerService() {
     private val progressRefreshRunnable =
         Runnable {
             progressExecutor.execute {
+                val navigation =
+                    try {
+                        extractLatestNavigationNotification()
+                    } catch (e: Exception) {
+                        Log.e("NotificationListener", "Failed to extract navigation notification", e)
+                        null
+                    }
+                progressHandler.post { notifyNavigationListeners(navigation) }
                 val data =
                     try {
                         extractLatestProgressNotification()
@@ -1919,9 +1987,62 @@ class NotificationListener : NotificationListenerService() {
         val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
         val progressNotifs = active.mapNotNull { sbn ->
             if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
+            if (islandShowsNavigation && sbn.isOngoing && isNavigationNotification(sbn)) return@mapNotNull null
             extractProgressNotification(sbn)
         }
         return progressNotifs.maxByOrNull { it.postTime }
+    }
+
+    private val islandShowsNavigation: Boolean
+        get() = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE).let {
+            it.getBoolean(SettingsRepository.KEY_ISLAND_ENABLED, false) &&
+                it.getBoolean(SettingsRepository.KEY_ISLAND_SHOW_NAVIGATION, true)
+        }
+
+    @Volatile
+    private var navigationManeuverCache: Triple<String, Long, Bitmap?>? = null
+
+    fun extractLatestNavigationNotification(): NavigationNotificationData? {
+        val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
+        return active
+            .filter { it.packageName != packageName && it.isOngoing && isNavigationNotification(it) }
+            .mapNotNull { extractNavigationNotification(it) }
+            .maxByOrNull { it.postTime }
+    }
+
+    private fun extractNavigationNotification(sbn: StatusBarNotification): NavigationNotificationData? {
+        val notif = sbn.notification ?: return null
+        val extras = notif.extras ?: return null
+        val parsed = NavigationParser.parse(
+            title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
+            text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString(),
+            chip = extras.getCharSequence(EXTRA_SHORT_CRITICAL_TEXT)?.toString(),
+        )
+        val postTime = if (sbn.postTime > 0) sbn.postTime else notif.`when`
+        val cached = navigationManeuverCache
+        val maneuver = if (cached != null && cached.first == sbn.key && cached.second == postTime) {
+            cached.third
+        } else {
+            try {
+                notif.getLargeIcon()?.loadDrawable(this)?.let { AppUtil.drawableToBitmap(it) }
+            } catch (_: Exception) {
+                null
+            }.also { navigationManeuverCache = Triple(sbn.key, postTime, it) }
+        }
+        val actions = notif.actions.orEmpty()
+        val exit = NavigationParser.exitActionIndex(actions.map { it.title?.toString() })
+        return NavigationNotificationData(
+            key = sbn.key,
+            packageName = sbn.packageName,
+            instruction = parsed.instruction,
+            distance = parsed.distance,
+            eta = parsed.eta,
+            maneuver = maneuver,
+            contentIntent = notif.contentIntent,
+            exitIntent = actions.getOrNull(exit)?.actionIntent,
+            postTime = postTime,
+        )
     }
 
     fun isHeadsUpNotification(

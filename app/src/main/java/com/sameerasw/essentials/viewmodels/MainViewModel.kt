@@ -84,9 +84,12 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.DuoBatteryLevels
+import com.sameerasw.essentials.utils.PermissionGrantUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.ScreenshotCleaner
 import com.sameerasw.essentials.utils.PrivilegedMode
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -187,6 +190,8 @@ class MainViewModel : ViewModel() {
     val duoBatteryPowerSaveColor = mutableStateOf("#FF9800")
     val isDuoBatteryLowColorEnabled = mutableStateOf(true)
     val duoBatteryLowColor = mutableStateOf("#FFEB3B")
+    val duoBatteryLowLevel = mutableIntStateOf(DuoBatteryLevels.DEFAULT_LOW)
+    val duoBatteryCriticalLevel = mutableIntStateOf(DuoBatteryLevels.DEFAULT_CRITICAL)
     val isIslandBatteryIdleColorEnabled = mutableStateOf(false)
     val islandBatteryIdleColor = mutableStateOf("#FFFFFF")
     val isDuoBatteryCriticalColorEnabled = mutableStateOf(true)
@@ -229,6 +234,8 @@ class MainViewModel : ViewModel() {
     val isIslandKeepInFullscreen = mutableStateOf(false)
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
+    val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
     val islandLandscapeTopSpacing = mutableFloatStateOf(0f)
@@ -248,6 +255,10 @@ class MainViewModel : ViewModel() {
     val islandAlarmWindowHours = mutableIntStateOf(12)
     val isIslandShowTravel = mutableStateOf(true)
     val isIslandShowCaffeinate = mutableStateOf(true)
+    val isIslandShowNavigation = mutableStateOf(true)
+    val islandNavigationOnNew = mutableStateOf(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK)
+    val islandNavigationExpandDistance = mutableIntStateOf(200)
+    val isIslandNavigationPeekAfterExpand = mutableStateOf(false)
     val isIslandShowHotspot = mutableStateOf(false)
     val isIslandShowRecording = mutableStateOf(false)
     val isIslandRecordingScreen = mutableStateOf(true)
@@ -269,7 +280,7 @@ class MainViewModel : ViewModel() {
     val isIslandCompactHideStatusBar = mutableStateOf(false)
     val isIslandHideWhenScreenOff = mutableStateOf(true)
     val islandTimeoutMs = mutableLongStateOf(4500L)
-    val isIslandLineStageEnabled = mutableStateOf(true)
+    val isIslandLineStageEnabled = mutableStateOf(false)
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
@@ -287,6 +298,8 @@ class MainViewModel : ViewModel() {
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
+    val isIslandOtpEnabled = mutableStateOf(false)
+    val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
@@ -302,10 +315,11 @@ class MainViewModel : ViewModel() {
     val isIslandShowCalendar = mutableStateOf(false)
     val isIslandShowConsciousGate = mutableStateOf(true)
     val isIslandShowTimeBattery = mutableStateOf(false)
-    val isIslandShowBatteryAlerts = mutableStateOf(true)
+    val isIslandBatteryPeekAlerts = mutableStateOf(true)
     val isIslandShowBattery = mutableStateOf(false)
     val isIslandShowFlashlight = mutableStateOf(true)
     val islandBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
+    val islandDevicesBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
     val isIslandBatteryPercentageEnabled = mutableStateOf(false)
     val isIslandBatteryPercentageConditional = mutableStateOf(false)
     val isIslandBatteryIconConditional = mutableStateOf(false)
@@ -405,6 +419,11 @@ class MainViewModel : ViewModel() {
     val isPocketModeEnabled = mutableStateOf(false)
     val isFaceUnlockBrightnessEnabled = mutableStateOf(false)
     val isScreenshotShareCleanupEnabled = mutableStateOf(false)
+    val screenshotShareCleanupDelayMinutes = mutableIntStateOf(0)
+    val isScreenshotAutoCleanEnabled = mutableStateOf(false)
+    val screenshotAutoCleanDays = mutableIntStateOf(7)
+    val screenshotsCleanedCount = mutableIntStateOf(0)
+    val screenshotsCleanedBytes = mutableLongStateOf(0L)
     val faceUnlockMaxBrightness = mutableIntStateOf(100)
     val faceUnlockAmbientThreshold = mutableFloatStateOf(10f)
     val isFaceUnlockTriggerUnlock = mutableStateOf(true)
@@ -594,6 +613,8 @@ class MainViewModel : ViewModel() {
     val isWriteSettingsEnabled = mutableStateOf(false)
     val isCalendarPermissionGranted = mutableStateOf(false)
     val isBubblePermissionGranted = mutableStateOf(false)
+    val isSensitiveNotificationsGranted = mutableStateOf(true)
+    val isLocalNetworkGranted = mutableStateOf(true)
     val isUserDictionaryEnabled = mutableStateOf(false)
     val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
     val isUserDictionarySheetVisible = mutableStateOf(false)
@@ -830,6 +851,12 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR ->
                         duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
 
+                    SettingsRepository.KEY_DUO_BATTERY_LOW_LEVEL ->
+                        duoBatteryLowLevel.intValue = settingsRepository.getDuoBatteryLowLevel()
+
+                    SettingsRepository.KEY_DUO_BATTERY_CRITICAL_LEVEL ->
+                        duoBatteryCriticalLevel.intValue = settingsRepository.getDuoBatteryCriticalLevel()
+
                     SettingsRepository.KEY_DUO_SHOW_NETWORKS ->
                         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
 
@@ -966,11 +993,29 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
                         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
 
+                    SettingsRepository.KEY_ISLAND_SHOW_NAVIGATION ->
+                        isIslandShowNavigation.value = settingsRepository.isIslandShowNavigationEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NAVIGATION_ON_NEW ->
+                        islandNavigationOnNew.value = settingsRepository.getIslandNavigationOnNew()
+
+                    SettingsRepository.KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE ->
+                        islandNavigationExpandDistance.intValue = settingsRepository.getIslandNavigationExpandDistance()
+
+                    SettingsRepository.KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND ->
+                        isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_TIMEOUT_MS ->
                         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+
+                    SettingsRepository.KEY_ISLAND_OTP_ENABLED ->
+                        isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
+
+                    SettingsRepository.KEY_ISLAND_OTP_TIMEOUT_MS ->
+                        islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
 
                     SettingsRepository.KEY_STATUS_GLANCE_ENABLED ->
                         isStatusGlanceEnabled.value = settingsRepository.isStatusGlanceEnabled()
@@ -1393,6 +1438,21 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_SCREENSHOT_SHARE_CLEANUP_ENABLED ->
                         isScreenshotShareCleanupEnabled.value = settingsRepository.isScreenshotShareCleanupEnabled()
+
+                    SettingsRepository.KEY_SCREENSHOT_SHARE_CLEANUP_DELAY ->
+                        screenshotShareCleanupDelayMinutes.intValue = settingsRepository.getScreenshotShareCleanupDelayMinutes()
+
+                    SettingsRepository.KEY_SCREENSHOT_AUTO_CLEAN_ENABLED ->
+                        isScreenshotAutoCleanEnabled.value = settingsRepository.isScreenshotAutoCleanEnabled()
+
+                    SettingsRepository.KEY_SCREENSHOT_AUTO_CLEAN_DAYS ->
+                        screenshotAutoCleanDays.intValue = settingsRepository.getScreenshotAutoCleanDays()
+
+                    SettingsRepository.KEY_SCREENSHOTS_CLEANED_COUNT ->
+                        screenshotsCleanedCount.intValue = settingsRepository.getScreenshotsCleanedCount()
+
+                    SettingsRepository.KEY_SCREENSHOTS_CLEANED_BYTES ->
+                        screenshotsCleanedBytes.longValue = settingsRepository.getScreenshotsCleanedBytes()
 
                     SettingsRepository.KEY_FACE_UNLOCK_MAX_BRIGHTNESS ->
                         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
@@ -1819,6 +1879,8 @@ class MainViewModel : ViewModel() {
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isBubblePermissionGranted.value = PermissionUtils.hasBubblePermission(context)
+        isSensitiveNotificationsGranted.value = PermissionGrantUtil.hasSensitiveNotifications(context)
+        isLocalNetworkGranted.value = PermissionUtils.hasLocalNetworkPermission(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         if (cachedIsUpdateAvailable) {
@@ -2386,6 +2448,8 @@ class MainViewModel : ViewModel() {
         islandBatteryIdleColor.value = settingsRepository.getIslandBatteryIdleColor()
         isDuoBatteryCriticalColorEnabled.value = settingsRepository.isDuoBatteryCriticalColorEnabled()
         duoBatteryCriticalColor.value = settingsRepository.getDuoBatteryCriticalColor()
+        duoBatteryLowLevel.intValue = settingsRepository.getDuoBatteryLowLevel()
+        duoBatteryCriticalLevel.intValue = settingsRepository.getDuoBatteryCriticalLevel()
         isDuoShowNetworks.value = settingsRepository.isDuoShowNetworksEnabled()
         isDuoDifferentiateWifi.value = settingsRepository.isDuoDifferentiateWifiEnabled()
         isDuoShowTime.value = settingsRepository.isDuoShowTimeEnabled()
@@ -2421,6 +2485,8 @@ class MainViewModel : ViewModel() {
         isIslandKeepInFullscreen.value = settingsRepository.isIslandKeepInFullscreenEnabled()
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
         islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
@@ -2445,6 +2511,10 @@ class MainViewModel : ViewModel() {
         isDuoKeepInFullscreen.value = settingsRepository.isDuoKeepInFullscreenEnabled()
         isDuoDisableInteractionsInFullscreen.value = settingsRepository.isDuoDisableInteractionsInFullscreenEnabled()
         isIslandShowCaffeinate.value = settingsRepository.isIslandShowCaffeinateEnabled()
+        isIslandShowNavigation.value = settingsRepository.isIslandShowNavigationEnabled()
+        islandNavigationOnNew.value = settingsRepository.getIslandNavigationOnNew()
+        islandNavigationExpandDistance.intValue = settingsRepository.getIslandNavigationExpandDistance()
+        isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
         isIslandShowRecording.value = settingsRepository.isIslandShowRecordingEnabled()
         isIslandRecordingScreen.value = settingsRepository.isIslandRecordingScreenEnabled()
@@ -2492,6 +2562,8 @@ class MainViewModel : ViewModel() {
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+        isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
+        islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
@@ -2507,10 +2579,11 @@ class MainViewModel : ViewModel() {
         isIslandShowCalendar.value = settingsRepository.isIslandShowCalendarEnabled()
         isIslandShowConsciousGate.value = settingsRepository.isIslandShowConsciousGateEnabled()
         isIslandShowTimeBattery.value = settingsRepository.isIslandShowTimeBatteryEnabled()
-        isIslandShowBatteryAlerts.value = settingsRepository.isIslandShowBatteryAlertsEnabled()
+        isIslandBatteryPeekAlerts.value = settingsRepository.isIslandBatteryPeekAlertsEnabled()
         isIslandShowBattery.value = settingsRepository.isIslandShowBatteryEnabled()
         isIslandShowFlashlight.value = settingsRepository.isIslandShowFlashlightEnabled()
         islandBatteryStyle.value = settingsRepository.getIslandBatteryStyle()
+        islandDevicesBatteryStyle.value = settingsRepository.getIslandDevicesBatteryStyle()
         isIslandBatteryPercentageEnabled.value = settingsRepository.isIslandBatteryPercentageEnabled()
         isIslandBatteryPercentageConditional.value = settingsRepository.isIslandBatteryPercentageConditional()
         isIslandBatteryIconConditional.value = settingsRepository.isIslandBatteryIconConditional()
@@ -2840,6 +2913,11 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
         isFaceUnlockBrightnessEnabled.value = settingsRepository.isFaceUnlockBrightnessEnabled()
         isScreenshotShareCleanupEnabled.value = settingsRepository.isScreenshotShareCleanupEnabled()
+        screenshotShareCleanupDelayMinutes.intValue = settingsRepository.getScreenshotShareCleanupDelayMinutes()
+        isScreenshotAutoCleanEnabled.value = settingsRepository.isScreenshotAutoCleanEnabled()
+        screenshotAutoCleanDays.intValue = settingsRepository.getScreenshotAutoCleanDays()
+        screenshotsCleanedCount.intValue = settingsRepository.getScreenshotsCleanedCount()
+        screenshotsCleanedBytes.longValue = settingsRepository.getScreenshotsCleanedBytes()
         faceUnlockMaxBrightness.intValue = settingsRepository.getFaceUnlockMaxBrightness()
         faceUnlockAmbientThreshold.floatValue = settingsRepository.getFaceUnlockAmbientThreshold()
         isFaceUnlockTriggerUnlock.value = settingsRepository.isFaceUnlockTriggerUnlockEnabled()
@@ -5461,6 +5539,22 @@ class MainViewModel : ViewModel() {
         settingsRepository.setDuoBatteryCriticalColor(colorHex)
     }
 
+    fun setDuoBatteryLowLevel(level: Int) {
+        val (low, critical) = DuoBatteryLevels.withLow(level, duoBatteryCriticalLevel.intValue)
+        applyDuoBatteryLevels(low, critical)
+    }
+
+    fun setDuoBatteryCriticalLevel(level: Int) {
+        val (low, critical) = DuoBatteryLevels.withCritical(level, duoBatteryLowLevel.intValue)
+        applyDuoBatteryLevels(low, critical)
+    }
+
+    private fun applyDuoBatteryLevels(low: Int, critical: Int) {
+        duoBatteryLowLevel.intValue = low
+        duoBatteryCriticalLevel.intValue = critical
+        settingsRepository.setDuoBatteryLevels(low, critical)
+    }
+
     fun setDuoShowNetworks(enabled: Boolean) {
         isDuoShowNetworks.value = enabled
         settingsRepository.setDuoShowNetworksEnabled(enabled)
@@ -5645,6 +5739,26 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandShowDevicesEnabled(enabled)
     }
 
+    fun setIslandShowNavigation(enabled: Boolean) {
+        isIslandShowNavigation.value = enabled
+        settingsRepository.setIslandShowNavigationEnabled(enabled)
+    }
+
+    fun setIslandNavigationOnNew(mode: String) {
+        islandNavigationOnNew.value = mode
+        settingsRepository.setIslandNavigationOnNew(mode)
+    }
+
+    fun setIslandNavigationExpandDistance(meters: Int) {
+        islandNavigationExpandDistance.intValue = meters
+        settingsRepository.setIslandNavigationExpandDistance(meters)
+    }
+
+    fun setIslandNavigationPeekAfterExpand(enabled: Boolean) {
+        isIslandNavigationPeekAfterExpand.value = enabled
+        settingsRepository.setIslandNavigationPeekAfterExpandEnabled(enabled)
+    }
+
     fun setIslandShowHotspot(enabled: Boolean) {
         isIslandShowHotspot.value = enabled
         settingsRepository.setIslandShowHotspotEnabled(enabled)
@@ -5802,6 +5916,16 @@ class MainViewModel : ViewModel() {
     fun setIslandMaxItems(value: Int) {
         islandMaxItems.value = value
         settingsRepository.setIslandMaxItems(value)
+    }
+
+    fun setIslandSecondaryBubble(enabled: Boolean) {
+        isIslandSecondaryBubble.value = enabled
+        settingsRepository.setIslandSecondaryBubbleEnabled(enabled)
+    }
+
+    fun setIslandBalanceCompact(enabled: Boolean) {
+        isIslandBalanceCompact.value = enabled
+        settingsRepository.setIslandBalanceCompactEnabled(enabled)
     }
 
     fun setIslandBondEdge(enabled: Boolean) {
@@ -5997,6 +6121,16 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandCatchUpTimeoutMs(value)
     }
 
+    fun setIslandOtpEnabled(enabled: Boolean) {
+        isIslandOtpEnabled.value = enabled
+        settingsRepository.setIslandOtpEnabled(enabled)
+    }
+
+    fun setIslandOtpTimeoutMs(value: Long) {
+        islandOtpTimeoutMs.longValue = value
+        settingsRepository.setIslandOtpTimeoutMs(value)
+    }
+
     fun setIslandShowGlow(enabled: Boolean) {
         isIslandShowGlow.value = enabled
         settingsRepository.setIslandShowGlowEnabled(enabled)
@@ -6094,14 +6228,19 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandBatteryStyle(value)
     }
 
+    fun setIslandDevicesBatteryStyle(value: String) {
+        islandDevicesBatteryStyle.value = value
+        settingsRepository.setIslandDevicesBatteryStyle(value)
+    }
+
     fun setIslandShowBattery(enabled: Boolean) {
         isIslandShowBattery.value = enabled
         settingsRepository.setIslandShowBatteryEnabled(enabled)
     }
 
-    fun setIslandShowBatteryAlerts(enabled: Boolean) {
-        isIslandShowBatteryAlerts.value = enabled
-        settingsRepository.setIslandShowBatteryAlertsEnabled(enabled)
+    fun setIslandBatteryPeekAlerts(enabled: Boolean) {
+        isIslandBatteryPeekAlerts.value = enabled
+        settingsRepository.setIslandBatteryPeekAlertsEnabled(enabled)
     }
 
     fun setIslandBatteryPercentageEnabled(enabled: Boolean) {
@@ -9657,6 +9796,34 @@ class MainViewModel : ViewModel() {
     fun setScreenshotShareCleanupEnabled(enabled: Boolean) {
         settingsRepository.setScreenshotShareCleanupEnabled(enabled)
         isScreenshotShareCleanupEnabled.value = enabled
+        if (!enabled) appContext?.let { ScreenshotCleaner.cancelAll(it, ScreenshotCleaner.TAG_SHARED) }
+    }
+
+    fun setScreenshotShareCleanupDelayMinutes(minutes: Int) {
+        settingsRepository.setScreenshotShareCleanupDelayMinutes(minutes)
+        screenshotShareCleanupDelayMinutes.intValue = minutes
+    }
+
+    fun setScreenshotAutoCleanEnabled(enabled: Boolean) {
+        isScreenshotAutoCleanEnabled.value = enabled
+        val context = appContext
+        if (context == null) {
+            settingsRepository.setScreenshotAutoCleanEnabled(enabled)
+            return
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            if (enabled) {
+                settingsRepository.setScreenshotAutoCleanLastId(ScreenshotCleaner.latestScreenshotId(context))
+            } else {
+                ScreenshotCleaner.cancelAll(context, ScreenshotCleaner.TAG_AUTO_CLEAN)
+            }
+            settingsRepository.setScreenshotAutoCleanEnabled(enabled)
+        }
+    }
+
+    fun setScreenshotAutoCleanDays(days: Int) {
+        settingsRepository.setScreenshotAutoCleanDays(days)
+        screenshotAutoCleanDays.intValue = days
     }
 
     fun setFaceUnlockAmbientThreshold(value: Float) {

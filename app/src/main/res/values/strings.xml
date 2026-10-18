@@ -1457,6 +1457,10 @@
     <string name="diy_action_wait">Wait</string>
     <string name="diy_wait_duration">Duration</string>
     <string name="diy_wait_desc">Pause before the next action runs</string>
+    <string name="diy_action_send_notification">Send notification</string>
+    <string name="diy_send_notification_title">Title</string>
+    <string name="diy_send_notification_body">Message</string>
+    <string name="diy_send_notification_label">Label</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_set_charging_mode">Set Charging Mode</string>
     <string name="diy_action_notification_lighting">Trigger notification lighting</string>
@@ -1607,6 +1611,7 @@
 
     <!-- Notifications -->
     <string name="automation_channel_name">Automations</string>
+    <string name="automation_notifications_channel_name">Automation notifications</string>
     <string name="automation_failed_title">Automation failed</string>
     <string name="automation_failed_text">%1$s: %2$s</string>
     <string name="automation_failed_missing">Missing permission: %1$s</string>
@@ -2976,7 +2981,12 @@
     <string name="settings_section_more">More</string>
     <string name="action_show_granted">Show granted</string>
     <string name="action_hide_granted">Hide granted</string>
+    <string name="perm_local_network_title">Local network access</string>
+    <string name="perm_local_network_desc">Android 17 blocks apps from talking to devices on your Wi-Fi network unless you allow it. Essentials needs this to work with your watch over the local network.</string>
     <string name="perm_bubbles_title">Floating Bubbles</string>
+    <string name="perm_sensitive_notifications_title">Read sensitive notifications</string>
+    <string name="perm_sensitive_notifications_desc">Android hides one-time codes from notification listeners. Essentials needs this access to show codes on the island.</string>
+    <string name="perm_sensitive_notifications_instructions">Grant it with Shizuku or root, or run the command over ADB.</string>
     <string name="perm_bubbles_desc">Allow web previews to open in floating conversation bubbles above other apps</string>
     <string name="perm_bubbles_instructions">Set to "All conversations can bubble" in app notification settings, or grant via Shizuku / Root.</string>
     <string name="label_frozen_apps">Frozen Apps</string>
@@ -3015,8 +3025,10 @@
     <string name="island_battery_idle_color_title">Idle color</string>
     <string name="duo_battery_charging_color_auto">Auto charging speed</string>
     <string name="duo_battery_power_save_color_title">Battery saver</string>
-    <string name="duo_battery_low_color_title">Low battery (&lt;20%)</string>
-    <string name="duo_battery_critical_color_title">Critically low battery (&lt;10%)</string>
+    <string name="duo_battery_low_color_title">Low battery</string>
+    <string name="duo_battery_low_level_title">Low battery level</string>
+    <string name="duo_battery_critical_color_title">Critically low battery</string>
+    <string name="duo_battery_critical_level_title">Critical battery level</string>
     <string name="island_media_config_title">Configuration</string>
     <string name="duo_media_skip_apps_title">Select apps to skip</string>
     <string name="duo_show_networks_title">Networks</string>
@@ -3139,6 +3151,8 @@
     <string name="island_keep_on_landscape_title">Keep on landscape</string>
     <string name="island_landscape_top_spacing_title">Landscape top spacing</string>
     <string name="island_bond_edge_title">Bond with notch when inactive</string>
+    <string name="island_secondary_bubble_title">Secondary bubble</string>
+    <string name="island_balance_compact_title">Visually balance compact island</string>
     <string name="island_max_items_title">Max items to show</string>
     <string name="island_always_gestures_title">Always available gestures</string>
     <string name="island_always_gestures_desc">Keep the gesture area available even while island is hidden</string>
@@ -3168,17 +3182,6 @@
     <string name="island_battery_style_title">Battery style</string>
     <string name="island_battery_style_ring">Ring</string>
     <string name="island_battery_style_icon">Icon</string>
-    <string name="island_battery_alerts_title">Battery alerts</string>
-    <string name="island_battery_alerts_options_title">Battery alert options</string>
-    <string name="island_battery_alert_charging_title">Charging connected</string>
-    <string name="island_battery_alert_low_title" formatted="false">Low Battery (11-20%)</string>
-    <string name="island_battery_alert_critical_title" formatted="false">Critical Battery (0-10%)</string>
-    <string name="island_battery_alert_charging">Charging</string>
-    <string name="island_battery_alert_low">Low Battery</string>
-    <string name="island_battery_alert_critical">Critical Battery</string>
-    <string name="island_battery_alert_icon_position_title">Icon position</string>
-    <string name="island_battery_alert_icon_position_right">Right</string>
-    <string name="island_battery_alert_icon_position_left">Left</string>
     <string name="slider_value_label">Value</string>
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
@@ -3294,6 +3297,19 @@
     <string name="duo_combine_with_island">Combine with Island</string>
     <string name="island_combine_with_duo">Combine with Duo</string>
     <string name="island_show_devices_title">Devices</string>
+    <string name="island_show_navigation_title">Navigation</string>
+    <string name="island_navigation_desc">Next turn and distance from Maps and other navigation apps</string>
+    <string name="island_navigation_options_title">Navigation</string>
+    <string name="island_navigation_exit">Exit</string>
+    <string name="island_navigation_on_new_title">New instruction</string>
+    <string name="island_navigation_on_new_desc">What the island does when the next direction appears</string>
+    <string name="island_navigation_on_new_expand">Expand</string>
+    <string name="island_navigation_on_new_peek">Line peek</string>
+    <string name="island_navigation_expand_title">Expand before a turn</string>
+    <string name="island_navigation_expand_off">Off</string>
+    <string name="island_navigation_expand_meters">%d m</string>
+    <string name="island_navigation_peek_after_expand_title">Line peek after expanding</string>
+    <string name="island_navigation_peek_after_expand_desc">When off, the island goes straight back to compact</string>
     <string name="island_show_hotspot_title">Hotspot</string>
     <string name="island_hotspot_desc">Shows while your hotspot is on, with connected devices and data shared</string>
     <plurals name="island_hotspot_clients">
@@ -3330,6 +3346,10 @@
     <string name="island_devices_battery_section">Devices</string>
     <string name="island_devices_move_up">Move up</string>
     <string name="island_devices_move_down">Move down</string>
+    <string name="island_battery_peek_alerts_title">Show peek alerts</string>
+    <string name="island_battery_state_low">Low battery</string>
+    <string name="island_battery_state_critical">Critical battery</string>
+    <string name="island_battery_state_saver">Battery saver</string>
     <string name="island_battery_charging">Charging</string>
     <string name="island_notif_keep_progress_title">Keep progress notifications</string>
     <string name="island_progress_open">Open</string>
@@ -3376,8 +3396,40 @@
     <string name="feat_face_unlock_brightness_desc">Bump brightness in low light</string>
     <string name="feat_screenshot_share_cleanup_title">Delete shared screenshots</string>
     <string name="feat_screenshot_share_cleanup_desc">Trash screenshots after sharing</string>
-    <string name="about_desc_screenshot_share_cleanup">After you share a screenshot from the screenshot preview, it is moved to the trash a minute after you leave the app you shared it to. Trashed screenshots can be restored from Files or Photos for 30 days.</string>
     <string name="screenshot_share_cleanup_trashed">Shared screenshot moved to trash</string>
+    <string name="screenshot_share_cleanup_scheduled">Shared screenshot will be moved to trash later</string>
+    <string name="feat_screenshots_title">Screenshots</string>
+    <string name="feat_screenshots_desc">Clean up shared and old screenshots</string>
+    <string name="about_desc_screenshots">Keeps your gallery free of one-off screenshots. Shared screenshots can be trashed right after sharing or a little later, and every new screenshot can be trashed automatically after a few days unless you keep it from its notification or star it in Photos. Trashed screenshots can be restored from Files or Photos for 30 days.</string>
+    <string name="screenshots_section_after_sharing">After sharing</string>
+    <string name="screenshots_section_auto_clean">Auto-clean</string>
+    <string name="screenshots_section_stats">Cleaned so far</string>
+    <string name="screenshot_share_cleanup_delay_title">Trash after sharing</string>
+    <string name="screenshot_delay_immediately">Immediately</string>
+    <string name="screenshot_delay_1_hour">1 hour</string>
+    <string name="screenshot_delay_1_day">1 day</string>
+    <string name="screenshot_auto_clean_title">Auto-clean screenshots</string>
+    <string name="screenshot_auto_clean_days_title">Trash new screenshots after</string>
+    <string name="screenshot_auto_clean_note">Each new screenshot gets a quiet notification to keep it. Starred screenshots are always kept.</string>
+    <string name="screenshots_cleaned_count_title">Screenshots cleaned</string>
+    <string name="screenshots_storage_saved_title">Storage saved</string>
+    <string name="screenshot_auto_clean_notification_text">Tap Keep or star it in Photos to save it</string>
+    <string name="screenshot_action_keep">Keep</string>
+    <string name="screenshot_action_trash_now">Trash now</string>
+    <string name="screenshot_kept">Screenshot kept</string>
+    <string name="screenshot_moved_to_trash">Screenshot moved to trash</string>
+    <string name="screenshot_trash_failed">Couldn\'t move the screenshot to trash</string>
+    <string name="screenshot_action_undo">Undo</string>
+    <string name="screenshot_cleanup_result_channel_name">Screenshot cleanup results</string>
+    <string name="screenshot_cleanup_channel_name">Screenshot cleanup</string>
+    <plurals name="screenshot_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="screenshot_auto_clean_notification_title">
+        <item quantity="one">Screenshot will be trashed in %d day</item>
+        <item quantity="other">Screenshot will be trashed in %d days</item>
+    </plurals>
     <string name="face_unlock_illuminate">Illuminate</string>
     <string name="face_unlock_ambient_threshold_title">Ambient threshold</string>
     <string name="face_unlock_ambient_now">Now: %1$s</string>
@@ -3405,6 +3457,22 @@
     <string name="island_notif_section_heads_up">Heads up</string>
     <string name="island_notif_section_in_island">In the island</string>
     <string name="island_notif_section_lock_screen">Lock screen</string>
+    <string name="island_otp_section">OTP codes</string>
+    <string name="island_otp_enabled_title">Detect OTP codes</string>
+    <string name="island_otp_enabled_desc">Show one-time codes from notifications with a copy button</string>
+    <string name="island_otp_tap_to_copy_title">Tap to copy</string>
+    <string name="island_otp_tap_to_copy_desc">Tapping the peek copies the code</string>
+    <string name="island_otp_dismiss_after_copy_title">Dismiss notification after copy</string>
+    <string name="island_otp_bypass_filter_title">Show codes from any app</string>
+    <string name="island_otp_bypass_filter_desc">Codes appear even from apps outside the notification filter</string>
+    <string name="island_otp_timeout_title">Show codes for</string>
+    <string name="island_otp_label">OTP code</string>
+    <string name="island_otp_copy">Copy code</string>
+    <string name="island_otp_dismiss">Dismiss</string>
+    <string name="island_otp_copied">Code copied</string>
+    <string name="island_otp_show_message">Show message</string>
+    <string name="island_otp_clip_label">One-time code</string>
+    <string name="island_otp_grant_title">Allow reading codes</string>
     <string name="island_notif_filter_apps_desc">Only show notifications from the apps you pick</string>
     <string name="island_notif_skip_silent_desc">Ignore notifications that arrive without sound</string>
     <string name="island_notif_follow_dnd_title">Follow Do Not Disturb</string>
@@ -3438,19 +3506,15 @@
     <string name="action_expand_settings">Expand settings</string>
     <string name="action_collapse_status_bar">Collapse status bar</string>
 
-    <!-- Watchface Promotion & Testing -->
+    <!-- Watchface Promotion -->
     <string name="whats_new_watchface_title">New: Essentials Watchface</string>
     <string name="whats_new_watchface_desc">Install the Essentials watchface on your Wear OS watch straight from Google Play.</string>
     <string name="whats_new_watchface_summary">Now on Google Play for Wear OS</string>
-    <string name="watchface_promo_step1_title">1. Join Google Group</string>
-    <string name="watchface_promo_step1_desc">Join the testing group using the Gmail account associated with your watch</string>
-    <string name="watchface_promo_step1_action">Join Google Group</string>
-    <string name="watchface_promo_step2_title">2. Join Beta Program</string>
-    <string name="watchface_promo_step2_desc">Opt-in to the internal testing program on Google Play</string>
-    <string name="watchface_promo_step2_action">Join Beta Program</string>
-    <string name="watchface_promo_step3_title">3. Install on Watch</string>
+    <string name="watchface_promo_step3_title">Install on Watch</string>
     <string name="watchface_promo_step3_desc">Open the Play Store listing directly on your watch to install</string>
     <string name="watchface_promo_step3_action">Open on Watch</string>
+
+    <string name="whats_new_previous_updates">From previous updates</string>
 
     <!-- Overcast Separation What's New -->
     <string name="whats_new_overcast_section_title">Weather is Now Separate</string>

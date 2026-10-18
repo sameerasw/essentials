@@ -14,7 +14,7 @@ import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
 import android.content.BroadcastReceiver
-import android.content.ComponentCallbacks
+import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -102,20 +102,28 @@ object StackHost {
                 intent: Intent,
             ) {
                 when (intent.action) {
-                    Intent.ACTION_SCREEN_OFF -> cancelAllTimers()
+                    Intent.ACTION_SCREEN_OFF -> {
+                        cancelAllTimers()
+                        repository.savePositions(positions)
+                    }
+
                     Intent.ACTION_SCREEN_ON -> repository.getAll().forEach { scheduleTimer(it.stackWidgetId) }
                 }
             }
         }
 
     private val configurationCallbacks =
-        object : ComponentCallbacks {
+        object : ComponentCallbacks2 {
             override fun onConfigurationChanged(newConfig: Configuration) {
                 repository.getAll().forEach { StackWidgetProvider.forwardSize(appContext, it) }
             }
 
             @Deprecated("Deprecated in Java")
             override fun onLowMemory() {}
+
+            override fun onTrimMemory(level: Int) {
+                if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) repository.savePositions(positions)
+            }
         }
 
     fun startIfNeeded(context: Context) {
@@ -140,6 +148,9 @@ object StackHost {
             if (host == null) start(app)
             reveal(stackWidgetId)
             advance(stackWidgetId, delta)
+            positions[stackWidgetId]?.let { pos ->
+                repository.savePositions(mapOf(stackWidgetId to pos))
+            }
         }
     }
 
@@ -177,6 +188,7 @@ object StackHost {
             PeriodicWorkRequestBuilder<StackHostWorker>(15, TimeUnit.MINUTES).build(),
         )
         repository = WidgetStackRepository(context)
+        positions.putAll(StackPositions.restore(repository.getPositions(), repository.getAll()))
         host = CapturingWidgetHost(context).also { it.startListening() }
         removeOrphanedWidgets()
         attachOverlay()

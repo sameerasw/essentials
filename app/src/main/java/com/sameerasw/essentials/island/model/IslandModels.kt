@@ -21,9 +21,10 @@ object IslandPriority {
     const val CALENDAR_OVERRIDE = 6
 
     const val NOTIFICATION = 10
-    const val PROGRESS = 15
+        const val PROGRESS = 15
     const val FLASHLIGHT = 20
-    const val RECORDING = 22
+    const val RECORDING = 21
+    const val NAVIGATION = 22
     const val TIMER = 25
     const val MEDIA = 30
     const val CONSCIOUS_GATE = 40
@@ -77,6 +78,7 @@ class InteractionOverrides(
     val onTap: (() -> Boolean)? = null,
     val onLongPress: (() -> Unit)? = null,
     val onExpandedTap: (() -> Boolean)? = null,
+    val onLineTap: (() -> Boolean)? = null,
 ) {
     companion object {
         val Default = InteractionOverrides()
