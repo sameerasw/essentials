@@ -446,13 +446,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
         render()
     }
 
-    // The newest notification that just dropped into the catch-up bubble leads and gets a ring until its regular timeout runs out
+    // The newest notification that just dropped into the catch-up bubble leads and gets a ring for the catch-up timeout
     private fun pinLatest() {
         val c = ctx ?: return
         if (!hub() || settings.getIslandNotifHubOrder() != SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC) return
         pinnedKey = currentAlert()?.key ?: return
         c.mainHandler.removeCallbacks(unpinRunnable)
-        c.mainHandler.postDelayed(unpinRunnable, timeoutMs())
+        val stay = settings.getIslandCatchUpStoredMs()
+        if (stay > 0L) c.mainHandler.postDelayed(unpinRunnable, stay)
     }
 
     private fun bubbleCells(): Int {

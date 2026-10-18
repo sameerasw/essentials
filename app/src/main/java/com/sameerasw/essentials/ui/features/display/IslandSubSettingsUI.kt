@@ -1162,7 +1162,7 @@ fun IslandNotificationSettingsUI(
             )
 
             AnimatedVisibility(
-                visible = viewModel.isIslandCatchUpEnabled.value && !viewModel.isIslandNotifHub.value,
+                visible = viewModel.isIslandCatchUpEnabled.value,
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically(),
             ) {

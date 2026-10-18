@@ -1013,7 +1013,7 @@ class MainViewModel : ViewModel() {
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_TIMEOUT_MS ->
-                        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+                        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
 
                     SettingsRepository.KEY_ISLAND_OTP_ENABLED ->
                         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
@@ -2561,7 +2561,7 @@ class MainViewModel : ViewModel() {
         islandNotifHubOrder.value = settingsRepository.getIslandNotifHubOrder()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
-        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
@@ -6033,7 +6033,7 @@ class MainViewModel : ViewModel() {
         isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
         isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
-        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
     }
 
     fun setIslandNotifQueueInline(enabled: Boolean) {

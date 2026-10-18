@@ -423,12 +423,13 @@ fun IslandRoot(
     }
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
     val compactSlack = remember { mutableIntStateOf(0) }
+    val compactBaseWidth = remember { mutableIntStateOf(0) }
     val bubbleMaxIcons = lastCatchUp?.maxIcons?.let { chosen ->
         if (chosen > 0) {
             chosen
         } else {
             val sizePx = with(density) { spec.compactHeight.toPx() }
-            val baseWidth = maxOf(fallbackCompact.width, compactSize.width - compactSlack.intValue)
+            val baseWidth = maxOf(fallbackCompact.width, compactBaseWidth.intValue)
             val room = (with(density) { spec.lineWidth.toPx() } - baseWidth) / 2f - with(density) { spec.cameraGap.toPx() }
             (((room - sizePx) / (sizePx * 0.55f)).toInt() + 1).coerceIn(1, 8)
         }
@@ -1183,6 +1184,7 @@ fun IslandRoot(
                             sideBubble = ::sideBubbleProgress,
                             bubbleExtent = { bubbleGapPx + sideWidthLive() },
                             onSlack = { if (current) compactSlack.intValue = it },
+                            onBaseWidth = { if (current) compactBaseWidth.intValue = it },
                         )
                     }
                 }
@@ -1320,6 +1322,7 @@ private fun StageContent(
     sideBubble: () -> Float = { 0f },
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
+    onBaseWidth: (Int) -> Unit = {},
 ) {
     val a = if (interactive) actions else NoActions
     when (stage) {
@@ -1338,6 +1341,7 @@ private fun StageContent(
                     sideBubble = sideBubble,
                     bubbleExtent = bubbleExtent,
                     onSlack = onSlack,
+                    onBaseWidth = onBaseWidth,
                 )
             }
         }

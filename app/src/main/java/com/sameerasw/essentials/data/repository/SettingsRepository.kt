@@ -4072,7 +4072,10 @@ class SettingsRepository(
     fun isIslandCatchUpEnabled(): Boolean = isIslandNotifHubEnabled() || getBoolean(KEY_ISLAND_CATCH_UP_ENABLED, true)
     fun setIslandCatchUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_CATCH_UP_ENABLED, enabled)
 
-    fun getIslandCatchUpTimeoutMs(): Long = if (isIslandNotifHubEnabled()) 0L else getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
+    // The stored value is kept as the hub's pin duration while the bubble itself never expires
+    fun getIslandCatchUpStoredMs(): Long = getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
+
+    fun getIslandCatchUpTimeoutMs(): Long = if (isIslandNotifHubEnabled()) 0L else getIslandCatchUpStoredMs()
     fun setIslandCatchUpTimeoutMs(value: Long) = putLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, value)
 
     fun isIslandCatchUpInfinite(): Boolean = getIslandCatchUpTimeoutMs() <= 0L
