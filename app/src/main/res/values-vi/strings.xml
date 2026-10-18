@@ -685,7 +685,7 @@
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
     <string name="label_app_language">Ngôn ngữ</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_haptic_feedback">Rung phản hồi</string>
     <string name="label_updates">Cập nhật</string>
     <string name="label_auto_check_updates">Tự động kiểm tra cập nhật</string>
     <string name="desc_auto_check_updates">Kiểm tra bản cập nhật khi khởi chạy ứng dụng</string>
@@ -1944,4 +1944,14 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_section_visuals">Hình ảnh</string>
     <string name="island_section_duration">Khoảng thời gian</string>
     <string name="island_section_behavior">Hành vi</string>
+    <string name="setting_hidden_debugging_title">Hỗ trợ gỡ lỗi ẩn</string>
+    <string name="island_always_gestures_title">Cử chỉ luôn khả dụng</string>
+    <string name="island_always_gestures_desc">Giữ cho vùng cử chỉ hoạt động ngay cả khi đảo bị ẩn</string>
+    <string name="island_keep_on_landscape_title">Duy trì hướng ngang</string>
+    <string name="island_balance_compact_title">Cân bằng trực quan island thu gọn</string>
+    <string name="island_secondary_bubble_title">Bong bóng phụ</string>
+    <string name="keep_in_full_screen_title">Duy trì chế độ toàn màn hình </string>
+    <string name="island_hide_live_updates_title">Ẩn Live Updates tự động </string>
+    <string name="island_compact_hide_status_bar_title">Ẩn tất cả mục cho island thu gọn</string>
+    <string name="island_hide_icons_title">Ẩn động các biểu tượng thanh trạng thái </string>
 </resources>
