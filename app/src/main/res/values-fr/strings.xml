@@ -1718,4 +1718,5 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="hilight_progress_toggle_desc">Allumez une LED supplémentaire à chaque huitième de seconde de téléchargement ou de mise à jour en direct, et faites-la clignoter à la fin</string>
     <string name="hilight_progress_mode_sequential">Séquentiel</string>
     <string name="about_desc_hilight_progress">Affiche la progression des téléchargements et les mises à jour en direct sur les LED Hilight, allumant une LED supplémentaire à chaque huitième de progression et faisant clignoter les huit LED une fois le téléchargement terminé. Nécessite Shizuku.</string>
+    <string name="keep_in_full_screen_title">Garder en plein écran</string>
 </resources>
