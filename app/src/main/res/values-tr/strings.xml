@@ -1837,4 +1837,16 @@ Seviyeler yalnızca normal ses seviyesinin altına inebilir, asla üstüne çık
 
 Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o tuşa basılı tutmak ses seviyesini değiştirmek yerine eylemi çalıştırır ve kısa basma yine de ses seviyesini adım boyutu kadar değiştirir. Ses paneli açıkken, Düğme yeniden eşleme varsayılan olarak duraklatılır, bu nedenle tuşa basılı tutmak ses seviyesini değiştirir. Eylemin her zaman öncelikli olmasını istiyorsanız, Düğme yeniden eşlemede \"Ses iletişim kutusu açıkken devre dışı bırak\" seçeneğini kapatın.</string>
     <string name="button_remap_pause_on_volume_dialog_title">Ses iletişim kutusu açıkken devre dışı bırak</string>
+    <string name="feat_screenshots_title">Ekran Görüntüleri</string>
+    <string name="feat_screenshots_desc">Paylaşılan ve eski ekran görüntülerini temizleyin.</string>
+    <string name="island_brief_desc">Olan bitenler hakkında kısa bir bilgi edinin.</string>
+    <string name="duo_action_horizontal_slide_track">Parçayı değiştir</string>
+    <string name="island_always_gestures_title">Her zaman kullanılabilir hareketler</string>
+    <string name="island_section_placement">Adanın Yeri</string>
+    <string name="island_section_visuals">Görseller</string>
+    <string name="island_preview_ring_title">Hizalama ipucunu göster</string>
+    <string name="island_battery_alert_icon_position_left">Sol</string>
+    <string name="island_battery_alert_icon_position_right">Sağ</string>
+    <string name="island_camera_position_center">Orta</string>
+    <string name="icon_network_speed">İnternet Hızı</string>
 </resources>
