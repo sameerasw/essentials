@@ -190,6 +190,8 @@ class SnippetAccessibilityHandler(
                     fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
                 ) {
                     cursor - targetWord.length
+                } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
+                    fullText.length - targetWord.length
                 } else {
                     return false
                 }

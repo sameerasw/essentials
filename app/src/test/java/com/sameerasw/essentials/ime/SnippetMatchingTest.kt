@@ -79,4 +79,38 @@ class SnippetMatchingTest {
         val results = findMatching("   ", snippets)
         assertTrue(results.isEmpty())
     }
+
+    private fun calculateReplacementIndex(fullText: String, cursor: Int, targetWord: String): Int {
+        return if (cursor in targetWord.length..fullText.length &&
+            fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
+        ) {
+            cursor - targetWord.length
+        } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
+            fullText.length - targetWord.length
+        } else {
+            -1
+        }
+    }
+
+    @Test
+    fun replaceKeyword_cursorAtEnd_calculatesCorrectIndex() {
+        val text = "Meeting today at !time "
+        val index = calculateReplacementIndex(text, text.length, "!time ")
+        assertEquals(text.indexOf("!time "), index)
+    }
+
+    @Test
+    fun replaceKeyword_cursorInMiddle_doesNotReplaceEarlierOccurrence() {
+        val text = "!date and some text and !date"
+        val secondIndex = text.lastIndexOf("!date")
+        val index = calculateReplacementIndex(text, text.length, "!date")
+        assertEquals(secondIndex, index)
+    }
+
+    @Test
+    fun replaceKeyword_cursorMismatched_returnsNegativeOne() {
+        val text = "Here is !date and typing here"
+        val index = calculateReplacementIndex(text, text.length, "!date")
+        assertEquals(-1, index)
+    }
 }

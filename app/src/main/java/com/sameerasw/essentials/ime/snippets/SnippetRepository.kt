@@ -68,7 +68,7 @@ class SnippetRepository private constructor(context: Context) {
                     return@launch
                 }
 
-                val json = storageFile.readText()
+                val json = atomicFile.openRead().bufferedReader(Charsets.UTF_8).use { it.readText() }
                 val type = object : TypeToken<List<Snippet>>() {}.type
                 val loaded: List<Snippet>? = gson.fromJson(json, type)
                 if (!loaded.isNullOrEmpty()) {

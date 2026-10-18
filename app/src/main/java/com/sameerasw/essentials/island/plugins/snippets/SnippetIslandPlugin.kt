@@ -114,12 +114,12 @@ class SnippetIslandPlugin : BaseIslandPlugin() {
                     snippet = snippet,
                     scope = scope,
                     onInsert = {
-                        copyToClipboard(snippet.content)
                         onExpandAction?.invoke()
                         hideSnippet()
                     },
                     onCopy = {
-                        copyToClipboard(snippet.content)
+                        val expanded = com.sameerasw.essentials.ime.snippets.SnippetExpander.expand(snippet.content, context)
+                        copyToClipboard(expanded)
                         Toast.makeText(context, R.string.snippets_action_copied, Toast.LENGTH_SHORT).show()
                         hideSnippet()
                     },
@@ -130,7 +130,6 @@ class SnippetIslandPlugin : BaseIslandPlugin() {
             },
             interactions = InteractionOverrides(
                 onTap = {
-                    copyToClipboard(snippet.content)
                     onExpandAction?.invoke()
                     hideSnippet()
                     true
