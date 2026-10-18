@@ -15,6 +15,7 @@ import android.graphics.PixelFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
@@ -49,6 +50,11 @@ class SnippetAccessibilityHandler(
     companion object {
         private const val TAG = "SnippetA11yHandler"
         private const val AUTO_DISMISS_TIMEOUT_MS = 6000L
+        private const val REPLACEMENT_DEBOUNCE_MS = 300L
+        private const val DEFAULT_KEYBOARD_HEIGHT_DP = 290
+        private const val FALLBACK_IME_PADDING_DP = 72
+        private const val MIN_INPUT_BOUNDS_TOP_DP = 80
+        private const val FLOATING_PILL_OFFSET_DP = 12
     }
 
     private val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -70,6 +76,7 @@ class SnippetAccessibilityHandler(
 
     private val dismissRunnable = Runnable { hideFloatingPill() }
 
+    @Volatile
     private var isPerformingReplacement = false
 
     fun updateSettings() {
@@ -78,6 +85,18 @@ class SnippetAccessibilityHandler(
         isFloatingPillEnabled = settingsRepository.isSnippetsUniversalFloatingPillEnabled()
         if (!isUniversalEnabled) {
             dismissAllSuggestions()
+        }
+    }
+
+    private fun isEssentialsImeActive(): Boolean {
+        return try {
+            val currentIme = Settings.Secure.getString(
+                service.contentResolver,
+                Settings.Secure.DEFAULT_INPUT_METHOD,
+            ).orEmpty()
+            currentIme.startsWith(service.packageName)
+        } catch (_: Exception) {
+            false
         }
     }
 
@@ -112,8 +131,8 @@ class SnippetAccessibilityHandler(
             return
         }
 
-        // 1. Check for Option A: Space-based instant auto-expand
-        if (fullText.endsWith(" ") && isAutoExpandEnabled) {
+        // 1. Space-based instant auto-expand (skip if Essentials IME is typing, to prevent double expansion)
+        if (fullText.endsWith(" ") && isAutoExpandEnabled && !isEssentialsImeActive()) {
             val textBeforeSpace = fullText.dropLast(1)
             val candidateWord = textBeforeSpace.takeLastWhile { !it.isWhitespace() }
 
@@ -138,7 +157,7 @@ class SnippetAccessibilityHandler(
             }
         }
 
-        // 2. Check for Option B: Suggestion trigger (Pill, Island, Duo, or Both)
+        // 2. Suggestion trigger (Pill, Island, Duo, or Both)
         val currentWord = fullText.takeLastWhile { !it.isWhitespace() }
         lastTypedWord = currentWord
 
@@ -165,15 +184,14 @@ class SnippetAccessibilityHandler(
             if (fullText.isEmpty()) return false
 
             val cursor = node.textSelectionEnd
+            // Verify cursor is at the end of targetWord to prevent replacing arbitrary occurrences
             val targetIndex =
                 if (cursor in targetWord.length..fullText.length &&
                     fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
                 ) {
                     cursor - targetWord.length
                 } else {
-                    val lastIdx = fullText.lastIndexOf(targetWord, ignoreCase = true)
-                    if (lastIdx < 0) return false
-                    lastIdx
+                    return false
                 }
 
             val newText =
@@ -188,7 +206,6 @@ class SnippetAccessibilityHandler(
             val success = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
             if (!success) return false
 
-            // Set cursor position at the end of replacement
             val newCursorPos = targetIndex + replacement.length
             val cursorArgs =
                 Bundle().apply {
@@ -198,14 +215,14 @@ class SnippetAccessibilityHandler(
             node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, cursorArgs)
             return true
         } finally {
-            mainHandler.postDelayed({ isPerformingReplacement = false }, 150L)
+            mainHandler.postDelayed({ isPerformingReplacement = false }, REPLACEMENT_DEBOUNCE_MS)
         }
     }
 
     private fun calculateImeOffset(): Int {
         val density = service.resources.displayMetrics.density
         val displayHeight = service.resources.displayMetrics.heightPixels
-        var keyboardHeight = (290 * density).toInt()
+        var keyboardHeight = (DEFAULT_KEYBOARD_HEIGHT_DP * density).toInt()
 
         try {
             val currentWindows = service.windows
@@ -226,17 +243,15 @@ class SnippetAccessibilityHandler(
             Log.e(TAG, "Error calculating IME window bounds", e)
         }
 
-        // Dynamically measure active input field to ensure the pill floats comfortably above it
         val bounds = lastInputBounds
         if (bounds != null && bounds.height() > 0 && bounds.top > 0 && bounds.top < displayHeight) {
             val nodeTopFromBottom = displayHeight - bounds.top
-            if (nodeTopFromBottom >= keyboardHeight && bounds.top > (80 * density)) {
-                return nodeTopFromBottom + (12 * density).toInt()
+            if (nodeTopFromBottom >= keyboardHeight && bounds.top > (MIN_INPUT_BOUNDS_TOP_DP * density)) {
+                return nodeTopFromBottom + (FLOATING_PILL_OFFSET_DP * density).toInt()
             }
         }
 
-        // Fallback: place comfortably above standard multi-line input bar
-        return keyboardHeight + (72 * density).toInt()
+        return keyboardHeight + (FALLBACK_IME_PADDING_DP * density).toInt()
     }
 
     private fun expandSnippet(snippet: Snippet) {
@@ -250,7 +265,7 @@ class SnippetAccessibilityHandler(
             val cursor = targetNode.textSelectionEnd
             val textBeforeCursor = if (cursor in 0..fullText.length) fullText.substring(0, cursor) else fullText
             val candidateWord = textBeforeCursor.takeLastWhile { !it.isWhitespace() }
-            val targetWord = if (candidateWord.isNotBlank() && (snippet.keyword.startsWith(candidateWord, ignoreCase = true) || candidateWord.equals(lastTypedWord, ignoreCase = true))) {
+            val targetWord = if (candidateWord.isNotBlank() && snippet.keyword.startsWith(candidateWord, ignoreCase = true)) {
                 candidateWord
             } else {
                 lastTypedWord.ifBlank { snippet.keyword }
@@ -320,6 +335,9 @@ class SnippetAccessibilityHandler(
         hideFloatingPill()
         islandCoordinator?.hideSnippet()
         duoOverlayHandler?.hideSnippetSuggestion()
+        activeNode?.recycle()
+        activeNode = null
+        lastTypedWord = ""
     }
 
     private fun showFloatingPill(snippet: Snippet, onExpand: () -> Unit) {
@@ -329,7 +347,6 @@ class SnippetAccessibilityHandler(
             mainHandler.postDelayed(dismissRunnable, AUTO_DISMISS_TIMEOUT_MS)
 
             if (overlayView != null) {
-                // Overlay already visible; update positioning dynamically if keyboard height changed
                 try {
                     val frame = overlayView ?: return@post
                     val lp = frame.layoutParams as? WindowManager.LayoutParams

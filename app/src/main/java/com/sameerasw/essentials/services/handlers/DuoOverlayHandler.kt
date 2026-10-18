@@ -374,21 +374,27 @@ class DuoOverlayHandler(
 
     var openBrief: (() -> Unit)? = null
 
+    private val snippetAutoDismissRunnable = Runnable { hideSnippetSuggestion() }
+
     fun showSnippetSuggestion(snippet: com.sameerasw.essentials.ime.snippets.Snippet, onExpand: () -> Unit) {
         mainHandler.post {
+            mainHandler.removeCallbacks(snippetAutoDismissRunnable)
             ensureTouchAnchor(isSnippet = true)
             duoTouchHandler?.onSnippetTapAction = {
+                mainHandler.removeCallbacks(snippetAutoDismissRunnable)
                 onExpand()
                 restoreTouchAnchor()
             }
             val titleText = snippet.title.ifBlank { snippet.content.take(18) }
             val displayKeyword = if (snippet.keyword.startsWith("!")) snippet.keyword else "!${snippet.keyword}"
             overlayView?.setInteractiveSnippet(keyword = displayKeyword, title = titleText)
+            mainHandler.postDelayed(snippetAutoDismissRunnable, 5000L)
         }
     }
 
     fun hideSnippetSuggestion() {
         mainHandler.post {
+            mainHandler.removeCallbacks(snippetAutoDismissRunnable)
             duoTouchHandler?.onSnippetTapAction = null
             if (overlayView?.isSnippetActive == true) {
                 overlayView?.resetInteractiveState(animate = true)

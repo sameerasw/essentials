@@ -762,7 +762,6 @@ class ScreenOffAccessibilityService :
         return imm?.inputMethodList?.any { it.packageName == pkg } == true
     }
 
-    override fun onInterrupt() {}
     override fun onInterrupt() {
         if (::volumeStepsHandler.isInitialized) volumeStepsHandler.stop()
     }

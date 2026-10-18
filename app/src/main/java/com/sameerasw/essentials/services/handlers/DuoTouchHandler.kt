@@ -254,6 +254,10 @@ class DuoTouchHandler(
                 }
 
                 if (!didPerformAnyGesture && totalDist < touchSlopPx && elapsed < 350L) {
+                    if (overlayView?.isSnippetActive == true) {
+                        onSnippetTapAction = null
+                        overlayView?.resetInteractiveState(animate = true)
+                    }
 
                     val doubleTapAction = settingsRepository.getDuoDoubleTapAction()
                     val tapAction = if (settingsRepository.isDuoTapForBriefActive() && openBrief != null) null else settingsRepository.getDuoTapAction()

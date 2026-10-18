@@ -10,29 +10,29 @@
 package com.sameerasw.essentials.ime.snippets
 
 import android.content.Context
+import android.util.AtomicFile
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.File
+import java.io.FileOutputStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
-import android.util.AtomicFile
 import kotlinx.coroutines.flow.updateAndGet
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 class SnippetRepository private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val scope = CoroutineScope(Dispatchers.IO)
     private val gson = Gson()
     private val storageFile = File(appContext.filesDir, "snippets.json")
-    private val atomicFile = android.util.AtomicFile(storageFile)
+    private val atomicFile = AtomicFile(storageFile)
     private val fileMutex = Mutex()
 
     private val _snippets = MutableStateFlow<List<Snippet>>(emptyList())
@@ -53,6 +53,11 @@ class SnippetRepository private constructor(context: Context) {
                             content = "{date}",
                         ),
                         Snippet(
+                            title = "Current Time",
+                            keyword = "!time",
+                            content = "{time}",
+                        ),
+                        Snippet(
                             title = "Shrug",
                             keyword = "!shrug",
                             content = "¯\\_(ツ)_/¯",
@@ -66,8 +71,10 @@ class SnippetRepository private constructor(context: Context) {
                 val json = storageFile.readText()
                 val type = object : TypeToken<List<Snippet>>() {}.type
                 val loaded: List<Snippet>? = gson.fromJson(json, type)
-                if (loaded != null) {
+                if (!loaded.isNullOrEmpty()) {
                     _snippets.value = loaded
+                } else if (loaded != null) {
+                    _snippets.value = emptyList()
                 } else {
                     Log.w(TAG, "Snippets file read returned null; preserving memory state")
                 }
@@ -115,7 +122,7 @@ class SnippetRepository private constructor(context: Context) {
         val query = word.trim()
         if (query.isEmpty()) return emptyList()
 
-        val isTriggerPrefix = query.startsWith("!") || query.startsWith("/") || query.startsWith(":")
+        val isTriggerPrefix = query.startsWith("!") || query.startsWith("/") || query.startsWith(":") || query.startsWith(";")
         return _snippets.value.filter { snippet ->
             snippet.keyword.equals(query, ignoreCase = true) ||
                 (isTriggerPrefix && snippet.keyword.startsWith(query, ignoreCase = true))
