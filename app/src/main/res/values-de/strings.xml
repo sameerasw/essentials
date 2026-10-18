@@ -1840,11 +1840,11 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_expanded_scale_title">Erweiterter Maßstab</string>
     <string name="island_expanded_scale_desc">Vergrößern Sie die Insel gleichmäßig auf allen Seiten</string>
     <string name="island_font_scale_title">Schriftart</string>
-    <string name="island_line_peek_title">Zeilenansicht</string>
+    <string name="island_line_peek_title">Linienansicht</string>
     <string name="island_line_peek_desc">Kurz Aktualisierungen auf der gesamten Insel anzeigen, dann zur Kompaktansicht zurückkehren</string>
     <string name="island_hide_in_owner_app_title">Komplikation innerhalb der App ausblenden</string>
     <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
-    <string name="island_dynamic_hide_status_bar_title">Statusleistenelemente dynamisch ausblenden</string>
+    <string name="island_dynamic_hide_status_bar_title">Alle ausblenden, wenn erweitert</string>
     <string name="island_notif_compact_heads_up_title">Kompakte Benachrichtigungen</string>
     <string name="island_notif_compact_heads_up_desc">Neue Benachrichtigungen als Zeilenvorschau anzeigen</string>
     <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
@@ -1918,4 +1918,82 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="face_unlock_light_tint_title">Leichte Tönung</string>
     <string name="label_online_help_media">Online-Hilfemedien</string>
     <string name="haptic_mode_stronger">Stärkee</string>
+    <string name="island_secondary_bubble_title">Sekundäre Blase</string>
+    <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
+    <string name="keep_in_full_screen_title">Im Vollbildmodus behalten</string>
+    <string name="island_hide_icons_title">Statusleistensymbole dynamisch ausblenden</string>
+    <string name="island_battery_style_title">Akkustil</string>
+    <string name="island_battery_only_low_title">Nur bei niedrigem Akkustand anzeigen</string>
+    <string name="island_battery_icon_conditional_title">Symbol nur unter folgenden Bedingungen</string>
+    <string name="battery_show_percentage_title">Prozentanzeige</string>
+    <string name="island_battery_percentage_conditional_title">% nur unter folgenden Bedingungen</string>
+    <string name="island_battery_idle_color_title">Leerlauffarbe</string>
+    <string name="island_battery_alerts_title">Akkuwarnungen</string>
+    <string name="island_battery_alert_charging_title">Laden angeschlossen</string>
+    <string name="island_battery_alert_low_title">Niedriger Akkustand (11-20)</string>
+    <string name="island_battery_alert_critical_title">Kritischer Akkustand (0-10%)</string>
+    <string name="island_battery_alert_icon_position_title">Symbolposition</string>
+    <string name="island_time_show_seconds_title">Sekunden anzeigen</string>
+    <string name="island_launcher_only_title">Nur im Launcher anzeigen</string>
+    <string name="island_launcher_only_desc">Ausblenden, solange eine App geöffnet ist</string>
+    <string name="island_notif_show_title">Benachrichtigungen anzeigen</string>
+    <string name="island_notif_filter_apps_title">Apps filtern</string>
+    <string name="island_notif_filter_apps_desc">Nur Benachrichtigungen von ausgewählten Apps anzeigen</string>
+    <string name="island_notif_skip_silent_title">Stumme Benachrichtigungen überspringen</string>
+    <string name="island_notif_skip_silent_desc">Benachrichtigungen ohne Ton ignorieren</string>
+    <string name="island_notif_follow_dnd_title">Nicht stören beachten</string>
+    <string name="island_notif_follow_dnd_desc">Benachrichtigungen ausblenden, die durch Nicht stören stummgeschaltet werden</string>
+    <string name="island_notif_keep_progress_desc">Downloads und andere laufende Fortschritte anzeigen</string>
+    <string name="island_notif_queue_inline_title">Warteschlange innerhalb der Insel</string>
+    <string name="island_notif_queue_inline_desc">Warteschlange innerhalb der Insel anzeigen</string>
+    <string name="island_notif_queue_style_overlap">Überlappen</string>
+    <string name="island_notif_queue_style_stack">Stapeln</string>
+    <string name="island_notif_queue_style_title">Schwanzstil</string>
+    <string name="island_otp_enabled_title">OTP-Codes erkennen</string>
+    <string name="perm_sensitive_notifications_title">Sensible Benachrichtigungen lesen</string>
+    <string name="perm_sensitive_notifications_instructions">Erteilen Sie die Berechtigung mit Shizuku oder als Root oder führen Sie den Befehl über ADB aus.</string>
+    <string name="island_otp_tap_to_copy_title">Zum Kopieren tippen</string>
+    <string name="island_otp_dismiss_after_copy_title">Benachrichtigung nach dem Kopieren ausblenden</string>
+    <string name="island_otp_bypass_filter_title">Codes aus jeder App anzeigen</string>
+    <string name="island_otp_timeout_title">Codes anzeigen für</string>
+    <string name="island_navigation_peek_after_expand_title">Linienansicht nach dem Erweitern</string>
+    <string name="island_navigation_peek_after_expand_desc">Im ausgeschalteten Zustand fährt die Insel direkt wieder in die kompakte Position zurück</string>
+    <string name="island_navigation_expand_title">Vor einer Kurve erweitern</string>
+    <string name="island_navigation_on_new_title">Neue Anweisung</string>
+    <string name="conscious_gate_reappear_off">Aus</string>
+    <string name="island_timers_show_screen_recorder_title">Bildschirmaufzeichnung anzeigen</string>
+    <string name="island_timers_filter_apps_title">App-Filter</string>
+    <string name="island_media_show_like_title">\"Gefällt mir\" Button  anzeigen</string>
+    <string name="island_media_show_previous_title">\"Vorherige Titel\" Button anzeigen </string>
+    <string name="island_media_keep_when_paused_title">Wiedergabefortsetzung beibehalten</string>
+    <string name="island_caffeinate_show_time_title">Zeit anzeigen</string>
+    <string name="island_calendar_priority_title">Priorität beim Schließen</string>
+    <string name="status_glance_calendar_show_all_day_title">Ganztägige Ereignisse anzeigen</string>
+    <string name="island_signal_wifi_title">WLAN-Signal anzeigen</string>
+    <string name="island_show_signal_title">Mobilfunksignal anzeigen</string>
+    <string name="island_network_activity_title">Netzwerkaktivität anzeigen</string>
+    <string name="island_signal_low_only_title">Anzeige bei schwachem Signal</string>
+    <string name="island_alarm_window_title">Alarme anzeigen innerhalb</string>
+    <string name="island_alarm_hide_time_title">Zeit ausblenden</string>
+    <string name="feat_widget_stack_desc">Widgets stapeln und zwischen ihnen wechseln</string>
+    <string name="feat_widget_stack_title">Widget-Stapel</string>
+    <string name="about_desc_widget_stack">Platziere mehrere Widgets aus beliebigen Apps an einer Stelle auf deinem Startbildschirm.
+
+Der Stapel wechselt zeitgesteuert zum nächsten Widget. Alternativ kannst du mit den Pfeilen darunter wechseln. Widgets, die eine scrollbare Liste anzeigen, wie z. B. ein Kalender, können nicht in einem Stapel angezeigt werden.</string>
+    <string name="feat_volume_steps_title">Lautstärkestufen</string>
+    <string name="feat_volume_steps_desc">Ändern Sie die Medienlautstärke schneller mit jedem Tastendruck</string>
+    <string name="feat_app_volume_title">App-Lautstärke</string>
+    <string name="feat_app_volume_desc">Stellen Sie für jede App eine separate Lautstärke ein</string>
+    <string name="volume_steps_enable_title">Lautstärkestufen aktivieren</string>
+    <string name="volume_steps_per_press_title">Schritte pro Tastendruck</string>
+    <string name="about_desc_volume_steps">Legt fest, um wie viele Schritte sich die Medienlautstärke bei jedem Drücken einer Lautstärketaste ändert. Das Gedrückthalten einer Taste erhöht die Lautstärke, bis Sie sie loslassen. Anrufe, Klingeltöne, Alarme und Kamera-Apps behalten ihr normales Lautstärkeverhalten bei.
+
+Wenn die Tastenbelegung eine Aktion für langes Drücken einer Lautstärketaste hat, wird beim Gedrückthalten dieser Taste die Aktion ausgeführt, anstatt die Lautstärke zu ändern. Ein kurzer Druck ändert die Lautstärke weiterhin um die von Ihnen festgelegte Schrittgröße. Während das Lautstärkefeld angezeigt wird, pausiert die Tastenbelegung standardmäßig, sodass das Gedrückthalten der Taste die Lautstärke ändert. Deaktivieren Sie in der Tastenbelegung die Option „Deaktiviert, während der Lautstärkedialog geöffnet ist“, wenn die Aktion immer Vorrang haben soll.</string>
+    <string name="app_volume_enable_title">App-Lautstärke aktivieren</string>
+    <string name="app_volume_overlay_title">Kontrol-UI-Überlagerung</string>
+    <string name="app_volume_add_app">App hinzufügen</string>
+    <string name="app_volume_add_app_desc">Lautstärke einstellen, bevor die App startet</string>
+    <string name="about_desc_app_volume">Verringert die Audioausgabe einer App, ohne die Medienlautstärke für alle anderen Apps zu ändern. Wählen Sie für jede App eine Stufe aus. Diese wird jedes Mal angewendet, wenn die App Ton abspielt, auch im Hintergrund.
+
+Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber hinausgehen. Einige Spiele und Audio-Apps mit niedriger Latenz ignorieren die Stufe möglicherweise. Shizuku muss ausgeführt werden, damit neue Stufen angewendet werden. Starten Sie es daher nach einem Neustart erneut</string>
 </resources>
