@@ -1761,4 +1761,6 @@
     <string name="watchface_glance_comp_events_desc">Mostrar as próximas reuniões de hoje</string>
     <string name="watchface_glance_comp_alarm_title">próximo alarme </string>
     <string name="watchface_glance_comp_alarm_desc">Exibir o horário do alarme quando não houver eventos.</string>
+    <string name="feat_screenshots_title">capturas de tela</string>
+    <string name="feat_screenshots_desc">Limpar capturas de tela compartilhadas e antigas</string>
 </resources>
