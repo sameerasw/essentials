@@ -68,8 +68,8 @@
     <string name="feat_essentials_on_display_desc">Информация о музыке на AOD</string>
     <string name="essentials_on_display_docked_mode_title">Всегда видно</string>
     <string name="essentials_on_display_docked_mode_desc">Оставляйте информацию всегда видимой, пока воспроизводится музыка на AOD</string>
-    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
-    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_respect_notifications_title">Привилегировать уведомления</string>
+    <string name="essentials_on_display_respect_notifications_desc">Выключать для показа новых сообщений</string>
     <string name="essentials_on_display_random_shapes_title">Случайные фигуры</string>
     <string name="essentials_on_display_random_shapes_desc">Использовать различные фигуры Material 3 для обложки альбома</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
@@ -1860,4 +1860,8 @@
     <string name="duo_slide_mirror_direction_title">Инвертировать направления</string>
     <string name="island_always_gestures_title">Всегда доступные жесты</string>
     <string name="island_always_gestures_desc">Оставлять пространство для жестов даже когда остров спрятан</string>
+    <string name="label_battery_capacity">Вместимость</string>
+    <string name="label_battery_capacity_health">Здоровье батареи</string>
+    <string name="feat_widget_stack_title">Стопка виджетов</string>
+    <string name="feat_widget_stack_desc">Складывайте виджеты в стопку и переключайтесь между ними</string>
 </resources>
