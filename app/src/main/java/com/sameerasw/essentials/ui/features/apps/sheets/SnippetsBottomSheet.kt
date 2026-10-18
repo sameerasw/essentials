@@ -73,14 +73,7 @@ fun SnippetsBottomSheet(
     val context = LocalContext.current
     val view = LocalView.current
     val repository = remember { SnippetRepository.getInstance(context) }
-    val settingsRepository = remember { SettingsRepository(context) }
     val snippets by repository.snippets.collectAsState()
-
-    var universalEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalEnabled()) }
-    var autoExpandEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalAutoExpandEnabled()) }
-    var floatingPillEnabled by remember { mutableStateOf(settingsRepository.isSnippetsUniversalFloatingPillEnabled()) }
-    var suggestionDisplayMode by remember { mutableStateOf(settingsRepository.getSnippetsSuggestionDisplayMode()) }
-    var isDisplayStyleSheetVisible by remember { mutableStateOf(false) }
 
     var searchQuery by remember { mutableStateOf("") }
     var editingSnippet by remember { mutableStateOf<Snippet?>(null) }
@@ -148,17 +141,6 @@ fun SnippetsBottomSheet(
         )
     }
 
-    if (isDisplayStyleSheetVisible) {
-        SnippetDisplayStyleSheet(
-            currentMode = suggestionDisplayMode,
-            onModeSelected = { newMode ->
-                suggestionDisplayMode = newMode
-                settingsRepository.setSnippetsSuggestionDisplayMode(newMode)
-            },
-            onDismissRequest = { isDisplayStyleSheetVisible = false },
-        )
-    }
-
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
     ) {
@@ -212,60 +194,6 @@ fun SnippetsBottomSheet(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                    }
-                }
-            }
-
-            // Settings: External Keyboard Support Group
-            item(key = "external_keyboard_settings") {
-                RoundedCardContainer(spacing = 2.dp) {
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_keyboard_24,
-                        title = stringResource(R.string.snippets_universal_title),
-                        description = stringResource(R.string.snippets_universal_desc),
-                        isChecked = universalEnabled,
-                        onCheckedChange = { checked ->
-                            universalEnabled = checked
-                            settingsRepository.setSnippetsUniversalEnabled(checked)
-                        },
-                    )
-
-                    if (universalEnabled) {
-                        IconToggleItem(
-                            iconRes = R.drawable.rounded_bolt_24,
-                            title = stringResource(R.string.snippets_universal_auto_expand),
-                            description = stringResource(R.string.snippets_universal_auto_expand_desc),
-                            isChecked = autoExpandEnabled,
-                            onCheckedChange = { checked ->
-                                autoExpandEnabled = checked
-                                settingsRepository.setSnippetsUniversalAutoExpandEnabled(checked)
-                            },
-                        )
-
-                        val modeLabel = when (suggestionDisplayMode) {
-                            SettingsRepository.SNIPPETS_DISPLAY_NONE -> stringResource(R.string.snippets_display_none_title)
-                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
-                            SettingsRepository.SNIPPETS_DISPLAY_DUO -> stringResource(R.string.snippets_display_duo_title)
-                            SettingsRepository.SNIPPETS_DISPLAY_BOTH -> stringResource(R.string.snippets_display_both_title)
-                            else -> stringResource(R.string.snippets_display_pill_title)
-                        }
-                        val modeIcon = when (suggestionDisplayMode) {
-                            SettingsRepository.SNIPPETS_DISPLAY_NONE -> R.drawable.rounded_visibility_off_24
-                            SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> R.drawable.rounded_bolt_24
-                            SettingsRepository.SNIPPETS_DISPLAY_DUO -> R.drawable.rounded_circle_24
-                            SettingsRepository.SNIPPETS_DISPLAY_BOTH -> R.drawable.rounded_auto_awesome_24
-                            else -> R.drawable.rounded_keyboard_24
-                        }
-
-                        IconToggleItem(
-                            iconRes = modeIcon,
-                            title = stringResource(R.string.snippets_display_style_title),
-                            description = modeLabel,
-                            isChecked = false,
-                            showToggle = false,
-                            onClick = { isDisplayStyleSheetVisible = true },
-                            onCheckedChange = { isDisplayStyleSheetVisible = true },
-                        )
                     }
                 }
             }

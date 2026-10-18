@@ -59,10 +59,18 @@ fun KeyboardSettingsUI(
     var text by remember { mutableStateOf("") }
     val isKeyboardEnabled by viewModel.isKeyboardEnabled
     val isKeyboardSelected by viewModel.isKeyboardSelected
+    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     var isSnippetsSheetVisible by remember { mutableStateOf(false) }
     val settingsRepo = remember { com.sameerasw.essentials.data.repository.SettingsRepository(context) }
     var suggestionDisplayMode by remember { mutableStateOf(settingsRepo.getSnippetsSuggestionDisplayMode()) }
     var isDisplayStyleSheetVisible by remember { mutableStateOf(false) }
+    var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+    var universalOn by remember { mutableStateOf(settingsRepo.isSnippetsUniversalEnabled()) }
+    var autoExpandEnabled by remember { mutableStateOf(settingsRepo.isSnippetsUniversalAutoExpandEnabled()) }
+
+    LaunchedEffect(isAccessibilityEnabled) {
+        universalOn = settingsRepo.isSnippetsUniversalEnabled()
+    }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -356,21 +364,42 @@ fun KeyboardSettingsUI(
         )
 
         RoundedCardContainer(spacing = 2.dp) {
-            var universalOn by remember { mutableStateOf(settingsRepo.isSnippetsUniversalEnabled()) }
-
             IconToggleItem(
                 iconRes = R.drawable.rounded_keyboard_24,
                 title = stringResource(R.string.snippets_universal_title),
                 description = stringResource(R.string.snippets_universal_desc),
-                isChecked = universalOn,
+                isChecked = universalOn && isAccessibilityEnabled,
                 onCheckedChange = { checked ->
-                    universalOn = checked
-                    settingsRepo.setSnippetsUniversalEnabled(checked)
+                    com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked) {
+                        if (!isAccessibilityEnabled) {
+                            requestingPermissionsFor = Pair(R.string.snippets_universal_title, listOf("ACCESSIBILITY"))
+                        } else {
+                            universalOn = true
+                            settingsRepo.setSnippetsUniversalEnabled(true)
+                        }
+                    } else {
+                        universalOn = false
+                        settingsRepo.setSnippetsUniversalEnabled(false)
+                    }
                 },
                 modifier = Modifier.highlight(highlightSetting == "snippets_universal"),
             )
 
-            if (universalOn) {
+            if (universalOn && isAccessibilityEnabled) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_bolt_24,
+                    title = stringResource(R.string.snippets_universal_auto_expand),
+                    description = stringResource(R.string.snippets_universal_auto_expand_desc),
+                    isChecked = autoExpandEnabled,
+                    onCheckedChange = { checked ->
+                        com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                        autoExpandEnabled = checked
+                        settingsRepo.setSnippetsUniversalAutoExpandEnabled(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "snippets_universal_auto_expand"),
+                )
+
                 val modeLabel = when (suggestionDisplayMode) {
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_NONE -> stringResource(R.string.snippets_display_none_title)
                     com.sameerasw.essentials.data.repository.SettingsRepository.SNIPPETS_DISPLAY_DYNAMIC_ISLAND -> stringResource(R.string.snippets_display_island_title)
@@ -392,8 +421,14 @@ fun KeyboardSettingsUI(
                     description = modeLabel,
                     isChecked = false,
                     showToggle = false,
-                    onClick = { isDisplayStyleSheetVisible = true },
-                    onCheckedChange = { isDisplayStyleSheetVisible = true },
+                    onClick = {
+                        com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                        isDisplayStyleSheetVisible = true
+                    },
+                    onCheckedChange = {
+                        com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                        isDisplayStyleSheetVisible = true
+                    },
                     modifier = Modifier.highlight(highlightSetting == "snippets_display_style"),
                 )
             }
@@ -404,8 +439,14 @@ fun KeyboardSettingsUI(
                 description = stringResource(R.string.desc_keyboard_snippets),
                 isChecked = false,
                 showToggle = false,
-                onClick = { isSnippetsSheetVisible = true },
-                onCheckedChange = { isSnippetsSheetVisible = true },
+                onClick = {
+                    com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                    isSnippetsSheetVisible = true
+                },
+                onCheckedChange = {
+                    com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                    isSnippetsSheetVisible = true
+                },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_snippets"),
             )
         }
@@ -436,6 +477,27 @@ fun KeyboardSettingsUI(
                     settingsRepo.setSnippetsSuggestionDisplayMode(newMode)
                 },
                 onDismissRequest = { isDisplayStyleSheetVisible = false },
+            )
+        }
+
+        if (requestingPermissionsFor != null) {
+            val (titleRes, permKeys) = requestingPermissionsFor!!
+            val permissionItems = com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItems(
+                permKeys,
+                context,
+                viewModel,
+            )
+            com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet(
+                onDismissRequest = {
+                    requestingPermissionsFor = null
+                    viewModel.check(context)
+                    if (viewModel.isAccessibilityEnabled.value) {
+                        universalOn = true
+                        settingsRepo.setSnippetsUniversalEnabled(true)
+                    }
+                },
+                featureTitle = stringResource(titleRes),
+                permissions = permissionItems,
             )
         }
     }
