@@ -128,7 +128,7 @@ fun CompactTemplate(
         fun edgeInset(outer: Placeable?) = if (outer != null && outer.width > squareCell) opticalInset else 0
         if (cameraSlot == 0) {
             val cells = left + right
-            onSlack(0)
+            onSlack(if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0)
             if (cells.isEmpty()) return@Layout layout(0, height) {}
             val pad = ((height - squareCell) / 2).coerceAtLeast(0)
             val startInset = edgeInset(cells.first())

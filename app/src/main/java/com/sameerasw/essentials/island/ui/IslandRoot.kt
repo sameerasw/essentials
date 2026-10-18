@@ -149,7 +149,7 @@ fun IslandRoot(
     val currentState by rememberUpdatedState(state)
     val inspection = LocalInspectionMode.current
 
-    val bondCandidate = targetSpec.bondEdge && stage == IslandStage.Compact && state.sideBubble == null
+    val bondCandidate = targetSpec.bondEdge && stage == IslandStage.Compact
     var bonded by remember { mutableStateOf(false) }
     LaunchedEffect(bondCandidate) {
         if (bondCandidate) {
@@ -461,8 +461,10 @@ fun IslandRoot(
     fun surfaceShiftFor(width: Int): Int = spec.growDirection * (width - cameraSlotPx) / 2
     fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
         lineShift.value.roundToInt() + catchShiftPx().roundToInt()
+    // Bonded to the edge, the bubble closes the gap and slightly overlaps, so the liquid neck merges both into one body
+    fun bondedGapPx(): Int = (bubbleGapPx * (1f - bond) - compactHeightPx * 0.08f * bond).roundToInt()
     fun bubbleX(width: Int): Int =
-        if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - sideWidthLive()
+        if (spec.growDirection > 0) surfaceLeft(width) + width + bondedGapPx() else surfaceLeft(width) - bondedGapPx() - sideWidthLive()
     val focusedItem = state.focused
     
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
@@ -684,6 +686,45 @@ fun IslandRoot(
                 )
             }
         }
+        if (bond > 0.001f && lastCatchUp != null && catchUpAnim.value > 0.5f && !bubbleOnlyLayout) {
+            Box(
+                Modifier
+                    .layout { measurable, constraints ->
+                        val w = surfaceSize.width
+                        val surfaceStart = surfaceLeft(w)
+                        val bubbleStart = bubbleX(w)
+                        val left = minOf(bubbleStart, surfaceStart)
+                        val right = maxOf(bubbleStart + sideWidthLive(), surfaceStart + w)
+                        val body = measurable.measure(Constraints.fixed((right - left).coerceAtLeast(0), compactHeightPx.roundToInt()))
+                        layout(constraints.maxWidth, constraints.maxHeight) {
+                            body.place(left, surfaceTopPx - (surfaceTopPx * bond).roundToInt())
+                        }
+                    }
+                    .graphicsLayer { alpha = bond }
+                    .drawBehind {
+                        val r = size.height / 2f
+                        drawRoundRect(Color.Black, cornerRadius = CornerRadius(r))
+                        drawRect(Color.Black, size = Size(size.width, r))
+                        val f = compactHeightPx * 0.4f
+                        val leftFillet = Path().apply {
+                            moveTo(-f, 0f)
+                            lineTo(0f, 0f)
+                            lineTo(0f, f)
+                            arcTo(Rect(Offset(-f, f), f), 0f, -90f, false)
+                            close()
+                        }
+                        val rightFillet = Path().apply {
+                            moveTo(size.width + f, 0f)
+                            lineTo(size.width, 0f)
+                            lineTo(size.width, f)
+                            arcTo(Rect(Offset(size.width + f, f), f), 180f, 90f, false)
+                            close()
+                        }
+                        drawPath(leftFillet, Color.Black)
+                        drawPath(rightFillet, Color.Black)
+                    },
+            )
+        }
         val bubbleData = lastCatchUp
         if (bubbleData != null && catchUpAnim.value > 0.001f) {
             val dragX = remember { Animatable(0f) }
@@ -712,7 +753,7 @@ fun IslandRoot(
                                 val endX = bubbleX(w)
                                 val startX = if (spec.growDirection > 0) surfaceLeft(w) + w - sideWidthLive() else surfaceLeft(w)
                                 val v = catchUpAnim.value
-                                IntOffset((startX + (endX - startX) * v + dragX.value).roundToInt(), surfaceTopPx)
+                                IntOffset((startX + (endX - startX) * v + dragX.value).roundToInt(), surfaceTopPx - (surfaceTopPx * bond).roundToInt())
                             }
                         }
                         .liquid(bubbleLiquid)
