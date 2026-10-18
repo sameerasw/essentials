@@ -28,6 +28,124 @@ import com.sameerasw.essentials.domain.diy.State as DIYState
 class TimeModule : AutomationModule {
     companion object {
         const val ID = "time_module"
+
+        fun rescheduleNext(
+            context: Context,
+            automation: Automation,
+            isEntry: Boolean,
+        ) {
+            when (automation.type) {
+                Automation.Type.TRIGGER ->
+                    (automation.trigger as? Trigger.Schedule)?.let {
+                        scheduleAlarm(context, automation.id, it.hour, it.minute, it.days, true)
+                    }
+
+                Automation.Type.STATE ->
+                    (automation.state as? DIYState.TimePeriod)?.let {
+                        if (isEntry) {
+                            scheduleAlarm(context, automation.id, it.startHour, it.startMinute, it.days, true)
+                        } else {
+                            scheduleAlarm(context, automation.id, it.endHour, it.endMinute, it.days, false)
+                        }
+                    }
+
+                else -> {}
+            }
+        }
+
+        fun scheduleAlarm(
+            context: Context,
+            id: String,
+            hour: Int,
+            minute: Int,
+            days: Set<Int>,
+            isEntry: Boolean,
+        ) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent =
+                Intent(context, TimeAutomationReceiver::class.java).apply {
+                    action = TimeAutomationReceiver.ACTION_TRIGGER
+                    putExtra(TimeAutomationReceiver.EXTRA_AUTOMATION_ID, id)
+                    putExtra(TimeAutomationReceiver.EXTRA_IS_ENTRY, isEntry)
+                }
+
+            val requestCode = (id + isEntry.toString()).hashCode()
+            val pendingIntent =
+                PendingIntent.getBroadcast(
+                    context,
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                )
+
+            val calendar = calculateNextOccurrence(hour, minute, days)
+            Log.d(
+                ID,
+                "Scheduling alarm for automation $id (entry=$isEntry) at ${calendar.time}",
+            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (alarmManager.canScheduleExactAlarms()) {
+                            alarmManager.setExactAndAllowWhileIdle(
+                                AlarmManager.RTC_WAKEUP,
+                                calendar.timeInMillis,
+                                pendingIntent,
+                            )
+                        } else {
+                            // Fallback to inexact
+                            alarmManager.setAndAllowWhileIdle(
+                                AlarmManager.RTC_WAKEUP,
+                                calendar.timeInMillis,
+                                pendingIntent,
+                            )
+                        }
+                    } else {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent,
+                        )
+                    }
+                } catch (e: SecurityException) {
+                    alarmManager.setAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent,
+                    )
+                }
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            }
+        }
+
+        fun calculateNextOccurrence(
+            hour: Int,
+            minute: Int,
+            days: Set<Int>,
+        ): Calendar {
+            val now = Calendar.getInstance()
+            val target =
+                Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+
+            if (!target.after(now)) {
+                target.add(Calendar.DAY_OF_YEAR, 1)
+            }
+
+            if (days.isNotEmpty()) {
+                while (!days.contains(target.get(Calendar.DAY_OF_WEEK))) {
+                    target.add(Calendar.DAY_OF_YEAR, 1)
+                }
+            }
+
+            return target
+        }
     }
 
     override val id: String = ID
@@ -97,73 +215,6 @@ class TimeModule : AutomationModule {
         }
     }
 
-    private fun scheduleAlarm(
-        context: Context,
-        id: String,
-        hour: Int,
-        minute: Int,
-        days: Set<Int>,
-        isEntry: Boolean,
-    ) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent =
-            Intent(context, TimeAutomationReceiver::class.java).apply {
-                action = TimeAutomationReceiver.ACTION_TRIGGER
-                putExtra(TimeAutomationReceiver.EXTRA_AUTOMATION_ID, id)
-                putExtra(TimeAutomationReceiver.EXTRA_IS_ENTRY, isEntry)
-            }
-
-        val requestCode = (id + isEntry.toString()).hashCode()
-        val pendingIntent =
-            PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-
-        val calendar = calculateNextOccurrence(hour, minute, days)
-        Log.d(
-            ID,
-            "Scheduling alarm for automation $id (entry=$isEntry) at ${calendar.time}",
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    if (alarmManager.canScheduleExactAlarms()) {
-                        alarmManager.setExactAndAllowWhileIdle(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.timeInMillis,
-                            pendingIntent,
-                        )
-                    } else {
-                        // Fallback to inexact
-                        alarmManager.setAndAllowWhileIdle(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.timeInMillis,
-                            pendingIntent,
-                        )
-                    }
-                } else {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent,
-                    )
-                }
-            } catch (e: SecurityException) {
-                alarmManager.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    pendingIntent,
-                )
-            }
-        } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-        }
-    }
-
     private fun cancelAllAlarms(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         automations.forEach { automation ->
@@ -196,33 +247,6 @@ class TimeModule : AutomationModule {
                     it.cancel()
                 }
         }
-    }
-
-    private fun calculateNextOccurrence(
-        hour: Int,
-        minute: Int,
-        days: Set<Int>,
-    ): Calendar {
-        val now = Calendar.getInstance()
-        val target =
-            Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, hour)
-                set(Calendar.MINUTE, minute)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }
-
-        if (target.before(now)) {
-            target.add(Calendar.DAY_OF_YEAR, 1)
-        }
-
-        if (days.isNotEmpty()) {
-            while (!days.contains(target.get(Calendar.DAY_OF_WEEK))) {
-                target.add(Calendar.DAY_OF_YEAR, 1)
-            }
-        }
-
-        return target
     }
 
     private val activeStateAutomations = mutableSetOf<String>()

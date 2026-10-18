@@ -871,6 +871,7 @@ fun FreezeSettingsUI(
             AppSelectionSheet(
                 restrictSystemApps = !viewModel.isEnableUnsupportedFeatures.value,
                 showInvertSelection = false,
+                hideSystemAppsByDefault = true,
                 onDismissRequest = { isAppSelectionSheetOpen = false },
                 onLoadApps = { viewModel.loadFreezeSelectedApps(it) },
                 onSaveApps = { ctx, apps -> viewModel.saveFreezeSelectedApps(ctx, apps) },

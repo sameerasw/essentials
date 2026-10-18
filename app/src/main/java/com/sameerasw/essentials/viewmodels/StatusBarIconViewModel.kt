@@ -46,6 +46,7 @@ class StatusBarIconViewModel : ViewModel() {
     val isHideSystemIconsLockedOnlyEnabled = mutableStateOf(false)
     val isHideClockEnabled = mutableStateOf(false)
     val isHideNotificationIconsEnabled = mutableStateOf(false)
+    val islandHiddenIcons = mutableStateOf<Set<String>>(emptySet())
 
     // Dynamic icon visibility states based on registry
     private val iconVisibilities =
@@ -664,6 +665,8 @@ class StatusBarIconViewModel : ViewModel() {
             prefs.getBoolean(PREF_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
         isHideClockEnabled.value = prefs.getBoolean(PREF_HIDE_CLOCK, false)
         isHideNotificationIconsEnabled.value = prefs.getBoolean(PREF_HIDE_NOTIFICATION_ICONS, false)
+        islandHiddenIcons.value =
+            com.sameerasw.essentials.data.repository.SettingsRepository(context).getIslandHideIcons()
         applyAdvancedFlags(context)
     }
 
@@ -687,6 +690,19 @@ class StatusBarIconViewModel : ViewModel() {
             PREF_HIDE_NOTIFICATION_ICONS -> isHideNotificationIconsEnabled.value = enabled
         }
         prefs.edit { putBoolean(flagKey, enabled) }
+        if (!enabled) {
+            val islandId =
+                when (flagKey) {
+                    PREF_HIDE_SYSTEM_ICONS -> com.sameerasw.essentials.data.repository.SettingsRepository.ISLAND_HIDE_ICON_SYSTEM
+                    PREF_HIDE_CLOCK -> com.sameerasw.essentials.data.repository.SettingsRepository.ISLAND_HIDE_ICON_CLOCK
+                    PREF_HIDE_NOTIFICATION_ICONS -> com.sameerasw.essentials.data.repository.SettingsRepository.ISLAND_HIDE_ICON_NOTIFICATIONS
+                    else -> null
+                }
+            if (islandId != null && islandId in islandHiddenIcons.value) {
+                islandHiddenIcons.value = islandHiddenIcons.value - islandId
+                com.sameerasw.essentials.data.repository.SettingsRepository(context).setIslandHideIcons(islandHiddenIcons.value)
+            }
+        }
         applyAdvancedFlags(context)
     }
 

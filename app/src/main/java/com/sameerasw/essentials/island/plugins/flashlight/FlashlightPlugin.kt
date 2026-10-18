@@ -11,7 +11,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,14 +68,14 @@ class FlashlightPlugin : BaseIslandPlugin() {
 
     private val callback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(id: String, enabled: Boolean) {
-            if (id != cameraId) return
+            if (ctx == null || id != cameraId) return
             torchOn = enabled
             refresh()
         }
 
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         override fun onTorchStrengthLevelChanged(id: String, level: Int) {
-            if (id != cameraId) return
+            if (ctx == null || id != cameraId) return
             percent = toPercent(level)
             render()
         }
@@ -232,45 +234,7 @@ private fun TorchBeam(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(BEAM_HEIGHT)
-            .pointerInput(adjustable) {
-                detectTapGestures { offset ->
-                    val lamp = LAMP_SIZE.toPx()
-                    val onLamp = offset.y >= size.height - lamp &&
-                        kotlin.math.abs(offset.x - size.width / 2f) <= lamp
-                    if (onLamp) {
-                        IslandHaptics.commit(context)
-                        onLampTap()
-                    } else if (adjustable) {
-                        IslandHaptics.touchDown(context)
-                        set(1f - offset.y / (size.height - lamp))
-                    }
-                }
-            }
-            .then(
-                if (adjustable) {
-                    Modifier.pointerInput(Unit) {
-                        detectVerticalDragGestures(
-                            onDragStart = {
-                                dragging = true
-                                onInteraction()
-                                IslandHaptics.touchDown(context)
-                            },
-                            onDragEnd = {
-                                dragging = false
-                                onInteraction()
-                                IslandHaptics.commit(context)
-                            },
-                            onDragCancel = { dragging = false },
-                        ) { change, dragAmount ->
-                            change.consume()
-                            set(current - dragAmount / (size.height - LAMP_SIZE.toPx()))
-                        }
-                    }
-                } else {
-                    Modifier
-                },
-            ),
+            .height(BEAM_HEIGHT),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Canvas(
@@ -319,6 +283,49 @@ private fun TorchBeam(
             }
         }
         IslandIcon(R.drawable.round_flashlight_on_24, size = LAMP_SIZE, tint = color)
+        Box(
+            Modifier
+                .width(CONTROL_WIDTH)
+                .fillMaxHeight()
+            .pointerInput(adjustable) {
+                detectTapGestures { offset ->
+                    val lamp = LAMP_SIZE.toPx()
+                    val onLamp = offset.y >= size.height - lamp &&
+                        kotlin.math.abs(offset.x - size.width / 2f) <= lamp
+                    if (onLamp) {
+                        IslandHaptics.commit(context)
+                        onLampTap()
+                    } else if (adjustable) {
+                        IslandHaptics.touchDown(context)
+                        set(1f - offset.y / (size.height - lamp))
+                    }
+                }
+            }
+            .then(
+                if (adjustable) {
+                    Modifier.pointerInput(Unit) {
+                        detectVerticalDragGestures(
+                            onDragStart = {
+                                dragging = true
+                                onInteraction()
+                                IslandHaptics.touchDown(context)
+                            },
+                            onDragEnd = {
+                                dragging = false
+                                onInteraction()
+                                IslandHaptics.commit(context)
+                            },
+                            onDragCancel = { dragging = false },
+                        ) { change, dragAmount ->
+                            change.consume()
+                            set(current - dragAmount / (size.height - LAMP_SIZE.toPx()))
+                        }
+                    }
+                } else {
+                    Modifier
+                },
+            ),
+        )
     }
 }
 
@@ -328,4 +335,5 @@ private const val INTERACTION_THROTTLE_MS = 500L
 private const val BEAM_LAYERS = 8
 private val BEAM_HEIGHT = 200.dp
 private val LAMP_SIZE = 72.dp
+private val CONTROL_WIDTH = 220.dp
 private val BEAM_TOP_CLEARANCE = 40.dp

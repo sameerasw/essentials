@@ -62,6 +62,7 @@ class IslandController(
 
     private var hiddenPackage: String? = null
     private var launcherOnlySources: Set<String> = emptySet()
+    private var launcherOnlyProviders: Set<String> = emptySet()
     private var onLauncher = true
 
     fun setItems(sourceId: String, items: List<IslandItem>) {
@@ -75,10 +76,15 @@ class IslandController(
         recompute()
     }
 
-    fun setLauncherState(onLauncher: Boolean, launcherOnlySources: Set<String>) {
-        if (this.onLauncher == onLauncher && this.launcherOnlySources == launcherOnlySources) return
+    fun setLauncherState(onLauncher: Boolean, launcherOnlySources: Set<String>, launcherOnlyProviders: Set<String> = emptySet()) {
+        if (this.onLauncher == onLauncher && this.launcherOnlySources == launcherOnlySources &&
+            this.launcherOnlyProviders == launcherOnlyProviders
+        ) {
+            return
+        }
         this.onLauncher = onLauncher
         this.launcherOnlySources = launcherOnlySources
+        this.launcherOnlyProviders = launcherOnlyProviders
         recompute()
     }
 
@@ -247,7 +253,11 @@ class IslandController(
     private fun allItems(): Map<String, IslandItem> =
         itemsBySource
             .flatMap { (source, items) ->
-                if (onLauncher || source !in launcherOnlySources) items else items.filter { it.bypassLauncherOnly }
+                when {
+                    onLauncher -> items
+                    source in launcherOnlySources -> items.filter { it.bypassLauncherOnly }
+                    else -> items.filter { it.bypassLauncherOnly || it.key.substringBefore(':') !in launcherOnlyProviders }
+                }
             }
             .filter { hiddenPackage == null || it.sourcePackage != hiddenPackage }
             .associateBy { it.key }

@@ -1,6 +1,7 @@
 package com.sameerasw.island.sdk;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import com.sameerasw.island.sdk.IIslandHost;
 import com.sameerasw.island.sdk.ISurfaceCallback;
 
@@ -16,4 +17,5 @@ interface IIslandProvider {
     oneway void requestSurface(String itemKey, in Bundle request, ISurfaceCallback callback);
     oneway void resizeSurface(String itemKey, int widthPx, int heightPx);
     oneway void releaseSurface(String itemKey);
+    oneway void onSurfaceTouch(String itemKey, in MotionEvent event);
 }

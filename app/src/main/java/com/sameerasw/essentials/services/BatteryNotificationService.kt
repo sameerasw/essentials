@@ -31,6 +31,8 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.activities.BatteryDetailsActivity
 import com.sameerasw.essentials.utils.BatteryRingDrawer
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
+import com.sameerasw.essentials.utils.BluetoothDeviceIcons
+import com.sameerasw.essentials.utils.BluetoothDeviceOrder
 
 class BatteryNotificationService : Service() {
     private lateinit var settingsRepository: SettingsRepository
@@ -192,7 +194,7 @@ class BatteryNotificationService : Service() {
         if (isAirSyncEnabled && macLevel != -1 && isMacConnected) {
             val statusIcon =
                 if (macIsCharging) {
-                    R.drawable.rounded_flash_on_24
+                    R.drawable.rounded_bolt_filled_24
                 } else if (macLevel <= 15) {
                     R.drawable.rounded_battery_android_frame_alert_24
                 } else {
@@ -204,6 +206,7 @@ class BatteryNotificationService : Service() {
                     R.drawable.rounded_laptop_mac_24,
                     "Mac",
                     statusIcon,
+                    BluetoothDeviceOrder.MAC,
                 ),
             )
         }
@@ -223,50 +226,43 @@ class BatteryNotificationService : Service() {
                             Array<BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java,
                         ).toList()
                 devices.forEach { device ->
-                    val iconRes =
-                        when {
-                            device.name.contains("watch", true) ||
-                                device.name.contains(
-                                    "gear",
-                                    true,
-                                ) ||
-                                device.name.contains("fit", true) -> R.drawable.rounded_watch_24
-
-                            device.name.contains("bud", true) ||
-                                device.name.contains(
-                                    "pod",
-                                    true,
-                                ) ||
-                                device.name.contains("head", true) ||
-                                device.name.contains(
-                                    "audio",
-                                    true,
-                                ) ||
-                                device.name.contains("sound", true) -> R.drawable.rounded_headphones_24
-
-                            else -> R.drawable.rounded_bluetooth_24
+                    if (device.hasParts) {
+                        listOf(
+                            Triple(device.left, R.drawable.rounded_earbud_left_24, " L"),
+                            Triple(device.right, R.drawable.rounded_earbud_right_24, " R"),
+                            Triple(device.case, R.drawable.rounded_earbud_case_24, " Case"),
+                        ).forEach { (level, icon, suffix) ->
+                            if (level != null) {
+                                val status = if (level <= 15) R.drawable.rounded_battery_android_frame_alert_24 else null
+                                items.add(BatteryItemData(level, icon, device.name + suffix, status, device.address))
+                            }
                         }
-                    val statusIcon =
-                        if (device.level <= 15) R.drawable.rounded_battery_android_frame_alert_24 else null
-                    items.add(BatteryItemData(device.level, iconRes, device.name, statusIcon))
+                    } else {
+                        val iconRes = BluetoothDeviceIcons.resolve(this, device.address, device.name)
+                        val statusIcon =
+                            if (device.level <= 15) R.drawable.rounded_battery_android_frame_alert_24 else null
+                        items.add(BatteryItemData(device.level, iconRes, device.name, statusIcon, device.address))
+                    }
                 }
             } catch (_: Exception) {
             }
         }
 
-        return items.take(maxDevices)
+        return BluetoothDeviceOrder.apply(this, items) { it.key }.take(maxDevices)
     }
 
     private fun createCompositeBitmap(items: List<BatteryItemData>): Bitmap {
         val itemSize = 256
         val spacing = 48
 
-        val actualContentWidth = items.size * itemSize + (items.size - 1).coerceAtLeast(0) * spacing
+        val perRow = items.size.coerceIn(1, 8)
+        val rowCount = (items.size + perRow - 1) / perRow
+        val actualContentWidth = perRow * itemSize + (perRow - 1).coerceAtLeast(0) * spacing
 
         val minWideItems = 3
         val minWideWidth = minWideItems * itemSize + (minWideItems - 1) * spacing
         val totalWidth = actualContentWidth.coerceAtLeast(minWideWidth)
-        val totalHeight = itemSize
+        val totalHeight = rowCount * itemSize + (rowCount - 1) * spacing
 
         val composite = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(composite)
@@ -280,6 +276,7 @@ class BatteryNotificationService : Service() {
                 Color.parseColor("#6200EE")
             }
 
+        val showPercentage = settingsRepository.isBatteryShowPercentageEnabled()
         val onSurface = Color.WHITE
         val trackColor = ColorUtils.setAlphaComponent(onSurface, 40)
         val surfaceColor = Color.parseColor("#99000000")
@@ -303,11 +300,18 @@ class BatteryNotificationService : Service() {
                     item.statusIconRes?.let { ContextCompat.getDrawable(this, it) },
                     itemSize,
                     itemSize,
+                    percentText = if (showPercentage) "${item.level}" else null,
+                    percentIcon =
+                        if (showPercentage && (item.statusIconRes == R.drawable.rounded_bolt_filled_24 || item.statusIconRes == R.drawable.rounded_shield_filled_24)) {
+                            ContextCompat.getDrawable(this, item.statusIconRes)
+                        } else {
+                            null
+                        },
                 )
             canvas.drawBitmap(
                 itemBitmap,
-                startX + (index * (itemSize + spacing)).toFloat(),
-                0f,
+                startX + ((index % perRow) * (itemSize + spacing)).toFloat(),
+                ((index / perRow) * (itemSize + spacing)).toFloat(),
                 null,
             )
         }
@@ -320,5 +324,6 @@ class BatteryNotificationService : Service() {
         val iconRes: Int,
         val name: String,
         val statusIconRes: Int? = null,
+        val key: String = "",
     )
 }

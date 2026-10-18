@@ -128,6 +128,12 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.DefaultLauncherTileService") {
+                startActivity(Intent(this, DefaultLauncherSettingsActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK })
+                finish()
+                return
+            }
+
             if (componentName.className == "com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService") {
                 val devIntent =
                     Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS).apply {
@@ -165,8 +171,8 @@ class QSPreferencesActivity : ComponentActivity() {
                     "com.sameerasw.essentials.services.tiles.RefreshRateTileService" -> "Screen refresh rate"
                     "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
                     "com.sameerasw.essentials.services.tiles.UsbDebuggingTileService" -> "Quick settings tiles"
-                    "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"
-                    "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" -> "Battery notification"
+                    "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Batteries"
+                    "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" -> "Batteries"
                     "com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService" -> "Always on Display"
                     "com.sameerasw.essentials.services.tiles.LocationReachedTileService" -> "Location reached"
                     "com.sameerasw.essentials.services.tiles.UrlShortenerTileService" -> "URL Shortener"

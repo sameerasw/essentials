@@ -116,7 +116,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 68
-        versionName = "19.0"
+        versionName = "19.1-beta.3"
 
         val whatsNewCounter = 6
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
@@ -276,4 +276,5 @@ dependencies {
 
     // QR Code Engine
     implementation(libs.zxing.core)
+    implementation(libs.play.services.code.scanner)
 }

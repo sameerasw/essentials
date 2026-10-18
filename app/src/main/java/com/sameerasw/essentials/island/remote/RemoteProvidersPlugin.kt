@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.remote
 
+import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,7 +12,11 @@ import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 class RemoteProvidersPlugin : BaseIslandPlugin() {
     override val id = "remote_providers"
 
-    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_PROVIDERS)
+    override val settingKeys = setOf(
+        SettingsRepository.KEY_ISLAND_PROVIDERS,
+        SettingsRepository.KEY_ISLAND_PROVIDERS_HIDDEN,
+        SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED,
+    )
 
     private val connections = HashMap<String, ProviderConnection>()
     private var receiver: BroadcastReceiver? = null
@@ -64,7 +69,11 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
 
     override fun onScreenStateChanged() {
         connections.values.forEach { it.refreshHostInfo() }
+        publishAll()
     }
+
+    private fun isDeviceLocked(): Boolean =
+        (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
 
     private fun onProviderUnauthorized(packageName: String) {
         ProviderTrustStore(settings).disable(packageName)
@@ -73,6 +82,8 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
     }
 
     private fun publishAll() {
-        publish(connections.values.flatMap { it.items.value })
+        val trust = ProviderTrustStore(settings)
+        val hidden = trust.hiddenFromIsland() + if (isDeviceLocked()) trust.hideWhenLocked() else emptySet()
+        publish(connections.filterKeys { it !in hidden }.values.flatMap { it.items.value })
     }
 }

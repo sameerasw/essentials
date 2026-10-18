@@ -12,6 +12,14 @@ import android.service.notification.StatusBarNotification
 import com.sameerasw.essentials.utils.AppUtil
 
 
+enum class CallActionRole { Answer, Decline, HangUp, Mute, Speaker, Hold, Video, Other }
+
+data class CallNotificationAction(
+    val role: CallActionRole,
+    val title: String,
+    val intent: PendingIntent,
+)
+
 data class NotificationCall(
     val key: String,
     val packageName: String,
@@ -24,6 +32,7 @@ data class NotificationCall(
     val endIntent: PendingIntent?,
     val contentIntent: PendingIntent?,
     val postedAt: Long,
+    val extraActions: List<CallNotificationAction> = emptyList(),
 )
 
 object CallNotificationParser {
@@ -37,9 +46,22 @@ object CallNotificationParser {
     private const val CALL_TYPE_ONGOING = 2
     private const val CALL_TYPE_SCREENING = 3
 
-    private val ANSWER_WORDS = listOf("answer", "accept", "pick up")
-    private val DECLINE_WORDS = listOf("decline", "reject", "dismiss")
-    private val HANG_UP_WORDS = listOf("hang up", "end", "leave")
+    private val ROLE_WORDS = listOf(
+        CallActionRole.Mute to listOf("mute", "unmute"),
+        CallActionRole.Speaker to listOf("speaker", "speakerphone"),
+        CallActionRole.Hold to listOf("hold", "resume"),
+        CallActionRole.Video to listOf("video", "camera"),
+        CallActionRole.Answer to listOf("answer", "accept", "pick up"),
+        CallActionRole.Decline to listOf("decline", "reject", "dismiss"),
+        CallActionRole.HangUp to listOf("hang up", "hangup", "end", "leave"),
+    )
+
+    private fun roleOf(title: String): CallActionRole {
+        val lowered = title.lowercase()
+        return ROLE_WORDS.firstOrNull { (_, words) ->
+            words.any { Regex("\\b${Regex.escape(it)}\\b").containsMatchIn(lowered) }
+        }?.first ?: CallActionRole.Other
+    }
 
     fun isCall(sbn: StatusBarNotification): Boolean = sbn.notification.category == Notification.CATEGORY_CALL
 
@@ -66,14 +88,19 @@ object CallNotificationParser {
         val photo = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) person?.icon else null)?.let { iconBitmap(context, it) }
             ?: n.getLargeIcon()?.let { iconBitmap(context, it) }
 
-        val actions = n.actions.orEmpty()
-        fun actionFor(words: List<String>) = actions.firstOrNull { a ->
-            val title = a.title?.toString()?.lowercase().orEmpty()
-            words.any { title.contains(it) }
-        }?.actionIntent
-        val answer = pendingIntent(extras, EXTRA_ANSWER_INTENT) ?: actionFor(ANSWER_WORDS)
-        val hangUp = pendingIntent(extras, EXTRA_HANG_UP_INTENT) ?: actionFor(HANG_UP_WORDS)
-        val decline = pendingIntent(extras, EXTRA_DECLINE_INTENT) ?: actionFor(DECLINE_WORDS)
+        val classified = n.actions.orEmpty().mapNotNull { a ->
+            val intent = a.actionIntent ?: return@mapNotNull null
+            if (!a.remoteInputs.isNullOrEmpty()) return@mapNotNull null
+            val title = a.title?.toString()?.trim().orEmpty()
+            CallNotificationAction(roleOf(title), title, intent)
+        }
+        fun actionFor(role: CallActionRole) = classified.firstOrNull { it.role == role }?.intent
+        val answer = pendingIntent(extras, EXTRA_ANSWER_INTENT) ?: actionFor(CallActionRole.Answer)
+        val hangUp = pendingIntent(extras, EXTRA_HANG_UP_INTENT) ?: actionFor(CallActionRole.HangUp)
+        val decline = pendingIntent(extras, EXTRA_DECLINE_INTENT) ?: actionFor(CallActionRole.Decline)
+        val extraActions = classified.filter {
+            it.role !in setOf(CallActionRole.Answer, CallActionRole.Decline, CallActionRole.HangUp) && it.title.isNotBlank()
+        }
 
         val callType = extras.getInt(EXTRA_CALL_TYPE, 0)
         val ringing = when (callType) {
@@ -106,6 +133,7 @@ object CallNotificationParser {
             endIntent = if (ringing) decline ?: hangUp else hangUp ?: decline,
             contentIntent = n.contentIntent,
             postedAt = sbn.postTime,
+            extraActions = extraActions,
         )
     }
 

@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.island.ui
 
+import kotlin.math.roundToInt
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -35,7 +38,8 @@ fun CompactTemplate(
     spec: IslandLayoutSpec,
     onCellTap: (String) -> Unit,
     onCellLongPress: (String) -> Unit,
-    leftBias: () -> Int = { 0 },
+    sideBubble: () -> Float = { 0f },
+    onSlack: (Int) -> Unit = {},
 ) {
     val cells = buildMap {
         state.items.values.forEach { item -> item.compact.forEach { put(it.key, item.key to it) } }
@@ -78,15 +82,16 @@ fun CompactTemplate(
                     val cameraOnEnd = if (spec.growDirection != 0) spec.growDirection < 0 else entry.before
                     val cameraEdge = if (cameraOnEnd) Alignment.End else Alignment.Start
                     val towardCamera: (Int) -> Int = { if (cameraOnEnd) it / 2 else -it / 2 }
+                    val edgeAnchored = spec.growDirection != 0
                     AnimatedVisibility(
                         visibleState = visibleState,
                         enter = fadeIn(IslandMotion.contentIn()) +
                             expandHorizontally(IslandMotion.compactSize, expandFrom = cameraEdge) +
-                            slideInHorizontally(IslandMotion.compactOffset, towardCamera) +
+                            (if (edgeAnchored) EnterTransition.None else slideInHorizontally(IslandMotion.compactOffset, towardCamera)) +
                             scaleIn(IslandMotion.compactFloat(), initialScale = 0.6f),
                         exit = fadeOut(IslandMotion.contentOut()) +
                             shrinkHorizontally(IslandMotion.compactSize, shrinkTowards = cameraEdge) +
-                            slideOutHorizontally(IslandMotion.compactOffset, towardCamera) +
+                            (if (edgeAnchored) ExitTransition.None else slideOutHorizontally(IslandMotion.compactOffset, towardCamera)) +
                             scaleOut(IslandMotion.compactFloat(), targetScale = 0.6f),
                         modifier = Modifier
                             .animatePlacement(fromEnd = spec.growDirection == 0 && !entry.before)
@@ -138,9 +143,11 @@ fun CompactTemplate(
         val edge = if (hasCells) spacing else 0
         val needLeft = content(left) + leftInset + edge
         val needRight = content(right) + rightInset + edge
-        val bias = if (hasCells) leftBias().coerceAtLeast(0) else 0
-        val rightSide = maxOf(needRight, needLeft + bias, if (bias == 0) needLeft else 0)
-        val leftSide = if (bias == 0) rightSide else rightSide - bias
+        val t = if (hasCells) sideBubble().coerceIn(0f, 1f) else 0f
+        val mirrored = maxOf(needLeft, needRight)
+        onSlack(needRight - needLeft)
+        val leftSide = (mirrored + (needLeft - mirrored) * t).roundToInt()
+        val rightSide = (mirrored + (needRight - mirrored) * t).roundToInt()
         val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
             var x = spacing + leftInset

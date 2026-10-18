@@ -16,7 +16,9 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -32,8 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
@@ -74,6 +78,7 @@ fun NavigationSettingsUI(
                         R.string.feat_hide_gesture_bar_title,
                         R.string.feat_hide_gesture_bar_on_launcher_title,
                         R.string.feat_circle_to_search_gesture_title,
+                        R.string.feat_split_screen_gesture_title,
                         R.string.feat_transparent_navigation_bar_title,
                     ),
                 actionLabel =
@@ -139,6 +144,7 @@ fun NavigationSettingsUI(
 
                 PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
                 PermissionModule.TRANSPARENT_NAVIGATION_BAR -> listOf(shizukuPermission)
+                PermissionModule.SPLIT_SCREEN_GESTURE -> listOf(shizukuPermission)
                 else -> emptyList()
             }
 
@@ -178,6 +184,7 @@ fun NavigationSettingsUI(
                         if (event == Lifecycle.Event.ON_RESUME) {
                             viewModel.setCircleToSearchPreviewEnabled(viewModel.isCircleToSearchGestureEnabled.value)
                             viewModel.refreshTransparentNavigationBarState(context)
+                            viewModel.refreshSplitScreenGestureState(context)
                         } else if (event == Lifecycle.Event.ON_PAUSE) {
                             viewModel.setCircleToSearchPreviewEnabled(false)
                         }
@@ -252,6 +259,28 @@ fun NavigationSettingsUI(
             )
 
             IconToggleItem(
+                title = stringResource(R.string.feat_split_screen_gesture_title),
+                description = stringResource(R.string.feat_split_screen_gesture_desc),
+                isChecked = viewModel.isSplitScreenGestureEnabled.value,
+                onCheckedChange = { enabled ->
+                    HapticUtil.performUIHaptic(view)
+                    if (isShellGranted) {
+                        viewModel.setSplitScreenGestureEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = PermissionModule.SPLIT_SCREEN_GESTURE
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isShellGranted) {
+                        requestingPermissionFor = PermissionModule.SPLIT_SCREEN_GESTURE
+                    }
+                },
+                iconRes = R.drawable.rounded_splitscreen_24,
+                modifier = Modifier.highlight(highlightSetting == "split_screen_gesture_toggle"),
+            )
+
+            IconToggleItem(
                 title = stringResource(R.string.feat_transparent_navigation_bar_title),
                 description = stringResource(R.string.feat_transparent_navigation_bar_desc),
                 isChecked = viewModel.isTransparentNavigationBarEnabled.value,
@@ -305,6 +334,30 @@ fun NavigationSettingsUI(
                     valueFormatter = { "${it.toInt()} dp" },
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            FeatureCard(
+                title = R.string.feat_back_gesture_title,
+                description = R.string.feat_back_gesture_desc,
+                iconRes = R.drawable.rounded_arrow_back_24,
+                isEnabled = true,
+                showToggle = false,
+                onToggle = {},
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    context.startActivity(
+                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                            putExtra("feature", BACK_GESTURE_FEATURE_ID)
+                        },
+                    )
+                },
+            )
         }
     }
 }

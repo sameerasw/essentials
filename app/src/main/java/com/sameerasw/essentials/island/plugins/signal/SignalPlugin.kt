@@ -204,7 +204,7 @@ class SignalPlugin : BaseIslandPlugin() {
                     placement = CompactPlacement.Dynamic,
                     compact = listOf(
                         CompactCell("signal.offline") {
-                            IslandIcon(R.drawable.rounded_android_cell_dual_5_bar_alert_24, size = 18.dp, tint = MaterialTheme.colorScheme.error)
+                            IslandIcon(R.drawable.rounded_android_cell_dual_5_bar_alert_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary)
                         },
                     ),
                 ),
@@ -246,7 +246,7 @@ class SignalPlugin : BaseIslandPlugin() {
         val wifi = context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         var rssi: Int? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) rssi = (caps.transportInfo as? WifiInfo)?.rssi
-        if (rssi == null) {
+        if (rssi == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             @Suppress("DEPRECATION")
             rssi = wifi?.connectionInfo?.rssi
         }

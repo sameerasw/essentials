@@ -78,6 +78,11 @@ fun IslandAlarmOptionsBottomSheet(
                         )
                     }
                 }
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_ALARM_HIDE_TIME,
+                    iconRes = R.drawable.rounded_schedule_24,
+                    title = stringResource(R.string.island_alarm_hide_time_title),
+                )
             }
 
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_ALARM_LAUNCHER_ONLY)

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.features.display
 
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -63,6 +64,7 @@ import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
+import com.sameerasw.essentials.ui.features.audio.sheets.SetModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.SnippetDisplayStyleSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
@@ -113,6 +115,7 @@ fun DuoSettingsUI(
     var showScreenOffSettings by remember { mutableStateOf(false) }
     var showDeviceEffectsSettings by remember { mutableStateOf(false) }
     var showSoundModeSettings by remember { mutableStateOf(false) }
+    var showSetModeSettings by remember { mutableStateOf(false) }
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
     var showFreezeTagSettings by remember { mutableStateOf(false) }
     var showOpenAppSettings by remember { mutableStateOf(false) }
@@ -564,6 +567,32 @@ fun DuoSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "duo_hide_on_shade"),
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_fullscreen_portrait_24,
+                title = stringResource(R.string.keep_in_full_screen_title),
+                isChecked = viewModel.isDuoKeepInFullscreen.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setDuoKeepInFullscreen(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "duo_keep_in_fullscreen"),
+            )
+            AnimatedVisibility(
+                visible = viewModel.isDuoKeepInFullscreen.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_do_not_touch_24,
+                    title = stringResource(R.string.disable_interactions_in_full_screen_title),
+                    isChecked = viewModel.isDuoDisableInteractionsInFullscreen.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setDuoDisableInteractionsInFullscreen(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "duo_disable_interactions_in_fullscreen"),
+                )
+            }
             val areUnsupportedFeaturesEnabled = viewModel.isEnableUnsupportedFeatures.value
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_off_24,
@@ -922,6 +951,7 @@ fun DuoSettingsUI(
                                         is Action.ScreenOff -> showScreenOffSettings = true
                                         is Action.DeviceEffects -> showDeviceEffectsSettings = true
                                         is Action.SoundMode -> showSoundModeSettings = true
+                                        is Action.SetMode -> showSetModeSettings = true
                                         is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                         is Action.FreezeTag -> showFreezeTagSettings = true
                                         is Action.OpenApp -> showOpenAppSettings = true
@@ -1053,6 +1083,18 @@ fun DuoSettingsUI(
             onDismiss = { showSoundModeSettings = false },
             onSave = { newAction ->
                 showSoundModeSettings = false
+                applyActionForGesture(activeConfigGesture, newAction)
+                configAction = null
+            },
+        )
+    }
+
+    if (showSetModeSettings && configAction is Action.SetMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        SetModeSettingsSheet(
+            initialAction = configAction as Action.SetMode,
+            onDismiss = { showSetModeSettings = false },
+            onSave = { newAction ->
+                showSetModeSettings = false
                 applyActionForGesture(activeConfigGesture, newAction)
                 configAction = null
             },

@@ -22,6 +22,7 @@ import com.sameerasw.essentials.services.tiles.CaffeinateTileService
 import com.sameerasw.essentials.services.tiles.ChargeQuickTileService
 import com.sameerasw.essentials.services.tiles.ColorPickerTileService
 import com.sameerasw.essentials.services.tiles.DataSimTileService
+import com.sameerasw.essentials.services.tiles.DefaultLauncherTileService
 import com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService
 import com.sameerasw.essentials.services.tiles.DuoTileService
 import com.sameerasw.essentials.services.tiles.DynamicNightLightTileService
@@ -328,6 +329,14 @@ object QSTileRegistry {
                 emptyList(),
                 R.string.about_desc_color_picker,
                 R.string.cat_visuals,
+            ),
+            QSTileInfo(
+                R.string.tile_default_launcher,
+                R.drawable.rounded_home_24,
+                DefaultLauncherTileService::class.java,
+                emptyList(),
+                R.string.about_desc_default_launcher,
+                R.string.cat_utils,
             ),
             QSTileInfo(
                 R.string.tile_developer_options,

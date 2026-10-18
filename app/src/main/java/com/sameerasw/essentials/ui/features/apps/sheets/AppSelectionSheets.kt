@@ -76,13 +76,14 @@ fun AppSelectionSheet(
     headerContent: (@Composable () -> Unit)? = null,
     restrictSystemApps: Boolean = false,
     showInvertSelection: Boolean = true,
+    hideSystemAppsByDefault: Boolean = false,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val view = LocalView.current
     var searchQuery by remember { mutableStateOf("") }
     var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
     var isLoadingApps by remember { mutableStateOf(true) }
-    var showSystemApps by remember { mutableStateOf(false) }
+    var showSystemApps by remember { mutableStateOf(!hideSystemAppsByDefault) }
     var initialEnabledPackageNames by remember { mutableStateOf<Set<String>>(emptySet()) }
     var restrictedPackages by remember { mutableStateOf<Set<String>>(emptySet()) }
     val scope = rememberCoroutineScope()
@@ -323,7 +324,7 @@ fun SingleAppSelectionSheet(
     onAppSelected: (NotificationApp) -> Unit,
     includeSelf: Boolean = false,
     context: Context = LocalContext.current,
-    includeSystemApps: Boolean = false,
+    includeSystemApps: Boolean = true,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val view = LocalView.current

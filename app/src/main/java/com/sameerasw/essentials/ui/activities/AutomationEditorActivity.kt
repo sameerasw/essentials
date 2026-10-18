@@ -87,6 +87,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.model.AppSelection
@@ -97,7 +98,9 @@ import com.sameerasw.essentials.ui.core.cards.AppToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.BluetoothDeviceSelectionSheet
+import com.sameerasw.essentials.ui.core.sheets.NotificationTriggerSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
+import com.sameerasw.essentials.ui.features.location.sheets.LocationTriggerSheet
 import com.sameerasw.essentials.ui.features.system.ActionSequenceEditor
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -277,7 +280,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var searchQuery by remember { mutableStateOf("") }
                 var allApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
                 var isLoadingApps by remember { mutableStateOf(false) }
-                var showSystemApps by remember { mutableStateOf(false) }
+                var showSystemApps by remember { mutableStateOf(true) }
 
                 // Load apps if needed
                 LaunchedEffect(automationType) {
@@ -358,6 +361,8 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showBatteryLevelSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
+                var showNotificationTriggerSettings by remember { mutableStateOf(false) }
+                var editingLocationTrigger by remember { mutableStateOf<Trigger?>(null) }
 
                 val isTriggerConfigured =
                     when (val trigger = selectedTrigger) {
@@ -365,6 +370,9 @@ class AutomationEditorActivity : ComponentActivity() {
                         is Trigger.BluetoothDisconnected -> trigger.deviceAddress.isNotBlank()
                         is Trigger.WifiConnected -> trigger.ssid.isNotBlank()
                         is Trigger.WifiDisconnected -> trigger.ssid.isNotBlank()
+                        is Trigger.NotificationReceived -> trigger.packageName.isNotBlank() || trigger.textContains.isNotBlank()
+                        is Trigger.ArriveAtLocation -> trigger.latitude != 0.0 || trigger.longitude != 0.0
+                        is Trigger.LeaveLocation -> trigger.latitude != 0.0 || trigger.longitude != 0.0
                         else -> true
                     }
 
@@ -393,6 +401,7 @@ class AutomationEditorActivity : ComponentActivity() {
                         is Action.OpenActivity -> action.className.isNotBlank()
                         is Action.CustomSettings -> action.entries.isNotEmpty()
                         is Action.Keyboard -> !action.inputMethodId.isNullOrBlank()
+                        is Action.SetMode -> action.modeId.isNotBlank()
                         else -> true
                     }
 
@@ -484,16 +493,7 @@ class AutomationEditorActivity : ComponentActivity() {
                             }.distinct()
 
                     return resolvedPermissions.filter { permKey ->
-                        when (permKey) {
-                            "SHIZUKU" -> !viewModel.isShizukuPermissionGranted.value
-                            "ROOT" -> !viewModel.isRootPermissionGranted.value
-                            "WRITE_SETTINGS" -> !viewModel.isWriteSettingsEnabled.value
-                            "NOTIFICATION_POLICY" -> !viewModel.isNotificationPolicyAccessGranted.value
-                            "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
-                            "DRAW_OVERLAYS" -> !viewModel.isOverlayPermissionGranted.value
-                            "ACCESSIBILITY" -> !viewModel.isAccessibilityEnabled.value
-                            else -> false
-                        }
+                        AppPermission.fromKey(permKey)?.isGranted(context) == false
                     }
                 }
 
@@ -509,7 +509,14 @@ class AutomationEditorActivity : ComponentActivity() {
                             Automation.Type.PIXEL_SEARCHBAR -> selectedActions
                             else -> selectedInActions + selectedOutActions
                         }
-                    val allMissingPermissions = actionsToCheck.flatMap { getMissingPermissionsHelper(it) }.distinct()
+                    val triggerMissingPermissions =
+                        if (automationType == Automation.Type.TRIGGER) {
+                            selectedTrigger?.permissions.orEmpty().filter { AppPermission.fromKey(it)?.isGranted(context) == false }
+                        } else {
+                            emptyList()
+                        }
+                    val allMissingPermissions =
+                        (actionsToCheck.flatMap { getMissingPermissionsHelper(it) } + triggerMissingPermissions).distinct()
                     if (allMissingPermissions.isNotEmpty()) {
                         permissionKeysToShow = allMissingPermissions
                         permissionFeatureTitle = R.string.tab_diy
@@ -864,7 +871,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             else -> R.drawable.rounded_circle_24
                                                         }
                                                         val isSelected = selectedAccessibilitySlot == slot
-                                                        val isEnabled = slot !in usedAccessibilitySlots
+                                                        val isEnabled = slot !in usedAccessibilitySlots &&
+                                                            !PermissionUtils.isShortcutSlotTakenBySplitScreenGesture(context, slot)
 
                                                         EditorActionItem(
                                                             title = title,
@@ -1030,6 +1038,20 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                             ssid =
                                                                                 (selectedTrigger as? Trigger.WifiDisconnected)?.ssid ?: "",
                                                                         ),
+                                                                        Trigger.AndroidAutoConnected,
+                                                                        Trigger.AndroidAutoDisconnected,
+                                                                    ),
+                                                                R.string.diy_category_notifications to
+                                                                    listOf(
+                                                                        (selectedTrigger as? Trigger.NotificationReceived)
+                                                                            ?: Trigger.NotificationReceived(),
+                                                                        Trigger.DndOn,
+                                                                        Trigger.DndOff,
+                                                                    ),
+                                                                R.string.diy_category_location to
+                                                                    listOf(
+                                                                        (selectedTrigger as? Trigger.ArriveAtLocation) ?: Trigger.ArriveAtLocation(),
+                                                                        (selectedTrigger as? Trigger.LeaveLocation) ?: Trigger.LeaveLocation(),
                                                                     ),
                                                                 R.string.diy_category_time_schedule to
                                                                     listOf(
@@ -1079,7 +1101,13 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     iconRes = trigger.icon,
                                                                     isSelected = isSelected,
                                                                     isConfigurable = trigger.isConfigurable,
-                                                                    onClick = { selectedTrigger = trigger },
+                                                                    onClick = {
+                                                                        if (trigger is Trigger.ArriveAtLocation || trigger is Trigger.LeaveLocation) {
+                                                                            editingLocationTrigger = trigger
+                                                                        } else {
+                                                                            selectedTrigger = trigger
+                                                                        }
+                                                                    },
                                                                     onSettingsClick = {
                                                                         when (trigger) {
                                                                             is Trigger.Schedule -> showTimeSettings = true
@@ -1089,6 +1117,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                             is Trigger.WifiConnected, is Trigger.WifiDisconnected ->
                                                                                 showWifiSettings =
                                                                                     true
+                                                                            is Trigger.NotificationReceived -> showNotificationTriggerSettings = true
+                                                                            is Trigger.ArriveAtLocation, is Trigger.LeaveLocation -> editingLocationTrigger = trigger
                                                                             else -> {}
                                                                         }
                                                                     },
@@ -1354,6 +1384,17 @@ class AutomationEditorActivity : ComponentActivity() {
                                 )
                             }
 
+                            if (showNotificationTriggerSettings) {
+                                NotificationTriggerSheet(
+                                    initialTrigger = selectedTrigger as? Trigger.NotificationReceived,
+                                    onDismiss = { showNotificationTriggerSettings = false },
+                                    onSave = {
+                                        selectedTrigger = it
+                                        showNotificationTriggerSettings = false
+                                    },
+                                )
+                            }
+
                             if (showWifiSettings) {
                                 WifiNetworkSelectionSheet(
                                     initialSsid =
@@ -1371,6 +1412,31 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 else -> selectedTrigger
                                             }
                                         showWifiSettings = false
+                                    },
+                                )
+                            }
+
+                            editingLocationTrigger?.let { trigger ->
+                                val (latitude, longitude, radius, name) =
+                                    when (trigger) {
+                                        is Trigger.ArriveAtLocation -> LocationFields(trigger.latitude, trigger.longitude, trigger.radiusMeters, trigger.placeName)
+                                        is Trigger.LeaveLocation -> LocationFields(trigger.latitude, trigger.longitude, trigger.radiusMeters, trigger.placeName)
+                                        else -> LocationFields(0.0, 0.0, Trigger.DEFAULT_LOCATION_RADIUS_METERS, "")
+                                    }
+                                LocationTriggerSheet(
+                                    title = stringResource(trigger.title),
+                                    initialLatitude = latitude,
+                                    initialLongitude = longitude,
+                                    initialRadiusMeters = radius,
+                                    initialPlaceName = name,
+                                    onDismiss = { editingLocationTrigger = null },
+                                    onSave = { lat, lng, radiusMeters, placeName ->
+                                        selectedTrigger =
+                                            when (trigger) {
+                                                is Trigger.LeaveLocation -> Trigger.LeaveLocation(lat, lng, radiusMeters, placeName)
+                                                else -> Trigger.ArriveAtLocation(lat, lng, radiusMeters, placeName)
+                                            }
+                                        editingLocationTrigger = null
                                     },
                                 )
                             }
@@ -1533,3 +1599,10 @@ fun EditorActionItem(
         }
     }
 }
+
+private data class LocationFields(
+    val latitude: Double,
+    val longitude: Double,
+    val radiusMeters: Int,
+    val placeName: String,
+)

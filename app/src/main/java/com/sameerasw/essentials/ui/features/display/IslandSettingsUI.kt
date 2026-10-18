@@ -15,12 +15,9 @@ import sh.calvin.reorderable.ReorderableColumn
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
 import com.sameerasw.essentials.island.remote.ProviderDiscovery
-import com.sameerasw.essentials.island.remote.ProviderPairing
 import com.sameerasw.essentials.island.remote.ProviderPriorities
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
 import androidx.compose.foundation.background
 import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
@@ -80,12 +77,14 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBot
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBorderOutlineOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandAppOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
-import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandNavigationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSignalOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceCalendarOptionsBottomSheet
@@ -95,18 +94,6 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
-
-private val notificationSheetSettings =
-    setOf(
-        "island_notif_compact_heads_up",
-        "island_notif_skip_silent",
-        "island_notif_filter_apps",
-        "island_notif_keep_progress",
-        "island_notif_queue",
-        "island_notif_tap_to_open",
-        "island_catch_up",
-        "island_catch_up_timeout",
-    )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -122,11 +109,11 @@ fun IslandSettingsUI(
     val prioritySettings = remember { SettingsRepository(context) }
     var reorderMode by remember { mutableStateOf(false) }
     var providerVersion by remember { mutableIntStateOf(0) }
+    var providerOptionsFor by remember { mutableStateOf<Pair<String, String>?>(null) }
     val providerEntries = remember(providerVersion) { ProviderPriorities.entries(context, prioritySettings) }
     var savedRaw by remember { mutableStateOf(prioritySettings.getIslandPriorityOrder().orEmpty()) }
     val savedOrder = remember(savedRaw, providerEntries) { IslandPriorityEntries.normalize(savedRaw, providerEntries) }
     var workingOrder by remember { mutableStateOf(savedOrder) }
-    val providerScope = rememberCoroutineScope()
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
@@ -134,13 +121,12 @@ fun IslandSettingsUI(
     var showTimeOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
+    var showCaffeinateOptionsSheet by remember { mutableStateOf(false) }
     var showCallOptionsSheet by remember { mutableStateOf(false) }
     var showSignalOptionsSheet by remember { mutableStateOf(false) }
     var showAlarmOptionsSheet by remember { mutableStateOf(false) }
+    var showNavigationOptionsSheet by remember { mutableStateOf(false) }
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
-    var showNotificationOptionsSheet by remember {
-        mutableStateOf(highlightSetting in notificationSheetSettings)
-    }
     var pickingGesture by remember { mutableStateOf<String?>(null) }
     var showSlideModeSheet by remember { mutableStateOf(false) }
     var showSnippetStyleSheet by remember { mutableStateOf(false) }
@@ -327,7 +313,14 @@ fun IslandSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandShowNotifications(checked)
                         },
-                        onSettingsClick = { showNotificationOptionsSheet = true },
+                        onSettingsClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            context.startActivity(
+                                Intent(context, FeatureSettingsActivity::class.java).apply {
+                                    putExtra("feature", ISLAND_NOTIFICATIONS_FEATURE_ID)
+                                },
+                            )
+                        },
                         modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
                     )
                     "time" -> IconToggleItem(
@@ -415,6 +408,7 @@ fun IslandSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             viewModel.setIslandShowCaffeinate(checked)
                         },
+                        onSettingsClick = { showCaffeinateOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_caffeinate"),
                     )
                     "travel" -> IconToggleItem(
@@ -480,6 +474,35 @@ fun IslandSettingsUI(
                         onSettingsClick = { showAlarmOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_alarm"),
                     )
+                    "navigation" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.round_navigation_24,
+                        title = stringResource(R.string.island_show_navigation_title),
+                        isChecked = viewModel.isIslandShowNavigation.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowNavigation(checked)
+                        },
+                        onSettingsClick = { showNavigationOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_navigation"),
+                    )
+                    "hotspot" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.rounded_wifi_tethering_24,
+                        title = stringResource(R.string.island_show_hotspot_title),
+                        isChecked = viewModel.isIslandShowHotspot.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandShowHotspot(checked)
+                            if (checked) {
+                                val missing = mutableListOf<String>()
+                                if (!PermissionUtils.hasUsageStatsPermission(context)) missing.add("USAGE_STATS")
+                                if (!ShellUtils.isAvailable(context) || !ShellUtils.hasPermission(context)) missing.add("SHIZUKU")
+                                if (missing.isNotEmpty()) requestingPermissionsFor = Pair(R.string.island_title, missing)
+                            }
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_show_hotspot"),
+                    )
                     "devices" -> IconToggleItem(
                         dragHandle = handle,
                         iconRes = R.drawable.rounded_bluetooth_24,
@@ -504,14 +527,13 @@ fun IslandSettingsUI(
                                 dragHandle = handle,
                                 leadingIcon = ProviderAppIcon(provider.packageName),
                                 title = provider.label,
-                                isChecked = true,
-                                onCheckedChange = {
+                                isChecked = !ProviderTrustStore(prioritySettings).isHiddenFromIsland(packageName),
+                                onCheckedChange = { checked ->
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    ProviderTrustStore(prioritySettings).disable(packageName)
-                                    providerScope.launch { ProviderPairing.revoke(context, provider) }
+                                    ProviderTrustStore(prioritySettings).setHiddenFromIsland(packageName, !checked)
                                     providerVersion++
                                 },
-                                onSettingsClick = { ProviderDiscovery.openSettings(context, provider) },
+                                onSettingsClick = { providerOptionsFor = provider.packageName to provider.label },
                             )
                         }
                     }
@@ -810,14 +832,6 @@ fun IslandSettingsUI(
         )
     }
 
-    if (showNotificationOptionsSheet) {
-        IslandNotificationOptionsBottomSheet(
-            viewModel = viewModel,
-            onDismissRequest = { showNotificationOptionsSheet = false },
-            highlightSetting = highlightSetting,
-        )
-    }
-
     if (showBriefOptionsSheet) {
         IslandBriefOptionsBottomSheet(
             viewModel = viewModel,
@@ -833,6 +847,13 @@ fun IslandSettingsUI(
         )
     }
 
+    if (showNavigationOptionsSheet) {
+        IslandNavigationOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showNavigationOptionsSheet = false },
+        )
+    }
+
     if (showAlarmOptionsSheet) {
         IslandAlarmOptionsBottomSheet(
             viewModel = viewModel,
@@ -844,6 +865,10 @@ fun IslandSettingsUI(
         IslandSignalOptionsBottomSheet(onDismissRequest = { showSignalOptionsSheet = false })
     }
 
+    providerOptionsFor?.let { (pkg, label) ->
+        IslandAppOptionsBottomSheet(packageName = pkg, label = label, onDismissRequest = { providerOptionsFor = null })
+    }
+
     if (showCallOptionsSheet) {
         IslandCallOptionsBottomSheet(onDismissRequest = { showCallOptionsSheet = false })
     }
@@ -853,6 +878,10 @@ fun IslandSettingsUI(
             viewModel = viewModel,
             onDismissRequest = { showTimerOptionsSheet = false },
         )
+    }
+
+    if (showCaffeinateOptionsSheet) {
+        IslandCaffeinateOptionsBottomSheet(onDismissRequest = { showCaffeinateOptionsSheet = false })
     }
 
     if (showTimeOptionsSheet) {

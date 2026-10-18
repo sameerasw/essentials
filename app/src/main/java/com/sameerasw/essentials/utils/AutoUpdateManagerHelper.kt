@@ -36,6 +36,7 @@ class AutoUpdateManagerHelper(
         onProgressUpdate: (Int) -> Unit,
     ) = withContext(Dispatchers.IO) {
         try {
+            AutoBackupManager.backupBeforeUpdate(context)
             autoUpdaterManager.downloadapk(
                 context = context,
                 apkUrl = apkUrl,

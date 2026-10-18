@@ -41,6 +41,7 @@ class IslandWindowHost(
     private var targetBounds: IntRect? = null
     private var stage = IslandStage.Hidden
     private var textInput = false
+    private var interactionsDisabled = false
 
     var maxWidthPx: Int = 0
 
@@ -123,6 +124,12 @@ class IslandWindowHost(
         layoutTouchWindow()
     }
 
+    fun setInteractionsDisabled(disabled: Boolean) {
+        if (interactionsDisabled == disabled) return
+        interactionsDisabled = disabled
+        layoutTouchWindow()
+    }
+
     fun setAlwaysGestures(enabled: Boolean) {
         if (alwaysGestures == enabled) return
         alwaysGestures = enabled
@@ -181,7 +188,7 @@ class IslandWindowHost(
         val reach = maxWidthPx + 32 * density
         val width = if (geo.anchor == CameraAnchor.Center) reach.roundToInt().coerceAtMost(geo.screenWidth) else (reach * 2).roundToInt()
         lp.width = width
-        lp.height = (geo.screenHeight * 0.6f).roundToInt()
+        lp.height = if (geo.screenWidth > geo.screenHeight) geo.screenHeight else (geo.screenHeight * 0.6f).roundToInt()
         lp.x = (geo.centerX - width / 2f).roundToInt()
         lp.y = 0
     }
@@ -202,7 +209,7 @@ class IslandWindowHost(
     @SuppressLint("ClickableViewAccessibility")
     private fun layoutGestureWindow() {
         val geo = geometry
-        if (geo == null || drawParams == null || !alwaysGestures || (stage != IslandStage.Hidden && !gestureTouching) || textInput) {
+        if (geo == null || drawParams == null || !alwaysGestures || (stage != IslandStage.Hidden && !gestureTouching) || textInput || interactionsDisabled) {
             removeGestureWindow()
             return
         }
@@ -225,16 +232,7 @@ class IslandWindowHost(
             }
             gestureView = v
         }
-        try {
-            if (gestureAdded) {
-                wm.updateViewLayout(view, lp)
-            } else {
-                wm.addView(view, lp)
-                gestureAdded = true
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to place island gesture window", e)
-        }
+        gestureAdded = placeWindow(view, lp, gestureAdded, "gesture")
     }
 
     private fun removeGestureWindow() {
@@ -251,7 +249,7 @@ class IslandWindowHost(
         layoutGestureWindow()
         val draw = drawParams
         val bounds = targetBounds
-        if (draw == null || bounds == null || stage == IslandStage.Hidden || textInput) {
+        if (draw == null || bounds == null || stage == IslandStage.Hidden || textInput || interactionsDisabled) {
             removeTouchWindow()
             return
         }
@@ -264,16 +262,7 @@ class IslandWindowHost(
             v.setOnTouchListener { _, event -> forward(event) }
             touchView = v
         }
-        try {
-            if (touchAdded) {
-                wm.updateViewLayout(view, lp)
-            } else {
-                wm.addView(view, lp)
-                touchAdded = true
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to place island touch window", e)
-        }
+        touchAdded = placeWindow(view, lp, touchAdded, "touch")
     }
 
     private fun forward(event: MotionEvent): Boolean {
@@ -289,6 +278,31 @@ class IslandWindowHost(
         target.dispatchTouchEvent(copy)
         copy.recycle()
         return true
+    }
+
+    private fun placeWindow(
+        view: View,
+        lp: WindowManager.LayoutParams,
+        added: Boolean,
+        name: String,
+    ): Boolean {
+        try {
+            if (added) wm.updateViewLayout(view, lp) else wm.addView(view, lp)
+            return true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to place island $name window, re-adding", e)
+        }
+        try {
+            wm.removeViewImmediate(view)
+        } catch (_: Exception) {
+        }
+        return try {
+            wm.addView(view, lp)
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to re-add island $name window", e)
+            false
+        }
     }
 
     private fun removeTouchWindow() {

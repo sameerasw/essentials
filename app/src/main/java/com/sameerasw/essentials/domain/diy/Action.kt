@@ -136,6 +136,39 @@ sealed interface Action {
     }
 
     @Keep
+    data object TurnOnCaffeinate : Action {
+        override val title: Int = R.string.diy_action_caffeinate_on
+        override val icon: Int = R.drawable.rounded_coffee_24
+    }
+
+    @Keep
+    data object TurnOffCaffeinate : Action {
+        override val title: Int = R.string.diy_action_caffeinate_off
+        override val icon: Int = R.drawable.rounded_coffee_24
+    }
+
+    @Keep
+    data class Wait(
+        @SerializedName("seconds") val seconds: Int = 5,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_wait
+        override val icon: Int get() = R.drawable.rounded_timer_24
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
+    data class SendNotification(
+        @SerializedName("title") val notificationTitle: String = "",
+        @SerializedName("body") val body: String = "",
+        @SerializedName("label") val label: String = "",
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_send_notification
+        override val icon: Int get() = R.drawable.rounded_notifications_unread_24
+        override val permissions: List<String> get() = listOf("POST_NOTIFICATIONS")
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
     data object TurnOffLowPower : Action {
         override val title: Int = R.string.diy_action_low_power_off
         override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
@@ -228,6 +261,18 @@ sealed interface Action {
     }
 
     @Keep
+    data class SetMode(
+        @SerializedName("modeId") val modeId: String = "",
+        @SerializedName("modeName") val modeName: String = "",
+        @SerializedName("active") val active: Boolean = true,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_set_mode
+        override val icon: Int get() = R.drawable.rounded_do_not_disturb_on_24
+        override val permissions: List<String> get() = listOf("SHIZUKU")
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
     data object OpenCamera : Action {
         override val title: Int = R.string.diy_action_open_camera
         override val icon: Int = R.drawable.rounded_photo_camera_24
@@ -317,6 +362,13 @@ sealed interface Action {
     data object PinApp : Action {
         override val title: Int = R.string.diy_action_pin_app
         override val icon: Int = R.drawable.rounded_shield_lock_24
+        override val permissions: List<String> = listOf("shizuku", "root")
+    }
+
+    @Keep
+    data object SplitScreen : Action {
+        override val title: Int = R.string.diy_action_split_screen
+        override val icon: Int = R.drawable.rounded_splitscreen_24
         override val permissions: List<String> = listOf("shizuku", "root")
     }
 
@@ -431,6 +483,20 @@ sealed interface Action {
         override val title: Int = R.string.diy_action_hotspot_off
         override val icon: Int = R.drawable.rounded_wifi_tethering_24
         override val permissions: List<String> = listOf("shizuku", "root")
+    }
+
+    @Keep
+    data object TurnOffBackGesture : Action {
+        override val title: Int = R.string.diy_action_back_gesture_off
+        override val icon: Int = R.drawable.rounded_arrow_back_24
+        override val permissions: List<String> = listOf("SHIZUKU")
+    }
+
+    @Keep
+    data object TurnOnBackGesture : Action {
+        override val title: Int = R.string.diy_action_back_gesture_on
+        override val icon: Int = R.drawable.rounded_arrow_back_24
+        override val permissions: List<String> = listOf("SHIZUKU")
     }
 
     @Keep

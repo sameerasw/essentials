@@ -54,6 +54,12 @@ object CaffeinateController {
         refreshTile(context)
     }
 
+    fun start(context: Context) {
+        startingJob?.cancel()
+        selectedTimeout.value = -1
+        startService(context)
+    }
+
     private fun refreshTile(context: Context) {
         TileService.requestListeningState(
             context,

@@ -2,6 +2,7 @@ package com.sameerasw.island.sdk.compose
 
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import android.view.SurfaceControlViewHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,13 @@ abstract class ComposeIslandProviderService : IslandProviderService() {
 
     override fun onReleaseSurface(itemKey: String) {
         main.post { surfaces.remove(itemKey)?.release() }
+    }
+
+    override fun onSurfaceTouch(itemKey: String, event: MotionEvent) {
+        main.post {
+            surfaces[itemKey]?.dispatchTouch(event)
+            event.recycle()
+        }
     }
 
     override fun onHostDetached() {

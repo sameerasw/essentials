@@ -43,6 +43,8 @@ class WifiModule : AutomationModule {
                 capabilities: NetworkCapabilities,
             ) {
                 if (!capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return
+                if (activeNetworkSsids.containsKey(network)) return
+                if (automations.none { it.trigger is Trigger.WifiConnected || it.trigger is Trigger.WifiDisconnected }) return
                 val ssid = currentWifiSsid()
                 if (ssid == null) {
                     Log.d(

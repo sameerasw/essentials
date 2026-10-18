@@ -11,10 +11,12 @@ package com.sameerasw.essentials.domain.registry
 
 import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
+import com.sameerasw.essentials.ui.features.display.ISLAND_NOTIFICATIONS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
@@ -26,6 +28,7 @@ import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
+import com.sameerasw.essentials.ui.features.system.BACK_GESTURE_FEATURE_ID
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.hardware.HilightLights
 import com.sameerasw.essentials.utils.ShellUtils
@@ -272,11 +275,60 @@ object FeatureRegistry {
                 id = "Navigation",
                 title = R.string.cat_navigation,
                 iconRes = R.drawable.rounded_bottom_navigation_24,
-                category = R.string.cat_interface,
-                description = R.string.feat_other_customizations_desc,
+                category = R.string.cat_interaction,
+                description = R.string.feat_navigation_desc,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.feat_split_screen_gesture_title,
+                            R.string.feat_split_screen_gesture_desc,
+                            "split_screen_gesture_toggle",
+                        ),
+                    ),
                 showToggle = false,
-                parentFeatureId = "Display",
+                parentFeatureId = "Input",
                 animationRes = R.raw.navigation_animation,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = BACK_GESTURE_FEATURE_ID,
+                contributors = listOf("jawzf"),
+                title = R.string.feat_back_gesture_title,
+                iconRes = R.drawable.rounded_arrow_back_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_back_gesture_desc,
+                permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+                showToggle = false,
+                parentFeatureId = "Navigation",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.feat_back_gesture_left_title,
+                            R.string.feat_back_gesture_width_desc,
+                            "back_gesture_left_width",
+                            R.array.keywords_back_gesture,
+                        ),
+                        SearchSetting(
+                            R.string.feat_back_gesture_right_title,
+                            R.string.feat_back_gesture_width_desc,
+                            "back_gesture_right_width",
+                            R.array.keywords_back_gesture,
+                        ),
+                        SearchSetting(
+                            R.string.back_gesture_add_app,
+                            R.string.back_gesture_add_app_desc,
+                            "back_gesture_apps",
+                            R.array.keywords_back_gesture,
+                        ),
+                    ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
 
@@ -775,6 +827,16 @@ object FeatureRegistry {
                             "island_show_timers",
                         ),
                         SearchSetting(
+                            R.string.island_show_navigation_title,
+                            R.string.island_navigation_desc,
+                            "island_show_navigation",
+                        ),
+                        SearchSetting(
+                            R.string.island_show_hotspot_title,
+                            R.string.island_hotspot_desc,
+                            "island_show_hotspot",
+                        ),
+                        SearchSetting(
                             R.string.feat_caffeinate_title,
                             R.string.caffeinate_notification_desc,
                             "island_show_caffeinate",
@@ -818,26 +880,6 @@ object FeatureRegistry {
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_queue_title,
-                            R.string.island_notif_queue_title,
-                            "island_notif_queue",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_compact_heads_up_title,
-                            R.string.island_notif_compact_heads_up_desc,
-                            "island_notif_compact_heads_up",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_skip_silent_title,
-                            R.string.island_notification_options_title,
-                            "island_notif_skip_silent",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_filter_apps_title,
-                            R.string.island_notification_options_title,
-                            "island_notif_filter_apps",
                         ),
                         SearchSetting(
                             R.string.island_media_peek_song_change_title,
@@ -969,6 +1011,82 @@ object FeatureRegistry {
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+            },
+            object : Feature(
+                id = ISLAND_NOTIFICATIONS_FEATURE_ID,
+                title = R.string.island_section_notifications,
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                category = R.string.cat_interface,
+                description = R.string.island_notification_options_title,
+                showToggle = false,
+                parentFeatureId = "Island",
+                isVisibleInMain = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.island_notif_filter_apps_title,
+                            R.string.island_notif_filter_apps_desc,
+                            "island_notif_filter_apps",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_skip_silent_title,
+                            R.string.island_notif_skip_silent_desc,
+                            "island_notif_skip_silent",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_follow_dnd_title,
+                            R.string.island_notif_follow_dnd_desc,
+                            "island_notif_follow_dnd",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_keep_progress_title,
+                            R.string.island_notif_keep_progress_desc,
+                            "island_notif_keep_progress",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_compact_heads_up_title,
+                            R.string.island_notif_compact_heads_up_desc,
+                            "island_notif_compact_heads_up",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_condensed_info_title,
+                            R.string.island_notif_peek_style_search_desc,
+                            "island_notif_peek_style",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_queue_title,
+                            R.string.island_notif_queue_desc,
+                            "island_notif_queue",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_queue_style_title,
+                            R.string.island_notif_queue_style_search_desc,
+                            "island_notif_queue_style",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_queue_inline_title,
+                            R.string.island_notif_queue_inline_desc,
+                            "island_notif_queue_inline",
+                        ),
+                        SearchSetting(
+                            R.string.island_notif_tap_to_open_title,
+                            R.string.island_notif_tap_to_open_desc,
+                            "island_notif_tap_to_open",
+                        ),
+                        SearchSetting(
+                            R.string.island_catch_up_title,
+                            R.string.island_catch_up_desc,
+                            "island_catch_up",
+                        ),
+                    ),
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isIslandEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,
@@ -1435,30 +1553,6 @@ object FeatureRegistry {
                 }
             },
             object : Feature(
-                id = "Battery notification",
-                title = R.string.feat_battery_notification_title,
-                iconRes = R.drawable.rounded_battery_charging_60_24,
-                category = R.string.cat_system,
-                description = R.string.feat_battery_notification_desc,
-                aboutDescription = R.string.about_desc_battery_notification,
-                permissionKeys = listOf("POST_NOTIFICATIONS", "BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
-                showToggle = true,
-                parentFeatureId = "Power and battery",
-            ) {
-                override fun isEnabled(viewModel: MainViewModel) = viewModel.isBatteryNotificationEnabled.value
-
-                override fun isToggleEnabled(
-                    viewModel: MainViewModel,
-                    context: Context,
-                ) = viewModel.isPostNotificationsEnabled.value && viewModel.isBluetoothPermissionGranted.value
-
-                override fun onToggle(
-                    viewModel: MainViewModel,
-                    context: Context,
-                    enabled: Boolean,
-                ) = viewModel.setBatteryNotificationEnabled(enabled, context)
-            },
-            object : Feature(
                 id = "Quick settings tiles",
                 title = R.string.feat_qs_tiles_title,
                 iconRes = R.drawable.rounded_tile_small_24,
@@ -1731,6 +1825,90 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setLockscreenShortcutsEnabled(enabled)
+            },
+            object : Feature(
+                id = "Volume steps",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_volume_steps_title,
+                iconRes = R.drawable.rounded_volume_up_24,
+                category = R.string.cat_system,
+                description = R.string.feat_volume_steps_desc,
+                aboutDescription = R.string.about_desc_volume_steps,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                showToggle = true,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_volume_steps_enable_title,
+                            R.string.search_volume_steps_enable_desc,
+                            "enable_volume_steps",
+                            R.array.keywords_switch_master,
+                        ),
+                        SearchSetting(
+                            R.string.volume_steps_per_press_title,
+                            R.string.search_volume_steps_per_press_desc,
+                            "volume_steps_per_press",
+                        ),
+                    ),
+                parentFeatureId = "Sound",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isVolumeStepsEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setVolumeStepsEnabled(enabled)
+            },
+            object : Feature(
+                id = "App volume",
+                contributors = listOf("jawzf"),
+                title = R.string.feat_app_volume_title,
+                iconRes = R.drawable.rounded_speaker_group_24,
+                category = R.string.cat_system,
+                description = R.string.feat_app_volume_desc,
+                aboutDescription = R.string.about_desc_app_volume,
+                permissionKeys = listOf("SHIZUKU", "ACCESSIBILITY"),
+                showToggle = true,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.search_app_volume_enable_title,
+                            R.string.search_app_volume_enable_desc,
+                            "enable_app_volume",
+                            R.array.keywords_switch_master,
+                        ),
+                        SearchSetting(
+                            R.string.app_volume_apps_section,
+                            R.string.search_app_volume_apps_desc,
+                            "app_volume_apps",
+                        ),
+                        SearchSetting(
+                            R.string.app_volume_overlay_title,
+                            R.string.search_app_volume_overlay_desc,
+                            "app_volume_overlay",
+                            R.array.keywords_switch_master,
+                        ),
+                    ),
+                parentFeatureId = "Sound",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppVolumeEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isAccessibilityEnabled.value && viewModel.isShizukuPermissionGranted.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setAppVolumeEnabled(enabled)
             },
             object : Feature(
                 id = "Dynamic night light",
@@ -2184,14 +2362,13 @@ object FeatureRegistry {
                 id = "Batteries",
                 title = R.string.feat_batteries_title,
                 iconRes = R.drawable.rounded_battery_charging_60_24,
-                // "Batteries"
-                category = R.string.cat_tools,
+                category = R.string.cat_system,
                 description = R.string.feat_batteries_desc,
                 aboutDescription = R.string.about_desc_batteries,
-                permissionKeys = listOf("BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
+                permissionKeys = listOf("POST_NOTIFICATIONS", "BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
                 showToggle = false,
                 hasMoreSettings = true,
-                parentFeatureId = "Widgets",
+                parentFeatureId = "Power and battery",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
 
@@ -2456,6 +2633,31 @@ object FeatureRegistry {
                         }
                     }
                 }
+            },
+            object : Feature(
+                id = "Watch eSIM Installer",
+                title = R.string.watch_esim_install_title,
+                iconRes = R.drawable.rounded_sim_card_24,
+                category = R.string.cat_tools,
+                description = R.string.watch_esim_install_desc,
+                parentFeatureId = "Watch",
+                hasMoreSettings = false,
+                showToggle = false,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = false
+
+                override fun isDeviceSupported(context: Context) =
+                    context
+                        .getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                        .getString("watch_node_name", "")
+                        .orEmpty()
+                        .contains("pixel watch", ignoreCase = true)
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
             },
             object : Feature(
                 id = "Sync sound mode",
@@ -2752,6 +2954,52 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) = viewModel.setFaceUnlockBrightnessEnabled(enabled)
+            },
+            object : Feature(
+                id = "Screenshots",
+                title = R.string.feat_screenshots_title,
+                iconRes = R.drawable.rounded_screenshot_region_24,
+                category = R.string.cat_tools,
+                description = R.string.feat_screenshots_desc,
+                aboutDescription = R.string.about_desc_screenshots,
+                permissionKeys = listOf("ACCESSIBILITY", "STORAGE"),
+                showToggle = false,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.feat_screenshot_share_cleanup_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_share_cleanup_enabled",
+                        ),
+                        SearchSetting(
+                            R.string.screenshot_share_cleanup_delay_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_share_cleanup_delay",
+                        ),
+                        SearchSetting(
+                            R.string.screenshot_auto_clean_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_auto_clean_enabled",
+                        ),
+                        SearchSetting(
+                            R.string.screenshot_auto_clean_days_title,
+                            R.string.feat_screenshots_title,
+                            "screenshot_auto_clean_days",
+                        ),
+                    ),
+                parentFeatureId = "Security",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) =
+                    viewModel.isScreenshotShareCleanupEnabled.value || viewModel.isScreenshotAutoCleanEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {}
+
+                override fun isDeviceSupported(context: Context) =
+                    DeviceUtils.isGoogleDevice() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
             },
             object : Feature(
                 id = "Lockdown mode",

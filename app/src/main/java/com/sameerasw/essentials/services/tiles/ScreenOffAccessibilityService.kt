@@ -46,16 +46,24 @@ import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
+import com.sameerasw.essentials.services.handlers.ScreenshotAutoCleanHandler
+import com.sameerasw.essentials.services.handlers.ScreenshotShareCleanupHandler
+import com.sameerasw.essentials.services.handlers.AppVolumeOverlayHandler
 import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
 import com.sameerasw.essentials.services.handlers.LockscreenShortcutsHandler
 import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
+import com.sameerasw.essentials.services.handlers.VolumeStepsHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FreezeManager
+import com.sameerasw.essentials.utils.media.AppVolumeController
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ScreenOffAccessibilityService :
     AccessibilityService(),
@@ -69,6 +77,7 @@ class ScreenOffAccessibilityService :
     lateinit var flashlightHandler: FlashlightHandler
     private lateinit var notificationLightingHandler: NotificationLightingHandler
     private lateinit var buttonRemapHandler: ButtonRemapHandler
+    private lateinit var volumeStepsHandler: VolumeStepsHandler
     private lateinit var appFlowHandler: AppFlowHandler
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
     private lateinit var aodForceTurnOffHandler: AodForceTurnOffHandler
@@ -82,7 +91,10 @@ class ScreenOffAccessibilityService :
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
     private lateinit var snippetAccessibilityHandler: com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler
+    private lateinit var screenshotShareCleanupHandler: ScreenshotShareCleanupHandler
+    private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
+    private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -300,6 +312,10 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
             ) {
                 lockscreenShortcutsHandler.updateState()
+            } else if (key == SettingsRepository.KEY_APP_VOLUME_ENABLED ||
+                key == SettingsRepository.KEY_APP_VOLUME_LEVELS
+            ) {
+                AppVolumeController.updateState(this)
             }
         }
 
@@ -310,7 +326,8 @@ class ScreenOffAccessibilityService :
         // Initialize Handlers
         flashlightHandler = FlashlightHandler(this, serviceScope)
         notificationLightingHandler = NotificationLightingHandler(this)
-        buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler)
+        volumeStepsHandler = VolumeStepsHandler(this)
+        buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler, volumeStepsHandler)
         appFlowHandler = AppFlowHandler(this, this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
@@ -338,12 +355,17 @@ class ScreenOffAccessibilityService :
                 duoOverlayHandler = duoOverlayHandler,
             )
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
+        appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
+        screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
+        screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
+        screenshotAutoCleanHandler.register()
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
+        AppVolumeController.updateState(this)
         setupReceivers()
     }
 
@@ -377,6 +399,8 @@ class ScreenOffAccessibilityService :
 
                         Intent.ACTION_SCREEN_OFF -> {
                             isScreenOn = false
+                            volumeStepsHandler.stop()
+                            screenshotShareCleanupHandler.onScreenOff()
                             statusGlanceHandler.setShadeExpanded(false)
                             islandOverlayHandler.setShadeExpanded(false)
                             duoOverlayHandler.setShadeExpanded(false)
@@ -389,6 +413,7 @@ class ScreenOffAccessibilityService :
                             duoOverlayHandler.onScreenOff()
                             statusGlanceHandler.onScreenOff()
                             lockscreenShortcutsHandler.onScreenOff()
+                            appVolumeOverlayHandler.onScreenOff()
                             omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
                             pocketModeHandler.onScreenOff()
                             faceUnlockBrightnessHandler.onScreenOff()
@@ -535,6 +560,8 @@ class ScreenOffAccessibilityService :
         } catch (_: Exception) {
         }
         LiveUpdateSnoozer.release()
+        volumeStepsHandler.stop()
+        AppVolumeController.stop()
         flashlightHandler.unregister()
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
@@ -552,7 +579,9 @@ class ScreenOffAccessibilityService :
             snippetAccessibilityHandler.destroy()
         }
         lockscreenShortcutsHandler.onDestroy()
+        appVolumeOverlayHandler.onDestroy()
         statusBarIconHandler.unregister()
+        screenshotAutoCleanHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
         if (isProximityRegistered) {
@@ -578,24 +607,15 @@ class ScreenOffAccessibilityService :
         if (event == null) return
 
         val trustsEventPackage = event.eventType != AccessibilityEvent.TYPE_WINDOWS_CHANGED
-        var detectedPackage = if (trustsEventPackage) event.packageName?.toString() else null
+        val detectedPackage = if (trustsEventPackage) event.packageName?.toString() else null
         if (detectedPackage == null || detectedPackage == "android") {
-            try {
-                val activePkg = windows
-                    ?.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
-                    ?.root?.packageName?.toString()
-                    ?: rootInActiveWindow?.packageName?.toString()
-                    ?: windows?.firstOrNull { it.isFocused }?.root?.packageName?.toString()
-                if (activePkg != null) {
-                    detectedPackage = activePkg
-                }
-            } catch (_: Exception) {}
+            resolveActivePackageAsync()
+        } else {
+            applyDetectedPackage(detectedPackage)
         }
 
-        if (detectedPackage != null) {
-            appFlowHandler.onPackageChanged(detectedPackage)
-            islandOverlayHandler.onForegroundPackage(detectedPackage)
-            islandOverlayHandler.updateConsciousGateState()
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            screenshotShareCleanupHandler.onViewClicked(event, appFlowHandler.currentPackage)
         }
 
         if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
@@ -620,6 +640,39 @@ class ScreenOffAccessibilityService :
             checkVolumeDialogState()
             faceUnlockBrightnessHandler.onWindowsChanged()
             lockscreenShortcutsHandler.onWindowsChanged()
+            appVolumeOverlayHandler.onWindowsChanged()
+        }
+    }
+
+    private fun applyDetectedPackage(detectedPackage: String) {
+        appFlowHandler.onPackageChanged(detectedPackage)
+        screenshotShareCleanupHandler.onForegroundPackage(appFlowHandler.currentPackage)
+        islandOverlayHandler.onForegroundPackage(detectedPackage)
+        islandOverlayHandler.updateConsciousGateState()
+    }
+
+    private val isResolvingPackage = AtomicBoolean(false)
+
+    private fun resolveActivePackageAsync() {
+        if (!isResolvingPackage.compareAndSet(false, true)) return
+        serviceScope.launch {
+            try {
+                val activePkg =
+                    withContext(Dispatchers.Default) {
+                        try {
+                            windows
+                                ?.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
+                                ?.root?.packageName?.toString()
+                                ?: rootInActiveWindow?.packageName?.toString()
+                                ?: windows?.firstOrNull { it.isFocused }?.root?.packageName?.toString()
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
+                if (activePkg != null) applyDetectedPackage(activePkg)
+            } finally {
+                isResolvingPackage.set(false)
+            }
         }
     }
 
@@ -633,7 +686,6 @@ class ScreenOffAccessibilityService :
             val currentWindows = windows
             val isVisible = currentWindows?.any { window ->
                 window.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM &&
-                    window.root?.packageName?.toString() == "com.android.systemui" &&
                     window.title?.contains("Volume", ignoreCase = true) == true
             } ?: false
             buttonRemapHandler.isVolumeDialogVisible = isVisible
@@ -711,6 +763,9 @@ class ScreenOffAccessibilityService :
     }
 
     override fun onInterrupt() {}
+    override fun onInterrupt() {
+        if (::volumeStepsHandler.isInitialized) volumeStepsHandler.stop()
+    }
 
     private fun updatePocketModeSensors() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -853,8 +908,7 @@ class ScreenOffAccessibilityService :
                 return true
             }
             // Bypass logic for Camera apps to resolve conflicts with shutter/zoom functions
-            val foregroundPackage =
-                rootInActiveWindow?.packageName?.toString() ?: appFlowHandler.currentPackage
+            val foregroundPackage = appFlowHandler.currentPackage
             if (appFlowHandler.isCameraApp(foregroundPackage)) {
                 return false
             }
@@ -869,6 +923,9 @@ class ScreenOffAccessibilityService :
             val powerManager = getSystemService(POWER_SERVICE) as? android.os.PowerManager
             if (powerManager?.isInteractive == false && event.action == KeyEvent.ACTION_DOWN) {
                 triggerAmbientGlanceVolume(keyCode)
+            }
+            if (volumeStepsHandler.onKeyEvent(event)) {
+                return true
             }
         }
         return super.onKeyEvent(event)

@@ -552,7 +552,8 @@ fun StatusBarIconSettingsUI(
                 iconRes = R.drawable.rounded_android_24,
                 title = stringResource(R.string.hide_all_system_icons_title),
                 description = stringResource(R.string.hide_all_system_icons_desc),
-                isChecked = viewModel.isHideSystemIconsEnabled.value,
+                isChecked = viewModel.isHideSystemIconsEnabled.value ||
+                    com.sameerasw.essentials.data.repository.SettingsRepository.ISLAND_HIDE_ICON_SYSTEM in viewModel.islandHiddenIcons.value,
                 onCheckedChange = { checked ->
                     if (!isAdvancedEnabled) {
                         showAdvancedPermissionSheet = true
@@ -602,7 +603,8 @@ fun StatusBarIconSettingsUI(
                 iconRes = R.drawable.rounded_nest_clock_farsight_analog_24,
                 title = stringResource(R.string.hide_clock_title),
                 description = stringResource(R.string.hide_clock_desc),
-                isChecked = viewModel.isHideClockEnabled.value,
+                isChecked = viewModel.isHideClockEnabled.value ||
+                    com.sameerasw.essentials.data.repository.SettingsRepository.ISLAND_HIDE_ICON_CLOCK in viewModel.islandHiddenIcons.value,
                 onCheckedChange = { checked ->
                     if (!isAdvancedEnabled) {
                         showAdvancedPermissionSheet = true
@@ -627,7 +629,8 @@ fun StatusBarIconSettingsUI(
                 iconRes = R.drawable.outline_circle_notifications_24,
                 title = stringResource(R.string.hide_notification_icons_title),
                 description = stringResource(R.string.hide_notification_icons_desc),
-                isChecked = viewModel.isHideNotificationIconsEnabled.value,
+                isChecked = viewModel.isHideNotificationIconsEnabled.value ||
+                    com.sameerasw.essentials.data.repository.SettingsRepository.ISLAND_HIDE_ICON_NOTIFICATIONS in viewModel.islandHiddenIcons.value,
                 onCheckedChange = { checked ->
                     if (!isAdvancedEnabled) {
                         showAdvancedPermissionSheet = true

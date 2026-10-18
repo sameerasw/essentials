@@ -2,6 +2,7 @@ package com.sameerasw.island.sdk.compose
 
 import android.content.Context
 import android.hardware.display.DisplayManager
+import android.view.MotionEvent
 import android.view.SurfaceControlViewHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
@@ -45,6 +46,10 @@ class IslandSurface(
 
     fun resize(widthPx: Int, heightPx: Int) {
         host.relayout(widthPx, heightPx)
+    }
+
+    fun dispatchTouch(event: MotionEvent) {
+        view.dispatchTouchEvent(event)
     }
 
     fun release() {

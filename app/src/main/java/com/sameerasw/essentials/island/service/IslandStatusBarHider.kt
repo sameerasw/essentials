@@ -34,6 +34,17 @@ object IslandStatusBarHider {
         }
     }
 
+    fun applyFlags(
+        context: Context,
+        flags: Set<String>,
+    ) {
+        if (flags.isEmpty()) {
+            StatusBarManager.requestRestore(context, REQUESTER_ID)
+        } else {
+            StatusBarManager.requestDisable(context, REQUESTER_ID, flags)
+        }
+    }
+
     fun restore(context: Context) {
         StatusBarManager.requestRestore(context, REQUESTER_ID)
     }

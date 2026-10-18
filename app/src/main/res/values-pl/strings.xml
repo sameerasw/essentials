@@ -146,8 +146,8 @@
     <string name="action_import_freeze">Importuj listę zamrożonych aplikacji</string>
     <string name="freeze_pick_apps_title">Wybierz aplikacje do zamrożenia</string>
     <string name="freeze_pick_apps_desc">Wybierz, które aplikacje można zablokować</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
-    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="freeze_show_in_launcher_title">Pokaż w programie uruchamiającym</string>
+    <string name="freeze_show_in_launcher_desc">Dodaj skrót launchera dla łatwiejszego dostępu</string>
     <string name="settings_section_automation">Automatyzacja</string>
     <string name="freeze_when_locked_title">Zamroź, gdy jest zamknięty</string>
     <string name="freeze_delay_title">Zamrożenie opóźnienia</string>
@@ -167,7 +167,7 @@
     <string name="perm_notif_listener_desc_freeze">Wymagane do wykrywania odtwarzanych multimediów i aktywnych powiadomień, aby uniknąć ich zablokowania</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
-    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_suspend">Zawieszania aplikacji </string>
     <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Pokazuj tylko przy wyłączonym ekranie</string>
@@ -393,7 +393,7 @@
     <string name="feat_statusbar_icons_desc">Kontroluj widoczność ikon na pasku stanu</string>
     <string name="feat_caffeinate_title">Kofeina</string>
     <string name="feat_caffeinate_desc">Nie wygaszaj ekranu</string>
-    <string name="feat_maps_power_saving_title">Oszczędzania energii podczas nawigacji</string>
+    <string name="feat_maps_power_saving_title">Tryb oszczędzania energii podczas nawigacji</string>
     <string name="feat_maps_power_saving_desc">Na dowolne urządzenie z Androidem</string>
     <string name="feat_notification_lighting_title">Oświetlenie powiadomień</string>
     <string name="feat_notification_lighting_desc">Podświetl powiadomienia</string>
@@ -435,11 +435,11 @@
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
     <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
     <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
-    <string name="feat_freeze_title">Zamrażać</string>
+    <string name="feat_freeze_title">Zamrażarka</string>
     <string name="feat_freeze_desc">Wyłącz rzadko używane aplikacje</string>
-    <string name="feat_watermark_title">Filigran</string>
+    <string name="feat_watermark_title">Znak wodny</string>
     <string name="feat_watermark_desc">Dodaj dane EXIF ​​i logo do zdjęć</string>
-    <string name="feat_always_on_display_title">Ekran zawsze włączony </string>
+    <string name="feat_always_on_display_title">Always on Display</string>
     <string name="feat_always_on_display_desc">Pokazuj godzinę i informacje, gdy ekran jest wyłączony</string>
     <string name="feat_calendar_sync_title">Synchronizacja kalendarza</string>
     <string name="feat_calendar_sync_desc">Synchronizuj kalendarz telefonu z zegarkiem</string>
@@ -614,7 +614,7 @@
     <!-- Tabs -->
     <string name="tab_essentials">Essentials </string>
     <string name="tab_freeze">Zamrażać</string>
-    <string name="tab_freeze_title">Zamrażanie </string>
+    <string name="tab_freeze_title">Zamrażarka</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_apps">Aplikacje</string>
     <string name="tab_freeze_subtitle">Wyłączone aplikacje</string>
@@ -832,8 +832,8 @@ Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać 
     <string name="diy_effect_dim_wallpaper">Ciemna tapeta</string>
     <string name="diy_effect_night_mode">Tryb nocny</string>
     <string name="diy_device_effects_android_15_warning">Ta funkcja wymaga systemu Android 15 lub nowszego.</string>
-    <string name="diy_device_effects_enabled">Włączony</string>
-    <string name="diy_device_effects_disabled">Wyłączony</string>
+    <string name="diy_device_effects_enabled">Włączone</string>
+    <string name="diy_device_effects_disabled">Wyłączone</string>
     <string name="diy_action_sound_mode">Tryb dźwięku</string>
     <string name="diy_sound_mode_desc">Ta akcja umożliwia przełączanie między trybami dźwięku, wibracji i ciszy w oparciu o wyzwalacze. Wymaga dostępu do trybu Nie przeszkadzać.</string>
     <!-- About Section -->
@@ -1468,7 +1468,7 @@ Użyj niestandardowych skrótów, aby upewnić się, że ustawienia są ukryte p
     <string name="feat_watch_controls_title">Dostosuj </string>
     <string name="feat_pocket_mode_title">Tryb kieszonkowy </string>
     <string name="feat_pocket_mode_desc">Zapobiega przypadkowym interakcjom, gdy telefon znajduje się w kieszeni</string>
-    <string name="feat_notification_snoozing_title">Uśpij powiadomienia</string>
+    <string name="feat_notification_snoozing_title">Odkładanie powiadomień</string>
     <string name="feat_notification_snoozing_desc">Odrocz powiadomienia na później </string>
     <string name="feat_safe_volume_title">Wyłącz komunikat o zbyt dużej głośności</string>
     <string name="feat_safe_volume_desc">Wyłącz komunikat o za dużej głośności</string>
@@ -1519,7 +1519,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="pocket_mode_trigger_delay_title">Opóźnienie wyzwolenia trybu </string>
     <string name="pocket_mode_lock_screen_only_title">Tylko na zablokowanym ekranie</string>
     <string name="pocket_mode_lock_screen_only_desc">Tryb kieszonkowy włącza się tylko wtedy, gdy urządzenie jest zablokowane</string>
-    <string name="feat_networks_title">Dane mobilne </string>
+    <string name="feat_networks_title">Sieci</string>
     <string name="tile_lockdown_mode_desc">Kafelek QS wyłączenia ekranu </string>
     <string name="watch_notif_sync_title">Synchronizacja powiadomień </string>
     <string name="watch_notif_sync_desc">Dla launchera Essentials </string>
@@ -1566,4 +1566,20 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="label_device_battery">Bateria</string>
     <string name="feat_sim_names_title">Nazwy kart SIM</string>
     <string name="feat_sim_names_desc">Zarządzaj nazwami operatów dla aktywnych kart SIM</string>
+    <string name="duo_desc">To się nie składa</string>
+    <string name="island_title">Wyspa</string>
+    <string name="island_desc">Dynamiczna wyspa</string>
+    <string name="feat_aod_wallpaper_title">Tapeta na AOD</string>
+    <string name="feat_aod_wallpaper_desc">Z użyciem nakładki</string>
+    <string name="feat_widget_stack_title">Stos widżetów</string>
+    <string name="feat_widget_stack_desc">Twórz stosy widżetów i przełączaj się między nimi</string>
+    <string name="feat_activity_launcher_title">Launcher aktywności</string>
+    <string name="feat_activity_launcher_desc">Otwórz lub przypnij każdy ekran aplikacji</string>
+    <string name="qs_secure_sensitive_tiles_title">Zabezpiecz wrażliwe kafelki</string>
+    <string name="qs_secure_sensitive_tiles_desc">Wymagaj odblokowania przed interakcją z wrażliwymi kafelkami</string>
+    <string name="setting_location_reached_full_screen_alarm_title">Pełnoekranowy alarm</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Odtwórz dźwięk alarmu i pokaż pełnoekranowy alert gdy dotrzesz na miejsce</string>
+    <string name="label_motion_blur_amount">Ilość</string>
+    <string name="haptic_mode_stronger">Mocniejsze</string>
+    <string name="setting_hidden_debugging_title">Ukryta obsługa debuggowania</string>
 </resources>

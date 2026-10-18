@@ -4,9 +4,10 @@ object IslandPriorityEntries {
     class Entry(val id: String, val pluginIds: Set<String>, val defaultPriority: Int)
 
     val all = listOf(
-        Entry("battery", setOf("battery_alerts_plugin"), IslandPriority.BATTERY_ALERT),
+        Entry("battery", setOf("battery_alerts_plugin", "battery"), IslandPriority.BATTERY_ALERT),
         Entry("notifications", setOf("notifications"), IslandPriority.NOTIFICATION),
         Entry("flashlight", setOf("flashlight"), IslandPriority.FLASHLIGHT),
+        Entry("navigation", setOf("navigation"), IslandPriority.NAVIGATION),
         Entry("timer", setOf("timer"), IslandPriority.TIMER),
         Entry("media", setOf("media"), IslandPriority.MEDIA),
         Entry("conscious_gate", setOf("conscious_gate"), IslandPriority.CONSCIOUS_GATE),
@@ -15,6 +16,7 @@ object IslandPriorityEntries {
         Entry("calendar", setOf("calendar"), IslandPriority.CALENDAR),
         Entry("sound_mode", setOf("sound_mode"), IslandPriority.SOUND_MODE),
         Entry("network", setOf("network", "signal"), IslandPriority.SIGNAL),
+        Entry("hotspot", setOf("hotspot"), IslandPriority.HOTSPOT),
         Entry("devices", setOf("devices"), IslandPriority.DEVICES),
         Entry("alarm", setOf("alarm"), IslandPriority.ALARM),
     ).sortedBy { it.defaultPriority }

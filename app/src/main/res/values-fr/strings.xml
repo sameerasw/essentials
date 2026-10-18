@@ -267,7 +267,7 @@
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
     <string name="tile_charge_optimization">Recharge</string>
     <string name="limit_to_80">Limiter à 80%</string>
-    <string name="adaptive_charging">Adaptative</string>
+    <string name="adaptive_charging">Adaptatif</string>
     <string name="deactivated">Non optimisée</string>
     <string name="permission_missing">Permission manquante</string>
     <!-- Screen Locked Security -->
@@ -397,7 +397,7 @@
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Notifications lumineuses</string>
     <string name="feat_notification_lighting_desc">Allumer la LED pour les nouvelles notifications</string>
-    <string name="feat_flashlight_pulse_desc">Faire clignoter le flash à la réception de notifications</string>
+    <string name="feat_flashlight_pulse_desc">Faire clignoter la lampe torche lorsqu\'une nouvelle notification est reçue</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_call_vibrations_title">Vibrations pour les appels</string>
     <string name="feat_call_vibrations_desc">Faîtes vibrer l\'appareil avec les actions des appels (décrocher, raccrocher...)</string>
@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d secondes</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Redémarrer IU Système</string>
-    <string name="desc_restart_systemui">Arrête et redémarre le processus IU Système pour appliquer immédiatement certaines modifications</string>
+    <string name="action_restart_systemui">Redémarrer l\'IU du système</string>
+    <string name="desc_restart_systemui">Arrête et redémarre l\'IU du système pour appliquer immédiatement certaines modifications</string>
     <string name="msg_error_load_release_notes">Impossible de charger les notes de version</string>
     <string name="action_view_on_web">Voir sur le Web</string>
     <string name="action_done">OK</string>
@@ -1629,7 +1629,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="island_enable_title">Activer Island</string>
     <string name="island_show_calls_title">Appels</string>
     <string name="island_show_timers_title">Minuteurs et chronomètres</string>
-    <string name="duo_action_horizontal_slide_sound_mode">Mode son</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Mode de sonnerie</string>
     <string name="island_devices_battery_section">Appareils</string>
     <string name="island_show_network_title">Activité réseau</string>
     <string name="feat_status_glance_title">Aperçu du statut</string>
@@ -1691,11 +1691,31 @@ Note que en activant ça peut casser les widgets At a Glance du launcher (Comme 
     <string name="label_battery_section_specs">Spécifications</string>
     <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
     <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
-    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger</string>
-    <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application.</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger.</string>
+    <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application</string>
     <string name="hilight_only_screen_off_title">Activer seulement lorsque l\'écran est éteint.</string>
     <string name="hilight_cooldown_title">Délai </string>
     <string name="about_desc_hilight">Allume la LED HiLight à l\'arrière des Pixels 11 Pro (XL/Fold) quand une notification arrive, avec un effet différent pour chaque application que tu ajoutes.
 Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans les paramètres du remapage des boutons et des automatisations.
 À besoin de Shizuku, ou de permission root pour fonctionner.</string>
+    <string name="watch_esim_install_title">Installer une eSIM</string>
+    <string name="watch_esim_install_desc">Même dans des régions non supportés</string>
+    <string name="island_section_behavior">Comportement</string>
+    <string name="island_section_visuals">Visuels</string>
+    <string name="diy_volume_channel_alarm">Alarme</string>
+    <string name="label_charging_mode_limited">Limité</string>
+    <string name="conscious_gate_reappear_off">Désactivé</string>
+    <string name="island_devices_connected">Connectés</string>
+    <string name="search_flashlight_pocket_title">Détection de la lampe torche dans la poche</string>
+    <string name="island_call_sticky_title">Ne pas réduire automatiquement</string>
+    <string name="island_call_show_mode_title">Comment montrer</string>
+    <string name="island_call_show_expanded">Étendu</string>
+    <string name="island_call_show_peek">prévisualisation</string>
+    <string name="feat_hilight_desc">Allumez les LED arrière pour les notifications et l\'affichage de la progression en direct</string>
+    <string name="hilight_progress_title">Progression en temps réel</string>
+    <string name="feat_hilight_progress_desc">Avertir de l\'état des téléchargements et installation</string>
+    <string name="hilight_progress_toggle_title">Avertir des progrès en temps réel</string>
+    <string name="hilight_progress_toggle_desc">Allumez une LED supplémentaire à chaque huitième de seconde de téléchargement ou de mise à jour en direct, et faites-la clignoter à la fin</string>
+    <string name="hilight_progress_mode_sequential">Séquentiel</string>
+    <string name="about_desc_hilight_progress">Affiche la progression des téléchargements et les mises à jour en direct sur les LED Hilight, allumant une LED supplémentaire à chaque huitième de progression et faisant clignoter les huit LED une fois le téléchargement terminé. Nécessite Shizuku.</string>
 </resources>

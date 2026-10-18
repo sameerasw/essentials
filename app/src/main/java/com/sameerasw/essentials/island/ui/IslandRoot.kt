@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.first
 import androidx.compose.runtime.snapshotFlow
 import kotlin.math.hypot
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import kotlinx.coroutines.CancellationException
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableFloatStateOf
@@ -121,6 +122,7 @@ interface IslandActions {
 }
 
 private val LocalLineInset = compositionLocalOf { 0.dp to 0.dp }
+private val LocalLineLeading = compositionLocalOf<LineLeading?> { null }
 
 private data class ContentKey(val stage: IslandStage, val itemKey: String?)
 
@@ -145,6 +147,7 @@ fun IslandRoot(
     val stage = state.stage
     val key = ContentKey(stage, state.focusedKey)
     val currentState by rememberUpdatedState(state)
+    val inspection = LocalInspectionMode.current
 
     val bondCandidate = targetSpec.bondEdge && stage == IslandStage.Compact && state.sideBubble == null
     var bonded by remember { mutableStateOf(false) }
@@ -206,7 +209,7 @@ fun IslandRoot(
         ?.takeIf { outlineAlpha > 0f && fade > 0f }
         ?.let { it.copy(alpha = it.alpha * outlineAlpha * fade) }
     val pulse = remember { Animatable(0f) }
-    LaunchedEffect(state.focusedKey, spec.pulseShadow) {
+    LaunchedEffect(state.focusedKey, state.items[state.focusedKey]?.contentId, spec.pulseShadow) {
         pulse.snapTo(0f)
         if (!spec.pulseShadow || state.focusedKey == null) return@LaunchedEffect
         pulse.animateTo(1f, tween(250, easing = LinearEasing))
@@ -271,6 +274,7 @@ fun IslandRoot(
     }
 
     LaunchedEffect(key) {
+        if (inspection) return@LaunchedEffect
         if (stage != IslandStage.Hidden) {
             visible = true
             squashStarted[0] = false
@@ -328,6 +332,7 @@ fun IslandRoot(
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
     val cameraSlotPx = with(density) { spec.cameraSlotWidth.roundToPx() }
+    val layerSizes = remember { HashMap<Any, IntSize>() }
     val contentOriginX = when {
         spec.growDirection > 0 -> 0f
         spec.growDirection < 0 -> 1f
@@ -402,29 +407,43 @@ fun IslandRoot(
     val bubbleOnlyLayout = !hasCompactCells && spec.cameraPresence <= 0f
     val catchUpAnim = remember { Animatable(0f) }
     LaunchedEffect(catchUpShown) {
+        if (inspection) {
+            catchUpAnim.snapTo(if (catchUpShown) 1f else 0f)
+            return@LaunchedEffect
+        }
         if (catchUpShown) {
             withTimeoutOrNull(IslandMotion.COLLAPSE_MS * 2L) {
                 snapshotFlow { surfaceSize.width to compactSize.width }
                     .first { (live, target) -> target > 0 && abs(live - target) <= 6 }
             }
-            catchUpAnim.animateTo(1f, IslandMotion.compactFloat())
+            catchUpAnim.animateTo(1f, IslandMotion.expressiveDefaultSpatial())
         } else {
-            catchUpAnim.animateTo(0f, IslandMotion.compactFloat())
+            catchUpAnim.animateTo(0f, IslandMotion.expressiveFastEffects())
         }
     }
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
+    val sideBubbleWidth = lastCatchUp
+        ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
+        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight) }
+        ?: spec.compactHeight
+    val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
+    val sideWidthAnim = remember { Animatable(sideWidthPx.toFloat()) }
+    LaunchedEffect(sideWidthPx) {
+        if (inspection) sideWidthAnim.snapTo(sideWidthPx.toFloat()) else sideWidthAnim.animateTo(sideWidthPx.toFloat(), IslandMotion.expressiveDefaultSpatial())
+    }
+    fun sideWidthLive(): Int = sideWidthAnim.value.roundToInt()
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
-    fun catchShiftPx(): Float =
-        if (spec.growDirection == 0 && hasCompactCells) catchUpAnim.value.coerceAtLeast(0f) * (bubbleSizePx + bubbleGapPx) / 2f else 0f
+    val compactSlack = remember { mutableIntStateOf(0) }
+    fun sideBubbleProgress(): Float =
+        if (spec.growDirection == 0 && hasCompactCells) catchUpAnim.value.coerceIn(0f, 1f) else 0f
+    fun catchShiftPx(): Float = sideBubbleProgress() * compactSlack.intValue / 2f
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
-    fun surfaceLeft(width: Int): Int = windowWidth / 2 + lineShift.value.roundToInt() + catchShiftPx().roundToInt() - when {
-        spec.growDirection > 0 -> cameraSlotPx / 2
-        spec.growDirection < 0 -> width - cameraSlotPx / 2
-        else -> width / 2
-    }
+    fun surfaceShiftFor(width: Int): Int = spec.growDirection * (width - cameraSlotPx) / 2
+    fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
+        lineShift.value.roundToInt() + catchShiftPx().roundToInt()
     fun bubbleX(width: Int): Int =
-        if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - bubbleSizePx
+        if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - sideWidthLive()
     val focusedItem = state.focused
     
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
@@ -433,20 +452,59 @@ fun IslandRoot(
         emptyList()
     }
     val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
-    val queuedIcons = if (foreignStack.isNotEmpty()) fullStack else fullStack.filterNot { it.current }
-    val queueShown = (stage == IslandStage.Line || stage == IslandStage.Expanded) && queuedIcons.isNotEmpty()
+    val queuedIcons = when {
+        foreignStack.isNotEmpty() -> fullStack
+        else -> focusedItem?.queued ?: fullStack.filterNot { it.current }
+    }
+    val inlineLineQueue = spec.queueInline && stage == IslandStage.Line && queuedIcons.isNotEmpty()
+    val queueShown = (stage == IslandStage.Expanded || (stage == IslandStage.Line && !spec.queueInline)) && queuedIcons.isNotEmpty()
     var lastFullStack by remember { mutableStateOf(emptyList<StackIcon>()) }
     if (queuedIcons.isNotEmpty()) lastFullStack = fullStack
     var pillSize by remember { mutableStateOf(IntSize.Zero) }
-    val lineInsetActive = queueShown && stage == IslandStage.Line
-    val lineInset = if (lineInsetActive) spec.compactHeight + spec.cameraGap else 0.dp
-    val lineInsets = if (spec.growDirection > 0) 0.dp to lineInset else lineInset to 0.dp
-    LaunchedEffect(lineInsetActive, spec.growDirection) {
-        val shift = if (lineInsetActive && spec.growDirection == 0) (bubbleSizePx + bubbleGapPx) / 2f else 0f
-        lineShift.animateTo(shift, IslandMotion.float())
-    }
     var lastQueuedIcons by remember { mutableStateOf(emptyList<StackIcon>()) }
     if (queuedIcons.isNotEmpty()) lastQueuedIcons = queuedIcons
+    val queueWidth = when (spec.queueStyle) {
+        QueueStyle.Stack -> spec.compactHeight
+        QueueStyle.Overlap -> stackOverlapWidth(lastQueuedIcons.size, spec.compactHeight)
+    }
+    val queueWidthPx = with(density) { queueWidth.roundToPx() }
+    val queueWidthAnim = remember { Animatable(queueWidthPx.toFloat()) }
+    LaunchedEffect(queueWidthPx) {
+        if (inspection) queueWidthAnim.snapTo(queueWidthPx.toFloat()) else queueWidthAnim.animateTo(queueWidthPx.toFloat(), IslandMotion.expressiveDefaultSpatial())
+    }
+    fun queueWidthLive(): Int = queueWidthAnim.value.roundToInt()
+    fun queueX(width: Int): Int =
+        if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - queueWidthLive()
+    val inlineQueueIcons = queuedIcons.ifEmpty { lastQueuedIcons }
+    val inlineQueue = LineLeading(
+        width = when (spec.queueStyle) {
+            QueueStyle.Stack -> spec.cellSize
+            QueueStyle.Overlap -> stackOverlapWidth(inlineQueueIcons.size, spec.cellSize)
+        },
+    ) {
+        val tapToAdvance = Modifier.pointerInput(Unit) {
+            detectTapGestures {
+                IslandHaptics.tap(context)
+                if (currentState.focused?.queue != null) actions.onAdvance() else lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
+            }
+        }
+        when (spec.queueStyle) {
+            QueueStyle.Stack -> IslandStackBubble(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
+            QueueStyle.Overlap -> IslandStackOverlap(inlineQueueIcons, spec.cellSize, modifier = tapToAdvance)
+        }
+    }
+    val lineInsetActive = queueShown && stage == IslandStage.Line
+    val lineInset = if (lineInsetActive) queueWidth + spec.cameraGap else 0.dp
+    val lineInsets = if (spec.growDirection > 0) 0.dp to lineInset else lineInset to 0.dp
+    val condensedLineActive = spec.growDirection == 0 && stage == IslandStage.Line && focusedItem?.line?.condensed == true
+    LaunchedEffect(lineInsetActive, spec.growDirection, condensedLineActive, queueWidthPx) {
+        val shift = if (lineInsetActive && spec.growDirection == 0 && !condensedLineActive) {
+            (queueWidthPx + bubbleGapPx) / 2f
+        } else {
+            0f
+        }
+        if (inspection) lineShift.snapTo(shift) else lineShift.animateTo(shift, IslandMotion.expressiveDefaultSpatial())
+    }
     val queueBelow = remember { Animatable(0f) }
     
     val pillReveal = remember { Animatable(0f) }
@@ -460,6 +518,10 @@ fun IslandRoot(
         }
     }
     LaunchedEffect(stage) {
+        if (inspection) {
+            queueBelow.snapTo(if (stage == IslandStage.Expanded) 1f else 0f)
+            return@LaunchedEffect
+        }
         when (stage) {
             IslandStage.Expanded -> queueBelow.animateTo(1f, IslandMotion.float())
             IslandStage.Line -> queueBelow.animateTo(0f, IslandMotion.float())
@@ -467,27 +529,31 @@ fun IslandRoot(
         }
     }
 
-    LaunchedEffect(target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells, bubbleOnlyLayout) {
+    LaunchedEffect(
+        target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
+        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, compactSlack.intValue,
+    ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
-        val shift = if ((lineInsetActive || (catchUpShown && hasCompactCells)) && spec.growDirection == 0) (bubbleSizePx + bubbleGapPx) / 2 else 0
-        val left = windowWidth / 2 + shift - when {
-            spec.growDirection > 0 -> cameraSlotPx / 2
-            spec.growDirection < 0 -> target.width - cameraSlotPx / 2
-            else -> target.width / 2
+        val shift = when {
+            spec.growDirection != 0 || condensedLineActive -> 0
+            lineInsetActive -> (queueWidthPx + bubbleGapPx) / 2
+            catchUpShown && hasCompactCells -> compactSlack.intValue / 2
+            else -> 0
         }
+        val left = windowWidth / 2 - target.width / 2 + surfaceShiftFor(target.width) + shift
         val top = (surfaceTopPx - g).coerceAtLeast(0)
         var bounds = IntRect(left, top, left + target.width, surfaceTopPx - g + target.height)
         if (queueShown && stage == IslandStage.Line) {
-            val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - bubbleSizePx
-            bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + bubbleSizePx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
+            val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - queueWidthPx
+            bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + queueWidthPx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
         }
         if (catchUpShown && bubbleOnlyLayout) {
-            val bx = windowWidth / 2 - bubbleSizePx / 2
-            bounds = IntRect(bx, surfaceTopPx, bx + bubbleSizePx, surfaceTopPx + bubbleSizePx)
+            val bx = windowWidth / 2 - sideWidthPx / 2
+            bounds = IntRect(bx, surfaceTopPx, bx + sideWidthPx, surfaceTopPx + bubbleSizePx)
         } else if (catchUpShown) {
-            val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - bubbleSizePx
-            bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + bubbleSizePx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
+            val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - sideWidthPx
+            bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + sideWidthPx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
         }
         if (queueShown && stage == IslandStage.Expanded && pillSize != IntSize.Zero) {
             val pillLeft = left + (target.width - pillSize.width) / 2
@@ -524,7 +590,7 @@ fun IslandRoot(
                         val p = measurable.measure(Constraints())
                         layout(constraints.maxWidth, constraints.maxHeight) {
                             val w = surfaceSize.width
-                            val sideX = bubbleX(w) + bubbleSizePx / 2f
+                            val sideX = queueX(w) + queueWidthLive() / 2f
                             val sideY = surfaceTopPx + bubbleSizePx / 2f
                             val belowX = surfaceLeft(w) + w / 2f
                             val belowY = surfaceTopPx + liveSurfaceHeight.intValue + pillGapPx + p.height / 2f
@@ -540,25 +606,35 @@ fun IslandRoot(
                             }
                         }
                     }
-                IslandStackBubble(
-                    icons = lastQueuedIcons,
-                    size = spec.compactHeight,
-                    outlineColor = outlineFor(1f),
-                    outlineThickness = spec.outlineThickness,
-                    modifier = Modifier
-                        .queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) }
-                        .pointerInput(Unit) {
-                            detectTapGestures {
-                                if (currentState.stage != IslandStage.Line) return@detectTapGestures
-                                IslandHaptics.tap(context)
-                                if (currentState.focused?.queue != null) {
-                                    actions.onAdvance()
-                                } else {
-                                    lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
-                                }
+                val queueModifier = Modifier
+                    .queueSlot(1f, 0.6f) { k -> (1f - k * 2f).coerceIn(0f, 1f) }
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            if (currentState.stage != IslandStage.Line) return@detectTapGestures
+                            IslandHaptics.tap(context)
+                            if (currentState.focused?.queue != null) {
+                                actions.onAdvance()
+                            } else {
+                                lastQueuedIcons.firstOrNull()?.onSelect?.invoke()
                             }
-                        },
-                )
+                        }
+                    }
+                when (spec.queueStyle) {
+                    QueueStyle.Stack -> IslandStackBubble(
+                        icons = lastQueuedIcons,
+                        size = spec.compactHeight,
+                        outlineColor = outlineFor(1f),
+                        outlineThickness = spec.outlineThickness,
+                        modifier = queueModifier,
+                    )
+                    QueueStyle.Overlap -> IslandStackOverlap(
+                        icons = lastQueuedIcons,
+                        size = spec.compactHeight,
+                        outlineColor = outlineFor(1f),
+                        outlineThickness = spec.outlineThickness,
+                        modifier = queueModifier,
+                    )
+                }
                 IslandStackPill(
                     icons = lastFullStack,
                     selectedKey = lastFullStack.firstOrNull { it.current }?.key,
@@ -583,16 +659,17 @@ fun IslandRoot(
                     ownerKey = lastBubbleKey,
                     bubbleFor = { knownBubbles[it] },
                     size = spec.compactHeight,
+                    style = spec.queueStyle,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {
-                                IntOffset((windowWidth / 2 - bubbleSizePx / 2 + dragX.value).roundToInt(), surfaceTopPx)
+                                IntOffset((windowWidth / 2 - sideWidthLive() / 2 + dragX.value).roundToInt(), surfaceTopPx)
                             } else {
                                 val w = surfaceSize.width
                                 val endX = bubbleX(w)
-                                val startX = if (spec.growDirection > 0) surfaceLeft(w) + w - bubbleSizePx else surfaceLeft(w)
+                                val startX = if (spec.growDirection > 0) surfaceLeft(w) + w - sideWidthLive() else surfaceLeft(w)
                                 val v = catchUpAnim.value
                                 IntOffset((startX + (endX - startX) * v + dragX.value).roundToInt(), surfaceTopPx)
                             }
@@ -643,7 +720,7 @@ fun IslandRoot(
                 .padding(top = spec.surfaceTop)
                 .layout { measurable, constraints ->
                     val p = measurable.measure(constraints)
-                    val dx = spec.growDirection * (p.width - cameraSlotPx) / 2 + lineShift.value.roundToInt() + catchShiftPx().roundToInt()
+                    val dx = surfaceShiftFor(p.width) + lineShift.value.roundToInt() + catchShiftPx().roundToInt()
                     layout(p.width, p.height) { p.place(dx, 0) }
                 }
                 .offset { IntOffset(0, (squashPx / 2f * squash.value - edgeShift.floatValue - surfaceTopPx * bond).roundToInt()) }
@@ -733,7 +810,12 @@ fun IslandRoot(
                     val range = (expandedHeight[0] - minSurfaceHeight).toFloat()
                     val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
                     edgeShift.floatValue = outsetPx * p
-                    layout(w, h) { child.place((w - child.width) / 2, 0) }
+                    val childX = when {
+                        spec.growDirection > 0 -> 0
+                        spec.growDirection < 0 -> w - child.width
+                        else -> (w - child.width) / 2
+                    }
+                    layout(w, h) { child.place(childX, 0) }
                 }
                 .onSizeChanged { surfaceSize = it }
                 .animateContentSize(
@@ -742,7 +824,11 @@ fun IslandRoot(
                         stage == IslandStage.Compact && compactSettled -> IslandMotion.compactSize
                         else -> IslandMotion.collapseSize
                     },
-                    alignment = Alignment.TopCenter,
+                    alignment = when {
+                        spec.growDirection > 0 -> Alignment.TopStart
+                        spec.growDirection < 0 -> Alignment.TopEnd
+                        else -> Alignment.TopCenter
+                    },
                     finishedListener = { _, _ ->
                         if (dragCommitted && currentState.stage != IslandStage.Expanded && currentState.stage != IslandStage.Line) {
                             dragCommitted = false
@@ -1006,6 +1092,7 @@ fun IslandRoot(
                         }
                         .onSizeChanged {
                             target = it
+                            layerSizes[layerKey] = it
                             if (key.stage == IslandStage.Compact) compactSize = it
                         }
                         .graphicsLayer {
@@ -1028,7 +1115,8 @@ fun IslandRoot(
                 } else {
                     Modifier
                         .layout { measurable, _ ->
-                            val p = measurable.measure(Constraints())
+                            val last = layerSizes[layerKey]
+                            val p = measurable.measure(if (last != null) Constraints.fixed(last.width, last.height) else Constraints())
                             val x = when {
                                 spec.growDirection > 0 -> 0
                                 spec.growDirection < 0 -> -p.width
@@ -1052,12 +1140,14 @@ fun IslandRoot(
                         LocalIslandBackdropSlot provides backdropSlot.takeIf { current },
                         LocalIslandCollapse provides { if (current) collapse.value else 0f },
                         LocalLineInset provides if (current) lineInsets else (0.dp to 0.dp),
+                        LocalLineLeading provides inlineQueue.takeIf { current && inlineLineQueue },
                     ) {
                         StageContent(
                             layerKey.stage, layerItem, state, spec, actions, interactive = current,
                             onCellTap = ::handleTap,
                             onCellLongPress = ::handleLongPress,
-                            leftBias = { (catchShiftPx() * 2f).roundToInt() },
+                            sideBubble = ::sideBubbleProgress,
+                            onSlack = { if (current) compactSlack.intValue = it },
                         )
                     }
                 }
@@ -1085,7 +1175,7 @@ fun IslandRoot(
                         },
                     contentAlignment = layerAlign,
                 ) {
-                    CompactTemplate(state = state, spec = spec, onCellTap = {}, onCellLongPress = {}, leftBias = { (catchShiftPx() * 2f).roundToInt() })
+                    CompactTemplate(state = state, spec = spec, onCellTap = {}, onCellLongPress = {}, sideBubble = ::sideBubbleProgress)
                 }
             }
             }
@@ -1179,7 +1269,8 @@ private fun StageContent(
     interactive: Boolean,
     onCellTap: (String) -> Unit = {},
     onCellLongPress: (String) -> Unit = {},
-    leftBias: () -> Int = { 0 },
+    sideBubble: () -> Float = { 0f },
+    onSlack: (Int) -> Unit = {},
 ) {
     val a = if (interactive) actions else NoActions
     when (stage) {
@@ -1195,13 +1286,14 @@ private fun StageContent(
                     spec = spec,
                     onCellTap = { if (interactive) onCellTap(it) },
                     onCellLongPress = { if (interactive) onCellLongPress(it) },
-                    leftBias = leftBias,
+                    sideBubble = sideBubble,
+                    onSlack = onSlack,
                 )
             }
         }
         IslandStage.Line -> item?.line?.let {
             val inset = LocalLineInset.current
-            LineTemplate(it, spec, inset.first, inset.second)
+            LineTemplate(it, spec, inset.first, inset.second, leading = LocalLineLeading.current)
         }
             ?: Spacer(Modifier.size(spec.lineWidth, spec.compactHeight))
         IslandStage.Expanded -> item?.let {

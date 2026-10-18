@@ -21,6 +21,8 @@ import com.sameerasw.essentials.services.LiveUpdateSnoozer
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.CallControlUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.call.CallActionRole
+import com.sameerasw.essentials.utils.call.CallNotificationAction
 import com.sameerasw.essentials.utils.call.CallPhase
 import com.sameerasw.essentials.utils.call.CallSnapshot
 import com.sameerasw.essentials.utils.call.CallStateRepository
@@ -137,24 +139,7 @@ class CallPlugin : BaseIslandPlugin() {
             ?: context.getString(R.string.island_call_incoming)
         val status = if (ringing) incomingLabel else elapsed(snap.startedAt)
         val photo = snap.photo
-        val actions = CallActions(
-            answer = {
-                guarded {
-                    if (snap.fromTelephony) CallControlUtil.acceptCall(context)
-                    else if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context)
-                }
-            },
-            end = {
-                guarded {
-                    if (snap.fromTelephony) CallControlUtil.endCall(context)
-                    else if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context)
-                }
-            },
-            toggleMute = { guarded(false) { CallControlUtil.toggleMute(context) } },
-            toggleSpeaker = { guarded(false) { CallControlUtil.toggleSpeaker(context) } },
-            isMuted = { CallControlUtil.isMuted(context) },
-            isSpeakerOn = { CallControlUtil.isSpeakerOn(context) },
-        )
+        val buttons = buttonsFor(snap, ringing)
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -181,7 +166,7 @@ class CallPlugin : BaseIslandPlugin() {
                         photo = photo,
                         ringing = ringing,
                         status = status,
-                        actions = actions,
+                        buttons = buttons,
                         scope = scope,
                     )
                 },
@@ -191,6 +176,112 @@ class CallPlugin : BaseIslandPlugin() {
             ),
         )
     }
+
+    private fun buttonsFor(snap: CallSnapshot, ringing: Boolean): List<CallButtonSpec> {
+        val telephony = snap.fromTelephony
+        val canAnswer = snap.answerIntent != null || telephony
+        val canEnd = snap.endIntent != null || telephony
+        val buttons = mutableListOf<CallButtonSpec>()
+        fun end(label: Int) {
+            if (!canEnd) return
+            buttons += CallButtonSpec(
+                key = "end",
+                icon = R.drawable.rounded_call_end_24,
+                label = context.getString(label),
+                style = CallButtonStyle.End,
+                onClick = {
+                    guarded {
+                        if (telephony) CallControlUtil.endCall(context)
+                        else if (!sendPendingIntent(context, snap.endIntent)) CallControlUtil.endCall(context)
+                    }
+                    null
+                },
+            )
+        }
+        fun answer() {
+            if (!canAnswer) return
+            buttons += CallButtonSpec(
+                key = "answer",
+                icon = R.drawable.rounded_call_24,
+                label = context.getString(R.string.island_call_answer),
+                style = CallButtonStyle.Answer,
+                onClick = {
+                    guarded {
+                        if (telephony) CallControlUtil.acceptCall(context)
+                        else if (!sendPendingIntent(context, snap.answerIntent)) CallControlUtil.acceptCall(context)
+                    }
+                    null
+                },
+            )
+        }
+        if (ringing) {
+            end(R.string.island_call_decline)
+            answer()
+        } else {
+            val own = snap.extraActions
+            val mute = own.firstOrNull { it.role == CallActionRole.Mute }
+            val speaker = own.firstOrNull { it.role == CallActionRole.Speaker }
+            if (telephony) {
+                buttons += CallButtonSpec(
+                    key = "mute",
+                    icon = R.drawable.rounded_mic_24,
+                    onIcon = R.drawable.rounded_mic_off_24,
+                    label = context.getString(R.string.island_call_mute),
+                    initialOn = guarded(false) { CallControlUtil.isMuted(context) },
+                    onClick = { guarded<Boolean?>(null) { CallControlUtil.toggleMute(context) } },
+                )
+                buttons += CallButtonSpec(
+                    key = "speaker",
+                    icon = R.drawable.rounded_volume_up_24,
+                    label = context.getString(R.string.island_call_speaker),
+                    initialOn = guarded(false) { CallControlUtil.isSpeakerOn(context) },
+                    onClick = { guarded<Boolean?>(null) { CallControlUtil.toggleSpeaker(context) } },
+                )
+            } else {
+                if (mute != null) {
+                    buttons += ownButton(mute, R.drawable.rounded_mic_24, on = mute.title.lowercase().contains("unmute"), onIcon = R.drawable.rounded_mic_off_24)
+                }
+                if (speaker != null) {
+                    buttons += ownButton(speaker, R.drawable.rounded_volume_up_24, on = false)
+                }
+            }
+            own.filter { it.role != CallActionRole.Mute && it.role != CallActionRole.Speaker }
+                .take(MAX_EXTRA_BUTTONS)
+                .forEach { action ->
+                    val icon = when (action.role) {
+                        CallActionRole.Hold -> R.drawable.rounded_pause_24
+                        CallActionRole.Video -> R.drawable.rounded_videocam_24
+                        else -> null
+                    }
+                    buttons += ownButton(action, icon, on = false)
+                }
+            end(R.string.island_call_end)
+        }
+        if (buttons.isEmpty()) {
+            buttons += CallButtonSpec(
+                key = "open",
+                icon = R.drawable.rounded_open_in_new_24,
+                label = context.getString(R.string.island_call_open),
+                onClick = {
+                    guarded { if (!sendPendingIntent(context, snap.contentIntent)) CallControlUtil.showInCallScreen(context) }
+                    null
+                },
+            )
+        }
+        return buttons
+    }
+
+    private fun ownButton(action: CallNotificationAction, icon: Int?, on: Boolean, onIcon: Int? = null) = CallButtonSpec(
+        key = "own:${action.role}:${action.title}",
+        icon = icon,
+        onIcon = onIcon,
+        label = action.title,
+        initialOn = on,
+        onClick = {
+            guarded { sendPendingIntent(context, action.intent) }
+            null
+        },
+    )
 
     private fun guarded(block: () -> Unit) {
         try {
@@ -216,6 +307,7 @@ class CallPlugin : BaseIslandPlugin() {
 
     companion object {
         const val ITEM_KEY = "call"
+        private const val MAX_EXTRA_BUTTONS = 2
     }
 }
 

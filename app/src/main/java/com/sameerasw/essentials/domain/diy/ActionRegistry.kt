@@ -49,6 +49,8 @@ object ActionRegistry {
                 add(Action.TurnOffAutoBrightness)
                 add(Action.ToggleAutoBrightness)
                 add(Action.DimWallpaper())
+                add(Action.TurnOnCaffeinate)
+                add(Action.TurnOffCaffeinate)
                 add(Action.ScreenOff())
                 if (sdkInt >= 35) add(Action.DeviceEffects())
             }
@@ -62,6 +64,7 @@ object ActionRegistry {
                 Action.UnfreezeApps(),
                 Action.FreezeTag(),
                 Action.PinApp,
+                Action.SplitScreen,
                 Action.Keyboard(),
                 Action.OpenCamera,
                 Action.OpenVideoCamera,
@@ -78,7 +81,11 @@ object ActionRegistry {
                 add(Action.TurnOffLowPower)
                 add(Action.SetChargingMode())
                 add(Action.CustomSettings())
+                add(Action.Wait())
+                add(Action.SendNotification())
                 add(Action.CircleToSearch)
+                add(Action.TurnOffBackGesture)
+                add(Action.TurnOnBackGesture)
                 // TakeScreenshot only available on screen-on context (null means no filter = include always)
                 if (screenOnOnly == null || screenOnOnly == true) {
                     add(Action.TakeScreenshot)
@@ -86,21 +93,22 @@ object ActionRegistry {
             }
 
         val soundMediaActions =
-            listOf(
-                Action.SoundMode(),
-                Action.CycleSoundModes,
-                Action.ToggleMute,
-                Action.ToggleDoNotDisturb,
-                Action.ToggleVibrate,
-                Action.HapticVibration,
-                Action.ToggleMediaVolume,
-                Action.SetVolume(),
-                Action.MediaPlayPause,
-                Action.MediaNext,
-                Action.MediaPrevious,
-                Action.LikeCurrentSong,
-                Action.OpenNowPlayingApp,
-            )
+            buildList {
+                add(Action.SoundMode())
+                add(Action.CycleSoundModes)
+                add(Action.ToggleMute)
+                add(Action.ToggleDoNotDisturb)
+                if (sdkInt >= 35) add(Action.SetMode())
+                add(Action.ToggleVibrate)
+                add(Action.HapticVibration)
+                add(Action.ToggleMediaVolume)
+                add(Action.SetVolume())
+                add(Action.MediaPlayPause)
+                add(Action.MediaNext)
+                add(Action.MediaPrevious)
+                add(Action.LikeCurrentSong)
+                add(Action.OpenNowPlayingApp)
+            }
 
         val essentialsActions =
             listOf(

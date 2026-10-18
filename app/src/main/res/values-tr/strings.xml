@@ -31,7 +31,7 @@
     <string name="setting_use_usage_access_title">Kullanım erişimini kullan</string>
     <string name="setting_use_usage_access_desc">Erişilebilirlik yerine (Dondur, Uygulama Kilidi, Dinamik Gece Işığı)</string>
     <!-- Button Remap -->
-    <string name="button_remap_enable_title">Düğme Yeniden Eşlemesini Etkinleştir</string>
+    <string name="button_remap_enable_title">Düğme Yeniden Eşlemeyi etkinleştir</string>
     <string name="button_remap_use_shizuku_title">Shizuku kullan</string>
     <string name="button_remap_use_shizuku_desc">Ekran kapalıyken çalışır (Önerilen)</string>
     <string name="shizuku_not_running_toast">Shizuku çalışmıyor</string>
@@ -58,7 +58,7 @@
     <string name="action_ai_assistant">Yapay zeka asistanı</string>
     <string name="action_take_screenshot">Ekran görüntüsü al</string>
     <string name="action_cycle_sound_modes">Ses modlarını değiştir</string>
-    <string name="action_circle_to_search">Aramak için Daire</string>
+    <string name="action_circle_to_search">Seçerek Arat</string>
     <string name="action_like_song">Şu anki şarkıyı beğen</string>
     <string name="like_song_settings_title">Şarkıyı beğenme ayarları</string>
     <string name="like_song_settings_desc">Bu özellik, o anda oynatılan medyayı algılamak ve benzer eylemi tetiklemek için bildirim erişimi gerektirir. Lütfen aşağıdan etkinleştirin.</string>
@@ -216,7 +216,7 @@
     <string name="tile_ui_blur">Kullanıcı Arayüzü Bulanıklığı</string>
     <string name="tile_bubbles">Konuşma balonları</string>
     <string name="tile_sensitive_content">Hassas İçerik</string>
-    <string name="tile_tap_to_wake">Uyandırmak için dokunun</string>
+    <string name="tile_tap_to_wake">Uyandırmak için dokun</string>
     <string name="tile_aod">AOD</string>
     <string name="tile_caffeinate">Kafein</string>
     <string name="tile_sound_mode">Ses Modu</string>
@@ -420,7 +420,7 @@
     <string name="feat_snooze_notifications_desc">Kalıcı bildirimleri ertele</string>
     <string name="feat_qs_tiles_title">Hızlı ayar kutucukları</string>
     <string name="feat_qs_tiles_desc">Tümünü görüntüle</string>
-    <string name="feat_button_remap_title">Düğme yeniden eşlemesi</string>
+    <string name="feat_button_remap_title">Düğme yeniden eşleme</string>
     <string name="feat_button_remap_desc">Donanım düğmesi eylemlerini yeniden eşleyin</string>
     <string name="feat_dynamic_night_light_title">Dinamik gece lambası</string>
     <string name="feat_dynamic_night_light_desc">Uygulamaya göre gece ışığını değiştir</string>
@@ -1505,7 +1505,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="feat_pixel_searchbar_title">Arama çubuğunu değiştir</string>
     <string name="feat_pixel_searchbar_desc">Pixel Launcher\'ın varsayılan arama çubuğunu değiştirin.</string>
     <string name="tile_lock">Kilit</string>
-    <string name="tile_restart_systemui">SystemUI Yeniden Başlatma</string>
+    <string name="tile_restart_systemui">SystemUI\'ı Yeniden Başlat</string>
     <string name="about_desc_restart_systemui_tile">SystemUI\'ı Hızlı Ayarlar panelinizden kolayca yeniden başlatın. Durum çubuğu sorunlarını hızlıca çözmek veya sistem arayüzü değişikliklerini anında uygulamak için kullanışlıdır. Root veya Shizuku shell erişimi gerektirir.</string>
     <string name="label_low_power_trigger_level">Özel tetikleme seviyesi</string>
     <string name="desc_low_power_trigger_level">pil tasarrufu için</string>
@@ -1615,7 +1615,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="app_icon_google">Spektrum</string>
     <string name="watch_watchface_title">Saat kadranı</string>
     <string name="watch_watchface_desc">Saat kadranını özelleştirin</string>
-    <string name="tile_url_shortener">URL\'yi kısalt</string>
+    <string name="tile_url_shortener">URL\'i kısalt</string>
     <string name="tile_url_shortener_subtitle">Panoyu Kısalt</string>
     <string name="label_motion_blur">Hareket bulanıklığı</string>
     <string name="label_ripple_animation">Dalgalanma animasyonu</string>
@@ -1772,14 +1772,14 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_action_horizontal_slide_brightness">Parlaklık</string>
     <string name="duo_action_horizontal_slide_sound_mode">Ses modu</string>
     <string name="feat_hilight_title">Vurgu</string>
-    <string name="feat_hilight_desc">Bildirimler için arka LED\'leri yakın.</string>
+    <string name="feat_hilight_desc">Bildirimler için arka LED\'leri yakın</string>
     <string name="about_desc_hilight">Bildirim geldiğinde Pixel 11 Pro, Pro XL ve Pro Fold\'un arkasındaki Vurgu LED\'lerini, eklediğiniz her uygulama için özel bir efektle yakar. Vurgu efektleri, Tuş yeniden atama ve otomasyon işlemlerinde bir eylem olarak da kullanılabilir. Her yeniden başlatmadan sonra tekrar başlatılması gereken Shizuku gerektirir.</string>
     <string name="feat_face_unlock_brightness_title">Yüz aydınlatması</string>
     <string name="feat_face_unlock_brightness_desc">Düşük ışıkta parlaklığı artırın</string>
     <string name="feat_lockscreen_shortcuts_title">Kilit ekranı kısayolları</string>
     <string name="feat_lockscreen_shortcuts_desc">Kendi eylemlerinizi kilit ekranından çalıştırın</string>
     <string name="about_desc_lockscreen_shortcuts">Kilit ekranının alt köşelerine Essentials kısayol düğmeleri ekler. İlgili işlemi gerçekleştirmek için bir kısayola dokunup basılı tutun. Yalnızca sistemin kendi kilit ekranı kısayolları kapalıyken kullanılabilir.</string>
-    <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin.</string>
+    <string name="feat_activity_launcher_desc">Herhangi bir uygulama ekranını açın veya sabitleyin</string>
     <string name="about_desc_activity_launcher">Herhangi bir uygulamadaki ekranlara (etkinliklere) göz atın, bunları doğrudan açın ve ana ekranınıza sabitleyin. Uygulamanın gizli tuttuğu ekranlar Yalnızca Root olarak işaretlenmiştir ve açılmaları için root yetkisi gerekir.</string>
     <string name="label_motion_blur_amount">Miktar</string>
     <string name="screen_locked_keep_qs_on_extended_unlock_title">QS\'i genişletilmiş kilit açma modunda görüntüleyin</string>
@@ -1792,11 +1792,49 @@ Gizlendiğinde, bildirimler ekranınızın üzerinde belirmek yerine bildirim pa
     <string name="duo_hide_when_screen_off_only_idle_title">Yalnızca boşta kalındığında AOD\'de gizle</string>
     <string name="duo_hide_when_screen_off_title">Ekran kapalıyken gizle</string>
     <string name="island_hide_on_shade_title">Durum çubuğu genişletildiğinde gizle</string>
-    <string name="duo_material_you_title">Material 3 Rengini Kullan</string>
+    <string name="duo_material_you_title">Material You renkleri kullan</string>
     <string name="duo_action_tap_title">Dokun</string>
     <string name="island_show_network_title">Ağ</string>
     <string name="island_section_notifications">Bildirimler</string>
     <string name="island_call_options_title">Çağrı</string>
     <string name="island_devices_battery_section">Cihazlar</string>
     <string name="island_like_while_playing_title">Müzik Oynarken Beğen</string>
+    <string name="feat_widget_stack_desc">Widget\'ları üst üste yerleştirin ve aralarında geçiş yapın</string>
+    <string name="feat_widget_stack_title">Widget yığını</string>
+    <string name="about_desc_widget_stack">Ana ekranınızda herhangi bir uygulamadan birden fazla widget\'ı tek bir yere yerleştirin.
+
+Yığın, bir zamanlayıcıyla bir sonraki widget\'a geçer veya altındaki oklarla geçiş yapabilirsiniz. Takvim ajandası gibi kaydırılabilir liste gösteren widget\'lar yığında gösterilemez.</string>
+    <string name="watch_esim_install_title">eSIM yükle</string>
+    <string name="watch_esim_install_desc">Desteklenmeyen bölgelerde bile</string>
+    <string name="face_unlock_ambient_threshold_title">Ortam eşiği</string>
+    <string name="face_unlock_light_tint_title">Açık renk tonu</string>
+    <string name="face_unlock_auto_illuminate_title">Uyanınca otomatik olarak aydınlat</string>
+    <string name="hilight_only_screen_off_title">Yalnızca ekran kapalıyken</string>
+    <string name="hilight_progress_title">Canlı ilerleme</string>
+    <string name="feat_hilight_progress_desc">LED\'ler üzerinde indirme ve canlı güncelleme ilerlemesini göster</string>
+    <string name="feat_hilight_notifications_title">Bildirim efektleri</string>
+    <string name="hilight_notifications_desc">Her uygulamadan bildirim geldiğinde kendine özgü efektini oynatın</string>
+    <string name="lockscreen_shortcuts_enable_title">Kilit ekranı kısayollarını etkinleştirin</string>
+    <string name="duo_action_swipe_down_title">Aşağı kaydırma</string>
+    <string name="duo_action_horizontal_slide_title">Yatay kaydırma</string>
+    <string name="face_unlock_trigger_unlock_title">Kilit açmayı tetikle</string>
+    <string name="feat_screenshot_share_cleanup_title">Paylaşılan ekran görüntülerini sil</string>
+    <string name="feat_screenshot_share_cleanup_desc">Paylaştıktan sonra ekran görüntülerini silin</string>
+    <string name="feat_app_volume_desc">Her uygulama için ayrı bir ses seviyesi belirleyin</string>
+    <string name="feat_app_volume_title">Uygulama ses seviyesi</string>
+    <string name="feat_volume_steps_title">Ses seviyesi adımları</string>
+    <string name="feat_volume_steps_desc">Her tuş vuruşunda medya ses seviyesini daha hızlı değiştirin</string>
+    <string name="volume_steps_enable_title">Ses seviyesi adımlarını etkinleştirin</string>
+    <string name="volume_steps_per_press_title">Her basış başına adım sayısı</string>
+    <string name="app_volume_enable_title">Uygulama ses seviyesini etkinleştirin</string>
+    <string name="app_volume_add_app">Uygulama ekle</string>
+    <string name="app_volume_add_app_desc">Uygulama oynatmaya başlamadan önce ses seviyesini belirleyin</string>
+    <string name="app_volume_overlay_title">Kontrol arayüzü katmanı</string>
+    <string name="about_desc_app_volume">Bir uygulamanın sesini, diğer her şeyin medya ses seviyesini değiştirmeden, kendi başına kısar. Her uygulama için bir seviye seçin ve bu seviye, uygulama ses çaldığında, arka planda da dahil olmak üzere, her seferinde uygulanır.
+
+Seviyeler yalnızca normal ses seviyesinin altına inebilir, asla üstüne çıkamaz. Bazı oyunlar ve düşük gecikmeli ses uygulamaları seviyeyi dikkate almayabilir. Yeni seviyelerin uygulanması için Shizuku\'nun çalışıyor olması gerekir, bu nedenle yeniden başlatmanın ardından tekrar başlatın.</string>
+    <string name="about_desc_volume_steps">Ses seviyesi tuşuna her bastığınızda medya ses seviyesinin kaç adım ilerleyeceğini ayarlar. Tuşa basılı tutmak, bırakana kadar adım adım ilerlemeye devam eder. Aramalar, zil sesleri, alarmlar ve kamera uygulamaları normal ses seviyesi davranışını korur.
+
+Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o tuşa basılı tutmak ses seviyesini değiştirmek yerine eylemi çalıştırır ve kısa basma yine de ses seviyesini adım boyutu kadar değiştirir. Ses paneli açıkken, Düğme yeniden eşleme varsayılan olarak duraklatılır, bu nedenle tuşa basılı tutmak ses seviyesini değiştirir. Eylemin her zaman öncelikli olmasını istiyorsanız, Düğme yeniden eşlemede \"Ses iletişim kutusu açıkken devre dışı bırak\" seçeneğini kapatın.</string>
+    <string name="button_remap_pause_on_volume_dialog_title">Ses iletişim kutusu açıkken devre dışı bırak</string>
 </resources>

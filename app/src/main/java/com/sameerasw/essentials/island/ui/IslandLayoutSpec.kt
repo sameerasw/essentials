@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+enum class QueueStyle { Stack, Overlap }
+
 @Immutable
 data class IslandLayoutSpec(
     val cameraDiameter: Dp = 28.dp,
@@ -35,6 +37,8 @@ data class IslandLayoutSpec(
     val pulseYShift: Float = 0.35f,
     val pulseSpread: Float = 2f,
     val pulseDurationMs: Int = 1450,
+    val queueStyle: QueueStyle = QueueStyle.Stack,
+    val queueInline: Boolean = false,
 ) {
     val compactHeight: Dp get() = cameraDiameter + verticalGap * 2
     val cameraSlotWidth: Dp get() = cameraDiameter * cameraPresence + cameraGap * 2

@@ -37,6 +37,7 @@ symspellkt = "3.4.0"
 ui = "1.13.0-alpha03"
 foundation = "1.13.0-alpha03"
 playServicesLocation = "21.4.0"
+playServicesCodeScanner = "16.1.0"
 playServicesWearable = "20.0.1"
 gson = "2.14.0"
 material = "1.14.0"
@@ -102,6 +103,7 @@ hiddenapibypass = { group = "org.lsposed.hiddenapibypass", name = "hiddenapibypa
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }

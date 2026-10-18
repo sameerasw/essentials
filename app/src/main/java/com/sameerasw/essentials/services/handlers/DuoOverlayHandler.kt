@@ -253,11 +253,14 @@ class DuoOverlayHandler(
                 val isPlugged = plugged > 0
                 val isChargingStatus = isPlugged && (status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL)
+                val currentLevel = if (level >= 0 && scale > 0) (level * 100) / scale else 0
+                val isLimitShield =
+                    com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(service, currentLevel, isChargingStatus || action == Intent.ACTION_POWER_CONNECTED)
 
                 val isNowCharging = when (action) {
                     Intent.ACTION_POWER_DISCONNECTED -> false
-                    Intent.ACTION_POWER_CONNECTED -> true
-                    else -> isChargingStatus
+                    Intent.ACTION_POWER_CONNECTED -> !isLimitShield
+                    else -> isChargingStatus && !isLimitShield
                 }
 
                 val isFastCharging = isFastCharging(batteryIntent, plugged)
@@ -357,9 +360,17 @@ class DuoOverlayHandler(
     fun setFullscreen(fullscreen: Boolean) {
         if (isFullscreen != fullscreen) {
             isFullscreen = fullscreen
-            overlayView?.isFullscreen = fullscreen
+            overlayView?.isFullscreen = shouldHideForFullscreen()
+            if (settingsRepository.isDuoKeepInFullscreenEnabled()) updateState()
         }
     }
+
+    private fun shouldHideForFullscreen(): Boolean = isFullscreen && !settingsRepository.isDuoKeepInFullscreenEnabled()
+
+    private fun shouldBlockTouchForFullscreen(): Boolean =
+        isFullscreen &&
+            settingsRepository.isDuoKeepInFullscreenEnabled() &&
+            settingsRepository.isDuoDisableInteractionsInFullscreenEnabled()
 
     var openBrief: (() -> Unit)? = null
 
@@ -507,7 +518,7 @@ class DuoOverlayHandler(
                         }
                     }
                 }
-                if (level == -1 && wifiManager != null) {
+                if (level == -1 && wifiManager != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     @Suppress("DEPRECATION")
                     val info = wifiManager?.connectionInfo
                     if (info != null && info.rssi > -127) {
@@ -910,7 +921,7 @@ class DuoOverlayHandler(
                 this.dotRadiusPx = settingsRepository.getDuoDotSize() * density
                 this.isDarkTheme = isNightMode
                 this.isScreenOff = this@DuoOverlayHandler.isScreenOff
-                this.isFullscreen = this@DuoOverlayHandler.isFullscreen
+                this.isFullscreen = shouldHideForFullscreen()
                 this.isYieldingToIsland = shouldYieldToIsland()
                 this.isShadeHidden = shouldHideForShade()
                 this.isLockedHidden = shouldHideForLock()
@@ -987,7 +998,7 @@ class DuoOverlayHandler(
                 unregisterTimeReceiver()
             }
 
-            val isTouchEnabled = !hideForOrientation && (settingsRepository.getDuoTapAction() != null ||
+            val isTouchEnabled = !hideForOrientation && !shouldBlockTouchForFullscreen() && (settingsRepository.getDuoTapAction() != null ||
                 settingsRepository.isDuoTapForBriefActive() ||
                 settingsRepository.getDuoDoubleTapAction() != null ||
                 settingsRepository.getDuoLongPressAction() != null ||
@@ -1341,7 +1352,8 @@ class DuoOverlayHandler(
                     val isPlugged = plugged > 0
                     val isChargingStatus = isPlugged && (status == BatteryManager.BATTERY_STATUS_CHARGING ||
                         status == BatteryManager.BATTERY_STATUS_FULL)
-                    if (isChargingStatus) {
+                    val initialLevel = if (level >= 0 && scale > 0) (level * 100) / scale else 0
+                    if (isChargingStatus && !com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(service, initialLevel, true)) {
                         isChargingState = true
                         val isFast = isFastCharging(it, plugged)
                         isFastChargingState = isFast

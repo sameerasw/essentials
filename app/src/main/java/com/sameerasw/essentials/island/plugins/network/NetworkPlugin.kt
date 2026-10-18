@@ -48,17 +48,11 @@ class NetworkPlugin : BaseIslandPlugin() {
         render()
     }
 
-    private val callback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        object : ConnectivityManager.NetworkCallback(FLAG_INCLUDE_LOCATION_INFO) {
-            override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) = onWifi(network, caps)
-            override fun onLost(network: Network) = onWifiLost(network)
-        }
-    } else {
+    private val callback =
         object : ConnectivityManager.NetworkCallback() {
             override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) = onWifi(network, caps)
             override fun onLost(network: Network) = onWifiLost(network)
         }
-    }
 
     private val airplaneReceiver = object : BroadcastReceiver() {
         override fun onReceive(c: Context, intent: Intent) {
@@ -104,11 +98,11 @@ class NetworkPlugin : BaseIslandPlugin() {
 
     private fun onWifi(network: Network, caps: NetworkCapabilities) {
         if (ctx == null || !caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return
-        val name = ssidFrom(caps) ?: WifiUtil.getCurrentSsid(context)
         if (network == wifiNetwork) {
-            if (ssid == null && name != null) ssid = name
+            if (ssid == null) ssidFrom(caps)?.let { ssid = it }
             return
         }
+        val name = ssidFrom(caps) ?: WifiUtil.getCurrentSsid(context)
         wifiNetwork = network
         ssid = name
         announce(connected = true)

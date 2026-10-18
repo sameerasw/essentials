@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
+import android.view.MotionEvent
 import android.view.SurfaceControlViewHost
 
 abstract class IslandProviderService : Service() {
@@ -22,6 +23,7 @@ abstract class IslandProviderService : Service() {
     protected open fun onRequestSurface(itemKey: String, request: SurfaceRequest, deliver: (SurfaceControlViewHost.SurfacePackage?) -> Unit) = deliver(null)
     protected open fun onResizeSurface(itemKey: String, widthPx: Int, heightPx: Int) {}
     protected open fun onReleaseSurface(itemKey: String) {}
+    protected open fun onSurfaceTouch(itemKey: String, event: MotionEvent) = event.recycle()
 
     private val binder = object : IIslandProvider.Stub() {
         override fun getSchemaVersion(): Int = IslandSchema.VERSION
@@ -92,6 +94,14 @@ abstract class IslandProviderService : Service() {
         override fun releaseSurface(itemKey: String) {
             if (!isCallerAllowed()) return
             onReleaseSurface(itemKey)
+        }
+
+        override fun onSurfaceTouch(itemKey: String, event: MotionEvent) {
+            if (!isCallerAllowed()) {
+                event.recycle()
+                return
+            }
+            this@IslandProviderService.onSurfaceTouch(itemKey, event)
         }
     }
 

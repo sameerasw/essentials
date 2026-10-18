@@ -356,6 +356,7 @@ fun SettingsContent(
     var showPreReleaseConfirmSheet by remember { mutableStateOf(false) }
     var pendingPreReleaseState by remember { mutableStateOf(false) }
     var showImportConfirmSheet by remember { mutableStateOf(false) }
+    var showImportBackupPicker by remember { mutableStateOf(false) }
     var selectedImportUri by remember { mutableStateOf<Uri?>(null) }
 
     var showTranslationSessionSheet by remember { mutableStateOf(false) }
@@ -513,6 +514,21 @@ fun SettingsContent(
                     context.startActivity(intent)
                     Runtime.getRuntime().exit(0)
                 }
+            },
+        )
+    }
+
+    if (showImportBackupPicker) {
+        com.sameerasw.essentials.ui.features.system.ImportBackupPickerSheet(
+            onDismissRequest = { showImportBackupPicker = false },
+            onBackupSelected = {
+                showImportBackupPicker = false
+                selectedImportUri = it
+                showImportConfirmSheet = true
+            },
+            onPickCustom = {
+                showImportBackupPicker = false
+                importLauncher.launch(arrayOf("application/json"))
             },
         )
     }
@@ -1000,6 +1016,74 @@ fun SettingsContent(
                 }
             }
 
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colorScheme.surfaceBright,
+                            shape = MaterialTheme.shapes.extraSmall,
+                        ).padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                val view = LocalView.current
+                val externalSettings = remember { SettingsRepository(context) }
+                var externalToken by remember { mutableStateOf(externalSettings.getExternalControlToken().orEmpty()) }
+                var isExternalTokenVisible by remember { mutableStateOf(false) }
+
+                OutlinedTextField(
+                    value = externalToken,
+                    onValueChange = { externalToken = it },
+                    label = { Text(stringResource(R.string.external_control_token_title)) },
+                    modifier = Modifier.weight(1f),
+                    shape = MaterialTheme.shapes.large,
+                    singleLine = true,
+                    visualTransformation = if (isExternalTokenVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        IconButton(onClick = { isExternalTokenVisible = !isExternalTokenVisible }) {
+                            Icon(
+                                painter =
+                                    painterResource(
+                                        id = if (isExternalTokenVisible) R.drawable.rounded_visibility_24 else R.drawable.rounded_visibility_off_24,
+                                    ),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                    },
+                )
+
+                OutlinedButton(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        externalToken = java.util.UUID.randomUUID().toString().replace("-", "")
+                        isExternalTokenVisible = true
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_refresh_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        externalSettings.setExternalControlToken(externalToken)
+                        HapticUtil.performUIHaptic(view)
+                        Toast.makeText(context, R.string.external_control_token_saved, Toast.LENGTH_SHORT).show()
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_save_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_adb_24,
                 title = stringResource(R.string.setting_hidden_debugging_title),
@@ -1066,6 +1150,16 @@ fun SettingsContent(
                 },
             )
 
+            if (viewModel.isEnableUnsupportedFeatures.value && DeviceUtils.isTorchRestrictedDevice()) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_flashlight_on_24,
+                    title = stringResource(R.string.setting_force_flashlight_controls_title),
+                    description = stringResource(R.string.setting_force_flashlight_controls_desc),
+                    isChecked = viewModel.isForceFlashlightControls.value,
+                    onCheckedChange = { enabled -> viewModel.setForceFlashlightControls(enabled) },
+                )
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_archive_24,
                 title = stringResource(R.string.setting_show_legacy_features_title),
@@ -1112,7 +1206,11 @@ fun SettingsContent(
                 Button(
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        importLauncher.launch(arrayOf("application/json"))
+                        if (com.sameerasw.essentials.utils.AutoBackupManager.canListBackups(context)) {
+                            showImportBackupPicker = true
+                        } else {
+                            importLauncher.launch(arrayOf("application/json"))
+                        }
                     },
                     modifier =
                         Modifier
@@ -1332,6 +1430,7 @@ fun SettingsContent(
             )
 
             RoundedCardContainer {
+                com.sameerasw.essentials.ui.features.system.AutoBackupSetting()
 
                 Column(
                     modifier =

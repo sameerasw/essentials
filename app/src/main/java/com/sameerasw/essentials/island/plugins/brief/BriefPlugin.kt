@@ -65,6 +65,8 @@ import kotlinx.coroutines.launch
 import android.os.BatteryManager
 import android.os.Build
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
+import com.sameerasw.essentials.utils.BluetoothDeviceIcons
+import com.sameerasw.essentials.utils.BluetoothDeviceOrder
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -128,6 +130,7 @@ class BriefPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_BRIEF_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
+        SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_STYLE,
         SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
         SettingsRepository.KEY_ISLAND_BRIEF_SHOW_ALARM,
         SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER,
@@ -140,12 +143,14 @@ class BriefPlugin : BaseIslandPlugin() {
             return
         }
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
+        val devicesIconStyle = settings.getIslandDevicesBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val alarmHours = if (settings.isIslandBriefShowAlarmEnabled()) settings.getIslandAlarmWindowHours() else null
         val calendarIds = settings.getStatusGlanceCalendarSelectedCalendars().mapNotNull { it.toLongOrNull() }.toSet()
         val showAllDay = settings.isStatusGlanceCalendarShowAllDayEnabled()
         val showGlow = settings.isIslandShowGlowEnabled()
         val calendarEnabled = context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
         val twoLineHeader = settings.getBoolean(SettingsRepository.KEY_ISLAND_BRIEF_TWO_LINE_HEADER, false)
+        ctx?.scope?.launch(Dispatchers.IO) { BriefDevicesCache.devices = readDevices(context) }
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -153,7 +158,7 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader) { open ->
+                    BriefExpanded(scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader) { open ->
                         pageOpen = open
                     }
                 },
@@ -172,6 +177,7 @@ class BriefPlugin : BaseIslandPlugin() {
 private fun BriefExpanded(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
+    devicesIconStyle: Boolean,
     alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
@@ -219,6 +225,7 @@ private fun BriefExpanded(
                     BriefPage.Overview -> BriefOverview(
                         scope = scope,
                         iconStyle = iconStyle,
+                        devicesIconStyle = devicesIconStyle,
                         alarmHours = alarmHours,
                         calendarEnabled = calendarEnabled,
                         calendarIds = calendarIds,
@@ -391,6 +398,7 @@ private fun openEvent(context: Context, event: UpcomingCalendarEvent) {
 private fun BriefOverview(
     scope: IslandExpandedScope,
     iconStyle: Boolean,
+    devicesIconStyle: Boolean,
     alarmHours: Int?,
     calendarEnabled: Boolean,
     calendarIds: Set<Long>,
@@ -417,8 +425,10 @@ private fun BriefOverview(
     }
     val battery = remember(now) { readBattery(context) }
     val alarm = remember(now, alarmHours) { alarmHours?.let { NextAlarm.within(context, it) } }
-    val devices by produceState(emptyList<BriefDevice>(), now) {
-        value = withContext(Dispatchers.IO) { readDevices(context) }
+    val devices by produceState(BriefDevicesCache.devices, now) {
+        val fresh = withContext(Dispatchers.IO) { readDevices(context) }
+        BriefDevicesCache.devices = fresh
+        if (fresh != value) value = fresh
     }
     val events by produceState<List<UpcomingCalendarEvent>?>(null, calendarEnabled) {
         value = if (calendarEnabled) {
@@ -484,20 +494,7 @@ private fun BriefOverview(
             val devicesBlock: @Composable () -> Unit = {
                 if (devices.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = blockPadding),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-                    ) {
-                        val single = devices.size == 1
-                        devices.forEach { device ->
-                            BriefDeviceChip(
-                                device,
-                                iconStyle,
-                                accent,
-                                if (single) Modifier else Modifier.weight(1f),
-                            )
-                        }
-                    }
+                    BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth().padding(horizontal = blockPadding))
                 }
             }
             val calendarBlock: @Composable () -> Unit = {
@@ -532,15 +529,7 @@ private fun BriefOverview(
                     }
                     if (devices.isNotEmpty()) {
                         add {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-                            ) {
-                                val single = devices.size == 1
-                                devices.forEach { device ->
-                                    BriefDeviceChip(device, iconStyle, accent, if (single) Modifier else Modifier.weight(1f))
-                                }
-                            }
+                            BriefDeviceRows(devices, devicesIconStyle, accent, Modifier.fillMaxWidth())
                         }
                     }
                     if (calendarEnabled) {
@@ -725,7 +714,12 @@ private fun isSameDay(a: Long, b: Long): Boolean {
         ca.get(java.util.Calendar.DAY_OF_YEAR) == cb.get(java.util.Calendar.DAY_OF_YEAR)
 }
 
-private class BriefDevice(val iconRes: Int, val level: Int)
+private data class BriefDevice(val key: String, val iconRes: Int, val level: Int)
+
+private object BriefDevicesCache {
+    @Volatile
+    var devices: List<BriefDevice> = emptyList()
+}
 
 private fun readDevices(context: Context): List<BriefDevice> {
     val settings = SettingsRepository(context)
@@ -735,27 +729,23 @@ private fun readDevices(context: Context): List<BriefDevice> {
         settings.getBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED) &&
         macLevel >= 0
     ) {
-        devices += BriefDevice(R.drawable.rounded_laptop_mac_24, macLevel)
+        devices += BriefDevice(BluetoothDeviceOrder.MAC, R.drawable.rounded_laptop_mac_24, macLevel)
     }
     val hasPermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
         context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
-    if (hasPermission) {
+    if (hasPermission && settings.isBluetoothDevicesEnabled()) {
         BluetoothBatteryUtils.getPairedDevicesBattery(context).forEach { device ->
-            devices += BriefDevice(deviceIcon(device.name), device.level)
+            if (device.hasParts) {
+                device.left?.let { devices += BriefDevice(device.address, R.drawable.rounded_earbud_left_24, it) }
+                device.right?.let { devices += BriefDevice(device.address, R.drawable.rounded_earbud_right_24, it) }
+                device.case?.let { devices += BriefDevice(device.address, R.drawable.rounded_earbud_case_24, it) }
+            } else {
+                devices += BriefDevice(device.address, BluetoothDeviceIcons.resolve(context, device.address, device.name), device.level)
+            }
         }
     }
-    return devices.take(MAX_DEVICES)
+    return BluetoothDeviceOrder.apply(context, devices) { it.key }.take(settings.getBatteryWidgetMaxDevices())
 }
-
-private fun deviceIcon(name: String): Int = when {
-    name.contains("watch", true) || name.contains("gear", true) || name.contains("fit", true) -> R.drawable.rounded_watch_24
-    name.contains("bud", true) || name.contains("pod", true) || name.contains("head", true) ||
-        name.contains("audio", true) || name.contains("sound", true) -> R.drawable.rounded_headphones_24
-    name.contains("keyboard", true) -> R.drawable.rounded_keyboard_24
-    else -> R.drawable.rounded_bluetooth_24
-}
-
-private const val MAX_DEVICES = 4
 
 @Composable
 private fun BriefAlarmChip(time: String, accent: Color) {
@@ -769,6 +759,22 @@ private fun BriefAlarmChip(time: String, accent: Color) {
         IslandIcon(R.drawable.rounded_alarm_24, tint = accent, size = 16.dp)
         Spacer(Modifier.width(4.dp))
         Text(time, style = IslandTextStyles.compact.copy(fontSize = 13.sp))
+    }
+}
+
+@Composable
+private fun BriefDeviceRows(devices: List<BriefDevice>, iconStyle: Boolean, accent: Color, modifier: Modifier = Modifier) {
+    val rows = if (devices.size > 4) devices.chunked((devices.size + 1) / 2) else listOf(devices)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        rows.forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+            ) {
+                val single = row.size == 1
+                row.forEach { device -> BriefDeviceChip(device, iconStyle, accent, if (single) Modifier else Modifier.weight(1f)) }
+            }
+        }
     }
 }
 

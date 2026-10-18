@@ -37,6 +37,13 @@ object IslandMotion {
     const val CONTENT_SCALE = 0.06f
     fun contentSpring(): FiniteAnimationSpec<Float> = spring(0.88f, 360f)
 
+    fun <T> expressiveFastSpatial(): FiniteAnimationSpec<T> = spring(0.6f, 800f)
+    fun <T> expressiveDefaultSpatial(): FiniteAnimationSpec<T> = spring(0.8f, 380f)
+    fun <T> expressiveSlowSpatial(): FiniteAnimationSpec<T> = spring(0.8f, 200f)
+    fun <T> expressiveFastEffects(): FiniteAnimationSpec<T> = spring(1f, 3800f)
+    fun <T> expressiveDefaultEffects(): FiniteAnimationSpec<T> = spring(1f, 1600f)
+    fun <T> expressiveSlowEffects(): FiniteAnimationSpec<T> = spring(1f, 800f)
+
     const val COLLAPSE_THRESHOLD = 0.3f
     const val DISMISS_THRESHOLD = 0.3f
 }

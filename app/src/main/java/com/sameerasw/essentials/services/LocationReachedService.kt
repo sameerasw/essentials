@@ -108,13 +108,13 @@ class LocationReachedService : Service() {
         trackingJob?.cancel()
         trackingJob =
             serviceScope.launch {
-                while (isActive) {
+                while (isActive && !isAlarmTriggered) {
                     val activeId = repository.getActiveAlarmId()
                     val alarms = repository.getAlarms()
                     val alarm = alarms.find { it.id == activeId }
 
                     if (alarm != null) {
-                        updateProgress(alarm)
+                        if (!alarm.isPaused) updateProgress(alarm)
                     } else {
                         serviceScope.launch {
                             delay(500)

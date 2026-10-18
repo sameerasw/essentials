@@ -9,9 +9,12 @@
 
 package com.sameerasw.essentials.domain.model
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.ShellUtils
 
 enum class AppPermission(
     val key: String,
@@ -133,6 +136,18 @@ enum class AppPermission(
         titleRes = R.string.perm_bubbles_title,
         iconRes = R.drawable.rounded_bubble_24,
     );
+
+    fun isGranted(context: Context): Boolean =
+        when (this) {
+            ACCESSIBILITY -> PermissionUtils.isAccessibilityServiceEnabled(context)
+            WRITE_SECURE_SETTINGS -> PermissionUtils.canWriteSecureSettings(context)
+            NOTIFICATION_LISTENER -> PermissionUtils.hasNotificationListenerPermission(context)
+            DRAW_OVERLAYS -> PermissionUtils.canDrawOverlays(context)
+            WRITE_SETTINGS -> PermissionUtils.canWriteSystemSettings(context)
+            NOTIFICATION_POLICY -> PermissionUtils.hasNotificationPolicyAccess(context)
+            ROOT, SHIZUKU -> ShellUtils.isAvailable(context) && ShellUtils.hasPermission(context)
+            else -> true
+        }
 
     companion object {
         fun fromKey(key: String): AppPermission? {

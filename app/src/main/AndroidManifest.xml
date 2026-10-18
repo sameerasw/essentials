@@ -62,6 +62,9 @@
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission
         android:name="android.permission.POST_PROMOTED_NOTIFICATIONS"
         tools:ignore="UnusedAttribute" />
     <uses-permission
@@ -102,6 +105,7 @@
     <queries>
         <package android:name="com.sameerasw.overcast" />
         <package android:name="eu.darken.porter" />
+        <package android:name="com.google.android.apps.wear.companion" />
         <intent>
             <action android:name="com.sameerasw.island.PROVIDER" />
         </intent>
@@ -565,6 +569,14 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
+            android:name=".ui.activities.AppVolumeControlActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
             android:name=".ui.activities.FlashlightIntensityActivity"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -592,6 +604,14 @@
             android:name=".ui.activities.PrivateDnsSettingsActivity"
             android:excludeFromRecents="true"
             android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
+            android:name=".ui.activities.DefaultLauncherSettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
             android:noHistory="true"
             android:taskAffinity=""
             android:theme="@style/Theme.Essentials.Translucent" />
@@ -688,6 +708,20 @@
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_shortcut_service_config" />
+        </service>
+
+        <service
+            android:name=".services.SplitScreenShortcutService"
+            android:exported="true"
+            android:icon="@drawable/rounded_splitscreen_24"
+            android:label="@string/split_screen_shortcut_service_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/split_screen_shortcut_service_config" />
         </service>
 
         <service
@@ -794,6 +828,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/screen_off_widget_info" />
         </receiver>
+
+        <activity
+            android:name=".ui.activities.BatteriesWidgetConfigureActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.activities.ScreenOffWidgetConfigureActivity"
@@ -1353,6 +1399,20 @@
         </service>
 
         <service
+            android:name=".services.tiles.DefaultLauncherTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_home_24"
+            android:label="@string/tile_default_launcher"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_UTILITIES" />
+        </service>
+
+        <service
             android:name=".services.tiles.DeveloperOptionsTileService"
             android:exported="true"
             android:icon="@drawable/rounded_mobile_code_24"
@@ -1517,6 +1577,9 @@
                 <action android:name="com.sameerasw.essentials.ACTION_TIME_AUTOMATION_TRIGGER" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".services.automation.receivers.GeofenceReceiver"
+            android:exported="false" />
 
 
         <service
@@ -1650,6 +1713,10 @@
             android:permission="com.sameerasw.essentials.permission.EXTERNAL_CONTROL" />
 
         <receiver
+            android:name=".external.ExternalTokenActionReceiver"
+            android:exported="true" />
+
+        <receiver
             android:name=".external.ExternalActionReceiver"
             android:exported="true"
             android:permission="com.sameerasw.essentials.permission.EXTERNAL_CONTROL">
@@ -1669,6 +1736,10 @@
 
         <receiver
             android:name=".receivers.UrlShortenerActionReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.ScreenshotCleanupActionReceiver"
             android:exported="false" />
 
         <service

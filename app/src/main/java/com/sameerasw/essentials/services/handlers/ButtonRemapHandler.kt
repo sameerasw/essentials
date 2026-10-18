@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 class ButtonRemapHandler(
     private val service: AccessibilityService,
     private val flashlightHandler: FlashlightHandler,
+    private val volumeStepsHandler: VolumeStepsHandler,
 ) {
     private val settingsRepository = SettingsRepository(service)
     private val handler = Handler(Looper.getMainLooper())
@@ -171,7 +172,7 @@ class ButtonRemapHandler(
             return true
         } else if (event.action == KeyEvent.ACTION_UP) {
             handler.removeCallbacks(longPressRunnable)
-            if (!isLongPressTriggered) {
+            if (!isLongPressTriggered && !volumeStepsHandler.adjustIfEnabled(keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
                 // Short press - re-simulate volume behavior
                 val am = service.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 val direction =

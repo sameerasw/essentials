@@ -23,6 +23,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -42,6 +47,10 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 fun IslandTimeOptionsBottomSheet(
     onDismissRequest: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val settings = remember { SettingsRepository(context) }
+    var showSeconds by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false)) }
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
@@ -51,6 +60,18 @@ fun IslandTimeOptionsBottomSheet(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            RoundedCardContainer {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_schedule_24,
+                    title = stringResource(R.string.island_time_show_seconds_title),
+                    isChecked = showSeconds,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showSeconds = it
+                        settings.putBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, it)
+                    },
+                )
+            }
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY)
         }
     }
@@ -63,9 +84,12 @@ fun IslandBatteryOptions(
     onlyLow: Boolean,
     onOnlyLowChange: (Boolean) -> Unit,
     showIconConditional: Boolean = false,
+    devices: Boolean = false,
 ) {
     val view = LocalView.current
-    val styleLabel = if (viewModel.islandBatteryStyle.value == SettingsRepository.ISLAND_BATTERY_STYLE_ICON) {
+    val currentStyle = if (devices) viewModel.islandDevicesBatteryStyle.value else viewModel.islandBatteryStyle.value
+    val setStyle: (String) -> Unit = if (devices) viewModel::setIslandDevicesBatteryStyle else viewModel::setIslandBatteryStyle
+    val styleLabel = if (currentStyle == SettingsRepository.ISLAND_BATTERY_STYLE_ICON) {
         stringResource(R.string.island_battery_style_icon)
     } else {
         stringResource(R.string.island_battery_style_ring)
@@ -92,14 +116,14 @@ fun IslandBatteryOptions(
                     text = { Text(stringResource(R.string.island_battery_style_ring)) },
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandBatteryStyle(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
+                        setStyle(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
                     },
                 )
                 SegmentedDropdownMenuItem(
                     text = { Text(stringResource(R.string.island_battery_style_icon)) },
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setIslandBatteryStyle(SettingsRepository.ISLAND_BATTERY_STYLE_ICON)
+                        setStyle(SettingsRepository.ISLAND_BATTERY_STYLE_ICON)
                     },
                 )
             }

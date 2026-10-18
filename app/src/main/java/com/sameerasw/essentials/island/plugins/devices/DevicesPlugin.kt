@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.BluetoothDeviceOrder
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
@@ -36,6 +37,7 @@ class DevicesPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_DEVICES,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
+        SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_STYLE,
         SettingsRepository.KEY_ISLAND_DEVICES_BATTERY_ORDER,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL,
@@ -55,6 +57,7 @@ class DevicesPlugin : BaseIslandPlugin() {
     private var event: DeviceEvent? = null
     private var batteryDevice: BatteryDevice? = null
     private var registered = false
+    private val pendingDisconnects = mutableMapOf<String, Runnable>()
     private val clearEvent = Runnable {
         event = null
         render()
@@ -65,8 +68,23 @@ class DevicesPlugin : BaseIslandPlugin() {
             val device = intent?.deviceExtra() ?: return
             ctx?.mainHandler?.postDelayed({ refreshBattery() }, BATTERY_SETTLE_MS)
             when (intent.action) {
-                BluetoothDevice.ACTION_ACL_CONNECTED -> announce(device, connected = true)
-                BluetoothDevice.ACTION_ACL_DISCONNECTED -> announce(device, connected = false)
+                BluetoothDevice.ACTION_ACL_CONNECTED -> {
+                    val pending = pendingDisconnects.remove(device.address)
+                    if (pending != null) {
+                        ctx?.mainHandler?.removeCallbacks(pending)
+                    } else {
+                        announce(device, connected = true)
+                    }
+                }
+                BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
+                    pendingDisconnects.remove(device.address)?.let { ctx?.mainHandler?.removeCallbacks(it) }
+                    val confirm = Runnable {
+                        pendingDisconnects.remove(device.address)
+                        announce(device, connected = false)
+                    }
+                    pendingDisconnects[device.address] = confirm
+                    ctx?.mainHandler?.postDelayed(confirm, DISCONNECT_SETTLE_MS)
+                }
                 ACTION_BATTERY_LEVEL_CHANGED -> {
                     val current = event ?: return
                     val level = intent.getIntExtra(EXTRA_BATTERY_LEVEL, -1)
@@ -93,6 +111,8 @@ class DevicesPlugin : BaseIslandPlugin() {
 
     override fun onStop() {
         ctx?.mainHandler?.removeCallbacks(clearEvent)
+        pendingDisconnects.values.forEach { ctx?.mainHandler?.removeCallbacks(it) }
+        pendingDisconnects.clear()
         event = null
         batteryDevice = null
         if (registered) {
@@ -112,8 +132,7 @@ class DevicesPlugin : BaseIslandPlugin() {
     @SuppressLint("MissingPermission")
     private fun refreshBattery() {
         if (ctx == null) return
-        val order = settings.getIslandDevicesBatteryOrder()
-        batteryDevice = if (order.isEmpty() || !settings.isIslandShowDevicesEnabled() || !hasPermission()) {
+        batteryDevice = if (!settings.isIslandShowDevicesEnabled() || !hasPermission()) {
             null
         } else {
             val bonded = try {
@@ -121,6 +140,7 @@ class DevicesPlugin : BaseIslandPlugin() {
             } catch (_: SecurityException) {
                 null
             }.orEmpty().associateBy { it.address }
+            val order = BluetoothDeviceOrder.visibleAddresses(context, bonded.keys.toList())
             val onlyLow = settings.isIslandDevicesBatteryOnlyLowEnabled()
             order.firstNotNullOfOrNull { address ->
                 val device = bonded[address] ?: return@firstNotNullOfOrNull null
@@ -131,6 +151,16 @@ class DevicesPlugin : BaseIslandPlugin() {
             }
         }
         render()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun visibleBondedAddresses(): List<String> {
+        val bonded = try {
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter?.bondedDevices
+        } catch (_: SecurityException) {
+            null
+        }.orEmpty().map { it.address }
+        return BluetoothDeviceOrder.visibleAddresses(context, bonded)
     }
 
     @SuppressLint("MissingPermission")
@@ -148,7 +178,7 @@ class DevicesPlugin : BaseIslandPlugin() {
     private fun announce(device: BluetoothDevice, connected: Boolean) {
         val c = ctx ?: return
         if (!settings.isIslandShowDevicesEnabled() || !settings.isIslandLineStageEnabled() || !hasPermission()) return
-        if (isComputer(device)) return
+        if (isComputer(device) || device.address !in visibleBondedAddresses()) return
         val name = nameOf(device)
         val battery = if (connected) batteryOf(device) else -1
         event = DeviceEvent(device.address, connected, name, iconFor(device, name), battery)
@@ -174,6 +204,9 @@ class DevicesPlugin : BaseIslandPlugin() {
         }
 
     private fun iconFor(device: BluetoothDevice, name: String): Int {
+        if (com.sameerasw.essentials.utils.BluetoothDeviceIcons.getOverrideId(context, device.address) != null) {
+            return com.sameerasw.essentials.utils.BluetoothDeviceIcons.resolve(context, device.address, name)
+        }
         val major = try {
             device.bluetoothClass?.majorDeviceClass
         } catch (_: SecurityException) {
@@ -196,7 +229,7 @@ class DevicesPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
-        val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
+        val iconStyle = settings.getIslandDevicesBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
         val items = mutableListOf<IslandItem>()
         batteryDevice?.let { d ->
             val color = levelColor(d.level)
@@ -281,6 +314,7 @@ class DevicesPlugin : BaseIslandPlugin() {
         const val ITEM_KEY = "devices"
         const val BATTERY_KEY = "devices.battery"
         private const val BATTERY_SETTLE_MS = 1500L
+        private const val DISCONNECT_SETTLE_MS = 2000L
         private const val ACTION_BATTERY_LEVEL_CHANGED = "android.bluetooth.device.action.BATTERY_LEVEL_CHANGED"
         private const val EXTRA_BATTERY_LEVEL = "android.bluetooth.device.extra.BATTERY_LEVEL"
     }

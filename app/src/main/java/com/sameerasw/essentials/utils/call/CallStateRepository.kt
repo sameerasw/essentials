@@ -26,6 +26,7 @@ data class CallSnapshot(
     val endIntent: PendingIntent? = null,
     val contentIntent: PendingIntent? = null,
     val fromTelephony: Boolean = false,
+    val extraActions: List<CallNotificationAction> = emptyList(),
 )
 
 
@@ -138,6 +139,7 @@ object CallStateRepository {
             endIntent = call.endIntent,
             contentIntent = call.contentIntent,
             fromTelephony = phone != null,
+            extraActions = call.extraActions,
         )
     }
 

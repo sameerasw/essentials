@@ -30,6 +30,34 @@ class ProviderTrustStore(private val settings: SettingsRepository) {
 
     fun disable(packageName: String) = save(trusted() - packageName)
 
+    fun hiddenFromIsland(): Set<String> = packages(SettingsRepository.KEY_ISLAND_PROVIDERS_HIDDEN)
+
+    fun isHiddenFromIsland(packageName: String): Boolean = packageName in hiddenFromIsland()
+
+    fun setHiddenFromIsland(packageName: String, hidden: Boolean) =
+        setPackage(SettingsRepository.KEY_ISLAND_PROVIDERS_HIDDEN, packageName, hidden)
+
+    fun launcherOnly(): Set<String> = packages(SettingsRepository.KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY)
+
+    fun setLauncherOnly(packageName: String, on: Boolean) =
+        setPackage(SettingsRepository.KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY, packageName, on)
+
+    fun hideWhenLocked(): Set<String> = packages(SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED)
+
+    fun setHideWhenLocked(packageName: String, on: Boolean) =
+        setPackage(SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED, packageName, on)
+
+    private fun packages(key: String): Set<String> =
+        settings.getString(key)
+            ?.let { runCatching { gson.fromJson<List<String>>(it, object : TypeToken<List<String>>() {}.type) }.getOrNull() }
+            .orEmpty()
+            .toSet()
+
+    private fun setPackage(key: String, packageName: String, on: Boolean) {
+        val next = if (on) packages(key) + packageName else packages(key) - packageName
+        settings.putString(key, next.takeIf { it.isNotEmpty() }?.let(gson::toJson))
+    }
+
     private fun save(map: Map<String, String>) =
         settings.putString(SettingsRepository.KEY_ISLAND_PROVIDERS, map.takeIf { it.isNotEmpty() }?.let(gson::toJson))
 

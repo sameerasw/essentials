@@ -60,6 +60,21 @@ object PermissionUtils {
         return enabledServices?.contains(serviceName) == true
     }
 
+    fun isShortcutSlotTakenBySplitScreenGesture(context: Context, slot: Int): Boolean {
+        val targets =
+            Settings.Secure.getString(context.contentResolver, "accessibility_gesture_targets")
+                ?.split(':')
+                .orEmpty()
+        val slotClass =
+            when (slot) {
+                1 -> com.sameerasw.essentials.services.AccessibilityShortcutService1::class.java
+                2 -> com.sameerasw.essentials.services.AccessibilityShortcutService2::class.java
+                else -> com.sameerasw.essentials.services.AccessibilityShortcutService3::class.java
+            }
+        val split = ComponentName(context, com.sameerasw.essentials.services.SplitScreenShortcutService::class.java).flattenToString()
+        return split in targets && ComponentName(context, slotClass).flattenToString() in targets
+    }
+
     /**
      * Executes the can write secure settings operation.
      *

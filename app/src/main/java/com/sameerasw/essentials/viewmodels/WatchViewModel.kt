@@ -47,6 +47,7 @@ class WatchViewModel : ViewModel() {
                 val detected = nodes.isNotEmpty()
                 isWatchDetected.value = detected
                 connectedWatchName.value = nodes.firstOrNull()?.displayName
+                prefs.edit().putString("watch_node_name", connectedWatchName.value.orEmpty()).apply()
 
                 // Wear app version is lower than required (or not yet reported)
                 isWearUpdateRequired.value =

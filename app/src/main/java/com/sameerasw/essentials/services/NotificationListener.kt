@@ -47,6 +47,8 @@ import com.sameerasw.essentials.domain.model.DashConfig
 import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.NavigationNotificationData
+import com.sameerasw.essentials.domain.model.NavigationParser
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.domain.model.RippleConfig
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
@@ -68,6 +70,10 @@ class NotificationListener : NotificationListenerService() {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
     }
 
+    interface NavigationNotificationListener {
+        fun onNavigationNotificationUpdated(data: NavigationNotificationData?)
+    }
+
     interface NotificationAlertListener {
         fun onNotificationAlertPosted(alert: ActiveNotificationAlert)
         fun onNotificationAlertRemoved(key: String)
@@ -75,6 +81,7 @@ class NotificationListener : NotificationListenerService() {
 
     companion object {
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
+        private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
 
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
@@ -87,6 +94,25 @@ class NotificationListener : NotificationListenerService() {
 
         private val progressListeners = mutableListOf<ProgressNotificationListener>()
         private val alertListeners = mutableListOf<NotificationAlertListener>()
+        private val navigationListeners = mutableListOf<NavigationNotificationListener>()
+
+        fun addNavigationNotificationListener(listener: NavigationNotificationListener) {
+            synchronized(navigationListeners) {
+                if (!navigationListeners.contains(listener)) navigationListeners.add(listener)
+            }
+        }
+
+        fun removeNavigationNotificationListener(listener: NavigationNotificationListener) {
+            synchronized(navigationListeners) { navigationListeners.remove(listener) }
+        }
+
+        fun notifyNavigationListeners(data: NavigationNotificationData?) {
+            val listenersCopy = synchronized(navigationListeners) { navigationListeners.toList() }
+            listenersCopy.forEach { it.onNavigationNotificationUpdated(data) }
+        }
+
+        fun getLatestNavigationNotification(): NavigationNotificationData? =
+            instance?.extractLatestNavigationNotification()
 
         fun addNotificationAlertListener(listener: NotificationAlertListener) {
             synchronized(alertListeners) {
@@ -264,6 +290,20 @@ class NotificationListener : NotificationListenerService() {
         } catch (_: Exception) {
         }
         return false
+    }
+
+    // Do Not Disturb holds this notification back or suppresses its peek; apps and conversations allowed through still pass.
+    fun isBlockedByDnd(
+        sbn: StatusBarNotification,
+        rankingMap: RankingMap? = null,
+    ): Boolean {
+        val map = rankingMap ?: currentRanking ?: return false
+        val ranking = Ranking()
+        if (!map.getRanking(sbn.key, ranking)) return false
+        val peekSuppressed =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                ranking.suppressedVisualEffects and NotificationManager.Policy.SUPPRESSED_EFFECT_PEEK != 0
+        return !ranking.matchesInterruptionFilter() || peekSuppressed
     }
 
     private fun populateActiveUnreadNotifications() {
@@ -1007,14 +1047,20 @@ class NotificationListener : NotificationListenerService() {
         val extras = sbn.notification.extras
         if (extras != null && (extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0) > 0 || extras.containsKey(Notification.EXTRA_PROGRESS_INDETERMINATE))) {
             scheduleProgressRefresh()
+        } else if (sbn.isOngoing && isNavigationNotification(sbn)) {
+            scheduleProgressRefresh()
         } else if (HilightProgressTracker.isTracking(sbn.key)) {
             // Its progress bar was replaced, e.g. by "Download complete"
             scheduleProgressRefresh()
         }
 
         if (!isRepost && isHeadsUpNotification(sbn, rankingMap, allowSilent = true)) {
-            val alert = extractNotificationAlert(sbn)?.copy(isSilent = isSilentNotification(sbn, rankingMap))
-            if (alert != null) {
+            val alert = extractNotificationAlert(sbn)?.copy(
+                isSilent = isSilentNotification(sbn, rankingMap),
+                blockedByDnd = isBlockedByDnd(sbn, rankingMap),
+            )
+            val callHidden = CallNotificationParser.isCall(sbn) && !SettingsRepository(applicationContext).isIslandShowCallsEnabled()
+            if (alert != null && !callHidden) {
                 notifyAlertPosted(alert)
             }
         }
@@ -1851,6 +1897,14 @@ class NotificationListener : NotificationListenerService() {
     private val progressRefreshRunnable =
         Runnable {
             progressExecutor.execute {
+                val navigation =
+                    try {
+                        extractLatestNavigationNotification()
+                    } catch (e: Exception) {
+                        Log.e("NotificationListener", "Failed to extract navigation notification", e)
+                        null
+                    }
+                progressHandler.post { notifyNavigationListeners(navigation) }
                 val data =
                     try {
                         extractLatestProgressNotification()
@@ -1890,9 +1944,62 @@ class NotificationListener : NotificationListenerService() {
         val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
         val progressNotifs = active.mapNotNull { sbn ->
             if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
+            if (islandShowsNavigation && sbn.isOngoing && isNavigationNotification(sbn)) return@mapNotNull null
             extractProgressNotification(sbn)
         }
         return progressNotifs.maxByOrNull { it.postTime }
+    }
+
+    private val islandShowsNavigation: Boolean
+        get() = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE).let {
+            it.getBoolean(SettingsRepository.KEY_ISLAND_ENABLED, false) &&
+                it.getBoolean(SettingsRepository.KEY_ISLAND_SHOW_NAVIGATION, true)
+        }
+
+    @Volatile
+    private var navigationManeuverCache: Triple<String, Long, Bitmap?>? = null
+
+    fun extractLatestNavigationNotification(): NavigationNotificationData? {
+        val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
+        return active
+            .filter { it.packageName != packageName && it.isOngoing && isNavigationNotification(it) }
+            .mapNotNull { extractNavigationNotification(it) }
+            .maxByOrNull { it.postTime }
+    }
+
+    private fun extractNavigationNotification(sbn: StatusBarNotification): NavigationNotificationData? {
+        val notif = sbn.notification ?: return null
+        val extras = notif.extras ?: return null
+        val parsed = NavigationParser.parse(
+            title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
+            text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString(),
+            chip = extras.getCharSequence(EXTRA_SHORT_CRITICAL_TEXT)?.toString(),
+        )
+        val postTime = if (sbn.postTime > 0) sbn.postTime else notif.`when`
+        val cached = navigationManeuverCache
+        val maneuver = if (cached != null && cached.first == sbn.key && cached.second == postTime) {
+            cached.third
+        } else {
+            try {
+                notif.getLargeIcon()?.loadDrawable(this)?.let { AppUtil.drawableToBitmap(it) }
+            } catch (_: Exception) {
+                null
+            }.also { navigationManeuverCache = Triple(sbn.key, postTime, it) }
+        }
+        val actions = notif.actions.orEmpty()
+        val exit = NavigationParser.exitActionIndex(actions.map { it.title?.toString() })
+        return NavigationNotificationData(
+            key = sbn.key,
+            packageName = sbn.packageName,
+            instruction = parsed.instruction,
+            distance = parsed.distance,
+            eta = parsed.eta,
+            maneuver = maneuver,
+            contentIntent = notif.contentIntent,
+            exitIntent = actions.getOrNull(exit)?.actionIntent,
+            postTime = postTime,
+        )
     }
 
     fun isHeadsUpNotification(
@@ -2139,7 +2246,7 @@ class NotificationListener : NotificationListenerService() {
         if (actions != null) {
             for (action in actions) {
                 val actionTitle = action.title?.toString()
-                if (!actionTitle.isNullOrBlank()) {
+                if (!actionTitle.isNullOrBlank() && action.actionIntent != null) {
                     val remoteInputs = action.remoteInputs
                     val hasReply = !remoteInputs.isNullOrEmpty()
                     actionList.add(
@@ -2186,6 +2293,15 @@ class NotificationListener : NotificationListenerService() {
         }
     }
 
+    private fun backgroundStartOptions(): Bundle? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            android.app.ActivityOptions.makeBasic().apply {
+                pendingIntentBackgroundActivityStartMode = android.app.ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+            }.toBundle()
+        } else {
+            null
+        }
+
     fun performNotificationAction(
         actionItem: NotificationActionItem,
         replyText: String? = null
@@ -2201,11 +2317,15 @@ class NotificationListener : NotificationListenerService() {
                         results.putCharSequence(ri.resultKey, replyText)
                     }
                     android.app.RemoteInput.addResultsToIntent(remoteInputs, intent, results)
-                    pendingIntent.send(this, 0, intent)
+                    pendingIntent.send(this, 0, intent, null, null, null, backgroundStartOptions())
                     return true
                 }
             }
-            pendingIntent.send()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                pendingIntent.send(this, 0, null, null, null, null, backgroundStartOptions())
+            } else {
+                pendingIntent.send()
+            }
             true
         } catch (e: Exception) {
             Log.e("NotificationListener", "Error performing notification action: ${e.message}")

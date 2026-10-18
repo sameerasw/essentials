@@ -44,7 +44,10 @@ import kotlinx.coroutines.launch
 class CaffeinatePlugin : BaseIslandPlugin() {
     override val id = "caffeinate"
 
-    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_CAFFEINATE)
+    override val settingKeys = setOf(
+        SettingsRepository.KEY_ISLAND_SHOW_CAFFEINATE,
+        SettingsRepository.KEY_ISLAND_CAFFEINATE_SHOW_TIME,
+    )
 
     private var observer: Job? = null
     private var ticker: Job? = null
@@ -94,7 +97,7 @@ class CaffeinatePlugin : BaseIslandPlugin() {
     }
 
     private fun presetLabel(minutes: Int): String =
-        if (minutes == -1) context.getString(R.string.caffeinate_timeout_infinity) else if (minutes >= 60) "${minutes / 60}h" else "${minutes}m"
+        if (minutes == -1) "" else if (minutes >= 60) "${minutes / 60}h" else "${minutes}m"
 
     private fun render() {
         if (ctx == null || !settings.isIslandShowCaffeinateEnabled()) {
@@ -112,9 +115,10 @@ class CaffeinatePlugin : BaseIslandPlugin() {
         val remaining = if (end > 0L) end - System.currentTimeMillis() else 0L
         val value = when {
             starting -> presetLabel(CaffeinateController.selectedTimeout.value)
-            end <= 0L -> context.getString(R.string.caffeinate_timeout_infinity)
+            end <= 0L -> ""
             else -> format(remaining)
         }
+        val showTime = value.isNotEmpty() && settings.isIslandCaffeinateShowTimeEnabled()
         val subtitle = when {
             starting -> context.getString(R.string.caffeinate_starting_in, CaffeinateController.startingTimeLeft.value)
             end <= 0L -> context.getString(R.string.caffeinate_notification_desc)
@@ -127,9 +131,9 @@ class CaffeinatePlugin : BaseIslandPlugin() {
                 key = ITEM_KEY,
                 priority = IslandPriority.CAFFEINATE,
                 placement = CompactPlacement.Dynamic,
-                compact = listOf(
+                compact = listOfNotNull(
                     CompactCell("caffeinate.icon") { IslandIcon(R.drawable.rounded_coffee_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
-                    CompactCell("caffeinate.time") { RollingText(value) },
+                    if (showTime) CompactCell("caffeinate.time") { RollingText(value) } else null,
                 ),
                 line = LineContent(
                     icon = { IslandIcon(R.drawable.rounded_coffee_24, tint = MaterialTheme.colorScheme.primary) },
@@ -177,7 +181,7 @@ class CaffeinatePlugin : BaseIslandPlugin() {
                         IslandIcon(R.drawable.rounded_coffee_24, size = 20.dp, tint = accent)
                         MarqueeText(text = title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
-                    end = { RollingText(value) },
+                    end = { if (value.isNotEmpty()) RollingText(value) },
                 )
                 Spacer(Modifier.height(4.dp))
                 MarqueeText(

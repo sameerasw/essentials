@@ -113,6 +113,7 @@ class ProviderConnection(
                     stub.attach(host, hostInfo().toBundle())
                 } catch (_: Exception) {
                 }
+                sessions.values.forEach { it.onProviderReady() }
             }
         }
 
@@ -192,7 +193,7 @@ class ProviderConnection(
 
     private fun clear() {
         provider = null
-        sessions.clear()
+        sessions.values.forEach { it.onProviderLost() }
         scopes.clear()
         heights.clear()
         snapshots.clear()
@@ -229,6 +230,7 @@ class ProviderConnection(
     }
 
     private fun handleRequest(rawKey: String, type: String, args: Bundle) {
+        sessions[rawKey]?.markHandled()
         val key = namespaced(rawKey)
         when (type) {
             HostRequestType.PEEK -> {
@@ -294,7 +296,13 @@ class ProviderConnection(
 
     override fun surfaceSession(rawKey: String): RemoteSurfaceSession? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
-        return sessions.getOrPut(rawKey) { RemoteSurfaceSession({ provider }, rawKey) }
+        return sessions.getOrPut(rawKey) {
+            RemoteSurfaceSession({ provider }, rawKey) {
+                openApp()
+                request(PluginRequest.Collapse(namespaced(rawKey)))
+                request(PluginRequest.Collapse(BriefPlugin.ITEM_KEY))
+            }
+        }
     }
 
     override fun onLayout(spec: IslandLayoutSpec, density: Float, accent: Color) {

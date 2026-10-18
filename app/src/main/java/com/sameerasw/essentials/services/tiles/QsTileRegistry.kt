@@ -125,6 +125,10 @@ object QsTileRegistry {
                 ColorPickerTileService::class.java,
             ),
             QsTileEntry(
+                R.drawable.rounded_home_24,
+                DefaultLauncherTileService::class.java,
+            ),
+            QsTileEntry(
                 R.drawable.rounded_mobile_code_24,
                 DeveloperOptionsTileService::class.java,
             ),

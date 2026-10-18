@@ -315,6 +315,7 @@ fun GenAIFloatingPill(
                                             "LikeCurrentSong" -> R.drawable.rounded_favorite_24
                                             "CircleToSearch" -> R.drawable.rounded_search_24
                                             "PinApp" -> R.drawable.rounded_shield_lock_24
+                                            "SplitScreen" -> R.drawable.rounded_splitscreen_24
                                             else -> R.drawable.rounded_play_arrow_24
                                         }
 

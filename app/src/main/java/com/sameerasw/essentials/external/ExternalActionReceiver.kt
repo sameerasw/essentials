@@ -26,21 +26,28 @@ class ExternalActionReceiver : BroadcastReceiver() {
         context: Context,
         intent: Intent,
     ) {
-        if (intent.action != ACTION_EXTERNAL_CONTROL) return
+        handleExternalControlIntent(context, intent)
+    }
+}
 
-        val path = intent.getStringExtra(EXTRA_PATH) ?: return
-        val action = intent.getStringExtra(EXTRA_ACTION)
-        val value = intent.getStringExtra(EXTRA_VALUE)
+fun handleExternalControlIntent(
+    context: Context,
+    intent: Intent,
+) {
+    if (intent.action != ExternalActionReceiver.ACTION_EXTERNAL_CONTROL) return
 
-        Log.d(
-            "ExternalActionReceiver",
-            "Received external control request: path=$path, action=$action, value=$value",
-        )
+    val path = intent.getStringExtra(ExternalActionReceiver.EXTRA_PATH) ?: return
+    val action = intent.getStringExtra(ExternalActionReceiver.EXTRA_ACTION)
+    val value = intent.getStringExtra(ExternalActionReceiver.EXTRA_VALUE)
 
-        if (action == "update") {
-            ExternalRouter.update(context, path, value, intent.extras)
-        } else if (action != null) {
-            ExternalRouter.action(context, path, action, intent.extras)
-        }
+    Log.d(
+        "ExternalActionReceiver",
+        "Received external control request: path=$path, action=$action, value=$value",
+    )
+
+    if (action == "update") {
+        ExternalRouter.update(context, path, value, intent.extras)
+    } else if (action != null) {
+        ExternalRouter.action(context, path, action, intent.extras)
     }
 }

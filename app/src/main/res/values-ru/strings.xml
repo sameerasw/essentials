@@ -218,7 +218,7 @@
     <string name="tile_sensitive_content">Чувствительный контент</string>
     <string name="tile_tap_to_wake">Нажать для пробуждения</string>
     <string name="tile_aod">AOD</string>
-    <string name="tile_caffeinate">Caffeinate</string>
+    <string name="tile_caffeinate">Кофеин</string>
     <string name="tile_sound_mode">Режим звука</string>
     <string name="tile_notification_lighting">Подсветка уведомлений</string>
     <string name="tile_dynamic_night_light">Динамический ночной свет</string>
@@ -391,7 +391,7 @@
     <string name="feat_screen_off_widget_desc">Невидимый виджет для выключения экрана</string>
     <string name="feat_statusbar_icons_title">Значки в строке состояния</string>
     <string name="feat_statusbar_icons_desc">Управление видимостью значков в строке состояния</string>
-    <string name="feat_caffeinate_title">Режим \"Caffeinate\"</string>
+    <string name="feat_caffeinate_title">Режим \"Кофеина\"</string>
     <string name="feat_caffeinate_desc">Отключает затухание экрана</string>
     <string name="feat_maps_power_saving_title">Режим энергосбережения для карт</string>
     <string name="feat_maps_power_saving_desc">Для любого Android-устройства</string>
@@ -615,7 +615,7 @@
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Заморозка</string>
     <string name="tab_freeze_title">Заморожено</string>
-    <string name="tab_diy">DIY</string>
+    <string name="tab_diy">Сделай сам</string>
     <string name="tab_apps">Приложения</string>
     <string name="tab_freeze_subtitle">Отключенные приложения</string>
     <string name="tab_diy_subtitle">Сделай это сам</string>
@@ -720,7 +720,9 @@
     <string name="about_desc_notification_lighting">Подсветка уведомлений добавляет красивый эффект боковой подсветки при получении уведомлений.\n\nВы можете настроить стиль, цвета и поведение анимации. Он работает, даже когда экран выключен (зависит от OEM) или находится поверх текущего приложения. Выберите приложения, приоритет уведомлений или поведение, при котором оно должно запускаться, с помощью заданных элементов управления. Если ваш OEM-производитель не поддерживает наложения выше AOD, подайте в суд на опцию Ambient display, указанную ниже.</string>
     <string name="about_desc_screen_off_widget">Легко выключите экран, коснувшись прозрачного виджета с изменяемым размером, который не добавляет значков или беспорядка на главный экран.</string>
     <string name="about_desc_statusbar_icons">Получите полный контроль над значками строки состояния.\n\nСкрывайте определенные значки, например Wi-Fi, Bluetooth или данные сотовой связи, чтобы строка состояния оставалась чистой. Вы также можете настроить формат часов и индикатор заряда батареи с помощью интеллектуальных элементов управления. Это список доступных элементов управления AOSP, поэтому ОС вашего устройства может не поддерживать все элементы управления.</string>
-    <string name="about_desc_caffeinate">Caffeinate предотвращает автоматическое выключение экрана.\n\nНе допускайте отключения экрана в течение определенного времени или на неопределенный срок. Полезно при чтении длинных статей или ссылок на рецепты.</string>
+    <string name="about_desc_caffeinate">Режим \"Кофеина\" предотвращает автоматическое выключение экрана.
+
+Не допускайте отключения экрана в течение определенного времени или на неопределенный срок. Полезно при чтении длинных статей или ссылок на рецепты.</string>
     <string name="about_desc_maps_power_saving">Получите эксклюзивный режим энергосбережения Google Maps для серии Pixel 10 с минимальным черным фоном для отображения на экране блокировки на любом устройстве Android. Запустите сеанс навигации, выключите и снова включите экран.</string>
     <string name="about_desc_flashlight_pulse">Включите мигание фонарика при получении уведомления.\n\nЕсли устройства имеют аппаратную поддержку затемнения фонарика, мигание будет плавно анимироваться.</string>
     <string name="about_desc_snooze_notifications">Отложите постоянные раздражающие системные уведомления, которые по умолчанию нельзя отключить. \n\nПодождите, пока не придет уведомление, а затем перейдите к этой функции, где будет указан канал уведомлений. Выберите этот канал, чтобы отложить уведомление в следующий раз.\n\nЛюбое отложенное уведомление по-прежнему можно просмотреть в истории уведомлений в Android.</string>
@@ -1577,7 +1579,7 @@
     <string name="feat_transparent_navigation_bar_title">Прозрачная панель навигации</string>
     <string name="feat_transparent_navigation_bar_desc">Сделать фон системной панели навигации прозрачным</string>
     <string name="setting_app_icon_title">Иконка приложения</string>
-    <string name="setting_app_icon_desc">Выберите иконку, которая будет отображатся на домашне экране</string>
+    <string name="setting_app_icon_desc">Выберите иконку, которая будет отображатся на домашнем экране</string>
     <string name="label_motion_blur">Размытие при скролле</string>
     <string name="label_device_battery">Батарея</string>
     <string name="label_online_help_media">Онлайн-справка Медиа</string>
@@ -1753,7 +1755,7 @@
     <string name="island_expanded_timeout_title">Тайм-аут раскрытости</string>
     <string name="island_expanded_timeout_desc">Длительность после второго всё сворачиваться в капсулу (от 0 до бесконечности)</string>
     <string name="feat_conscious_gate_desc">Пауза перед открыванием выбранных приложений</string>
-    <string name="haptic_mode_stronger">Повышенная</string>
+    <string name="haptic_mode_stronger">Повышенный</string>
     <string name="island_section_notifications">Уведомления</string>
     <string name="island_show_network_title">Сетевая активность</string>
     <string name="island_section_placement">Расположение</string>
@@ -1828,6 +1830,31 @@
     <string name="face_unlock_light_tint_title">Светлый оттенок </string>
     <string name="face_unlock_trigger_unlock_title">Реакция на разблокировку</string>
     <string name="island_hide_live_updates_title">Скрыыать live updates Динамично</string>
-    <string name="feat_activity_launcher_title">Запускаешь Activity</string>
+    <string name="feat_activity_launcher_title">Запуск Activity</string>
     <string name="feat_activity_launcher_desc">Откройте или закрепите любой экран приложения</string>
+    <string name="feat_back_gesture_title">Движение назад</string>
+    <string name="feat_screenshot_share_cleanup_title">Удалять отправленные скриншоты</string>
+    <string name="feat_screenshot_share_cleanup_desc">Удалять скриншоты после отправки</string>
+    <string name="watch_esim_install_title">Установка eSIM</string>
+    <string name="watch_esim_install_desc">Даже в неподдерживаемых регионах</string>
+    <string name="watchface_glance_comp_battery_alerts_title">Предупреждение о низком заряде</string>
+    <string name="watchface_glance_comp_battery_alerts_desc">Показ оповещения, когда батарея часов или телефона ниже 20% </string>
+    <string name="watchface_glance_comp_alarm_title">Следующий будильник</string>
+    <string name="watchface_glance_comp_alarm_desc">Покажите предстоящее время будильника, когда нет событий </string>
+    <string name="watchface_glance_comp_events_desc">Покажите предстоящие сегодняшние встречи </string>
+    <string name="watchface_glance_comp_travel_title">Мы здесь (Travel ETA) </string>
+    <string name="watchface_glance_comp_travel_desc">Показать оставшееся время / расстояние до пункта назначения </string>
+    <string name="feat_lockscreen_shortcuts_title">Ярлыки экрана блокировки </string>
+    <string name="feat_lockscreen_shortcuts_desc">Запустите свои собственные действия с экрана блокировки </string>
+    <string name="feat_navigation_desc">Бар жестов, навигационные жесты и настройки панели навигации </string>
+    <string name="feat_hilight_desc">Подсветите задние светодиоды для уведомлений и живого прогресса </string>
+    <string name="widget_stack_interval_seconds">Уведомлять о новых уведомлениях</string>
+    <string name="setting_hidden_debugging_title">Скрыть поддержку отладки </string>
+    <string name="label_battery_current_avg">Средний ток </string>
+    <string name="tile_default_launcher">Лаунчер по умолчанию</string>
+    <string name="about_desc_duo_tile">Включите или выключите кольцо камеры Duo. </string>
+    <string name="action_lock_auto_freeze">Никогда не замораживается </string>
+    <string name="freeze_tag_never_auto_freeze_desc">Приложения в этой метке будут заблокированы от автоматического замораживания </string>
+    <string name="freeze_tag_color_coded_title">Тег цветовая кодировка</string>
+    <string name="freeze_tag_color_coded_desc">Показать цвета тегов в сетке приложения </string>
 </resources>

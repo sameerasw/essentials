@@ -14,6 +14,7 @@ import android.accessibilityservice.AccessibilityService
 import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.services.automation.AutomationManager
+import com.sameerasw.essentials.utils.SplitScreenUtil
 
 abstract class BaseAccessibilityShortcutService(private val slot: Int) : AccessibilityService() {
 
@@ -27,7 +28,7 @@ abstract class BaseAccessibilityShortcutService(private val slot: Int) : Accessi
             buttonCallback =
                 object : AccessibilityButtonController.AccessibilityButtonCallback() {
                     override fun onClicked(controller: AccessibilityButtonController) {
-                        AutomationManager.triggerAccessibilityShortcut(this@BaseAccessibilityShortcutService, slot)
+                        onShortcutClicked()
                     }
 
                     override fun onAvailabilityChanged(
@@ -38,6 +39,10 @@ abstract class BaseAccessibilityShortcutService(private val slot: Int) : Accessi
                 }
             accessibilityButtonController?.registerAccessibilityButtonCallback(buttonCallback!!)
         }
+    }
+
+    protected open fun onShortcutClicked() {
+        AutomationManager.triggerAccessibilityShortcut(this, slot)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -57,4 +62,10 @@ abstract class BaseAccessibilityShortcutService(private val slot: Int) : Accessi
 class AccessibilityShortcutService1 : BaseAccessibilityShortcutService(1)
 class AccessibilityShortcutService2 : BaseAccessibilityShortcutService(2)
 class AccessibilityShortcutService3 : BaseAccessibilityShortcutService(3)
+
+class SplitScreenShortcutService : BaseAccessibilityShortcutService(0) {
+    override fun onShortcutClicked() {
+        Thread { SplitScreenUtil.toggle(this) }.start()
+    }
+}
 

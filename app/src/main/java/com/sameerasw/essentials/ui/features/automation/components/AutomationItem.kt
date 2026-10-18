@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components.diy
 
+import android.text.format.DateFormat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -54,15 +55,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.domain.diy.State as DIYState
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import java.text.DateFormatSymbols
+import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -227,10 +234,14 @@ fun AutomationItem(
                     val titleString =
                         when (automation.type) {
                             Automation.Type.TRIGGER ->
-                                automation.trigger?.title?.let {
-                                    stringResource(
-                                        it,
-                                    )
+                                when (val trigger = automation.trigger) {
+                                    is Trigger.ArriveAtLocation ->
+                                        trigger.placeName.takeIf { it.isNotBlank() }?.let { stringResource(R.string.diy_trigger_arrive_location_named, it) }
+                                            ?: stringResource(trigger.title)
+                                    is Trigger.LeaveLocation ->
+                                        trigger.placeName.takeIf { it.isNotBlank() }?.let { stringResource(R.string.diy_trigger_leave_location_named, it) }
+                                            ?: stringResource(trigger.title)
+                                    else -> trigger?.title?.let { stringResource(it) }
                                 }
 
                             Automation.Type.ACTION_SHORTCUT -> stringResource(R.string.diy_create_action_shortcut_title)
@@ -276,14 +287,25 @@ fun AutomationItem(
                                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
-                                Text(
-                                    text = titleString,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    fontWeight = FontWeight.SemiBold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
+                                Column {
+                                    Text(
+                                        text = titleString,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                    automationSummary(automation)?.let { summary ->
+                                        Text(
+                                            text = summary,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
+                                            maxLines = 2,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -386,6 +408,83 @@ fun AutomationItem(
     }
 }
 
+// Short description of the configured trigger/state values, so users don't have to open the editor to recall them
+@Composable
+private fun automationSummary(automation: Automation): String? {
+    val context = LocalContext.current
+    val everyDay = stringResource(R.string.diy_summary_every_day)
+    val allCalendars = stringResource(R.string.diy_summary_all_calendars)
+
+    fun time(
+        hour: Int,
+        minute: Int,
+    ): String {
+        val calendar =
+            Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+            }
+        return DateFormat.getTimeFormat(context).format(calendar.time)
+    }
+
+    fun days(days: Set<Int>): String {
+        if (days.isEmpty() || days.size == 7) return everyDay
+        val firstDay = Calendar.getInstance().firstDayOfWeek
+        val names = DateFormatSymbols.getInstance().shortWeekdays
+        return (0 until 7)
+            .map { (firstDay - 1 + it) % 7 + 1 }
+            .filter { it in days }
+            .joinToString(", ") { names[it] }
+    }
+
+    return when (automation.type) {
+        Automation.Type.TRIGGER ->
+            when (val trigger = automation.trigger) {
+                is Trigger.Schedule -> "${time(trigger.hour, trigger.minute)} · ${days(trigger.days)}"
+                is Trigger.BluetoothConnected -> trigger.deviceName.ifBlank { null }
+                is Trigger.BluetoothDisconnected -> trigger.deviceName.ifBlank { null }
+                is Trigger.WifiConnected -> trigger.ssid.ifBlank { null }
+                is Trigger.WifiDisconnected -> trigger.ssid.ifBlank { null }
+                is Trigger.NotificationReceived ->
+                    listOfNotNull(
+                        trigger.appName.ifBlank { null },
+                        trigger.textContains.ifBlank { null }?.let { "\"$it\"" },
+                    ).joinToString(" · ").ifBlank { null }
+                else -> null
+            }
+
+        Automation.Type.STATE ->
+            when (val state = automation.state) {
+                is DIYState.TimePeriod ->
+                    "${time(state.startHour, state.startMinute)} – ${time(state.endHour, state.endMinute)} · ${days(state.days)}"
+                is DIYState.BatteryLevel -> "${state.minLevel}% – ${state.maxLevel}%"
+                is DIYState.CalendarEvent ->
+                    if (state.calendarIds.isEmpty()) {
+                        allCalendars
+                    } else {
+                        stringResource(R.string.diy_summary_calendars_count, state.calendarIds.size)
+                    }
+                else -> null
+            }
+
+        Automation.Type.APP ->
+            remember(automation.selectedApps) {
+                val pm = context.packageManager
+                automation.selectedApps
+                    .map { packageName ->
+                        try {
+                            pm.getApplicationInfo(packageName, 0).loadLabel(pm).toString()
+                        } catch (e: Exception) {
+                            packageName
+                        }
+                    }.joinToString(", ")
+                    .ifBlank { null }
+            }
+
+        else -> null
+    }
+}
+
 @Composable
 fun ActionItem(
     action: Action?,
@@ -458,6 +557,69 @@ fun ActionItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+        }
+    }
+}
+
+@Preview(name = "Automation summaries", showBackground = true, heightDp = 1400)
+@Composable
+private fun AutomationItemSummariesPreview() {
+    val weekdays = setOf(Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY)
+    val actions = listOf(Action.ToggleFlashlight)
+    val samples =
+        listOf(
+            Automation("1", Automation.Type.TRIGGER, trigger = Trigger.Schedule(hour = 7, minute = 30, days = weekdays), actions = actions),
+            Automation("2", Automation.Type.TRIGGER, trigger = Trigger.Schedule(hour = 22, minute = 0), actions = actions),
+            Automation("3", Automation.Type.TRIGGER, trigger = Trigger.BluetoothConnected("00:11:22:33:44:55", "Pixel Buds Pro"), actions = actions),
+            Automation("4", Automation.Type.TRIGGER, trigger = Trigger.BluetoothDisconnected("AA:BB:CC:DD:EE:FF", ""), actions = actions),
+            Automation("13", Automation.Type.TRIGGER, trigger = Trigger.NotificationReceived(packageName = "com.example.chat", appName = "Messages", textContains = "code"), actions = actions),
+            Automation("5", Automation.Type.TRIGGER, trigger = Trigger.WifiConnected("Home Wi-Fi"), actions = actions),
+            Automation("6", Automation.Type.TRIGGER, trigger = Trigger.WifiDisconnected("Office"), actions = actions),
+            Automation(
+                "7",
+                Automation.Type.STATE,
+                state = DIYState.TimePeriod(startHour = 22, startMinute = 0, endHour = 7, endMinute = 0, days = setOf(Calendar.SATURDAY, Calendar.SUNDAY)),
+                entryActions = listOf(Action.TurnOnLowPower),
+                exitActions = listOf(Action.TurnOffLowPower),
+            ),
+            Automation(
+                "8",
+                Automation.Type.STATE,
+                state = DIYState.BatteryLevel(minLevel = 0, maxLevel = 20),
+                entryActions = listOf(Action.TurnOnLowPower),
+                exitActions = listOf(Action.TurnOffLowPower),
+            ),
+            Automation(
+                "9",
+                Automation.Type.STATE,
+                state = DIYState.CalendarEvent(),
+                entryActions = listOf(Action.ToggleDoNotDisturb),
+                exitActions = listOf(Action.ToggleDoNotDisturb),
+            ),
+            Automation(
+                "10",
+                Automation.Type.STATE,
+                state = DIYState.CalendarEvent(calendarIds = setOf(1L, 2L, 3L)),
+                entryActions = listOf(Action.ToggleDoNotDisturb),
+                exitActions = listOf(Action.ToggleDoNotDisturb),
+            ),
+            Automation(
+                "11",
+                Automation.Type.APP,
+                selectedApps = listOf("com.google.android.apps.maps", "com.spotify.music"),
+                entryActions = listOf(Action.TurnOnLowPower),
+                exitActions = listOf(Action.TurnOffLowPower),
+            ),
+            // No configurable values, or no name to show, so no summary line
+            Automation("12", Automation.Type.TRIGGER, trigger = Trigger.ChargerConnected, actions = actions),
+        )
+
+    EssentialsTheme(dynamicColor = false) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            samples.forEach { AutomationItem(automation = it) }
         }
     }
 }

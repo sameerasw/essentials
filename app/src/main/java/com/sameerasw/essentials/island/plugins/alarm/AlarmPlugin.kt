@@ -30,6 +30,7 @@ class AlarmPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_SHOW_ALARM,
         SettingsRepository.KEY_ISLAND_ALARM_WINDOW_HOURS,
+        SettingsRepository.KEY_ISLAND_ALARM_HIDE_TIME,
     )
 
     private var registered = false
@@ -93,19 +94,20 @@ class AlarmPlugin : BaseIslandPlugin() {
         c.mainHandler.postDelayed(recheck, info.triggerTime - now + 60_000L)
         val shortTime = NextAlarm.format(context, info.triggerTime, withPeriod = false)
         val fullTime = NextAlarm.format(context, info.triggerTime, withPeriod = true)
+        val hideTime = settings.getBoolean(SettingsRepository.KEY_ISLAND_ALARM_HIDE_TIME, false)
         publish(
             IslandItem(
                 key = ITEM_KEY,
                 priority = IslandPriority.ALARM,
                 placement = CompactPlacement.Dynamic,
-                compact = listOf(
-                    CompactCell("alarm.icon") { IslandIcon(R.drawable.rounded_alarm_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
-                    CompactCell("alarm.time") { Text(shortTime, style = IslandTextStyles.compact) },
-                ),
+                compact = buildList {
+                    add(CompactCell("alarm.icon") { IslandIcon(R.drawable.rounded_alarm_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) })
+                    if (!hideTime) add(CompactCell("alarm.time") { Text(shortTime, style = IslandTextStyles.compact) })
+                },
                 line = LineContent(
                     icon = { IslandIcon(R.drawable.rounded_alarm_24, tint = MaterialTheme.colorScheme.primary) },
                     start = context.getString(R.string.island_show_alarm_title),
-                    end = fullTime,
+                    end = if (hideTime) "" else fullTime,
                 ),
                 onOpen = { sendPendingIntent(context, info.showIntent) },
             ),

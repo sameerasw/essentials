@@ -21,8 +21,9 @@ object IslandPriority {
     const val CALENDAR_OVERRIDE = 6
 
     const val NOTIFICATION = 10
-    const val PROGRESS = 15
+        const val PROGRESS = 15
     const val FLASHLIGHT = 20
+    const val NAVIGATION = 22
     const val TIMER = 25
     const val MEDIA = 30
     const val CONSCIOUS_GATE = 40
@@ -32,6 +33,7 @@ object IslandPriority {
     const val SOUND_MODE = 55
     const val SIGNAL = 57
     const val NETWORK = 60
+    const val HOTSPOT = 61
     const val DEVICES = 62
     const val ALARM = 90
     const val DEFAULT = 100
@@ -50,6 +52,8 @@ class LineContent(
     val end: String,
     val endSlot: (@Composable () -> Unit)? = null,
     val showLeftIcon: Boolean = true,
+    // Icon + title only on line peek
+    val condensed: Boolean = false,
 )
 
 interface IslandExpandedScope {
@@ -123,6 +127,8 @@ class IslandItem(
     val sourcePackage: String? = null,
     // Temporary priority while the item's state is urgent; null falls back to `priority`.
     val priorityOverride: Int? = null,
+    // Identifies the content currently shown, so a new one pulses even when the item key is unchanged.
+    val contentId: String? = null,
     
     val compactVisible: Boolean = true,
     val needsCompanyAtCenter: Boolean = false,
@@ -131,6 +137,7 @@ class IslandItem(
     val bypassLauncherOnly: Boolean = false,
     
     val stack: List<StackIcon> = emptyList(),
+    val queued: List<StackIcon>? = null,
     val priorityGroup: String? = null,
 ) {
     var userPriority: Int? = null

@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.features.display.actions
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -44,6 +45,7 @@ import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.SometimesEssentialsSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
+import com.sameerasw.essentials.ui.features.audio.sheets.SetModeSettingsSheet
 import com.sameerasw.essentials.ui.features.apps.sheets.KeyboardSelectionSheet
 import com.sameerasw.essentials.ui.features.audio.sheets.SetVolumeSettingsSheet
 import com.sameerasw.essentials.ui.features.system.LikeSongSettingsSheet
@@ -70,6 +72,7 @@ fun GestureActionPickerSheet(
     var showScreenOffSettings by remember { mutableStateOf(false) }
     var showDeviceEffectsSettings by remember { mutableStateOf(false) }
     var showSoundModeSettings by remember { mutableStateOf(false) }
+    var showSetModeSettings by remember { mutableStateOf(false) }
     var showSometimesEssentialsSettings by remember { mutableStateOf(false) }
     var showFreezeTagSettings by remember { mutableStateOf(false) }
     var showOpenAppSettings by remember { mutableStateOf(false) }
@@ -86,7 +89,7 @@ fun GestureActionPickerSheet(
     var permissionFeatureTitle by remember { mutableStateOf<Any>("") }
 
     val anyOpen = showPicker || showFlashlightOptions || showLikeSongOptions.value || showDimSettings ||
-        showScreenOffSettings || showDeviceEffectsSettings || showSoundModeSettings ||
+        showScreenOffSettings || showDeviceEffectsSettings || showSoundModeSettings || showSetModeSettings ||
         showSometimesEssentialsSettings || showFreezeTagSettings || showOpenAppSettings ||
         showFreezeAppsSettings || showSetKeyboardSheet || showCustomSettingsSettings ||
         showSetVolumeSettings || showPermissionSheet
@@ -219,6 +222,7 @@ fun GestureActionPickerSheet(
                                         is Action.ScreenOff -> showScreenOffSettings = true
                                         is Action.DeviceEffects -> showDeviceEffectsSettings = true
                                         is Action.SoundMode -> showSoundModeSettings = true
+                                        is Action.SetMode -> showSetModeSettings = true
                                         is Action.SometimesEssentials -> showSometimesEssentialsSettings = true
                                         is Action.FreezeTag -> showFreezeTagSettings = true
                                         is Action.OpenApp -> showOpenAppSettings = true
@@ -350,6 +354,18 @@ fun GestureActionPickerSheet(
             onDismiss = { showSoundModeSettings = false },
             onSave = { newAction ->
                 showSoundModeSettings = false
+                onActionSelected(newAction)
+                configAction = null
+            },
+        )
+    }
+
+    if (showSetModeSettings && configAction is Action.SetMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        SetModeSettingsSheet(
+            initialAction = configAction as Action.SetMode,
+            onDismiss = { showSetModeSettings = false },
+            onSave = { newAction ->
+                showSetModeSettings = false
                 onActionSelected(newAction)
                 configAction = null
             },

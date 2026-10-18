@@ -32,12 +32,13 @@ object BatteryRingDrawer {
         hasStatusIcon: Boolean,
         width: Int,
         height: Int,
+        gapDegrees: Float? = null,
     ): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
-        val progressBitmap = drawProgressArc(batteryLevel, ringColor, hasStatusIcon, width, height)
-        val trackBitmap = drawTrackArc(batteryLevel, trackColor, hasStatusIcon, width, height)
+        val progressBitmap = drawProgressArc(batteryLevel, ringColor, hasStatusIcon, width, height, gapDegrees)
+        val trackBitmap = drawTrackArc(batteryLevel, trackColor, hasStatusIcon, width, height, gapDegrees)
 
         canvas.drawBitmap(trackBitmap, 0f, 0f, null)
         canvas.drawBitmap(progressBitmap, 0f, 0f, null)
@@ -51,6 +52,7 @@ object BatteryRingDrawer {
         hasStatusIcon: Boolean,
         width: Int,
         height: Int,
+        gapDegrees: Float? = null,
     ): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -70,7 +72,7 @@ object BatteryRingDrawer {
                 this.color = color
             }
 
-        val topGapDegrees = if (hasStatusIcon) 60f else 0f
+        val topGapDegrees = gapDegrees ?: if (hasStatusIcon) 60f else 0f
         val capAngleDegrees = ((strokeWidth / 2f) / radius) * (180f / PI.toFloat())
 
         if (clampedLevel >= 100 && !hasStatusIcon) {
@@ -110,6 +112,7 @@ object BatteryRingDrawer {
         hasStatusIcon: Boolean,
         width: Int,
         height: Int,
+        gapDegrees: Float? = null,
     ): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -130,7 +133,7 @@ object BatteryRingDrawer {
                 this.color = color
             }
 
-        val topGapDegrees = if (hasStatusIcon) 60f else 0f
+        val topGapDegrees = gapDegrees ?: if (hasStatusIcon) 60f else 0f
         val trackCapAngleDegrees = ((trackStrokeWidth / 2f) / radius) * (180f / PI.toFloat())
         val startAngle = -90f + (topGapDegrees / 2)
         val totalAvailableSweep = 360f - topGapDegrees
@@ -170,6 +173,9 @@ object BatteryRingDrawer {
         statusIcon: Drawable?,
         width: Int,
         height: Int,
+        tintDeviceIcon: Boolean = true,
+        percentText: String? = null,
+        percentIcon: Drawable? = null,
     ): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -196,14 +202,17 @@ object BatteryRingDrawer {
                 batteryLevel,
                 ringColor,
                 trackColor,
-                statusIcon != null,
+                statusIcon != null || percentText != null,
                 width,
                 height,
+                percentText?.let { percentGapDegrees(context, width, it, percentIcon != null) },
             )
         canvas.drawBitmap(ringBitmap, 0f, 0f, null)
 
-        // 3. Draw Status Icon Bubble
-        if (statusIcon != null) {
+        // 3. Draw Status Icon Bubble or percentage chip
+        if (percentText != null) {
+            drawPercent(context, canvas, percentText, percentIcon, centerX, rect.top, width, ringColor, backgroundColor, iconTint)
+        } else if (statusIcon != null) {
             val smallIconRadius = strokeWidth * 1.3f
             val iconCenterY = rect.top
 
@@ -230,11 +239,13 @@ object BatteryRingDrawer {
 
             val iconPaint =
                 Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    colorFilter =
-                        android.graphics.PorterDuffColorFilter(
-                            iconTint,
-                            android.graphics.PorterDuff.Mode.SRC_IN,
-                        )
+                    if (tintDeviceIcon) {
+                        colorFilter =
+                            android.graphics.PorterDuffColorFilter(
+                                iconTint,
+                                android.graphics.PorterDuff.Mode.SRC_IN,
+                            )
+                    }
                 }
             canvas.drawBitmap(
                 iconBitmap,
@@ -245,5 +256,138 @@ object BatteryRingDrawer {
         }
 
         return bitmap
+    }
+
+    fun percentTextSize(width: Int): Float = width * 0.16f
+
+    private fun percentTypeface(context: Context): android.graphics.Typeface {
+        val base = androidx.core.content.res.ResourcesCompat.getFont(context, com.sameerasw.essentials.R.font.google_sans_flex)
+            ?: return android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            android.graphics.Typeface.create(base, 700, false)
+        } else {
+            android.graphics.Typeface.create(base, android.graphics.Typeface.BOLD)
+        }
+    }
+
+    private fun percentPaint(
+        context: Context,
+        width: Int,
+    ): Paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            typeface = percentTypeface(context)
+            textSize = percentTextSize(width)
+        }
+
+    class PercentLayers(
+        val chip: Bitmap?,
+        val content: Bitmap,
+        val widthPx: Int,
+        val heightPx: Int,
+    )
+
+    fun drawPercentLayers(
+        context: Context,
+        width: Int,
+        text: String,
+        icon: Drawable?,
+    ): PercentLayers {
+        val paint = percentPaint(context, width)
+        val textSize = paint.textSize
+        val textWidth = paint.measureText(text)
+        val iconSize = if (icon != null) textSize * 1.0f else 0f
+        val iconGap = if (icon != null) textSize * 0.1f else 0f
+        val chipPadding = if (icon != null) textSize * 0.5f else 0f
+        val chipWidth = (textWidth + iconSize + iconGap + chipPadding).toInt().coerceAtLeast(1)
+        val chipHeight = (textSize * if (icon != null) 1.3f else 1.2f).toInt().coerceAtLeast(1)
+        val content = Bitmap.createBitmap(chipWidth, chipHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(content)
+        var x = chipPadding / 2f
+        if (icon != null) {
+            val top = (chipHeight - iconSize) / 2f
+            icon.setBounds(x.toInt(), top.toInt(), (x + iconSize).toInt(), (top + iconSize).toInt())
+            icon.setTint(android.graphics.Color.WHITE)
+            icon.draw(canvas)
+            x += iconSize + iconGap
+        }
+        paint.color = android.graphics.Color.WHITE
+        paint.textAlign = Paint.Align.LEFT
+        val baseline = chipHeight / 2f - (paint.fontMetrics.ascent + paint.fontMetrics.descent) / 2f
+        canvas.drawText(text, x, baseline, paint)
+        val chip =
+            if (icon != null) {
+                Bitmap.createBitmap(chipWidth, chipHeight, Bitmap.Config.ARGB_8888).also {
+                    Canvas(it).drawRoundRect(
+                        RectF(0f, 0f, chipWidth.toFloat(), chipHeight.toFloat()),
+                        chipHeight / 2f,
+                        chipHeight / 2f,
+                        Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.WHITE },
+                    )
+                }
+            } else {
+                null
+            }
+        return PercentLayers(chip, content, chipWidth, chipHeight)
+    }
+
+    fun percentGapDegrees(
+        context: Context,
+        width: Int,
+        text: String,
+        charging: Boolean,
+    ): Float {
+        val textSize = percentTextSize(width)
+        val radius = width * 0.5f - (width * 0.11f + width * 0.05f)
+        var contentWidth = percentPaint(context, width).measureText(text)
+        contentWidth +=
+            if (charging) {
+                textSize * 1.0f + textSize * 0.1f + textSize * 0.5f + textSize * 1.0f
+            } else {
+                width * 0.08f
+            }
+        val degrees = Math.toDegrees((contentWidth / radius).toDouble()).toFloat()
+        return if (charging) degrees.coerceIn(56f, 100f) else degrees.coerceIn(44f, 66f)
+    }
+
+    private fun drawPercent(
+        context: Context,
+        canvas: Canvas,
+        text: String,
+        icon: Drawable?,
+        centerX: Float,
+        centerY: Float,
+        width: Int,
+        @ColorInt chipColor: Int,
+        @ColorInt chipContentColor: Int,
+        @ColorInt textColor: Int,
+    ) {
+        val paint = percentPaint(context, width)
+        val textSize = paint.textSize
+        val textWidth = paint.measureText(text)
+        if (icon == null) {
+            paint.color = textColor
+            paint.textAlign = Paint.Align.CENTER
+            val baseline = centerY - (paint.fontMetrics.ascent + paint.fontMetrics.descent) / 2f
+            canvas.drawText(text, centerX, baseline, paint)
+            return
+        }
+        val iconSize = textSize * 1.0f
+        val iconGap = textSize * 0.1f
+        val chipWidth = textWidth + iconSize + iconGap + textSize * 0.5f
+        val chipHeight = textSize * 1.3f
+        val left = centerX - chipWidth / 2f
+        val top = centerY - chipHeight / 2f
+        val chipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = chipColor }
+        canvas.drawRoundRect(RectF(left, top, left + chipWidth, top + chipHeight), chipHeight / 2f, chipHeight / 2f, chipPaint)
+        var x = left + textSize * 0.25f
+        val iconTop = centerY - iconSize / 2f
+        icon.setBounds(x.toInt(), iconTop.toInt(), (x + iconSize).toInt(), (iconTop + iconSize).toInt())
+        icon.setTint(chipContentColor)
+        icon.draw(canvas)
+        x += iconSize + iconGap
+        paint.color = chipContentColor
+        paint.textAlign = Paint.Align.LEFT
+        val baseline = centerY - (paint.fontMetrics.ascent + paint.fontMetrics.descent) / 2f
+        canvas.drawText(text, x, baseline, paint)
     }
 }

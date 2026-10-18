@@ -119,11 +119,12 @@ class StackWidgetProvider : AppWidgetProvider() {
             context: Context,
             stackWidgetId: Int,
             animate: Boolean = false,
+            reverse: Boolean = false,
         ) {
             val awm = AppWidgetManager.getInstance(context)
             if (stackWidgetId !in StackHost.visibleOnlyStacks) {
                 try {
-                    awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = false, animate = animate))
+                    awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = false, animate = animate, reverse = reverse))
                     return
                 } catch (e: IllegalArgumentException) {
                     Log.w(TAG, "Stack $stackWidgetId is too large, sending only the visible widget", e)
@@ -134,7 +135,7 @@ class StackWidgetProvider : AppWidgetProvider() {
                 }
             }
             try {
-                awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = true, animate = animate))
+                awm.updateAppWidget(stackWidgetId, build(context, stackWidgetId, visibleOnly = true, animate = animate, reverse = reverse))
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to update stack $stackWidgetId", e)
             }
@@ -145,11 +146,12 @@ class StackWidgetProvider : AppWidgetProvider() {
             stackWidgetId: Int,
             visibleOnly: Boolean,
             animate: Boolean,
+            reverse: Boolean,
         ): RemoteViews {
             val awm = AppWidgetManager.getInstance(context)
             val config = WidgetStackRepository(context).get(stackWidgetId)
             val hosted = config?.hostedWidgetIds.orEmpty()
-            val views = RemoteViews(context.packageName, if (animate) R.layout.widget_stack_animated else R.layout.widget_stack)
+            val views = RemoteViews(context.packageName, if (animate) (if (reverse) R.layout.widget_stack_animated_reverse else R.layout.widget_stack_animated) else R.layout.widget_stack)
             views.removeAllViews(R.id.stack_flipper)
             views.removeAllViews(R.id.stack_dots)
             views.setViewVisibility(R.id.stack_edge_prev, View.GONE)
