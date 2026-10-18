@@ -52,6 +52,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS_LIST,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
         SettingsRepository.KEY_ISLAND_OTP_ENABLED,
@@ -69,6 +70,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     
     private var pendingPopUp = false
     private var catchingUp = false
+    private var hubOpen = false
 
     private fun busyElsewhere(): Boolean {
         val c = ctx ?: return false
@@ -82,6 +84,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val here = focusedKey == ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
         val left = wasHere && !here
         wasHere = here
+        if (left) hubOpen = false
         if (left && !pendingPopUp && alerts.isNotEmpty() && settings.isIslandCatchUpEnabled()) {
             val c = ctx
             if (c != null) {
@@ -137,7 +140,9 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (index < 0) return
         catchingUp = false
         val here = showingHere()
-        if (here && index == currentIndex) return
+        val fromHub = hubOpen
+        hubOpen = false
+        if (here && index == currentIndex && !fromHub) return
         currentIndex = index
         markSeen()
         manualPick = true
@@ -178,6 +183,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
             NotificationListener.addNotificationAlertListener(listener)
             registered = true
         }
+        if (hub()) syncHub()
     }
 
     override fun onStop() {
@@ -188,11 +194,65 @@ class NotificationsPlugin : BaseIslandPlugin() {
         cancelTimers()
         alerts.clear()
         seen.clear()
+        hubOpen = false
     }
 
     override fun refresh() {
         if (ctx == null) return
-        if (!settings.isIslandShowNotificationsEnabled()) clearAll() else render()
+        if (!settings.isIslandShowNotificationsEnabled()) {
+            clearAll()
+            return
+        }
+        if (hub()) {
+            syncHub()
+        } else {
+            hubOpen = false
+            if (alerts.removeAll { it.hubOnly || it.ongoing }) currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+            if (alerts.isEmpty()) clearAll() else render()
+        }
+    }
+
+    private fun hub() = settings.isIslandNotifHubEnabled() && settings.isIslandShowNotificationsEnabled()
+
+    private fun maxQueue() = if (hub()) HUB_MAX_QUEUE else MAX_QUEUE
+
+    private fun syncHub() {
+        val live = NotificationListener.instance?.hubAlerts().orEmpty()
+        val liveKeys = live.mapTo(HashSet()) { it.key }
+        val stale = alerts.filter { it.key !in liveKeys && !it.key.startsWith("simulated_") }
+        stale.forEach { removeQuietly(it.key) }
+        live.forEach { alert ->
+            val index = alerts.indexOfFirst { it.key == alert.key }
+            if (index >= 0) {
+                alerts[index] = alert
+            } else {
+                insertSilently(alert)
+            }
+        }
+        if (alerts.isEmpty()) clearAll() else render()
+    }
+
+    private fun removeQuietly(key: String) {
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index < 0) return
+        alerts.removeAt(index)
+        seen.remove(key)
+        if (index < currentIndex) currentIndex--
+        currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+    }
+
+    private fun insertSilently(alert: ActiveNotificationAlert) {
+        val at = alerts.indexOfFirst { it.timestamp < alert.timestamp }.let { if (it < 0) alerts.size else it }
+        alerts.add(at, alert)
+        if (at <= currentIndex && alerts.size > 1) currentIndex++
+        seen.add(alert.key)
+        while (alerts.size > maxQueue()) alerts.removeLast()
+    }
+
+    private fun addSilently(alert: ActiveNotificationAlert) {
+        val index = alerts.indexOfFirst { it.key == alert.key }
+        if (index >= 0) alerts[index] = alert else insertSilently(alert)
+        render()
     }
 
     override fun onSuppressionChanged(suppressed: Boolean) {
@@ -218,6 +278,10 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     override fun onScreenStateChanged() {
+        if (hub()) {
+            syncHub()
+            return
+        }
         if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
 
@@ -246,7 +310,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun onPosted(alert: ActiveNotificationAlert) {
         val c = ctx ?: return
-        if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled() || !passesFilters(alert)) return
+        if (alert.hubOnly) {
+            if (hub()) addSilently(alert)
+            return
+        }
+        if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled() || !passesFilters(alert)) {
+            if (hub()) addSilently(alert)
+            return
+        }
         val existing = alerts.indexOfFirst { it.key == alert.key }
         if (existing >= 0) {
             alerts[existing] = alert
@@ -266,7 +337,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         catchingUp = false
         if (queueEnabled() && showingHere()) {
             alerts.addLast(alert)
-            while (alerts.size > MAX_QUEUE) {
+            while (alerts.size > maxQueue()) {
                 alerts.removeAt(if (currentIndex == 0) 1 else 0)
                 if (currentIndex > 0) currentIndex--
             }
@@ -277,7 +348,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (waiting) alerts.addLast(alert) else alerts.addFirst(alert)
         if (!waiting) currentIndex = 0
         manualPick = false
-        val cap = if (queueEnabled()) MAX_QUEUE else 1
+        val cap = if (queueEnabled()) maxQueue() else 1
         while (alerts.size > cap) alerts.removeLast()
         if (minimal()) {
             pendingPopUp = false
@@ -325,7 +396,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun onTimeout() {
         val c = ctx ?: return
-        if (pendingPopUp) return
+        if (pendingPopUp || hubOpen) return
         if (showingHere() && alerts.size > 1 && !manualPick && advanceToUnseen()) {
             scheduleTimeout()
             render()
@@ -370,6 +441,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun scheduleTimeout() {
         val handler = ctx?.mainHandler ?: return
         handler.removeCallbacks(timeoutRunnable)
+        if (hubOpen) return
         handler.postDelayed(timeoutRunnable, timeoutMs())
     }
 
@@ -380,6 +452,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun clearAll() {
+        hubOpen = false
         catchingUp = false
         catchUpPaused = false
         copiedKey = null
@@ -422,6 +495,10 @@ class NotificationsPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
+        if (hubOpen && hub()) {
+            publish(hubItem())
+            return
+        }
         val index = alerts.indexOf(alert)
         val next = if (queueEnabled()) alerts.getOrNull(index + 1) ?: alerts.getOrNull(index - 1) else null
         val stack = alerts.map { stackIconFor(it, current = it === alert) }
@@ -440,8 +517,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
             settings.isIslandCatchUpEnabled() -> SideBubble(
                 priority = SideBubblePriority.NOTIFICATION,
                 icons = alerts.map { stackIconFor(it, current = false) },
-                onOpen = { select(alert.key) },
-                onDismiss = { clearAll() },
+                onOpen = { if (hub()) openHub() else select(alert.key) },
+                onDismiss = if (hub()) null else ({ clearAll() }),
             )
             else -> null
         }
@@ -465,6 +542,63 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun queueEnabled() = settings.isIslandNotifQueueEnabled()
+
+    private fun openHub() {
+        val c = ctx ?: return
+        if (!hub() || alerts.isEmpty()) return
+        hubOpen = true
+        catchingUp = false
+        manualPick = false
+        pendingPopUp = false
+        cancelTimers()
+        render()
+        c.request(PluginRequest.Expand(ITEM_KEY, sticky = true))
+    }
+
+    private fun clearHub() {
+        val dismissable = alerts.filter { !it.ongoing }
+        if (dismissable.isEmpty()) return
+        dismissable.forEach { NotificationListener.dismissNotification(it.key) }
+        dismissable.forEach { removeQuietly(it.key) }
+        if (alerts.isEmpty()) clearAll() else render()
+    }
+
+    private fun hubItem(): IslandItem {
+        val sorted = alerts.sortedByDescending { it.timestamp }
+        return IslandItem(
+            key = ITEM_KEY,
+            priority = IslandPriority.NOTIFICATION,
+            placement = CompactPlacement.Dynamic,
+            compact = listOf(
+                CompactCell("notif.hub") {
+                    IslandIcon(R.drawable.rounded_notifications_unread_24, size = 20.dp)
+                },
+            ),
+            expanded = ExpandedContent { scope ->
+                NotificationHubExpanded(
+                    alerts = sorted,
+                    onOpen = { alert ->
+                        if (!sendPendingIntent(context, alert.contentIntent)) launchPackage(context, alert.packageName)
+                        scope.collapse()
+                    },
+                    onSelect = { select(it.key) },
+                    onDismiss = { alert ->
+                        NotificationListener.dismissNotification(alert.key)
+                        removeQuietly(alert.key)
+                        if (alerts.isEmpty()) clearAll() else render()
+                    },
+                    onAction = { alert, action ->
+                        HapticUtil.performStrongTickHaptic(context)
+                        if (action.pendingIntent != null) NotificationListener.instance?.performNotificationAction(action)
+                    },
+                    onClearAll = ::clearHub,
+                    scope = scope,
+                )
+            },
+            dismissible = false,
+            contentId = "notif.hub",
+        )
+    }
 
     private fun queueCell(icons: List<StackIcon>): CompactCell = CompactCell("notif.queue") {
         when (settings.getIslandNotifQueueStyle()) {
@@ -772,6 +906,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     companion object {
         const val ITEM_KEY = "notifications"
         private const val MAX_QUEUE = 20
+        private const val HUB_MAX_QUEUE = 200
         private const val COPIED_MS = 1_500L
         private const val REPLY_REPOST_WINDOW_MS = 10_000L
 

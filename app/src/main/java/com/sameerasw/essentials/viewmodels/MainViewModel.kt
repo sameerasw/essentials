@@ -288,6 +288,7 @@ class MainViewModel : ViewModel() {
     val isIslandNotifFollowDnd = mutableStateOf(true)
     val isIslandNotifFilterApps = mutableStateOf(false)
     val isIslandShowNotifications = mutableStateOf(true)
+    val isIslandNotifHub = mutableStateOf(false)
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
@@ -982,6 +983,8 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS ->
                         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB -> syncIslandNotifHubState()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
                         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
@@ -2545,6 +2548,7 @@ class MainViewModel : ViewModel() {
         isIslandNotifFollowDnd.value = settingsRepository.isIslandNotifFollowDndEnabled()
         isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
+        isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
@@ -5996,6 +6000,20 @@ class MainViewModel : ViewModel() {
     fun setIslandShowNotifications(enabled: Boolean) {
         isIslandShowNotifications.value = enabled
         settingsRepository.setIslandShowNotificationsEnabled(enabled)
+    }
+
+    fun setIslandNotifHub(enabled: Boolean) {
+        if (enabled) settingsRepository.setIslandShowNotificationsEnabled(true)
+        settingsRepository.setIslandNotifHubEnabled(enabled)
+        isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
+        syncIslandNotifHubState()
+    }
+
+    private fun syncIslandNotifHubState() {
+        isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
+        isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
+        isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
+        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
     }
 
     fun setIslandNotifQueueInline(enabled: Boolean) {

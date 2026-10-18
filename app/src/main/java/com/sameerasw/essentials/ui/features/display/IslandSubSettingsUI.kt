@@ -941,6 +941,17 @@ fun IslandNotificationSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.outline_circle_notifications_24,
+                title = stringResource(R.string.island_notif_hub_title),
+                isChecked = viewModel.isIslandNotifHub.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandNotifHub(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_notif_hub"),
+            )
         }
 
         IslandSettingsSection(R.string.island_notif_section_sources) {
@@ -1102,6 +1113,7 @@ fun IslandNotificationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandNotifQueue(checked)
                 },
+                enabled = !viewModel.isIslandNotifHub.value,
                 onSettingsClick = { showQueueSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_notif_queue"),
             )
@@ -1127,11 +1139,12 @@ fun IslandNotificationSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandCatchUpEnabled(checked)
                 },
+                enabled = !viewModel.isIslandNotifHub.value,
                 modifier = Modifier.highlight(highlightSetting == "island_catch_up"),
             )
 
             AnimatedVisibility(
-                visible = viewModel.isIslandCatchUpEnabled.value,
+                visible = viewModel.isIslandCatchUpEnabled.value && !viewModel.isIslandNotifHub.value,
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically(),
             ) {

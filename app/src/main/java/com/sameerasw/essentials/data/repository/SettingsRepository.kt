@@ -672,6 +672,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_FILTER_APPS = "island_notif_filter_apps"
         const val KEY_ISLAND_NOTIF_FILTER_APPS_LIST = "island_notif_filter_apps_list"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
+        const val KEY_ISLAND_NOTIF_HUB = "island_notif_hub"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
         const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
@@ -4063,10 +4064,10 @@ class SettingsRepository(
     fun getIslandExpandedTimeoutMs(): Long = getLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, 0L)
     fun setIslandExpandedTimeoutMs(value: Long) = putLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, value)
 
-    fun isIslandCatchUpEnabled(): Boolean = getBoolean(KEY_ISLAND_CATCH_UP_ENABLED, true)
+    fun isIslandCatchUpEnabled(): Boolean = isIslandNotifHubEnabled() || getBoolean(KEY_ISLAND_CATCH_UP_ENABLED, true)
     fun setIslandCatchUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_CATCH_UP_ENABLED, enabled)
 
-    fun getIslandCatchUpTimeoutMs(): Long = getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
+    fun getIslandCatchUpTimeoutMs(): Long = if (isIslandNotifHubEnabled()) 0L else getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
     fun setIslandCatchUpTimeoutMs(value: Long) = putLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, value)
 
     fun isIslandCatchUpInfinite(): Boolean = getIslandCatchUpTimeoutMs() <= 0L
@@ -4324,7 +4325,10 @@ class SettingsRepository(
     fun isIslandShowNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, true)
     fun setIslandShowNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, enabled)
 
-    fun isIslandNotifQueueEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
+    fun isIslandNotifHubEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB, false)
+    fun setIslandNotifHubEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB, enabled)
+
+    fun isIslandNotifQueueEnabled(): Boolean = isIslandNotifHubEnabled() || getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
     fun setIslandNotifQueueEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE, enabled)
 
     fun getIslandNotifQueueStyle(): String =

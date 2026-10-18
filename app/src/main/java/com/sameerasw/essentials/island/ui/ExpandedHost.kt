@@ -64,7 +64,7 @@ fun ExpandedHost(
 }
 
 // Scrolls only while there is room in the drag direction, so a swipe at either end reaches the island's own gestures.
-private fun Modifier.edgeAwareScroll(state: ScrollState): Modifier =
+internal fun Modifier.edgeAwareScroll(state: ScrollState): Modifier =
     pointerInput(state) {
         awaitEachGesture {
             awaitFirstDown(requireUnconsumed = false)

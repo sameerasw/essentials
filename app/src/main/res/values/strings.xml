@@ -3437,6 +3437,8 @@
     <string name="island_notif_peek_style_minimal_catch_up_desc">App icon only, kept for the catch up time. Tap to expand</string>
     <string name="island_notif_peek_style_search_desc">Full, compact or minimal peeks</string>
     <string name="island_notif_show_title">Show notifications</string>
+    <string name="island_notif_hub_title">Notification Hub</string>
+    <string name="island_hub_ongoing">Ongoing</string>
     <string name="island_notif_section_sources">Which notifications</string>
     <string name="island_notif_section_heads_up">Heads up</string>
     <string name="island_notif_section_in_island">In the island</string>

@@ -877,6 +877,11 @@ object FeatureRegistry {
                             "island_show_notifications",
                         ),
                         SearchSetting(
+                            R.string.island_notif_hub_title,
+                            R.string.island_notification_options_title,
+                            "island_notif_hub",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
