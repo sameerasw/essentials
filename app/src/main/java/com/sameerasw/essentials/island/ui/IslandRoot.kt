@@ -181,9 +181,7 @@ fun IslandRoot(
     val surfaceShape = remember(compactHeightPx, expandedCornerPx) {
         object : Shape {
             override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-                val t = ((size.height - compactHeightPx) / compactHeightPx).coerceIn(0f, 1f)
-                val r = (compactHeightPx / 2f + (expandedCornerPx - compactHeightPx / 2f) * t)
-                    .coerceAtMost(size.height / 2f)
+                val r = surfaceCornerPx(size.height, compactHeightPx, expandedCornerPx)
                 return Outline.Rounded(RoundRect(size.toRect(), CornerRadius(r)))
             }
         }
@@ -256,7 +254,6 @@ fun IslandRoot(
     val revealDirection by remember { derivedStateOf { if (dismissOffset.value >= 0f) 1f else -1f } }
     val dismissThresholdPx = with(density) { 48.dp.toPx() }
     val jelly = rememberCompactJellyState()
-    val surfaceLiquid = rememberLiquidBody()
     val jellyRangePx = with(density) { 90.dp.toPx() }
     var compactLongPressed by remember { mutableStateOf(false) }
     var compactSettled by remember { mutableStateOf(false) }
@@ -399,6 +396,16 @@ fun IslandRoot(
     val hasCompactCells = state.arrangement.before.isNotEmpty() || state.arrangement.after.isNotEmpty()
     val bubbleOnlyLayout = !hasCompactCells && spec.cameraPresence <= 0f
     val catchUpAnim = remember { Animatable(0f) }
+    val liquidField = remember { LiquidField() }
+    liquidField.reach = with(density) { spec.cameraGap.toPx() } * 0.8f
+    val surfaceBond = remember(compactHeightPx, expandedCornerPx, bubbleOnlyLayout) {
+        LiquidBond(
+            id = "surface",
+            radius = { surfaceCornerPx(it.height, compactHeightPx, expandedCornerPx) },
+            presence = { if (!visible) 0f else if (bubbleOnlyLayout) 1f - catchUpAnim.value.coerceIn(0f, 1f) else 1f },
+        )
+    }
+    val surfaceLiquid = rememberLiquidBody(bond = surfaceBond, field = liquidField)
     LaunchedEffect(catchUpShown) {
         if (inspection) {
             catchUpAnim.snapTo(if (catchUpShown) 1f else 0f)
@@ -560,6 +567,7 @@ fun IslandRoot(
         onTargetBoundsChanged(bounds)
     }
 
+    CompositionLocalProvider(LocalLiquidField provides liquidField) {
     Box(
         Modifier
             .fillMaxSize()
@@ -569,6 +577,7 @@ fun IslandRoot(
                 detectTapGestures { actions.onCollapse() }
             },
     ) {
+        LiquidBridges(liquidField)
         val pillGapPx = with(density) { 2.dp.roundToPx() }
         AnimatedVisibility(
             visible = queueShown,
@@ -619,6 +628,7 @@ fun IslandRoot(
                         outlineColor = outlineFor(1f),
                         outlineThickness = spec.outlineThickness,
                         modifier = queueModifier,
+                        bondId = "queue",
                     )
                     QueueStyle.Overlap -> IslandStackOverlap(
                         icons = lastQueuedIcons,
@@ -626,6 +636,7 @@ fun IslandRoot(
                         outlineColor = outlineFor(1f),
                         outlineThickness = spec.outlineThickness,
                         modifier = queueModifier,
+                        bondId = "queue",
                     )
                 }
                 IslandStackPill(
@@ -635,6 +646,7 @@ fun IslandRoot(
                     interactive = stage == IslandStage.Expanded,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
+                    bondId = "pill",
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
                         .onSizeChanged { pillSize = it },
@@ -644,7 +656,10 @@ fun IslandRoot(
         val bubbleData = lastCatchUp
         if (bubbleData != null && catchUpAnim.value > 0.001f) {
             val dragX = remember { Animatable(0f) }
-            val bubbleLiquid = rememberLiquidBody(LiquidSpec.Droplet)
+            val bubbleBond = remember(bubbleOnlyLayout) {
+                LiquidBond("sideBubble", presence = { if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 1f })
+            }
+            val bubbleLiquid = rememberLiquidBody(LiquidSpec.Droplet, bubbleBond, liquidField)
             val towardCamera = if (spec.growDirection > 0) -1f else 1f
             val maxDrag = with(density) { 56.dp.toPx() }
             val threshold = with(density) { 28.dp.toPx() }
@@ -1198,9 +1213,15 @@ fun IslandRoot(
             }
         }
     }
+    }
 }
 
 private const val BOND_DELAY_MS = 3000L
+
+private fun surfaceCornerPx(height: Float, compactHeightPx: Float, expandedCornerPx: Float): Float {
+    val t = ((height - compactHeightPx) / compactHeightPx).coerceIn(0f, 1f)
+    return (compactHeightPx / 2f + (expandedCornerPx - compactHeightPx / 2f) * t).coerceAtMost(height / 2f)
+}
 
 private fun bondedShape(progress: Float, compactHeightPx: Float, expandedCornerPx: Float): Shape = object : Shape {
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {

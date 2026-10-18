@@ -108,6 +108,7 @@ fun IslandStackBubble(
     modifier: Modifier = Modifier,
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
+    bondId: String? = null,
 ) {
     val shown = queueVisible(icons, BUBBLE_MAX_MINIS)
     val count = shown.size
@@ -123,7 +124,7 @@ fun IslandStackBubble(
         else -> listOf(0.dp to -r, -r to r * 0.7f, r to r * 0.7f)[i]
     }
 
-    val liquid = rememberLiquidBody(LiquidSpec.Droplet)
+    val liquid = rememberLiquidBody(LiquidSpec.Droplet, bondId?.let { LiquidBond(it) })
     Box(
         modifier = modifier
             .liquid(liquid)
@@ -206,10 +207,11 @@ fun IslandStackOverlap(
     modifier: Modifier = Modifier,
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
+    bondId: String? = null,
 ) {
     val shown = queueVisible(icons, OVERLAP_MAX)
     val width by animateDpAsState(stackOverlapWidth(shown.size, size), IslandMotion.expressiveDefaultSpatial(), label = "overlapWidth")
-    val liquid = rememberLiquidBody(LiquidSpec.Droplet)
+    val liquid = rememberLiquidBody(LiquidSpec.Droplet, bondId?.let { LiquidBond(it) })
     Box(modifier.liquid(liquid).size(width, size)) {
         val order = shown.asReversed()
         rememberQueueEntries(order).forEach { entry ->
@@ -251,9 +253,10 @@ fun IslandStackPill(
     modifier: Modifier = Modifier,
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
+    bondId: String? = null,
 ) {
     val ring = MaterialTheme.colorScheme.primary
-    val liquid = rememberLiquidBody()
+    val liquid = rememberLiquidBody(bond = bondId?.let { LiquidBond(it) })
     Row(
         modifier = modifier
             .liquid(liquid)

@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -10,6 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -39,7 +42,7 @@ data class LiquidSpec(
 
 // Reads how fast a node resizes or travels and lets a damped spring wobble the stretch, so any pill turns liquid without per-animation code
 @Stable
-class LiquidBody(private val spec: LiquidSpec) {
+class LiquidBody(private val spec: LiquidSpec, private val field: LiquidField? = null, private val bond: LiquidBond? = null) {
     private var stretchX by mutableFloatStateOf(0f)
     private var stretchY by mutableFloatStateOf(0f)
     private var velocityX = 0f
@@ -53,6 +56,7 @@ class LiquidBody(private val spec: LiquidSpec) {
     private val wake = Channel<Unit>(Channel.CONFLATED)
 
     fun observe(size: IntSize, position: Offset) {
+        if (field != null && bond != null) field.report(Rect(position, size.toSize()), bond)
         val now = System.nanoTime()
         val w = size.width.toFloat()
         val h = size.height.toFloat()
@@ -142,9 +146,16 @@ class LiquidBody(private val spec: LiquidSpec) {
 }
 
 @Composable
-fun rememberLiquidBody(spec: LiquidSpec = LiquidSpec.Surface): LiquidBody {
-    val body = remember(spec) { LiquidBody(spec) }
+fun rememberLiquidBody(
+    spec: LiquidSpec = LiquidSpec.Surface,
+    bond: LiquidBond? = null,
+    field: LiquidField? = LocalLiquidField.current,
+): LiquidBody {
+    val body = remember(spec, field, bond?.id) { LiquidBody(spec, field, bond) }
     LaunchedEffect(body) { body.run() }
+    if (field != null && bond != null) {
+        DisposableEffect(field, bond.id) { onDispose { field.remove(bond.id) } }
+    }
     return body
 }
 
