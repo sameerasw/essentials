@@ -208,12 +208,15 @@ class PixelSearchResultsActivity : ComponentActivity() {
         val isBlurEnabled = repository.isPixelSearchBlurEnabled()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val params = window.attributes
             if (isBlurEnabled) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                window.attributes.blurBehindRadius = 60
+                params.blurBehindRadius = 60
             } else {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                params.blurBehindRadius = 0
             }
+            window.attributes = params
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             window.setDimAmount(dimAmount)
         } else {
@@ -654,8 +657,15 @@ fun PixelSearchResultsScreen(
         }
     }
 
-    val isBlurEnabled = remember { repository.isPixelSearchBlurEnabled() }
-    val scrimAlpha = if (isBlurEnabled) 0.55f else 0.85f
+    val isBlurEffective = remember(context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val windowManager = context.getSystemService(WindowManager::class.java)
+            repository.isPixelSearchBlurEnabled() && (windowManager?.isCrossWindowBlurEnabled == true)
+        } else {
+            false
+        }
+    }
+    val scrimAlpha = if (isBlurEffective) 0.55f else 0.85f
     val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = scrimAlpha)
 
     Box(
