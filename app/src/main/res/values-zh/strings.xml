@@ -1676,4 +1676,12 @@
     <string name="island_balance_compact_title">视觉上居中对齐</string>
     <string name="island_show_when_title">在什么时候显示</string>
     <string name="island_show_when_unlocked">解锁时</string>
+    <string name="island_hide_in_owner_app_title">打开应用时隐藏</string>
+    <string name="keep_in_full_screen_title">全屏时显示</string>
+    <string name="island_suppress_system_heads_up_title">隐藏系统的通知（横幅通知）</string>
+    <string name="island_hide_live_updates_title">动态隐藏实时更新</string>
+    <string name="island_compact_hide_status_bar_title">隐藏紧凑型灵动岛的所有项目</string>
+    <string name="island_dynamic_hide_status_bar_title">展开时隐藏所有内容</string>
+    <string name="island_hide_icons_title">动态隐藏状态栏图标</string>
+    <string name="island_dismiss_on_outside_title">点击外部区域时关闭</string>
 </resources>
