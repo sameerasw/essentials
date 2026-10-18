@@ -35,7 +35,7 @@ class SnippetRepository private constructor(context: Context) {
     private val atomicFile = AtomicFile(storageFile)
     private val fileMutex = Mutex()
 
-    private val _snippets = MutableStateFlow<List<Snippet>>(emptyList())
+    private val _snippets = MutableStateFlow<List<Snippet>>(DEFAULT_SNIPPETS)
     val snippets: StateFlow<List<Snippet>> = _snippets.asStateFlow()
 
     init {
@@ -46,25 +46,8 @@ class SnippetRepository private constructor(context: Context) {
         scope.launch {
             try {
                 if (!storageFile.exists()) {
-                    val defaults = listOf(
-                        Snippet(
-                            title = "Current Date",
-                            keyword = "!date",
-                            content = "{date}",
-                        ),
-                        Snippet(
-                            title = "Current Time",
-                            keyword = "!time",
-                            content = "{time}",
-                        ),
-                        Snippet(
-                            title = "Shrug",
-                            keyword = "!shrug",
-                            content = "¯\\_(ツ)_/¯",
-                        ),
-                    )
-                    saveToFile(defaults)
-                    _snippets.value = defaults
+                    saveToFile(DEFAULT_SNIPPETS)
+                    _snippets.value = DEFAULT_SNIPPETS
                     return@launch
                 }
 
@@ -131,6 +114,24 @@ class SnippetRepository private constructor(context: Context) {
 
     companion object {
         private const val TAG = "SnippetRepository"
+
+        val DEFAULT_SNIPPETS = listOf(
+            Snippet(
+                title = "Current Date",
+                keyword = "!date",
+                content = "{date}",
+            ),
+            Snippet(
+                title = "Current Time",
+                keyword = "!time",
+                content = "{time}",
+            ),
+            Snippet(
+                title = "Shrug",
+                keyword = "!shrug",
+                content = "¯\\_(ツ)_/¯",
+            ),
+        )
 
         @Volatile
         private var INSTANCE: SnippetRepository? = null

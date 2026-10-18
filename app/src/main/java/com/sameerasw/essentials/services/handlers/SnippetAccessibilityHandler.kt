@@ -70,6 +70,7 @@ class SnippetAccessibilityHandler(
     private var activeNode: AccessibilityNodeInfo? = null
     private var lastInputBounds: android.graphics.Rect? = null
     private var lastTypedWord: String = ""
+    private var lastKnownText: String = ""
 
     private var overlayView: FrameLayout? = null
     private var lifecycleOwner: OverlayLifecycleOwner? = null
@@ -117,7 +118,11 @@ class SnippetAccessibilityHandler(
 
         val sourceNode = event.source ?: return
         if (event.isPassword || sourceNode.isPassword || isPasswordField(sourceNode)) return
-        if (!sourceNode.isEditable) return
+
+        val canEdit = sourceNode.isEditable ||
+            sourceNode.actionList.any { it.id == AccessibilityNodeInfo.ACTION_SET_TEXT } ||
+            sourceNode.className?.contains("EditText", ignoreCase = true) == true
+        if (!canEdit) return
 
         activeNode?.recycle()
         activeNode = AccessibilityNodeInfo.obtain(sourceNode)
@@ -134,6 +139,8 @@ class SnippetAccessibilityHandler(
             } else {
                 sourceNode.text?.toString().orEmpty()
             }
+
+        lastKnownText = fullText
 
         if (fullText.isEmpty()) {
             dismissAllSuggestions()
@@ -157,6 +164,7 @@ class SnippetAccessibilityHandler(
                         node = sourceNode,
                         targetWord = "$candidateWord ",
                         replacement = "$expanded ",
+                        currentText = fullText,
                     )
                     if (success) {
                         dismissAllSuggestions()
@@ -186,11 +194,14 @@ class SnippetAccessibilityHandler(
         node: AccessibilityNodeInfo,
         targetWord: String,
         replacement: String,
+        currentText: String = "",
     ): Boolean {
         isPerformingReplacement = true
         try {
-            val fullText = node.text?.toString().orEmpty()
-            if (fullText.isEmpty()) return false
+            val fullText = node.text?.toString().takeIf { !it.isNullOrEmpty() }
+                ?: currentText.takeIf { it.isNotEmpty() }
+                ?: lastKnownText.takeIf { it.isNotEmpty() }
+                ?: return false
 
             val cursor = node.textSelectionEnd
             // Verify cursor is at the end of targetWord to prevent replacing arbitrary occurrences
@@ -201,6 +212,9 @@ class SnippetAccessibilityHandler(
                     cursor - targetWord.length
                 } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
                     fullText.length - targetWord.length
+                } else if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
+                    val trimmed = fullText.trimEnd()
+                    trimmed.length - targetWord.trimEnd().length
                 } else {
                     return false
                 }
@@ -277,12 +291,12 @@ class SnippetAccessibilityHandler(
 
     private fun expandSnippet(snippet: Snippet) {
         overlayView?.let { HapticUtil.performUIHaptic(it) }
-        val targetNode = activeNode?.takeIf {
-            try { it.refresh() } catch (_: Exception) { false }
+        val targetNode = activeNode?.also {
+            try { it.refresh() } catch (_: Exception) {}
         } ?: service.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
 
         if (targetNode != null) {
-            val fullText = targetNode.text?.toString().orEmpty()
+            val fullText = targetNode.text?.toString().takeIf { !it.isNullOrEmpty() } ?: lastKnownText
             val cursor = targetNode.textSelectionEnd
             val textBeforeCursor = if (cursor in 0..fullText.length) fullText.substring(0, cursor) else fullText
             val candidateWord = textBeforeCursor.takeLastWhile { !it.isWhitespace() }
@@ -297,6 +311,7 @@ class SnippetAccessibilityHandler(
                 node = targetNode,
                 targetWord = targetWord,
                 replacement = "$expanded ",
+                currentText = fullText,
             )
         }
         dismissAllSuggestions()
@@ -364,6 +379,7 @@ class SnippetAccessibilityHandler(
         activeNode?.recycle()
         activeNode = null
         lastTypedWord = ""
+        lastKnownText = ""
     }
 
     private fun showFloatingPill(snippet: Snippet, onExpand: () -> Unit) {

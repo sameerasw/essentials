@@ -87,6 +87,9 @@ class SnippetMatchingTest {
             cursor - targetWord.length
         } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
             fullText.length - targetWord.length
+        } else if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
+            val trimmed = fullText.trimEnd()
+            trimmed.length - targetWord.trimEnd().length
         } else {
             -1
         }
@@ -97,6 +100,13 @@ class SnippetMatchingTest {
         val text = "Meeting today at !time "
         val index = calculateReplacementIndex(text, text.length, "!time ")
         assertEquals(text.indexOf("!time "), index)
+    }
+
+    @Test
+    fun replaceKeyword_withTrailingWhitespace_calculatesCorrectIndex() {
+        val text = "Search !date  "
+        val index = calculateReplacementIndex(text, -1, "!date")
+        assertEquals(text.indexOf("!date"), index)
     }
 
     @Test
