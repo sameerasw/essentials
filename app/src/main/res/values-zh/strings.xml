@@ -1670,4 +1670,10 @@
     <string name="island_brief_title">简报</string>
     <string name="island_brief_desc">获取当前正在发生事情的简报</string>
     <string name="island_like_while_playing_title">播放时点赞</string>
+    <string name="island_line_peek_title">短暂显示</string>
+    <string name="island_line_peek_desc">短暂在灵动岛显示更新，然后恢复紧凑状态</string>
+    <string name="island_secondary_bubble_title">次级气泡（消息环）</string>
+    <string name="island_balance_compact_title">视觉上居中对齐</string>
+    <string name="island_show_when_title">在什么时候显示</string>
+    <string name="island_show_when_unlocked">解锁时</string>
 </resources>
