@@ -3182,17 +3182,6 @@
     <string name="island_battery_style_title">Battery style</string>
     <string name="island_battery_style_ring">Ring</string>
     <string name="island_battery_style_icon">Icon</string>
-    <string name="island_battery_alerts_title">Battery alerts</string>
-    <string name="island_battery_alerts_options_title">Battery alert options</string>
-    <string name="island_battery_alert_charging_title">Charging connected</string>
-    <string name="island_battery_alert_low_title" formatted="false">Low Battery (11-20%)</string>
-    <string name="island_battery_alert_critical_title" formatted="false">Critical Battery (0-10%)</string>
-    <string name="island_battery_alert_charging">Charging</string>
-    <string name="island_battery_alert_low">Low Battery</string>
-    <string name="island_battery_alert_critical">Critical Battery</string>
-    <string name="island_battery_alert_icon_position_title">Icon position</string>
-    <string name="island_battery_alert_icon_position_right">Right</string>
-    <string name="island_battery_alert_icon_position_left">Left</string>
     <string name="slider_value_label">Value</string>
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
@@ -3341,6 +3330,10 @@
     <string name="island_devices_battery_section">Devices</string>
     <string name="island_devices_move_up">Move up</string>
     <string name="island_devices_move_down">Move down</string>
+    <string name="island_battery_peek_alerts_title">Show peek alerts</string>
+    <string name="island_battery_state_low">Low battery</string>
+    <string name="island_battery_state_critical">Critical battery</string>
+    <string name="island_battery_state_saver">Battery saver</string>
     <string name="island_battery_charging">Charging</string>
     <string name="island_notif_keep_progress_title">Keep progress notifications</string>
     <string name="island_progress_open">Open</string>
