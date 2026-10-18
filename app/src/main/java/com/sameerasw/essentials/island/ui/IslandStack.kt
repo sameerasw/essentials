@@ -160,7 +160,7 @@ fun IslandStackBubble(
     }
 }
 
-private const val OVERLAP_MAX = 3
+const val OVERLAP_MAX = 3
 
 private fun queueVisible(icons: List<StackIcon>, max: Int): List<StackIcon> {
     if (icons.size <= max) return icons
@@ -202,7 +202,7 @@ private fun QueueOverflowCounter(count: Int, size: Dp) {
 
 private const val OVERLAP_STEP = 0.55f
 
-fun stackOverlapWidth(count: Int, size: Dp): Dp = size + size * OVERLAP_STEP * (count.coerceIn(1, OVERLAP_MAX) - 1)
+fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX): Dp = size + size * OVERLAP_STEP * (count.coerceIn(1, maxIcons) - 1)
 
 @Composable
 fun IslandStackOverlap(
@@ -212,9 +212,10 @@ fun IslandStackOverlap(
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
+    maxIcons: Int = OVERLAP_MAX,
 ) {
-    val shown = queueVisible(icons, OVERLAP_MAX)
-    val width by animateDpAsState(stackOverlapWidth(shown.size, size), IslandMotion.expressiveDefaultSpatial(), label = "overlapWidth")
+    val shown = queueVisible(icons, maxIcons)
+    val width by animateDpAsState(stackOverlapWidth(shown.size, size, maxIcons), IslandMotion.expressiveDefaultSpatial(), label = "overlapWidth")
     val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
     val field = remember { LiquidField() }
     field.reach = with(LocalDensity.current) { size.toPx() } * 0.3f
@@ -366,6 +367,7 @@ fun IslandSideBubble(
     style: QueueStyle = QueueStyle.Stack,
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
+    maxIcons: Int = OVERLAP_MAX,
 ) {
     Box(modifier.height(size)) {
         AnimatedContent(
@@ -389,7 +391,7 @@ fun IslandSideBubble(
                         contentAlignment = Alignment.Center,
                     ) { content(size * 0.72f) }
                 } else if (style == QueueStyle.Overlap) {
-                    IslandStackOverlap(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness)
+                    IslandStackOverlap(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness, maxIcons = maxIcons)
                 } else {
                     IslandStackBubble(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness)
                 }

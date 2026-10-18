@@ -289,6 +289,7 @@ class MainViewModel : ViewModel() {
     val isIslandNotifFilterApps = mutableStateOf(false)
     val isIslandShowNotifications = mutableStateOf(true)
     val isIslandNotifHub = mutableStateOf(false)
+    val islandNotifHubIcons = mutableIntStateOf(3)
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
@@ -985,6 +986,9 @@ class MainViewModel : ViewModel() {
                         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB -> syncIslandNotifHubState()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS ->
+                        islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
 
                     SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
                         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
@@ -2549,6 +2553,7 @@ class MainViewModel : ViewModel() {
         isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
         isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
+        islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
@@ -6007,6 +6012,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNotifHubEnabled(enabled)
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
         syncIslandNotifHubState()
+    }
+
+    fun setIslandNotifHubIcons(value: Int) {
+        islandNotifHubIcons.intValue = value
+        settingsRepository.setIslandNotifHubIcons(value)
     }
 
     private fun syncIslandNotifHubState() {

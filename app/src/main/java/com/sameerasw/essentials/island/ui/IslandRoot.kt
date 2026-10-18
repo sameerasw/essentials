@@ -424,7 +424,7 @@ fun IslandRoot(
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
-        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight) }
+        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight, it.maxIcons ?: OVERLAP_MAX) }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
     val sideWidthAnim = remember { Animatable(sideWidthPx.toFloat()) }
@@ -683,6 +683,7 @@ fun IslandRoot(
                     style = spec.queueStyle,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
+                    maxIcons = bubbleData.maxIcons ?: OVERLAP_MAX,
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {

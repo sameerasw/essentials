@@ -56,6 +56,7 @@ import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeS
 import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescription
 import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBorderOutlineOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationHubOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationQueueOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
@@ -905,6 +906,7 @@ fun IslandNotificationSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showFilterAppsSheet by remember { mutableStateOf(false) }
+    var showHubSheet by remember { mutableStateOf(false) }
     var showOtpPermissions by remember { mutableStateOf(false) }
     var showQueueSheet by remember {
         mutableStateOf(
@@ -952,6 +954,22 @@ fun IslandNotificationSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_notif_hub"),
             )
+
+            AnimatedVisibility(
+                visible = viewModel.isIslandNotifHub.value,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_settings_24,
+                    title = stringResource(R.string.island_hide_icon_notifications),
+                    showToggle = false,
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showHubSheet = true
+                    },
+                )
+            }
         }
 
         IslandSettingsSection(R.string.island_notif_section_sources) {
@@ -1277,6 +1295,13 @@ fun IslandNotificationSettingsUI(
                 }
             }
         }
+    }
+
+    if (showHubSheet) {
+        IslandNotificationHubOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showHubSheet = false },
+        )
     }
 
     if (showQueueSheet) {

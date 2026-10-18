@@ -98,6 +98,7 @@ class SideBubble(
     val content: (@Composable (Dp) -> Unit)? = null,
     val whenOccupiedOnly: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
+    val maxIcons: Int? = null,
 )
 
 object SideBubblePriority {
