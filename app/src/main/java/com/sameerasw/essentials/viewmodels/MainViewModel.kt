@@ -289,7 +289,7 @@ class MainViewModel : ViewModel() {
     val isIslandNotifFilterApps = mutableStateOf(false)
     val isIslandShowNotifications = mutableStateOf(true)
     val isIslandNotifHub = mutableStateOf(false)
-    val islandNotifHubIcons = mutableIntStateOf(3)
+    val islandNotifHubIcons = mutableIntStateOf(0)
     val islandNotifHubOrder = mutableStateOf(SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC)
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)

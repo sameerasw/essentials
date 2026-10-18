@@ -4337,8 +4337,9 @@ class SettingsRepository(
 
     fun setIslandNotifHubOrder(value: String) = putString(KEY_ISLAND_NOTIF_HUB_ORDER, value)
 
-    fun getIslandNotifHubIcons(): Int = getInt(KEY_ISLAND_NOTIF_HUB_ICONS, 3).coerceIn(1, 8)
-    fun setIslandNotifHubIcons(value: Int) = putInt(KEY_ISLAND_NOTIF_HUB_ICONS, value.coerceIn(1, 8))
+    // 0 = fit to the available width
+    fun getIslandNotifHubIcons(): Int = getInt(KEY_ISLAND_NOTIF_HUB_ICONS, 0).coerceIn(0, 8)
+    fun setIslandNotifHubIcons(value: Int) = putInt(KEY_ISLAND_NOTIF_HUB_ICONS, value.coerceIn(0, 8))
 
     fun isIslandNotifHubEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB, false)
     fun setIslandNotifHubEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB, enabled)

@@ -3438,6 +3438,7 @@
     <string name="island_notif_peek_style_search_desc">Full, compact or minimal peeks</string>
     <string name="island_notif_show_title">Show notifications</string>
     <string name="island_notif_hub_title">Notification Hub</string>
+    <string name="island_notif_hub_icons_auto">Auto</string>
     <string name="island_notif_hub_order_title">Ordering</string>
     <string name="island_notif_hub_order_dynamic">Dynamic</string>
     <string name="island_notif_hub_order_priority">Priority</string>

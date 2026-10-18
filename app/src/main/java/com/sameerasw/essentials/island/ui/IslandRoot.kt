@@ -422,9 +422,20 @@ fun IslandRoot(
         }
     }
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
+    val compactSlack = remember { mutableIntStateOf(0) }
+    val bubbleMaxIcons = lastCatchUp?.maxIcons?.let { chosen ->
+        if (chosen > 0) {
+            chosen
+        } else {
+            val sizePx = with(density) { spec.compactHeight.toPx() }
+            val baseWidth = maxOf(fallbackCompact.width, compactSize.width - compactSlack.intValue)
+            val room = (with(density) { spec.lineWidth.toPx() } - baseWidth) / 2f - with(density) { spec.cameraGap.toPx() }
+            (((room - sizePx) / (sizePx * 0.55f)).toInt() + 1).coerceIn(1, 8)
+        }
+    } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
-        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight, it.maxIcons ?: OVERLAP_MAX) }
+        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight, bubbleMaxIcons) }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
     val sideWidthAnim = remember { Animatable(sideWidthPx.toFloat()) }
@@ -433,7 +444,6 @@ fun IslandRoot(
     }
     fun sideWidthLive(): Int = sideWidthAnim.value.roundToInt()
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
-    val compactSlack = remember { mutableIntStateOf(0) }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && hasCompactCells) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     fun catchShiftPx(): Float = sideBubbleProgress() * compactSlack.intValue / 2f
@@ -683,7 +693,7 @@ fun IslandRoot(
                     style = spec.queueStyle,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
-                    maxIcons = bubbleData.maxIcons ?: OVERLAP_MAX,
+                    maxIcons = bubbleMaxIcons,
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {

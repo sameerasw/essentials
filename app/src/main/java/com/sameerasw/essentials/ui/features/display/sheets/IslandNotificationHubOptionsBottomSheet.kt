@@ -45,6 +45,7 @@ fun IslandNotificationHubOptionsBottomSheet(
             )
 
             RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                val autoLabel = stringResource(R.string.island_notif_hub_icons_auto)
                 val dynamicLabel = stringResource(R.string.island_notif_hub_order_dynamic)
                 val priorityLabel = stringResource(R.string.island_notif_hub_order_priority)
                 val recentLabel = stringResource(R.string.island_notif_hub_order_recent)
@@ -73,10 +74,10 @@ fun IslandNotificationHubOptionsBottomSheet(
                         HapticUtil.performUIHaptic(view)
                         viewModel.setIslandNotifHubIcons(it.toInt())
                     },
-                    valueRange = 1f..8f,
+                    valueRange = 0f..8f,
                     increment = 1f,
                     iconRes = R.drawable.rounded_notifications_unread_24,
-                    valueFormatter = { it.toInt().toString() },
+                    valueFormatter = { if (it.toInt() == 0) autoLabel else it.toInt().toString() },
                 )
             }
         }
