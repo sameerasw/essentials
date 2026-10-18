@@ -1697,7 +1697,7 @@
     <string name="island_expanded_timeout_desc">Duração antes de retornar ao estado de comprimido colapsado (0 para infinito)</string>
     <string name="island_preview_ring_title">Mostrar fica de alinhamento</string>
     <string name="island_expanded_scale_title">Escala espandida</string>
-    <string name="island_font_scale_title">Tamanho da fonte</string>
+    <string name="island_font_scale_title">tamanho da fonte (letras)</string>
     <string name="island_expanded_roundness_title">raio de canto expandido</string>
     <string name="island_expanded_padding_title">Acolchoamento expandido</string>
     <string name="island_expanded_top_padding_title">Acolchoamento superior expandido</string>
@@ -1729,4 +1729,18 @@
     <string name="island_calendar_priority_title">Prioridade ao fechar</string>
     <string name="status_glance_calendar_timeframe_title">Mostrar os próximos eventos em</string>
     <string name="island_launcher_only_desc">Ocultar enquanto o aplicativo estiver aberto</string>
+    <string name="watch_watchface_title">Mostrador de relógio</string>
+    <string name="watch_watchface_desc">customize seu mostrador de relógio (estranho)</string>
+    <string name="watch_complications_desc">Personalizar widgets de complicações</string>
+    <string name="watch_complications_title">compilações </string>
+    <string name="watch_esim_install_title">Instalar eSIM</string>
+    <string name="watch_esim_install_desc">Mesmo em regiões sem suporte</string>
+    <string name="watchface_clock_dual_tone_title">bicolor</string>
+    <string name="watchface_clock_dual_tone_desc">Horas em branco, minutos em cor de destaque</string>
+    <string name="watchface_clock_outline_title">Apenas o esboço</string>
+    <string name="watchface_clock_outline_desc">Exibir apenas os contornos da fonte em vez do texto preenchido.</string>
+    <string name="watchface_hide_battery_title">esconder bateria</string>
+    <string name="watchface_hide_battery_desc">Ocultar rastros de arco e indicadores da bateria</string>
+    <string name="watchface_hide_device_icons_title">esconder ícones do dispositivo </string>
+    <string name="watchface_hide_device_icons_desc">Ocultar ícones de relógio e telefone na parte inferior</string>
 </resources>
