@@ -87,6 +87,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.FeatureHelpBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PixelSearchBlurOptionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
@@ -324,6 +325,7 @@ fun PixelSearchbarSettingsUI(
     var pendingWidgetId by remember { mutableStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
     var showWidgetPicker by remember { mutableStateOf(false) }
     var isWidgetUnsupported by remember { mutableStateOf(false) }
+    var showBlurOptionsSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentType) {
         while (currentType == "widget") {
@@ -1000,11 +1002,19 @@ fun PixelSearchbarSettingsUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.setPixelSearchBlurEnabled(checked)
                             },
+                            onSettingsClick = { showBlurOptionsSheet = true },
                         )
                     }
                 }
             }
         }
+    }
+
+    if (showBlurOptionsSheet) {
+        PixelSearchBlurOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showBlurOptionsSheet = false },
+        )
     }
 
     if (showPermissionSheet) {

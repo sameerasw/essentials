@@ -206,12 +206,20 @@ class PixelSearchResultsActivity : ComponentActivity() {
 
         val repository = SettingsRepository(this)
         val isBlurEnabled = repository.isPixelSearchBlurEnabled()
+        val isWallpaperBg = repository.isPixelSearchWallpaperBackgroundEnabled()
+        val blurRadius = repository.getPixelSearchBlurRadius().toInt().coerceIn(1, 300)
+
+        if (isWallpaperBg) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val params = window.attributes
             if (isBlurEnabled) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                params.blurBehindRadius = 60
+                params.blurBehindRadius = blurRadius
             } else {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
                 params.blurBehindRadius = 0
