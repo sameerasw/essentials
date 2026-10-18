@@ -306,6 +306,7 @@ class ScreenOffAccessibilityService :
             } else if (key?.startsWith("snippets_") == true) {
                 if (::snippetAccessibilityHandler.isInitialized) {
                     snippetAccessibilityHandler.updateSettings()
+                    updateSnippetEventRegistration()
                 }
             } else if (key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUTS_ENABLED ||
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS ||
@@ -532,6 +533,7 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        updateSnippetEventRegistration()
     }
 
     private fun updateOmniOverlay() {
@@ -760,6 +762,22 @@ class ScreenOffAccessibilityService :
         if (pkg == packageName) return true
         val imm = getSystemService(INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
         return imm?.inputMethodList?.any { it.packageName == pkg } == true
+    }
+
+    private fun updateSnippetEventRegistration() {
+        val info = serviceInfo ?: return
+        val isSnippetsEnabled = SettingsRepository(this).isSnippetsUniversalEnabled()
+        val currentEvents = info.eventTypes
+        val desiredEvents =
+            if (isSnippetsEnabled) {
+                currentEvents or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+            } else {
+                currentEvents and AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED.inv()
+            }
+        if (currentEvents != desiredEvents) {
+            info.eventTypes = desiredEvents
+            serviceInfo = info
+        }
     }
 
     override fun onInterrupt() {
