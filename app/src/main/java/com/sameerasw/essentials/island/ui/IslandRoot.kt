@@ -424,13 +424,21 @@ fun IslandRoot(
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
     val compactSlack = remember { mutableIntStateOf(0) }
     val compactBaseWidth = remember { mutableIntStateOf(0) }
+    val compactNeedLeft = remember { mutableIntStateOf(-1) }
     val bubbleMaxIcons = lastCatchUp?.maxIcons?.let { chosen ->
         if (chosen > 0) {
             chosen
         } else {
             val sizePx = with(density) { spec.compactHeight.toPx() }
-            val baseWidth = maxOf(fallbackCompact.width, compactBaseWidth.intValue)
-            val room = (with(density) { spec.lineWidth.toPx() } - baseWidth) / 2f - with(density) { spec.cameraGap.toPx() }
+            val budget = with(density) { spec.lineWidth.toPx() }
+            val gap = with(density) { spec.cameraGap.toPx() }
+            val needLeft = compactNeedLeft.intValue
+            // Balanced, the bubble's room grows the pill on the far side, so only the near side's content eats into the budget
+            val room = if (needLeft >= 0) {
+                (budget - cameraSlotPx) / 2f - needLeft - gap
+            } else {
+                (budget - maxOf(fallbackCompact.width, compactBaseWidth.intValue)) - gap
+            }
             (((room - sizePx) / (sizePx * 0.55f)).toInt() + 1).coerceIn(1, 8)
         }
     } ?: OVERLAP_MAX
@@ -1185,6 +1193,7 @@ fun IslandRoot(
                             bubbleExtent = { bubbleGapPx + sideWidthLive() },
                             onSlack = { if (current) compactSlack.intValue = it },
                             onBaseWidth = { if (current) compactBaseWidth.intValue = it },
+                            onNeedLeft = { if (current) compactNeedLeft.intValue = it },
                         )
                     }
                 }
@@ -1323,6 +1332,7 @@ private fun StageContent(
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
     onBaseWidth: (Int) -> Unit = {},
+    onNeedLeft: (Int) -> Unit = {},
 ) {
     val a = if (interactive) actions else NoActions
     when (stage) {
@@ -1342,6 +1352,7 @@ private fun StageContent(
                     bubbleExtent = bubbleExtent,
                     onSlack = onSlack,
                     onBaseWidth = onBaseWidth,
+                    onNeedLeft = onNeedLeft,
                 )
             }
         }

@@ -42,6 +42,7 @@ fun CompactTemplate(
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
     onBaseWidth: (Int) -> Unit = {},
+    onNeedLeft: (Int) -> Unit = {},
 ) {
     val cells = buildMap {
         state.items.values.forEach { item -> item.compact.forEach { put(it.key, item.key to it) } }
@@ -134,6 +135,7 @@ fun CompactTemplate(
             val endInset = edgeInset(cells.last())
             val width = pad * 2 + startInset + endInset + content(cells)
             onBaseWidth(width)
+            onNeedLeft(-1)
             return@Layout layout(width, height) {
                 var x = pad + startInset
                 cells.forEach {
@@ -148,6 +150,7 @@ fun CompactTemplate(
             val body = content(cells) + if (cells.isEmpty()) 0 else spacing + inset
             val width = cameraSlot + body
             onBaseWidth(width)
+            onNeedLeft(-1)
             return@Layout layout(width, height) {
                 var x = if (spec.growDirection > 0) cameraSlot else spacing + inset
                 cells.forEach {
@@ -172,6 +175,7 @@ fun CompactTemplate(
         val leftSide = (mirrored + (balancedLeft - mirrored) * t).roundToInt()
         val rightSide = (mirrored + (balancedRight - mirrored) * t).roundToInt()
         onBaseWidth(mirrored * 2 + cameraSlot)
+        onNeedLeft(needLeft)
         val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
             var x = spacing + leftInset
