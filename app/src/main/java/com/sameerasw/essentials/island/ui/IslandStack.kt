@@ -169,7 +169,9 @@ private fun queueVisible(icons: List<StackIcon>, max: Int): List<StackIcon> {
     return drawn + queueOverflowIcon(icons.size - drawn.size)
 }
 
-private fun queueOverflowIcon(count: Int) = StackIcon("queue_overflow") { size -> QueueOverflowCounter(count, size) }
+private const val OVERFLOW_KEY = "queue_overflow"
+
+private fun queueOverflowIcon(count: Int) = StackIcon(OVERFLOW_KEY) { size -> QueueOverflowCounter(count, size) }
 
 @Composable
 private fun QueueOverflowCounter(count: Int, size: Dp) {
@@ -195,7 +197,7 @@ private fun QueueOverflowCounter(count: Int, size: Dp) {
                 maxLines = 1,
                 softWrap = false,
                 fontWeight = FontWeight.Bold,
-                fontSize = with(LocalDensity.current) { (size * if (shownCount > 9) 0.4f else 0.5f).toSp() },
+                fontSize = with(LocalDensity.current) { (size * if (shownCount > 9) 0.32f else 0.4f).toSp() },
             )
         }
     }
@@ -203,7 +205,14 @@ private fun QueueOverflowCounter(count: Int, size: Dp) {
 
 private const val OVERLAP_STEP = 0.55f
 
-fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX): Dp = size + size * OVERLAP_STEP * (count.coerceIn(1, maxIcons) - 1)
+// Slightly overlapped, so the liquid neck to the counter holds through a bounce
+private const val OVERFLOW_STEP = 0.85f
+
+// The +N counter gets a slot of its own so the next icon doesn't sit on top of it
+fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX): Dp {
+    val gap = if (count > maxIcons) size * (OVERFLOW_STEP - OVERLAP_STEP) else 0.dp
+    return size + size * OVERLAP_STEP * (count.coerceIn(1, maxIcons) - 1) + gap
+}
 
 @Composable
 fun IslandStackOverlap(
@@ -216,7 +225,7 @@ fun IslandStackOverlap(
     maxIcons: Int = OVERLAP_MAX,
 ) {
     val shown = queueVisible(icons, maxIcons)
-    val width by animateDpAsState(stackOverlapWidth(shown.size, size, maxIcons), IslandMotion.expressiveDefaultSpatial(), label = "overlapWidth")
+    val width by animateDpAsState(stackOverlapWidth(icons.size, size, maxIcons), IslandMotion.expressiveDefaultSpatial(), label = "overlapWidth")
     val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
     val field = remember { LiquidField() }
     field.reach = with(LocalDensity.current) { size.toPx() } * 0.3f
@@ -231,7 +240,8 @@ fun IslandStackOverlap(
                     val held = remember { arrayOf(0.dp) }
                     val index = order.indexOfFirst { it.key == entry.icon.key }
                     val present = index >= 0
-                    val target = if (present) (step * index).also { held[0] = it } else step * (order.size - 1) / 2
+                    val counterGap = if (icons.size > maxIcons && entry.icon.key != OVERFLOW_KEY) size * (OVERFLOW_STEP - OVERLAP_STEP) else 0.dp
+                    val target = if (present) (step * index + counterGap).also { held[0] = it } else step * (order.size - 1) / 2
                     val spawn = remember { if (entry.visibility.currentState) target else step * (index - 1).coerceAtLeast(0) }
                     val x = remember { Animatable(spawn, Dp.VectorConverter) }
                     LaunchedEffect(target) { x.animateTo(target, IslandMotion.expressiveDefaultSpatial()) }

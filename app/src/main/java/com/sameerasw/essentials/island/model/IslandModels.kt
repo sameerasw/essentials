@@ -100,6 +100,8 @@ class SideBubble(
     val whenOccupiedOnly: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
     val maxIcons: Int? = null,
+    // Compact cells' worth of room the bubble takes beside the camera
+    val cells: Int = 1,
 )
 
 object SideBubblePriority {

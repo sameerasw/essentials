@@ -301,7 +301,7 @@ class IslandController(
             },
             anchorProvider(),
             maxCells = maxCells,
-            leftExtra = if (bubbleOwner != null) 1 else 0,
+            leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
         )
         val focusedKey = expandedKey ?: peekKey

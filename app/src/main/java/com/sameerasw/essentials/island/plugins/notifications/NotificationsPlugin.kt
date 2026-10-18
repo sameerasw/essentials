@@ -3,6 +3,7 @@ package com.sameerasw.essentials.island.plugins.notifications
 import com.sameerasw.essentials.island.model.QueueInfo
 import com.sameerasw.essentials.island.model.StackIcon
 import android.widget.Toast
+import kotlin.math.ceil
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
 import android.content.Context
@@ -454,6 +455,13 @@ class NotificationsPlugin : BaseIslandPlugin() {
         c.mainHandler.postDelayed(unpinRunnable, timeoutMs())
     }
 
+    private fun bubbleCells(): Int {
+        if (!hub() || settings.getIslandNotifQueueStyle() != SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) return 1
+        val shown = alerts.size.coerceIn(1, settings.getIslandNotifHubIcons())
+        val overflow = if (alerts.size > settings.getIslandNotifHubIcons()) 0.3f else 0f
+        return ceil(1f + 0.55f * (shown - 1) + overflow).toInt()
+    }
+
     private fun priorityRank(alert: ActiveNotificationAlert) = when {
         alert.ongoing -> 0
         alert.isConversation -> 1
@@ -554,6 +562,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 onOpen = { select(alert.key) },
                 onDismiss = if (hub()) null else ({ clearAll() }),
                 maxIcons = if (hub()) settings.getIslandNotifHubIcons() else null,
+                cells = bubbleCells(),
             )
             else -> null
         }
