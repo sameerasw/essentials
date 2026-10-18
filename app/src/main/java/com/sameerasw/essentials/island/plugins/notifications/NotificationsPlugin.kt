@@ -54,6 +54,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
         SettingsRepository.KEY_ISLAND_NOTIF_HUB,
         SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_ORDER,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
         SettingsRepository.KEY_ISLAND_OTP_ENABLED,
@@ -71,6 +72,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     
     private var pendingPopUp = false
     private var catchingUp = false
+    private var pinnedKey: String? = null
 
     private fun busyElsewhere(): Boolean {
         val c = ctx ?: return false
@@ -91,6 +93,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 c.mainHandler.removeCallbacks(catchUpRunnable)
                 if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
             }
+            pinLatest()
             catchingUp = true
         }
         if (catchingUp) render()
@@ -189,6 +192,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
             registered = false
         }
         cancelTimers()
+        ctx?.mainHandler?.removeCallbacks(unpinRunnable)
+        pinnedKey = null
         alerts.clear()
         seen.clear()
     }
@@ -415,6 +420,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         }
         if (settings.isIslandCatchUpEnabled() && alerts.isNotEmpty()) {
             if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+            pinLatest()
             catchingUp = true
             render()
             return
@@ -429,8 +435,41 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         cancelTimers()
+        pinLatest()
         catchingUp = true
         if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+    }
+
+    private val unpinRunnable = Runnable {
+        pinnedKey = null
+        render()
+    }
+
+    // The newest notification that just dropped into the catch-up bubble leads and gets a ring until its regular timeout runs out
+    private fun pinLatest() {
+        val c = ctx ?: return
+        if (!hub() || settings.getIslandNotifHubOrder() != SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC) return
+        pinnedKey = currentAlert()?.key ?: return
+        c.mainHandler.removeCallbacks(unpinRunnable)
+        c.mainHandler.postDelayed(unpinRunnable, timeoutMs())
+    }
+
+    private fun priorityRank(alert: ActiveNotificationAlert) = when {
+        alert.ongoing -> 0
+        alert.isConversation -> 1
+        alert.isSilent -> 3
+        else -> 2
+    }
+
+    private fun hubOrdered(): List<ActiveNotificationAlert> {
+        val mode = settings.getIslandNotifHubOrder()
+        val recent = alerts.sortedByDescending { it.timestamp }
+        if (mode == SettingsRepository.ISLAND_NOTIF_HUB_ORDER_RECENT) return recent
+        val byPriority = recent.sortedBy(::priorityRank)
+        val pinned = pinnedKey
+            ?.takeIf { mode == SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC }
+            ?.let { key -> byPriority.firstOrNull { it.key == key } }
+        return if (pinned != null) listOf(pinned) + byPriority.filter { it !== pinned } else byPriority
     }
 
     private fun scheduleTimeout() {
@@ -446,6 +485,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun clearAll() {
+        ctx?.mainHandler?.removeCallbacks(unpinRunnable)
+        pinnedKey = null
         catchingUp = false
         catchUpPaused = false
         copiedKey = null
@@ -505,7 +546,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
             minimal -> null
             settings.isIslandCatchUpEnabled() -> SideBubble(
                 priority = SideBubblePriority.NOTIFICATION,
-                icons = alerts.map { stackIconFor(it, current = false) },
+                icons = if (hub()) {
+                    hubOrdered().map { stackIconFor(it, current = false, highlight = it.key == pinnedKey) }
+                } else {
+                    alerts.map { stackIconFor(it, current = false) }
+                },
                 onOpen = { select(alert.key) },
                 onDismiss = if (hub()) null else ({ clearAll() }),
                 maxIcons = if (hub()) settings.getIslandNotifHubIcons() else null,
@@ -770,9 +815,9 @@ class NotificationsPlugin : BaseIslandPlugin() {
         render()
     }
 
-    private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean): StackIcon {
+    private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean, highlight: Boolean = false): StackIcon {
         val icon = if (concealed() && hidesChatPictures()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
-        return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }) { size ->
+        return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }, highlight = highlight) { size ->
             IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
         }
     }

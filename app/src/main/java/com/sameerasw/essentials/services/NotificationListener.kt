@@ -1090,6 +1090,7 @@ class NotificationListener : NotificationListenerService() {
                 isSilent = isSilentNotification(sbn, rankingMap),
                 blockedByDnd = isBlockedByDnd(sbn, rankingMap),
                 otpCode = otpCodeOf(sbn),
+                isConversation = isConversationNotification(sbn, rankingMap),
             )
             val callHidden = CallNotificationParser.isCall(sbn) && !SettingsRepository(applicationContext).isIslandShowCallsEnabled()
             if (alert != null && !callHidden) {
@@ -2070,6 +2071,15 @@ class NotificationListener : NotificationListenerService() {
         it.isIslandNotifHubEnabled() && it.isIslandShowNotificationsEnabled()
     }
 
+    private fun isConversationNotification(sbn: StatusBarNotification, rankingMap: RankingMap?): Boolean {
+        val notif = sbn.notification
+        if (notif.category == Notification.CATEGORY_MESSAGE) return true
+        if (notif.extras?.getString(Notification.EXTRA_TEMPLATE)?.endsWith("MessagingStyle") == true) return true
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+        val ranking = Ranking()
+        return (rankingMap ?: currentRanking)?.getRanking(sbn.key, ranking) == true && ranking.isConversation
+    }
+
     private fun hubAlertOf(sbn: StatusBarNotification, rankingMap: RankingMap?): ActiveNotificationAlert? {
         if (sbn.packageName == packageName || !hasReadableExtras(sbn) || isMediaNotification(sbn)) return null
         if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) return null
@@ -2077,6 +2087,7 @@ class NotificationListener : NotificationListenerService() {
             isSilent = isSilentNotification(sbn, rankingMap),
             blockedByDnd = isBlockedByDnd(sbn, rankingMap),
             ongoing = sbn.isOngoing,
+            isConversation = isConversationNotification(sbn, rankingMap),
             hubOnly = true,
             timestamp = if (sbn.postTime > 0) sbn.postTime else System.currentTimeMillis(),
         )

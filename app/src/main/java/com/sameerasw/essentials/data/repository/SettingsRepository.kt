@@ -674,6 +674,10 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_HUB = "island_notif_hub"
         const val KEY_ISLAND_NOTIF_HUB_ICONS = "island_notif_hub_icons"
+        const val KEY_ISLAND_NOTIF_HUB_ORDER = "island_notif_hub_order"
+        const val ISLAND_NOTIF_HUB_ORDER_DYNAMIC = "dynamic"
+        const val ISLAND_NOTIF_HUB_ORDER_PRIORITY = "priority"
+        const val ISLAND_NOTIF_HUB_ORDER_RECENT = "recent"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
         const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
@@ -4325,6 +4329,13 @@ class SettingsRepository(
 
     fun isIslandShowNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, true)
     fun setIslandShowNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, enabled)
+
+    fun getIslandNotifHubOrder(): String =
+        getString(KEY_ISLAND_NOTIF_HUB_ORDER, null)
+            ?.takeIf { it == ISLAND_NOTIF_HUB_ORDER_PRIORITY || it == ISLAND_NOTIF_HUB_ORDER_RECENT }
+            ?: ISLAND_NOTIF_HUB_ORDER_DYNAMIC
+
+    fun setIslandNotifHubOrder(value: String) = putString(KEY_ISLAND_NOTIF_HUB_ORDER, value)
 
     fun getIslandNotifHubIcons(): Int = getInt(KEY_ISLAND_NOTIF_HUB_ICONS, 3).coerceIn(1, 8)
     fun setIslandNotifHubIcons(value: Int) = putInt(KEY_ISLAND_NOTIF_HUB_ICONS, value.coerceIn(1, 8))

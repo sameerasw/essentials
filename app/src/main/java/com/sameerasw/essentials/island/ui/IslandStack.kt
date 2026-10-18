@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
@@ -245,12 +246,21 @@ fun IslandStackOverlap(
                             .offset { IntOffset(x.value.roundToPx(), 0) }
                             .liquid(entryLiquid),
                     ) {
+                        val ringColor = MaterialTheme.colorScheme.primary
+                        val ringAlpha by animateFloatAsState(if (entry.icon.highlight) 1f else 0f, IslandMotion.expressiveDefaultEffects(), label = "overlapRing")
                         Box(
                             Modifier
                                 .size(size)
                                 .clip(CircleShape)
                                 .background(Color.Black)
-                                .islandOutline(outlineColor, outlineThickness, CircleShape),
+                                .islandOutline(outlineColor, outlineThickness, CircleShape)
+                                .drawWithContent {
+                                    drawContent()
+                                    if (ringAlpha > 0f) {
+                                        val stroke = 2.5.dp.toPx()
+                                        drawCircle(ringColor.copy(alpha = ringAlpha), radius = this.size.minDimension / 2f - stroke / 2f, style = Stroke(stroke))
+                                    }
+                                },
                             contentAlignment = Alignment.Center,
                         ) {
                             val iconSize = size * 0.72f

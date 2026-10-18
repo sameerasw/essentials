@@ -13,6 +13,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -43,6 +45,27 @@ fun IslandNotificationHubOptionsBottomSheet(
             )
 
             RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                val dynamicLabel = stringResource(R.string.island_notif_hub_order_dynamic)
+                val priorityLabel = stringResource(R.string.island_notif_hub_order_priority)
+                val recentLabel = stringResource(R.string.island_notif_hub_order_recent)
+                SegmentedPicker(
+                    items = listOf(
+                        SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC,
+                        SettingsRepository.ISLAND_NOTIF_HUB_ORDER_PRIORITY,
+                        SettingsRepository.ISLAND_NOTIF_HUB_ORDER_RECENT,
+                    ),
+                    selectedItem = viewModel.islandNotifHubOrder.value,
+                    onItemSelected = { viewModel.setIslandNotifHubOrder(it) },
+                    labelProvider = {
+                        when (it) {
+                            SettingsRepository.ISLAND_NOTIF_HUB_ORDER_PRIORITY -> priorityLabel
+                            SettingsRepository.ISLAND_NOTIF_HUB_ORDER_RECENT -> recentLabel
+                            else -> dynamicLabel
+                        }
+                    },
+                    title = R.string.island_notif_hub_order_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 ConfigSliderItem(
                     title = stringResource(R.string.island_hide_icon_notifications),
                     value = viewModel.islandNotifHubIcons.intValue.toFloat(),
