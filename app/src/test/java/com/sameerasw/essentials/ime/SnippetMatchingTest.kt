@@ -123,4 +123,44 @@ class SnippetMatchingTest {
         val index = calculateReplacementIndex(text, text.length, "!date")
         assertEquals(-1, index)
     }
+
+    private fun buildReplacementText(fullText: String, cursor: Int, targetWord: String, replacement: String): String? {
+        val targetIndex =
+            if (cursor in targetWord.length..fullText.length &&
+                fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
+            ) {
+                cursor - targetWord.length
+            } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
+                fullText.length - targetWord.length
+            } else if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
+                val trimmed = fullText.trimEnd()
+                trimmed.length - targetWord.trimEnd().length
+            } else {
+                return null
+            }
+
+        val actualWordEnd =
+            if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
+                fullText.length
+            } else {
+                (targetIndex + targetWord.length).coerceAtMost(fullText.length)
+            }
+
+        return fullText.substring(0, targetIndex) + replacement + fullText.substring(actualWordEnd)
+    }
+
+    @Test
+    fun buildReplacementText_replacesCleanlyWithoutDoubleTrailingSpaces() {
+        val text = "Search !date  "
+        val replaced = buildReplacementText(text, -1, "!date", "2026-10-18 ")
+        assertEquals("Search 2026-10-18 ", replaced)
+    }
+
+    @Test
+    fun buildReplacementText_middleCursor_preservesSurroundingText() {
+        val text = "Before !date after"
+        val cursor = text.indexOf("!date") + "!date".length
+        val replaced = buildReplacementText(text, cursor, "!date", "2026-10-18 ")
+        assertEquals("Before 2026-10-18  after", replaced)
+    }
 }

@@ -119,9 +119,15 @@ class SnippetAccessibilityHandler(
         val sourceNode = event.source ?: return
         if (event.isPassword || sourceNode.isPassword || isPasswordField(sourceNode)) return
 
-        val canEdit = sourceNode.isEditable ||
-            sourceNode.actionList.any { it.id == AccessibilityNodeInfo.ACTION_SET_TEXT } ||
-            sourceNode.className?.contains("EditText", ignoreCase = true) == true
+        val hasSetTextAction = (sourceNode.actions and AccessibilityNodeInfo.ACTION_SET_TEXT) != 0 ||
+            sourceNode.actionList.any { it.id == AccessibilityNodeInfo.ACTION_SET_TEXT }
+        val isTextClass = sourceNode.className?.let { name ->
+            name.contains("EditText", ignoreCase = true) ||
+                name.contains("AutoComplete", ignoreCase = true) ||
+                name.contains("Search", ignoreCase = true)
+        } == true
+
+        val canEdit = sourceNode.isEditable || hasSetTextAction || isTextClass
         if (!canEdit) return
 
         activeNode?.recycle()
@@ -219,10 +225,17 @@ class SnippetAccessibilityHandler(
                     return false
                 }
 
+            val actualWordEnd =
+                if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
+                    fullText.length
+                } else {
+                    (targetIndex + targetWord.length).coerceAtMost(fullText.length)
+                }
+
             val newText =
                 fullText.substring(0, targetIndex) +
                     replacement +
-                    fullText.substring(targetIndex + targetWord.length)
+                    fullText.substring(actualWordEnd)
 
             val args =
                 Bundle().apply {
@@ -231,7 +244,7 @@ class SnippetAccessibilityHandler(
             val success = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
             if (!success) return false
 
-            val newCursorPos = targetIndex + replacement.length
+            val newCursorPos = (targetIndex + replacement.length).coerceIn(0, newText.length)
             val cursorArgs =
                 Bundle().apply {
                     putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, newCursorPos)
@@ -416,7 +429,7 @@ class SnippetAccessibilityHandler(
                             if (currentSnippet != null) {
                                 SnippetFloatingPillView(
                                     snippet = currentSnippet,
-                                    onExpand = onExpand,
+                                    onExpand = { expandSnippet(currentSnippet) },
                                     onDismiss = { dismissAllSuggestions() },
                                 )
                             }
