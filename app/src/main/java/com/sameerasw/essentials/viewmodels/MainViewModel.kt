@@ -288,6 +288,11 @@ class MainViewModel : ViewModel() {
     val isIslandNotifFollowDnd = mutableStateOf(true)
     val isIslandNotifFilterApps = mutableStateOf(false)
     val isIslandShowNotifications = mutableStateOf(true)
+    val isIslandNotifHub = mutableStateOf(false)
+    val islandNotifHubIcons = mutableIntStateOf(0)
+    val isIslandNotifHubIncludeSilent = mutableStateOf(false)
+    val isIslandNotifHubGroupByApps = mutableStateOf(false)
+    val islandNotifHubOrder = mutableStateOf(SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC)
     val isIslandNotifTapToOpen = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
@@ -308,7 +313,7 @@ class MainViewModel : ViewModel() {
     val isIslandShowCalendar = mutableStateOf(false)
     val isIslandShowConsciousGate = mutableStateOf(true)
     val isIslandShowTimeBattery = mutableStateOf(false)
-    val isIslandShowBatteryAlerts = mutableStateOf(true)
+    val isIslandBatteryPeekAlerts = mutableStateOf(true)
     val isIslandShowBattery = mutableStateOf(false)
     val isIslandShowFlashlight = mutableStateOf(true)
     val islandBatteryStyle = mutableStateOf(SettingsRepository.ISLAND_BATTERY_STYLE_RING)
@@ -983,6 +988,20 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS ->
                         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
 
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB -> syncIslandNotifHubState()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_SILENT ->
+                        isIslandNotifHubIncludeSilent.value = settingsRepository.isIslandNotifHubIncludeSilent()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_GROUP ->
+                        isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_ORDER ->
+                        islandNotifHubOrder.value = settingsRepository.getIslandNotifHubOrder()
+
+                    SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS ->
+                        islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
+
                     SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
                         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
 
@@ -1002,7 +1021,7 @@ class MainViewModel : ViewModel() {
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_TIMEOUT_MS ->
-                        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+                        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
 
                     SettingsRepository.KEY_ISLAND_OTP_ENABLED ->
                         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
@@ -2545,9 +2564,14 @@ class MainViewModel : ViewModel() {
         isIslandNotifFollowDnd.value = settingsRepository.isIslandNotifFollowDndEnabled()
         isIslandNotifFilterApps.value = settingsRepository.isIslandNotifFilterAppsEnabled()
         isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
+        isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
+        islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
+        islandNotifHubOrder.value = settingsRepository.getIslandNotifHubOrder()
+        isIslandNotifHubIncludeSilent.value = settingsRepository.isIslandNotifHubIncludeSilent()
+        isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
         isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
-        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpTimeoutMs()
+        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
@@ -2565,7 +2589,7 @@ class MainViewModel : ViewModel() {
         isIslandShowCalendar.value = settingsRepository.isIslandShowCalendarEnabled()
         isIslandShowConsciousGate.value = settingsRepository.isIslandShowConsciousGateEnabled()
         isIslandShowTimeBattery.value = settingsRepository.isIslandShowTimeBatteryEnabled()
-        isIslandShowBatteryAlerts.value = settingsRepository.isIslandShowBatteryAlertsEnabled()
+        isIslandBatteryPeekAlerts.value = settingsRepository.isIslandBatteryPeekAlertsEnabled()
         isIslandShowBattery.value = settingsRepository.isIslandShowBatteryEnabled()
         isIslandShowFlashlight.value = settingsRepository.isIslandShowFlashlightEnabled()
         islandBatteryStyle.value = settingsRepository.getIslandBatteryStyle()
@@ -5998,6 +6022,40 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandShowNotificationsEnabled(enabled)
     }
 
+    fun setIslandNotifHub(enabled: Boolean) {
+        if (enabled) settingsRepository.setIslandShowNotificationsEnabled(true)
+        settingsRepository.setIslandNotifHubEnabled(enabled)
+        isIslandShowNotifications.value = settingsRepository.isIslandShowNotificationsEnabled()
+        syncIslandNotifHubState()
+    }
+
+    fun setIslandNotifHubIncludeSilent(enabled: Boolean) {
+        isIslandNotifHubIncludeSilent.value = enabled
+        settingsRepository.setIslandNotifHubIncludeSilent(enabled)
+    }
+
+    fun setIslandNotifHubGroupByApps(enabled: Boolean) {
+        isIslandNotifHubGroupByApps.value = enabled
+        settingsRepository.setIslandNotifHubGroupByApps(enabled)
+    }
+
+    fun setIslandNotifHubOrder(value: String) {
+        islandNotifHubOrder.value = value
+        settingsRepository.setIslandNotifHubOrder(value)
+    }
+
+    fun setIslandNotifHubIcons(value: Int) {
+        islandNotifHubIcons.intValue = value
+        settingsRepository.setIslandNotifHubIcons(value)
+    }
+
+    private fun syncIslandNotifHubState() {
+        isIslandNotifHub.value = settingsRepository.isIslandNotifHubEnabled()
+        isIslandNotifQueue.value = settingsRepository.isIslandNotifQueueEnabled()
+        isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
+        islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
+    }
+
     fun setIslandNotifQueueInline(enabled: Boolean) {
         isIslandNotifQueueInline.value = enabled
         settingsRepository.setIslandNotifQueueInlineEnabled(enabled)
@@ -6189,9 +6247,9 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandShowBatteryEnabled(enabled)
     }
 
-    fun setIslandShowBatteryAlerts(enabled: Boolean) {
-        isIslandShowBatteryAlerts.value = enabled
-        settingsRepository.setIslandShowBatteryAlertsEnabled(enabled)
+    fun setIslandBatteryPeekAlerts(enabled: Boolean) {
+        isIslandBatteryPeekAlerts.value = enabled
+        settingsRepository.setIslandBatteryPeekAlertsEnabled(enabled)
     }
 
     fun setIslandBatteryPercentageEnabled(enabled: Boolean) {

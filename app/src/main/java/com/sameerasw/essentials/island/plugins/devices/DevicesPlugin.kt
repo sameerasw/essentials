@@ -48,6 +48,8 @@ class DevicesPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR,
         SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED,
         SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR,
+        SettingsRepository.KEY_DUO_BATTERY_LOW_LEVEL,
+        SettingsRepository.KEY_DUO_BATTERY_CRITICAL_LEVEL,
     )
 
     private class BatteryDevice(val name: String, val iconRes: Int, val level: Int)
@@ -183,7 +185,7 @@ class DevicesPlugin : BaseIslandPlugin() {
             order.firstNotNullOfOrNull { address ->
                 val device = bonded[address] ?: return@firstNotNullOfOrNull null
                 val level = batteryOf(device).takeIf { it >= 0 } ?: return@firstNotNullOfOrNull null
-                if (onlyLow && level > SettingsRepository.ISLAND_BATTERY_LOW_LEVEL) return@firstNotNullOfOrNull null
+                if (onlyLow && level > settings.getDuoBatteryLowLevel()) return@firstNotNullOfOrNull null
                 val name = nameOf(device)
                 BatteryDevice(name, iconFor(device, name), level)
             }
@@ -331,9 +333,9 @@ class DevicesPlugin : BaseIslandPlugin() {
             fallback
         }
         val raw = when {
-            level in 0..SettingsRepository.ISLAND_BATTERY_CRITICAL_LEVEL && settings.isDuoBatteryCriticalColorEnabled() ->
+            level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
                 parse(settings.getDuoBatteryCriticalColor(), android.graphics.Color.rgb(244, 67, 54))
-            level in 0..SettingsRepository.ISLAND_BATTERY_LOW_LEVEL && settings.isDuoBatteryLowColorEnabled() ->
+            level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
                 parse(settings.getDuoBatteryLowColor(), android.graphics.Color.rgb(255, 235, 59))
             else -> return null
         }

@@ -41,6 +41,8 @@ fun CompactTemplate(
     sideBubble: () -> Float = { 0f },
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
+    onBaseWidth: (Int) -> Unit = {},
+    onNeedLeft: (Int) -> Unit = {},
 ) {
     val cells = buildMap {
         state.items.values.forEach { item -> item.compact.forEach { put(it.key, item.key to it) } }
@@ -126,12 +128,14 @@ fun CompactTemplate(
         fun edgeInset(outer: Placeable?) = if (outer != null && outer.width > squareCell) opticalInset else 0
         if (cameraSlot == 0) {
             val cells = left + right
-            onSlack(0)
+            onSlack(if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0)
             if (cells.isEmpty()) return@Layout layout(0, height) {}
             val pad = ((height - squareCell) / 2).coerceAtLeast(0)
             val startInset = edgeInset(cells.first())
             val endInset = edgeInset(cells.last())
             val width = pad * 2 + startInset + endInset + content(cells)
+            onBaseWidth(width)
+            onNeedLeft(-1)
             return@Layout layout(width, height) {
                 var x = pad + startInset
                 cells.forEach {
@@ -145,6 +149,8 @@ fun CompactTemplate(
             val inset = edgeInset(if (spec.growDirection > 0) cells.lastOrNull() else cells.firstOrNull())
             val body = content(cells) + if (cells.isEmpty()) 0 else spacing + inset
             val width = cameraSlot + body
+            onBaseWidth(width)
+            onNeedLeft(-1)
             return@Layout layout(width, height) {
                 var x = if (spec.growDirection > 0) cameraSlot else spacing + inset
                 cells.forEach {
@@ -168,6 +174,8 @@ fun CompactTemplate(
         onSlack(if (spec.balanceCompact) extent else needRight - needLeft)
         val leftSide = (mirrored + (balancedLeft - mirrored) * t).roundToInt()
         val rightSide = (mirrored + (balancedRight - mirrored) * t).roundToInt()
+        onBaseWidth(mirrored * 2 + cameraSlot)
+        onNeedLeft(needLeft)
         val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
             var x = spacing + leftInset

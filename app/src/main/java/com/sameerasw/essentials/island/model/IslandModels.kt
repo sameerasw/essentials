@@ -88,6 +88,7 @@ class StackIcon(
     val key: String,
     val current: Boolean = false,
     val onSelect: (() -> Unit)? = null,
+    val highlight: Boolean = false,
     val content: @Composable (size: Dp) -> Unit,
 )
 
@@ -98,6 +99,9 @@ class SideBubble(
     val content: (@Composable (Dp) -> Unit)? = null,
     val whenOccupiedOnly: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
+    val maxIcons: Int? = null,
+    // Compact cells' worth of room the bubble takes beside the camera
+    val cells: Int = 1,
 )
 
 object SideBubblePriority {

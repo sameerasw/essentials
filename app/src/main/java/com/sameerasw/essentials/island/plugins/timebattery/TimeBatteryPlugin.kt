@@ -41,6 +41,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL,
         SettingsRepository.KEY_ISLAND_BATTERY_ONLY_LOW,
         SettingsRepository.KEY_ISLAND_BATTERY_ICON_CONDITIONAL,
+        SettingsRepository.KEY_ISLAND_BATTERY_PEEK_ALERTS,
+        SettingsRepository.KEY_DUO_BATTERY_LOW_LEVEL,
+        SettingsRepository.KEY_DUO_BATTERY_CRITICAL_LEVEL,
         SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR_ENABLED,
         SettingsRepository.KEY_DUO_BATTERY_CHARGING_COLOR,
         SettingsRepository.KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED,
@@ -59,8 +62,14 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     private var shielded = false
     private var powerSave = false
     private var registered = false
-    private var chargePeekUntil = 0L
-    private val endChargePeek = Runnable { render() }
+    private var peekUntil = 0L
+    private var peekReason: PeekReason? = null
+    private val endPeek = Runnable {
+        peekReason = null
+        render()
+    }
+
+    private enum class PeekReason { Charging, Saver, Low, Critical }
     private val secondsTick = object : Runnable {
         override fun run() {
             readTime()
@@ -74,14 +83,30 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             when (intent?.action) {
                 Intent.ACTION_BATTERY_CHANGED -> {
                     val wasPlugged = charging || shielded
+                    val previousSeverity = severity()
                     readBattery(intent)
                     if ((charging || shielded) && !wasPlugged && level >= 0) {
                         render()
-                        peekCharging()
+                        peek(PeekReason.Charging)
+                        return
+                    }
+                    val plugged = charging || shielded
+                    val severity = severity()
+                    if (!plugged && level >= 0 && severity > previousSeverity) {
+                        render()
+                        peek(if (severity == 2) PeekReason.Critical else PeekReason.Low)
                         return
                     }
                 }
-                PowerManager.ACTION_POWER_SAVE_MODE_CHANGED -> readBattery(null)
+                PowerManager.ACTION_POWER_SAVE_MODE_CHANGED -> {
+                    val wasSaving = powerSave
+                    readBattery(null)
+                    if (powerSave && !wasSaving && level >= 0) {
+                        render()
+                        peek(PeekReason.Saver)
+                        return
+                    }
+                }
                 Intent.ACTION_SCREEN_OFF -> {
                     ctx?.mainHandler?.removeCallbacks(secondsTick)
                     return
@@ -114,7 +139,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     }
 
     override fun onStop() {
-        ctx?.mainHandler?.removeCallbacks(endChargePeek)
+        ctx?.mainHandler?.removeCallbacks(endPeek)
         ctx?.mainHandler?.removeCallbacks(secondsTick)
         if (registered) {
             try {
@@ -161,16 +186,30 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         powerSave = (context.getSystemService(Context.POWER_SERVICE) as? PowerManager)?.isPowerSaveMode ?: false
     }
 
-    private fun peekCharging() {
+    private fun severity(): Int = when {
+        level < 0 -> 0
+        level <= settings.getDuoBatteryCriticalLevel() -> 2
+        level <= settings.getDuoBatteryLowLevel() -> 1
+        else -> 0
+    }
+
+    private fun peek(reason: PeekReason) {
         val c = ctx ?: return
-        if (!settings.isIslandShowBatteryEnabled()) return
+        if (!settings.isIslandShowBatteryEnabled() || !settings.isIslandBatteryPeekAlertsEnabled()) return
         val duration = settings.getIslandPeekDurationMs()
-        
-        chargePeekUntil = System.currentTimeMillis() + duration
+        peekReason = reason
+        peekUntil = System.currentTimeMillis() + duration
         render()
         c.request(PluginRequest.Peek(BATTERY_KEY, duration))
-        c.mainHandler.removeCallbacks(endChargePeek)
-        c.mainHandler.postDelayed(endChargePeek, duration + 500L)
+        c.mainHandler.removeCallbacks(endPeek)
+        c.mainHandler.postDelayed(endPeek, duration + 500L)
+    }
+
+    private fun peekLine(reason: PeekReason): Pair<String, Boolean> = when (reason) {
+        PeekReason.Charging -> context.getString(if (shielded) R.string.island_battery_charge_limited else R.string.island_battery_charging) to shielded
+        PeekReason.Saver -> context.getString(R.string.island_battery_state_saver) to false
+        PeekReason.Low -> context.getString(R.string.island_battery_state_low) to false
+        PeekReason.Critical -> context.getString(R.string.island_battery_state_critical) to false
     }
 
     private fun render() {
@@ -189,6 +228,12 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val showLevel = settings.isIslandBatteryPercentageEnabled() &&
             (!settings.isIslandBatteryPercentageConditional() || stateColor != null)
 
+        val lineReason = when {
+            System.currentTimeMillis() < peekUntil -> peekReason
+            charging || shielded -> PeekReason.Charging
+            else -> null
+        }
+
         val timeItem = IslandItem(
             key = "time",
             priority = IslandPriority.TIME,
@@ -204,7 +249,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             priorityGroup = "battery",
             placement = CompactPlacement.Pinned,
             outlineAccent = displayColor,
-            companionOnly = settings.isIslandBatteryIconConditional() && stateColor == null && System.currentTimeMillis() >= chargePeekUntil,
+            companionOnly = settings.isIslandBatteryIconConditional() && stateColor == null && System.currentTimeMillis() >= peekUntil,
             compact = listOf(
                 CompactCell("battery") {
                     when {
@@ -213,7 +258,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     }
                 },
             ),
-            line = if (charging || shielded) {
+            line = lineReason?.let { reason ->
+                val (label, showShield) = peekLine(reason)
                 LineContent(
                     icon = {
                         when {
@@ -222,21 +268,19 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                         }
                     },
                     start = "$batteryLevel%",
-                    end = context.getString(if (shielded) R.string.island_battery_charge_limited else R.string.island_battery_charging),
-                    endSlot = if (shielded) {
+                    end = label,
+                    endSlot = if (showShield) {
                         { IslandIcon(R.drawable.rounded_shield_filled_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) }
                     } else {
                         null
                     },
                 )
-            } else {
-                null
             },
         )
         val showBattery = showBatteryItem && batteryLevel >= 0 && (
             !settings.isIslandBatteryOnlyLowEnabled() ||
-                batteryLevel <= SettingsRepository.ISLAND_BATTERY_LOW_LEVEL ||
-                System.currentTimeMillis() < chargePeekUntil
+                batteryLevel <= settings.getDuoBatteryLowLevel() ||
+                System.currentTimeMillis() < peekUntil
             )
         publish(listOfNotNull(timeItem.takeIf { showTime }, batteryItem.takeIf { showBattery }))
     }
@@ -263,9 +307,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
             powerSave && settings.isDuoBatteryPowerSaveColorEnabled() ->
                 parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 152, 0))
-            level in 0..SettingsRepository.ISLAND_BATTERY_CRITICAL_LEVEL && settings.isDuoBatteryCriticalColorEnabled() ->
+            level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
                 parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
-            level in 0..SettingsRepository.ISLAND_BATTERY_LOW_LEVEL && settings.isDuoBatteryLowColorEnabled() ->
+            level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
                 parse(settings.getDuoBatteryLowColor(), AndroidColor.rgb(255, 235, 59))
             else -> return null
         }

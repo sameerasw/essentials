@@ -56,4 +56,9 @@ while read -r num branch; do
 done <<< "$prs"
 
 git checkout -q "$start_branch"
+if ! python3 scripts/validate_strings.py >/dev/null 2>&1; then
+  python3 scripts/validate_strings.py --fix >/dev/null 2>&1
+  echo "develop has translation issues after merging; fixed locally in the working tree, review and commit"
+  git status --short
+fi
 echo; echo "Merged: ${merged[*]:-none}"; echo "Failed: ${failed[*]:-none}"

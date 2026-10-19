@@ -149,7 +149,7 @@ fun IslandRoot(
     val currentState by rememberUpdatedState(state)
     val inspection = LocalInspectionMode.current
 
-    val bondCandidate = targetSpec.bondEdge && stage == IslandStage.Compact && state.sideBubble == null
+    val bondCandidate = targetSpec.bondEdge && stage == IslandStage.Compact
     var bonded by remember { mutableStateOf(false) }
     LaunchedEffect(bondCandidate) {
         if (bondCandidate) {
@@ -181,9 +181,7 @@ fun IslandRoot(
     val surfaceShape = remember(compactHeightPx, expandedCornerPx) {
         object : Shape {
             override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-                val t = ((size.height - compactHeightPx) / compactHeightPx).coerceIn(0f, 1f)
-                val r = (compactHeightPx / 2f + (expandedCornerPx - compactHeightPx / 2f) * t)
-                    .coerceAtMost(size.height / 2f)
+                val r = surfaceCornerPx(size.height, compactHeightPx, expandedCornerPx)
                 return Outline.Rounded(RoundRect(size.toRect(), CornerRadius(r)))
             }
         }
@@ -300,7 +298,7 @@ fun IslandRoot(
             delay(IslandMotion.COLLAPSE_MS + 400L)
             if (dragCommitted) {
                 dragCommitted = false
-                collapse.snapTo(0f)
+                collapse.animateTo(0f, IslandMotion.settle())
             }
             return@LaunchedEffect
         }
@@ -398,6 +396,16 @@ fun IslandRoot(
     val hasCompactCells = state.arrangement.before.isNotEmpty() || state.arrangement.after.isNotEmpty()
     val bubbleOnlyLayout = !hasCompactCells && spec.cameraPresence <= 0f
     val catchUpAnim = remember { Animatable(0f) }
+    val liquidField = remember { LiquidField() }
+    liquidField.reach = with(density) { spec.cameraGap.toPx() } * 0.8f
+    val surfaceBond = remember(compactHeightPx, expandedCornerPx, bubbleOnlyLayout) {
+        LiquidBond(
+            id = "surface",
+            radius = { surfaceCornerPx(it.height, compactHeightPx, expandedCornerPx) },
+            presence = { if (!visible) 0f else if (bubbleOnlyLayout) 1f - catchUpAnim.value.coerceIn(0f, 1f) else 1f },
+        )
+    }
+    val surfaceLiquid = rememberLiquidBody(bond = surfaceBond, field = liquidField)
     LaunchedEffect(catchUpShown) {
         if (inspection) {
             catchUpAnim.snapTo(if (catchUpShown) 1f else 0f)
@@ -414,9 +422,29 @@ fun IslandRoot(
         }
     }
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
+    val compactSlack = remember { mutableIntStateOf(0) }
+    val compactBaseWidth = remember { mutableIntStateOf(0) }
+    val compactNeedLeft = remember { mutableIntStateOf(-1) }
+    val bubbleMaxIcons = lastCatchUp?.maxIcons?.let { chosen ->
+        if (chosen > 0) {
+            chosen
+        } else {
+            val sizePx = with(density) { spec.compactHeight.toPx() }
+            val budget = with(density) { spec.lineWidth.toPx() }
+            val gap = with(density) { spec.cameraGap.toPx() }
+            val needLeft = compactNeedLeft.intValue
+            // Balanced, the bubble's room grows the pill on the far side, so only the near side's content eats into the budget
+            val room = if (needLeft >= 0) {
+                (budget - cameraSlotPx) / 2f - needLeft - gap
+            } else {
+                (budget - maxOf(fallbackCompact.width, compactBaseWidth.intValue)) - gap
+            }
+            (((room - sizePx) / (sizePx * 0.55f)).toInt() + 1).coerceIn(1, 8)
+        }
+    } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
-        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight) }
+        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight, bubbleMaxIcons) }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
     val sideWidthAnim = remember { Animatable(sideWidthPx.toFloat()) }
@@ -425,7 +453,6 @@ fun IslandRoot(
     }
     fun sideWidthLive(): Int = sideWidthAnim.value.roundToInt()
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
-    val compactSlack = remember { mutableIntStateOf(0) }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && hasCompactCells) catchUpAnim.value.coerceIn(0f, 1f) else 0f
     fun catchShiftPx(): Float = sideBubbleProgress() * compactSlack.intValue / 2f
@@ -434,8 +461,10 @@ fun IslandRoot(
     fun surfaceShiftFor(width: Int): Int = spec.growDirection * (width - cameraSlotPx) / 2
     fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
         lineShift.value.roundToInt() + catchShiftPx().roundToInt()
+    // Bonded to the edge, the bubble closes the gap and slightly overlaps, so the liquid neck merges both into one body
+    fun bondedGapPx(): Int = (bubbleGapPx * (1f - bond) - compactHeightPx * 0.08f * bond).roundToInt()
     fun bubbleX(width: Int): Int =
-        if (spec.growDirection > 0) surfaceLeft(width) + width + bubbleGapPx else surfaceLeft(width) - bubbleGapPx - sideWidthLive()
+        if (spec.growDirection > 0) surfaceLeft(width) + width + bondedGapPx() else surfaceLeft(width) - bondedGapPx() - sideWidthLive()
     val focusedItem = state.focused
     
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
@@ -559,6 +588,19 @@ fun IslandRoot(
         onTargetBoundsChanged(bounds)
     }
 
+    val queuePresence = animateFloatAsState(if (queueShown) 1f else 0f, IslandMotion.expressiveFastEffects(), label = "queuePresence")
+    val queueBond = remember {
+        LiquidBond("queue", presence = {
+            queuePresence.value * (1f - queueBelow.value * 2f).coerceIn(0f, 1f) * (1f - collapse.value).coerceIn(0f, 1f)
+        })
+    }
+    val pillBond = remember {
+        LiquidBond("pill", presence = {
+            queuePresence.value * ((queueBelow.value - 0.3f) / 0.7f).coerceIn(0f, 1f) * (1f - collapse.value).coerceIn(0f, 1f)
+        })
+    }
+
+    CompositionLocalProvider(LocalLiquidField provides liquidField) {
     Box(
         Modifier
             .fillMaxSize()
@@ -568,6 +610,7 @@ fun IslandRoot(
                 detectTapGestures { actions.onCollapse() }
             },
     ) {
+        LiquidBridges(liquidField)
         val pillGapPx = with(density) { 2.dp.roundToPx() }
         AnimatedVisibility(
             visible = queueShown,
@@ -618,6 +661,7 @@ fun IslandRoot(
                         outlineColor = outlineFor(1f),
                         outlineThickness = spec.outlineThickness,
                         modifier = queueModifier,
+                        bond = queueBond,
                     )
                     QueueStyle.Overlap -> IslandStackOverlap(
                         icons = lastQueuedIcons,
@@ -625,6 +669,7 @@ fun IslandRoot(
                         outlineColor = outlineFor(1f),
                         outlineThickness = spec.outlineThickness,
                         modifier = queueModifier,
+                        bond = queueBond,
                     )
                 }
                 IslandStackPill(
@@ -634,15 +679,59 @@ fun IslandRoot(
                     interactive = stage == IslandStage.Expanded,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
+                    bond = pillBond,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
                         .onSizeChanged { pillSize = it },
                 )
             }
         }
+        if (bond > 0.001f && lastCatchUp != null && catchUpAnim.value > 0.5f && !bubbleOnlyLayout) {
+            Box(
+                Modifier
+                    .layout { measurable, constraints ->
+                        val w = surfaceSize.width
+                        val surfaceStart = surfaceLeft(w)
+                        val bubbleStart = bubbleX(w)
+                        val left = minOf(bubbleStart, surfaceStart)
+                        val right = maxOf(bubbleStart + sideWidthLive(), surfaceStart + w)
+                        val body = measurable.measure(Constraints.fixed((right - left).coerceAtLeast(0), compactHeightPx.roundToInt()))
+                        layout(constraints.maxWidth, constraints.maxHeight) {
+                            body.place(left, surfaceTopPx - (surfaceTopPx * bond).roundToInt())
+                        }
+                    }
+                    .graphicsLayer { alpha = bond }
+                    .drawBehind {
+                        val r = size.height / 2f
+                        drawRoundRect(Color.Black, cornerRadius = CornerRadius(r))
+                        drawRect(Color.Black, size = Size(size.width, r))
+                        val f = compactHeightPx * 0.4f
+                        val leftFillet = Path().apply {
+                            moveTo(-f, 0f)
+                            lineTo(0f, 0f)
+                            lineTo(0f, f)
+                            arcTo(Rect(Offset(-f, f), f), 0f, -90f, false)
+                            close()
+                        }
+                        val rightFillet = Path().apply {
+                            moveTo(size.width + f, 0f)
+                            lineTo(size.width, 0f)
+                            lineTo(size.width, f)
+                            arcTo(Rect(Offset(size.width + f, f), f), 180f, 90f, false)
+                            close()
+                        }
+                        drawPath(leftFillet, Color.Black)
+                        drawPath(rightFillet, Color.Black)
+                    },
+            )
+        }
         val bubbleData = lastCatchUp
         if (bubbleData != null && catchUpAnim.value > 0.001f) {
             val dragX = remember { Animatable(0f) }
+            val bubbleBond = remember(bubbleOnlyLayout) {
+                LiquidBond("sideBubble", presence = { if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 1f })
+            }
+            val bubbleLiquid = rememberLiquidBody(LiquidSpec.Droplet, bubbleBond, liquidField)
             val towardCamera = if (spec.growDirection > 0) -1f else 1f
             val maxDrag = with(density) { 56.dp.toPx() }
             val threshold = with(density) { 28.dp.toPx() }
@@ -654,6 +743,7 @@ fun IslandRoot(
                     style = spec.queueStyle,
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
+                    maxIcons = bubbleMaxIcons,
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {
@@ -663,9 +753,10 @@ fun IslandRoot(
                                 val endX = bubbleX(w)
                                 val startX = if (spec.growDirection > 0) surfaceLeft(w) + w - sideWidthLive() else surfaceLeft(w)
                                 val v = catchUpAnim.value
-                                IntOffset((startX + (endX - startX) * v + dragX.value).roundToInt(), surfaceTopPx)
+                                IntOffset((startX + (endX - startX) * v + dragX.value).roundToInt(), surfaceTopPx - (surfaceTopPx * bond).roundToInt())
                             }
                         }
+                        .liquid(bubbleLiquid)
                         .graphicsLayer {
                             val appear = if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 1f
                             alpha = (1f - (abs(dragX.value) / maxDrag).coerceIn(0f, 0.8f)) * appear
@@ -717,6 +808,7 @@ fun IslandRoot(
                 }
                 .offset { IntOffset(0, (squashPx / 2f * squash.value - edgeShift.floatValue - surfaceTopPx * bond).roundToInt()) }
                 .compactJelly(jelly, jellyRangePx)
+                .liquid(surfaceLiquid, TransformOrigin(0.5f, 0f))
                 .drawBehind {
                     if (bond <= 0f) return@drawBehind
                     val f = compactHeightPx * 0.4f * bond
@@ -824,7 +916,7 @@ fun IslandRoot(
                     finishedListener = { _, _ ->
                         if (dragCommitted && currentState.stage != IslandStage.Expanded && currentState.stage != IslandStage.Line) {
                             dragCommitted = false
-                            scope.launch { collapse.snapTo(0f) }
+                            scope.launch { collapse.animateTo(0f, IslandMotion.settle()) }
                         }
                     },
                 )
@@ -1141,6 +1233,8 @@ fun IslandRoot(
                             sideBubble = ::sideBubbleProgress,
                             bubbleExtent = { bubbleGapPx + sideWidthLive() },
                             onSlack = { if (current) compactSlack.intValue = it },
+                            onBaseWidth = { if (current) compactBaseWidth.intValue = it },
+                            onNeedLeft = { if (current) compactNeedLeft.intValue = it },
                         )
                     }
                 }
@@ -1194,9 +1288,15 @@ fun IslandRoot(
             }
         }
     }
+    }
 }
 
 private const val BOND_DELAY_MS = 3000L
+
+private fun surfaceCornerPx(height: Float, compactHeightPx: Float, expandedCornerPx: Float): Float {
+    val t = ((height - compactHeightPx) / compactHeightPx).coerceIn(0f, 1f)
+    return (compactHeightPx / 2f + (expandedCornerPx - compactHeightPx / 2f) * t).coerceAtMost(height / 2f)
+}
 
 private fun bondedShape(progress: Float, compactHeightPx: Float, expandedCornerPx: Float): Shape = object : Shape {
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
@@ -1272,6 +1372,8 @@ private fun StageContent(
     sideBubble: () -> Float = { 0f },
     bubbleExtent: () -> Int = { 0 },
     onSlack: (Int) -> Unit = {},
+    onBaseWidth: (Int) -> Unit = {},
+    onNeedLeft: (Int) -> Unit = {},
 ) {
     val a = if (interactive) actions else NoActions
     when (stage) {
@@ -1290,6 +1392,8 @@ private fun StageContent(
                     sideBubble = sideBubble,
                     bubbleExtent = bubbleExtent,
                     onSlack = onSlack,
+                    onBaseWidth = onBaseWidth,
+                    onNeedLeft = onNeedLeft,
                 )
             }
         }

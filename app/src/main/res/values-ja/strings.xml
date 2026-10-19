@@ -1894,4 +1894,11 @@
     <string name="island_always_gestures_desc">Islandが非表示の状態でもジェスチャーができるようにします</string>
     <string name="island_desc">ダイナミックアイランド</string>
     <string name="search_conscious_gate_pick_desc">意識ゲート画面を表示するアプリを選択</string>
+    <string name="feat_split_screen_gesture_title">画面分割ジェスチャー</string>
+    <string name="feat_split_screen_gesture_desc">画面下部から2本の指で上にスワイプして、現在のアプリを分割または分割解除します</string>
+    <string name="feat_back_gesture_title">戻るジェスチャー</string>
+    <string name="feat_back_gesture_desc">エッジの幅とアプリごとの戻るジェスチャー</string>
+    <string name="feat_navigation_desc">ジェスチャーバー、ナビゲーションジェスチャー、ナビゲーションバーの調整</string>
+    <string name="feat_lockscreen_shortcuts_title">ロック画面ショートカット</string>
+    <string name="feat_lockscreen_shortcuts_desc">ロック画面から独自のアクションを実行します</string>
 </resources>

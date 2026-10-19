@@ -571,16 +571,8 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL = "island_battery_percentage_conditional"
         const val KEY_ISLAND_BATTERY_ICON_CONDITIONAL = "island_battery_icon_conditional"
         const val KEY_ISLAND_BATTERY_ONLY_LOW = "island_battery_only_low"
+        const val KEY_ISLAND_BATTERY_PEEK_ALERTS = "island_battery_peek_alerts"
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
-        const val KEY_ISLAND_SHOW_BATTERY_ALERTS = "island_show_battery_alerts"
-        const val KEY_ISLAND_BATTERY_ALERT_CHARGING = "island_battery_alert_charging"
-        const val KEY_ISLAND_BATTERY_ALERT_LOW = "island_battery_alert_low"
-        const val KEY_ISLAND_BATTERY_ALERT_CRITICAL = "island_battery_alert_critical"
-        const val KEY_ISLAND_BATTERY_ALERT_ICON_POSITION = "island_battery_alert_icon_position"
-        const val ISLAND_BATTERY_ALERT_ICON_POSITION_RIGHT = "right"
-        const val ISLAND_BATTERY_ALERT_ICON_POSITION_LEFT = "left"
-        const val ISLAND_BATTERY_LOW_LEVEL = 20
-        const val ISLAND_BATTERY_CRITICAL_LEVEL = 10
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
@@ -680,6 +672,14 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_FILTER_APPS = "island_notif_filter_apps"
         const val KEY_ISLAND_NOTIF_FILTER_APPS_LIST = "island_notif_filter_apps_list"
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
+        const val KEY_ISLAND_NOTIF_HUB = "island_notif_hub"
+        const val KEY_ISLAND_NOTIF_HUB_ICONS = "island_notif_hub_icons"
+        const val KEY_ISLAND_NOTIF_HUB_ORDER = "island_notif_hub_order"
+        const val KEY_ISLAND_NOTIF_HUB_SILENT = "island_notif_hub_silent"
+        const val KEY_ISLAND_NOTIF_HUB_GROUP = "island_notif_hub_group"
+        const val ISLAND_NOTIF_HUB_ORDER_DYNAMIC = "dynamic"
+        const val ISLAND_NOTIF_HUB_ORDER_PRIORITY = "priority"
+        const val ISLAND_NOTIF_HUB_ORDER_RECENT = "recent"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
         const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
@@ -4082,13 +4082,19 @@ class SettingsRepository(
     fun getIslandExpandedTimeoutMs(): Long = getLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, 0L)
     fun setIslandExpandedTimeoutMs(value: Long) = putLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, value)
 
-    fun isIslandCatchUpEnabled(): Boolean = getBoolean(KEY_ISLAND_CATCH_UP_ENABLED, true)
+    fun isIslandCatchUpEnabled(): Boolean = isIslandNotifHubEnabled() || getBoolean(KEY_ISLAND_CATCH_UP_ENABLED, true)
     fun setIslandCatchUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_CATCH_UP_ENABLED, enabled)
 
-    fun getIslandCatchUpTimeoutMs(): Long = getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
+    // The stored value is kept as the hub's pin duration while the bubble itself never expires
+    fun getIslandCatchUpStoredMs(): Long = getLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, 10000L)
+
+    fun getIslandCatchUpTimeoutMs(): Long = if (isIslandNotifHubEnabled()) 0L else getIslandCatchUpStoredMs()
     fun setIslandCatchUpTimeoutMs(value: Long) = putLong(KEY_ISLAND_CATCH_UP_TIMEOUT_MS, value)
 
     fun isIslandCatchUpInfinite(): Boolean = getIslandCatchUpTimeoutMs() <= 0L
+
+    // Ignores the hub's override, for features that borrow the catch-up duration
+    fun isIslandCatchUpStoredInfinite(): Boolean = getIslandCatchUpStoredMs() <= 0L
 
     fun isIslandShowMediaEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_MEDIA, true)
     fun setIslandShowMediaEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_MEDIA, enabled)
@@ -4114,13 +4120,8 @@ class SettingsRepository(
         if (contains(KEY_ISLAND_SHOW_BATTERY)) getBoolean(KEY_ISLAND_SHOW_BATTERY, false) else isIslandShowTimeBatteryEnabled()
     fun setIslandShowBatteryEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_BATTERY, enabled)
 
-    fun isIslandShowBatteryAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_BATTERY_ALERTS, true)
-    fun setIslandShowBatteryAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_BATTERY_ALERTS, enabled)
-
-    fun getIslandBatteryAlertIconPosition(): String =
-        getString(KEY_ISLAND_BATTERY_ALERT_ICON_POSITION, ISLAND_BATTERY_ALERT_ICON_POSITION_RIGHT) ?: ISLAND_BATTERY_ALERT_ICON_POSITION_RIGHT
-    fun setIslandBatteryAlertIconPosition(position: String) =
-        putString(KEY_ISLAND_BATTERY_ALERT_ICON_POSITION, position)
+    fun isIslandBatteryPeekAlertsEnabled(): Boolean = getBoolean(KEY_ISLAND_BATTERY_PEEK_ALERTS, true)
+    fun setIslandBatteryPeekAlertsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_PEEK_ALERTS, enabled)
 
     fun getIslandBatteryStyle(): String =
         getString(KEY_ISLAND_BATTERY_STYLE, ISLAND_BATTERY_STYLE_RING) ?: ISLAND_BATTERY_STYLE_RING
@@ -4348,7 +4349,27 @@ class SettingsRepository(
     fun isIslandShowNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, true)
     fun setIslandShowNotificationsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_NOTIFICATIONS, enabled)
 
-    fun isIslandNotifQueueEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
+    fun isIslandNotifHubIncludeSilent(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB_SILENT, false)
+    fun setIslandNotifHubIncludeSilent(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB_SILENT, enabled)
+
+    fun isIslandNotifHubGroupByApps(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB_GROUP, false)
+    fun setIslandNotifHubGroupByApps(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB_GROUP, enabled)
+
+    fun getIslandNotifHubOrder(): String =
+        getString(KEY_ISLAND_NOTIF_HUB_ORDER, null)
+            ?.takeIf { it == ISLAND_NOTIF_HUB_ORDER_PRIORITY || it == ISLAND_NOTIF_HUB_ORDER_RECENT }
+            ?: ISLAND_NOTIF_HUB_ORDER_DYNAMIC
+
+    fun setIslandNotifHubOrder(value: String) = putString(KEY_ISLAND_NOTIF_HUB_ORDER, value)
+
+    // 0 = fit to the available width
+    fun getIslandNotifHubIcons(): Int = getInt(KEY_ISLAND_NOTIF_HUB_ICONS, 0).coerceIn(0, 8)
+    fun setIslandNotifHubIcons(value: Int) = putInt(KEY_ISLAND_NOTIF_HUB_ICONS, value.coerceIn(0, 8))
+
+    fun isIslandNotifHubEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB, false)
+    fun setIslandNotifHubEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB, enabled)
+
+    fun isIslandNotifQueueEnabled(): Boolean = isIslandNotifHubEnabled() || getBoolean(KEY_ISLAND_NOTIF_QUEUE, true)
     fun setIslandNotifQueueEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_QUEUE, enabled)
 
     fun getIslandNotifQueueStyle(): String =

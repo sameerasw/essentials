@@ -25,6 +25,9 @@ data class CompactArrangement(
 object CompactLayoutEngine {
     const val MAX_CELLS = 4
 
+    // A bubble this wide is worth moving pinned cells across the camera for
+    private const val WIDE_BUBBLE_CELLS = 2
+
     fun arrange(
         entries: List<CompactEntry>,
         anchor: CameraAnchor = CameraAnchor.Center,
@@ -97,6 +100,19 @@ object CompactLayoutEngine {
                 val gap = kotlin.math.abs(left - right)
                 val movedGap = kotlin.math.abs((left - size) - (right + size))
                 if (movedGap > gap || (movedGap == gap && left <= right)) break
+                before.removeAll(entry.cellKeys.toSet())
+                after += if (size == 2) entry.cellKeys.reversed() else entry.cellKeys
+            }
+        }
+
+        if (balance && leftExtra >= WIDE_BUBBLE_CELLS) {
+            for (entry in pinned.filter { e -> e.cellKeys.all { it in before } }.sortedByDescending { it.priority }) {
+                val size = entry.cellKeys.size
+                val left = before.size + leftExtra
+                val right = after.size
+                val gap = kotlin.math.abs(left - right)
+                val movedGap = kotlin.math.abs((left - size) - (right + size))
+                if (movedGap >= gap) break
                 before.removeAll(entry.cellKeys.toSet())
                 after += if (size == 2) entry.cellKeys.reversed() else entry.cellKeys
             }

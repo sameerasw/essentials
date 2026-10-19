@@ -1582,4 +1582,6 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="label_motion_blur_amount">Ilość</string>
     <string name="haptic_mode_stronger">Mocniejsze</string>
     <string name="setting_hidden_debugging_title">Ukryta obsługa debuggowania</string>
+    <string name="feat_app_volume_title">Dźwięki aplikacji</string>
+    <string name="feat_app_volume_desc">Ustaw osobną głośność dla każdej aplikacji</string>
 </resources>

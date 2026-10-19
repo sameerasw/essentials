@@ -29,5 +29,8 @@ data class ActiveNotificationAlert(
     val isSilent: Boolean = false,
     val blockedByDnd: Boolean = false,
     val otpCode: String? = null,
+    val ongoing: Boolean = false,
+    val isConversation: Boolean = false,
+    val hubOnly: Boolean = false,
 )
 

@@ -3182,17 +3182,6 @@
     <string name="island_battery_style_title">Battery style</string>
     <string name="island_battery_style_ring">Ring</string>
     <string name="island_battery_style_icon">Icon</string>
-    <string name="island_battery_alerts_title">Battery alerts</string>
-    <string name="island_battery_alerts_options_title">Battery alert options</string>
-    <string name="island_battery_alert_charging_title">Charging connected</string>
-    <string name="island_battery_alert_low_title" formatted="false">Low Battery (11-20%)</string>
-    <string name="island_battery_alert_critical_title" formatted="false">Critical Battery (0-10%)</string>
-    <string name="island_battery_alert_charging">Charging</string>
-    <string name="island_battery_alert_low">Low Battery</string>
-    <string name="island_battery_alert_critical">Critical Battery</string>
-    <string name="island_battery_alert_icon_position_title">Icon position</string>
-    <string name="island_battery_alert_icon_position_right">Right</string>
-    <string name="island_battery_alert_icon_position_left">Left</string>
     <string name="slider_value_label">Value</string>
     <string name="island_font_scale_title">Font size</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
@@ -3341,6 +3330,10 @@
     <string name="island_devices_battery_section">Devices</string>
     <string name="island_devices_move_up">Move up</string>
     <string name="island_devices_move_down">Move down</string>
+    <string name="island_battery_peek_alerts_title">Show peek alerts</string>
+    <string name="island_battery_state_low">Low battery</string>
+    <string name="island_battery_state_critical">Critical battery</string>
+    <string name="island_battery_state_saver">Battery saver</string>
     <string name="island_battery_charging">Charging</string>
     <string name="island_notif_keep_progress_title">Keep progress notifications</string>
     <string name="island_progress_open">Open</string>
@@ -3444,6 +3437,14 @@
     <string name="island_notif_peek_style_minimal_catch_up_desc">App icon only, kept for the catch up time. Tap to expand</string>
     <string name="island_notif_peek_style_search_desc">Full, compact or minimal peeks</string>
     <string name="island_notif_show_title">Show notifications</string>
+    <string name="island_notif_hub_title">Notification Hub</string>
+    <string name="island_notif_hub_icons_auto">Auto</string>
+    <string name="island_notif_hub_order_title">Ordering</string>
+    <string name="island_notif_hub_include_silent">Include silent notifications</string>
+    <string name="island_notif_hub_group_apps">Group by apps</string>
+    <string name="island_notif_hub_order_dynamic">Dynamic</string>
+    <string name="island_notif_hub_order_priority">Priority</string>
+    <string name="island_notif_hub_order_recent">Recent</string>
     <string name="island_notif_section_sources">Which notifications</string>
     <string name="island_notif_section_heads_up">Heads up</string>
     <string name="island_notif_section_in_island">In the island</string>

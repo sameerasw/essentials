@@ -1944,4 +1944,20 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_section_visuals">Hình ảnh</string>
     <string name="island_section_duration">Khoảng thời gian</string>
     <string name="island_section_behavior">Hành vi</string>
+    <string name="setting_hidden_debugging_title">Hỗ trợ gỡ lỗi ẩn</string>
+    <string name="island_always_gestures_title">Các cử chỉ luôn khả dụng</string>
+    <string name="island_always_gestures_desc">Giữ cho vùng thao tác cử chỉ vẫn khả dụng ngay cả khi island đang ẩn đi </string>
+    <string name="island_keep_on_landscape_title">Giữ ở chế độ ngang</string>
+    <string name="island_balance_compact_title">Cân bằng trực quan island thu gọn</string>
+    <string name="island_secondary_bubble_title">Bong bóng phụ</string>
+    <string name="keep_in_full_screen_title">Giữ ở chế độ toàn màn hình</string>
+    <string name="island_hide_live_updates_title">Ẩn Live Updates tự động </string>
+    <string name="island_compact_hide_status_bar_title">Ẩn tất cả mục cho island thu gọn</string>
+    <string name="island_hide_icons_title">Ẩn động các biểu tượng thanh trạng thái </string>
+    <string name="island_max_items_title">Số lượng tối đa để xem</string>
+    <string name="diy_action_notification_lighting">Kích hoạt đèn thông báo</string>
+    <string name="diy_action_overlay_control">Lớp phủ</string>
+    <string name="essential_search_label">Tìm kiếm Essential</string>
+    <string name="island_landscape_top_spacing_title">Khoảng cách phía trên ở chế độ ngang</string>
+    <string name="island_bond_edge_title">Liên kết với tai thỏ khi không hoạt động</string>
 </resources>
