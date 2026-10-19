@@ -19,6 +19,7 @@ import com.sameerasw.essentials.utils.notification.NotificationRepostFilter
 import com.sameerasw.essentials.utils.chronometer.ChronometerRepository
 import com.sameerasw.essentials.utils.call.CallNotificationParser
 import com.sameerasw.essentials.utils.call.CallStateRepository
+import com.sameerasw.essentials.utils.recording.ScreenCaptureRepository
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.Person
@@ -384,6 +385,7 @@ class NotificationListener : NotificationListenerService() {
             ChronometerRepository.clear()
             safeActiveNotifications()?.filter { it.packageName != packageName && ChronometerRepository.isCandidate(it) }
                 ?.forEach { ChronometerRepository.onPosted(applicationContext, it) }
+            syncScreenCapture()
 
             // Initial discovery from active notifications
             safeActiveNotifications()?.forEach { sbn ->
@@ -1069,9 +1071,11 @@ class NotificationListener : NotificationListenerService() {
         val isRepost = NotificationRepostFilter.isUnchangedRepost(sbn)
         if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
         if (ChronometerRepository.isCandidate(sbn)) ChronometerRepository.onPosted(applicationContext, sbn)
-        if (isOngoingScreenCaptureNotification(sbn)) {
-            ScreenOffAccessibilityService.updateSmartPixelsState()
-        }
+        // Recorders may turn the ongoing notification into a "saved" one under the same key when they stop.
+        val capturing = isOngoingScreenCaptureNotification(sbn)
+        if (capturing || ScreenCaptureRepository.isTracking(sbn.key)) syncScreenCapture(added = sbn)
+        ScreenCaptureRepository.offerSaved(applicationContext, sbn)
+        if (capturing) ScreenOffAccessibilityService.updateSmartPixelsState()
         handleRespectNotifications(sbn)
         if (!isRepost) WatchNotificationSyncManager.onNotificationPosted(applicationContext, sbn, isSilentNotification(sbn, rankingMap))
 
@@ -1513,6 +1517,8 @@ class NotificationListener : NotificationListenerService() {
             sbn.packageName.contains("screenrecord") ||
             sbn.packageName == "com.android.systemui"
         ) {
+            syncScreenCapture(removedKey = sbn.key)
+            ScreenCaptureRepository.clearSaved(sbn.key)
             ScreenOffAccessibilityService.updateSmartPixelsState()
         }
 
@@ -1955,6 +1961,11 @@ class NotificationListener : NotificationListenerService() {
     private fun scheduleProgressRefresh() {
         progressHandler.removeCallbacks(progressRefreshRunnable)
         progressHandler.postDelayed(progressRefreshRunnable, PROGRESS_REFRESH_DEBOUNCE_MS)
+    }
+
+    private fun syncScreenCapture(added: StatusBarNotification? = null, removedKey: String? = null) {
+        val active = safeActiveNotifications().orEmpty().filter { it.key != removedKey && it.key != added?.key }
+        ScreenCaptureRepository.update(applicationContext, (active + listOfNotNull(added)).filter { isOngoingScreenCaptureNotification(it) })
     }
 
     private fun hasReadableExtras(sbn: StatusBarNotification): Boolean =

@@ -48,6 +48,7 @@ import com.sameerasw.essentials.island.plugins.consciousgate.ConsciousGatePlugin
 import com.sameerasw.essentials.island.plugins.flashlight.FlashlightPlugin
 import com.sameerasw.essentials.island.plugins.navigation.NavigationPlugin
 import com.sameerasw.essentials.island.plugins.hotspot.HotspotPlugin
+import com.sameerasw.essentials.island.plugins.recording.RecordingPlugin
 import com.sameerasw.essentials.island.plugins.network.NetworkPlugin
 import com.sameerasw.essentials.island.plugins.signal.SignalPlugin
 import com.sameerasw.essentials.island.plugins.devices.DevicesPlugin
@@ -155,6 +156,7 @@ class IslandCoordinator(
         NetworkPlugin(),
         SignalPlugin(),
         HotspotPlugin(),
+        RecordingPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
     )

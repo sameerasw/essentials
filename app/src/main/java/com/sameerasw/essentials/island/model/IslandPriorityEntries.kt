@@ -7,6 +7,7 @@ object IslandPriorityEntries {
         Entry("battery", setOf("battery"), IslandPriority.BATTERY_ALERT),
         Entry("notifications", setOf("notifications"), IslandPriority.NOTIFICATION),
         Entry("flashlight", setOf("flashlight"), IslandPriority.FLASHLIGHT),
+        Entry("recording", setOf("recording"), IslandPriority.RECORDING),
         Entry("navigation", setOf("navigation"), IslandPriority.NAVIGATION),
         Entry("timer", setOf("timer"), IslandPriority.TIMER),
         Entry("media", setOf("media"), IslandPriority.MEDIA),

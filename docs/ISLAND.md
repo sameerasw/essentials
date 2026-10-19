@@ -233,6 +233,7 @@ If the plugin needs a runtime permission, request it through `PermissionsBottomS
 | `key` | Stable id. Also the animation key; keep it constant for the same logical item. |
 | `priority` | See `IslandPriority`. Lower is more important. |
 | `priorityOverride` | Optional state-driven priority (an `*_OVERRIDE` value) that replaces `priority` while set. |
+| `exclusive` | Hides every other item, including pinned ones, while published. Calls still show. |
 | `placement` | `Pinned` for always-present status (time, battery), `Dynamic` for everything else. |
 | `compact` | 1–2 cells. Index 0 is the icon (outer edge), index 1 the value (inner). Cell keys must be unique across items. |
 | `line` | Optional. Without it the item cannot peek. |
