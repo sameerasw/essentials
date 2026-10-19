@@ -39,6 +39,8 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ime.snippets.SnippetExpander
+import com.sameerasw.essentials.ime.snippets.SnippetRepository
 import com.sameerasw.essentials.ui.ime.KeyboardInputView
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import kotlinx.coroutines.Job
@@ -462,12 +464,49 @@ class EssentialsInputMethodService :
                                     undoRedoManager.recordDelete(lastWord)
                                     ic.deleteSurroundingText(lastWord.length, 0)
                                 }
-                                undoRedoManager.recordInsert(word + " ")
-                                ic.commitText(word + " ", 1)
+                                val insertText =
+                                    if (suggestion.snippet != null) {
+                                        SnippetExpander.expand(
+                                            suggestion.snippet.content,
+                                            this@EssentialsInputMethodService,
+                                        )
+                                    } else {
+                                        word + " "
+                                    }
+                                undoRedoManager.recordInsert(insertText)
+                                ic.commitText(insertText, 1)
                                 suggestionEngine.clearSuggestions()
                             }
                         },
                         onType = { text ->
+                            if (text == " ") {
+                                val ic = currentInputConnection
+                                if (ic != null) {
+                                    val textBefore = ic.getTextBeforeCursor(50, 0)?.toString() ?: ""
+                                    val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
+                                    if (lastWord.isNotEmpty()) {
+                                        val matching =
+                                            SnippetRepository.getInstance(this@EssentialsInputMethodService)
+                                                .snippets.value.firstOrNull {
+                                                    it.autoExpandOnSpace &&
+                                                        it.keyword.equals(lastWord, ignoreCase = true)
+                                                }
+                                        if (matching != null) {
+                                            undoRedoManager.recordDelete(lastWord)
+                                            ic.deleteSurroundingText(lastWord.length, 0)
+                                            val expanded =
+                                                SnippetExpander.expand(
+                                                    matching.content,
+                                                    this@EssentialsInputMethodService,
+                                                )
+                                            undoRedoManager.recordInsert(expanded + " ")
+                                            ic.commitText(expanded + " ", 1)
+                                            suggestionEngine.clearSuggestions()
+                                            return@KeyboardInputView
+                                        }
+                                    }
+                                }
+                            }
                             undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
                             if (isUserDictionaryEnabled && text.length == 1 && !text[0].isLetterOrDigit()) {
@@ -715,7 +754,7 @@ class EssentialsInputMethodService :
         val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
         if (!textBefore.isNullOrEmpty()) {
             val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
-            if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
+            if (lastWord.isNotEmpty()) {
                 lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
                     suggestionEngine.lookup(lastWord)
                 }

@@ -5,6 +5,7 @@ import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
 import com.sameerasw.essentials.island.plugins.call.CallPlugin
+import com.sameerasw.essentials.island.plugins.snippets.SnippetIslandPlugin
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
@@ -118,7 +119,7 @@ class IslandCoordinator(
         },
         anchorProvider = { geometry?.anchor ?: CameraAnchor.Center },
     )
-
+    private val snippetPlugin = SnippetIslandPlugin()
     private val latestItems = HashMap<String, List<IslandItem>>()
     private var userPriorities: Map<String, Int> = emptyMap()
 
@@ -157,6 +158,8 @@ class IslandCoordinator(
         HotspotPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
+        BatteryAlertsPlugin(),
+        snippetPlugin,
     )
 
     private var scope: CoroutineScope? = null
@@ -391,6 +394,14 @@ class IslandCoordinator(
         } else if (running) {
             applyConfig()
         }
+    }
+
+    fun showSnippet(snippet: com.sameerasw.essentials.ime.snippets.Snippet, onExpand: () -> Unit) {
+        mainHandler.post { snippetPlugin.showSnippet(snippet, onExpand) }
+    }
+
+    fun hideSnippet() {
+        mainHandler.post { snippetPlugin.hideSnippet() }
     }
 
     fun restart() {

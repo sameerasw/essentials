@@ -90,6 +90,7 @@ class ScreenOffAccessibilityService :
     private lateinit var duoOverlayHandler: DuoOverlayHandler
     lateinit var islandOverlayHandler: IslandCoordinator
     private lateinit var statusGlanceHandler: StatusGlanceHandler
+    private lateinit var snippetAccessibilityHandler: com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler
     private lateinit var screenshotShareCleanupHandler: ScreenshotShareCleanupHandler
     private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
@@ -302,6 +303,11 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_STATUS_GLANCE_HIDE_WHEN_LOCKED
             ) {
                 statusGlanceHandler.updateState()
+            } else if (key?.startsWith("snippets_") == true) {
+                if (::snippetAccessibilityHandler.isInitialized) {
+                    snippetAccessibilityHandler.updateSettings()
+                    updateSnippetEventRegistration()
+                }
             } else if (key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUTS_ENABLED ||
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_LEFT_ACTIONS ||
                 key == SettingsRepository.KEY_LOCKSCREEN_SHORTCUT_RIGHT_ACTIONS
@@ -342,6 +348,13 @@ class ScreenOffAccessibilityService :
         }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
+        snippetAccessibilityHandler =
+            com.sameerasw.essentials.services.handlers.SnippetAccessibilityHandler(
+                service = this,
+                scope = serviceScope,
+                islandCoordinator = islandOverlayHandler,
+                duoOverlayHandler = duoOverlayHandler,
+            )
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
@@ -520,6 +533,7 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        updateSnippetEventRegistration()
     }
 
     private fun updateOmniOverlay() {
@@ -563,6 +577,9 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.destroy()
         islandOverlayHandler.onDestroy()
         statusGlanceHandler.destroy()
+        if (::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.destroy()
+        }
         lockscreenShortcutsHandler.onDestroy()
         appVolumeOverlayHandler.onDestroy()
         statusBarIconHandler.unregister()
@@ -603,9 +620,21 @@ class ScreenOffAccessibilityService :
             screenshotShareCleanupHandler.onViewClicked(event, appFlowHandler.currentPackage)
         }
 
+        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
+            if (::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onTextChanged(event)
+            }
+            return
+        }
+
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
+            val eventPkg = event.packageName?.toString().orEmpty()
+            val isImeEvent = isKeyboardPackage(eventPkg)
+            if (!isImeEvent && ::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.onNonImeWindowChanged()
+            }
             checkFullscreenState()
             checkStatusBarExpansion()
             freezeHandler.removeCallbacks(shadeRecheckRunnable)
@@ -679,6 +708,9 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.setShadeExpanded(expanded)
         islandOverlayHandler.setShadeExpanded(expanded)
         duoOverlayHandler.setShadeExpanded(expanded)
+        if (expanded && ::snippetAccessibilityHandler.isInitialized) {
+            snippetAccessibilityHandler.hideFloatingPill()
+        }
     }
 
     private fun isShadeWindowVisible(): Boolean {
@@ -716,9 +748,35 @@ class ScreenOffAccessibilityService :
                         duoOverlayHandler.setFullscreen(isFullscreen)
                         statusGlanceHandler.setFullscreen(isFullscreen)
                         islandOverlayHandler.setFullscreen(isFullscreen)
+                        if (isFullscreen && ::snippetAccessibilityHandler.isInitialized) {
+                            snippetAccessibilityHandler.hideFloatingPill()
+                        }
                     }
                 }
             } catch (_: Exception) {}
+        }
+    }
+
+    private fun isKeyboardPackage(pkg: String): Boolean {
+        if (pkg.isEmpty()) return false
+        if (pkg == packageName) return true
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+        return imm?.inputMethodList?.any { it.packageName == pkg } == true
+    }
+
+    private fun updateSnippetEventRegistration() {
+        val info = serviceInfo ?: return
+        val isSnippetsEnabled = SettingsRepository(this).isSnippetsUniversalEnabled()
+        val currentEvents = info.eventTypes
+        val desiredEvents =
+            if (isSnippetsEnabled) {
+                currentEvents or AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+            } else {
+                currentEvents and AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED.inv()
+            }
+        if (currentEvents != desiredEvents) {
+            info.eventTypes = desiredEvents
+            serviceInfo = info
         }
     }
 
