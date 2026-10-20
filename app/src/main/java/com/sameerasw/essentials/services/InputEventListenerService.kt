@@ -10,16 +10,21 @@
 package com.sameerasw.essentials.services
 
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import android.util.Log
 import android.view.Display
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.input.InputDeviceScanner
+import com.sameerasw.essentials.input.PowerPressDetector
 import com.sameerasw.essentials.input.VolumeLongPressDetector
 import com.sameerasw.essentials.input.VolumePressEvent
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
@@ -42,6 +47,10 @@ class InputEventListenerService : Service() {
         const val EXTRA_DIRECTION = "direction"
         const val EXTRA_DURATION_MS = "duration_ms"
         const val ACTION_STOP = "com.sameerasw.essentials.STOP_INPUT_LISTENER"
+        const val ACTION_POWER_GESTURE = "com.sameerasw.essentials.POWER_GESTURE"
+        const val EXTRA_POWER_GESTURE = "power_gesture"
+        const val EXTRA_SCREEN_ON_BEFORE = "screen_on_before"
+        const val EXTRA_FIRST_PRESS_AT = "first_press_at"
         private const val NOTIFICATION_ID = 4242
         const val PREF_LISTENER_ACTIVE = "shizuku_listener_active"
         private const val WATCHDOG_RETRY_MS = 2_000L
@@ -77,6 +86,10 @@ class InputEventListenerService : Service() {
     private var detector: VolumeLongPressDetector? = null
     private var collectJob: Job? = null
     private val startMutex = Mutex()
+    private val powerDetectors = mutableListOf<PowerPressDetector>()
+    private val powerCollectJobs = mutableListOf<Job>()
+
+    @Volatile private var screenOn = true
     private lateinit var shizukuHelper: ShizukuPermissionHelper
     private var isTorchOn = false
 
@@ -88,6 +101,19 @@ class InputEventListenerService : Service() {
             ) {
                 super.onTorchModeChanged(cameraId, enabled)
                 isTorchOn = enabled
+            }
+        }
+
+    private val screenReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                when (intent?.action) {
+                    Intent.ACTION_SCREEN_ON -> screenOn = true
+                    Intent.ACTION_SCREEN_OFF -> screenOn = false
+                }
             }
         }
 
@@ -140,6 +166,20 @@ class InputEventListenerService : Service() {
             } catch (e: Exception) {
                 Log.w("InputEventListener", "Torch callback unavailable", e)
             }
+        }
+
+        val powerManager = getSystemService(POWER_SERVICE) as? PowerManager
+        screenOn = powerManager?.isInteractive ?: true
+
+        val filter =
+            IntentFilter().apply {
+                addAction(Intent.ACTION_SCREEN_ON)
+                addAction(Intent.ACTION_SCREEN_OFF)
+            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(screenReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(screenReceiver, filter)
         }
 
         Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
@@ -329,6 +369,37 @@ class InputEventListenerService : Service() {
             }
 
             scope?.let { setListenerActive(activeDetector.startListening(it)) }
+
+            val powerPaths =
+                withContext(Dispatchers.IO) {
+                    InputDeviceScanner().scanForPowerDevices(this@InputEventListenerService)
+                }
+
+            powerPaths.forEach { path ->
+                val pDetector =
+                    PowerPressDetector(
+                        path,
+                        { screenOn },
+                    )
+                val job =
+                    scope?.launch {
+                        pDetector.events.collect { event ->
+                            sendBroadcast(
+                                Intent(ACTION_POWER_GESTURE).apply {
+                                    putExtra(EXTRA_POWER_GESTURE, event.gesture.name)
+                                    putExtra(EXTRA_SCREEN_ON_BEFORE, event.screenOnBefore)
+                                    putExtra(EXTRA_FIRST_PRESS_AT, event.firstPressAt)
+                                    setPackage(packageName)
+                                },
+                            )
+                        }
+                    }
+                synchronized(powerDetectors) {
+                    powerDetectors.add(pDetector)
+                    job?.let { powerCollectJobs.add(it) }
+                }
+                scope?.let { pDetector.startListening(it) }
+            }
         }
     }
 
@@ -337,6 +408,15 @@ class InputEventListenerService : Service() {
         collectJob = null
         detector?.stopListening()
         detector = null
+        val toStop =
+            synchronized(powerDetectors) {
+                powerCollectJobs.forEach { it.cancel() }
+                powerCollectJobs.clear()
+                val list = powerDetectors.toList()
+                powerDetectors.clear()
+                list
+            }
+        toStop.forEach { it.stopListening() }
         setListenerActive(false)
     }
 
@@ -381,6 +461,10 @@ class InputEventListenerService : Service() {
         try {
             (getSystemService(CAMERA_SERVICE) as? android.hardware.camera2.CameraManager)
                 ?.unregisterTorchCallback(torchCallback)
+        } catch (_: Exception) {
+        }
+        try {
+            unregisterReceiver(screenReceiver)
         } catch (_: Exception) {
         }
         Shizuku.removeBinderReceivedListener(binderReceivedListener)

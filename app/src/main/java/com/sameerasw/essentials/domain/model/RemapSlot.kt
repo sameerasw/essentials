@@ -15,11 +15,18 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 enum class RemapInput {
     VOLUME_UP,
     VOLUME_DOWN,
+    POWER_HOLD,
 }
 
 enum class RemapScreenState {
     OFF,
     ON,
+}
+
+enum class PowerChoice {
+    ASSISTANT,
+    POWER_MENU,
+    ACTIONS,
 }
 
 data class RemapSlot(
@@ -42,6 +49,37 @@ data class RemapSlot(
                     } else {
                         SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF
                     }
+
+                RemapInput.POWER_HOLD ->
+                    if (screenState == RemapScreenState.ON) {
+                        SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_ACTION_ON
+                    } else {
+                        SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_ACTION_OFF
+                    }
+            }
+
+    val choicePrefKey: String?
+        get() =
+            when (input) {
+                RemapInput.POWER_HOLD ->
+                    if (screenState == RemapScreenState.ON) {
+                        SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON
+                    } else {
+                        SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF
+                    }
+
+                RemapInput.VOLUME_UP,
+                RemapInput.VOLUME_DOWN,
+                -> null
+            }
+
+    val defaultChoice: PowerChoice?
+        get() =
+            when (input) {
+                RemapInput.POWER_HOLD -> PowerChoice.ASSISTANT
+                RemapInput.VOLUME_UP,
+                RemapInput.VOLUME_DOWN,
+                -> null
             }
 
     companion object {
