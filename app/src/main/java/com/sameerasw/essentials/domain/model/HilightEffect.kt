@@ -16,6 +16,8 @@ import com.sameerasw.essentials.R
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.round
 
 @Keep
 enum class HilightPattern(
@@ -36,8 +38,20 @@ enum class HilightPattern(
     @SerializedName("SWEEP")
     SWEEP(R.string.hilight_pattern_sweep),
 
+    @SerializedName("PULSE")
+    PULSE(R.string.hilight_pattern_pulse),
+
+    @SerializedName("RIPPLE")
+    RIPPLE(R.string.hilight_pattern_ripple),
+
+    @SerializedName("SPARKLE")
+    SPARKLE(R.string.hilight_pattern_sparkle),
+
     @SerializedName("RAINBOW")
     RAINBOW(R.string.hilight_pattern_rainbow),
+
+    @SerializedName("BATTERY")
+    BATTERY(R.string.hilight_pattern_battery),
 }
 
 @Keep
@@ -45,6 +59,9 @@ data class HilightEffect(
     @SerializedName("pattern") val pattern: HilightPattern = HilightPattern.GLOW,
     @SerializedName("color") val color: Int = DEFAULT_COLOR,
     @SerializedName("durationMs") val durationMs: Long = DEFAULT_DURATION_MS,
+    @SerializedName("brightness") val brightness: Int = 100,
+    @SerializedName("repeats") val repeats: Int = 0,
+    @SerializedName("autoColor") val autoColor: Boolean = false,
 ) {
     // Gson sets an unknown pattern name to null despite the non-null type
     @Suppress("USELESS_ELVIS")
@@ -57,6 +74,16 @@ data class HilightEffect(
 
         // No published guidance exists for sustained use of the array, so keep effects short
         const val MAX_DURATION_MS = 30_000L
+
+        const val MIN_BRIGHTNESS = 10
+        const val MAX_REPEATS = 10
+        const val DEFAULT_REPEATS = 3
+        const val DEFAULT_LED_COUNT = 8
+
+        fun appColorOr(
+            appColor: Int,
+            fallback: Int,
+        ): Int = if (appColor ushr 24 == 0) fallback else appColor
     }
 }
 
@@ -68,9 +95,25 @@ object HilightFrames {
         effect: HilightEffect,
         elapsedMs: Long,
         ledCount: Int,
+        batteryLevel: Int = 100,
     ): IntArray {
         val t = elapsedMs.coerceAtLeast(0)
-        return when (effect.pattern) {
+        val base = patternFrame(effect, t, ledCount, batteryLevel)
+        return if (effect.brightness < 100) {
+            val factor = effect.brightness / 100f
+            IntArray(ledCount) { i -> scale(base[i], factor) }
+        } else {
+            base
+        }
+    }
+
+    private fun patternFrame(
+        effect: HilightEffect,
+        t: Long,
+        ledCount: Int,
+        batteryLevel: Int,
+    ): IntArray =
+        when (effect.pattern) {
             HilightPattern.SOLID -> IntArray(ledCount) { opaque(effect.color) }
             HilightPattern.BLINK -> uniform(ledCount, effect.color, if ((t / BLINK_HALF_MS) % 2 == 0L) 1f else 0f)
             HilightPattern.GLOW -> {
@@ -92,20 +135,101 @@ object HilightFrames {
                     }
                 }
             }
+            HilightPattern.PULSE -> {
+                fun beat(x: Long): Float = if (x in 0 until 200) 1f - x / 200f else 0f
+                val c = t % PULSE_PERIOD_MS
+                val level = max(beat(c), beat(c - 280))
+                uniform(ledCount, effect.color, level)
+            }
+            HilightPattern.RIPPLE -> {
+                val centre = (ledCount - 1) / 2f
+                val maxD = centre + 1f
+                val front = (t % RIPPLE_PERIOD_MS).toFloat() / RIPPLE_PERIOD_MS * maxD
+                IntArray(ledCount) { i ->
+                    val d = abs(i - centre)
+                    val level = (1f - abs(d - front)).coerceIn(0f, 1f)
+                    scale(effect.color, level)
+                }
+            }
+            HilightPattern.SPARKLE -> {
+                val step = t / SPARKLE_STEP_MS
+                IntArray(ledCount) { i ->
+                    var h = (i * 73856093) xor (step * 19349663L).toInt()
+                    h = h xor (h ushr 13)
+                    if ((h and 3) == 0) {
+                        val level = 0.4f + ((h ushr 2) and 0xFF) / 255f * 0.6f
+                        scale(effect.color, level)
+                    } else {
+                        OFF
+                    }
+                }
+            }
             HilightPattern.RAINBOW ->
                 IntArray(ledCount) { i ->
-                    val hue = ((t % RAINBOW_PERIOD_MS).toFloat() / RAINBOW_PERIOD_MS * 360f + i * 360f / ledCount.coerceAtLeast(1)) % 360f
+                    val hue =
+                        ((t % RAINBOW_PERIOD_MS).toFloat() / RAINBOW_PERIOD_MS * 360f + i * 360f / ledCount.coerceAtLeast(1)) % 360f
                     hueToColor(hue)
                 }
+            HilightPattern.BATTERY -> {
+                val maxLit = HilightProgressFrames.litCount(batteryLevel.toFloat(), ledCount)
+                val filled = ((t / BATTERY_STEP_MS) + 1).toInt().coerceAtMost(maxLit)
+                IntArray(ledCount) { i -> if (i < filled) scale(effect.color, 1f) else OFF }
+            }
         }
+
+    fun cycleMs(
+        pattern: HilightPattern,
+        ledCount: Int,
+    ): Long? =
+        when (pattern) {
+            HilightPattern.BLINK -> 2 * BLINK_HALF_MS
+            HilightPattern.GLOW -> GLOW_PERIOD_MS
+            HilightPattern.FLASH -> FLASH_PERIOD_MS
+            HilightPattern.SWEEP -> SWEEP_STEP_MS * ledCount
+            HilightPattern.PULSE -> PULSE_PERIOD_MS
+            HilightPattern.RIPPLE -> RIPPLE_PERIOD_MS
+            HilightPattern.RAINBOW -> RAINBOW_PERIOD_MS
+            HilightPattern.SOLID,
+            HilightPattern.SPARKLE,
+            HilightPattern.BATTERY,
+            -> null
+        }
+
+    fun durationMs(
+        effect: HilightEffect,
+        ledCount: Int,
+    ): Long {
+        val cycle = cycleMs(effect.pattern, ledCount)
+        val duration =
+            if (effect.repeats > 0 && cycle != null) {
+                effect.repeats * cycle
+            } else {
+                effect.durationMs.coerceAtLeast(HilightEffect.MIN_DURATION_MS)
+            }
+        return duration.coerceAtMost(HilightEffect.MAX_DURATION_MS)
     }
+
+    fun repeatsFor(effect: HilightEffect): Int {
+        if (effect.repeats > 0) return effect.repeats
+        val cycle = cycleMs(effect.pattern, HilightEffect.DEFAULT_LED_COUNT) ?: return HilightEffect.DEFAULT_REPEATS
+        val count = round(effect.durationMs.toFloat() / cycle).toInt()
+        return count.coerceIn(1, HilightEffect.MAX_REPEATS)
+    }
+
+    // The repeat count the editor shows, so an effect saved without touching the slider plays what it showed
+    fun withShownRepeats(effect: HilightEffect): HilightEffect =
+        if (effect.repeats == 0 && cycleMs(effect.pattern, HilightEffect.DEFAULT_LED_COUNT) != null) {
+            effect.copy(repeats = repeatsFor(effect))
+        } else {
+            effect
+        }
 
     fun scale(
         color: Int,
         level: Float,
     ): Int {
         val f = level.coerceIn(0f, 1f)
-        if (f == 0f) return OFF
+        if (color == OFF || f == 0f) return OFF
         val r = (((color shr 16) and 0xFF) * f).toInt()
         val g = (((color shr 8) and 0xFF) * f).toInt()
         val b = ((color and 0xFF) * f).toInt()
@@ -145,4 +269,8 @@ object HilightFrames {
     private const val SWEEP_STEP_MS = 90L
     private const val SWEEP_TAIL_LEVEL = 0.3f
     private const val RAINBOW_PERIOD_MS = 3_000L
+    private const val PULSE_PERIOD_MS = 1_200L
+    private const val RIPPLE_PERIOD_MS = 1_200L
+    private const val SPARKLE_STEP_MS = 120L
+    private const val BATTERY_STEP_MS = 150L
 }
