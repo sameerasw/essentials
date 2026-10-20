@@ -296,6 +296,17 @@
     <string name="hilight_pattern_flash">Flash</string>
     <string name="hilight_pattern_sweep">Sweep</string>
     <string name="hilight_pattern_rainbow">Rainbow</string>
+    <string name="hilight_pattern_pulse">Pulse</string>
+    <string name="hilight_pattern_ripple">Ripple</string>
+    <string name="hilight_pattern_sparkle">Sparkle</string>
+    <string name="hilight_pattern_battery">Battery level</string>
+    <string name="hilight_repeats_title">Repeat</string>
+    <string name="hilight_repeats_value">%1$d×</string>
+    <string name="hilight_brightness_title">Brightness</string>
+    <string name="hilight_brightness_value">%1$d%%</string>
+    <string name="hilight_app_effect_summary_repeats">%1$s · %2$d×</string>
+    <string name="hilight_auto_color_title">Match app color</string>
+    <string name="hilight_auto_color_desc">Use the app\'s icon color, or the one you set in Custom app colors</string>
     <string name="hilight_progress_title">Live progress</string>
     <string name="feat_hilight_notifications_title">Notification effects</string>
     <string name="feat_hilight_progress_desc">Show download and live update progress on the LEDs</string>
