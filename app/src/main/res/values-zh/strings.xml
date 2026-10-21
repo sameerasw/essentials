@@ -715,10 +715,10 @@
     <string name="about_desc_essentials_on_display">当音乐播放和播放切换时，“Essentials On Display”会在锁定屏幕上显示“正在播放”叠加层。\n\n如果您的设备不支持在 AOD 上显示叠加层，您可以在充电时选择使用 Android 设置中添加的“氛围”屏幕保护程序作为替代方案。</string>
     <string name="about_desc_notification_lighting">通知光效在您收到通知时添加漂亮的边缘光效。\n\n您可以自定义动画样式、颜色和行为。它甚至在屏幕关闭时（取决于OEM）或在当前应用之上工作。从给定的控件中选择应用、通知优先级或触发行为。如果您的OEM不支持在AOD上显示叠加层，请使用下方找到的环境显示选项。</string>
     <string name="about_desc_screen_off_widget">通过点击一个透明的、可调整大小的小组件轻松关闭屏幕，该小组件不会在主屏幕上添加图标或任何杂乱。</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
+    <string name="about_desc_statusbar_icons">完全控制您的状态栏图标。\n\n隐藏特定图标如WiFi、蓝牙或蜂窝数据，保持状态栏整洁。您还可以使用一些智能控制自定义时钟格式和电池指示器。这些是可用的AOSP控件列表，因此您的设备操作系统可能不会尊重所有控件。</string>
     <string name="about_desc_caffeinate">保持唤醒可防止屏幕自动关闭。\n\n在特定时长或无限期内保持屏幕唤醒。适用于阅读长文章或参考食谱时。</string>
     <string name="about_desc_maps_power_saving">在任何Android设备上获取Pixel 10系列独有的Google Maps省电模式，在锁屏上显示极简纯黑背景。开始导航会话，关闭屏幕再重新打开即可。</string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
+    <string name="about_desc_flashlight_pulse">收到通知时脉冲闪光灯。\n\n对于硬件支持闪光灯调光的设备，脉冲将平滑动画。</string>
     <string name="about_desc_snooze_notifications">延迟那些默认无法修改的烦人的系统持久通知。\n\n请等待通知到达，然后进入此功能，其通知通道将被列出。选择该通道以便下次延迟。\n\n任何延迟的通知仍然可以从Android的通知历史记录中访问。</string>
     <string name="about_desc_quick_settings_tiles">向快速设置面板添加自定义磁贴。\n\n长按其中任何一个以了解它们的作用。</string>
     <string name="about_desc_button_remap">重映射硬件按钮以执行不同的操作和快捷方式。\n\n自定义在特定条件下长按音量键时发生的情况。\n\n某些行为，如屏幕关闭触发或手电筒控制，可能取决于OEM的实现方式，并非在所有设备上都能按预期工作。某些场景可以使用Shizuku权限解决，但由于实现方式不同，可能无法提供相同的体验。</string>
@@ -763,7 +763,7 @@
     <string name="about_desc_bubbles">启用或禁用浮动通知气泡。\n\n快速切换会话气泡的系统级设置。</string>
     <string name="about_desc_sensitive_content">在锁屏上隐藏敏感内容。\n\n切换设备锁定时是否显示或隐藏通知内容。</string>
     <string name="about_desc_tap_to_wake">切换点按唤醒功能。\n\n启用或禁用通过点按唤醒屏幕的功能。</string>
-    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
+    <string name="about_desc_aod">切换始终显示。\n\n快速启用或禁用始终显示以快速查看信息。</string>
     <string name="about_desc_notification_glance">根据通知自动控制您的始终显示。当来自选定应用的消息或提醒到达时，AOD将保持开启，直到您关闭通知，确保您不会错过重要信息，同时在没有提醒时不会浪费电池。</string>
     <string name="about_desc_mono_audio">将音频通道合并为单声道。\n\n使用单个耳塞或出于无障碍目的时很有用。</string>
     <string name="about_desc_flashlight_tile">切换手电筒。\n\n长按打开亮度调节控件，这可能需要某些设备缺乏的硬件实现。</string>
@@ -1307,7 +1307,7 @@
     <string name="label_animator_duration_scale">动画时长缩放</string>
     <string name="label_transition_animation_scale">过渡动画缩放</string>
     <string name="label_window_animation_scale">窗口动画缩放</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">调整系统范围的字体缩放、粗细和动画速度。请注意，某些设置可能需要高级权限或设备重启才能让某些应用反映更改。\n\n缩放调整可能需要额外的shizuku或root权限</string>
     <string name="about_desc_screen_refresh_rate">使用 Shizuku 设置自定义屏幕刷新率。固定模式会将最小刷新率和最高刷新率锁定为一个值，而范围模式允许您定义单独的最小值和最高。重置会清除自定义覆盖并将设备恢复到其系统管理的刷新行为。</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1458,7 +1458,7 @@
     <string name="notification_lighting_sweep_select_shapes_title">选择形状</string>
     <string name="notification_lighting_sweep_select_shapes_desc">选择扫描动画中使用的形状</string>
     <string name="feat_flashlight_title">手电筒</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">改进手电筒行为</string>
     <string name="flashlight_pocket_title">口袋检测</string>
     <string name="flashlight_pocket_desc">手机放在口袋里时关闭手电筒</string>
     <string name="flashlight_overheat_title">过热预防</string>
@@ -1711,7 +1711,7 @@
     <string name="island_preview_stage_title">预览</string>
     <string name="app_colors_auto">自动</string>
     <string name="island_cutout_gap_title">摄像头宽度</string>
-    <string name="island_keep_on_landscape_title">保持显示</string>
+    <string name="island_keep_on_landscape_title">跟随旋转</string>
     <string name="island_timeout_title">显示时长</string>
     <string name="feat_aod_wallpaper_desc">通过使用叠加层</string>
     <string name="watch_esim_install_title">安装 eSIM</string>
@@ -1774,4 +1774,14 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="instruction_section_silent_title">静音声音模式</string>
+    <string name="instruction_section_silent_desc">您可能已经注意到静音模式也会触发勿扰模式。\n\n这是由于Android实现的方式，即使我们使用相同的API切换到振动模式，由于某些原因，它也会在静音模式下同时打开勿扰模式，目前这是无法避免的。:(</string>
+    <string name="instruction_section_statusbar_title">状态栏图标</string>
+    <string name="instruction_section_statusbar_desc">您可能会注意到，即使重置了状态栏图标，某些图标如设备旋转、有线耳机图标可能仍然可见。这是由于Android中状态栏黑名单的实现方式以及您的OEM可能对它们进行了自定义。\n您可能需要进一步调整。\n\n另外，并非所有图标可见性选项都能正常工作，因为它们取决于OEM的实现和可用性。</string>
+    <string name="island_suppress_system_heads_up_title">隐藏系统的通知（横幅通知）</string>
+    <string name="island_hide_live_updates_title">动态隐藏实时更新</string>
+    <string name="island_compact_hide_status_bar_title">隐藏紧凑型灵动岛的所有项目</string>
+    <string name="island_dynamic_hide_status_bar_title">展开时隐藏所有内容</string>
+    <string name="island_hide_icons_title">动态隐藏状态栏图标</string>
+    <string name="island_bond_edge_title">置顶并已刘海屏显示</string>
 </resources>
