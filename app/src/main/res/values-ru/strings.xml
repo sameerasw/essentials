@@ -719,12 +719,12 @@
     <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Подсветка уведомлений добавляет красивый эффект боковой подсветки при получении уведомлений.\n\nВы можете настроить стиль, цвета и поведение анимации. Он работает, даже когда экран выключен (зависит от OEM) или находится поверх текущего приложения. Выберите приложения, приоритет уведомлений или поведение, при котором оно должно запускаться, с помощью заданных элементов управления. Если ваш OEM-производитель не поддерживает наложения выше AOD, подайте в суд на опцию Ambient display, указанную ниже.</string>
     <string name="about_desc_screen_off_widget">Легко выключите экран, коснувшись прозрачного виджета с изменяемым размером, который не добавляет значков или беспорядка на главный экран.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
+    <string name="about_desc_statusbar_icons">Получите полный контроль над значками строки состояния.\n\nСкрывайте определенные значки, например Wi-Fi, Bluetooth или данные сотовой связи, чтобы строка состояния оставалась чистой. Вы также можете настроить формат часов и индикатор заряда батареи с помощью интеллектуальных элементов управления. Это список доступных элементов управления AOSP, поэтому ОС вашего устройства может не поддерживать все элементы управления.</string>
     <string name="about_desc_caffeinate">Режим \"Кофеина\" предотвращает автоматическое выключение экрана.
 
 Не допускайте отключения экрана в течение определенного времени или на неопределенный срок. Полезно при чтении длинных статей или ссылок на рецепты.</string>
     <string name="about_desc_maps_power_saving">Получите эксклюзивный режим энергосбережения Google Maps для серии Pixel 10 с минимальным черным фоном для отображения на экране блокировки на любом устройстве Android. Запустите сеанс навигации, выключите и снова включите экран.</string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
+    <string name="about_desc_flashlight_pulse">Включите мигание фонарика при получении уведомления.\n\nЕсли устройства имеют аппаратную поддержку затемнения фонарика, мигание будет плавно анимироваться.</string>
     <string name="about_desc_snooze_notifications">Отложите постоянные раздражающие системные уведомления, которые по умолчанию нельзя отключить. \n\nПодождите, пока не придет уведомление, а затем перейдите к этой функции, где будет указан канал уведомлений. Выберите этот канал, чтобы отложить уведомление в следующий раз.\n\nЛюбое отложенное уведомление по-прежнему можно просмотреть в истории уведомлений в Android.</string>
     <string name="about_desc_quick_settings_tiles">Добавьте пользовательские плитки на панель быстрых настроек.\n\nНажмите и удерживайте любой из них, чтобы узнать, что они делают.</string>
     <string name="about_desc_button_remap">Переназначьте аппаратные кнопки для выполнения различных действий и ярлыков.\n\nНастройте то, что происходит при длительном нажатии кнопок громкости при определенных условиях. \n\nНекоторые функции, такие как триггер выключения экрана или элементы управления фонариком, могут зависеть от OEM-производителя и работать не на всех устройствах должным образом. Некоторые сценарии можно обойти, используя разрешения Shizuku, но из-за реализаций они могут не дать такого же результата.</string>
@@ -769,7 +769,7 @@
     <string name="about_desc_bubbles">Включите или отключите плавающие всплывающие уведомления.\n\nБыстро переключайте общесистемные настройки для всплывающих окон разговоров.</string>
     <string name="about_desc_sensitive_content">Скрыть конфиденциальное содержимое на экране блокировки.\n\nПереключите, будет ли отображаться или скрываться содержимое уведомлений, когда ваше устройство заблокировано.</string>
     <string name="about_desc_tap_to_wake">Переключите функцию пробуждения нажатием.\n\nВключите или отключите возможность пробуждения экрана нажатием.</string>
-    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
+    <string name="about_desc_aod">Переключить всегда включенный дисплей.\n\nБыстро включите или отключите всегда включенный дисплей, чтобы сразу просмотреть информацию.</string>
     <string name="about_desc_notification_glance">Автоматически управляйте функцией Всегда на дисплее на основе ваших уведомлений. Когда сообщение или оповещение поступает из выбранного приложения, AOD будет оставаться включенным до тех пор, пока вы не закроете уведомление, гарантируя, что вы никогда не пропустите важную информацию, не тратя заряд батареи при отсутствии оповещений.</string>
     <string name="about_desc_mono_audio">Объедините аудио в моно.\n\nПолезно при использовании одного наушника или в целях доступности.</string>
     <string name="about_desc_flashlight_tile">Включите фонарик.\n\nДлительное нажатие открывает элементы управления для регулировки интенсивности, для чего может потребоваться аппаратная реализация, которой может не хватать на некоторых устройствах.</string>
@@ -1313,7 +1313,7 @@
     <string name="label_animator_duration_scale">Шкала продолжительности анимации</string>
     <string name="label_transition_animation_scale">Размер анимации перехода</string>
     <string name="label_window_animation_scale">Размер анимации окна</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">Настройте размер, толщину и скорость анимации общесистемного шрифта. Обратите внимание, что для некоторых настроек могут потребоваться дополнительные разрешения или перезагрузка устройства, чтобы определенные приложения отразили изменения. \n\nДля настройки масштаба могут потребоваться дополнительные разрешения Shizuku или Root-прав</string>
     <string name="about_desc_screen_refresh_rate">Установите пользовательскую частоту обновления экрана с помощью Shizuku. Фиксированный режим фиксирует как минимальную, так и максимальную частоту обновления на одном значении, а режим диапазона позволяет задать отдельные минимальные и максимальные значения. Сброс удаляет пользовательские настройки и возвращает устройство к системному управлению частотой обновления</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1455,7 +1455,7 @@
     <string name="feat_safe_volume_title">Убрать предупреждение о слишком громком звуке</string>
     <string name="feat_safe_volume_desc">Убирает диалоговое окно с предупреждением о звуке</string>
     <string name="feat_flashlight_title">Фонарик</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">Улучшите управление фонариком</string>
     <string name="feat_power_battery_title">Питание и батарея</string>
     <string name="feat_power_battery_desc">Настроить режим энергосбережения</string>
     <string name="feat_pocket_mode_title">\"В кармане\"</string>
@@ -1744,8 +1744,8 @@
     <string name="duo_action_horizontal_slide_track">Переключить трек</string>
     <string name="island_combine_with_duo">Совместить с Duo</string>
     <string name="island_timeout_title">Продолжительность показа</string>
-    <string name="island_expanded_timeout_title">Тайм-аут раскрытости</string>
-    <string name="island_expanded_timeout_desc">Длительность после второго всё сворачиваться в капсулу (от 0 до бесконечности)</string>
+    <string name="island_expanded_timeout_title">Тайм-аут раскрытого вида</string>
+    <string name="island_expanded_timeout_desc">Длительность до сворачивания в капсулу в капсулу (от 0 до бесконечности)</string>
     <string name="feat_conscious_gate_desc">Пауза перед открыванием выбранных приложений</string>
     <string name="haptic_mode_stronger">Повышенный</string>
     <string name="island_section_notifications">Уведомления</string>
@@ -1848,15 +1848,15 @@
     <string name="freeze_tag_never_auto_freeze_desc">Приложения в этой метке будут заблокированы от автоматического замораживания </string>
     <string name="freeze_tag_color_coded_title">Тег цветовая кодировка</string>
     <string name="freeze_tag_color_coded_desc">Показать цвета тегов в сетке приложения </string>
-    <string name="duo_slide_mirror_direction_title">Инвертировать направления</string>
-    <string name="island_always_gestures_title">Всегда доступные жесты</string>
-    <string name="island_always_gestures_desc">Оставлять пространство для жестов даже когда остров спрятан</string>
+    <string name="duo_slide_mirror_direction_title">Отразить направления</string>
+    <string name="island_always_gestures_title">Жесты доступны всегда</string>
+    <string name="island_always_gestures_desc">Держать область жестов доступной, даже когда остров скрыт</string>
     <string name="label_battery_capacity">Вместимость</string>
     <string name="label_battery_capacity_health">Здоровье батареи</string>
     <string name="feat_widget_stack_title">Стопка виджетов</string>
     <string name="feat_widget_stack_desc">Складывайте виджеты в стопку и переключайтесь между ними</string>
-    <string name="feat_volume_steps_title">Шаг звука</string>
-    <string name="feat_volume_steps_desc">Изменение шага громкости при каждом нажатие кнопки</string>
+    <string name="feat_volume_steps_title">Шаг громкости</string>
+    <string name="feat_volume_steps_desc">Меняйте громкость медиа быстрее с каждым нажатием</string>
     <string name="feat_aod_wallpaper_extended_media">Показать информацию о воспроизведении</string>
     <string name="feat_aod_wallpaper_extended_app_icon">Заменить заметку иконкой приложения</string>
     <string name="keep_in_full_screen_title">Держать в полном экране</string>
@@ -1902,4 +1902,20 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="instruction_section_silent_title">Режим \"Без звука\"</string>
+    <string name="instruction_section_silent_desc">Возможно, вы заметили, что режим \"Без звука\" также запускает режим «Не беспокоить». \n\nЭто связано с тем, как это реализовано в Android: даже если мы используем тот же API для переключения в режим вибрации, он по какой-то причине включает «Не беспокоить» вместе с режимом \"Без звука\", и в данный момент этого невозможно избежать. :(</string>
+    <string name="instruction_section_statusbar_title">Значки в строке состояния</string>
+    <string name="instruction_section_statusbar_desc">Вы можете заметить, что даже после сброса значков строки состояния некоторые значки, такие как вращение устройства и значки проводных наушников, могут оставаться видимыми. Это связано с тем, как черный список statubar реализован в Android и с тем, как ваш OEM-производитель мог настроить их. \nВам могут потребоваться дополнительные настройки. \n\nКроме того, не все параметры видимости значков могут работать, поскольку они зависят от реализаций и доступности OEM.</string>
+    <string name="island_notif_compact_heads_up_title">Компактные напоминания</string>
+    <string name="island_notif_compact_heads_up_desc">Показывает новые уведомления в строку</string>
+    <string name="island_dynamic_hide_status_bar_title">Скрыть всё при раскрытом виде</string>
+    <string name="island_suppress_system_heads_up_title">Скрыть системные напоминания </string>
+    <string name="island_hide_live_updates_title">Скрыыать live updates Динамично</string>
+    <string name="island_compact_hide_status_bar_title">Скрыть все предметы для компактного острова</string>
+    <string name="island_hide_icons_title">Динамическое скрытие иконок статус-бара</string>
+    <string name="feat_app_volume_title">Громкость приложений</string>
+    <string name="feat_app_volume_desc">Устанавливайте громкость отдельно для каждого приложения</string>
+    <string name="desc_location_mode">Ограничить запросы местоположения пока включена экономия энергии</string>
+    <string name="label_location_mode">Режимы геолокации и GPS</string>
+    <string name="label_apply_after_reboot">Применить после перезагрузки</string>
 </resources>
