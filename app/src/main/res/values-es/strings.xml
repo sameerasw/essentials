@@ -1908,4 +1908,9 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="feat_aod_wallpaper_extended_app_icon">Replasar la nota con el icono de app</string>
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">En regiones insoportadas</string>
+    <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
+    <string name="island_navigation_peek_after_expand_desc">Si esta desactivado, la Isla vuelve a ser compacta</string>
+    <string name="island_navigation_on_new_title">Nueva instruccion</string>
+    <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
+    <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>
 </resources>
