@@ -1893,4 +1893,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="island_hide_status_bar_title">Ocultar barra de estado</string>
+    <string name="feat_aod_wallpaper_extended_app_icon">Replasar la nota con el icono de app</string>
+    <string name="watch_esim_install_title">Instalar eSIM</string>
+    <string name="watch_esim_install_desc">En regiones insoportadas</string>
 </resources>
