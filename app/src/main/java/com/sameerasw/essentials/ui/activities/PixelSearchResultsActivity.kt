@@ -14,6 +14,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.graphics.PixelFormat
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -156,6 +158,8 @@ class PixelSearchResultsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        window.setFormat(PixelFormat.TRANSLUCENT)
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
                 android.graphics.Color.TRANSPARENT,
@@ -171,18 +175,7 @@ class PixelSearchResultsActivity : ComponentActivity() {
             window.isNavigationBarContrastEnforced = false
         }
 
-        val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val dimAmount = if (isSystemDark) 0.2f else 0.08f
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-            window.attributes.blurBehindRadius = 60
-            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            window.setDimAmount(dimAmount)
-        } else {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            window.setDimAmount(if (isSystemDark) 0.35f else 0.15f)
-        }
+        applyBlur()
 
         val initialQuery = intent.getStringExtra(SearchManager.QUERY)
             ?: intent.getStringExtra("query")
@@ -201,9 +194,48 @@ class PixelSearchResultsActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        applyBlur()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        applyBlur()
+    }
+
+    private fun applyBlur() {
+        val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val dimAmount = if (isSystemDark) 0.2f else 0.08f
+
+        val repository = SettingsRepository(this)
+        val isBlurEnabled = repository.isPixelSearchBlurEnabled()
+        val isWallpaperBg = repository.isPixelSearchWallpaperBackgroundEnabled()
+        val blurRadius = repository.getPixelSearchBlurRadius().toInt().coerceIn(1, 300)
+
+        if (isWallpaperBg) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val params = window.attributes
+            if (isBlurEnabled) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                params.blurBehindRadius = blurRadius
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                params.blurBehindRadius = 0
+            }
+            window.attributes = params
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            window.setDimAmount(dimAmount)
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            window.setDimAmount(if (isSystemDark) 0.35f else 0.15f)
+        }
     }
 }
 
@@ -638,7 +670,21 @@ fun PixelSearchResultsScreen(
         }
     }
 
-    val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.55f)
+    val isWallpaperBg = remember { repository.isPixelSearchWallpaperBackgroundEnabled() }
+    val isBlurEffective = remember(context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val windowManager = context.getSystemService(WindowManager::class.java)
+            repository.isPixelSearchBlurEnabled() && (windowManager?.isCrossWindowBlurEnabled == true)
+        } else {
+            false
+        }
+    }
+    val scrimAlpha = when {
+        !isBlurEffective -> 0.85f
+        !isWallpaperBg -> 0.45f
+        else -> 0.55f
+    }
+    val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = scrimAlpha)
 
     Box(
         modifier = Modifier
