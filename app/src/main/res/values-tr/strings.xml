@@ -416,7 +416,7 @@
     <string name="diy_editor_edit_title">Otomasyonu Düzenle</string>
     <string name="feat_link_actions_title">Bağlantı eylemleri</string>
     <string name="feat_link_actions_desc">Birden fazla uygulamayla bağlantıları yönetin</string>
-    <string name="feat_snooze_notifications_title">Sistem bildirimlerini erteleyin</string>
+    <string name="feat_snooze_notifications_title">Sistem bildirimlerini erteleme</string>
     <string name="feat_snooze_notifications_desc">Kalıcı bildirimleri ertele</string>
     <string name="feat_qs_tiles_title">Hızlı ayar kutucukları</string>
     <string name="feat_qs_tiles_desc">Tümünü görüntüle</string>
@@ -1668,7 +1668,7 @@ Devam et düğmesi birkaç saniyeliğine devre dışı kalır; böylece karar ve
     <string name="feat_aod_wallpaper_use_album_art">Albüm görselini kullan</string>
     <string name="island_title">Ada</string>
     <string name="island_desc">Dinamik ada</string>
-    <string name="island_enable_title">Ada\'yı Etkinleştir</string>
+    <string name="island_enable_title">Ada\'yı etkinleştir</string>
     <string name="island_enable_desc">Dinamik adayı göster</string>
     <string name="about_desc_aod_wallpaper">Ayarlanabilir opaklık, bulanıklık, vinyet ve siyah eşiği seçenekleriyle, Her Zaman Açık Ekran\'da saatin arkasında duvar kağıdınızı bir katman olarak gösterir. Ayrıca özel bir görsel seçebilir veya o sırada çalan müziğin albüm kapağını görüntüleyebilirsiniz.
 
@@ -1833,7 +1833,7 @@ Seviyeler yalnızca normal ses seviyesinin altına inebilir, asla üstüne çık
 
 Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o tuşa basılı tutmak ses seviyesini değiştirmek yerine eylemi çalıştırır ve kısa basma yine de ses seviyesini adım boyutu kadar değiştirir. Ses paneli açıkken, Düğme yeniden eşleme varsayılan olarak duraklatılır, bu nedenle tuşa basılı tutmak ses seviyesini değiştirir. Eylemin her zaman öncelikli olmasını istiyorsanız, Düğme yeniden eşlemede \"Ses iletişim kutusu açıkken devre dışı bırak\" seçeneğini kapatın.</string>
     <string name="button_remap_pause_on_volume_dialog_title">Ses iletişim kutusu açıkken devre dışı bırak</string>
-    <string name="feat_screenshots_title">Screenshot clean-up</string>
+    <string name="feat_screenshots_title">Ekran görüntüsü temizleme</string>
     <string name="feat_screenshots_desc">Paylaşılan ve eski ekran görüntülerini temizleyin</string>
     <string name="island_brief_desc">Olan bitenler hakkında kısa bir bilgi edinin</string>
     <string name="duo_action_horizontal_slide_track">Parçayı değiştir</string>
