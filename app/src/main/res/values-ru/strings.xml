@@ -1731,7 +1731,7 @@
     <string name="duo_rotate_album_art_title">Поворачивать обложку альбома</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Скрываться на AOD только во время простоя</string>
     <string name="duo_combine_with_island">Сочетать с островом</string>
-    <string name="island_dynamic_hide_status_bar_title">Динамично скрывать элементы статус-бара</string>
+    <string name="island_dynamic_hide_status_bar_title">Скрыть всё при раскрытом виде</string>
     <string name="island_suppress_system_heads_up_title">Скрыть системные напоминания </string>
     <string name="island_notif_tap_to_open_title">Тапнуть что бы открыть уведомление</string>
     <string name="feat_prefer_gpu_composing_title">Предпочитаете графический процессор для создания экрана</string>
@@ -1752,8 +1752,8 @@
     <string name="duo_action_horizontal_slide_track">Переключить трек</string>
     <string name="island_combine_with_duo">Совместить с Duo</string>
     <string name="island_timeout_title">Продолжительность показа</string>
-    <string name="island_expanded_timeout_title">Тайм-аут раскрытости</string>
-    <string name="island_expanded_timeout_desc">Длительность после второго всё сворачиваться в капсулу (от 0 до бесконечности)</string>
+    <string name="island_expanded_timeout_title">Тайм-аут раскрытого вида</string>
+    <string name="island_expanded_timeout_desc">Длительность до сворачивания в капсулу в капсулу (от 0 до бесконечности)</string>
     <string name="feat_conscious_gate_desc">Пауза перед открыванием выбранных приложений</string>
     <string name="haptic_mode_stronger">Повышенный</string>
     <string name="island_section_notifications">Уведомления</string>
@@ -1857,19 +1857,19 @@
     <string name="freeze_tag_never_auto_freeze_desc">Приложения в этой метке будут заблокированы от автоматического замораживания </string>
     <string name="freeze_tag_color_coded_title">Тег цветовая кодировка</string>
     <string name="freeze_tag_color_coded_desc">Показать цвета тегов в сетке приложения </string>
-    <string name="duo_slide_mirror_direction_title">Инвертировать направления</string>
-    <string name="island_always_gestures_title">Всегда доступные жесты</string>
-    <string name="island_always_gestures_desc">Оставлять пространство для жестов даже когда остров спрятан</string>
+    <string name="duo_slide_mirror_direction_title">Отразить направления</string>
+    <string name="island_always_gestures_title">Жесты доступны всегда</string>
+    <string name="island_always_gestures_desc">Держать область жестов доступной, даже когда остров скрыт</string>
     <string name="label_battery_capacity">Вместимость</string>
     <string name="label_battery_capacity_health">Здоровье батареи</string>
     <string name="feat_widget_stack_title">Стопка виджетов</string>
     <string name="feat_widget_stack_desc">Складывайте виджеты в стопку и переключайтесь между ними</string>
-    <string name="feat_volume_steps_title">Шаг звука</string>
-    <string name="feat_volume_steps_desc">Изменение шага громкости при каждом нажатие кнопки</string>
+    <string name="feat_volume_steps_title">Шаг громкости</string>
+    <string name="feat_volume_steps_desc">Меняйте громкость медиа быстрее с каждым нажатием</string>
     <string name="feat_aod_wallpaper_extended_media">Показать информацию о воспроизведении</string>
     <string name="feat_aod_wallpaper_extended_app_icon">Заменить заметку иконкой приложения</string>
     <string name="island_compact_hide_status_bar_title">Скрыть все предметы для компактного острова</string>
-    <string name="island_hide_icons_title">Динамично скоыыать иконки статус-бара</string>
+    <string name="island_hide_icons_title">Динамическое скрытие иконок статус-бара</string>
     <string name="keep_in_full_screen_title">Держать в полном экране</string>
     <string name="disable_interactions_in_full_screen_title">Отключить взаимодействия в полном экране</string>
     <string name="island_balance_compact_title">Визуальная балансировка компактного острова</string>
@@ -1877,4 +1877,9 @@
     <string name="island_max_items_title">Максимальное количество отображаемых предметов</string>
     <string name="duo_action_horizontal_slide_brightness">Яркость</string>
     <string name="island_keep_on_landscape_title">Показывать в горизонтальном режиме</string>
+    <string name="feat_app_volume_title">Громкость приложений</string>
+    <string name="feat_app_volume_desc">Устанавливайте громкость отдельно для каждого приложения</string>
+    <string name="desc_location_mode">Ограничить запросы местоположения пока включена экономия энергии</string>
+    <string name="label_location_mode">Режимы геолокации и GPS</string>
+    <string name="label_apply_after_reboot">Применить после перезагрузки</string>
 </resources>
