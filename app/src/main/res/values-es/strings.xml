@@ -1899,4 +1899,13 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_suppress_system_heads_up_title">Ocultar notificaciones emergentes del sistema</string>
+    <string name="island_dynamic_hide_status_bar_title">Automáticamente oculta los íconos de la barra de estado</string>
+    <string name="island_hide_live_updates_title">Ocultar las notificaciones actuales dinámicamente. </string>
+    <string name="island_compact_hide_status_bar_title">Ocultar todos los elementos para la isla compacta</string>
+    <string name="island_hide_icons_title">Ocultar iconos seleccionador de la barra de estado con Isla Compacta  </string>
+    <string name="island_hide_status_bar_title">Ocultar barra de estado</string>
+    <string name="feat_aod_wallpaper_extended_app_icon">Replasar la nota con el icono de app</string>
+    <string name="watch_esim_install_title">Instalar eSIM</string>
+    <string name="watch_esim_install_desc">En regiones insoportadas</string>
 </resources>
