@@ -1902,4 +1902,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_navigation_on_new_title">Nueva instruccion</string>
     <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
     <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>
+    <string name="feat_split_screen_gesture_title">Gesto de dividir pantalla</string>
+    <string name="feat_split_screen_gesture_desc">Desliza 2 dedos hacia arriba en la barra de navegacion para dividir o desdividir la pantalla </string>
 </resources>
