@@ -54,6 +54,8 @@ import com.sameerasw.essentials.utils.HapticUtil
 @Composable
 fun SoundModeSettingsSheet(
     initialAction: Action.SoundMode,
+    title: String = stringResource(R.string.diy_action_sound_mode),
+    showInfo: Boolean = true,
     onDismiss: () -> Unit,
     onSave: (Action.SoundMode) -> Unit,
 ) {
@@ -72,48 +74,50 @@ fun SoundModeSettingsSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                text = stringResource(R.string.diy_action_sound_mode),
+                text = title,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
             // Info Card
-            Card(
-                colors =
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                    ),
-                shape = RoundedCornerShape(24.dp),
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+            if (showInfo) {
+                Card(
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceBright,
+                        ),
+                    shape = RoundedCornerShape(24.dp),
                 ) {
-                    val infoTitle = "Sound Mode"
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(40.dp)
-                                .background(
-                                    color = ColorUtil.getPastelColorFor(infoTitle),
-                                    shape = CircleShape,
-                                ),
-                        contentAlignment = Alignment.Center,
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_info_24),
-                            contentDescription = null,
-                            tint = ColorUtil.getVibrantColorFor(infoTitle),
-                            modifier = Modifier.size(24.dp),
+                        val infoTitle = "Sound Mode"
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        color = ColorUtil.getPastelColorFor(infoTitle),
+                                        shape = CircleShape,
+                                    ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_info_24),
+                                contentDescription = null,
+                                tint = ColorUtil.getVibrantColorFor(infoTitle),
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.diy_sound_mode_desc),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    Text(
-                        text = stringResource(R.string.diy_sound_mode_desc),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
                 }
             }
 

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
@@ -12,8 +13,10 @@ import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import com.sameerasw.essentials.domain.diy.State as DIYState
 
 class NotificationModule : AutomationModule {
     companion object {
@@ -27,6 +30,7 @@ class NotificationModule : AutomationModule {
     private val scope = CoroutineScope(Dispatchers.IO)
     private var appContext: Context? = null
     private var dndOn = false
+    private val stateEntries = StateEntries()
 
     private val alertListener =
         object : NotificationListener.NotificationAlertListener {
@@ -52,6 +56,7 @@ class NotificationModule : AutomationModule {
                 dndOn = on
                 val fired = if (on) Trigger.DndOn else Trigger.DndOff
                 run(context) { it == fired }
+                syncStates(context)
             }
         }
 
@@ -63,6 +68,11 @@ class NotificationModule : AutomationModule {
     }
 
     override fun stop(context: Context) {
+        stateEntries.closeAll().forEach { actions ->
+            scope.launch(NonCancellable) {
+                CombinedActionExecutor.executeAll(context, actions)
+            }
+        }
         NotificationListener.removeNotificationAlertListener(alertListener)
         try {
             context.unregisterReceiver(dndReceiver)
@@ -72,6 +82,20 @@ class NotificationModule : AutomationModule {
 
     override fun updateAutomations(automations: List<Automation>) {
         this.automations = automations
+        appContext?.let { syncStates(it) }
+    }
+
+    private fun syncStates(context: Context) = launchAll(context, stateEntries.sync(automations) { it.state is DIYState.Dnd && dndOn })
+
+    private fun launchAll(
+        context: Context,
+        actionLists: List<List<Action>>,
+    ) {
+        actionLists.forEach { actions ->
+            scope.launch {
+                CombinedActionExecutor.executeAll(context, actions)
+            }
+        }
     }
 
     private fun run(

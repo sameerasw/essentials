@@ -10,6 +10,7 @@
 package com.sameerasw.essentials.ui.components.diy
 
 import android.text.format.DateFormat
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -458,6 +459,7 @@ private fun automationSummary(automation: Automation): String? {
                         trigger.textContains.ifBlank { null }?.let { "\"$it\"" },
                     ).joinToString(" · ").ifBlank { null }
                 is Trigger.SystemMetric -> systemMetricText(context, trigger.metric, trigger.comparison)
+                is Trigger.SoundModeChanged -> stringResource(soundModeName(trigger.mode))
                 else -> null
             }
 
@@ -473,6 +475,7 @@ private fun automationSummary(automation: Automation): String? {
                     } else {
                         stringResource(R.string.diy_summary_calendars_count, state.calendarIds.size)
                     }
+                is DIYState.SoundMode -> stringResource(soundModeName(state.mode))
                 else -> null
             }
 
@@ -493,6 +496,14 @@ private fun automationSummary(automation: Automation): String? {
         else -> null
     }
 }
+
+@StringRes
+private fun soundModeName(mode: Action.SoundModeType): Int =
+    when (mode) {
+        Action.SoundModeType.SOUND -> R.string.sound_mode_sound
+        Action.SoundModeType.VIBRATE -> R.string.sound_mode_vibrate
+        Action.SoundModeType.SILENT -> R.string.sound_mode_silent
+    }
 
 @Composable
 fun ActionItem(

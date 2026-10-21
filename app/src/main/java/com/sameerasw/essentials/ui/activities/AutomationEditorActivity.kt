@@ -106,6 +106,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.BluetoothDeviceSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.NotificationTriggerSheet
+import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SystemMetricSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
 import com.sameerasw.essentials.ui.features.location.sheets.LocationTriggerSheet
@@ -364,6 +365,7 @@ fun AutomationEditorScreen(
         // Config Sheets
         var showTimeSettings by remember { mutableStateOf(false) }
         var showCalendarStateSettings by remember { mutableStateOf(false) }
+        var showSoundModeSettings by remember { mutableStateOf(false) }
         var showBluetoothSettings by remember { mutableStateOf(false) }
         var showWifiSettings by remember { mutableStateOf(false) }
         var showNotificationTriggerSettings by remember { mutableStateOf(false) }
@@ -1049,6 +1051,11 @@ fun AutomationEditorScreen(
                                                                 Trigger.DndOn,
                                                                 Trigger.DndOff,
                                                             ),
+                                                        R.string.diy_category_sound to
+                                                            listOf(
+                                                                (selectedTrigger as? Trigger.SoundModeChanged)
+                                                                    ?: Trigger.SoundModeChanged(),
+                                                            ),
                                                         R.string.diy_category_location to
                                                             listOf(
                                                                 (selectedTrigger as? Trigger.ArriveAtLocation) ?: Trigger.ArriveAtLocation(),
@@ -1135,6 +1142,10 @@ fun AutomationEditorScreen(
                                                                         selectedTrigger = trigger
                                                                         showSystemMetricSettings = true
                                                                     }
+                                                                    is Trigger.SoundModeChanged -> {
+                                                                        selectedTrigger = trigger
+                                                                        showSoundModeSettings = true
+                                                                    }
                                                                     else -> {}
                                                                 }
                                                             },
@@ -1155,6 +1166,11 @@ fun AutomationEditorScreen(
                                                                         Metric.BATTERY_LEVEL
                                                                 }
                                                                     ?: DIYState.SystemMetric(metric = Metric.BATTERY_LEVEL),
+                                                            ),
+                                                        R.string.diy_category_sound to
+                                                            listOf(
+                                                                DIYState.Dnd,
+                                                                (selectedState as? DIYState.SoundMode) ?: DIYState.SoundMode(),
                                                             ),
                                                         R.string.diy_category_system_screen to
                                                             listOf(
@@ -1231,7 +1247,8 @@ fun AutomationEditorScreen(
                                                             isConfigurable =
                                                                 state is DIYState.TimePeriod ||
                                                                     state is DIYState.CalendarEvent ||
-                                                                    state is DIYState.SystemMetric,
+                                                                    state is DIYState.SystemMetric ||
+                                                                    state is DIYState.SoundMode,
                                                             onSettingsClick = {
                                                                 if (state is DIYState.TimePeriod) {
                                                                     showTimeSettings = true
@@ -1243,6 +1260,10 @@ fun AutomationEditorScreen(
                                                                 if (state is DIYState.SystemMetric) {
                                                                     selectedState = state
                                                                     showSystemMetricSettings = true
+                                                                }
+                                                                if (state is DIYState.SoundMode) {
+                                                                    selectedState = state
+                                                                    showSoundModeSettings = true
                                                                 }
                                                             },
                                                         )
@@ -1369,6 +1390,31 @@ fun AutomationEditorScreen(
                             onDismiss = { showSystemMetricSettings = false },
                             onTriggerChange = { selectedTrigger = it },
                             onStateChange = { selectedState = it },
+                        )
+                    }
+
+                    if (showSoundModeSettings) {
+                        val isTrigger = automationType == Automation.Type.TRIGGER
+                        val titleRes = if (isTrigger) R.string.diy_trigger_sound_mode else R.string.diy_state_sound_mode
+                        val currentMode =
+                            if (isTrigger) {
+                                (selectedTrigger as? Trigger.SoundModeChanged)?.mode ?: Action.SoundModeType.SILENT
+                            } else {
+                                (selectedState as? DIYState.SoundMode)?.mode ?: Action.SoundModeType.SILENT
+                            }
+                        SoundModeSettingsSheet(
+                            title = stringResource(titleRes),
+                            showInfo = false,
+                            initialAction = Action.SoundMode(currentMode),
+                            onDismiss = { showSoundModeSettings = false },
+                            onSave = {
+                                showSoundModeSettings = false
+                                if (isTrigger) {
+                                    selectedTrigger = Trigger.SoundModeChanged(it.mode)
+                                } else {
+                                    selectedState = DIYState.SoundMode(it.mode)
+                                }
+                            },
                         )
                     }
 
