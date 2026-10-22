@@ -1455,7 +1455,7 @@
     <string name="feat_safe_volume_title">Убрать предупреждение о слишком громком звуке</string>
     <string name="feat_safe_volume_desc">Убирает диалоговое окно с предупреждением о звуке</string>
     <string name="feat_flashlight_title">Фонарик</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">Яркость, угасание и контроль безопасности</string>
     <string name="feat_power_battery_title">Питание и батарея</string>
     <string name="feat_power_battery_desc">Настроить режим энергосбережения</string>
     <string name="feat_pocket_mode_title">\"В кармане\"</string>
@@ -1879,9 +1879,7 @@
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
     <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
     <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
-    <string name="about_desc_watch_wireless_debugging">Включите беспроводную отладку на часах удалённо со своего телефона.
-
-Это избавляет вас от изучения вариантов разработчиков часов, когда вы хотите подключиться через ADB </string>
+    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
     <string name="about_desc_watch_esim_install">Install an eSIM on your Pixel Watch even in regions where it is not officially supported.\n\nExperimental. It relies on a hidden screen in the Pixel Watch app that may change, and installation success cannot be confirmed here.</string>
     <string name="about_desc_sync_sound_mode">Automatically keeps your watch sound mode in sync with your phone.\n\nWhen you switch your phone between sound, vibrate and silent, your watch follows.</string>
     <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
@@ -1908,15 +1906,15 @@
     <string name="island_suppress_system_heads_up_title">Скрыть системные напоминания </string>
     <string name="island_hide_live_updates_title">Скрыыать live updates Динамично</string>
     <string name="island_hide_icons_title">Динамично скоыыать иконки статус-бара</string>
-    <string name="feat_app_volume_title">Громкость отдельных приложений</string>
-    <string name="feat_app_volume_desc">Установите отдельную громкость для каждого приложения </string>
+    <string name="feat_app_volume_title">Громкость приложений</string>
+    <string name="feat_app_volume_desc">Поставьте отдельную громкость для разных приложений</string>
     <string name="desc_location_mode">Ограничить запросы местоположения пока включена экономия энергии</string>
     <string name="label_location_mode">Режимы геолокации и GPS</string>
     <string name="label_apply_after_reboot">Применить после перезагрузки</string>
     <string name="feat_screenshots_desc">Очистите отправленные и старые скриншоты </string>
-    <string name="app_volume_enable_title">Включить разную громкость для разных приложений</string>
-    <string name="app_volume_add_app">Добавить приложения</string>
-    <string name="app_volume_add_app_desc">Задайте громкость перед тем, как приложение начнёт воспроизведение звука</string>
+    <string name="app_volume_enable_title">Включить громкость приложений</string>
+    <string name="app_volume_add_app">Добавить приложение</string>
+    <string name="app_volume_add_app_desc">Установить громкость приложения до того как будет проигрывать звук </string>
     <string name="about_desc_app_volume">Отключает звук приложения самостоятельно, не меняя громкость медиа для всего остального. Выберите уровень для каждого приложения, и он применяется каждый раз, когда приложение воспроизводит звук, в том числе в фоновом режиме.
 
 Уровни могут только снижаться от нормального объёма, но никогда выше него. Некоторые игры и аудиоприложения с низкой задержкой могут игнорировать уровень. Сидзуку, должно быть, работает на новых уровнях для применения, поэтому начните его снова после перезагрузки. </string>
@@ -1933,7 +1931,7 @@
     <string name="app_icon_black">Динамичная</string>
     <string name="app_icon_legacy">Наследие</string>
     <string name="app_icon_default">Обычный </string>
-    <string name="app_volume_overlay_title">Настроить интерфейс оверлея</string>
+    <string name="app_volume_overlay_title">Оверлей управления</string>
     <string name="watch_notif_sync_silent_title">Уведомляйте о тихих уведомлениях </string>
     <string name="watch_notif_sync_silent_desc">Синхронизируйте бесшумные и низкоприоритетные уведомления для просмотра </string>
     <string name="watch_notif_sync_media_title">Синхронизация воспроизведения мультимедиа </string>
@@ -1946,4 +1944,15 @@
     <string name="watch_notif_sync_icons_desc">Синхронизируйте иконки приложения лаунчера часов для отображения уведомлений </string>
     <string name="watch_notif_sound_dock">Док </string>
     <string name="watch_notif_sound_carmen_nexus">Нексус </string>
+    <string name="app_volume_playing_summary">Играет сейчас · %1$s</string>
+    <string name="feat_screenshots_title">Очистка скриншотов</string>
+    <string name="screenshot_auto_clean_title">Авточистка скриншотов</string>
+    <string name="screenshot_auto_clean_note">При каждом новом скриншоте приходит тихое уведомление о его сохранении. Скриншоты, отмеченные звездочкой, сохраняются всегда</string>
+    <string name="screenshots_cleaned_count_title">Скриншотов убрано</string>
+    <string name="screenshots_storage_saved_title">Сохранённое место</string>
+    <string name="notification_lighting_ripple_repeat_count_title">Количество повторений</string>
+    <string name="flashlight_speed_label">Скорость </string>
+    <string name="notification_lighting_ripple_sparkle_size_title">Размер частиц</string>
+    <string name="notification_lighting_ripple_sparkle_count_title">Коливество частиц</string>
+    <string name="notification_lighting_ripple_wave_size_title">Размер волны</string>
 </resources>
