@@ -1930,4 +1930,8 @@
     <string name="feat_hilight_notifications_title">Эффекты уведомления </string>
     <string name="hilight_notifications_desc">Воспроизвести собственный эффект каждого приложения, когда приходят его уведомления </string>
     <string name="hilight_only_screen_off_title">Только когда экран выключен </string>
+    <string name="app_icon_google">Спектрум</string>
+    <string name="app_icon_black">Динамичная</string>
+    <string name="app_icon_legacy">Наследие</string>
+    <string name="app_icon_default">Обычная</string>
 </resources>
