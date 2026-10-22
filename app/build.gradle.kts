@@ -116,7 +116,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 69
-        versionName = "20.1-beta.2"
+        versionName = "20.1-beta.3"
 
         val whatsNewCounter = 8
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
