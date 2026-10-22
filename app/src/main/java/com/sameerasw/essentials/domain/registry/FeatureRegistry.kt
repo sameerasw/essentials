@@ -1555,6 +1555,49 @@ object FeatureRegistry {
                 )
             },
             object : Feature(
+                id = "Auto-dismiss notifications",
+                title = R.string.feat_auto_dismiss_notifications_title,
+                iconRes = R.drawable.rounded_timer_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_auto_dismiss_notifications_desc,
+                aboutDescription = R.string.about_desc_auto_dismiss_notifications,
+                permissionKeys = listOf("NOTIFICATION_LISTENER"),
+                showToggle = true,
+                hasMoreSettings = true,
+                searchableSettings = emptyList(),
+                parentFeatureId = "Notifications",
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isAutoDismissEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ) = viewModel.isNotificationListenerEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) = viewModel.setAutoDismissEnabled(
+                    enabled,
+                    context = context,
+                )
+
+                override fun onClick(
+                    context: Context,
+                    viewModel: MainViewModel,
+                ) {
+                    val intent =
+                        Intent(
+                            context,
+                            FeatureSettingsActivity::class.java,
+                        ).apply {
+                            putExtra("feature", "Auto-dismiss notifications")
+                        }
+                    context.startActivity(intent)
+                }
+            },
+            object : Feature(
                 id = "Notification snoozing",
                 title = R.string.feat_notification_snoozing_title,
                 iconRes = R.drawable.rounded_notifications_paused_24,

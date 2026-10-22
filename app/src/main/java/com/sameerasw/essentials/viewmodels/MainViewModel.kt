@@ -57,7 +57,12 @@ import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.AutoDismissAppConfig
+import com.sameerasw.essentials.domain.model.AutoDismissChannel
+import com.sameerasw.essentials.domain.model.AutoDismissStat
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
+import com.sameerasw.essentials.services.NotificationAutoDismisser
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.domain.model.AppStandbyInfo
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.HilightEffect
@@ -372,6 +377,7 @@ class MainViewModel : ViewModel() {
     val mapsChannels =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.MapsChannel>>(emptyList())
     val isSnoozeHeadsUpEnabled = mutableStateOf(false)
+    val isAutoDismissEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
@@ -493,6 +499,12 @@ class MainViewModel : ViewModel() {
 
     val shutUpConfigs =
         mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
+    val autoDismissConfigs =
+        mutableStateOf<List<AutoDismissAppConfig>>(emptyList())
+    val autoDismissChannels =
+        mutableStateOf<List<AutoDismissChannel>>(emptyList())
+    val autoDismissStats =
+        mutableStateOf<Map<String, AutoDismissStat>>(emptyMap())
     val isShutUpLoading = mutableStateOf(false)
     val isShutUpAttemptShizukuRestart = mutableStateOf(true)
     val shutUpRestoreDelay = mutableIntStateOf(10)
@@ -1318,6 +1330,22 @@ class MainViewModel : ViewModel() {
                         isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(key)
                     }
 
+                    SettingsRepository.KEY_AUTO_DISMISS_ENABLED -> {
+                        isAutoDismissEnabled.value = settingsRepository.isAutoDismissEnabled()
+                    }
+
+                    SettingsRepository.KEY_AUTO_DISMISS_APPS -> {
+                        loadAutoDismissConfigs()
+                    }
+
+                    SettingsRepository.KEY_AUTO_DISMISS_CHANNELS -> {
+                        loadAutoDismissChannels()
+                    }
+
+                    SettingsRepository.KEY_AUTO_DISMISS_STATS -> {
+                        loadAutoDismissStats()
+                    }
+
                     SettingsRepository.KEY_PINNED_FEATURES -> {
                         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
                     }
@@ -1830,6 +1858,115 @@ class MainViewModel : ViewModel() {
         loadShutUpConfigs()
     }
 
+    fun loadAutoDismissConfigs() {
+        autoDismissConfigs.value = settingsRepository.loadAutoDismissConfigs()
+        loadAutoDismissChannels()
+        loadAutoDismissStats()
+    }
+
+    fun loadAutoDismissChannels() {
+        autoDismissChannels.value = settingsRepository.loadAutoDismissChannels()
+    }
+
+    fun loadAutoDismissStats() {
+        autoDismissStats.value = settingsRepository.loadAutoDismissStats()
+    }
+
+    private fun resyncAutoDismiss() = NotificationListener.instance?.let { NotificationAutoDismisser.resync(it) }
+
+    fun setAutoDismissEnabled(
+        enabled: Boolean,
+        context: Context,
+    ) {
+        isAutoDismissEnabled.value = enabled
+        settingsRepository.setAutoDismissEnabled(enabled)
+        resyncAutoDismiss()
+    }
+
+    fun saveAutoDismissSelectedApps(
+        context: Context,
+        apps: List<AppSelection>,
+    ) {
+        val currentConfigs = settingsRepository.loadAutoDismissConfigs().associateBy { it.packageName }
+        val lastMinutes = settingsRepository.getAutoDismissLastMinutes()
+        val enabledApps = apps.filter { it.isEnabled }
+        val newConfigs =
+            enabledApps.map {
+                currentConfigs[it.packageName] ?: AutoDismissAppConfig(
+                    packageName = it.packageName,
+                    minutes = lastMinutes,
+                )
+            }
+        settingsRepository.saveAutoDismissConfigs(newConfigs)
+
+        val newPackageNames = newConfigs.map { it.packageName }.toSet()
+        val currentStats = settingsRepository.loadAutoDismissStats().toMutableMap()
+        for (pkg in newPackageNames) {
+            if (pkg !in currentConfigs) {
+                currentStats[pkg] = AutoDismissStat(0, System.currentTimeMillis())
+            }
+        }
+        currentStats.keys.retainAll(newPackageNames)
+        settingsRepository.saveAutoDismissStats(currentStats)
+
+        loadAutoDismissConfigs()
+        resyncAutoDismiss()
+    }
+
+    fun setAutoDismissMinutes(
+        packageName: String,
+        minutes: Int,
+    ) {
+        settingsRepository.setAutoDismissLastMinutes(minutes)
+        val current = autoDismissConfigs.value.toMutableList()
+        val index = current.indexOfFirst { it.packageName == packageName }
+        if (index >= 0) {
+            current[index] = current[index].copy(minutes = minutes)
+        } else {
+            current.add(AutoDismissAppConfig(packageName, minutes))
+        }
+        settingsRepository.saveAutoDismissConfigs(current)
+        loadAutoDismissConfigs()
+        resyncAutoDismiss()
+    }
+
+    fun removeAutoDismissApp(packageName: String) {
+        val current = autoDismissConfigs.value.toMutableList()
+        current.removeAll { it.packageName == packageName }
+        settingsRepository.saveAutoDismissConfigs(current)
+
+        val currentStats = settingsRepository.loadAutoDismissStats().toMutableMap()
+        currentStats.remove(packageName)
+        settingsRepository.saveAutoDismissStats(currentStats)
+
+        loadAutoDismissConfigs()
+        resyncAutoDismiss()
+    }
+
+    fun setAutoDismissChannelIncluded(
+        packageName: String,
+        channelId: String,
+        included: Boolean,
+    ) {
+        val current = autoDismissConfigs.value.toMutableList()
+        val index = current.indexOfFirst { it.packageName == packageName }
+        if (index >= 0) {
+            val config = current[index]
+            val excluded = config.excludedChannels.orEmpty().toMutableList()
+            if (included) {
+                excluded.remove(channelId)
+            } else {
+                if (channelId !in excluded) {
+                    excluded.add(channelId)
+                }
+            }
+            current[index] = config.copy(excludedChannels = excluded)
+            settingsRepository.saveAutoDismissConfigs(current)
+            loadAutoDismissConfigs()
+            resyncAutoDismiss()
+        }
+    }
+
     fun createShutUpShortcut(
         context: Context,
         config: com.sameerasw.essentials.domain.model.ShutUpAppConfig,
@@ -2010,6 +2147,9 @@ class MainViewModel : ViewModel() {
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
+        loadAutoDismissConfigs()
+        loadAutoDismissChannels()
+        loadAutoDismissStats()
         recentSearches.value = settingsRepository.getRecentSearches()
         loadCachedWallpaper()
         isDailyWallpaperAutoUpdateEnabled.value =
@@ -2658,6 +2798,8 @@ class MainViewModel : ViewModel() {
         loadMapsChannels(context)
         isSnoozeHeadsUpEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED)
+        isAutoDismissEnabled.value =
+            settingsRepository.isAutoDismissEnabled()
         isFlashlightAlwaysTurnOffEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
         isFlashlightFadeEnabled.value =

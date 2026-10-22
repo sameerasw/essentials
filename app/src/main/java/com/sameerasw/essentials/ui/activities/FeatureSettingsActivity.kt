@@ -136,6 +136,7 @@ import com.sameerasw.essentials.ui.features.system.ScreenLockedSecuritySettingsU
 import com.sameerasw.essentials.ui.features.system.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.features.system.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.features.system.SnoozeNotificationsSettingsUI
+import com.sameerasw.essentials.ui.features.system.AutoDismissNotificationsSettingsUI
 import com.sameerasw.essentials.ui.features.system.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.features.system.StandbyAppsSettingsUI
 import com.sameerasw.essentials.ui.features.system.StatusBarIconSettingsUI
@@ -383,6 +384,7 @@ fun FeatureSettingsScreen(
                         "Duo", "Status glance" -> !isAccessibilityEnabled
                         "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                         "Snooze system notifications" -> !isNotificationListenerEnabled
+                        "Auto-dismiss notifications" -> !isNotificationListenerEnabled
                         "Screen locked security" ->
                             !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context,
@@ -698,6 +700,7 @@ fun FeatureSettingsScreen(
                                                 listOf(
                                                     "Notification snoozing",
                                                     "Snooze system notifications",
+                                                    "Auto-dismiss notifications",
                                                 ),
                                             )
 
@@ -836,6 +839,7 @@ fun FeatureSettingsScreen(
                                                     "Duo", "Status glance" -> !isAccessibilityEnabled
                                                     "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                                                     "Snooze system notifications" -> !isNotificationListenerEnabled
+                                                    "Auto-dismiss notifications" -> !isNotificationListenerEnabled
                                                     "Screen locked security" ->
                                                         !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                             context,
@@ -1132,6 +1136,14 @@ fun FeatureSettingsScreen(
 
                             "Snooze system notifications" -> {
                                 SnoozeNotificationsSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting,
+                                )
+                            }
+
+                            "Auto-dismiss notifications" -> {
+                                AutoDismissNotificationsSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting,

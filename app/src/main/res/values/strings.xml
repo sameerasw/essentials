@@ -902,6 +902,30 @@
     <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Snooze system notifications</string>
     <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
+    <!-- Auto-dismiss notifications -->
+    <string name="feat_auto_dismiss_notifications_title">Auto-dismiss notifications</string>
+    <string name="feat_auto_dismiss_notifications_desc">Clear app notifications after a set time</string>
+    <string name="about_desc_auto_dismiss_notifications">Automatically clear notifications from the apps you choose after a set time.\n\n1. Choose the apps whose notifications you want cleared.\n2. Tap an app to set how long its notifications stay, from 1 minute to 24 hours.\n3. Under Categories, switch off any type of notification from that app that you want to keep. Categories show up once the app has sent a notification of that type; until then, all of its notifications are cleared.\n\nEach app shows how many of its notifications were cleared since you added it. Only the number is kept; the notifications themselves are in Android\'s notification history. Removing an app resets its count.\n\nNotifications you can\'t swipe away, like music, downloads or calls, are never cleared.</string>
+    <string name="auto_dismiss_select_apps_title">Choose apps</string>
+    <string name="auto_dismiss_select_apps_desc">Apps whose notifications are cleared</string>
+    <string name="auto_dismiss_time_title">Dismiss after</string>
+    <string name="auto_dismiss_description">Tap an app to change its time or keep some of its notification categories. Tap the bin to remove it.</string>
+    <string name="auto_dismiss_time_minutes">%d min</string>
+    <string name="auto_dismiss_time_hours">%d h</string>
+    <string name="auto_dismiss_categories_title">Categories</string>
+    <string name="auto_dismiss_categories_empty">Categories appear here after this app sends a notification. Until then, all of its notifications are dismissed.</string>
+    <plurals name="auto_dismiss_categories_off">
+        <item quantity="one">%d category off</item>
+        <item quantity="other">%d categories off</item>
+    </plurals>
+    <plurals name="auto_dismiss_cleared_count">
+        <item quantity="one">%d cleared</item>
+        <item quantity="other">%d cleared</item>
+    </plurals>
+    <plurals name="auto_dismiss_cleared_since">
+        <item quantity="one">%1$d notification cleared since %2$s</item>
+        <item quantity="other">%1$d notifications cleared since %2$s</item>
+    </plurals>
     <string name="feat_qs_tiles_title">Quick settings tiles</string>
     <string name="feat_qs_tiles_desc">View all</string>
     <string name="feat_button_remap_title">Button remap</string>
