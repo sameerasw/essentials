@@ -1621,7 +1621,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="island_enable_title">Activer Island</string>
     <string name="island_show_calls_title">Appels</string>
     <string name="island_show_timers_title">Minuteurs et chronomètres</string>
-    <string name="duo_action_horizontal_slide_sound_mode">Mode de sonnerie</string>
+    <string name="duo_action_horizontal_slide_sound_mode">Mode de son</string>
     <string name="island_devices_battery_section">Appareils</string>
     <string name="island_show_network_title">Activité réseau</string>
     <string name="feat_status_glance_title">Aperçu du statut</string>
