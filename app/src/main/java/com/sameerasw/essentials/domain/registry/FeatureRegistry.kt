@@ -2468,7 +2468,6 @@ object FeatureRegistry {
                 permissionKeys = listOf("DRAW_OVERLAYS"),
                 showToggle = false,
                 hasMoreSettings = true,
-                isBeta = true,
                 parentFeatureId = "Widgets",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
