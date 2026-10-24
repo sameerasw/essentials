@@ -1784,4 +1784,10 @@ adicionar algum app</string>
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="island_keep_on_landscape_title">manter no modo paisagem</string>
+    <string name="island_secondary_bubble_title">bolha segundaria</string>
+    <string name="island_balance_compact_title">visual balanceado para um ilha compacto</string>
+    <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
+    <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
+    <string name="duo_material_you_title">use cores do material you</string>
 </resources>
