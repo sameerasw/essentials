@@ -549,6 +549,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
+        const val KEY_ISLAND_MONOCHROME = "island_monochrome"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
         const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
         const val KEY_ISLAND_EXPANDED_PADDING = "island_expanded_padding"
@@ -4096,6 +4097,9 @@ class SettingsRepository(
 
     fun isIslandShowGlowEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_GLOW, true)
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
+
+    fun isIslandMonochromeEnabled(): Boolean = getBoolean(KEY_ISLAND_MONOCHROME, false)
+    fun setIslandMonochromeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MONOCHROME, enabled)
 
     fun getIslandExpandedWidth(): Float = getFloat(KEY_ISLAND_EXPANDED_WIDTH, 360f)
     fun setIslandExpandedWidth(value: Float) = putFloat(KEY_ISLAND_EXPANDED_WIDTH, value)

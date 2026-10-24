@@ -3229,6 +3229,8 @@
     <string name="island_pulse_shadow_spread_title">Glow spread</string>
     <string name="island_pulse_shadow_duration_title">Pulse duration</string>
     <string name="island_show_glow_desc">App based color glow</string>
+    <string name="island_monochrome_title">App icon bubble</string>
+    <string name="island_monochrome_desc">Show the app\'s notification icon on its app color instead of the picture or content</string>
     <string name="island_expanded_width_title">Expanded width</string>
     <string name="island_cutout_gap_title">Camera gap</string>
     <string name="island_expanded_width_desc">Width when long pressed to expand</string>

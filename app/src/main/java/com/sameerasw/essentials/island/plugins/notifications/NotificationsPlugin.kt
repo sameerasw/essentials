@@ -9,6 +9,9 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.os.PowerManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.runtime.Composable
+import android.graphics.Bitmap
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -32,6 +35,7 @@ import com.sameerasw.essentials.island.plugins.soften
 import com.sameerasw.essentials.island.ui.IslandStackBubble
 import com.sameerasw.essentials.island.ui.IslandStackOverlap
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
+import com.sameerasw.essentials.island.ui.components.NotificationGlyph
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.HapticUtil
@@ -46,6 +50,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
+        SettingsRepository.KEY_ISLAND_MONOCHROME,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
         SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT,
         SettingsRepository.KEY_ISLAND_NOTIF_FOLLOW_DND,
@@ -553,7 +558,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (!entry.grouped) return stackIconFor(entry.lead, current = false, highlight = highlight)
         val icon = entry.lead.appIcon ?: entry.lead.icon
         return StackIcon(entry.key, onSelect = { select(entry.lead.key) }, highlight = highlight) { size ->
-            IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
+            AlertIcon(entry.lead, icon, size, circle = true)
         }
     }
 
@@ -732,16 +737,16 @@ class NotificationsPlugin : BaseIslandPlugin() {
             compact = buildList {
                 add(
                     CompactCell("notif.icon") {
-                        IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                        AlertIcon(alert, icon, 22.dp)
                     },
                 )
                 val appIcon = alert.appIcon
-                if (!minimal() && alert.chatIcon != null && appIcon != null) {
+                if (!minimal() && !monochrome() && alert.chatIcon != null && appIcon != null) {
                     add(CompactCell("notif.app", soloOnly = true) { IslandBitmap(appIcon, 22.dp, circle = true) })
                 }
             },
             line = LineContent(
-                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                icon = { AlertIcon(alert, icon, 24.dp) },
                 start = sender,
                 end = message,
                 condensed = condensedLine(),
@@ -789,24 +794,24 @@ class NotificationsPlugin : BaseIslandPlugin() {
             compact = buildList {
                 add(
                     CompactCell("notif.icon") {
-                        IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                        AlertIcon(alert, icon, 22.dp)
                     },
                 )
                 val appIcon = alert.appIcon
-                if (!minimal() && !hideChat && alert.chatIcon != null && appIcon != null) {
+                if (!minimal() && !monochrome() && !hideChat && alert.chatIcon != null && appIcon != null) {
                     add(CompactCell("notif.app", soloOnly = true) { IslandBitmap(appIcon, 22.dp, circle = true) })
                 }
             },
             line = if (isOtp(alert)) {
                 LineContent(
-                    icon = { IslandBitmap(alert.appIcon ?: alert.icon, 24.dp, fallbackRes = R.drawable.rounded_lock_24) },
+                    icon = { AlertIcon(alert, alert.appIcon ?: alert.icon, 24.dp, fallbackRes = R.drawable.rounded_lock_24) },
                     start = "${appNameFor(context, alert)} · ${context.getString(R.string.island_otp_label)}",
                     end = alert.otpCode?.let(::maskOtp).orEmpty(),
                     endSlot = { IslandIcon(R.drawable.rounded_lock_24, size = 18.dp) },
                 )
             } else {
                 LineContent(
-                    icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                    icon = { AlertIcon(alert, icon, 24.dp) },
                     start = appNameFor(context, alert),
                     end = "",
                     condensed = condensedLine(),
@@ -840,11 +845,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
             placement = CompactPlacement.Dynamic,
             compact = listOf(
                 CompactCell("notif.icon") {
-                    IslandBitmap(icon, 22.dp, fallbackRes = R.drawable.rounded_notifications_unread_24)
+                    AlertIcon(alert, icon, 22.dp)
                 },
             ),
             line = LineContent(
-                icon = { IslandBitmap(icon, 24.dp, fallbackRes = R.drawable.rounded_notifications_unread_24) },
+                icon = { AlertIcon(alert, icon, 24.dp) },
                 start = sender,
                 end = formatOtp(code),
                 endSlot = { IslandIcon(R.drawable.rounded_content_copy_24, size = 18.dp) },
@@ -930,7 +935,25 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean, highlight: Boolean = false): StackIcon {
         val icon = if (concealed() && hidesChatPictures()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
         return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }, highlight = highlight) { size ->
-            IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
+            AlertIcon(alert, icon, size, circle = true)
+        }
+    }
+
+    private fun monochrome() = settings.isIslandMonochromeEnabled()
+
+    // Monochrome swaps the picture for the app's notification glyph on the island's softened accent
+    @Composable
+    private fun AlertIcon(
+        alert: ActiveNotificationAlert,
+        bitmap: Bitmap?,
+        size: Dp,
+        circle: Boolean = false,
+        fallbackRes: Int = R.drawable.rounded_notifications_unread_24,
+    ) {
+        if (monochrome()) {
+            NotificationGlyph(alert.smallIcon, alert.appColor?.let { Color(soften(it)) }, size, fallbackRes = fallbackRes)
+        } else {
+            IslandBitmap(bitmap, size, circle = circle, fallbackRes = fallbackRes)
         }
     }
 
