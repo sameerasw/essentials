@@ -99,6 +99,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.BluetoothDeviceSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.NotificationTriggerSheet
+import com.sameerasw.essentials.ui.core.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.WifiNetworkSelectionSheet
 import com.sameerasw.essentials.ui.features.location.sheets.LocationTriggerSheet
 import com.sameerasw.essentials.ui.features.system.ActionSequenceEditor
@@ -359,6 +360,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var showCalendarStateSettings by remember { mutableStateOf(false) }
                 var showBatteryLevelSettings by remember { mutableStateOf(false) }
+                var showSoundModeSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
                 var showNotificationTriggerSettings by remember { mutableStateOf(false) }
@@ -1048,6 +1050,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                         Trigger.DndOn,
                                                                         Trigger.DndOff,
                                                                     ),
+                                                                R.string.diy_category_sound to
+                                                                    listOf(
+                                                                        (selectedTrigger as? Trigger.SoundModeChanged)
+                                                                            ?: Trigger.SoundModeChanged(),
+                                                                    ),
                                                                 R.string.diy_category_location to
                                                                     listOf(
                                                                         (selectedTrigger as? Trigger.ArriveAtLocation) ?: Trigger.ArriveAtLocation(),
@@ -1119,6 +1126,10 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                                     true
                                                                             is Trigger.NotificationReceived -> showNotificationTriggerSettings = true
                                                                             is Trigger.ArriveAtLocation, is Trigger.LeaveLocation -> editingLocationTrigger = trigger
+                                                                            is Trigger.SoundModeChanged -> {
+                                                                                selectedTrigger = trigger
+                                                                                showSoundModeSettings = true
+                                                                            }
                                                                             else -> {}
                                                                         }
                                                                     },
@@ -1135,6 +1146,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                         DIYState.Charging,
                                                                         DIYState.PowerSaving,
                                                                         (selectedState as? DIYState.BatteryLevel) ?: DIYState.BatteryLevel(),
+                                                                    ),
+                                                                R.string.diy_category_sound to
+                                                                    listOf(
+                                                                        DIYState.Dnd,
+                                                                        (selectedState as? DIYState.SoundMode) ?: DIYState.SoundMode(),
                                                                     ),
                                                                 R.string.diy_category_system_screen to
                                                                     listOf(
@@ -1196,7 +1212,10 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     iconRes = state.icon,
                                                                     isSelected = isSelected,
                                                                     onClick = { selectedState = state },
-                                                                    isConfigurable = state is DIYState.TimePeriod || state is DIYState.CalendarEvent || state is DIYState.BatteryLevel,
+                                                                    isConfigurable =
+                                                                        state is DIYState.TimePeriod || state is DIYState.CalendarEvent ||
+                                                                            state is DIYState.BatteryLevel ||
+                                                                            state is DIYState.SoundMode,
                                                                     onSettingsClick = {
                                                                         if (state is DIYState.TimePeriod) {
                                                                             showTimeSettings = true
@@ -1208,6 +1227,10 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                         if (state is DIYState.CalendarEvent) {
                                                                             selectedState = state
                                                                             showCalendarStateSettings = true
+                                                                        }
+                                                                        if (state is DIYState.SoundMode) {
+                                                                            selectedState = state
+                                                                            showSoundModeSettings = true
                                                                         }
                                                                     },
                                                                 )
@@ -1325,6 +1348,31 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                     }
                                 }
+                            }
+
+                            if (showSoundModeSettings) {
+                                val isTrigger = automationType == Automation.Type.TRIGGER
+                                val titleRes = if (isTrigger) R.string.diy_trigger_sound_mode else R.string.diy_state_sound_mode
+                                val currentMode =
+                                    if (isTrigger) {
+                                        (selectedTrigger as? Trigger.SoundModeChanged)?.mode ?: Action.SoundModeType.SILENT
+                                    } else {
+                                        (selectedState as? DIYState.SoundMode)?.mode ?: Action.SoundModeType.SILENT
+                                    }
+                                SoundModeSettingsSheet(
+                                    title = stringResource(titleRes),
+                                    showInfo = false,
+                                    initialAction = Action.SoundMode(currentMode),
+                                    onDismiss = { showSoundModeSettings = false },
+                                    onSave = {
+                                        showSoundModeSettings = false
+                                        if (isTrigger) {
+                                            selectedTrigger = Trigger.SoundModeChanged(it.mode)
+                                        } else {
+                                            selectedState = DIYState.SoundMode(it.mode)
+                                        }
+                                    },
+                                )
                             }
 
                             if (showBatteryLevelSettings) {

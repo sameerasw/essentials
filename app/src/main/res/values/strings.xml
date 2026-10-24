@@ -1366,6 +1366,7 @@
     <string name="diy_trigger_notification_received">Notification Received</string>
     <string name="diy_trigger_dnd_on">Do Not Disturb On</string>
     <string name="diy_trigger_dnd_off">Do Not Disturb Off</string>
+    <string name="diy_trigger_sound_mode">Sound mode changes</string>
     <string name="diy_notification_trigger_hint">Runs when a notification from this app arrives, or one containing this text. Set at least one.</string>
     <string name="diy_notification_trigger_app">App</string>
     <string name="diy_notification_trigger_any_app">Any app</string>
@@ -1421,6 +1422,7 @@
     <string name="diy_category_battery_power">Battery &amp; Power</string>
     <string name="diy_category_time_schedule">Time &amp; Schedule</string>
     <string name="diy_category_notifications">Notifications</string>
+    <string name="diy_category_sound">Sound</string>
     <string name="diy_category_location">Location</string>
     <string name="diy_location_none">No place chosen yet</string>
     <string name="diy_location_pinned">Pinned place</string>
@@ -1443,6 +1445,8 @@
     <string name="diy_state_battery_level">Battery level</string>
     <string name="diy_battery_level_range">%1$d%% – %2$d%%</string>
     <string name="diy_state_power_saving">Power Saving</string>
+    <string name="diy_state_dnd">Do Not Disturb</string>
+    <string name="diy_state_sound_mode">Sound mode</string>
 
     <string name="diy_action_haptic">Vibrate</string>
     <string name="diy_action_notification">Show Notification</string>

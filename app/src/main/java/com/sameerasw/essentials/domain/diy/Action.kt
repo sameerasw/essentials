@@ -102,15 +102,17 @@ sealed interface Action {
     }
 
     @Keep
-    enum class SoundModeType {
+    enum class SoundModeType(
+        @param:DrawableRes val icon: Int,
+    ) {
         @SerializedName("SOUND")
-        SOUND,
+        SOUND(R.drawable.rounded_volume_up_24),
 
         @SerializedName("VIBRATE")
-        VIBRATE,
+        VIBRATE(R.drawable.rounded_mobile_vibrate_24),
 
         @SerializedName("SILENT")
-        SILENT,
+        SILENT(R.drawable.rounded_volume_off_24),
     }
 
     @Keep
@@ -118,13 +120,7 @@ sealed interface Action {
         @SerializedName("mode") val mode: SoundModeType = SoundModeType.SOUND,
     ) : Action {
         override val title: Int get() = R.string.diy_action_sound_mode
-        override val icon: Int
-            get() =
-                when (mode) {
-                    SoundModeType.SOUND -> R.drawable.rounded_volume_up_24
-                    SoundModeType.VIBRATE -> R.drawable.rounded_mobile_vibrate_24
-                    SoundModeType.SILENT -> R.drawable.rounded_volume_off_24
-                }
+        override val icon: Int get() = mode.icon
         override val permissions: List<String> = listOf("NOTIFICATION_POLICY")
         override val isConfigurable: Boolean = true
     }
