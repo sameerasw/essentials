@@ -33,6 +33,8 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.PowerChoice
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
@@ -154,6 +156,25 @@ class SettingsRepository(
         }
     }
 
+    fun getPowerChoice(slot: RemapSlot): PowerChoice {
+        val defaultChoice = slot.defaultChoice ?: PowerChoice.ASSISTANT
+        val key = slot.choicePrefKey ?: return defaultChoice
+        val value = prefs.getString(key, null) ?: return defaultChoice
+        return try {
+            PowerChoice.valueOf(value)
+        } catch (_: IllegalArgumentException) {
+            defaultChoice
+        }
+    }
+
+    fun setPowerChoice(
+        slot: RemapSlot,
+        choice: PowerChoice,
+    ) {
+        val key = slot.choicePrefKey ?: return
+        prefs.edit().putString(key, choice.name).apply()
+    }
+
     companion object {
         const val PREFS_NAME = "essentials_prefs"
 
@@ -249,6 +270,12 @@ class SettingsRepository(
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION = "button_remap_vol_down_action" // Legacy
         const val KEY_BUTTON_REMAP_VOL_UP_ACTION_ON = "button_remap_vol_up_action_on"
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON = "button_remap_vol_down_action_on"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_ACTION_OFF = "button_remap_power_hold_action_off"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_ACTION_ON = "button_remap_power_hold_action_on"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF = "button_remap_power_hold_choice_off"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON = "button_remap_power_hold_choice_on"
+        const val KEY_BUTTON_REMAP_POWER_OVERRIDDEN = "button_remap_power_overridden"
+        const val KEY_BUTTON_REMAP_POWER_CAMERA_FLIP = "button_remap_power_camera_flip"
         const val KEY_BUTTON_REMAP_HAPTIC_TYPE = "button_remap_haptic_type"
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy
         const val KEY_BUTTON_REMAP_MIGRATION_DONE = "button_remap_action_migration_done"

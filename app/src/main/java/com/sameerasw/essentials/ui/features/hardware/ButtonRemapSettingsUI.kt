@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.features.system
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -50,6 +53,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapInput
 import com.sameerasw.essentials.domain.model.RemapScreenState
 import com.sameerasw.essentials.domain.model.RemapSlot
@@ -59,8 +63,11 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUIHelper
+import com.sameerasw.essentials.utils.PowerButtonGestures
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +80,18 @@ fun ButtonRemapSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var selectedScreenTab by remember { mutableIntStateOf(0) } // 0: Off, 1: On
-    var selectedButtonTab by remember { mutableIntStateOf(0) } // 0: Up, 1: Down
+    var selectedButtonTab by remember {
+        mutableIntStateOf(
+            if (highlightSetting == "power_camera_flip" ||
+                highlightSetting == "power_hold"
+            ) {
+                2
+            } else {
+                0
+            },
+        )
+    } // 0: Up, 1: Down, 2: Power
+    var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
 
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     var shizukuStatus by remember { mutableStateOf(ShizukuStatus.NOT_RUNNING) }
@@ -93,9 +111,25 @@ fun ButtonRemapSettingsUI(
         }
     }
 
+    requestingPermissionsFor?.let { (titleRes, permKeys) ->
+        PermissionsBottomSheet(
+            onDismissRequest = {
+                requestingPermissionsFor = null
+                viewModel.check(context)
+            },
+            featureTitle = stringResource(titleRes),
+            permissions = PermissionUIHelper.getPermissionItems(permKeys, context, viewModel),
+        )
+    }
+
     val currentSlot =
         RemapSlot(
-            input = if (selectedButtonTab == 0) RemapInput.VOLUME_UP else RemapInput.VOLUME_DOWN,
+            input =
+                when (selectedButtonTab) {
+                    0 -> RemapInput.VOLUME_UP
+                    1 -> RemapInput.VOLUME_DOWN
+                    else -> RemapInput.POWER_HOLD
+                },
             screenState = if (selectedScreenTab == 0) RemapScreenState.OFF else RemapScreenState.ON,
         )
     val currentActions: List<Action> = viewModel.remapActions[currentSlot].orEmpty()
@@ -297,7 +331,7 @@ fun ButtonRemapSettingsUI(
                 }
 
                 Text(
-                    text = stringResource(R.string.button_remap_section_long_press),
+                    text = stringResource(R.string.button_remap_section_button),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -305,6 +339,21 @@ fun ButtonRemapSettingsUI(
 
                 // Button Picker & Tabs
                 RoundedCardContainer(spacing = 2.dp) {
+                    val buttonOptions =
+                        listOf(
+                            stringResource(R.string.volume_up),
+                            stringResource(R.string.volume_down),
+                            stringResource(R.string.button_remap_power),
+                        )
+                    SegmentedPicker(
+                        items = buttonOptions,
+                        selectedItem = buttonOptions[selectedButtonTab],
+                        onItemSelected = {
+                            HapticUtil.performUIHaptic(view)
+                            selectedButtonTab = buttonOptions.indexOf(it)
+                        },
+                        labelProvider = { it },
+                    )
                     val screenOptions =
                         listOf(
                             stringResource(R.string.screen_off),
@@ -312,37 +361,75 @@ fun ButtonRemapSettingsUI(
                         )
                     SegmentedPicker(
                         items = screenOptions,
-                        selectedItem = if (selectedScreenTab == 0) screenOptions[0] else screenOptions[1],
+                        selectedItem = screenOptions[selectedScreenTab],
                         onItemSelected = {
                             HapticUtil.performUIHaptic(view)
                             selectedScreenTab = screenOptions.indexOf(it)
                         },
                         labelProvider = { it },
                     )
-                    val buttonOptions =
-                        listOf(
-                            stringResource(R.string.volume_up),
-                            stringResource(R.string.volume_down),
-                        )
-                    SegmentedPicker(
-                        items = buttonOptions,
-                        selectedItem = if (selectedButtonTab == 0) buttonOptions[0] else buttonOptions[1],
-                        onItemSelected = {
-                            HapticUtil.performUIHaptic(view)
-                            selectedButtonTab = buttonOptions.indexOf(it)
-                        },
-                        labelProvider = { it },
-                    )
                 }
 
-                ActionSequenceEditor(
-                    viewModel = viewModel,
-                    actions = currentActions,
-                    onActionsChange = { viewModel.setRemapActions(currentSlot, it) },
-                    screenOnOnly = selectedScreenTab == 1,
-                    listKey = currentSlot,
-                    emptyText = stringResource(R.string.button_remap_no_actions),
-                )
+                if (selectedButtonTab != 2) {
+                    Text(
+                        text = stringResource(R.string.button_remap_section_long_press),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+
+                    ActionSequenceEditor(
+                        viewModel = viewModel,
+                        actions = currentActions,
+                        onActionsChange = { viewModel.setRemapActions(currentSlot, it) },
+                        screenOnOnly = selectedScreenTab == 1,
+                        listKey = currentSlot,
+                        emptyText = stringResource(R.string.button_remap_no_actions),
+                    )
+                } else {
+                    val screenState =
+                        if (selectedScreenTab == 0) RemapScreenState.OFF else RemapScreenState.ON
+                    Text(
+                        text = stringResource(R.string.button_remap_double_press),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+
+                    RoundedCardContainer(spacing = 2.dp) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_photo_camera_24,
+                            title = stringResource(R.string.button_remap_power_camera_flip_title),
+                            description =
+                                stringResource(
+                                    R.string.button_remap_power_camera_flip_desc,
+                                    stringResource(R.string.button_remap_use_shizuku_title),
+                                ),
+                            isChecked = viewModel.isPowerCameraFlipEnabled.value,
+                            onCheckedChange = { enabled ->
+                                viewModel.setPowerCameraFlipEnabled(enabled)
+                            },
+                            modifier = Modifier.highlight(highlightSetting == "power_camera_flip"),
+                        )
+                    }
+
+                    PowerGestureSection(
+                        slot = RemapSlot(RemapInput.POWER_HOLD, screenState),
+                        titleRes = R.string.button_remap_press_and_hold,
+                        options =
+                            listOf(
+                                PowerChoice.ASSISTANT,
+                                PowerChoice.POWER_MENU,
+                                PowerChoice.ACTIONS,
+                            ),
+                        viewModel = viewModel,
+                        onRequestPermission = {
+                            requestingPermissionsFor =
+                                Pair(R.string.button_remap_press_and_hold, listOf("WRITE_SECURE_SETTINGS"))
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "power_hold"),
+                    )
+                }
             }
         }
 
@@ -350,7 +437,9 @@ fun ButtonRemapSettingsUI(
         RoundedCardContainer {
             Text(
                 text =
-                    if (selectedScreenTab == 0) {
+                    if (selectedButtonTab == 2) {
+                        stringResource(R.string.button_remap_power_hint)
+                    } else if (selectedScreenTab == 0) {
                         stringResource(R.string.button_remap_screen_off_hint)
                     } else {
                         stringResource(R.string.button_remap_screen_on_hint)
@@ -425,3 +514,104 @@ fun RemapActionItem(
     }
 }
 
+@Composable
+private fun PowerGestureSection(
+    slot: RemapSlot,
+    titleRes: Int,
+    options: List<PowerChoice>,
+    viewModel: MainViewModel,
+    onRequestPermission: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val offSlot = RemapSlot(slot.input, RemapScreenState.OFF)
+    val onSlot = RemapSlot(slot.input, RemapScreenState.ON)
+    val offChoice = viewModel.powerChoices[offSlot] ?: offSlot.defaultChoice ?: PowerChoice.ASSISTANT
+    val onChoice = viewModel.powerChoices[onSlot] ?: onSlot.defaultChoice ?: PowerChoice.ASSISTANT
+    val selectedChoice = viewModel.powerChoices[slot] ?: slot.defaultChoice ?: PowerChoice.ASSISTANT
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            text = stringResource(titleRes),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer(spacing = 2.dp) {
+            options.forEach { option ->
+                val iconRes =
+                    when (option) {
+                        PowerChoice.ASSISTANT -> R.drawable.rounded_mic_24
+                        PowerChoice.POWER_MENU -> R.drawable.rounded_power_settings_new_24
+                        PowerChoice.ACTIONS -> R.drawable.rounded_switch_access_3_24
+                    }
+                val title =
+                    if (option == slot.defaultChoice) {
+                        stringResource(
+                            R.string.button_remap_default_suffix,
+                            stringResource(getPowerChoiceTitleRes(option)),
+                        )
+                    } else {
+                        stringResource(getPowerChoiceTitleRes(option))
+                    }
+
+                RemapActionItem(
+                    title = title,
+                    iconRes = iconRes,
+                    isSelected = selectedChoice == option,
+                    onClick = {
+                        if (option != slot.defaultChoice && !viewModel.canWriteSecureSettings(context)) {
+                            onRequestPermission()
+                        } else {
+                            viewModel.setPowerChoice(slot, option, context)
+                        }
+                    },
+                    hasSettings = option == PowerChoice.ASSISTANT,
+                    onSettingsClick = {
+                        try {
+                            context.startActivity(Intent(Settings.ACTION_VOICE_INPUT_SETTINGS))
+                        } catch (_: ActivityNotFoundException) {
+                        }
+                    },
+                )
+            }
+        }
+
+        if (selectedChoice == PowerChoice.ACTIONS) {
+            ActionSequenceEditor(
+                viewModel = viewModel,
+                actions = viewModel.remapActions[slot].orEmpty(),
+                onActionsChange = { viewModel.setRemapActions(slot, it) },
+                screenOnOnly = slot.screenState == RemapScreenState.ON,
+                listKey = slot,
+                emptyText = stringResource(R.string.button_remap_power_no_actions),
+            )
+        }
+
+        if (PowerButtonGestures.isHandledByEssentials(offChoice, onChoice)) {
+            RoundedCardContainer {
+                Text(
+                    text =
+                        stringResource(
+                            R.string.button_remap_power_hold_handled_hint,
+                            stringResource(R.string.button_remap_use_shizuku_title),
+                        ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(16.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+private fun getPowerChoiceTitleRes(choice: PowerChoice): Int =
+    when (choice) {
+        PowerChoice.ASSISTANT -> R.string.button_remap_power_assistant
+        PowerChoice.POWER_MENU -> R.string.button_remap_power_menu
+        PowerChoice.ACTIONS -> R.string.button_remap_power_actions
+    }

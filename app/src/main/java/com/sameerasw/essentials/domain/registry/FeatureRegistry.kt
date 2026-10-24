@@ -1807,6 +1807,18 @@ object FeatureRegistry {
                             R.array.keywords_flashlight,
                         ),
                         SearchSetting(
+                            R.string.search_remap_power_camera_flip_title,
+                            R.string.search_remap_power_camera_flip_desc,
+                            "power_camera_flip",
+                            R.array.keywords_power_camera_flip,
+                        ),
+                        SearchSetting(
+                            R.string.search_remap_power_hold_title,
+                            R.string.search_remap_power_hold_desc,
+                            "power_hold",
+                            R.array.keywords_power_hold,
+                        ),
+                        SearchSetting(
                             R.string.search_flashlight_pocket_title,
                             R.string.search_flashlight_pocket_desc,
                             "flashlight_options",
