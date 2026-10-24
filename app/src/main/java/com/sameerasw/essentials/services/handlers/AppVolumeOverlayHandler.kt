@@ -403,12 +403,12 @@ class AppVolumeOverlayHandler(
                         it.alpha = 0f
                         it.scaleX = HIDDEN_SCALE
                         it.scaleY = HIDDEN_SCALE
-                        it.translationY = offsetFor(depth)
+                        it.translationY = offsetFor(depth, top.size)
                     } ?: return@forEachIndexed
                 val scale = 1f - DEPTH_SCALE_STEP * depth
                 icon
                     .animate()
-                    .translationY(offsetFor(depth))
+                    .translationY(offsetFor(depth, top.size))
                     .scaleX(scale)
                     .scaleY(scale)
                     .alpha(1f - DEPTH_FADE_STEP * depth)
@@ -419,7 +419,7 @@ class AppVolumeOverlayHandler(
             top.indices.reversed().forEach { icons[top[it]]?.bringToFront() }
         }
 
-        private fun offsetFor(depth: Int) = (FRONT_SHIFT_DP - STACK_STEP_DP * depth) * density
+        private fun offsetFor(depth: Int, count: Int) = if (count == 1) 0f else (FRONT_SHIFT_DP - STACK_STEP_DP * depth) * density
 
         private fun createIcon(packageName: String): ImageView? {
             val bitmap = loadIcon(packageName) ?: return null
