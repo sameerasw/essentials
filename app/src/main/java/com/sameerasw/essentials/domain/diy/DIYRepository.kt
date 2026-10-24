@@ -76,6 +76,7 @@ object DIYRepository {
     private var appContext: Context? = null
 
     fun init(context: Context) {
+        DIYRuntimeStore.init(context)
         appContext = context.applicationContext
         if (prefs != null) return
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -113,6 +114,7 @@ object DIYRepository {
     }
 
     fun updateAutomation(automation: Automation) {
+        DIYRuntimeStore.setPaused(automation.id, false)
         val current = _automations.value.toMutableList()
         val index = current.indexOfFirst { it.id == automation.id }
         if (index != -1) {
@@ -124,11 +126,24 @@ object DIYRepository {
     }
 
     fun removeAutomation(id: String) {
+        DIYRuntimeStore.setPaused(id, false)
         val current = _automations.value.toMutableList()
         current.removeAll { it.id == id }
         _automations.value = current
         saveToPrefs()
         updateActionShortcutLauncherState()
+    }
+
+    fun pauseAutomation(id: String) {
+        val current = _automations.value.toMutableList()
+        val index = current.indexOfFirst { it.id == id }
+        if (index != -1) {
+            current[index] = current[index].copy(isEnabled = false)
+            _automations.value = current
+            saveToPrefs()
+            updateActionShortcutLauncherState()
+            DIYRuntimeStore.setPaused(id, true)
+        }
     }
 
     fun getAutomation(id: String): Automation? = _automations.value.find { it.id == id }
