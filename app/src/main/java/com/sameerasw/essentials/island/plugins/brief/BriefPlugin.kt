@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.brief
 
+import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import com.sameerasw.essentials.island.plugins.alarm.NextAlarm
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.remote.RemoteBriefCardRow
@@ -641,10 +642,11 @@ private fun BriefPlayer(media: MediaSnapshot, artwork: ImageBitmap?, onClick: ()
                 it()
             }
         }
+        val playContainer = LocalIslandIconColor.current ?: media.accent
         BriefPlayerButton(
             icon = if (media.playing) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24,
-            tint = if (media.accent.luminance() > 0.5f) Color.Black else Color.White,
-            container = media.accent,
+            tint = if (playContainer.luminance() > 0.5f) Color.Black else Color.White,
+            container = playContainer,
             width = 64.dp,
             iconSize = 26.dp,
         ) {
@@ -677,7 +679,9 @@ private fun BriefPlayerButton(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        IslandIcon(icon, tint = tint, size = iconSize)
+        CompositionLocalProvider(LocalIslandIconColor provides if (container != null) null else LocalIslandIconColor.current) {
+            IslandIcon(icon, tint = tint, size = iconSize)
+        }
     }
 }
 

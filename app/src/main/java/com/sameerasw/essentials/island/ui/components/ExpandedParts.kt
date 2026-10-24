@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui.components
 
+import com.sameerasw.essentials.island.ui.LocalIslandTextColor
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import android.graphics.Bitmap
@@ -169,7 +171,13 @@ fun ConnectedButtonRow(
                         }
                     },
                 contentAlignment = Alignment.Center,
-            ) { item.content() }
+            ) {
+                if (item.container != null) {
+                    CompositionLocalProvider(LocalIslandIconColor provides null, LocalIslandTextColor provides null) { item.content() }
+                } else {
+                    item.content()
+                }
+            }
         }
     }
 }

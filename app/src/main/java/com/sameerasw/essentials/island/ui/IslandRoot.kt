@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleOut
@@ -134,6 +135,16 @@ private enum class SwipeIntent { Hide, Dismiss }
 
 // The window never moves; the surface is always horizontally centred in it (= on the camera).
 // Only the surface's width/height/corner animate, read in layout/draw so frames don't recompose.
+private fun readableOnDark(color: Color): Color {
+    var result = color
+    var steps = 0
+    while (result.luminance() < 0.4f && steps < 10) {
+        result = androidx.compose.ui.graphics.lerp(result, Color.White, 0.12f)
+        steps++
+    }
+    return result
+}
+
 @Composable
 fun IslandRoot(
     state: IslandUiState,
@@ -153,7 +164,7 @@ fun IslandRoot(
     } else {
         targetSpec.iconColorCustom ?: iconBase
     }
-    val iconColor by animateColorAsState(iconTarget, label = "islandIconColor")
+    val iconColor by animateColorAsState(readableOnDark(iconTarget), label = "islandIconColor")
     CompositionLocalProvider(
         LocalIslandIconColor provides iconColor,
         LocalIslandTextColor provides if (targetSpec.themedText) pastelOf(iconColor) else null,
