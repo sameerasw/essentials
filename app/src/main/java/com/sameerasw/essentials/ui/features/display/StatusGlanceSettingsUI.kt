@@ -45,6 +45,8 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.diy.displayName
+import com.sameerasw.essentials.domain.diy.matches
 import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
@@ -408,7 +410,7 @@ fun StatusGlanceSettingsUI(
                 ) {
                     val tapAction = viewModel.statusGlanceTapAction.value
                     val tapDescription = if (tapAction != null) {
-                        "${stringResource(R.string.status_glance_action_tap_media_desc)} • ${stringResource(tapAction.title)}"
+                        "${stringResource(R.string.status_glance_action_tap_media_desc)} • ${tapAction.displayName(context)}"
                     } else {
                         stringResource(R.string.status_glance_action_tap_media_desc)
                     }
@@ -428,7 +430,7 @@ fun StatusGlanceSettingsUI(
                     IconToggleItem(
                         iconRes = R.drawable.rounded_touch_app_24,
                         title = stringResource(R.string.status_glance_action_double_tap_title),
-                        description = doubleTapAction?.let { stringResource(it.title) } ?: stringResource(R.string.status_glance_action_none),
+                        description = doubleTapAction?.displayName(context) ?: stringResource(R.string.status_glance_action_none),
                         showToggle = false,
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
@@ -441,7 +443,7 @@ fun StatusGlanceSettingsUI(
                     IconToggleItem(
                         iconRes = R.drawable.rounded_front_hand_24,
                         title = stringResource(R.string.status_glance_action_long_press_title),
-                        description = longPressAction?.let { stringResource(it.title) } ?: stringResource(R.string.status_glance_action_none),
+                        description = longPressAction?.displayName(context) ?: stringResource(R.string.status_glance_action_none),
                         showToggle = false,
                         onClick = {
                             HapticUtil.performVirtualKeyHaptic(view)
@@ -609,13 +611,13 @@ fun StatusGlanceSettingsUI(
                 }
 
                 val actionCategories = remember {
-                    ActionRegistry.getCategories(screenOnOnly = false)
+                    ActionRegistry.getCategories(screenOnOnly = false) + listOfNotNull(ActionRegistry.getMacroCategory())
                 }
 
                 var expandedActionCategory by remember {
                     mutableStateOf<Int?>(
                         actionCategories.firstOrNull { category ->
-                            category.actions.any { currentAction != null && it::class == currentAction::class }
+                            category.actions.any { it.matches(currentAction) }
                         }?.titleRes ?: actionCategories.firstOrNull()?.titleRes
                     )
                 }
@@ -632,9 +634,9 @@ fun StatusGlanceSettingsUI(
                     ) {
                         category.actions.forEach { action ->
                             val resolvedAction =
-                                if (currentAction != null && currentAction::class == action::class) currentAction else action
+                                currentAction?.takeIf { action.matches(it) } ?: action
                             val isSelected =
-                                currentAction != null && currentAction::class == resolvedAction::class
+                                action.matches(currentAction)
                             val missing = getMissingPermissionsHelper(resolvedAction)
 
                             fun showMissingPermissionSheet() {
@@ -644,7 +646,7 @@ fun StatusGlanceSettingsUI(
                             }
 
                             RemapActionItem(
-                                title = stringResource(resolvedAction.title),
+                                title = resolvedAction.displayName(context),
                                 iconRes = resolvedAction.icon,
                                 isSelected = isSelected,
                                 hasSettings = resolvedAction.isConfigurable ||

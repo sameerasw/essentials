@@ -368,6 +368,12 @@
             android:label="@string/diy_editor_new_title"
             android:theme="@style/Theme.Essentials" />
 
+        <activity
+            android:name=".ui.activities.MacroEditorActivity"
+            android:exported="false"
+            android:label="@string/diy_new_macro"
+            android:theme="@style/Theme.Essentials" />
+
 
         <service
             android:name=".services.LocationReachedService"

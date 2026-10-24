@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.diy.displayName
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -85,6 +86,7 @@ fun ActionSequenceEditor(
     modifier: Modifier = Modifier,
     maxActions: Int = Int.MAX_VALUE,
     categories: List<ActionRegistry.ActionCategory>? = null,
+    showMacros: Boolean = true,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -312,6 +314,7 @@ fun ActionSequenceEditor(
         RemapAddActionSheet(
             screenOnOnly = screenOnOnly,
             categories = categories,
+            showMacros = showMacros,
             onDismiss = { showAddActionSheet = false },
             onActionPicked = { action ->
                 showAddActionSheet = false
@@ -671,12 +674,14 @@ private fun RemapSequenceItem(
     onSettingsClick: () -> Unit,
     onRemove: () -> Unit,
 ) {
+    val context = LocalContext.current
     val view = LocalView.current
     val title =
         stringResource(action.title).let { baseTitle ->
             when {
                 action is Action.Wait -> "$baseTitle · ${formatWait(action.seconds)}"
                 action is Action.SendNotification && action.notificationTitle.isNotBlank() -> "$baseTitle · ${action.notificationTitle}"
+                action is Action.RunMacro -> "$baseTitle · ${action.displayName(context)}"
                 else -> baseTitle
             }
         }
@@ -800,12 +805,18 @@ private fun RemapAddActionItem(
 private fun RemapAddActionSheet(
     screenOnOnly: Boolean,
     categories: List<ActionRegistry.ActionCategory>?,
+    showMacros: Boolean = true,
     onDismiss: () -> Unit,
     onActionPicked: (Action) -> Unit,
 ) {
+    val context = LocalContext.current
     val view = LocalView.current
     val actionCategories =
-        remember(screenOnOnly, categories) { categories ?: ActionRegistry.getCategories(screenOnOnly = screenOnOnly) }
+        remember(screenOnOnly, categories, showMacros) {
+            val base = categories ?: ActionRegistry.getCategories(screenOnOnly = screenOnOnly)
+            val macroCategory = if (showMacros) ActionRegistry.getMacroCategory() else null
+            if (macroCategory != null) base + macroCategory else base
+        }
     var expandedActionCategory by remember(screenOnOnly) {
         mutableStateOf(actionCategories.firstOrNull()?.titleRes)
     }
@@ -857,7 +868,7 @@ private fun RemapAddActionSheet(
                                 tint = MaterialTheme.colorScheme.primary,
                             )
                             Text(
-                                text = stringResource(action.title),
+                                text = action.displayName(context),
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.weight(1f),
                             )

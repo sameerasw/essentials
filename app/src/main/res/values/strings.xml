@@ -1460,6 +1460,20 @@
     <string name="diy_send_notification_title">Title</string>
     <string name="diy_send_notification_body">Message</string>
     <string name="diy_send_notification_label">Label</string>
+    <string name="diy_action_run_macro">Run macro</string>
+    <string name="diy_macro_not_found">The macro was deleted</string>
+    <string name="diy_tab_automations">Automations</string>
+    <string name="diy_tab_macros">Macros</string>
+    <string name="diy_category_macros">Macros</string>
+    <string name="diy_new_macro">New macro</string>
+    <string name="diy_edit_macro">Edit macro</string>
+    <string name="diy_macro_name">Name</string>
+    <string name="diy_no_macros">No macros yet. A macro is a list of actions you can reuse anywhere.</string>
+    <string name="diy_macro_deleted_label">Deleted macro</string>
+    <plurals name="diy_macro_action_count">
+        <item quantity="one">%d action</item>
+        <item quantity="other">%d actions</item>
+    </plurals>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_set_charging_mode">Set Charging Mode</string>
     <string name="diy_action_notification_lighting">Trigger notification lighting</string>
