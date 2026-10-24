@@ -53,6 +53,7 @@ import com.sameerasw.essentials.island.ui.IslandTextStyles
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.drawBehind
@@ -75,7 +76,7 @@ fun NotificationGlyph(
     fallbackRes: Int,
 ) {
     val background = color ?: MaterialTheme.colorScheme.primary
-    val glyph = if (background.luminance() > 0.6f) Color.Black else Color.White
+    val glyph = lerp(background, if (background.luminance() > 0.179f) Color.Black else Color.White, 0.8f)
     Box(
         modifier
             .sizeIn(maxWidth = size, maxHeight = size)
