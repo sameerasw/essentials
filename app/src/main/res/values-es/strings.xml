@@ -1465,7 +1465,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="feat_safe_volume_desc">Suprimir el diálogo de alto volumen</string>
     <string name="feat_notification_snoozing_title">Posponer notificaciones</string>
     <string name="feat_notification_snoozing_desc">Reprogramar notificaciones</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">Brillo, intensidad y controles seguros</string>
     <string name="feat_power_battery_title">Poder y batería</string>
     <string name="feat_power_battery_desc">Configura las politicas del ahorro de batería</string>
     <string name="feat_pixel_searchbar_title">Reemplazar barra de búsqueda</string>
@@ -1864,7 +1864,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="icon_glove_mode">Modo Guantes</string>
     <string name="icon_frame_rate">Frec. de Actualización / Vel. de Fotogramas</string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">Agitar para Ayuda</string>
     <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
@@ -1888,4 +1888,20 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="island_hide_status_bar_title">Ocultar barra de estado</string>
+    <string name="feat_aod_wallpaper_extended_app_icon">Replasar la nota con el icono de app</string>
+    <string name="watch_esim_install_title">Instalar eSIM</string>
+    <string name="watch_esim_install_desc">En regiones insoportadas</string>
+    <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
+    <string name="island_navigation_peek_after_expand_desc">Si esta desactivado, la Isla vuelve a ser compacta</string>
+    <string name="island_navigation_on_new_title">Nueva instruccion</string>
+    <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
+    <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>
+    <string name="feat_split_screen_gesture_title">Gesto de dividir pantalla</string>
+    <string name="feat_split_screen_gesture_desc">Desliza 2 dedos hacia arriba en la barra de navegacion para dividir o desdividir la pantalla </string>
+    <string name="feat_back_gesture_title">Gesto de atras</string>
+    <string name="feat_back_gesture_left_title">Ancho del lado izquierdo</string>
+    <string name="feat_back_gesture_right_title">Ancho del lado derecho</string>
+    <string name="back_gesture_add_app">Añadir aplicacion</string>
+    <string name="back_gesture_add_app_desc">Usa diferentes anchos del lado si una app esta abierta</string>
 </resources>
