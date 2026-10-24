@@ -83,6 +83,7 @@ object ActionRegistry {
                 add(Action.CustomSettings())
                 add(Action.Wait())
                 add(Action.SendNotification())
+                add(Action.DeviceCare())
                 add(Action.CircleToSearch)
                 add(Action.TurnOffBackGesture)
                 add(Action.TurnOnBackGesture)

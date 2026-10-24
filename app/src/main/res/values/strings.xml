@@ -1460,6 +1460,14 @@
     <string name="diy_send_notification_title">Title</string>
     <string name="diy_send_notification_body">Message</string>
     <string name="diy_send_notification_label">Label</string>
+    <string name="diy_action_device_care">Device care</string>
+    <string name="diy_device_care_desc">Free up storage and memory without closing what you\'re using</string>
+    <string name="diy_device_care_clear_cache">Clear app caches</string>
+    <string name="diy_device_care_clear_cache_desc">Deletes temporary files that apps can rebuild</string>
+    <string name="diy_device_care_close_apps">Close background apps</string>
+    <string name="diy_device_care_close_apps_desc">Skips what you\'re using, music, your keyboard and launcher</string>
+    <string name="diy_device_care_done">Device care: %1$s freed</string>
+    <string name="diy_device_care_done_apps">Device care: background apps closed</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_set_charging_mode">Set Charging Mode</string>
     <string name="diy_action_notification_lighting">Trigger notification lighting</string>

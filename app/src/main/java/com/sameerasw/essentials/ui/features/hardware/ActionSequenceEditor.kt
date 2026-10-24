@@ -60,6 +60,7 @@ import com.sameerasw.essentials.ui.core.sheets.OpenActivityPicker
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.WaitSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.SendNotificationSettingsSheet
+import com.sameerasw.essentials.ui.core.sheets.DeviceCareSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.formatWait
 import com.sameerasw.essentials.ui.core.sheets.ChargingModeSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.NotificationLightingActionSheet
@@ -113,6 +114,7 @@ fun ActionSequenceEditor(
     var showHilightSettings by remember { mutableStateOf(false) }
     var showWaitSettings by remember { mutableStateOf(false) }
     var showSendNotificationSettings by remember { mutableStateOf(false) }
+    var showDeviceCareSettings by remember { mutableStateOf(false) }
     var configAction by remember { mutableStateOf<Action?>(null) }
     var configIndex by remember { mutableStateOf<Int?>(null) }
     var showAddActionSheet by remember { mutableStateOf(false) }
@@ -227,6 +229,7 @@ fun ActionSequenceEditor(
             is Action.CustomSettings -> showCustomSettingsSettings = true
             is Action.Wait -> showWaitSettings = true
             is Action.SendNotification -> showSendNotificationSettings = true
+            is Action.DeviceCare -> showDeviceCareSettings = true
             else -> {}
         }
     }
@@ -640,6 +643,18 @@ fun ActionSequenceEditor(
         )
     }
 
+    if (showDeviceCareSettings && configAction is Action.DeviceCare) {
+        DeviceCareSettingsSheet(
+            initialAction = configAction as Action.DeviceCare,
+            onDismiss = { showDeviceCareSettings = false },
+            onSave = { newAction ->
+                showDeviceCareSettings = false
+                onActionSelected(newAction)
+                configAction = null
+            },
+        )
+    }
+
     if (showPermissionSheet) {
         val permissionItems =
             com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItems(
@@ -677,6 +692,15 @@ private fun RemapSequenceItem(
             when {
                 action is Action.Wait -> "$baseTitle · ${formatWait(action.seconds)}"
                 action is Action.SendNotification && action.notificationTitle.isNotBlank() -> "$baseTitle · ${action.notificationTitle}"
+                action is Action.DeviceCare && action.clearCache != action.closeApps -> {
+                    val optionTitle =
+                        if (action.clearCache) {
+                            stringResource(R.string.diy_device_care_clear_cache)
+                        } else {
+                            stringResource(R.string.diy_device_care_close_apps)
+                        }
+                    "$baseTitle · $optionTitle"
+                }
                 else -> baseTitle
             }
         }

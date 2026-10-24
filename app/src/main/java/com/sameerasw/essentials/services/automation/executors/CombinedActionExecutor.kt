@@ -50,6 +50,7 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.ui.activities.PixelSearchResultsActivity
 import com.sameerasw.essentials.utils.AutomationFailureNotifier
 import com.sameerasw.essentials.utils.AutomationNotificationPoster
+import com.sameerasw.essentials.utils.DeviceCare
 import com.sameerasw.essentials.utils.DeviceLockUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -173,6 +174,7 @@ object CombinedActionExecutor {
                 is Action.TurnOffCaffeinate -> CaffeinateController.cancelAll(context)
                 is Action.Wait -> delay(action.seconds * 1000L)
                 is Action.SendNotification -> AutomationNotificationPoster.post(context, action)
+                is Action.DeviceCare -> withContext(Dispatchers.IO) { DeviceCare.run(context, action) }
                 is Action.TurnOffLowPower -> setLowPowerMode(context, false)
                 is Action.SetChargingMode ->
                     com.sameerasw.essentials.utils.battery.ChargingModeUtil
