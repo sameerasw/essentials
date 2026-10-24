@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.layout.onSizeChanged
@@ -63,7 +64,11 @@ fun IslandBitmap(
     circle: Boolean = false,
     fallbackRes: Int? = null,
 ) {
-    val shape = if (circle) CircleShape else RoundedCornerShape(percent = 28)
+    val shape = when {
+        LocalIslandBitmapFlat.current -> RectangleShape
+        circle -> CircleShape
+        else -> RoundedCornerShape(percent = 28)
+    }
     AnimatedContent(
         targetState = bitmap,
         transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
@@ -87,6 +92,8 @@ fun IslandBitmap(
         }
     }
 }
+
+val LocalIslandBitmapFlat = compositionLocalOf { false }
 
 val LocalIslandIconColor = compositionLocalOf<Color?> { null }
 

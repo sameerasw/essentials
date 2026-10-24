@@ -18,6 +18,7 @@ object IslandHaptics {
     }
     fun wiggle(context: Context) = HapticUtil.performCustomHaptic(context, 0.15f)
     fun button(context: Context) = HapticUtil.performCustomHaptic(context, 0.5f)
+    fun scrollTick(context: Context) = HapticUtil.performCustomHaptic(context, 0.55f)
     fun sliderStep(context: Context) = HapticUtil.performCustomHaptic(context, 0.2f)
 
     fun holdRumbleStart(context: Context, durationMs: Long) = HapticUtil.startRampingHoldHaptic(context, durationMs)
