@@ -9,12 +9,14 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import android.Manifest
 import android.app.Activity
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -49,6 +51,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -67,9 +70,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.delay
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
@@ -79,7 +82,9 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.features.widgets.WidgetPickerSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import kotlinx.coroutines.delay
 
 class WidgetStackConfigureActivity : ComponentActivity() {
     private lateinit var repository: WidgetStackRepository
@@ -88,6 +93,8 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     private var stackWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private var config by mutableStateOf(WidgetStackConfig(AppWidgetManager.INVALID_APPWIDGET_ID))
     private var overlayGranted by mutableStateOf(true)
+    private var notificationAccess by mutableStateOf(true)
+    private var calendarAccess by mutableStateOf(true)
     private var unsupported by mutableStateOf(emptySet<Int>())
     private var pendingWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -97,6 +104,12 @@ class WidgetStackConfigureActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val info = awm.getAppWidgetInfo(pendingWidgetId)
             if (result.resultCode == RESULT_OK && info != null) onWidgetBound(info) else discardPending()
+        }
+
+    private val calendarPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            calendarAccess = granted
+            if (granted) StackHost.refresh(this)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -155,6 +168,10 @@ class WidgetStackConfigureActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         overlayGranted = Settings.canDrawOverlays(this)
+        notificationAccess = PermissionUtils.hasNotificationListenerPermission(this)
+        calendarAccess =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) ==
+            PackageManager.PERMISSION_GRANTED
         unsupported = StackHost.unsupported.toSet()
         if (overlayGranted) StackHost.refresh(this)
     }
@@ -367,6 +384,57 @@ class WidgetStackConfigureActivity : ComponentActivity() {
                             },
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                     )
+                }
+
+                SectionTitle(stringResource(R.string.widget_stack_smart_section))
+                RoundedCardContainer {
+                    ListItem(
+                        modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
+                        headlineContent = { Text(stringResource(R.string.widget_stack_smart_title)) },
+                        supportingContent = { Text(stringResource(R.string.widget_stack_smart_desc)) },
+                        trailingContent = {
+                            Switch(
+                                checked = config.smart,
+                                onCheckedChange = {
+                                    HapticUtil.performUIHaptic(view)
+                                    updateConfig(config.withSmart(it))
+                                },
+                            )
+                        },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                    )
+                    if (config.smart && !notificationAccess) {
+                        ListItem(
+                            modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
+                            headlineContent = { Text(stringResource(R.string.widget_stack_smart_needs_access)) },
+                            trailingContent = {
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                                    },
+                                    colors = ButtonDefaults.filledTonalButtonColors(),
+                                ) { Text(stringResource(R.string.widget_stack_grant)) }
+                            },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                        )
+                    }
+                    if (config.smart && !calendarAccess) {
+                        ListItem(
+                            modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
+                            headlineContent = { Text(stringResource(R.string.widget_stack_smart_needs_calendar)) },
+                            trailingContent = {
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        calendarPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
+                                    },
+                                    colors = ButtonDefaults.filledTonalButtonColors(),
+                                ) { Text(stringResource(R.string.widget_stack_grant)) }
+                            },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                        )
+                    }
                 }
 
                 SectionTitle(stringResource(R.string.widget_stack_interval_title))
