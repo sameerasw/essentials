@@ -1086,7 +1086,7 @@ class NotificationListener : NotificationListenerService() {
         }
 
         if (isHandledAsProgress(sbn)) {
-            // Shown by the progress plugin instead
+            notifyAlertRemoved(sbn.key)
         } else if (!isRepost && isHeadsUpNotification(sbn, rankingMap, allowSilent = true)) {
             val alert = extractNotificationAlert(sbn)?.copy(
                 isSilent = isSilentNotification(sbn, rankingMap),
@@ -1926,6 +1926,15 @@ class NotificationListener : NotificationListenerService() {
                 null
             },
             contentIntent = notif.contentIntent,
+            actions = notif.actions.orEmpty().mapNotNull { action ->
+                val title = action.title?.toString()
+                val intent = action.actionIntent
+                if (title.isNullOrBlank() || intent == null || !action.remoteInputs.isNullOrEmpty()) {
+                    null
+                } else {
+                    NotificationActionItem(title = title, pendingIntent = intent, actionKey = "${sbn.key}_$title")
+                }
+            },
         )
     }
 

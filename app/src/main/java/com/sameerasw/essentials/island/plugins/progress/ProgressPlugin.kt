@@ -43,6 +43,7 @@ import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.launchPackage
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
+import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.services.NotificationListener
 
@@ -109,6 +110,11 @@ class ProgressPlugin : BaseIslandPlugin() {
                         progress = progress,
                         indeterminate = indeterminate,
                         accent = MaterialTheme.colorScheme.primary,
+                        actions = d.actions,
+                        onAction = { action ->
+                            IslandHaptics.button(context)
+                            NotificationListener.instance?.performNotificationAction(action)
+                        },
                         onOpen = { open(d) },
                         scope = scope,
                     )

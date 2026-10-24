@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
@@ -37,6 +38,8 @@ fun ProgressExpanded(
     progress: Float,
     indeterminate: Boolean,
     accent: Color,
+    actions: List<NotificationActionItem>,
+    onAction: (NotificationActionItem) -> Unit,
     onOpen: () -> Unit,
     scope: IslandExpandedScope,
 ) {
@@ -87,7 +90,9 @@ fun ProgressExpanded(
                         onOpen()
                         scope.collapse()
                     }) { ConnectedTextLabel(stringResource(R.string.island_progress_open)) },
-                ),
+                ) + actions.take(3).map { action ->
+                    ConnectedItem({ onAction(action) }) { ConnectedTextLabel(action.title) }
+                },
             )
         }
     }
