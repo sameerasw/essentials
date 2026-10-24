@@ -44,6 +44,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.input.pointer.pointerInput
@@ -329,11 +333,34 @@ fun IslandStackPill(
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
+    onInteraction: () -> Unit = {},
 ) {
     val ring = MaterialTheme.colorScheme.primary
     val liquid = rememberLiquidBody(bond = bond)
+    val limit = if (icons.size == PILL_MAX_ICONS + 1) icons.size else PILL_MAX_ICONS
+    val maxStart = (icons.size - limit).coerceAtLeast(0)
+    var scrollStart by remember { mutableIntStateOf(0) }
+    val stepPx = with(LocalDensity.current) { (iconSize + 10.dp).toPx() }
+    val selectedIndex = icons.indexOfFirst { it.key == selectedKey }
+    LaunchedEffect(selectedKey) {
+        if (selectedIndex >= 0) scrollStart = scrollStart.coerceIn((selectedIndex - limit + 1).coerceAtLeast(0), selectedIndex)
+    }
+    val start = scrollStart.coerceIn(0, maxStart)
+    var dragAcc by remember { mutableStateOf(0f) }
+    val hapticContext = LocalContext.current
     Row(
         modifier = modifier
+            .pointerInput(maxStart, stepPx) {
+                detectHorizontalDragGestures(onDragEnd = { dragAcc = 0f }, onDragCancel = { dragAcc = 0f }) { change, amount ->
+                    if (maxStart == 0) return@detectHorizontalDragGestures
+                    change.consume()
+                    onInteraction()
+                    dragAcc -= amount
+                    while (dragAcc >= stepPx && scrollStart < maxStart) { scrollStart++; dragAcc -= stepPx; IslandHaptics.sliderStep(hapticContext) }
+                    while (dragAcc <= -stepPx && scrollStart > 0) { scrollStart--; dragAcc += stepPx; IslandHaptics.sliderStep(hapticContext) }
+                    dragAcc = dragAcc.coerceIn(-stepPx, stepPx)
+                }
+            }
             .liquid(liquid)
             .clip(CircleShape)
             .background(Color.Black)
@@ -343,11 +370,8 @@ fun IslandStackPill(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val selectedIndex = icons.indexOfFirst { it.key == selectedKey }
-        val limit = if (icons.size == PILL_MAX_ICONS + 1) icons.size else PILL_MAX_ICONS
-        val start = if (selectedIndex >= limit) selectedIndex - limit + 1 else 0
         val visible = icons.drop(start).take(limit)
-        val overflow = icons.size - visible.size
+        val overflow = icons.size - start - visible.size
         visible.forEach { icon ->
             key(icon.key) {
                 val selected by animateFloatAsState(if (icon.key == selectedKey) 1f else 0f, IslandMotion.float(), label = "stackSelected")
@@ -370,7 +394,7 @@ fun IslandStackPill(
                         }
                         .then(
                             if (interactive && icon.onSelect != null) {
-                                Modifier.pointerInput(icon.key) { detectTapGestures { icon.onSelect.invoke() } }
+                                Modifier.pointerInput(icon.key) { detectTapGestures { onInteraction(); icon.onSelect.invoke() } }
                             } else {
                                 Modifier
                             },
