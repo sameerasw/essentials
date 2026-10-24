@@ -35,8 +35,6 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.drawscope.scale
 import com.sameerasw.essentials.R
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.res.stringResource
@@ -85,6 +83,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import android.graphics.BlurMaskFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.util.VelocityTracker
@@ -223,6 +224,10 @@ private fun IslandRootContent(
     )
 
     val pulseAccent = state.items[state.focusedKey]?.accent
+    val pulsePaint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
+    val pulseBlur = remember(spec.pulseBlur, density) {
+        with(density) { spec.pulseBlur.toPx() }.takeIf { it > 0f }?.let { BlurMaskFilter(it * 0.866f, BlurMaskFilter.Blur.NORMAL) }
+    }
     val dynamicOutline: Color? = if (spec.outlineDynamic) {
         val focused = state.items[state.focusedKey]
         (focused?.outlineAccent ?: focused?.accent)
@@ -241,7 +246,7 @@ private fun IslandRootContent(
         pulse.snapTo(0f)
         if (!spec.pulseShadow || state.focusedKey == null) return@LaunchedEffect
         pulse.animateTo(1f, tween(250, easing = LinearEasing))
-        pulse.animateTo(0f, tween(1200, easing = LinearEasing))
+        pulse.animateTo(0f, tween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
     }
     val minSurfaceWidth = with(density) { spec.cameraDiameter.roundToPx() }
     val minSurfaceHeight = with(density) { spec.compactHeight.roundToPx() }
@@ -872,23 +877,14 @@ private fun IslandRootContent(
                 .drawBehind {
                     val p = pulse.value
                     if (pulseAccent == null || p <= 0f || !visible) return@drawBehind
-                    val w = size.width * spec.pulseSize
-                    val h = size.height * spec.pulseSize
-                    val center = Offset(size.width / 2f, size.height / 2f + h * spec.pulseYShift)
-                    val radius = h / 2f * spec.pulseSpread
-                    scale(scaleX = w / h, scaleY = 1f, pivot = center) {
-                        drawCircle(
-                            brush = Brush.radialGradient(
-                                0f to pulseAccent.copy(alpha = 0.95f * p),
-                                0.45f to pulseAccent.copy(alpha = 0.55f * p),
-                                1f to Color.Transparent,
-                                center = center,
-                                radius = radius,
-                            ),
-                            radius = radius,
-                            center = center,
-                        )
-                    }
+                    val spread = spec.pulseSpread.toPx()
+                    val dy = spec.pulseOffsetY.toPx()
+                    val r = surfaceCornerPx(size.height, compactHeightPx, expandedCornerPx) + spread
+                    pulsePaint.color = pulseAccent.copy(alpha = spec.pulseOpacity * p).toArgb()
+                    pulsePaint.maskFilter = pulseBlur
+                    drawContext.canvas.nativeCanvas.drawRoundRect(
+                        -spread, -spread + dy, size.width + spread, size.height + spread + dy, r, r, pulsePaint,
+                    )
                 }
                 .graphicsLayer {
                     alpha = (if (visible) 1f else 0f) * (1f - if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 0f)
