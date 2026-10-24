@@ -1455,7 +1455,7 @@
     <string name="feat_safe_volume_title">Убрать предупреждение о слишком громком звуке</string>
     <string name="feat_safe_volume_desc">Убирает диалоговое окно с предупреждением о звуке</string>
     <string name="feat_flashlight_title">Фонарик</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">Яркость, угасание и контроль безопасности</string>
     <string name="feat_power_battery_title">Питание и батарея</string>
     <string name="feat_power_battery_desc">Настроить режим энергосбережения</string>
     <string name="feat_pocket_mode_title">\"В кармане\"</string>
@@ -1891,4 +1891,21 @@
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="feat_app_volume_title">Громкость приложений</string>
+    <string name="feat_app_volume_desc">Поставьте отдельную громкость для разных приложений</string>
+    <string name="app_volume_enable_title">Включить громкость приложений</string>
+    <string name="app_volume_overlay_title">Оверлей управления</string>
+    <string name="app_volume_playing_summary">Играет сейчас · %1$s</string>
+    <string name="app_volume_add_app">Добавить приложение</string>
+    <string name="app_volume_add_app_desc">Установить громкость приложения до того как будет проигрывать звук </string>
+    <string name="feat_screenshots_title">Очистка скриншотов</string>
+    <string name="screenshot_auto_clean_title">Авточистка скриншотов</string>
+    <string name="screenshot_auto_clean_note">При каждом новом скриншоте приходит тихое уведомление о его сохранении. Скриншоты, отмеченные звездочкой, сохраняются всегда</string>
+    <string name="screenshots_cleaned_count_title">Скриншотов убрано</string>
+    <string name="screenshots_storage_saved_title">Сохранённое место</string>
+    <string name="notification_lighting_ripple_repeat_count_title">Количество повторений</string>
+    <string name="flashlight_speed_label">Скорость </string>
+    <string name="notification_lighting_ripple_sparkle_size_title">Размер частиц</string>
+    <string name="notification_lighting_ripple_sparkle_count_title">Коливество частиц</string>
+    <string name="notification_lighting_ripple_wave_size_title">Размер волны</string>
 </resources>
