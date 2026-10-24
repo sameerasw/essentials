@@ -1428,7 +1428,7 @@ class NotificationListener : NotificationListenerService() {
         val now = SystemClock.elapsedRealtime()
         val last = lastHilightTime[sbn.packageName]
         if (last != null && now - last < settings.getHilightCooldownSeconds() * 1000L) return
-        HilightController.play(effect) { lastHilightTime[sbn.packageName] = SystemClock.elapsedRealtime() }
+        HilightController.playForApp(this, sbn.packageName, effect) { lastHilightTime[sbn.packageName] = SystemClock.elapsedRealtime() }
     }
 
     private val lastHilightTime = ConcurrentHashMap<String, Long>()

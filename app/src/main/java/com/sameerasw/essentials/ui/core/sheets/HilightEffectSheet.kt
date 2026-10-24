@@ -4,7 +4,7 @@
  *
  * Feature Module: Core UI Components
  * File: HilightEffectSheet.kt
- * Description: Pattern, colour and duration editor for Hilight effects, with a live try-out.
+ * Description: Pattern, colour, timing and brightness editor for Hilight effects, with a live try-out.
  */
 
 package com.sameerasw.essentials.ui.core.sheets
@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
@@ -42,8 +44,10 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.HilightFrames
 import com.sameerasw.essentials.domain.model.HilightPattern
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.utils.HapticUtil
@@ -54,6 +58,8 @@ fun HilightEffectEditor(
     onEffectChange: (HilightEffect) -> Unit,
     modifier: Modifier = Modifier,
     canTry: Boolean = true,
+    patterns: List<HilightPattern> = HilightPattern.entries,
+    appPackage: String? = null,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -67,7 +73,7 @@ fun HilightEffectEditor(
                         .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                HilightPattern.entries.forEach { pattern ->
+                patterns.forEach { pattern ->
                     FilterChip(
                         selected = effect.pattern == pattern,
                         onClick = {
@@ -80,8 +86,20 @@ fun HilightEffectEditor(
             }
         }
 
+        if (appPackage != null && effect.pattern != HilightPattern.RAINBOW) {
+            RoundedCardContainer {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_palette_24,
+                    title = stringResource(R.string.hilight_auto_color_title),
+                    description = stringResource(R.string.hilight_auto_color_desc),
+                    isChecked = effect.autoColor,
+                    onCheckedChange = { onEffectChange(effect.copy(autoColor = it)) },
+                )
+            }
+        }
+
         // Rainbow cycles through every hue, so a colour choice would have no effect
-        if (effect.pattern != HilightPattern.RAINBOW) {
+        if (effect.pattern != HilightPattern.RAINBOW && !(effect.autoColor && appPackage != null)) {
             ColorSwatchPicker(
                 selectedColorHex = toHex(effect.color),
                 onColorSelected = { hex -> onEffectChange(effect.copy(color = Color.parseColor(hex))) },
@@ -89,22 +107,51 @@ fun HilightEffectEditor(
         }
 
         RoundedCardContainer {
+            if (HilightFrames.cycleMs(effect.pattern, HilightEffect.DEFAULT_LED_COUNT) != null) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.hilight_repeats_title),
+                    value = HilightFrames.repeatsFor(effect).toFloat(),
+                    onValueChange = { onEffectChange(effect.copy(repeats = it.toInt())) },
+                    valueRange = 1f..HilightEffect.MAX_REPEATS.toFloat(),
+                    increment = 1f,
+                    steps = HilightEffect.MAX_REPEATS - 2,
+                    valueFormatter = { context.getString(R.string.hilight_repeats_value, it.toInt()) },
+                    iconRes = R.drawable.rounded_sync_24,
+                )
+            } else {
+                ConfigSliderItem(
+                    title = stringResource(R.string.hilight_duration_title),
+                    value = effect.durationMs / 1000f,
+                    onValueChange = { onEffectChange(effect.copy(durationMs = (it * 1000).toLong())) },
+                    valueRange = HilightEffect.MIN_DURATION_MS / 1000f..HilightEffect.MAX_DURATION_MS / 1000f,
+                    increment = 1f,
+                    steps = ((HilightEffect.MAX_DURATION_MS - HilightEffect.MIN_DURATION_MS) / 1000 - 1).toInt(),
+                    valueFormatter = { context.getString(R.string.hilight_duration_value, it.toInt()) },
+                    iconRes = R.drawable.rounded_timer_24,
+                )
+            }
             ConfigSliderItem(
-                title = stringResource(R.string.hilight_duration_title),
-                value = effect.durationMs / 1000f,
-                onValueChange = { onEffectChange(effect.copy(durationMs = (it * 1000).toLong())) },
-                valueRange = HilightEffect.MIN_DURATION_MS / 1000f..HilightEffect.MAX_DURATION_MS / 1000f,
-                increment = 1f,
-                steps = ((HilightEffect.MAX_DURATION_MS - HilightEffect.MIN_DURATION_MS) / 1000 - 1).toInt(),
-                valueFormatter = { context.getString(R.string.hilight_duration_value, it.toInt()) },
-                iconRes = R.drawable.rounded_timer_24,
+                title = stringResource(R.string.hilight_brightness_title),
+                value = effect.brightness.toFloat(),
+                onValueChange = { onEffectChange(effect.copy(brightness = it.toInt())) },
+                valueRange = HilightEffect.MIN_BRIGHTNESS.toFloat()..100f,
+                increment = 10f,
+                steps = ((100 - HilightEffect.MIN_BRIGHTNESS) / 10 - 1),
+                valueFormatter = { context.getString(R.string.hilight_brightness_value, it.toInt()) },
+                iconRes = R.drawable.rounded_brightness_medium_24,
             )
         }
 
         OutlinedButton(
             onClick = {
                 HapticUtil.performVirtualKeyHaptic(view)
-                if (!HilightController.play(effect)) {
+                val played =
+                    if (appPackage != null) {
+                        HilightController.playForApp(context, appPackage, HilightFrames.withShownRepeats(effect))
+                    } else {
+                        HilightController.play(HilightFrames.withShownRepeats(effect))
+                    }
+                if (!played) {
                     Toast.makeText(context, R.string.hilight_unavailable_toast, Toast.LENGTH_SHORT).show()
                 }
             },
@@ -132,7 +179,7 @@ fun HilightEffectSettingsSheet(
         title = stringResource(R.string.diy_action_hilight),
         initialEffect = initialAction.toEffect(),
         onDismiss = onDismiss,
-        onSave = { onSave(Action.Hilight(it.pattern, it.color, it.durationMs)) },
+        onSave = { onSave(Action.Hilight(it.pattern, it.color, it.durationMs, it.brightness, it.repeats)) },
     )
 }
 
@@ -143,6 +190,8 @@ fun HilightEffectSheet(
     onDismiss: () -> Unit,
     onSave: (HilightEffect) -> Unit,
     canTry: Boolean = true,
+    patterns: List<HilightPattern> = HilightPattern.entries,
+    appPackage: String? = null,
 ) {
     val view = LocalView.current
     var effect by remember { mutableStateOf(initialEffect) }
@@ -152,7 +201,8 @@ fun HilightEffectSheet(
             modifier =
                 Modifier
                     .padding(16.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
@@ -162,7 +212,13 @@ fun HilightEffectSheet(
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
-            HilightEffectEditor(effect = effect, onEffectChange = { effect = it }, canTry = canTry)
+            HilightEffectEditor(
+                effect = effect,
+                onEffectChange = { effect = it },
+                canTry = canTry,
+                patterns = patterns,
+                appPackage = appPackage,
+            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -194,7 +250,7 @@ fun HilightEffectSheet(
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
                         HilightController.stop()
-                        onSave(effect)
+                        onSave(HilightFrames.withShownRepeats(effect))
                     },
                     modifier = Modifier.weight(1f),
                 ) {
