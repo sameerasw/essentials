@@ -1908,8 +1908,12 @@ Ayrıca sizin için kilidi açmayı da tetikleyebilir. Erişilebilirlik izni ger
     <string name="about_desc_link_actions">Tek bir uygulamaya bağlı kalmak yerine, bağlantıların nasıl açılacağını seçin.
 
 Bir bağlantıyı açtığınızda, Essentials, onu işlemek için birden fazla uygulama arasından seçim yapmanıza olanak tanır; bu uygulamalar arasında bağlantıyı bir baloncuk içinde açma, kopyalama, paylaşma veya kısaltıp QR kodu oluşturma seçenekleri bulunur.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
-    <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
+    <string name="about_desc_daily_wallpaper">Duvar kağıdınızı günlük olarak seçilen bir duvar kağıdıyla güncel tutun veya canlı bir duvar kağıdı ayarlayın.
+
+Duvar kağıdınızı seçin, yarınki duvar kağıdını uygulanmadan önce inceleyin ve sıraya alın ve canlı duvar kağıdınızı tek bir yerden yönetin.</string>
+    <string name="about_desc_watch">Telefonunuz ve Wear OS saatiniz arasında entegrasyonlar.
+
+Bildirimleri ve aramaları senkronize etmek, telefonunuzu saatten kilitlemek, saat kadranını ve komplikasyonları özelleştirmek, ses modunu ve konum durumunu senkronize etmek, eSIM yüklemek ve kablosuz hata ayıklamayı uzaktan etkinleştirmek için Essentials yardımcı uygulamasını saatinize yükleyin.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
     <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
