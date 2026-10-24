@@ -293,6 +293,13 @@ fun IslandStackOverlap(
                                 .clip(CircleShape)
                                 .background(Color.Black)
                                 .islandOutline(outlineColor, outlineThickness, CircleShape)
+                                .then(
+                                    if (entry.icon.onSelect != null && !entry.leaving) {
+                                        Modifier.pointerInput(entry.icon.key) { detectTapGestures { entry.icon.onSelect.invoke() } }
+                                    } else {
+                                        Modifier
+                                    },
+                                )
                                 .drawWithContent {
                                     drawContent()
                                     if (ringAlpha > 0f) {

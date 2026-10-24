@@ -141,6 +141,11 @@ class MediaPlugin : BaseIslandPlugin() {
             controllers.any { it.sessionToken == current.sessionToken } &&
             current.packageName !in excluded &&
             current.playbackState?.state == PlaybackState.STATE_PAUSED
+        val transient = current != null && track != null &&
+            controllers.any { it.sessionToken == current.sessionToken } &&
+            current.packageName !in excluded &&
+            current.playbackState?.state.let { it == PlaybackState.STATE_BUFFERING || it == PlaybackState.STATE_CONNECTING || it == PlaybackState.STATE_SKIPPING_TO_NEXT || it == PlaybackState.STATE_SKIPPING_TO_PREVIOUS || it == PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM }
+        if (transient) return
         if (paused) {
             playing = false
             render()
