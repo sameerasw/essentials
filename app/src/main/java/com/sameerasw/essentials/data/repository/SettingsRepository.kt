@@ -23,6 +23,9 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionGsonAdapter
 import com.sameerasw.essentials.domain.model.AppIcon
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.AutoDismissAppConfig
+import com.sameerasw.essentials.domain.model.AutoDismissChannel
+import com.sameerasw.essentials.domain.model.AutoDismissStat
 import com.sameerasw.essentials.domain.model.BackGestureAppConfig
 import com.sameerasw.essentials.domain.model.AppTag
 import com.sameerasw.essentials.domain.model.DnsPreset
@@ -270,6 +273,11 @@ class SettingsRepository(
         const val KEY_SNOOZE_DISCOVERED_CHANNELS = "snooze_discovered_channels"
         const val KEY_SNOOZE_BLOCKED_CHANNELS = "snooze_blocked_channels"
         const val KEY_SNOOZE_HEADS_UP_ENABLED = "snooze_heads_up_enabled"
+        const val KEY_AUTO_DISMISS_ENABLED = "auto_dismiss_notifications_enabled"
+        const val KEY_AUTO_DISMISS_APPS = "auto_dismiss_notifications_apps"
+        const val KEY_AUTO_DISMISS_LAST_MINUTES = "auto_dismiss_notifications_last_minutes"
+        const val KEY_AUTO_DISMISS_CHANNELS = "auto_dismiss_notifications_channels"
+        const val KEY_AUTO_DISMISS_STATS = "auto_dismiss_notifications_stats"
 
         const val KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED = "flashlight_always_turn_off_enabled"
         const val KEY_FLASHLIGHT_FADE_ENABLED = "flashlight_fade_enabled"
@@ -1626,6 +1634,86 @@ class SettingsRepository(
         packageName: String,
         enabled: Boolean,
     ) = updateAppSelection(KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS, packageName, enabled)
+
+    fun isAutoDismissEnabled(): Boolean = getBoolean(KEY_AUTO_DISMISS_ENABLED, false)
+
+    fun setAutoDismissEnabled(enabled: Boolean) = putBoolean(KEY_AUTO_DISMISS_ENABLED, enabled)
+
+    fun getAutoDismissLastMinutes(): Int = getInt(KEY_AUTO_DISMISS_LAST_MINUTES, 15)
+
+    fun setAutoDismissLastMinutes(minutes: Int) = putInt(KEY_AUTO_DISMISS_LAST_MINUTES, minutes)
+
+    fun loadAutoDismissConfigs(): List<AutoDismissAppConfig> {
+        val json = prefs.getString(KEY_AUTO_DISMISS_APPS, null)
+        return if (json != null) {
+            try {
+                gson
+                    .fromJson(
+                        json,
+                        Array<AutoDismissAppConfig>::class.java,
+                    ).toList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun saveAutoDismissConfigs(configs: List<AutoDismissAppConfig>) {
+        val json = gson.toJson(configs)
+        putString(KEY_AUTO_DISMISS_APPS, json)
+    }
+
+    fun loadAutoDismissChannels(): List<AutoDismissChannel> {
+        val json = prefs.getString(KEY_AUTO_DISMISS_CHANNELS, null)
+        return if (json != null) {
+            try {
+                gson
+                    .fromJson(
+                        json,
+                        Array<AutoDismissChannel>::class.java,
+                    ).toList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun saveAutoDismissChannels(channels: List<AutoDismissChannel>) {
+        val json = gson.toJson(channels)
+        putString(KEY_AUTO_DISMISS_CHANNELS, json)
+    }
+
+    fun loadAutoDismissStats(): Map<String, AutoDismissStat> {
+        val json = prefs.getString(KEY_AUTO_DISMISS_STATS, null) ?: return emptyMap()
+        return try {
+            val type = object : TypeToken<Map<String, AutoDismissStat>>() {}.type
+            gson.fromJson<Map<String, AutoDismissStat>>(json, type) ?: emptyMap()
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
+
+    fun saveAutoDismissStats(stats: Map<String, AutoDismissStat>) {
+        val json = gson.toJson(stats)
+        putString(KEY_AUTO_DISMISS_STATS, json)
+    }
+
+    fun incrementAutoDismissCount(packageName: String) {
+        val current = loadAutoDismissStats().toMutableMap()
+        val existing = current[packageName]
+        val updated =
+            if (existing != null) {
+                existing.copy(count = existing.count + 1)
+            } else {
+                AutoDismissStat(1, System.currentTimeMillis())
+            }
+        current[packageName] = updated
+        saveAutoDismissStats(current)
+    }
 
     /**
      * Executes the load shut up configs operation.

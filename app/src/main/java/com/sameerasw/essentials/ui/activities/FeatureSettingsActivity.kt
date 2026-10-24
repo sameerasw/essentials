@@ -124,6 +124,7 @@ import com.sameerasw.essentials.ui.features.system.RemoteLockSettingsUI
 import com.sameerasw.essentials.ui.features.system.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.features.system.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.features.system.ShutUpSettingsUI
+import com.sameerasw.essentials.ui.features.system.AutoDismissNotificationsSettingsUI
 import com.sameerasw.essentials.ui.features.system.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.ui.features.system.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.features.system.StandbyAppsSettingsUI
@@ -396,6 +397,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 "Duo", "Status glance" -> !isAccessibilityEnabled
                                 "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                                 "Snooze system notifications" -> !isNotificationListenerEnabled
+                                "Auto-dismiss notifications" -> !isNotificationListenerEnabled
                                 "Screen locked security" ->
                                     !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                         context,
@@ -858,6 +860,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                             "Duo", "Status glance" -> !isAccessibilityEnabled
                                                             "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                                                             "Snooze system notifications" -> !isNotificationListenerEnabled
+                                 "Auto-dismiss notifications" -> !isNotificationListenerEnabled
                                                             "Screen locked security" ->
                                                                 !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                                     context,
@@ -1153,6 +1156,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Snooze system notifications" -> {
                                         SnoozeNotificationsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting,
+                                        )
+                                    }
+
+                                    "Auto-dismiss notifications" -> {
+                                        AutoDismissNotificationsSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
