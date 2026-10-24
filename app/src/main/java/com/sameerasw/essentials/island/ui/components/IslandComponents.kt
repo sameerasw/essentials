@@ -59,8 +59,44 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Row
 import com.sameerasw.essentials.island.ui.IslandMotion
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.ColorFilter
 import kotlinx.coroutines.delay
 import kotlin.random.Random
+
+// Monochrome stand-in for a notification picture: the app's status bar glyph on its accent color
+@Composable
+fun NotificationGlyph(
+    smallIcon: Bitmap?,
+    color: Color?,
+    size: Dp,
+    modifier: Modifier = Modifier,
+    fallbackRes: Int,
+) {
+    val background = color ?: MaterialTheme.colorScheme.primary
+    val glyph = if (background.luminance() > 0.6f) Color.Black else Color.White
+    Box(
+        modifier
+            .sizeIn(maxWidth = size, maxHeight = size)
+            .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            .clip(CircleShape)
+            .background(background),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (smallIcon != null) {
+            Image(
+                bitmap = remember(smallIcon) { smallIcon.asImageBitmap() },
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(glyph),
+                modifier = Modifier.fillMaxSize(0.6f),
+            )
+        } else {
+            Icon(painterResource(fallbackRes), null, tint = glyph, modifier = Modifier.fillMaxSize(0.6f))
+        }
+    }
+}
 
 @Composable
 fun IslandBitmap(

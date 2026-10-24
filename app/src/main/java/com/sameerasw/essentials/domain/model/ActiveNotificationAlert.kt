@@ -32,5 +32,7 @@ data class ActiveNotificationAlert(
     val ongoing: Boolean = false,
     val isConversation: Boolean = false,
     val hubOnly: Boolean = false,
+    // The status bar glyph (Notification.smallIcon), used by the monochrome island
+    val smallIcon: Bitmap? = null,
 )
 
