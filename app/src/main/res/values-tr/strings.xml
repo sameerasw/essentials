@@ -1905,7 +1905,9 @@ Parlaklık kontrolü, bazı cihazlarda bulunmayan donanım desteği gerektirir.<
 Ekran düşük ışıkta uyandığında, Essentials ön kameranın yüzünüzü görebilmesi için ekranı yumuşak, renkli bir ışıkla aydınlatır. Ne zaman devreye gireceğine karar veren ortam ışığı eşiğini ayarlayabilir, ışık tonunu seçebilir ve uyandığında otomatik olarak mı yoksa yalnızca siz tetiklediğinizde mi aydınlanacağını belirleyebilirsiniz.
 
 Ayrıca sizin için kilidi açmayı da tetikleyebilir. Erişilebilirlik izni gereklidir.</string>
-    <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
+    <string name="about_desc_link_actions">Tek bir uygulamaya bağlı kalmak yerine, bağlantıların nasıl açılacağını seçin.
+
+Bir bağlantıyı açtığınızda, Essentials, onu işlemek için birden fazla uygulama arasından seçim yapmanıza olanak tanır; bu uygulamalar arasında bağlantıyı bir baloncuk içinde açma, kopyalama, paylaşma veya kısaltıp QR kodu oluşturma seçenekleri bulunur.</string>
     <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
