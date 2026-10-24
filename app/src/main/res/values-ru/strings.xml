@@ -1879,7 +1879,9 @@
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
     <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
     <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
-    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
+    <string name="about_desc_watch_wireless_debugging">Включите беспроводную отладку на часах удалённо со своего телефона.
+
+Это избавляет вас от изучения вариантов разработчиков часов, когда вы хотите подключиться через ADB </string>
     <string name="about_desc_watch_esim_install">Install an eSIM on your Pixel Watch even in regions where it is not officially supported.\n\nExperimental. It relies on a hidden screen in the Pixel Watch app that may change, and installation success cannot be confirmed here.</string>
     <string name="about_desc_sync_sound_mode">Automatically keeps your watch sound mode in sync with your phone.\n\nWhen you switch your phone between sound, vibrate and silent, your watch follows.</string>
     <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
@@ -1891,4 +1893,39 @@
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="feat_screenshots_desc">Очистите отправленные и старые скриншоты </string>
+    <string name="feat_app_volume_title">Громкость отдельных приложений</string>
+    <string name="feat_app_volume_desc">Установите отдельную громкость для каждого приложения </string>
+    <string name="app_volume_enable_title">Включить разную громкость для разных приложений</string>
+    <string name="app_volume_add_app">Добавить приложения</string>
+    <string name="app_volume_add_app_desc">Задайте громкость перед тем, как приложение начнёт воспроизведение звука</string>
+    <string name="about_desc_app_volume">Отключает звук приложения самостоятельно, не меняя громкость медиа для всего остального. Выберите уровень для каждого приложения, и он применяется каждый раз, когда приложение воспроизводит звук, в том числе в фоновом режиме.
+
+Уровни могут только снижаться от нормального объёма, но никогда выше него. Некоторые игры и аудиоприложения с низкой задержкой могут игнорировать уровень. Сидзуку, должно быть, работает на новых уровнях для применения, поэтому начните его снова после перезагрузки. </string>
+    <string name="volume_steps_enable_title">Включить шаги по громкости </string>
+    <string name="volume_steps_per_press_title">Шаги за нажатие</string>
+    <string name="hilight_progress_title">Живой прогресс </string>
+    <string name="feat_hilight_progress_desc">Показать загрузку и обновление в режиме реального времени на светодиодах </string>
+    <string name="about_desc_hilight">Светодиоды Hilight на задней панели Pixel 11 Pro, Pro XL и Pro Fold при поступлении уведомлений с пользовательским эффектом для каждого добавленного вами приложения. Эффекты Hilight также могут быть использованы в качестве действия в перепланировке и автоматизации Button. Нужен Сидзуку, который нужно перезапускать после каждой перезагрузки. </string>
+    <string name="about_desc_hilight_progress">Показывает прогресс загрузок и обновления в реальном времени на светодиодах Hilight, освещая ещё один светодиод каждый раз, когда прогресс проходит ещё одну восьмую, и мигая все восемь, когда он заканчивается. Нужен Сидзуку, который нужно перезапускать после каждой перезагрузки. </string>
+    <string name="feat_hilight_notifications_title">Эффекты уведомлений</string>
+    <string name="hilight_notifications_desc">Воспроизвести собственный эффект каждого приложения, когда приходят его уведомления </string>
+    <string name="hilight_only_screen_off_title">Только когда экран выключен </string>
+    <string name="app_icon_google">Спектрум</string>
+    <string name="app_icon_black">Динамичная</string>
+    <string name="app_icon_legacy">Наследие</string>
+    <string name="app_icon_default">Обычный </string>
+    <string name="app_volume_overlay_title">Настроить интерфейс оверлея</string>
+    <string name="watch_notif_sync_silent_title">Уведомляйте о тихих уведомлениях </string>
+    <string name="watch_notif_sync_silent_desc">Синхронизируйте бесшумные и низкоприоритетные уведомления для просмотра </string>
+    <string name="watch_notif_sync_media_title">Синхронизация воспроизведения мультимедиа </string>
+    <string name="watch_notif_sync_media_desc">Синхронизация элементов воспроизведения мультимедиа и уведомлений для просмотра </string>
+    <string name="watch_notif_sound_title">Звук уведомления </string>
+    <string name="watch_notif_sound_desc">Измените звук, воспроизводимый на часах </string>
+    <string name="watch_notif_sync_now">Синхронизировать активные уведомления сейчас</string>
+    <string name="watch_notif_sync_now_desc">Принудительная синхронизация всех активных телефонных уведомлений для лаунчера часов</string>
+    <string name="watch_notif_sync_icons">Синхронизация иконок приложений</string>
+    <string name="watch_notif_sync_icons_desc">Синхронизируйте иконки приложения лаунчера часов для отображения уведомлений </string>
+    <string name="watch_notif_sound_dock">Док </string>
+    <string name="watch_notif_sound_carmen_nexus">Нексус </string>
 </resources>
