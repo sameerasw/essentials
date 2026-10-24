@@ -714,9 +714,10 @@ class SettingsRepository(
         const val KEY_ISLAND_BORDER_OUTLINE_THICKNESS = "island_border_outline_thickness"
         const val KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED = "island_border_outline_hide_expanded"
         const val KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION = "island_pulse_shadow_on_notification"
-        const val KEY_ISLAND_PULSE_SHADOW_SIZE = "island_pulse_shadow_size"
-        const val KEY_ISLAND_PULSE_SHADOW_Y_SHIFT = "island_pulse_shadow_y_shift"
-        const val KEY_ISLAND_PULSE_SHADOW_SPREAD = "island_pulse_shadow_spread"
+        const val KEY_ISLAND_PULSE_SHADOW_BLUR = "island_pulse_shadow_blur"
+        const val KEY_ISLAND_PULSE_SHADOW_SPREAD_DP = "island_pulse_shadow_spread_dp"
+        const val KEY_ISLAND_PULSE_SHADOW_OFFSET_Y = "island_pulse_shadow_offset_y"
+        const val KEY_ISLAND_PULSE_SHADOW_OPACITY = "island_pulse_shadow_opacity"
         const val KEY_ISLAND_PULSE_SHADOW_DURATION_MS = "island_pulse_shadow_duration_ms"
         const val ISLAND_BORDER_OUTLINE_DEFAULT_COLOR = "#202020"
 
@@ -4082,14 +4083,17 @@ class SettingsRepository(
     fun isIslandPulseShadowEnabled(): Boolean = getBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, false)
     fun setIslandPulseShadowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, enabled)
 
-    fun getIslandPulseShadowSize(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SIZE, 0.5f)
-    fun setIslandPulseShadowSize(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SIZE, value)
+    fun getIslandPulseShadowBlur(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_BLUR, 20f)
+    fun setIslandPulseShadowBlur(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_BLUR, value)
 
-    fun getIslandPulseShadowYShift(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_Y_SHIFT, 0.35f)
-    fun setIslandPulseShadowYShift(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_Y_SHIFT, value)
+    fun getIslandPulseShadowSpread(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD_DP, 6f)
+    fun setIslandPulseShadowSpread(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD_DP, value)
 
-    fun getIslandPulseShadowSpread(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD, 2f)
-    fun setIslandPulseShadowSpread(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD, value)
+    fun getIslandPulseShadowOffsetY(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_OFFSET_Y, 1f)
+    fun setIslandPulseShadowOffsetY(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_OFFSET_Y, value)
+
+    fun getIslandPulseShadowOpacity(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_OPACITY, 0.35f)
+    fun setIslandPulseShadowOpacity(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_OPACITY, value)
 
     fun getIslandPulseShadowDurationMs(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_DURATION_MS, 1450f)
     fun setIslandPulseShadowDurationMs(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_DURATION_MS, value)
