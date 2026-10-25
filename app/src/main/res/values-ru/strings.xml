@@ -1913,9 +1913,6 @@
     <string name="desc_location_mode">Ограничить запросы местоположения пока включена экономия энергии</string>
     <string name="label_location_mode">Режимы геолокации и GPS</string>
     <string name="label_apply_after_reboot">Применить после перезагрузки</string>
-    <string name="island_notif_compact_heads_up_title">Компактные напоминания</string>
-    <string name="island_notif_compact_heads_up_desc">Показывает новые уведомления в строку</string>
-    <string name="island_compact_hide_status_bar_title">Скрыть все предметы для компактного острова</string>
     <string name="feat_screenshots_desc">Очистите отправленные и старые скриншоты </string>
     <string name="app_volume_enable_title">Включить разную громкость для разных приложений</string>
     <string name="app_volume_add_app">Добавить приложения</string>
