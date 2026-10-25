@@ -828,7 +828,7 @@ class IslandCoordinator(
             "alarm" to SettingsRepository.KEY_ISLAND_ALARM_LAUNCHER_ONLY,
         )
         val CONFIG_KEYS = setOf(
-            SettingsRepository.KEY_ISLAND_MONOCHROME,
+            SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,

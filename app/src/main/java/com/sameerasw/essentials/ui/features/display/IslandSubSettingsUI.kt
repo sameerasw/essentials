@@ -1320,18 +1320,6 @@ fun IslandNotificationSettingsUI(
                     modifier = Modifier.highlight(highlightSetting == "island_catch_up_timeout"),
                 )
             }
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_invert_colors_24,
-                title = stringResource(R.string.island_monochrome_title),
-                description = stringResource(R.string.island_monochrome_desc),
-                isChecked = viewModel.isIslandMonochrome.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandMonochrome(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_monochrome"),
-            )
         }
 
         if (showOtpPermissions) {

@@ -52,7 +52,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
         SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
-        SettingsRepository.KEY_ISLAND_MONOCHROME,
+        SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
+        SettingsRepository.KEY_ISLAND_THEMED_APP_ICONS,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE,
         SettingsRepository.KEY_ISLAND_NOTIF_SKIP_SILENT,
         SettingsRepository.KEY_ISLAND_NOTIF_FOLLOW_DND,
@@ -754,7 +755,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                     },
                 )
                 val appIcon = alert.appIcon
-                if (!minimal() && !monochrome() && alert.chatIcon != null && appIcon != null) {
+                if (!minimal() && !themedBubble() && alert.chatIcon != null && appIcon != null) {
                     add(CompactCell("notif.app", soloOnly = true) { IslandBitmap(appIcon, 22.dp, circle = true) })
                 }
             },
@@ -811,7 +812,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                     },
                 )
                 val appIcon = alert.appIcon
-                if (!minimal() && !monochrome() && !hideChat && alert.chatIcon != null && appIcon != null) {
+                if (!minimal() && !themedBubble() && !hideChat && alert.chatIcon != null && appIcon != null) {
                     add(CompactCell("notif.app", soloOnly = true) { IslandBitmap(appIcon, 22.dp, circle = true) })
                 }
             },
@@ -952,9 +953,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         }
     }
 
-    private fun monochrome() = settings.isIslandMonochromeEnabled()
+    private fun themedBubble() = settings.isIslandNotifThemedBubbleActive()
 
-    // Monochrome swaps the picture for the app's notification glyph on the island's softened accent
     @Composable
     private fun AlertIcon(
         alert: ActiveNotificationAlert,
@@ -963,8 +963,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         circle: Boolean = false,
         fallbackRes: Int = R.drawable.rounded_notifications_unread_24,
     ) {
-        if (monochrome()) {
-            NotificationGlyph(alert.smallIcon, alert.appColor?.let { Color(soften(it)) }, size, fallbackRes = fallbackRes)
+        if (themedBubble()) {
+            NotificationGlyph(alert.themedIcon, alert.smallIcon, alert.appColor?.let { Color(soften(it)) }, size, fallbackRes = fallbackRes)
         } else {
             IslandBitmap(bitmap, size, circle = circle, fallbackRes = fallbackRes)
         }

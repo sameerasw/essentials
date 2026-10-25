@@ -309,7 +309,7 @@ class MainViewModel : ViewModel() {
     val isIslandOtpEnabled = mutableStateOf(false)
     val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
-    val isIslandMonochrome = mutableStateOf(false)
+    val isIslandNotifThemedBubble = mutableStateOf(false)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
     val isIslandBorderOutlineDynamic = mutableStateOf(false)
@@ -2613,7 +2613,7 @@ class MainViewModel : ViewModel() {
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
-        isIslandMonochrome.value = settingsRepository.isIslandMonochromeEnabled()
+        isIslandNotifThemedBubble.value = settingsRepository.isIslandNotifThemedBubbleEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
         isIslandBorderOutlineDynamic.value = settingsRepository.isIslandBorderOutlineDynamicEnabled()
@@ -6254,9 +6254,9 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandShowGlowEnabled(enabled)
     }
 
-    fun setIslandMonochrome(enabled: Boolean) {
-        isIslandMonochrome.value = enabled
-        settingsRepository.setIslandMonochromeEnabled(enabled)
+    fun setIslandNotifThemedBubble(enabled: Boolean) {
+        isIslandNotifThemedBubble.value = enabled
+        settingsRepository.setIslandNotifThemedBubbleEnabled(enabled)
     }
 
     fun setIslandBorderOutline(enabled: Boolean) {
