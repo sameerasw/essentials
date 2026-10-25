@@ -37,6 +37,7 @@ fun IslandAppOptionsBottomSheet(
     val store = remember { ProviderTrustStore(SettingsRepository(context)) }
     var launcherOnly by remember { mutableStateOf(packageName in store.launcherOnly()) }
     var hideWhenLocked by remember { mutableStateOf(packageName in store.hideWhenLocked()) }
+    var showOnUpdate by remember { mutableStateOf(packageName in store.showOnUpdate()) }
 
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
@@ -72,6 +73,17 @@ fun IslandAppOptionsBottomSheet(
                         HapticUtil.performVirtualKeyHaptic(view)
                         hideWhenLocked = it
                         store.setHideWhenLocked(packageName, it)
+                    },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_sync_24,
+                    title = stringResource(R.string.island_show_on_update_title),
+                    description = stringResource(R.string.island_show_on_update_desc),
+                    isChecked = showOnUpdate,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showOnUpdate = it
+                        store.setShowOnUpdate(packageName, it)
                     },
                 )
             }

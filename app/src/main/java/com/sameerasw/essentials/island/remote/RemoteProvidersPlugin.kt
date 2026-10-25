@@ -5,9 +5,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class RemoteProvidersPlugin : BaseIslandPlugin() {
     override val id = "remote_providers"
@@ -16,10 +21,13 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_PROVIDERS,
         SettingsRepository.KEY_ISLAND_PROVIDERS_HIDDEN,
         SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED,
+        SettingsRepository.KEY_ISLAND_PROVIDERS_ON_UPDATE,
     )
 
     private val connections = HashMap<String, ProviderConnection>()
     private var receiver: BroadcastReceiver? = null
+    private val visibleUntil = HashMap<String, Long>()
+    private val hideJobs = HashMap<String, Job>()
 
     override fun onStart() {
         val receiver = object : BroadcastReceiver() {
@@ -40,6 +48,9 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
         receiver = null
         connections.values.forEach { it.disconnect() }
         connections.clear()
+        hideJobs.values.forEach { it.cancel() }
+        hideJobs.clear()
+        visibleUntil.clear()
     }
 
     override fun refresh() {
@@ -59,6 +70,7 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
                 scope = c.scope,
                 request = c.request,
                 onItemsChanged = ::publishAll,
+                onUpdated = { onProviderUpdated(pkg) },
                 onUnauthorized = { onProviderUnauthorized(pkg) },
             )
             connections[pkg] = connection
@@ -81,9 +93,25 @@ class RemoteProvidersPlugin : BaseIslandPlugin() {
         publishAll()
     }
 
+    private fun onProviderUpdated(packageName: String) {
+        val c = ctx ?: return
+        if (packageName !in ProviderTrustStore(settings).showOnUpdate()) return
+        val duration = settings.getIslandPeekDurationMs()
+        visibleUntil[packageName] = SystemClock.elapsedRealtime() + duration
+        publishAll()
+        connections[packageName]?.items?.value?.firstOrNull()?.let { c.request(PluginRequest.Peek(it.key, duration)) }
+        hideJobs.remove(packageName)?.cancel()
+        hideJobs[packageName] = c.scope.launch {
+            delay(duration)
+            publishAll()
+        }
+    }
+
     private fun publishAll() {
         val trust = ProviderTrustStore(settings)
-        val hidden = trust.hiddenFromIsland() + if (isDeviceLocked()) trust.hideWhenLocked() else emptySet()
+        val now = SystemClock.elapsedRealtime()
+        val waiting = trust.showOnUpdate().filter { (visibleUntil[it] ?: 0L) <= now }
+        val hidden = trust.hiddenFromIsland() + waiting + if (isDeviceLocked()) trust.hideWhenLocked() else emptySet()
         publish(connections.filterKeys { it !in hidden }.values.flatMap { it.items.value })
     }
 }
