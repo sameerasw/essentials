@@ -1774,13 +1774,8 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
-    <string name="instruction_section_silent_title">静音声音模式</string>
-    <string name="instruction_section_silent_desc">您可能已经注意到静音模式也会触发勿扰模式。\n\n这是由于Android实现的方式，即使我们使用相同的API切换到振动模式，由于某些原因，它也会在静音模式下同时打开勿扰模式，目前这是无法避免的。:(</string>
-    <string name="instruction_section_statusbar_title">状态栏图标</string>
-    <string name="instruction_section_statusbar_desc">您可能会注意到，即使重置了状态栏图标，某些图标如设备旋转、有线耳机图标可能仍然可见。这是由于Android中状态栏黑名单的实现方式以及您的OEM可能对它们进行了自定义。\n您可能需要进一步调整。\n\n另外，并非所有图标可见性选项都能正常工作，因为它们取决于OEM的实现和可用性。</string>
     <string name="island_suppress_system_heads_up_title">隐藏系统的通知（横幅通知）</string>
     <string name="island_hide_live_updates_title">动态隐藏实时更新</string>
-    <string name="island_compact_hide_status_bar_title">隐藏紧凑型灵动岛的所有项目</string>
     <string name="island_dynamic_hide_status_bar_title">展开时隐藏所有内容</string>
     <string name="island_hide_icons_title">动态隐藏状态栏图标</string>
     <string name="island_bond_edge_title">置顶并已刘海屏显示</string>
