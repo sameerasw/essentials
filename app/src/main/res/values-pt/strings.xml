@@ -1795,10 +1795,8 @@ adicionar algum app</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
-    <string name="island_notif_compact_heads_up_title">Cabeças compactas</string>
     <string name="island_suppress_system_heads_up_title">Ocultar avisos do sistema</string>
     <string name="island_hide_live_updates_title">Ocultar atualizações ao vivo dinamicamente</string>
-    <string name="island_compact_hide_status_bar_title">Ocultar todos os itens para ilha compacta</string>
     <string name="island_hide_icons_title">Ocultar dinamicamente os ícones da barra de status</string>
     <string name="island_dynamic_hide_status_bar_title">Ocultar tudo quando expandido</string>
     <string name="island_keep_on_landscape_title">manter no modo paisagem</string>
