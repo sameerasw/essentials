@@ -361,7 +361,7 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">altura da zona de gestos</string>
     <string name="feat_circle_to_search_gesture_height_desc">Ajuste a altura da área sensível ao toque na parte inferior.</string>
-    <string name="feat_other_customizations_title">Outras personalizações</string>
+    <string name="feat_other_customizations_title">Outras customizações</string>
     <string name="feat_other_customizations_desc">Ajustes e modificações adicionais do sistema</string>
     <string name="status_bar_icons_disclaimer">Observe que a implementação dessas opções pode depender do OEM e algumas podem não funcionar.</string>
     <!-- Network Type Picker -->
@@ -687,7 +687,7 @@
     <string name="label_app_language">Linguagem</string>
     <string name="label_haptic_feedback">Feedback tátil</string>
     <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Procurar por atualizações </string>
+    <string name="label_auto_check_updates">Busca automática por atualizações</string>
     <string name="desc_auto_check_updates">Procurar por atualização no início do aplicativo</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
@@ -946,7 +946,7 @@
         <item>tempo esgotado</item>
     </string-array>
     <string name="label_keyboard_always_dark">Tema sempre escuro</string>
-    <string name="label_keyboard_pitch_black">Tema preto como breu</string>
+    <string name="label_keyboard_pitch_black">Tema escuro OLED</string>
     <string name="label_keyboard_clipboard_enabled">Histórico da área de transferência</string>
     <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
     <string name="label_keyboard_accented_characters">Accented characters</string>
@@ -1535,7 +1535,7 @@
     <string name="island_timeout_title">duração na tela</string>
     <string name="island_show_glow_title">Mostrar o brilho do destaque</string>
     <string name="icon_network_speed">velocidade de rede</string>
-    <string name="feat_aod_wallpaper_title">papel de parede no AOD</string>
+    <string name="feat_aod_wallpaper_title">Papel de parede no AOD</string>
     <string name="feat_aod_wallpaper_desc">Usando uma sobreposição</string>
     <string name="setting_location_reached_full_screen_alarm_title">alarme em tela cheia</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Reproduza o toque do alarme e mostre um alerta em tela cheia ao chegar.</string>
@@ -1805,4 +1805,5 @@ adicionar algum app</string>
     <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_material_you_title">use cores do material you</string>
+    <string name="haptic_mode_stronger">Forçado</string>
 </resources>
