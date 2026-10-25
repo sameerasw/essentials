@@ -1899,17 +1899,17 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
-    <string name="island_suppress_system_heads_up_title">Ocultar notificaciones emergentes del sistema</string>
+    <string name="island_suppress_system_heads_up_title">Esconder banner de notificaciones</string>
     <string name="island_dynamic_hide_status_bar_title">Automáticamente oculta los íconos de la barra de estado</string>
-    <string name="island_hide_live_updates_title">Ocultar las notificaciones actuales dinámicamente. </string>
+    <string name="island_hide_live_updates_title">Remover live updates</string>
     <string name="island_hide_icons_title">Ocultar iconos seleccionador de la barra de estado con Isla Compacta  </string>
-    <string name="island_hide_status_bar_title">Ocultar barra de estado</string>
+    <string name="island_hide_status_bar_title">Esconder barra de estado</string>
     <string name="feat_aod_wallpaper_extended_app_icon">Replasar la nota con el icono de app</string>
     <string name="watch_esim_install_title">Instalar eSIM</string>
     <string name="watch_esim_install_desc">En regiones insoportadas</string>
     <string name="island_bond_edge_title">Union con la Isla si esta inactuva</string>
     <string name="island_navigation_peek_after_expand_desc">Si esta desactivado, la Isla vuelve a ser compacta</string>
-    <string name="island_navigation_on_new_title">Nueva institución</string>
+    <string name="island_navigation_on_new_title">Nueva instrucción</string>
     <string name="feat_screenshots_title">Limpieza de capturas de pantalla</string>
     <string name="feat_screenshots_desc">Limpiar capturas de pantallas compartidas y viejas</string>
     <string name="feat_split_screen_gesture_title">Gesto de dividir pantalla</string>
@@ -1919,4 +1919,10 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="feat_back_gesture_right_title">Ancho del lado derecho</string>
     <string name="back_gesture_add_app">Añadir aplicacion</string>
     <string name="back_gesture_add_app_desc">Usa diferentes anchos del lado si una app esta abierta</string>
+    <string name="island_media_peek_song_change_title">Cambio de canción en vista previa</string>
+    <string name="island_media_keep_when_paused_title">Mantener en espera cuando se pausa</string>
+    <string name="island_media_show_previous_title">Botón de canción anterior</string>
+    <string name="island_media_show_like_title">Botón de \"me gusta\"</string>
+    <string name="island_hide_in_fullscreen_title">Ocultar en pantalla completa</string>
+    <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
 </resources>
