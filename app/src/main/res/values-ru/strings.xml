@@ -1902,16 +1902,9 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
-    <string name="instruction_section_silent_title">Режим \"Без звука\"</string>
-    <string name="instruction_section_silent_desc">Возможно, вы заметили, что режим \"Без звука\" также запускает режим «Не беспокоить». \n\nЭто связано с тем, как это реализовано в Android: даже если мы используем тот же API для переключения в режим вибрации, он по какой-то причине включает «Не беспокоить» вместе с режимом \"Без звука\", и в данный момент этого невозможно избежать. :(</string>
-    <string name="instruction_section_statusbar_title">Значки в строке состояния</string>
-    <string name="instruction_section_statusbar_desc">Вы можете заметить, что даже после сброса значков строки состояния некоторые значки, такие как вращение устройства и значки проводных наушников, могут оставаться видимыми. Это связано с тем, как черный список statubar реализован в Android и с тем, как ваш OEM-производитель мог настроить их. \nВам могут потребоваться дополнительные настройки. \n\nКроме того, не все параметры видимости значков могут работать, поскольку они зависят от реализаций и доступности OEM.</string>
-    <string name="island_notif_compact_heads_up_title">Компактные напоминания</string>
-    <string name="island_notif_compact_heads_up_desc">Показывает новые уведомления в строку</string>
     <string name="island_dynamic_hide_status_bar_title">Скрыть всё при раскрытом виде</string>
     <string name="island_suppress_system_heads_up_title">Скрыть системные напоминания </string>
     <string name="island_hide_live_updates_title">Скрыыать live updates Динамично</string>
-    <string name="island_compact_hide_status_bar_title">Скрыть все предметы для компактного острова</string>
     <string name="island_hide_icons_title">Динамическое скрытие иконок статус-бара</string>
     <string name="feat_app_volume_title">Громкость приложений</string>
     <string name="feat_app_volume_desc">Устанавливайте громкость отдельно для каждого приложения</string>
