@@ -156,6 +156,15 @@ fun IslandTimeOptionsBottomSheet(
                     )
                 }
             }
+            RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK,
+                    iconRes = R.drawable.rounded_alarm_24,
+                    title = stringResource(R.string.island_time_tap_opens_clock_title),
+                    description = stringResource(R.string.island_time_tap_opens_clock_desc),
+                    defaultValue = true,
+                )
+            }
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY)
             if (rememberIslandShowsWhileLocked()) {
                 RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
