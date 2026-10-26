@@ -1894,7 +1894,7 @@
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Island chips</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
-    <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
+    <string name="feat_aod_wallpaper_compat_title">Режим Совместимости</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
@@ -1956,4 +1956,9 @@
     <string name="notification_lighting_ripple_sparkle_size_title">Размер частиц</string>
     <string name="notification_lighting_ripple_sparkle_count_title">Коливество частиц</string>
     <string name="notification_lighting_ripple_wave_size_title">Размер волны</string>
+    <string name="about_desc_aod_wallpaper">Показывает ваши обои за часами на AOD с помощью наложения, с регулируемой прозрачностью, размытием, виньетированием и порогом черного цвета. Вы также можете выбрать собственное изображение или отобразить обложку альбома воспроизводимой музыки.
+
+Это работает только со статичными обоями. Живые обои и видеообои не поддерживаются.
+
+Для отображения наложения требуется доступ к специальным функциям, а для чтения текущих обоев — доступ к хранилищу. Доступ к уведомлениям необходим только в том случае, если вы включите отображение обложек альбомов</string>
 </resources>
