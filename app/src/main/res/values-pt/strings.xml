@@ -1216,10 +1216,10 @@
     <string name="search_sound_mode_show_slider_desc">Mostrar controle deslizante de volume no bloco</string>
     <string name="search_sound_mode_behavior_title">Comportamento do Ciclo</string>
     <string name="search_sound_mode_behavior_desc">Escolha os modos para percorrer</string>
-    <string name="feat_sound_haptics_title">Som e sensação tátil</string>
+    <string name="feat_sound_haptics_title">Som e retorno tátil</string>
     <string name="feat_sound_haptics_desc">Volume e recursos táteis</string>
     <string name="feat_security_privacy_title">Segurança e privacidade</string>
-    <string name="feat_security_privacy_desc">Proteja e proteja seu dispositivo</string>
+    <string name="feat_security_privacy_desc">Proteja e aumente a segurança do seu dispositivo</string>
     <string name="feat_notifications_alerts_title">Notificações e Alertas</string>
     <string name="feat_notifications_alerts_desc">Nunca perca suas prioridades</string>
     <string name="feat_input_actions_title">Entrada e ações</string>
@@ -1465,7 +1465,7 @@
     <string name="feat_pixel_searchbar_title">Barra de pesquisa do Pixel</string>
     <string name="feat_pixel_searchbar_desc">Defina o Essentials como o provedor de pesquisa padrão para a barra de pesquisa da tela inicial no Pixel Launcher.</string>
     <string name="feat_power_battery_title">Energia e bateria</string>
-    <string name="feat_power_battery_desc">Configure as políticas de economia de energia</string>
+    <string name="feat_power_battery_desc">Configurar as políticas de economia de energia</string>
     <string name="feat_flashlight_title">Lanterna</string>
     <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
     <string name="feat_notification_snoozing_title">Adiar notificações</string>
