@@ -665,7 +665,7 @@
     <string name="action_report_bug">Reportar um bug</string>
     <!-- Sentry Crash Reporting -->
     <string name="sentry_report_mode_title">Relatório de falhas</string>
-    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_off">Desabilitado</string>
     <string name="sentry_mode_auto">Automático</string>
     <string name="sentry_crash_toast">O Essentials crashou, o relatório foi enviado</string>
     <string name="simulate_crash">Simulate crash</string>
@@ -1760,7 +1760,7 @@ adicionar algum app</string>
     <string name="app_volume_overlay_title">sobreposição da UI do controle</string>
     <string name="volume_steps_enable_title">adicionar etapas de volume</string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">Agite para ajuda</string>
     <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
@@ -1806,4 +1806,39 @@ adicionar algum app</string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_material_you_title">use cores do material you</string>
     <string name="haptic_mode_stronger">Forçado</string>
+    <string name="label_disable_vibration">Desativar vibração</string>
+    <string name="desc_disable_vibration">Desative o feedback tátil e as vibrações em todos os aplicativos.</string>
+    <string name="label_soundtrigger_mode">Modo de acionamento por som</string>
+    <string name="desc_soundtrigger_mode">Restringir a detecção de palavras-chave do assistente (por exemplo, “Ok Google”).</string>
+    <string name="label_location_mode">GPS / Modo de Localização</string>
+    <string name="desc_location_mode">Restringir solicitações de localização enquanto o modo de economia de bateria estiver ativado.</string>
+    <string name="label_apply_after_reboot">Aplicar após a reinicialização</string>
+    <string name="label_defer_keyvalue_backup">Adiar o backup de chave-valor</string>
+    <string name="desc_defer_keyvalue_backup">Adiar os backups de pares-chave.</string>
+    <string name="label_defer_full_backup">Adiar o backup completo</string>
+    <string name="desc_defer_full_backup">Adie os backups completos do sistema até que o modo de economia de bateria seja desativado.</string>
+    <string name="desc_enable_datasaver">Ative o Economizador de Dados para restringir o uso de dados em segundo plano.</string>
+    <string name="desc_disable_optional_sensors">Desative sensores opcionais que consomem muita energia, como o de proximidade, o giroscópio etc.</string>
+    <string name="label_disable_optional_sensors">Desativar sensores opcionais</string>
+    <string name="label_enable_quick_doze">Ativar o Quick Doze</string>
+    <string name="desc_enable_quick_doze">Ative o modo de suspensão Doze mais rapidamente quando a tela desligar.</string>
+    <string name="label_disable_launch_boost">Desativar o impulso de inicialização</string>
+    <string name="desc_disable_launch_boost">Reduza o aumento da frequência da CPU durante a inicialização do aplicativo para economizar energia.</string>
+    <string name="label_low_power_trigger_level">Nível de acionamento personalizado</string>
+    <string name="desc_low_power_trigger_level">para economia de energia</string>
+    <string name="label_enable_night_mode">Forçar o Modo Escuro/Noturno</string>
+    <string name="desc_enable_night_mode">Forçar o tema escuro quando o modo de economia de bateria estiver ativado.</string>
+    <string name="label_disable_aod">Desativar a tela sempre ligada</string>
+    <string name="desc_disable_aod">Desative a tela ambiente / tela sempre ligada.</string>
+    <string name="label_disable_animation">Desativar animações</string>
+    <string name="desc_disable_animation">Desative as animações das janelas e do sistema.</string>
+    <string name="desc_enable_brightness_adjustment">Permitir reduzir o limite de brilho da tela quando o protetor de tela estiver ativo.</string>
+    <string name="label_enable_brightness_adjustment">Ativar redução de brilho</string>
+    <string name="label_force_background_check">Exigir verificação de segundo-plano</string>
+    <string name="desc_force_background_check">Aplicar restrições rigorosas aos serviços em segundo plano.</string>
+    <string name="label_force_all_apps_standby">Forçar modo de espera</string>
+    <string name="desc_force_all_apps_standby">Coloque todos os aplicativos no grupo “App Standby” quando estiverem ativos.</string>
+    <string name="label_enable_firewall">Ativar o firewall</string>
+    <string name="desc_enable_firewall">Ative o firewall de rede para restringir o tráfego de rede em segundo plano.</string>
+    <string name="desc_advertise_is_enabled">Notificar os aplicativos de que o modo de economia de bateria está ativado.</string>
 </resources>
