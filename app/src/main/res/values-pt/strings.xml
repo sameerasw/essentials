@@ -14,7 +14,7 @@
     <string name="screen_off_widget_label">Tela vazia fora do widget</string>
     <string name="app_freezing_tile_label">Congelamento de aplicativos</string>
     <string name="flashlight_pulse_tile_label">Pulso de lanterna</string>
-    <string name="check_pre_releases_label">Confira os pré-lançamentos</string>
+    <string name="check_pre_releases_label">Conferir pré-lançamentos</string>
     <string name="check_pre_releases_desc">Pode ser instável</string>
     <string name="label_default_tab">Aba Padrão </string>
     <!-- App Lock -->
@@ -28,8 +28,8 @@
     <string name="app_lock_description">Proteja seus aplicativos com autenticação biométrica. Os aplicativos bloqueados exigirão autenticação ao serem iniciados. Permanecem desbloqueados até que a tela seja desligada.</string>
     <string name="app_lock_warning">Esteja ciente de que esta não é uma solução robusta, pois é apenas um aplicativo de terceiros. Se você precisar de segurança forte, considere usar o Private Space ou outros recursos semelhantes.</string>
     <string name="app_lock_biometric_note">Outra observação: o prompt de autenticação biométrica só permite usar métodos de classe seguros FORTES. Os métodos de segurança de desbloqueio facial na classe FRACA em dispositivos como o Pixel 7 só poderão utilizar os outros métodos de autenticação STRONG disponíveis, como impressão digital ou PIN.</string>
-    <string name="setting_use_usage_access_title">Acesso ao uso</string>
-    <string name="setting_use_usage_access_desc">Em vez de acessibilidade (Congelar, Bloqueio de Aplicativos, Luz Noturna Dinâmica)</string>
+    <string name="setting_use_usage_access_title">Utilizar acesso ao uso dos apps</string>
+    <string name="setting_use_usage_access_desc">Em vez de acessibilidade (Congelar, Bloqueio de Aplicativo, Luz Noturna Dinâmica)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Ativar remapeamento de botão</string>
     <string name="button_remap_use_shizuku_title">usar Shizuku ou Root</string>
@@ -612,10 +612,10 @@
     <string name="perm_battery_optimization_title">Otimização da bateria</string>
     <string name="perm_battery_optimization_desc">Certifique-se de que o serviço não seja eliminado pelo sistema para economizar energia.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Fundamentos</string>
+    <string name="tab_essentials">Essenciais</string>
     <string name="tab_freeze">Congelar</string>
-    <string name="tab_freeze_title">Congelado</string>
-    <string name="tab_diy">faça você mesmo</string>
+    <string name="tab_freeze_title">Freezer</string>
+    <string name="tab_diy">DIY</string>
     <string name="tab_apps">Aplicativos</string>
     <string name="tab_freeze_subtitle">Aplicativos desativados</string>
     <string name="tab_diy_subtitle">Faça você mesmo</string>
@@ -665,7 +665,7 @@
     <string name="action_report_bug">Reportar um bug</string>
     <!-- Sentry Crash Reporting -->
     <string name="sentry_report_mode_title">Relatório de falhas</string>
-    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_off">Desligado</string>
     <string name="sentry_mode_auto">Automático</string>
     <string name="sentry_crash_toast">O Essentials crashou, o relatório foi enviado</string>
     <string name="simulate_crash">Simulate crash</string>
@@ -684,11 +684,11 @@
     <string name="preferences_title">Preferences</string>
     <string name="preferences_desc">Configure algumas coisas básicas para começar.</string>
     <string name="label_app_settings">Configurações do aplicativo</string>
-    <string name="label_app_language">Linguagem</string>
-    <string name="label_haptic_feedback">Feedback tátil</string>
+    <string name="label_app_language">Idioma</string>
+    <string name="label_haptic_feedback">Retorno tátil</string>
     <string name="label_updates">Updates</string>
     <string name="label_auto_check_updates">Busca automática por atualizações</string>
-    <string name="desc_auto_check_updates">Procurar por atualização no início do aplicativo</string>
+    <string name="desc_auto_check_updates">Procurar por atualizações ao iniciar o aplicativo</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Reiniciar UI do Sistema</string>
-    <string name="desc_restart_systemui">Para e Reinicia a  UI do Sistema para aplicar alterações imediatamente</string>
+    <string name="action_restart_systemui">Reiniciar SystemUI</string>
+    <string name="desc_restart_systemui">Encerra e reinicia o processo do SystemUI para aplicar imediatamente algumas alterações</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Feito</string>
@@ -1512,7 +1512,7 @@
     <string name="island_max_width_title">Largura máxima </string>
     <string name="island_expanded_width_title">Largura expandido </string>
     <string name="island_cutout_gap_title">Distância da câmera </string>
-    <string name="setting_show_legacy_features_title">mostrar funções legacy (nota: legacy no português é legado)</string>
+    <string name="setting_show_legacy_features_title">Mostrar funções antigas</string>
     <string name="setting_show_legacy_features_desc">Essas funcionalidades não vão receber atualizações futuras devido a limitações técnicas ou por não serem consideradas essenciais.</string>
     <string name="setting_app_icon_title">ícone do aplicativo (nota deixa ele mais estiloso)</string>
     <string name="setting_app_icon_desc">Personalize o ícone do launcher da tela inicial</string>
@@ -1539,7 +1539,7 @@
     <string name="feat_aod_wallpaper_desc">Usando uma sobreposição</string>
     <string name="setting_location_reached_full_screen_alarm_title">alarme em tela cheia</string>
     <string name="setting_location_reached_full_screen_alarm_desc">Reproduza o toque do alarme e mostre um alerta em tela cheia ao chegar.</string>
-    <string name="label_motion_blur">desfoque de movimento </string>
+    <string name="label_motion_blur">Efeito de desfoque</string>
     <string name="label_motion_blur_amount">força</string>
     <string name="label_online_help_media">Mídia de ajuda online</string>
     <string name="duo_action_long_press_title">toque longo</string>
@@ -1648,7 +1648,7 @@
     <string name="app_colors_auto">Automático</string>
     <string name="island_call_show_peek">Espiar</string>
     <string name="island_call_show_expanded">Expandido</string>
-    <string name="setting_hidden_debugging_title">esconder Suporte para depuração</string>
+    <string name="setting_hidden_debugging_title">Ocultar opções de debug</string>
     <string name="freeze_tag_color_coded_title">Etiquetas com código de cores</string>
     <string name="freeze_tag_color_coded_desc">Exibir cores de etiquetas na grade do aplicativo</string>
     <string name="feat_hilight_title">Destaque</string>
@@ -1760,7 +1760,7 @@ adicionar algum app</string>
     <string name="app_volume_overlay_title">sobreposição da UI do controle</string>
     <string name="volume_steps_enable_title">adicionar etapas de volume</string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
-    <string name="label_shake_for_help">Shake for help</string>
+    <string name="label_shake_for_help">Agitar para acessar ajuda</string>
     <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
@@ -1805,5 +1805,5 @@ adicionar algum app</string>
     <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_material_you_title">use cores do material you</string>
-    <string name="haptic_mode_stronger">Forçado</string>
+    <string name="haptic_mode_stronger">Mais forte</string>
 </resources>
