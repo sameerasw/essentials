@@ -719,7 +719,13 @@
     <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Подсветка уведомлений добавляет красивый эффект боковой подсветки при получении уведомлений.\n\nВы можете настроить стиль, цвета и поведение анимации. Он работает, даже когда экран выключен (зависит от OEM) или находится поверх текущего приложения. Выберите приложения, приоритет уведомлений или поведение, при котором оно должно запускаться, с помощью заданных элементов управления. Если ваш OEM-производитель не поддерживает наложения выше AOD, подайте в суд на опцию Ambient display, указанную ниже.</string>
     <string name="about_desc_screen_off_widget">Легко выключите экран, коснувшись прозрачного виджета с изменяемым размером, который не добавляет значков или беспорядка на главный экран.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
+    <string name="about_desc_statusbar_icons">Получите полный контроль над строкой состояния.
+
+Скрывайте отдельные значки — например, Wi-Fi, Bluetooth или мобильной сети; убирайте все системные значки или значки уведомлений сразу; либо настройте скрытие системных значков только на время блокировки устройства. Функция «умного» отображения позволяет автоматически скрывать значок мобильной сети при подключении к Wi-Fi или в определенных режимах работы.
+
+Также можно добавить отображение секунд на часах, изменить их положение или вовсе скрыть часы, вывести процент заряда аккумулятора, убрать индикаторы использования камеры и микрофона или полностью скрыть строку состояния. Для использования некоторых расширенных функций потребуются Shizuku или root-права.
+
+Поскольку это стандартные элементы управления AOSP, операционная система вашего устройства может поддерживать их не в полном объеме.</string>
     <string name="about_desc_caffeinate">Режим \"Кофеина\" предотвращает автоматическое выключение экрана.
 
 Не допускайте отключения экрана в течение определенного времени или на неопределенный срок. Полезно при чтении длинных статей или ссылок на рецепты.</string>
@@ -1313,7 +1319,13 @@
     <string name="label_animator_duration_scale">Шкала продолжительности анимации</string>
     <string name="label_transition_animation_scale">Размер анимации перехода</string>
     <string name="label_window_animation_scale">Размер анимации окна</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">Настройте внешний вид и поведение всей системы.
+
+Изменяйте размер и насыщенность шрифтов, масштаб отображения (минимальную ширину), а также скорость анимации окон, переходов и других графических эффектов. Также можно настроить время до отключения экрана и функцию автоповорота.
+
+Переключайтесь между стандартным режимом и режимом «В перчатках» одним касанием. В режиме «В перчатках» меняется масштаб интерфейса и повышается чувствительность сенсора, благодаря чему экран лучше реагирует на прикосновения, если вы в перчатках или используете защитную пленку/стекло. Для быстрого переключения доступна соответствующая кнопка в меню быстрых настроек.
+
+Для применения некоторых параметров может потребоваться предоставление расширенных прав или перезагрузка устройства. Необходимы права Shizuku или root-права.</string>
     <string name="about_desc_screen_refresh_rate">Установите пользовательскую частоту обновления экрана с помощью Shizuku. Фиксированный режим фиксирует как минимальную, так и максимальную частоту обновления на одном значении, а режим диапазона позволяет задать отдельные минимальные и максимальные значения. Сброс удаляет пользовательские настройки и возвращает устройство к системному управлению частотой обновления</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1867,10 +1879,20 @@
     <string name="island_max_items_title">Максимальное количество отображаемых предметов</string>
     <string name="duo_action_horizontal_slide_brightness">Яркость</string>
     <string name="island_keep_on_landscape_title">Показывать в горизонтальном режиме</string>
-    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
+    <string name="about_desc_duo">Это не для раскладушек
+
+Индикатор состояния в стиле «iPhone Duo» отображает уровень заряда аккумулятора, состояние сети, параметры воспроизведения медиафайлов и многое другое. Он выполнен в виде компактного минималистичного интерфейса, который располагается вокруг камеры; предусмотрены различные элементы для отображения информации и жесты для взаимодействия.
+
+Для складных устройств: если функция «Автоопределение камеры» работает нестабильно, отключите её и вручную настройте положение индикатора Duo относительно внутренней и внешней камер — приложение запомнит выбранную вами конфигурацию.</string>
     <string name="label_shake_for_help">Shake for help</string>
     <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
-    <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
+    <string name="about_desc_pocket_mode">Предотвращает случайные нажатия, когда телефон находится в кармане или сумке.
+
+Если датчик приближения перекрыт, «Карманный режим» активирует экран блокировки, благодаря чему случайные касания не вызывают никаких действий. Чтобы убрать этот экран, нажмите любую кнопку регулировки громкости. Для повышения точности можно задействовать датчик освещенности вместе с датчиком приближения, настроить задержку срабатывания, а также выбрать активацию режима только при заблокированном устройстве.
+
+Можно исключить приложения, в которых этот режим не должен срабатывать. По умолчанию он не работает во время игр или потокового воспроизведения контента.
+
+Требуется разрешение на использование специальных возможностей (Accessibility). На некоторых устройствах, где отсутствуют определенные датчики, включение этой функции может помешать переходу устройства в режим глубокого сна, что приведет к повышенному расходу заряда аккумулятора.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
@@ -1961,4 +1983,21 @@
 Это работает только со статичными обоями. Живые обои и видеообои не поддерживаются.
 
 Для отображения наложения требуется доступ к специальным функциям, а для чтения текущих обоев — доступ к хранилищу. Доступ к уведомлениям необходим только в том случае, если вы включите отображение обложек альбомов</string>
+    <string name="about_desc_volume_steps">Задает количество шагов, на которое изменяется громкость мультимедиа при каждом нажатии клавиши регулировки громкости. Удержание клавиши позволяет изменять громкость шаг за шагом, пока вы ее не отпустите. При звонках, входящих в систему, будильниках и приложениях камеры сохраняется обычное поведение регулировки громкости.
+
+Если в настройках переназначения кнопок предусмотрено длительное нажатие клавиши регулировки громкости, то вместо изменения громкости будет выполняться только удержание этой клавиши, а короткое нажатие по-прежнему будет изменять громкость на заданный шаг. Пока отображается панель регулировки громкости, переназначение кнопок по умолчанию приостанавливается, поэтому последующее удержание клавиши изменяет громкость. Отключите параметр «Отключено, пока открыто диалоговое окно регулировки громкости» в настройках переназначения кнопок, если хотите, чтобы действие всегда имело приоритет.</string>
+    <string name="about_desc_status_glance">Функция «Динамичный Статус» отображает приоритетный индикатор состояния рядом с отверстием для фронтальной камеры. Он динамически отображает активную вспышку, предстоящие события календаря, воспроизводимый в данный момент контент и текущее время.</string>
+    <string name="about_desc_other_customizations">Дополнительные настройки дисплея и системного интерфейса — всё в одном месте.
+
+Можно скрыть полоску жестов (с возможностью оставить её видимой на рабочем столе), изменить жест для функции «Обвести и найти» (Circle to Search), сделать панель навигации прозрачной, отключить кнопку предложения поворота экрана, разрешить наложение элементов поверх системных настроек, а также включить использование графического процессора (GPU) для отрисовки экрана (эта настройка сбрасывается после перезагрузки).
+
+Для работы некоторых функций требуется Shizuku или предоставление специальных разрешений (доступ к возможностям системы); результат может отличаться в зависимости от устройства и версии операционной системы.</string>
+    <string name="about_desc_widget_stack">Разместите несколько виджетов из разных приложений в одном месте на главном экране.
+
+Виджеты в такой стопке сменяют друг друга автоматически по таймеру; также можно переключаться между ними вручную с помощью стрелок в нижней части. Виджеты, отображающие прокручиваемый список (например, список дел из календаря), в стопку добавить нельзя.</string>
+    <string name="about_desc_pixel_searchbar">Замените стандартную строку поиска Pixel Launcher на главном экране. Вы можете настроить её содержимое: оставить поле пустым или отображать текущую дату.
+
+Обратите внимание: это может привести к некорректной работе виджетов Pixel Launcher из раздела «На виду» (At a Glance) — например, виджетов со спортивной или финансовой информацией.
+
+Кроме того, для применения настроек может потребоваться выполнить их сохранение несколько раз.</string>
 </resources>
