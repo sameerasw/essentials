@@ -331,7 +331,7 @@ private fun IslandRootContent(
         surfacePulse.animateTo(1f, motionTween(250, easing = LinearEasing))
         surfacePulse.animateTo(0f, motionTween(SURFACE_PULSE_DURATION_MS - 250, easing = LinearEasing))
     }
-    val shakeMode = state.items.values.firstNotNullOfOrNull { it.shake }
+    val shakeMode = state.items.values.firstNotNullOfOrNull { it.shake }?.takeIf { stage != IslandStage.Expanded }
     val shake = remember { Animatable(0f) }
     LaunchedEffect(shakeMode) {
         if (shakeMode == null || inspection) {
