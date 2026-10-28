@@ -33,6 +33,7 @@ import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
+import com.sameerasw.essentials.island.model.OutlineEffect
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.soften
@@ -92,6 +93,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         peekReason = null
         render()
     }
+    private var effect: OutlineEffect? = null
+    private val endEffect = Runnable {
+        effect = null
+        render()
+    }
 
     private enum class PeekReason { Charging, Saver, Low, Critical }
     private val clockTick = object : Runnable {
@@ -110,6 +116,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     val previousSeverity = severity()
                     readBattery(intent)
                     if ((charging || shielded) && !wasPlugged && level >= 0) {
+                        if (settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CHARGING_ANIM, true)) {
+                            playEffect(OutlineEffect(chargingOutlineColor(settings), OutlineEffect.Style.Trace, shadow = true))
+                        }
                         render()
                         peek(PeekReason.Charging)
                         return
@@ -117,6 +126,9 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                     val plugged = charging || shielded
                     val severity = severity()
                     if (!plugged && level >= 0 && severity > previousSeverity) {
+                        if (severity == 2 && settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_CRITICAL_ANIM, true)) {
+                            playEffect(OutlineEffect(criticalOutlineColor(settings), OutlineEffect.Style.Pulse, shadow = true))
+                        }
                         render()
                         peek(if (severity == 2) PeekReason.Critical else PeekReason.Low)
                         return
@@ -165,6 +177,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
 
     override fun onStop() {
         ctx?.mainHandler?.removeCallbacks(endPeek)
+        ctx?.mainHandler?.removeCallbacks(endEffect)
+        effect = null
         ctx?.mainHandler?.removeCallbacks(clockTick)
         if (registered) {
             try {
@@ -220,6 +234,14 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         level <= settings.getDuoBatteryCriticalLevel() -> 2
         level <= settings.getDuoBatteryLowLevel() -> 1
         else -> 0
+    }
+
+    private fun playEffect(next: OutlineEffect) {
+        val handler = ctx?.mainHandler ?: return
+        effect = next
+        handler.removeCallbacks(endEffect)
+        val shadowMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toLong()
+        handler.postDelayed(endEffect, maxOf(EFFECT_MIN_MS + shadowMs, settings.getIslandPeekDurationMs()))
     }
 
     private fun peek(reason: PeekReason) {
@@ -302,6 +324,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             priorityGroup = "battery",
             placement = CompactPlacement.Pinned,
             outlineAccent = displayColor,
+            outlineEffect = effect,
             companionOnly = settings.isIslandBatteryIconConditional() && stateColor == null && System.currentTimeMillis() >= peekUntil,
             compact = listOf(
                 CompactCell("battery") {
@@ -356,19 +379,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     }
 
     private fun stateColor(): Color? {
-        fun parse(hex: String, fallback: Int) = try {
-            AndroidColor.parseColor(hex)
-        } catch (_: Exception) {
-            fallback
-        }
-        val charge = settings.getDuoBatteryChargingColor()
         val raw = when {
-            charging && settings.isDuoBatteryChargingColorEnabled() ->
-                if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
+            charging && settings.isDuoBatteryChargingColorEnabled() -> chargingRaw(settings)
             powerSave && settings.isDuoBatteryPowerSaveColorEnabled() ->
                 parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 152, 0))
-            level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
-                parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
+            level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() -> criticalRaw(settings)
             level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
                 parse(settings.getDuoBatteryLowColor(), AndroidColor.rgb(255, 235, 59))
             else -> return null
@@ -378,6 +393,25 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
 
     private companion object {
         const val BATTERY_KEY = "battery"
-        val AUTO_CHARGING = AndroidColor.rgb(0, 230, 118)
+        const val EFFECT_MIN_MS = 3400L
     }
 }
+
+private val AUTO_CHARGING = AndroidColor.rgb(0, 230, 118)
+
+private fun parse(hex: String, fallback: Int) = try {
+    AndroidColor.parseColor(hex)
+} catch (_: Exception) {
+    fallback
+}
+
+private fun chargingRaw(settings: SettingsRepository): Int {
+    val charge = settings.getDuoBatteryChargingColor()
+    return if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
+}
+
+private fun criticalRaw(settings: SettingsRepository) = parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
+
+private fun chargingOutlineColor(settings: SettingsRepository) = Color(soften(chargingRaw(settings)))
+
+private fun criticalOutlineColor(settings: SettingsRepository) = Color(soften(criticalRaw(settings)))
