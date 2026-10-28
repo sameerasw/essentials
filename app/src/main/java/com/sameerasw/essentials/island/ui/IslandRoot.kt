@@ -124,7 +124,6 @@ import com.sameerasw.essentials.island.plugins.media.MediaSurface
 import com.sameerasw.essentials.island.ui.components.islandAccent
 import com.sameerasw.essentials.island.model.IslandShake
 import com.sameerasw.essentials.island.model.OutlineEffect
-import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.StackIcon
@@ -358,8 +357,7 @@ private fun IslandRootContent(
     val sweep = remember { Animatable(0f) }
     val sweepAlpha = remember { Animatable(0f) }
     var lastSweepColor by remember { mutableStateOf(Color.Transparent) }
-    val effectIconColor = LocalIslandIconColor.current ?: Color.White
-    if (outlineEffect != null) lastSweepColor = outlineEffect.color.takeOrElse { effectIconColor }
+    if (outlineEffect != null) lastSweepColor = outlineEffect.color
     val effectShadow = remember { Animatable(0f) }
     LaunchedEffect(outlineEffect) {
         if (inspection) {

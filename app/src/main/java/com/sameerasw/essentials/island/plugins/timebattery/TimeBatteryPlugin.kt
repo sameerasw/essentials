@@ -240,8 +240,13 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val handler = ctx?.mainHandler ?: return
         effect = next
         handler.removeCallbacks(endEffect)
-        val shadowMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toLong()
-        handler.postDelayed(endEffect, maxOf(EFFECT_MIN_MS + shadowMs, settings.getIslandPeekDurationMs()))
+        val peeks = settings.isIslandShowBatteryEnabled() && settings.isIslandBatteryPeekAlertsEnabled()
+        val duration = if (peeks) {
+            settings.getIslandPeekDurationMs()
+        } else {
+            EFFECT_MIN_MS + settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toLong()
+        }
+        handler.postDelayed(endEffect, duration)
     }
 
     private fun peek(reason: PeekReason) {

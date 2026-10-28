@@ -704,7 +704,6 @@ class SettingsRepository(
         const val KEY_ISLAND_CALL_STICKY = "island_call_sticky"
         const val KEY_ISLAND_CALL_RING_SHAKE = "island_call_ring_shake"
         const val KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE = "island_sound_mode_vibrate_shake"
-        const val KEY_ISLAND_PROGRESS_COMPLETE_ANIM = "island_progress_complete_anim"
         const val KEY_ISLAND_BATTERY_CHARGING_ANIM = "island_battery_charging_anim"
         const val KEY_ISLAND_BATTERY_CRITICAL_ANIM = "island_battery_critical_anim"
         const val ISLAND_CALL_SHOW_EXPANDED = "expanded"
