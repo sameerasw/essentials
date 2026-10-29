@@ -19,6 +19,7 @@ import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
+import com.sameerasw.essentials.island.model.IslandShake
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
@@ -178,6 +179,10 @@ class SoundModePlugin : BaseIslandPlugin() {
                 key = ITEM_KEY,
                 priority = IslandPriority.SOUND_MODE,
                 placement = CompactPlacement.Dynamic,
+                shake = IslandShake.Once.takeIf {
+                    announcing && !zenActive && mode == AudioManager.RINGER_MODE_VIBRATE &&
+                    settings.getBoolean(SettingsRepository.KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE, true)
+                },
                 compact = listOf(
                     CompactCell("sound_mode.icon") { IslandIcon(icon, size = 18.dp, tint = islandAccent()) },
                 ),

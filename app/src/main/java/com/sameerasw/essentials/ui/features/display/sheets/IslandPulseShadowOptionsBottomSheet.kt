@@ -18,7 +18,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import java.util.Locale
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,29 +45,16 @@ fun IslandPulseShadowOptionsBottomSheet(
 
             RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
                 ConfigSliderItem(
-                    title = stringResource(R.string.island_pulse_shadow_size_title),
-                    value = viewModel.islandPulseShadowSize.floatValue,
+                    title = stringResource(R.string.island_pulse_shadow_blur_title),
+                    value = viewModel.islandPulseShadowBlur.floatValue,
                     onValueChange = {
                         HapticUtil.performUIHaptic(view)
-                        viewModel.setIslandPulseShadowSize(it)
+                        viewModel.setIslandPulseShadowBlur(it)
                     },
-                    valueRange = 0.2f..1f,
-                    increment = 0.05f,
-                    iconRes = R.drawable.rounded_magnify_fullscreen_24,
-                    valueFormatter = { "${(it * 100).toInt()}%" },
-                )
-
-                ConfigSliderItem(
-                    title = stringResource(R.string.island_pulse_shadow_y_shift_title),
-                    value = viewModel.islandPulseShadowYShift.floatValue,
-                    onValueChange = {
-                        HapticUtil.performUIHaptic(view)
-                        viewModel.setIslandPulseShadowYShift(it)
-                    },
-                    valueRange = 0f..1f,
-                    increment = 0.05f,
-                    iconRes = R.drawable.rounded_screenshot_region_24,
-                    valueFormatter = { "${(it * 100).toInt()}%" },
+                    valueRange = 0f..48f,
+                    increment = 1f,
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    valueFormatter = { "${it.toInt()} dp" },
                 )
 
                 ConfigSliderItem(
@@ -77,10 +64,36 @@ fun IslandPulseShadowOptionsBottomSheet(
                         HapticUtil.performUIHaptic(view)
                         viewModel.setIslandPulseShadowSpread(it)
                     },
-                    valueRange = 1f..4f,
-                    increment = 0.1f,
-                    iconRes = R.drawable.rounded_blur_on_24,
-                    valueFormatter = { String.format(Locale.US, "%.1fx", it) },
+                    valueRange = 0f..24f,
+                    increment = 1f,
+                    iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                    valueFormatter = { "${it.toInt()} dp" },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_pulse_shadow_offset_y_title),
+                    value = viewModel.islandPulseShadowOffsetY.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandPulseShadowOffsetY(it)
+                    },
+                    valueRange = -8f..16f,
+                    increment = 1f,
+                    iconRes = R.drawable.rounded_screenshot_region_24,
+                    valueFormatter = { "${it.toInt()} dp" },
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_pulse_shadow_opacity_title),
+                    value = viewModel.islandPulseShadowOpacity.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandPulseShadowOpacity(it)
+                    },
+                    valueRange = 0.1f..1f,
+                    increment = 0.02f,
+                    iconRes = R.drawable.rounded_invert_colors_24,
+                    valueFormatter = { "${(it * 100).roundToInt()}%" },
                 )
 
                 ConfigSliderItem(

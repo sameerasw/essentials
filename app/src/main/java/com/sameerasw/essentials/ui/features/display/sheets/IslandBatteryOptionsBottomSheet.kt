@@ -47,6 +47,18 @@ fun IslandBatteryOptionsBottomSheet(
                         viewModel.setIslandBatteryPeekAlerts(checked)
                     },
                 )
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_BATTERY_CHARGING_ANIM,
+                    iconRes = R.drawable.rounded_battery_charging_60_24,
+                    title = stringResource(R.string.island_battery_charging_anim_title),
+                    defaultValue = true,
+                )
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_BATTERY_CRITICAL_ANIM,
+                    iconRes = R.drawable.rounded_battery_alert_24,
+                    title = stringResource(R.string.island_battery_critical_anim_title),
+                    defaultValue = true,
+                )
             }
 
             if (rememberIslandShowsWhileLocked()) {

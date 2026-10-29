@@ -309,9 +309,10 @@ class MainViewModel : ViewModel() {
     val islandBorderOutlineThickness = mutableFloatStateOf(1f)
     val isIslandBorderOutlineHiddenWhenExpanded = mutableStateOf(false)
     val isIslandPulseShadow = mutableStateOf(false)
-    val islandPulseShadowSize = mutableFloatStateOf(0.5f)
-    val islandPulseShadowYShift = mutableFloatStateOf(0.35f)
-    val islandPulseShadowSpread = mutableFloatStateOf(2f)
+    val islandPulseShadowBlur = mutableFloatStateOf(20f)
+    val islandPulseShadowSpread = mutableFloatStateOf(6f)
+    val islandPulseShadowOffsetY = mutableFloatStateOf(1f)
+    val islandPulseShadowOpacity = mutableFloatStateOf(0.35f)
     val islandPulseShadowDurationMs = mutableFloatStateOf(1450f)
     val isIslandShowMedia = mutableStateOf(true)
     val isIslandShowCalendar = mutableStateOf(false)
@@ -2602,9 +2603,10 @@ class MainViewModel : ViewModel() {
         islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
         isIslandBorderOutlineHiddenWhenExpanded.value = settingsRepository.isIslandBorderOutlineHiddenWhenExpanded()
         isIslandPulseShadow.value = settingsRepository.isIslandPulseShadowEnabled()
-        islandPulseShadowSize.floatValue = settingsRepository.getIslandPulseShadowSize()
-        islandPulseShadowYShift.floatValue = settingsRepository.getIslandPulseShadowYShift()
+        islandPulseShadowBlur.floatValue = settingsRepository.getIslandPulseShadowBlur()
         islandPulseShadowSpread.floatValue = settingsRepository.getIslandPulseShadowSpread()
+        islandPulseShadowOffsetY.floatValue = settingsRepository.getIslandPulseShadowOffsetY()
+        islandPulseShadowOpacity.floatValue = settingsRepository.getIslandPulseShadowOpacity()
         islandPulseShadowDurationMs.floatValue = settingsRepository.getIslandPulseShadowDurationMs()
         isIslandShowMedia.value = settingsRepository.isIslandShowMediaEnabled()
         isIslandShowCalendar.value = settingsRepository.isIslandShowCalendarEnabled()
@@ -6229,14 +6231,19 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandPulseShadowEnabled(enabled)
     }
 
-    fun setIslandPulseShadowSize(value: Float) {
-        islandPulseShadowSize.floatValue = value
-        settingsRepository.setIslandPulseShadowSize(value)
+    fun setIslandPulseShadowBlur(value: Float) {
+        islandPulseShadowBlur.floatValue = value
+        settingsRepository.setIslandPulseShadowBlur(value)
     }
 
-    fun setIslandPulseShadowYShift(value: Float) {
-        islandPulseShadowYShift.floatValue = value
-        settingsRepository.setIslandPulseShadowYShift(value)
+    fun setIslandPulseShadowOffsetY(value: Float) {
+        islandPulseShadowOffsetY.floatValue = value
+        settingsRepository.setIslandPulseShadowOffsetY(value)
+    }
+
+    fun setIslandPulseShadowOpacity(value: Float) {
+        islandPulseShadowOpacity.floatValue = value
+        settingsRepository.setIslandPulseShadowOpacity(value)
     }
 
     fun setIslandPulseShadowSpread(value: Float) {

@@ -1656,8 +1656,6 @@
     <string name="island_show_glow_title">Toon accentkleurige gloed</string>
     <string name="island_pulse_shadow_title">Toon puls schaduw tijdens meldingen</string>
     <string name="island_pulse_shadow_desc">Toont een gloed achter het eiland in de appkleuren</string>
-    <string name="island_pulse_shadow_size_title">Gloed grootte</string>
-    <string name="island_pulse_shadow_y_shift_title">Verticale positie</string>
     <string name="island_pulse_shadow_spread_title">Snelheid gloed</string>
     <string name="island_pulse_shadow_duration_title">Puls duur</string>
     <string name="island_section_duration">Duur</string>

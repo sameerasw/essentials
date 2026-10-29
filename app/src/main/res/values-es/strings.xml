@@ -1807,8 +1807,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_border_outline_hide_expanded_title">Ocultar al Expandir</string>
     <string name="island_border_outline_hide_expanded_desc">Solo delinear la isla compacta y de vista previa</string>
     <string name="island_border_outline_desc">Muestra una línea alrededor de la isla</string>
-    <string name="island_pulse_shadow_size_title">Tamaño del Brillo</string>
-    <string name="island_pulse_shadow_y_shift_title">Desplazamiento vertical</string>
     <string name="island_pulse_shadow_spread_title">Ondas de Brillo</string>
     <string name="island_pulse_shadow_duration_title">Duración de la Animación</string>
     <string name="island_max_items_title">Número máximo de elementos a mostrar</string>

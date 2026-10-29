@@ -39,7 +39,6 @@ fun IslandCallOptionsBottomSheet(onDismissRequest: () -> Unit) {
         )
     }
     var sticky by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_CALL_STICKY, false)) }
-
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
@@ -103,6 +102,13 @@ fun IslandCallOptionsBottomSheet(onDismissRequest: () -> Unit) {
                         },
                     )
                 }
+
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_CALL_RING_SHAKE,
+                    iconRes = R.drawable.rounded_mobile_vibrate_24,
+                    title = stringResource(R.string.island_call_ring_shake_title),
+                    defaultValue = true,
+                )
             }
         }
     }
