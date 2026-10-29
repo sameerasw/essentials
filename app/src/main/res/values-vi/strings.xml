@@ -651,7 +651,7 @@
     <string name="btn_enable_keyboard">Bật trong cài đặt</string>
     <string name="btn_select_keyboard">Chuyển sang thiết yếu</string>
     <string name="label_enabled">Đã bật</string>
-    <string name="label_disabled">Hủy kích hoạt</string>
+    <string name="label_disabled">Tắt</string>
     <string name="tile_adaptive_brightness">Độ sáng thích ứng</string>
     <string name="tile_maps_power_saving">Tiết kiệm năng lượng của bản đồ</string>
     <string name="action_search">Tìm kiếm</string>
@@ -2038,4 +2038,21 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="duo_combine_with_island">Kết hợp với Island</string>
     <string name="disable_interactions_in_full_screen_title">Vô hiệu hóa tương tác ở chế độ toàn màn hình</string>
     <string name="duo_tap_for_brief_title">Chạm để xem tóm tắt</string>
+    <string name="island_notif_hub_title">Trung tâm thông báo</string>
+    <string name="island_notif_hub_desc">Thay thế các biểu tượng thông báo trên thanh trạng thái bằng hình ảnh từ island</string>
+    <string name="island_notif_tap_to_open_desc">Chạm vào thông báo được mở rộng để mở ứng dụng</string>
+    <string name="island_notif_follow_dnd_title">Theo trạng thái của chế độ Không làm phiền</string>
+    <string name="island_notif_follow_dnd_desc">Ẩn các thông báo mà chế độ Không làm phiền đã tắt</string>
+    <string name="island_notif_skip_silent_title">Bỏ qua thông báo im lặng</string>
+    <string name="island_notif_skip_silent_desc">Bỏ qua các thông báo không có âm thanh</string>
+    <string name="island_notif_filter_apps_title">Lọc ứng dụng</string>
+    <string name="island_notif_filter_apps_desc">Chỉ hiển thị thông báo từ các ứng dụng bạn chọn</string>
+    <string name="island_notif_queue_desc">Hiển thị thông báo theo từng đợt</string>
+    <string name="island_notif_queue_inline_title">Xếp hàng bên trong Island</string>
+    <string name="island_notif_queue_inline_desc">Hiển thị hàng đợi bên trong Island</string>
+    <string name="island_otp_enabled_title">Phát hiện mã OTP</string>
+    <string name="island_otp_tap_to_copy_title">Nhấn để sao chép</string>
+    <string name="island_otp_dismiss_after_copy_title">Xóa thông báo sau khi sao chép</string>
+    <string name="island_otp_timeout_title">Hiển thị mã cho</string>
+    <string name="island_otp_bypass_filter_title">Hiển thị mã từ bất kỳ ứng dụng nào</string>
 </resources>
