@@ -67,6 +67,7 @@ fun <T> SegmentedPicker(
     contentPadding: PaddingValues = PaddingValues(10.dp),
     title: Any? = null,
     description: Any? = null,
+    enabled: Boolean = true,
 ) {
     val view = LocalView.current
     val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
@@ -117,6 +118,7 @@ fun <T> SegmentedPicker(
             Box(modifier = boxModifier) {
                 ToggleButton(
                     checked = selectedItem == item,
+                    enabled = enabled,
                     onCheckedChange = {
                         HapticUtil.performUIHaptic(view)
                         onItemSelected(item)

@@ -10,7 +10,6 @@
 package com.sameerasw.essentials.domain.registry
 
 import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
-import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_NOTIFICATIONS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
@@ -865,7 +864,7 @@ object FeatureRegistry {
                         SearchSetting(
                             R.string.island_brief_title,
                             R.string.island_brief_desc,
-                            "island_brief_enabled",
+                            "island_long_press_action",
                         ),
                         SearchSetting(
                             R.string.island_show_devices_title,
@@ -970,25 +969,12 @@ object FeatureRegistry {
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
                         ),
+                        SearchSetting(
+                            R.string.island_chips_title,
+                            R.string.island_section_icon_color,
+                            "island_chips",
+                        ),
                     ),
-            ) {
-                override fun isEnabled(viewModel: MainViewModel) = true
-
-                override fun onToggle(
-                    viewModel: MainViewModel,
-                    context: Context,
-                    enabled: Boolean,
-                ) {}
-            },
-            object : Feature(
-                id = ISLAND_DURATION_FEATURE_ID,
-                title = R.string.island_section_duration,
-                iconRes = R.drawable.rounded_timer_24,
-                category = R.string.cat_interface,
-                description = R.string.island_section_duration,
-                showToggle = false,
-                parentFeatureId = "Island",
-                isVisibleInMain = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
 
@@ -1009,11 +995,6 @@ object FeatureRegistry {
                 isVisibleInMain = false,
                 searchableSettings =
                     listOf(
-                        SearchSetting(
-                            R.string.island_suppress_system_heads_up_title,
-                            R.string.island_suppress_system_heads_up_desc,
-                            "island_suppress_system_heads_up",
-                        ),
                         SearchSetting(
                             R.string.island_line_peek_title,
                             R.string.island_line_peek_desc,
@@ -1055,6 +1036,11 @@ object FeatureRegistry {
                 isVisibleInMain = false,
                 searchableSettings =
                     listOf(
+                        SearchSetting(
+                            R.string.island_suppress_system_heads_up_title,
+                            R.string.island_suppress_system_heads_up_desc,
+                            "island_suppress_system_heads_up",
+                        ),
                         SearchSetting(
                             R.string.island_notif_filter_apps_title,
                             R.string.island_notif_filter_apps_desc,

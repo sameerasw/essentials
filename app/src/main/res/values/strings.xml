@@ -3179,6 +3179,13 @@
     <string name="island_themed_text_title">Themed text color</string>
     <string name="island_icon_color_dynamic">Dynamic</string>
     <string name="island_icon_color_custom">Custom</string>
+    <string name="island_icon_color_app">App color</string>
+    <string name="island_icon_color_material_you">Material You</string>
+    <string name="island_expanded_options_title">Expanded island</string>
+    <string name="island_expanded_options_desc">Width, scale, roundness and padding</string>
+    <string name="island_hide_status_bar_off">Off</string>
+    <string name="island_hide_status_bar_expanded">While expanded</string>
+    <string name="island_hide_status_bar_always">Always</string>
     <string name="island_icon_material_you_title">Use Material You colors</string>
     <string name="island_time_format_title">Time format</string>
     <string name="island_time_format_system">System</string>
@@ -3261,6 +3268,7 @@
     <string name="island_show_when_unlocked">Unlocked</string>
     <string name="island_show_when_screen_on">Screen on</string>
     <string name="island_show_when_always">Always</string>
+    <string name="island_notif_hide_locked_title">Hide notifications when locked</string>
     <string name="island_notif_conceal_locked_title">Conceal notification content</string>
     <string name="island_notif_conceal_chat_pictures_title">Hide chat pictures</string>
     <string name="island_calendar_hide_locked_title">Hide when locked</string>

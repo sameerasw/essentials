@@ -55,13 +55,22 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
+data class GestureExtraOption(
+    val title: String,
+    val iconRes: Int,
+    val selected: Boolean,
+    val onSelect: () -> Unit,
+)
+
 @Composable
 fun GestureActionPickerSheet(
     viewModel: MainViewModel,
     currentAction: Action?,
     onActionSelected: (Action?) -> Unit,
     onPickerClosed: () -> Unit,
+    extraOption: GestureExtraOption? = null,
 ) {
+    val extraSelected = extraOption?.selected == true
     val context = LocalContext.current
     val view = LocalView.current
 
@@ -143,13 +152,24 @@ fun GestureActionPickerSheet(
                 RoundedCardContainer(spacing = 2.dp) {
                     RemapActionItem(
                         title = stringResource(R.string.duo_action_none),
-                        isSelected = currentAction == null,
+                        isSelected = currentAction == null && !extraSelected,
                         onClick = {
                             onActionSelected(null)
                             showPicker = false
                         },
                         iconRes = R.drawable.rounded_do_not_disturb_on_24,
                     )
+                    extraOption?.let { option ->
+                        RemapActionItem(
+                            title = option.title,
+                            isSelected = option.selected,
+                            onClick = {
+                                option.onSelect()
+                                showPicker = false
+                            },
+                            iconRes = option.iconRes,
+                        )
+                    }
                 }
 
                 val actionCategories = remember {
@@ -178,7 +198,7 @@ fun GestureActionPickerSheet(
                             val resolvedAction =
                                 if (currentAction != null && currentAction::class == action::class) currentAction else action
                             val isSelected =
-                                currentAction != null && currentAction::class == resolvedAction::class
+                                !extraSelected && currentAction != null && currentAction::class == resolvedAction::class
                             val missing = getMissingPermissionsHelper(resolvedAction)
 
                             fun showMissingPermissionSheet() {

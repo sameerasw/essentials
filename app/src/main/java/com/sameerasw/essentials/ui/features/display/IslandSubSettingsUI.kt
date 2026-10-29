@@ -21,6 +21,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -62,6 +64,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandBriefOptionsBot
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPrefToggle
+import com.sameerasw.essentials.ui.features.display.sheets.IslandExpandedOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBottomSheet
@@ -77,22 +80,36 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 
 const val ISLAND_PLACEMENT_FEATURE_ID = "Island placement"
 const val ISLAND_VISUALS_FEATURE_ID = "Island visuals"
-const val ISLAND_DURATION_FEATURE_ID = "Island duration"
 const val ISLAND_BEHAVIOR_FEATURE_ID = "Island behavior"
 const val ISLAND_NOTIFICATIONS_FEATURE_ID = "Island notifications"
 
 val ISLAND_SUB_PAGE_IDS = setOf(
     ISLAND_PLACEMENT_FEATURE_ID,
     ISLAND_VISUALS_FEATURE_ID,
-    ISLAND_DURATION_FEATURE_ID,
     ISLAND_BEHAVIOR_FEATURE_ID,
     ISLAND_NOTIFICATIONS_FEATURE_ID,
 )
 
+internal val ISLAND_EXPANDED_SETTING_KEYS = setOf(
+    "island_expanded_width",
+    "island_expanded_scale",
+    "island_expanded_roundness",
+    "island_expanded_padding",
+    "island_expanded_top_padding",
+    "island_expanded_bottom_padding",
+)
+
+private const val ICON_COLOR_APP = "app"
+private const val ICON_COLOR_MATERIAL_YOU = "material_you"
+private const val ICON_COLOR_CUSTOM = "custom"
+
+private const val STATUS_BAR_HIDE_OFF = "off"
+private const val STATUS_BAR_HIDE_EXPANDED = "expanded"
+private const val STATUS_BAR_HIDE_ALWAYS = "always"
+
 internal val ISLAND_SUB_PAGES = listOf(
     Triple(ISLAND_PLACEMENT_FEATURE_ID, R.string.island_section_placement, R.drawable.rounded_center_focus_strong_24),
     Triple(ISLAND_VISUALS_FEATURE_ID, R.string.island_section_visuals, R.drawable.rounded_palette_24),
-    Triple(ISLAND_DURATION_FEATURE_ID, R.string.island_section_duration, R.drawable.rounded_timer_24),
     Triple(ISLAND_BEHAVIOR_FEATURE_ID, R.string.island_section_behavior, R.drawable.rounded_settings_motion_mode_24),
 )
 
@@ -259,21 +276,6 @@ fun IslandPlacementSettingsUI(
             )
 
             ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_width_title),
-                value = viewModel.islandExpandedWidth.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedWidth(it)
-                },
-                valueRange = 200f..500f,
-                increment = 10f,
-                iconRes = R.drawable.rounded_arrows_outward_24,
-                valueFormatter = { "%.1f dp".format(it) },
-                allowDecimals = true,
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_width"),
-            )
-
-            ConfigSliderItem(
                 title = stringResource(R.string.island_cutout_gap_title),
                 value = viewModel.islandCutoutGap.floatValue,
                 onValueChange = {
@@ -345,6 +347,7 @@ fun IslandVisualsSettingsUI(
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
     var showPulseShadowSheet by remember { mutableStateOf(false) }
+    var showExpandedSheet by remember { mutableStateOf(highlightSetting in ISLAND_EXPANDED_SETTING_KEYS) }
 
     Column(
         modifier = modifier
@@ -358,19 +361,16 @@ fun IslandVisualsSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_scale_title),
-                description = stringResource(R.string.island_expanded_scale_desc),
-                value = viewModel.islandExpandedScale.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedScale(it)
-                },
-                valueRange = 1f..1.3f,
-                increment = 0.02f,
+            IconToggleItem(
                 iconRes = R.drawable.rounded_magnify_fullscreen_24,
-                valueFormatter = { "${(it * 100).toInt()}%" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_scale"),
+                title = stringResource(R.string.island_expanded_options_title),
+                description = stringResource(R.string.island_expanded_options_desc),
+                showToggle = false,
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    showExpandedSheet = true
+                },
+                modifier = Modifier.highlight(highlightSetting in ISLAND_EXPANDED_SETTING_KEYS),
             )
 
             ConfigSliderItem(
@@ -387,76 +387,6 @@ fun IslandVisualsSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_font_scale"),
             )
 
-            ConfigSliderItem(
-                title = stringResource(R.string.island_animation_speed_title),
-                value = viewModel.islandAnimationSpeed.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandAnimationSpeed(it)
-                },
-                valueRange = 0.5f..1.5f,
-                increment = 0.1f,
-                iconRes = R.drawable.rounded_format_size_24,
-                valueFormatter = { "${(it * 100).toInt()}%" },
-                modifier = Modifier.highlight(highlightSetting == "island_animation_speed"),
-            )
-
-
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_roundness_title),
-                value = viewModel.islandExpandedRoundness.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedRoundness(it)
-                },
-                valueRange = 0f..80f,
-                increment = 2f,
-                iconRes = R.drawable.rounded_rounded_corner_24,
-                valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_roundness"),
-            )
-
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_padding_title),
-                value = viewModel.islandExpandedPadding.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedPadding(it)
-                },
-                valueRange = 8f..48f,
-                increment = 2f,
-                iconRes = R.drawable.rounded_screenshot_region_24,
-                valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_padding"),
-            )
-
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_top_padding_title),
-                value = viewModel.islandExpandedTopPadding.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedTopPadding(it)
-                },
-                valueRange = 0f..40f,
-                increment = 2f,
-                iconRes = R.drawable.rounded_vertical_align_top_24,
-                valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_top_padding"),
-            )
-
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_bottom_padding_title),
-                value = viewModel.islandExpandedBottomPadding.floatValue,
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedBottomPadding(it)
-                },
-                valueRange = 0f..40f,
-                increment = 2f,
-                iconRes = R.drawable.rounded_vertical_align_bottom_24,
-                valueFormatter = { "${it.toInt()} dp" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_bottom_padding"),
-            )
         }
 
         RoundedCardContainer(
@@ -510,34 +440,32 @@ fun IslandVisualsSettingsUI(
             var customColor by remember {
                 mutableStateOf(iconSettings.getString(SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM, null) ?: "#FFFFFF")
             }
-            val modeLabels = mapOf(
-                SettingsRepository.ISLAND_ICON_COLOR_DYNAMIC to stringResource(R.string.island_icon_color_dynamic),
-                SettingsRepository.ISLAND_ICON_COLOR_CUSTOM to stringResource(R.string.island_icon_color_custom),
+            val colorChoice = when {
+                colorMode != SettingsRepository.ISLAND_ICON_COLOR_CUSTOM -> ICON_COLOR_APP
+                materialYou -> ICON_COLOR_MATERIAL_YOU
+                else -> ICON_COLOR_CUSTOM
+            }
+            val choiceLabels = mapOf(
+                ICON_COLOR_APP to stringResource(R.string.island_icon_color_app),
+                ICON_COLOR_MATERIAL_YOU to stringResource(R.string.island_icon_color_material_you),
+                ICON_COLOR_CUSTOM to stringResource(R.string.island_icon_color_custom),
             )
             SegmentedPicker(
-                items = modeLabels.keys.toList(),
-                selectedItem = colorMode,
+                items = choiceLabels.keys.toList(),
+                selectedItem = colorChoice,
                 onItemSelected = {
                     HapticUtil.performVirtualKeyHaptic(view)
-                    colorMode = it
-                    iconSettings.putString(SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE, it)
+                    colorMode = if (it == ICON_COLOR_APP) SettingsRepository.ISLAND_ICON_COLOR_DYNAMIC else SettingsRepository.ISLAND_ICON_COLOR_CUSTOM
+                    materialYou = it != ICON_COLOR_CUSTOM
+                    iconSettings.putString(SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE, colorMode)
+                    iconSettings.putBoolean(SettingsRepository.KEY_ISLAND_ICON_MATERIAL_YOU, materialYou)
                 },
-                labelProvider = { modeLabels[it].orEmpty() },
+                labelProvider = { choiceLabels[it].orEmpty() },
                 title = R.string.island_section_icon_color,
                 modifier = Modifier.fillMaxWidth().highlight(highlightSetting == "island_icon_color_mode"),
             )
-            IconToggleItem(
-                iconRes = R.drawable.rounded_palette_24,
-                title = stringResource(R.string.island_icon_material_you_title),
-                isChecked = materialYou,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    materialYou = checked
-                    iconSettings.putBoolean(SettingsRepository.KEY_ISLAND_ICON_MATERIAL_YOU, checked)
-                },
-            )
             AnimatedVisibility(
-                visible = colorMode == SettingsRepository.ISLAND_ICON_COLOR_CUSTOM && !materialYou,
+                visible = colorChoice == ICON_COLOR_CUSTOM,
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically(),
             ) {
@@ -580,6 +508,7 @@ fun IslandVisualsSettingsUI(
                 iconRes = R.drawable.rounded_palette_24,
                 title = stringResource(R.string.island_chips_title),
                 isChecked = chips,
+                modifier = Modifier.highlight(highlightSetting == "island_chips"),
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     chips = checked
@@ -602,57 +531,12 @@ fun IslandVisualsSettingsUI(
             onDismissRequest = { showPulseShadowSheet = false },
         )
     }
-}
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun IslandDurationSettingsUI(
-    viewModel: MainViewModel,
-    modifier: Modifier = Modifier,
-    highlightSetting: String? = null,
-) {
-    val context = LocalContext.current
-    val view = LocalView.current
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            ConfigSliderItem(
-                title = stringResource(R.string.island_timeout_title),
-                value = (viewModel.islandTimeoutMs.longValue / 1000f),
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandTimeoutMs((it * 1000).toLong())
-                },
-                valueRange = 2f..60f,
-                increment = 0.5f,
-                iconRes = R.drawable.rounded_timer_24,
-                valueFormatter = { "%.1fs".format(it) },
-            )
-
-            val infinityText = stringResource(R.string.island_timeout_infinity)
-            ConfigSliderItem(
-                title = stringResource(R.string.island_expanded_timeout_title),
-                description = stringResource(R.string.island_expanded_timeout_desc),
-                value = (viewModel.islandExpandedTimeoutMs.longValue / 1000f),
-                onValueChange = {
-                    HapticUtil.performUIHaptic(view)
-                    viewModel.setIslandExpandedTimeoutMs((it * 1000).toLong())
-                },
-                valueRange = 0f..30f,
-                increment = 1f,
-                iconRes = R.drawable.rounded_schedule_24,
-                valueFormatter = { if (it <= 0f) infinityText else "${it.toInt()}s" },
-                modifier = Modifier.highlight(highlightSetting == "island_expanded_timeout_ms"),
-            )
-        }
+    if (showExpandedSheet) {
+        IslandExpandedOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showExpandedSheet = false },
+        )
     }
 }
 
@@ -742,6 +626,54 @@ fun IslandBehaviorSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            ConfigSliderItem(
+                title = stringResource(R.string.island_timeout_title),
+                value = (viewModel.islandTimeoutMs.longValue / 1000f),
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandTimeoutMs((it * 1000).toLong())
+                },
+                valueRange = 2f..60f,
+                increment = 0.5f,
+                iconRes = R.drawable.rounded_timer_24,
+                valueFormatter = { "%.1fs".format(it) },
+            )
+
+            val infinityText = stringResource(R.string.island_timeout_infinity)
+            ConfigSliderItem(
+                title = stringResource(R.string.island_expanded_timeout_title),
+                description = stringResource(R.string.island_expanded_timeout_desc),
+                value = (viewModel.islandExpandedTimeoutMs.longValue / 1000f),
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandExpandedTimeoutMs((it * 1000).toLong())
+                },
+                valueRange = 0f..30f,
+                increment = 1f,
+                iconRes = R.drawable.rounded_schedule_24,
+                valueFormatter = { if (it <= 0f) infinityText else "${it.toInt()}s" },
+                modifier = Modifier.highlight(highlightSetting == "island_expanded_timeout_ms"),
+            )
+
+            ConfigSliderItem(
+                title = stringResource(R.string.island_animation_speed_title),
+                value = viewModel.islandAnimationSpeed.floatValue,
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandAnimationSpeed(it)
+                },
+                valueRange = 0.5f..1.5f,
+                increment = 0.1f,
+                iconRes = R.drawable.rounded_shutter_speed_24,
+                valueFormatter = { "${(it * 100).toInt()}%" },
+                modifier = Modifier.highlight(highlightSetting == "island_animation_speed"),
+            )
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = stringResource(R.string.island_secondary_bubble_title),
@@ -754,6 +686,7 @@ fun IslandBehaviorSettingsUI(
             )
 
             val secondaryStyle = viewModel.islandNotifQueueStyle.value
+            val secondaryOn = viewModel.isIslandSecondaryBubble.value
             val stackLabel = stringResource(R.string.island_notif_queue_style_stack)
             val overlapLabel = stringResource(R.string.island_notif_queue_style_overlap)
             Column(
@@ -766,7 +699,7 @@ fun IslandBehaviorSettingsUI(
                 Text(
                     text = stringResource(R.string.island_secondary_style_title),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (secondaryOn) 1f else 0.38f),
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 SegmentedPicker(
@@ -779,20 +712,9 @@ fun IslandBehaviorSettingsUI(
                     labelProvider = { if (it == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) overlapLabel else stackLabel },
                     title = R.string.island_secondary_style_title,
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = secondaryOn,
                 )
             }
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_motion_play_24,
-                title = stringResource(R.string.island_line_peek_title),
-                description = stringResource(R.string.island_line_peek_desc),
-                isChecked = viewModel.isIslandLineStageEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandLineStageEnabled(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_line_stage_enabled"),
-            )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_format_align_center_24,
@@ -803,6 +725,23 @@ fun IslandBehaviorSettingsUI(
                     viewModel.setIslandBalanceCompact(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_balance_compact"),
+            )
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_motion_play_24,
+                title = stringResource(R.string.island_line_peek_title),
+                description = stringResource(R.string.island_line_peek_desc),
+                isChecked = viewModel.isIslandLineStageEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandLineStageEnabled(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_line_stage_enabled"),
             )
 
             IconToggleItem(
@@ -870,46 +809,65 @@ fun IslandBehaviorSettingsUI(
         }
 
         IslandSettingsSection(R.string.island_section_statusbar) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_visibility_off_24,
-                title = stringResource(R.string.island_hide_status_bar_title),
-                onInfoClick = { showHideStatusBarInfo = true },
-                isChecked = viewModel.isIslandHideStatusBarInsets.value && hasShellPermission,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked && !hasShellPermission) {
-                        requestingPermissionsFor =
-                            Pair(
-                                R.string.island_hide_status_bar_title,
-                                listOf(if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"),
-                            )
-                    } else {
-                        viewModel.setIslandHideStatusBarInsets(checked, context)
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_hide_status_bar_insets"),
+            val hideAlways = viewModel.isIslandHideStatusBarInsets.value && hasShellPermission
+            val hideMode = when {
+                hideAlways -> STATUS_BAR_HIDE_ALWAYS
+                viewModel.isIslandDynamicHideStatusBar.value && hasShellPermission -> STATUS_BAR_HIDE_EXPANDED
+                else -> STATUS_BAR_HIDE_OFF
+            }
+            val hideLabels = mapOf(
+                STATUS_BAR_HIDE_OFF to stringResource(R.string.island_hide_status_bar_off),
+                STATUS_BAR_HIDE_EXPANDED to stringResource(R.string.island_hide_status_bar_expanded),
+                STATUS_BAR_HIDE_ALWAYS to stringResource(R.string.island_hide_status_bar_always),
             )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_notifications_off_24,
-                title = stringResource(R.string.island_suppress_system_heads_up_title),
-                isChecked = viewModel.isIslandSuppressSystemHeadsUp.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked && !PermissionUtils.canWriteSecureSettings(context) && !ShellUtils.isAvailable(context)) {
-                        requestingPermissionsFor = Pair(R.string.island_suppress_system_heads_up_title, listOf("WRITE_SECURE_SETTINGS"))
-                    } else {
-                        viewModel.setIslandSuppressSystemHeadsUp(checked)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 4.dp)
+                    .highlight(highlightSetting == "island_hide_status_bar_insets" || highlightSetting == "island_dynamic_hide_status_bar"),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.island_hide_status_bar_title),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f).padding(start = 16.dp),
+                    )
+                    IconButton(onClick = { showHideStatusBarInfo = true }) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_info_24),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_suppress_system_heads_up"),
-            )
-
+                }
+                SegmentedPicker(
+                    items = hideLabels.keys.toList(),
+                    selectedItem = hideMode,
+                    onItemSelected = { mode ->
+                        if (mode != STATUS_BAR_HIDE_OFF && !hasShellPermission) {
+                            requestingPermissionsFor =
+                                Pair(
+                                    R.string.island_hide_status_bar_title,
+                                    listOf(if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"),
+                                )
+                        } else {
+                            // "Always" hides the whole bar, so hiding it while expanded on top would do nothing
+                            viewModel.setIslandHideStatusBarInsets(mode == STATUS_BAR_HIDE_ALWAYS, context)
+                            viewModel.setIslandDynamicHideStatusBar(mode == STATUS_BAR_HIDE_EXPANDED, context)
+                        }
+                    },
+                    labelProvider = { hideLabels[it].orEmpty() },
+                    title = R.string.island_hide_status_bar_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_off_24,
                 title = stringResource(R.string.island_hide_live_updates_title),
-                enabled = !viewModel.isIslandHideStatusBarInsets.value,
-                isChecked = viewModel.isIslandHideLiveUpdates.value && !viewModel.isIslandHideStatusBarInsets.value,
+                enabled = !hideAlways,
+                isChecked = viewModel.isIslandHideLiveUpdates.value && !hideAlways,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     if (checked && !hasShellPermission) {
@@ -928,6 +886,7 @@ fun IslandBehaviorSettingsUI(
             IslandHideIconsToggle(
                 viewModel = viewModel,
                 hasShellPermission = hasShellPermission,
+                enabled = !hideAlways,
                 onNeedPermission = {
                     requestingPermissionsFor =
                         Pair(
@@ -938,24 +897,6 @@ fun IslandBehaviorSettingsUI(
                 highlighted = highlightSetting == "island_hide_icons",
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_visibility_off_24,
-                title = stringResource(R.string.island_dynamic_hide_status_bar_title),
-                isChecked = viewModel.isIslandDynamicHideStatusBar.value && hasShellPermission,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    if (checked && !hasShellPermission) {
-                        requestingPermissionsFor =
-                            Pair(
-                                R.string.island_dynamic_hide_status_bar_title,
-                                listOf(if (ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"),
-                            )
-                    } else {
-                        viewModel.setIslandDynamicHideStatusBar(checked, context)
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_dynamic_hide_status_bar"),
-            )
         }
     }
 }
@@ -1039,6 +980,7 @@ fun IslandNotificationSettingsUI(
     var showFilterAppsSheet by remember { mutableStateOf(false) }
     var showHubSheet by remember { mutableStateOf(false) }
     var showOtpPermissions by remember { mutableStateOf(false) }
+    var showHeadsUpPermissions by remember { mutableStateOf(false) }
     var lockedDisabled by remember {
         mutableStateOf(
             SettingsRepository(context).getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_DISABLE_LOCKED, true)
@@ -1083,6 +1025,32 @@ fun IslandNotificationSettingsUI(
                     viewModel.setIslandNotifTapToOpen(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_notif_tap_to_open"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_off_24,
+                title = stringResource(R.string.island_suppress_system_heads_up_title),
+                isChecked = viewModel.isIslandSuppressSystemHeadsUp.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !PermissionUtils.canWriteSecureSettings(context) && !ShellUtils.isAvailable(context)) {
+                        showHeadsUpPermissions = true
+                    } else {
+                        viewModel.setIslandSuppressSystemHeadsUp(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_suppress_system_heads_up"),
+            )
+        }
+
+        if (showHeadsUpPermissions) {
+            PermissionsBottomSheet(
+                onDismissRequest = {
+                    showHeadsUpPermissions = false
+                    viewModel.check(context)
+                },
+                featureTitle = stringResource(R.string.island_suppress_system_heads_up_title),
+                permissions = PermissionUIHelper.getPermissionItems(listOf("WRITE_SECURE_SETTINGS"), context, viewModel),
             )
         }
 
@@ -1273,7 +1241,7 @@ fun IslandNotificationSettingsUI(
             )
 
             AnimatedVisibility(
-                visible = viewModel.isIslandCatchUpEnabled.value,
+                visible = viewModel.isIslandCatchUpEnabled.value && !viewModel.isIslandNotifHub.value,
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically(),
             ) {
@@ -1333,55 +1301,39 @@ fun IslandNotificationSettingsUI(
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically(),
             ) {
-                IslandPrefToggle(
-                    settingKey = SettingsRepository.KEY_ISLAND_OTP_TAP_TO_COPY,
-                    iconRes = R.drawable.rounded_content_copy_24,
-                    title = stringResource(R.string.island_otp_tap_to_copy_title),
-                    defaultValue = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_otp_tap_to_copy"),
-                )
-            }
-            AnimatedVisibility(
-                visible = otpEnabled,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                IslandPrefToggle(
-                    settingKey = SettingsRepository.KEY_ISLAND_OTP_DISMISS_AFTER_COPY,
-                    iconRes = R.drawable.rounded_check_circle_24,
-                    title = stringResource(R.string.island_otp_dismiss_after_copy_title),
-                )
-            }
-            AnimatedVisibility(
-                visible = otpEnabled,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                ConfigSliderItem(
-                    title = stringResource(R.string.island_otp_timeout_title),
-                    value = OTP_TIMEOUT_STEPS_MS.indexOfClosest(viewModel.islandOtpTimeoutMs.longValue).toFloat(),
-                    onValueChange = {
-                        HapticUtil.performUIHaptic(view)
-                        viewModel.setIslandOtpTimeoutMs(OTP_TIMEOUT_STEPS_MS[it.toInt().coerceIn(OTP_TIMEOUT_STEPS_MS.indices)])
-                    },
-                    valueRange = 0f..OTP_TIMEOUT_STEPS_MS.lastIndex.toFloat(),
-                    increment = 1f,
-                    iconRes = R.drawable.rounded_timer_24,
-                    valueFormatter = { formatCatchUp(OTP_TIMEOUT_STEPS_MS[it.toInt().coerceIn(OTP_TIMEOUT_STEPS_MS.indices)], "") },
-                )
-            }
-            AnimatedVisibility(
-                visible = otpEnabled,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                IslandPrefToggle(
-                    settingKey = SettingsRepository.KEY_ISLAND_OTP_BYPASS_FILTER,
-                    iconRes = R.drawable.rounded_filter_alt_24,
-                    title = stringResource(R.string.island_otp_bypass_filter_title),
-                    defaultValue = true,
-                    modifier = Modifier.highlight(highlightSetting == "island_otp_bypass_filter"),
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_OTP_TAP_TO_COPY,
+                        iconRes = R.drawable.rounded_content_copy_24,
+                        title = stringResource(R.string.island_otp_tap_to_copy_title),
+                        defaultValue = true,
+                        modifier = Modifier.highlight(highlightSetting == "island_otp_tap_to_copy"),
+                    )
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_OTP_DISMISS_AFTER_COPY,
+                        iconRes = R.drawable.rounded_check_circle_24,
+                        title = stringResource(R.string.island_otp_dismiss_after_copy_title),
+                    )
+                    ConfigSliderItem(
+                        title = stringResource(R.string.island_otp_timeout_title),
+                        value = OTP_TIMEOUT_STEPS_MS.indexOfClosest(viewModel.islandOtpTimeoutMs.longValue).toFloat(),
+                        onValueChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setIslandOtpTimeoutMs(OTP_TIMEOUT_STEPS_MS[it.toInt().coerceIn(OTP_TIMEOUT_STEPS_MS.indices)])
+                        },
+                        valueRange = 0f..OTP_TIMEOUT_STEPS_MS.lastIndex.toFloat(),
+                        increment = 1f,
+                        iconRes = R.drawable.rounded_timer_24,
+                        valueFormatter = { formatCatchUp(OTP_TIMEOUT_STEPS_MS[it.toInt().coerceIn(OTP_TIMEOUT_STEPS_MS.indices)], "") },
+                    )
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_OTP_BYPASS_FILTER,
+                        iconRes = R.drawable.rounded_filter_alt_24,
+                        title = stringResource(R.string.island_otp_bypass_filter_title),
+                        defaultValue = true,
+                        modifier = Modifier.highlight(highlightSetting == "island_otp_bypass_filter"),
+                    )
+                }
             }
         }
 
@@ -1390,7 +1342,7 @@ fun IslandNotificationSettingsUI(
                 IslandPrefToggle(
                     settingKey = SettingsRepository.KEY_ISLAND_NOTIF_DISABLE_LOCKED,
                     iconRes = R.drawable.rounded_notifications_off_24,
-                    title = stringResource(R.string.label_disabled),
+                    title = stringResource(R.string.island_notif_hide_locked_title),
                     defaultValue = true,
                     onChanged = { lockedDisabled = it },
                 )

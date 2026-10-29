@@ -39,6 +39,7 @@ fun HorizontalSlideModeSheet(
     mode: String,
     onModeSelected: (String) -> Unit,
     onDismissRequest: () -> Unit,
+    extraContent: (@Composable () -> Unit)? = null,
 ) {
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
@@ -62,12 +63,13 @@ fun HorizontalSlideModeSheet(
                         isSelected = mode == modeKey,
                         onClick = {
                             onModeSelected(modeKey)
-                            onDismissRequest()
+                            if (extraContent == null) onDismissRequest()
                         },
                     )
                 }
             }
 
+            extraContent?.invoke()
         }
     }
 }

@@ -82,13 +82,11 @@ import com.sameerasw.essentials.ui.features.display.AodWallpaperPreviewCard
 import com.sameerasw.essentials.ui.features.display.AodWallpaperSettingsUI
 import com.sameerasw.essentials.ui.features.display.DuoSettingsUI
 import com.sameerasw.essentials.ui.features.display.ISLAND_BEHAVIOR_FEATURE_ID
-import com.sameerasw.essentials.ui.features.display.ISLAND_DURATION_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_NOTIFICATIONS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_PLACEMENT_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.ISLAND_SUB_PAGE_IDS
 import com.sameerasw.essentials.ui.features.display.ISLAND_VISUALS_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.IslandBehaviorSettingsUI
-import com.sameerasw.essentials.ui.features.display.IslandDurationSettingsUI
 import com.sameerasw.essentials.ui.features.display.IslandNotificationSettingsUI
 import com.sameerasw.essentials.ui.features.display.IslandPlacementSettingsUI
 import com.sameerasw.essentials.ui.features.display.IslandSettingsUI
@@ -1353,14 +1351,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     ISLAND_VISUALS_FEATURE_ID -> {
                                         IslandVisualsSettingsUI(
-                                            viewModel = viewModel,
-                                            modifier = Modifier.padding(top = 16.dp),
-                                            highlightSetting = highlightSetting,
-                                        )
-                                    }
-
-                                    ISLAND_DURATION_FEATURE_ID -> {
-                                        IslandDurationSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting,

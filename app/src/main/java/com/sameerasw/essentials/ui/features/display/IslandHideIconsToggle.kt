@@ -34,29 +34,31 @@ fun IslandHideIconsToggle(
     hasShellPermission: Boolean,
     onNeedPermission: () -> Unit,
     highlighted: Boolean,
+    enabled: Boolean = true,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
     val settings = remember { SettingsRepository(context) }
-    var enabled by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, false)) }
+    var isOn by remember { mutableStateOf(settings.getBoolean(SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, false)) }
     var selected by remember { mutableStateOf(settings.getIslandHideIcons()) }
 
     IconToggleItem(
         iconRes = R.drawable.rounded_visibility_off_24,
         title = stringResource(R.string.island_hide_icons_title),
-        isChecked = enabled && hasShellPermission,
+        isChecked = isOn && hasShellPermission,
+        enabled = enabled,
         onCheckedChange = { checked ->
             HapticUtil.performVirtualKeyHaptic(view)
             if (checked && !hasShellPermission) {
                 onNeedPermission()
             } else {
-                enabled = checked
+                isOn = checked
                 settings.putBoolean(SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, checked)
             }
         },
     )
 
-    if (enabled && hasShellPermission) {
+    if (enabled && isOn && hasShellPermission) {
         val options =
             listOf(
                 SettingsRepository.ISLAND_HIDE_ICON_SYSTEM to R.string.island_hide_icon_system,
