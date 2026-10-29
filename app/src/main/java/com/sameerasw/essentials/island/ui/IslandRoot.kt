@@ -338,7 +338,7 @@ private fun IslandRootContent(
             shake.snapTo(0f)
             return@LaunchedEffect
         }
-        val px = with(density) { 2.5.dp.toPx() }
+        val px = with(density) { 4.dp.toPx() }
         suspend fun buzz() = repeat(2) { burst ->
             if (burst > 0) delay(140)
             repeat(7) { shake.animateTo(if (it % 2 == 0) px else -px, motionTween(28, easing = LinearEasing)) }
@@ -1351,6 +1351,7 @@ private fun IslandRootContent(
                         )
                     }
                 }
+                .offset { IntOffset(-shake.value.roundToInt(), 0) }
                 // Finger-driven shrink sits inside the clip/background so the pill itself follows the drag.
                 .layout { measurable, constraints ->
                     val child = measurable.measure(constraints)
