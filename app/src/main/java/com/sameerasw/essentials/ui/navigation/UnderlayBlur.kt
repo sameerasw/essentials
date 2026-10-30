@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 
-private val gestureBlurEasing =
+internal val gestureBlurEasing =
     Easing { t ->
         if (t < 0.8f) {
             0.5f * (t / 0.8f)
@@ -32,7 +32,7 @@ private val gestureBlurEasing =
         }
     }
 
-private val cornerEasing =
+internal val cornerEasing =
     Easing { t ->
         val x = (t / 0.8f).coerceAtMost(1f)
         1f - (1f - x) * (1f - x)

@@ -1,5 +1,17 @@
 package com.sameerasw.essentials.ui.navigation
 
+import kotlin.coroutines.cancellation.CancellationException
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Animatable
+import androidx.activity.compose.PredictiveBackHandler
+import android.os.Build
 import androidx.compose.runtime.key
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.fadeIn
@@ -68,10 +80,11 @@ data class TwoPaneScene(
     override val key: Any,
     val listEntry: NavEntry<AppRoute>,
     val detailEntry: NavEntry<AppRoute>?,
+    val parentDetailEntry: NavEntry<AppRoute>?,
     val layout: PaneLayout,
     override val previousEntries: List<NavEntry<AppRoute>>,
 ) : Scene<AppRoute> {
-    override val entries: List<NavEntry<AppRoute>> = listOfNotNull(listEntry, detailEntry)
+    override val entries: List<NavEntry<AppRoute>> = listOfNotNull(listEntry, parentDetailEntry, detailEntry)
 
     override val content: @Composable () -> Unit = {
         Row(
@@ -97,7 +110,7 @@ data class TwoPaneScene(
             ) {
                 if (detailEntry != null) {
                     key(detailEntry.contentKey) {
-                        AnimatedDetail(detailEntry)
+                        DetailPane(detailEntry, parentDetailEntry)
                     }
                 }
             }
@@ -119,21 +132,100 @@ class TwoPaneSceneStrategy(
             key = list.contentKey,
             listEntry = list,
             detailEntry = last,
+            parentDetailEntry = entries.getOrNull(entries.lastIndex - 1)?.takeIf { it.route !is AppRoute.Home },
             layout = paneLayout,
             previousEntries = entries.dropLast(1),
         )
     }
 }
 
+class PaneNavigation(
+    val pop: () -> Unit,
+    val lastNavWasPop: () -> Boolean,
+)
+
+val LocalPaneNavigation = staticCompositionLocalOf<PaneNavigation?> { null }
+
 @Composable
-private fun AnimatedDetail(entry: NavEntry<AppRoute>) {
-    val visibleState = remember { MutableTransitionState(false).apply { targetState = true } }
-    AnimatedVisibility(
-        visibleState = visibleState,
-        enter =
-            fadeIn(tween(220)) +
-                slideInHorizontally(spring(dampingRatio = 0.9f, stiffness = 500f)) { it / 6 },
-    ) {
-        entry.Content()
+private fun DetailPane(
+    entry: NavEntry<AppRoute>,
+    parent: NavEntry<AppRoute>?,
+) {
+    val paneNavigation = LocalPaneNavigation.current
+    val barHost = LocalBottomBarHost.current
+    val gesture = remember { Animatable(0f) }
+    val commit = remember { Animatable(0f) }
+    val visibleState =
+        remember {
+            MutableTransitionState(paneNavigation?.lastNavWasPop?.invoke() == true).apply { targetState = true }
+        }
+
+    PredictiveBackHandler(enabled = paneNavigation != null) { events ->
+        try {
+            events.collect { event ->
+                gesture.snapTo(event.progress)
+                barHost?.dismissProgress = event.progress * AppNavTransitions.GESTURE_PHASE
+            }
+            commit.animateTo(1f, tween(260, easing = FastOutSlowInEasing))
+            paneNavigation?.pop?.invoke()
+        } catch (e: CancellationException) {
+            barHost?.dismissProgress = 0f
+            gesture.animateTo(0f, spring(dampingRatio = 0.9f, stiffness = 500f))
+        }
+    }
+
+    val gestureT = gesture.value * AppNavTransitions.GESTURE_PHASE
+    val c = commit.value
+    val active = gesture.value > 0f || c > 0f
+    val offset = AppNavTransitions.elasticSlide.transform(gestureT).let { it + (1f - it) * c }
+    val scale = 1f - 0.18f * AppNavTransitions.gestureScale.transform(gestureT)
+    val corner = 32f * cornerEasing.transform(gestureT).coerceAtLeast(c)
+    val underlay = (1f - gestureBlurEasing.transform(gestureT)) * (1f - c)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (active && parent != null) {
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            val radius = (12f * underlay).dp.toPx()
+                            renderEffect =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && radius > 0.5f) {
+                                    BlurEffect(radius, radius, TileMode.Decal)
+                                } else {
+                                    null
+                                }
+                        }.drawWithContent {
+                            drawContent()
+                            drawRect(Color.Black.copy(alpha = 0.25f * underlay))
+                        },
+            ) {
+                parent.Content()
+            }
+        }
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        translationX = offset * size.width
+                        scaleX = scale
+                        scaleY = scale
+                        if (active) {
+                            shape = RoundedCornerShape(corner.dp)
+                            clip = true
+                        }
+                    },
+        ) {
+            AnimatedVisibility(
+                visibleState = visibleState,
+                enter =
+                    fadeIn(tween(220)) +
+                        slideInHorizontally(spring(dampingRatio = 0.9f, stiffness = 500f)) { it / 6 },
+            ) {
+                entry.Content()
+            }
+        }
     }
 }

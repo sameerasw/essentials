@@ -12,6 +12,9 @@ package com.sameerasw.essentials
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
+import com.sameerasw.essentials.ui.navigation.TwoPaneScene
+import com.sameerasw.essentials.ui.navigation.PaneNavigation
+import com.sameerasw.essentials.ui.navigation.LocalPaneNavigation
 import com.sameerasw.essentials.ui.navigation.rememberPaneLayout
 import com.sameerasw.essentials.ui.navigation.TwoPaneSceneStrategy
 import com.sameerasw.essentials.ui.navigation.ROUTE_METADATA_KEY
@@ -294,6 +297,13 @@ class MainActivity : AppCompatActivity() {
                                 .MenuStateManager()
                         },
                     LocalBottomBarHost provides bottomBarHost,
+                    LocalPaneNavigation provides
+                        remember {
+                            PaneNavigation(
+                                pop = { navViewModel.pop() },
+                                lastNavWasPop = { navViewModel.lastNavWasPop },
+                            )
+                        },
                 ) {
                     val backStack = navViewModel.backStack
                     val topRoute = backStack.lastOrNull() ?: AppRoute.Home
@@ -769,7 +779,7 @@ class MainActivity : AppCompatActivity() {
                                                     title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                     isBeta = isDetail && detailSpec?.isBeta == true,
                                                     onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
-                                                backCollapsed = isDetail && paneLayout == null && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
+                                                backCollapsed = isDetail && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
                                                     items =
                                                         tabs.mapIndexed { index, tab ->
                                                             ToolbarItem(
@@ -973,9 +983,15 @@ class MainActivity : AppCompatActivity() {
                                             rememberSaveableStateHolderNavEntryDecorator(),
                                             rememberViewModelStoreNavEntryDecorator(),
                                         ),
-                                    transitionSpec = { AppNavTransitions.push() },
-                                    popTransitionSpec = { AppNavTransitions.pop() },
-                                    predictivePopTransitionSpec = { swipeEdge -> AppNavTransitions.predictivePop(swipeEdge) },
+                                    transitionSpec = {
+                                        if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.push()
+                                    },
+                                    popTransitionSpec = {
+                                        if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.pop()
+                                    },
+                                    predictivePopTransitionSpec = { swipeEdge ->
+                                        if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.predictivePop(swipeEdge)
+                                    },
                                     entryProvider =
                                         entryProvider<AppRoute> {
                                             entry<AppRoute.Home>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.Home)) {

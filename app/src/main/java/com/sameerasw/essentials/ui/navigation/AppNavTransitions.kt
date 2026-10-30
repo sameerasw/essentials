@@ -28,6 +28,13 @@ object AppNavTransitions {
                 fadeOut(tween(200))
         )
 
+    fun paneFade(): ContentTransform =
+        ContentTransform(
+            targetContentEnter = fadeIn(tween(180)),
+            initialContentExit = fadeOut(tween(180)),
+            sizeTransform = null,
+        )
+
     fun pop(): ContentTransform =
         ContentTransform(
             targetContentEnter = EnterTransition.None,
@@ -45,7 +52,7 @@ object AppNavTransitions {
     private const val GESTURE_SLIDE = 0.12f
     private const val THRESHOLD_BOOST = 0.14f
 
-    private val elasticSlide =
+    val elasticSlide =
         Easing { t ->
             if (t < GESTURE_PHASE) {
                 val x = t / GESTURE_PHASE
@@ -58,7 +65,7 @@ object AppNavTransitions {
             }
         }
 
-    private val gestureScale =
+    val gestureScale =
         Easing { t ->
             val x = (t / 0.8f).coerceAtMost(1f)
             1f - (1f - x) * (1f - x)
