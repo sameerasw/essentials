@@ -74,4 +74,18 @@ sealed interface State {
         override val title: Int get() = R.string.diy_state_calendar_event
         override val icon: Int get() = R.drawable.rounded_calendar_today_24
     }
+
+    @Keep
+    data object Dnd : State {
+        override val title: Int = R.string.diy_state_dnd
+        override val icon: Int = R.drawable.rounded_do_not_disturb_on_24
+    }
+
+    @Keep
+    data class SoundMode(
+        @SerializedName("mode") val mode: Action.SoundModeType = Action.SoundModeType.SILENT,
+    ) : State {
+        override val title: Int get() = R.string.diy_state_sound_mode
+        override val icon: Int get() = mode.icon
+    }
 }

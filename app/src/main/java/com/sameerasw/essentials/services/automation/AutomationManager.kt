@@ -24,6 +24,7 @@ import com.sameerasw.essentials.services.automation.modules.LocationModule
 import com.sameerasw.essentials.services.automation.modules.PowerModule
 import com.sameerasw.essentials.services.automation.modules.TimeModule
 import com.sameerasw.essentials.services.automation.modules.CalendarModule
+import com.sameerasw.essentials.services.automation.modules.SoundModule
 import com.sameerasw.essentials.services.automation.modules.WifiModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -116,6 +117,7 @@ object AutomationManager {
         val wifiAutomations = mutableListOf<Automation>()
         val calendarAutomations = mutableListOf<Automation>()
         val notificationAutomations = mutableListOf<Automation>()
+        val soundAutomations = mutableListOf<Automation>()
         val locationAutomations = mutableListOf<Automation>()
         val androidAutoAutomations = mutableListOf<Automation>()
 
@@ -153,6 +155,11 @@ object AutomationManager {
                             notificationAutomations.add(automation)
                         }
 
+                        is Trigger.SoundModeChanged -> {
+                            requiredModuleIds.add(SoundModule.ID)
+                            soundAutomations.add(automation)
+                        }
+
                         is Trigger.ArriveAtLocation, is Trigger.LeaveLocation -> {
                             requiredModuleIds.add(LocationModule.ID)
                             locationAutomations.add(automation)
@@ -187,6 +194,16 @@ object AutomationManager {
                         is DIYState.CalendarEvent -> {
                             requiredModuleIds.add(CalendarModule.ID)
                             calendarAutomations.add(automation)
+                        }
+
+                        is DIYState.Dnd -> {
+                            requiredModuleIds.add(NotificationModule.ID)
+                            notificationAutomations.add(automation)
+                        }
+
+                        is DIYState.SoundMode -> {
+                            requiredModuleIds.add(SoundModule.ID)
+                            soundAutomations.add(automation)
                         }
 
                         else -> {}
@@ -294,6 +311,17 @@ object AutomationManager {
             module.updateAutomations(notificationAutomations)
         } else {
             activeModules.remove(NotificationModule.ID)?.stop(context)
+        }
+
+        // Sound Module
+        if (requiredModuleIds.contains(SoundModule.ID)) {
+            val module =
+                activeModules.getOrPut(SoundModule.ID) {
+                    SoundModule().also { it.start(context) }
+                }
+            module.updateAutomations(soundAutomations)
+        } else {
+            activeModules.remove(SoundModule.ID)?.stop(context)
         }
 
         if (requiredModuleIds.contains(LocationModule.ID)) {
