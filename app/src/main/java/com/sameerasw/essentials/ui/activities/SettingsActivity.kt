@@ -738,7 +738,7 @@ fun SettingsContent(
             )
 
             val defaultTab by viewModel.defaultTab
-            val availableTabs = remember { DIYTabs.entries }
+            val availableTabs = remember { DIYTabs.entries.filter { it != DIYTabs.SETTINGS } }
             DefaultTabPicker(
                 selectedTab = defaultTab,
                 onTabSelected = { viewModel.setDefaultTab(it, context) },

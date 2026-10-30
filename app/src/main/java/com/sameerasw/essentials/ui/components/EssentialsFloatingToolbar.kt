@@ -43,8 +43,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -81,15 +79,6 @@ fun EssentialsFloatingToolbar(
     expanded: Boolean = true,
 ) {
     val view = LocalView.current
-    val configuration = LocalConfiguration.current
-    val fontScale = LocalDensity.current.fontScale
-    val screenWidth = configuration.screenWidthDp
-
-    // Hide label if font scale is large or screen width is too small
-    val isLargeFont = fontScale > 1.25f
-    val isCompactScreen = screenWidth < 400
-
-    val shouldHideLabel = isLargeFont || (isCompactScreen && items.size > 3)
 
     val finalFab: (@Composable () -> Unit)? =
         when {
@@ -204,7 +193,7 @@ fun EssentialsFloatingToolbar(
                     }
                 }
             } else {
-                // TABBED MODE - Expanding labels
+                // TABBED MODE
                 items.forEachIndexed { index, item ->
                     val isSelected = selectedIndex == index
 
@@ -216,16 +205,6 @@ fun EssentialsFloatingToolbar(
                                 stiffness = Spring.StiffnessLow,
                             ),
                         label = "item_width_$index",
-                    )
-
-                    val labelWidth by animateDpAsState(
-                        targetValue = if (isSelected && !shouldHideLabel) 80.dp else 0.dp,
-                        animationSpec =
-                            spring(
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow,
-                            ),
-                        label = "label_width_$index",
                     )
 
                     val spacerWidth by animateDpAsState(
@@ -246,7 +225,7 @@ fun EssentialsFloatingToolbar(
                             },
                             modifier =
                                 Modifier
-                                    .width(itemWidth + labelWidth)
+                                    .width(itemWidth)
                                     .height(48.dp),
                             colors =
                                 if (isSelected) {
@@ -264,7 +243,6 @@ fun EssentialsFloatingToolbar(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(horizontal = 8.dp),
                             ) {
                                 Box {
                                     Icon(
@@ -290,16 +268,6 @@ fun EssentialsFloatingToolbar(
                                             )
                                         }
                                     }
-                                }
-                                if (isSelected && !shouldHideLabel) {
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = stringResource(id = item.labelRes),
-                                        style = MaterialTheme.typography.labelLarge,
-                                        maxLines = 1,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.basicMarquee(),
-                                    )
                                 }
                             }
                         }
