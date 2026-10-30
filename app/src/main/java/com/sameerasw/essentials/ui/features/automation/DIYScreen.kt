@@ -189,92 +189,85 @@ fun DIYScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding =
                         PaddingValues(
+                            top = contentPadding.calculateTopPadding(),
                             bottom = contentPadding.calculateBottomPadding(),
                             start = 16.dp,
                             end = 16.dp,
                         ),
                 ) {
                     item {
-                        Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
-                    }
-                    item {
-                        PullTitleHeader(
-                            title = stringResource(R.string.tab_diy),
-                            state = headerState,
-                        )
-                    }
-                    item {
-                        AnimatedVisibility(
-                            visible = selectionMode,
-                            enter = expandVertically() + fadeIn(),
-                            exit = shrinkVertically() + fadeOut(),
-                        ) {
-                            val selected = automations.filter { it.id in selectedIds }
-                            val hasEnabled = selected.any { it.isEnabled }
-                            val hasDisabled = selected.any { !it.isEnabled }
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(
-                                    text = stringResource(R.string.diy_selected_count, selected.size),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.padding(start = 16.dp),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        Column {
+                            PullTitleHeader(
+                                title = stringResource(R.string.tab_diy),
+                                state = headerState,
+                            )
+                            AnimatedVisibility(
+                                visible = selectionMode,
+                                enter = expandVertically() + fadeIn(),
+                                exit = shrinkVertically() + fadeOut(),
+                            ) {
+                                val selected = automations.filter { it.id in selectedIds }
+                                val hasEnabled = selected.any { it.isEnabled }
+                                val hasDisabled = selected.any { !it.isEnabled }
+                                Column(
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
-                                    SelectionActionButton(
-                                        icon = R.drawable.rounded_close_24,
-                                        text = stringResource(R.string.action_cancel),
-                                        outlined = true,
-                                        modifier = Modifier.weight(1f),
+                                    Text(
+                                        text = stringResource(R.string.diy_selected_count, selected.size),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        modifier = Modifier.padding(start = 16.dp),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        exitSelection()
-                                    }
-                                    if (hasEnabled) {
                                         SelectionActionButton(
-                                            icon = R.drawable.rounded_do_not_disturb_on_24,
-                                            text = stringResource(R.string.action_disable),
+                                            icon = R.drawable.rounded_close_24,
+                                            text = stringResource(R.string.action_cancel),
+                                            outlined = true,
                                             modifier = Modifier.weight(1f),
                                         ) {
                                             HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.setAutomationsEnabled(selectedIds, false)
+                                            exitSelection()
                                         }
-                                    }
-                                    if (hasDisabled) {
+                                        if (hasEnabled) {
+                                            SelectionActionButton(
+                                                icon = R.drawable.rounded_do_not_disturb_on_24,
+                                                text = stringResource(R.string.action_disable),
+                                                modifier = Modifier.weight(1f),
+                                            ) {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                viewModel.setAutomationsEnabled(selectedIds, false)
+                                            }
+                                        }
+                                        if (hasDisabled) {
+                                            SelectionActionButton(
+                                                icon = R.drawable.rounded_check_24,
+                                                text = stringResource(R.string.action_enable),
+                                                modifier = Modifier.weight(1f),
+                                            ) {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                viewModel.setAutomationsEnabled(selectedIds, true)
+                                            }
+                                        }
                                         SelectionActionButton(
-                                            icon = R.drawable.rounded_check_24,
-                                            text = stringResource(R.string.action_enable),
+                                            icon = R.drawable.rounded_delete_24,
+                                            text = stringResource(R.string.action_delete),
+                                            enabled = selected.isNotEmpty(),
                                             modifier = Modifier.weight(1f),
                                         ) {
                                             HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.setAutomationsEnabled(selectedIds, true)
+                                            viewModel.deleteAutomations(selectedIds)
+                                            exitSelection()
                                         }
-                                    }
-                                    SelectionActionButton(
-                                        icon = R.drawable.rounded_delete_24,
-                                        text = stringResource(R.string.action_delete),
-                                        enabled = selected.isNotEmpty(),
-                                        modifier = Modifier.weight(1f),
-                                    ) {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        viewModel.deleteAutomations(selectedIds)
-                                        exitSelection()
                                     }
                                 }
                             }
                         }
                     }
                     if (enabledAutomations.isNotEmpty()) {
-                        item {
-                            Text(
-                                text = stringResource(R.string.label_enabled),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(start = 16.dp),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
                         item {
                             RoundedCardContainer {
                                 enabledAutomations.forEach { automation ->
