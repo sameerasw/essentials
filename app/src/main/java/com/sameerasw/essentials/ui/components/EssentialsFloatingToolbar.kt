@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.foundation.layout.offset
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -75,7 +76,7 @@ data class ToolbarItem(
     val iconRes: Int,
     val labelRes: Int,
     val onClick: () -> Unit,
-    val hasBadge: Boolean = false,
+    val badge: (@Composable () -> Unit)? = null,
     val iconScale: Float = 1f,
 )
 
@@ -333,16 +334,14 @@ fun EssentialsFloatingToolbar(
                                                         },
                                                     modifier = Modifier.size(24.dp * item.iconScale),
                                                 )
-                                                if (item.hasBadge) {
-                                                    Canvas(
+                                                if (item.badge != null) {
+                                                    Box(
                                                         modifier =
                                                             Modifier
-                                                                .size(8.dp)
-                                                                .align(Alignment.TopEnd),
+                                                                .align(Alignment.TopEnd)
+                                                                .offset(x = 7.dp, y = (-7).dp),
                                                     ) {
-                                                        drawCircle(
-                                                            color = Color.Red,
-                                                        )
+                                                        item.badge.invoke()
                                                     }
                                                 }
                                             }

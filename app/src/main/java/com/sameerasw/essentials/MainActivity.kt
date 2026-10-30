@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import com.sameerasw.essentials.ui.navigation.UnderlayBlur
 import com.sameerasw.essentials.ui.navigation.LocalBottomBarHost
@@ -669,6 +670,7 @@ class MainActivity : AppCompatActivity() {
                                 ) {
                                     val bottomBarState = rememberSharedContentState(key = "bottom_bar")
                                     val isDetail = !isAtHome
+                                    val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
                                     val detailSpec = if (isDetail) bottomBarHost.specFor(topRoute) else null
                                     val routeTitle =
                                         when (val route = topRoute) {
@@ -770,7 +772,12 @@ class MainActivity : AppCompatActivity() {
                                                                         jumpToTab(index)
                                                                     }
                                                                 },
-                                                                hasBadge = tab == DIYTabs.SETTINGS && isUpdateAvailable && currentTab != DIYTabs.SETTINGS,
+                                                                badge =
+                                                                    if (tab == DIYTabs.SETTINGS && (isTranslationModeActive || isUpdateAvailable)) {
+                                                                        { SettingsTabBadge(isTranslationModeActive) }
+                                                                    } else {
+                                                                        null
+                                                                    },
                                                                 iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
                                                             )
                                                         },
@@ -919,74 +926,6 @@ class MainActivity : AppCompatActivity() {
                                                                 }
                                                             }
 
-                                                            val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
-
-                                                            if (isTranslationModeActive &&
-                                                                !isDetail && currentTab == DIYTabs.SETTINGS
-                                                            ) {
-                                                                Badge(
-                                                                    modifier =
-                                                                        Modifier
-                                                                            .align(Alignment.TopEnd)
-                                                                            .offset(x = 6.dp, y = (-6).dp)
-                                                                            .size(28.dp),
-                                                                    containerColor = MaterialTheme.colorScheme.tertiary,
-                                                                    contentColor = MaterialTheme.colorScheme.onTertiary,
-                                                                ) {
-                                                                    Icon(
-                                                                        painter = painterResource(id = R.drawable.rounded_translate_24),
-                                                                        contentDescription = "Translation Mode Active",
-                                                                        modifier =
-                                                                            Modifier
-                                                                                .fillMaxSize()
-                                                                                .padding(4.dp),
-                                                                    )
-                                                                }
-                                                            } else if (isUpdateAvailable &&
-                                                                !isDetail && currentTab == DIYTabs.SETTINGS
-                                                            ) {
-                                                                Badge(
-                                                                    modifier =
-                                                                        Modifier
-                                                                            .align(Alignment.TopEnd)
-                                                                            .offset(x = 6.dp, y = (-6).dp)
-                                                                            .size(28.dp),
-                                                                    containerColor = MaterialTheme.colorScheme.error,
-                                                                    contentColor = MaterialTheme.colorScheme.onError,
-                                                                ) {
-                                                                    val composition by rememberLottieComposition(
-                                                                        LottieCompositionSpec.RawRes(R.raw.update_motion),
-                                                                    )
-                                                                    val progress by animateLottieCompositionAsState(
-                                                                        composition = composition,
-                                                                        iterations = LottieConstants.IterateForever,
-                                                                    )
-                                                                    val onErrorColor =
-                                                                        MaterialTheme.colorScheme.onError
-                                                                    val dynamicProperties =
-                                                                        rememberLottieDynamicProperties(
-                                                                            rememberLottieDynamicProperty(
-                                                                                property = LottieProperty.COLOR_FILTER,
-                                                                                value =
-                                                                                    PorterDuffColorFilter(
-                                                                                        onErrorColor.toArgb(),
-                                                                                        PorterDuff.Mode.SRC_ATOP,
-                                                                                    ),
-                                                                                keyPath = arrayOf("**"),
-                                                                            ),
-                                                                        )
-
-                                                                    LottieAnimation(
-                                                                        composition = composition,
-                                                                        progress = { progress },
-                                                                        dynamicProperties = dynamicProperties,
-                                                                        modifier =
-                                                                            Modifier
-                                                                                .fillMaxSize()
-                                                                                .padding(2.dp),
-                                                                    )
-                                                                }
-                                                            }
                                                         }
                                                     },
                                                 )
@@ -1284,6 +1223,50 @@ class MainActivity : AppCompatActivity() {
                     }
                 startActivity(settingsIntent)
             }
+        }
+    }
+}
+
+@Composable
+private fun SettingsTabBadge(isTranslationMode: Boolean) {
+    if (isTranslationMode) {
+        Badge(
+            modifier = Modifier.size(18.dp),
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_translate_24),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize().padding(2.dp),
+            )
+        }
+    } else {
+        Badge(
+            modifier = Modifier.size(18.dp),
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError,
+        ) {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.update_motion))
+            val progress by animateLottieCompositionAsState(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+            )
+            val onErrorColor = MaterialTheme.colorScheme.onError
+            val dynamicProperties =
+                rememberLottieDynamicProperties(
+                    rememberLottieDynamicProperty(
+                        property = LottieProperty.COLOR_FILTER,
+                        value = PorterDuffColorFilter(onErrorColor.toArgb(), PorterDuff.Mode.SRC_ATOP),
+                        keyPath = arrayOf("**"),
+                    ),
+                )
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
+                dynamicProperties = dynamicProperties,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }
