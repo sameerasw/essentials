@@ -659,6 +659,7 @@ class SettingsRepository(
         const val KEY_ISLAND_ALARM_LAUNCHER_ONLY = "island_alarm_launcher_only"
         const val KEY_ISLAND_ALARM_WINDOW_HOURS = "island_alarm_window_hours"
         const val KEY_ISLAND_ALARM_HIDE_TIME = "island_alarm_hide_time"
+        const val KEY_ISLAND_ALARM_SHOW_REMAINING = "island_alarm_show_remaining"
         const val KEY_ISLAND_SHOW_TRAVEL = "island_show_travel"
         const val KEY_ISLAND_SHOW_CAFFEINATE = "island_show_caffeinate"
         const val KEY_ISLAND_CAFFEINATE_SHOW_TIME = "island_caffeinate_show_time"
@@ -4261,6 +4262,9 @@ class SettingsRepository(
 
     fun getIslandAlarmWindowHours(): Int = getInt(KEY_ISLAND_ALARM_WINDOW_HOURS, 12)
     fun setIslandAlarmWindowHours(hours: Int) = putInt(KEY_ISLAND_ALARM_WINDOW_HOURS, hours)
+
+    fun isIslandAlarmShowRemainingEnabled(): Boolean = getBoolean(KEY_ISLAND_ALARM_SHOW_REMAINING, false)
+    fun setIslandAlarmShowRemainingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALARM_SHOW_REMAINING, enabled)
 
     fun isIslandShowTravelEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TRAVEL, true)
     fun setIslandShowTravelEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TRAVEL, enabled)

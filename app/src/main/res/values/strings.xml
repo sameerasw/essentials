@@ -629,6 +629,7 @@
     <string name="bt_icon_custom">Custom</string>
     <string name="bt_device_icons_title">Order and icons</string>
     <string name="island_alarm_hide_time_title">Hide time</string>
+    <string name="island_alarm_show_remaining_title">Show time remaining</string>
     <string name="battery_separate_channels_title">Separate battery channels</string>
     <string name="bt_order_separator">Entries below are hidden</string>
     <string name="battery_separate_channels_desc">Separate LR channels</string>

@@ -83,6 +83,11 @@ fun IslandAlarmOptionsBottomSheet(
                     iconRes = R.drawable.rounded_schedule_24,
                     title = stringResource(R.string.island_alarm_hide_time_title),
                 )
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_ALARM_SHOW_REMAINING,
+                    iconRes = R.drawable.rounded_timer_24,
+                    title = stringResource(R.string.island_alarm_show_remaining_title),
+                )
             }
 
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_ALARM_LAUNCHER_ONLY)
