@@ -1640,7 +1640,7 @@
     <string name="screenshot_auto_clean_note">Per ogni nuovo screenshot viene inviata una notifica silenziosa che consente di conservarlo. Gli screenshot contrassegnati come preferiti vengono sempre conservati.</string>
     <string name="feat_screenshot_share_cleanup_title">Elimina screenshots condivisi</string>
     <string name="feat_screenshot_share_cleanup_desc">Elimina gli screenshot dopo la condivisione</string>
-    <string name="smart_pixels_disable_on_cast_title">Disabilità durante proiezione schermo</string>
+    <string name="smart_pixels_disable_on_cast_title">Disabilita durante proiezione schermo</string>
     <string name="smart_pixels_disable_on_cast_desc">Disabilità in automatico l\'overlay quando si proietta o condivide lo schermo</string>
     <string name="smart_pixels_intensity_title">Intensità</string>
     <string name="pocket_mode_use_light_title">Usa il sensore di luce</string>
