@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.components.PullTitleHeader
@@ -280,17 +283,46 @@ fun DIYScreen(
 
                     if (disabledAutomations.isNotEmpty()) {
                         item {
-                            Text(
-                                text = stringResource(R.string.label_disabled),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(start = 16.dp, top = 8.dp),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            var isDisabledExpanded by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+                            val chevronRotation by androidx.compose.animation.core.animateFloatAsState(
+                                targetValue = if (isDisabledExpanded) 180f else 0f,
+                                label = "disabled_chevron",
                             )
-                        }
-                        item {
-                            RoundedCardContainer {
-                                disabledAutomations.forEach { automation ->
-                                    AutomationRow(automation)
+                            Column {
+                                Row(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .clip(MaterialTheme.shapes.extraLarge)
+                                            .clickable {
+                                                HapticUtil.performUIHaptic(view)
+                                                isDisabledExpanded = !isDisabledExpanded
+                                            }.padding(start = 16.dp, end = 12.dp, top = 8.dp, bottom = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "${stringResource(R.string.label_disabled)} (${disabledAutomations.size})",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.graphicsLayer { rotationZ = chevronRotation },
+                                    )
+                                }
+                                AnimatedVisibility(
+                                    visible = isDisabledExpanded,
+                                    enter = expandVertically() + fadeIn(),
+                                    exit = shrinkVertically() + fadeOut(),
+                                ) {
+                                    RoundedCardContainer(modifier = Modifier.padding(top = 8.dp)) {
+                                        disabledAutomations.forEach { automation ->
+                                            AutomationRow(automation)
+                                        }
+                                    }
                                 }
                             }
                         }
