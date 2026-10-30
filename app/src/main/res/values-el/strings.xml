@@ -619,6 +619,8 @@
     <string name="tab_apps">Εφαρμογές</string>
     <string name="tab_freeze_subtitle">Απενεργοποιημένες εφαρμογές</string>
     <string name="tab_diy_subtitle">Κάντο μόνος σου</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Εύρεση και διαχείριση εφαρμογών</string>
     <string name="feat_app_updates_title">Ενημερώσεις εφαρμογών</string>
     <string name="tab_app_updates_title">Ενημερώσεις εφαρμογών</string>

@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.components.PullTitleHeader
@@ -600,6 +601,7 @@ fun SettingsContent(
     val sentryMode by viewModel.sentryReportMode
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
     val scrollState = rememberScrollState()
+    val appVersion = remember { "v${BuildConfig.VERSION_NAME}" }
     val headerState = rememberPullTitleHeaderState()
     var permissionsSectionY by remember { mutableStateOf<Float?>(null) }
 
@@ -624,6 +626,7 @@ fun SettingsContent(
 
         PullTitleHeader(
             title = stringResource(R.string.label_settings),
+            caption = appVersion,
             state = headerState,
         )
 

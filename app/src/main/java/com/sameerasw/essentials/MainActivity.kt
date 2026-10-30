@@ -62,7 +62,6 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -82,7 +81,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.animation.doOnEnd
@@ -289,6 +287,8 @@ class MainActivity : AppCompatActivity() {
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
                     var isSearchActive by remember { mutableStateOf(false) }
+                    var freezeSearchQuery by remember { mutableStateOf("") }
+                    var freezeSearchSubmitSignal by remember { androidx.compose.runtime.mutableIntStateOf(0) }
                     val gitHubToken by viewModel.gitHubToken
                     val gitHubUser by gitHubAuthViewModel.currentUser
                     val isOnboardingCompleted by viewModel.isOnboardingCompleted
@@ -594,10 +594,15 @@ class MainActivity : AppCompatActivity() {
 
                                 val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
                                 val searchFocusRequester = remember { FocusRequester() }
-                                val searchQuery = viewModel.searchQuery.value
+                                val isFreezeSearch = currentTab == DIYTabs.FREEZE
+                                val searchQuery = if (isFreezeSearch) freezeSearchQuery else viewModel.searchQuery.value
+                                val onSearchQueryChange: (String) -> Unit = {
+                                    if (isFreezeSearch) freezeSearchQuery = it else viewModel.onSearchQueryChanged(it, context)
+                                }
                                 val closeSearch = {
                                     focusManager.clearFocus()
                                     viewModel.onSearchQueryChanged("", context)
+                                    freezeSearchQuery = ""
                                     isSearchActive = false
                                 }
 
@@ -634,12 +639,20 @@ class MainActivity : AppCompatActivity() {
                                             ) {
                                                 SearchBarDefaults.InputField(
                                                     query = searchQuery,
-                                                    onQueryChange = { viewModel.onSearchQueryChanged(it, context) },
-                                                    onSearch = { focusManager.clearFocus() },
+                                                    onQueryChange = onSearchQueryChange,
+                                                    onSearch = {
+                                                        focusManager.clearFocus()
+                                                        if (isFreezeSearch) freezeSearchSubmitSignal++
+                                                    },
                                                     expanded = true,
                                                     onExpandedChange = {},
                                                     modifier = Modifier.focusRequester(searchFocusRequester),
-                                                    placeholder = { Text(stringResource(R.string.search_placeholder), maxLines = 1) },
+                                                    placeholder = {
+                                                        Text(
+                                                            stringResource(if (isFreezeSearch) R.string.search_frozen_apps_placeholder else R.string.search_placeholder),
+                                                            maxLines = 1,
+                                                        )
+                                                    },
                                                     leadingIcon = {
                                                         IconButton(onClick = {
                                                             HapticUtil.performVirtualKeyHaptic(view)
@@ -652,10 +665,10 @@ class MainActivity : AppCompatActivity() {
                                                         }
                                                     },
                                                     trailingIcon = {
-                                                        if (viewModel.isSearching.value) {
+                                                        if (!isFreezeSearch && viewModel.isSearching.value) {
                                                             LoadingIndicator(modifier = Modifier.size(32.dp))
                                                         } else if (searchQuery.isNotEmpty()) {
-                                                            IconButton(onClick = { viewModel.onSearchQueryChanged("", context) }) {
+                                                            IconButton(onClick = { onSearchQueryChange("") }) {
                                                                 Icon(
                                                                     painter = painterResource(id = R.drawable.rounded_close_24),
                                                                     contentDescription = stringResource(R.string.action_clear),
@@ -684,8 +697,6 @@ class MainActivity : AppCompatActivity() {
                                                         )
                                                     },
                                                 floatingActionButton = {
-                                                    var isFreezeMenuExpanded by remember { mutableStateOf(false) }
-
                                                     Box {
                                                         // Menu anchor
                                                         FloatingActionButton(
@@ -709,8 +720,7 @@ class MainActivity : AppCompatActivity() {
                                                                     }
 
                                                                     DIYTabs.FREEZE -> {
-                                                                        isFreezeMenuExpanded =
-                                                                            !isFreezeMenuExpanded
+                                                                        isSearchActive = true
                                                                     }
 
                                                                     DIYTabs.DIY -> {
@@ -767,11 +777,8 @@ class MainActivity : AppCompatActivity() {
 
                                                                 DIYTabs.FREEZE -> {
                                                                     Icon(
-                                                                        painter =
-                                                                            painterResource(
-                                                                                id = if (isFreezeMenuExpanded) R.drawable.rounded_close_24 else R.drawable.rounded_more_vert_24,
-                                                                            ),
-                                                                        contentDescription = stringResource(R.string.content_desc_more_options),
+                                                                        painter = painterResource(id = R.drawable.rounded_search_24),
+                                                                        contentDescription = stringResource(R.string.label_search_content_description),
                                                                     )
                                                                 }
 
@@ -809,118 +816,6 @@ class MainActivity : AppCompatActivity() {
                                                                         Icon(
                                                                             painter = painterResource(id = R.drawable.rounded_logout_24),
                                                                             contentDescription = null,
-                                                                        )
-                                                                    },
-                                                                )
-                                                            }
-                                                        }
-
-                                                        if (currentTab == DIYTabs.FREEZE) {
-                                                            SegmentedDropdownMenu(
-                                                                expanded = isFreezeMenuExpanded,
-                                                                onDismissRequest = {
-                                                                    isFreezeMenuExpanded = false
-                                                                },
-                                                                offset = DpOffset(0.dp, (-8).dp),
-                                                            ) {
-                                                                val fabColors =
-                                                                    MenuDefaults.itemColors(
-                                                                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                                        leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                                        trailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                                    )
-                                                                val itemBg =
-                                                                    MaterialTheme.colorScheme.primaryContainer
-
-                                                                SegmentedDropdownMenuItem(
-                                                                    text = { Text(stringResource(R.string.action_freeze)) },
-                                                                    onClick = {
-                                                                        HapticUtil.performVirtualKeyHaptic(view)
-                                                                        isFreezeMenuExpanded = false
-                                                                        viewModel.freezeAllAuto(context)
-                                                                    },
-                                                                    itemContainerColor = itemBg,
-                                                                    colors = fabColors,
-                                                                    leadingIcon = {
-                                                                        Icon(
-                                                                            painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                                                            contentDescription = null,
-                                                                            modifier = Modifier.size(18.dp),
-                                                                        )
-                                                                    },
-                                                                )
-                                                                SegmentedDropdownMenuItem(
-                                                                    text = { Text(stringResource(R.string.action_unfreeze)) },
-                                                                    onClick = {
-                                                                        HapticUtil.performVirtualKeyHaptic(view)
-                                                                        isFreezeMenuExpanded = false
-                                                                        viewModel.unfreezeAllAuto(context)
-                                                                    },
-                                                                    itemContainerColor = itemBg,
-                                                                    colors = fabColors,
-                                                                    leadingIcon = {
-                                                                        Icon(
-                                                                            painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                                                            contentDescription = null,
-                                                                            modifier = Modifier.size(18.dp),
-                                                                        )
-                                                                    },
-                                                                )
-                                                                SegmentedDropdownMenuItem(
-                                                                    text = { Text(stringResource(R.string.action_freeze_all)) },
-                                                                    onClick = {
-                                                                        HapticUtil.performVirtualKeyHaptic(view)
-                                                                        isFreezeMenuExpanded = false
-                                                                        viewModel.freezeAllManual(context)
-                                                                    },
-                                                                    itemContainerColor = itemBg,
-                                                                    colors = fabColors,
-                                                                    leadingIcon = {
-                                                                        Icon(
-                                                                            painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                                                            contentDescription = null,
-                                                                            modifier = Modifier.size(18.dp),
-                                                                        )
-                                                                    },
-                                                                )
-                                                                SegmentedDropdownMenuItem(
-                                                                    text = { Text(stringResource(R.string.action_unfreeze_all)) },
-                                                                    onClick = {
-                                                                        HapticUtil.performVirtualKeyHaptic(view)
-                                                                        isFreezeMenuExpanded = false
-                                                                        viewModel.unfreezeAllManual(context)
-                                                                    },
-                                                                    itemContainerColor = itemBg,
-                                                                    colors = fabColors,
-                                                                    leadingIcon = {
-                                                                        Icon(
-                                                                            painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                                                            contentDescription = null,
-                                                                            modifier = Modifier.size(18.dp),
-                                                                        )
-                                                                    },
-                                                                )
-                                                                SegmentedDropdownMenuItem(
-                                                                    text = { Text(stringResource(R.string.label_settings)) },
-                                                                    onClick = {
-                                                                        HapticUtil.performVirtualKeyHaptic(view)
-                                                                        isFreezeMenuExpanded = false
-                                                                        startActivity(
-                                                                            Intent(
-                                                                                context,
-                                                                                FeatureSettingsActivity::class.java,
-                                                                            ).apply {
-                                                                                putExtra("feature", "Freeze")
-                                                                            },
-                                                                        )
-                                                                    },
-                                                                    itemContainerColor = itemBg,
-                                                                    colors = fabColors,
-                                                                    leadingIcon = {
-                                                                        Icon(
-                                                                            painter = painterResource(id = R.drawable.rounded_settings_24),
-                                                                            contentDescription = null,
-                                                                            modifier = Modifier.size(18.dp),
                                                                         )
                                                                     },
                                                                 )
@@ -1076,6 +971,8 @@ class MainActivity : AppCompatActivity() {
                                                         },
                                                     )
                                                 },
+                                                searchQuery = freezeSearchQuery,
+                                                searchSubmitSignal = freezeSearchSubmitSignal,
                                             )
                                         }
 

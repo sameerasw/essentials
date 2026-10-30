@@ -200,6 +200,7 @@ fun DIYScreen(
                             PullTitleHeader(
                                 title = stringResource(R.string.tab_diy),
                                 state = headerState,
+                                caption = stringResource(R.string.diy_header_caption),
                             )
                             AnimatedVisibility(
                                 visible = selectionMode,

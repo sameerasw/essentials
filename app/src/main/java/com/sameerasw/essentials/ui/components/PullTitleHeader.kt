@@ -1,6 +1,11 @@
 package com.sameerasw.essentials.ui.components
 
 import android.view.View
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.platform.LocalDensity
@@ -101,6 +107,8 @@ fun PullTitleHeader(
     state: PullTitleHeaderState,
     modifier: Modifier = Modifier,
     expandableContent: (@Composable BoxScope.() -> Unit)? = null,
+    caption: String? = null,
+    expandedContent: (@Composable () -> Unit)? = null,
 ) {
     val fraction = state.fraction
     val fontFamily =
@@ -152,5 +160,29 @@ fun PullTitleHeader(
             maxLines = 1,
             modifier = Modifier.basicMarquee(),
         )
+        if (caption != null) {
+            Text(
+                text = caption,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                modifier =
+                    Modifier
+                        .basicMarquee()
+                        .graphicsLayer { alpha = fraction },
+            )
+        }
+        if (expandedContent != null) {
+            AnimatedVisibility(
+                visible = fraction >= 0.98f,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                Box(modifier = Modifier.padding(top = 16.dp)) {
+                    expandedContent()
+                }
+            }
+        }
     }
 }

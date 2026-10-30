@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.components.PullTitleHeader
@@ -913,6 +914,7 @@ fun SetupFeatures(
         }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+    val appVersion = remember { "v${BuildConfig.VERSION_NAME}" }
     val headerState = rememberPullTitleHeaderState()
 
     LazyColumn(
@@ -931,6 +933,7 @@ fun SetupFeatures(
             item {
                 PullTitleHeader(
                     title = stringResource(R.string.tab_essentials),
+                    caption = appVersion,
                     state = headerState,
                 )
             }

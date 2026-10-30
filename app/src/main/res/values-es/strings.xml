@@ -620,6 +620,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tab_apps">Aplicaciones</string>
     <string name="tab_freeze_subtitle">Aplicaciones desactivadas</string>
     <string name="tab_diy_subtitle">Hazlo tú mismo</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Buscar y administrar aplicaciones</string>
     <string name="feat_app_updates_title">Actualizaciones de aplicaciones</string>
     <string name="tab_app_updates_title">Actualizaciones de aplicaciones</string>
