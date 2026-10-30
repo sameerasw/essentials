@@ -1558,6 +1558,10 @@
         </receiver>
 
         <receiver
+            android:name=".services.receivers.LoopBreakerReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".services.receivers.AppBootReceiver"
             android:exported="true">
             <intent-filter>

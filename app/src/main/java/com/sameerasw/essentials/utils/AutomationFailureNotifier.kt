@@ -19,10 +19,28 @@ import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.conditionText
 import com.sameerasw.essentials.domain.model.AppPermission
+import com.sameerasw.essentials.services.receivers.LoopBreakerReceiver
 
 object AutomationFailureNotifier {
     private const val CHANNEL_ID = "automations"
+
+    private fun createChannelIfNeeded(
+        context: Context,
+        manager: NotificationManager,
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL_ID,
+                    context.getString(R.string.automation_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT,
+                ),
+            )
+        }
+    }
 
     fun missingPermissions(
         context: Context,
@@ -54,15 +72,7 @@ object AutomationFailureNotifier {
     ) {
         if (!PermissionUtils.isPostNotificationsEnabled(context)) return
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            manager.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    context.getString(R.string.automation_channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT,
-                ),
-            )
-        }
+        createChannelIfNeeded(context, manager)
 
         val actionName = context.getString(action.title)
         val openApp =
@@ -86,5 +96,54 @@ object AutomationFailureNotifier {
                 .setAutoCancel(true)
                 .build()
         manager.notify(action::class.java.name.hashCode(), notification)
+    }
+
+    fun notifyLoopBreak(
+        context: Context,
+        automation: Automation,
+    ) {
+        if (!PermissionUtils.isPostNotificationsEnabled(context)) return
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createChannelIfNeeded(context, manager)
+
+        val openApp =
+            PendingIntent.getActivity(
+                context,
+                0,
+                Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        val reenableIntent =
+            Intent(context, LoopBreakerReceiver::class.java).apply {
+                putExtra("automation_id", automation.id)
+            }
+        val reenablePendingIntent =
+            PendingIntent.getBroadcast(
+                context,
+                automation.id.hashCode(),
+                reenableIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        val condText = conditionText(context, automation)
+        val text = context.getString(R.string.automation_paused_text, condText)
+        val notification =
+            NotificationCompat
+                .Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle(context.getString(R.string.automation_paused_title))
+                .setContentText(text)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .setContentIntent(openApp)
+                .addAction(
+                    0,
+                    context.getString(R.string.automation_paused_reenable),
+                    reenablePendingIntent,
+                ).setAutoCancel(true)
+                .build()
+        manager.notify(automation.id.hashCode(), notification)
     }
 }

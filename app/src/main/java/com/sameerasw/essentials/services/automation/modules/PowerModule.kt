@@ -14,13 +14,25 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
+import android.os.SystemClock
+import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.diy.DIYRuntimeStore
+import com.sameerasw.essentials.domain.diy.Metric
+import com.sameerasw.essentials.domain.diy.SystemMetricTracker
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.utils.AutomationFailureNotifier
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import com.sameerasw.essentials.domain.diy.State as DIYState
 
 class PowerModule : AutomationModule {
@@ -31,13 +43,31 @@ class PowerModule : AutomationModule {
     override val id: String = ID
     private var automations: List<Automation> = emptyList()
     private val scope = CoroutineScope(Dispatchers.IO)
+    private var tracker: SystemMetricTracker? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val automationMutexes = mutableMapOf<String, Mutex>()
 
     // State tracking
     private var isCharging = false
     private var isPowerSaving = false
     private var appContext: Context? = null
     private var batteryLevel = -1
-    private val batteryStateActive = mutableMapOf<String, Boolean>()
+
+    private fun getMutex(id: String): Mutex = automationMutexes.getOrPut(id) { Mutex() }
+
+    private fun runOrdered(
+        automation: Automation,
+        actions: List<Action>,
+    ) {
+        if (actions.isEmpty()) return
+        val context = appContext ?: return
+        val mutex = getMutex(automation.id)
+        scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            mutex.withLock {
+                CombinedActionExecutor.executeAll(context, actions)
+            }
+        }
+    }
 
     private val receiver =
         object : BroadcastReceiver() {
@@ -69,7 +99,8 @@ class PowerModule : AutomationModule {
                             val percent = level * 100 / scale
                             if (percent != batteryLevel) {
                                 batteryLevel = percent
-                                evaluateBatteryLevel(context)
+                                // The broadcast fires on any battery field change, so only forward level changes.
+                                tracker?.onReading(Metric.BATTERY_LEVEL, percent.toDouble())
                             }
                         }
                     }
@@ -101,6 +132,44 @@ class PowerModule : AutomationModule {
                 addAction(Intent.ACTION_BATTERY_CHANGED)
             }
         appContext = context.applicationContext
+        DIYRuntimeStore.init(context)
+        tracker =
+            SystemMetricTracker(
+                clock = { SystemClock.elapsedRealtime() },
+                scheduler = { delayMs, block ->
+                    val runnable = Runnable { block() }
+                    mainHandler.postDelayed(runnable, delayMs)
+                    val cancel: () -> Unit = { mainHandler.removeCallbacks(runnable) }
+                    cancel
+                },
+                openStore =
+                    object : SystemMetricTracker.OpenStateStore {
+                        override fun load(): Set<String> = DIYRuntimeStore.openStateIds(ID)
+
+                        override fun save(ids: Set<String>) = DIYRuntimeStore.setOpenStateIds(ID, ids)
+                    },
+                listener =
+                    object : SystemMetricTracker.Listener {
+                        override fun onFire(automation: Automation) {
+                            runOrdered(automation, automation.actionList)
+                        }
+
+                        override fun onEnter(automation: Automation) {
+                            runOrdered(automation, automation.entryActionList)
+                        }
+
+                        override fun onExit(automation: Automation) {
+                            runOrdered(automation, automation.exitActionList)
+                        }
+
+                        override fun onLoopBreak(automation: Automation) {
+                            DIYRepository.pauseAutomation(automation.id)
+                            appContext?.let {
+                                AutomationFailureNotifier.notifyLoopBreak(it, automation)
+                            }
+                        }
+                    },
+            )
         context.registerReceiver(receiver, filter)
 
         // Initial check for charging
@@ -125,36 +194,21 @@ class PowerModule : AutomationModule {
     }
 
     override fun stop(context: Context) {
+        tracker?.closeAll()
+        tracker = null
+        mainHandler.removeCallbacksAndMessages(null)
         try {
             context.unregisterReceiver(receiver)
         } catch (e: Exception) {
             // Ignore if not registered
         }
-        batteryStateActive.clear()
         batteryLevel = -1
         appContext = null
     }
 
     override fun updateAutomations(automations: List<Automation>) {
         this.automations = automations
-        batteryStateActive.keys.retainAll(automations.map { it.id }.toSet())
-        appContext?.let { evaluateBatteryLevel(it) }
-    }
-
-    private fun evaluateBatteryLevel(context: Context) {
-        val level = batteryLevel
-        if (level < 0) return
-        automations
-            .filter { it.type == Automation.Type.STATE && it.isEnabled }
-            .forEach { automation ->
-                val state = automation.state as? DIYState.BatteryLevel ?: return@forEach
-                val inRange = level in state.minLevel..state.maxLevel
-                val previous = batteryStateActive.put(automation.id, inRange)
-                if (inRange == (previous ?: false)) return@forEach
-                val actions = if (inRange) automation.entryActionList else automation.exitActionList
-                if (actions.isEmpty()) return@forEach
-                scope.launch { CombinedActionExecutor.executeAll(context, actions) }
-            }
+        tracker?.updateAutomations(automations)
     }
 
     private fun handleTrigger(
