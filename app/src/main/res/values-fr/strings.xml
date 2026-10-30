@@ -619,6 +619,8 @@
     <string name="tab_apps">Applications</string>
     <string name="tab_freeze_subtitle">Applications désactivées</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Trouvez et gérez des applis</string>
     <string name="feat_app_updates_title">Mises à jour de l\'appli</string>
     <string name="tab_app_updates_title">Mises à jour de l\'appli</string>

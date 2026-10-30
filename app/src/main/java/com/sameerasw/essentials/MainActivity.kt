@@ -9,6 +9,30 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
+import androidx.compose.runtime.CompositionLocalProvider
+import com.sameerasw.essentials.ui.navigation.openFeatureIds
+import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.Composable
+import androidx.compose.foundation.background
+import com.sameerasw.essentials.ui.navigation.TwoPaneScene
+import com.sameerasw.essentials.ui.navigation.PaneNavigation
+import com.sameerasw.essentials.ui.navigation.LocalPaneNavigation
+import com.sameerasw.essentials.ui.navigation.rememberPaneLayout
+import com.sameerasw.essentials.ui.navigation.TwoPaneSceneStrategy
+import com.sameerasw.essentials.ui.navigation.ROUTE_METADATA_KEY
+import com.sameerasw.essentials.ui.navigation.UnderlayBlur
+import com.sameerasw.essentials.ui.navigation.LocalBottomBarHost
+import com.sameerasw.essentials.ui.navigation.BottomBarHost
+import com.sameerasw.essentials.ui.navigation.AppRoutes
+import com.sameerasw.essentials.ui.navigation.AppRoute
+import com.sameerasw.essentials.ui.navigation.AppNavigationViewModel
+import com.sameerasw.essentials.ui.navigation.AppNavTransitions
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -25,6 +49,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -46,7 +86,6 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -59,13 +98,14 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.animation.doOnEnd
@@ -81,6 +121,7 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.ui.activities.YourAndroidContent
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.ToolbarItem
@@ -112,8 +153,11 @@ class MainActivity : AppCompatActivity() {
     val updatesViewModel: AppUpdatesViewModel by viewModels()
     val locationViewModel: LocationReachedViewModel by viewModels()
     val gitHubAuthViewModel: GitHubAuthViewModel by viewModels()
+    private val navViewModel: AppNavigationViewModel by viewModels()
+    private val bottomBarHost = BottomBarHost()
     private var isAppReady = false
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         // Install and configure the splash screen
         val splashScreen = installSplashScreen()
@@ -234,6 +278,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         Log.d("MainActivity", "onCreate with action: ${intent?.action}")
+        if (savedInstanceState == null) {
+            AppRoutes.fromIntent(intent)?.let { navViewModel.navigate(it) }
+        }
         handleLocationIntent(intent)
 
         // Initialize HapticUtil with saved preferences
@@ -253,7 +300,23 @@ class MainActivity : AppCompatActivity() {
                             com.sameerasw.essentials.ui.state
                                 .MenuStateManager()
                         },
+                    LocalBottomBarHost provides bottomBarHost,
+                    LocalPaneNavigation provides
+                        remember {
+                            PaneNavigation(
+                                pop = { navViewModel.pop() },
+                                lastNavWasPop = { navViewModel.lastNavWasPop },
+                            )
+                        },
                 ) {
+                    val backStack = navViewModel.backStack
+                    val topRoute = backStack.lastOrNull() ?: AppRoute.Home
+                    val isAtHome = backStack.size <= 1
+                    val paneLayout = rememberPaneLayout()
+                    val paneStrategy = remember(paneLayout) { TwoPaneSceneStrategy(paneLayout) }
+                    navViewModel.isTwoPane = paneLayout != null
+                    val barRoute = topRoute
+                    val barAtHome = barRoute is AppRoute.Home
                     val context = LocalContext.current
                     val view = LocalView.current
                     try {
@@ -269,6 +332,9 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
+                    var isSearchActive by remember { mutableStateOf(false) }
+                    var freezeSearchQuery by remember { mutableStateOf("") }
+                    var freezeSearchSubmitSignal by remember { androidx.compose.runtime.mutableIntStateOf(0) }
                     val gitHubToken by viewModel.gitHubToken
                     val gitHubUser by gitHubAuthViewModel.currentUser
                     val isOnboardingCompleted by viewModel.isOnboardingCompleted
@@ -310,6 +376,32 @@ class MainActivity : AppCompatActivity() {
                             initialPage = initialPage,
                             pageCount = { tabs.size },
                         )
+                    val tabSwitchProgress = remember { Animatable(1f) }
+                    var tabSwitchDirection by remember { androidx.compose.runtime.mutableFloatStateOf(1f) }
+                    val jumpToTab: suspend (Int) -> Unit = { target ->
+                        val current = pagerState.currentPage
+                        if (kotlin.math.abs(target - current) <= 1) {
+                            pagerState.animateScrollToPage(target)
+                        } else {
+                            tabSwitchDirection = if (target > current) 1f else -1f
+                            tabSwitchProgress.snapTo(0f)
+                            pagerState.scrollToPage(target)
+                            tabSwitchProgress.animateTo(
+                                1f,
+                                androidx.compose.animation.core.spring(
+                                    dampingRatio = androidx.compose.animation.core.Spring.DampingRatioLowBouncy,
+                                    stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow,
+                                ),
+                            )
+                        }
+                    }
+                    LaunchedEffect(navViewModel.pendingTab) {
+                        navViewModel.pendingTab?.let { tab ->
+                            val index = tabs.indexOf(tab)
+                            if (index != -1) jumpToTab(index)
+                            navViewModel.pendingTab = null
+                        }
+                    }
 
                     LaunchedEffect(intent) {
                         intent?.getStringExtra("target_tab")?.let { tabName ->
@@ -359,13 +451,13 @@ class MainActivity : AppCompatActivity() {
                     val scope = rememberCoroutineScope()
 
                     // Handle predictive back button for tab navigation
-                    PredictiveBackHandler(enabled = pagerState.currentPage != initialPage) { progress ->
+                    PredictiveBackHandler(enabled = isAtHome && pagerState.currentPage != initialPage) { progress ->
                         try {
                             progress.collect { backEvent ->
                                 backProgress.snapTo(backEvent.progress)
                             }
                             scope.launch {
-                                pagerState.animateScrollToPage(initialPage)
+                                jumpToTab(initialPage)
                             }
                             scope.launch {
                                 backProgress.animateTo(
@@ -439,7 +531,28 @@ class MainActivity : AppCompatActivity() {
                     var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }
                     val trackedRepos by updatesViewModel.trackedRepos
 
-                    rememberLauncherForActivityResult(
+                    val yourAndroidViewModel: com.sameerasw.essentials.ui.activities.YourAndroidViewModel =
+                        androidx.lifecycle.viewmodel.compose
+                            .viewModel()
+                    val deviceInfo = remember { com.sameerasw.essentials.utils.DeviceUtils.getDeviceInfo(context) }
+                    var showFabProfileMenu by remember { mutableStateOf(false) }
+                    var showBugReportSheet by remember { mutableStateOf(false) }
+
+                    if (showBugReportSheet) {
+                        com.sameerasw.essentials.ui.core.sheets.BugReportBottomSheet(
+                            viewModel = viewModel,
+                            onDismissRequest = { showBugReportSheet = false },
+                        )
+                    }
+
+                    val backupAppListLauncher =
+                        rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.CreateDocument("application/json"),
+                        ) { uri ->
+                            uri?.let { yourAndroidViewModel.exportAppList(context, it) }
+                        }
+
+                    val exportLauncher = rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.CreateDocument("application/json"),
                     ) { uri ->
                         uri?.let {
@@ -455,7 +568,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    rememberLauncherForActivityResult(
+                    val importLauncher = rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.OpenDocument(),
                     ) { uri ->
                         uri?.let {
@@ -551,366 +664,535 @@ class MainActivity : AppCompatActivity() {
                                             ?: DIYTabs.ESSENTIALS
                                     }
 
-                                EssentialsFloatingToolbar(
+                                val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
+                                val searchFocusRequester = remember { FocusRequester() }
+                                val isFreezeSearch = currentTab == DIYTabs.FREEZE
+                                val searchQuery = if (isFreezeSearch) freezeSearchQuery else viewModel.searchQuery.value
+                                val onSearchQueryChange: (String) -> Unit = {
+                                    if (isFreezeSearch) freezeSearchQuery = it else viewModel.onSearchQueryChanged(it, context)
+                                }
+                                val closeSearch = {
+                                    focusManager.clearFocus()
+                                    viewModel.onSearchQueryChanged("", context)
+                                    freezeSearchQuery = ""
+                                    isSearchActive = false
+                                }
+
+                                BackHandler(enabled = isAtHome && isSearchActive) { closeSearch() }
+
+                                LaunchedEffect(pagerState.currentPage) {
+                                    if (isSearchActive) closeSearch()
+                                }
+
+                                SharedTransitionLayout(
                                     modifier =
                                         Modifier
                                             .align(Alignment.BottomCenter)
+                                            .fillMaxWidth()
                                             .zIndex(1f),
-                                    selectedIndex = pagerState.currentPage,
-                                    items =
-                                        tabs.mapIndexed { index, tab ->
-                                            ToolbarItem(
-                                                iconRes = tab.iconRes,
-                                                labelRes = tab.title,
-                                                onClick = {
-                                                    HapticUtil.performUIHaptic(view)
-                                                    scope.launch {
-                                                        pagerState.animateScrollToPage(index)
-                                                    }
-                                                },
-                                                hasBadge = false,
-                                            )
-                                        },
-                                    floatingActionButton = {
-                                        var isFreezeMenuExpanded by remember { mutableStateOf(false) }
-
-                                        Box {
-                                            // Menu anchor
-                                            FloatingActionButton(
-                                                onClick = {
-                                                    HapticUtil.performVirtualKeyHaptic(view)
-                                                    when (currentTab) {
-                                                        DIYTabs.ESSENTIALS -> {
-                                                            startActivity(
-                                                                Intent(
-                                                                    context,
-                                                                    SettingsActivity::class.java,
-                                                                ),
-                                                            )
-                                                        }
-
-                                                        DIYTabs.FREEZE -> {
-                                                            isFreezeMenuExpanded =
-                                                                !isFreezeMenuExpanded
-                                                        }
-
-                                                        DIYTabs.DIY -> {
-                                                            showNewAutomationSheet = true
-                                                        }
-                                                    }
-                                                },
-                                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                shape = MaterialTheme.shapes.large,
-                                                elevation =
-                                                    androidx.compose.material3.FloatingActionButtonDefaults.elevation(
-                                                        0.dp,
-                                                        0.dp,
-                                                        0.dp,
-                                                        0.dp,
-                                                    ),
-                                            ) {
-                                                when (currentTab) {
-                                                    DIYTabs.ESSENTIALS -> {
-                                                        Icon(
-                                                            painter = painterResource(id = R.drawable.rounded_settings_heart_24),
-                                                            contentDescription = stringResource(R.string.content_desc_settings),
-                                                        )
-                                                    }
-
-                                                    DIYTabs.FREEZE -> {
-                                                        Icon(
-                                                            painter =
-                                                                painterResource(
-                                                                    id = if (isFreezeMenuExpanded) R.drawable.rounded_close_24 else R.drawable.rounded_more_vert_24,
-                                                                ),
-                                                            contentDescription = stringResource(R.string.content_desc_more_options),
-                                                        )
-                                                    }
-
-                                                    DIYTabs.DIY -> {
-                                                        Icon(
-                                                            painter = painterResource(id = R.drawable.rounded_add_24),
-                                                            contentDescription = stringResource(R.string.diy_editor_new_title),
-                                                        )
-                                                    }
+                                ) {
+                                    val bottomBarState = rememberSharedContentState(key = "bottom_bar")
+                                    val isDetail = !barAtHome
+                                    val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
+                                    val detailSpec = if (isDetail) bottomBarHost.specFor(barRoute) else null
+                                    val routeTitle =
+                                        when (val route = barRoute) {
+                                            is AppRoute.FeatureSettings ->
+                                                com.sameerasw.essentials.domain.registry.FeatureRegistry.ALL_FEATURES
+                                                    .find { it.id == route.featureId }
+                                                    ?.let { stringResource(it.title) }
+                                                    ?: route.featureId
+                                            is AppRoute.PixelSearchbarSettings -> stringResource(R.string.pixel_searchbar_settings_title)
+                                            is AppRoute.Wallpaper -> stringResource(R.string.feat_daily_wallpaper_title)
+                                            else -> ""
+                                        }
+                                    val barMode = if (barAtHome && isSearchActive) "search" else "bar"
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.BottomCenter,
+                                    ) {
+                                        AnimatedContent(
+                                            targetState = barMode,
+                                            transitionSpec = { fadeIn() togetherWith fadeOut() },
+                                            label = "bottom_bar",
+                                        ) { mode ->
+                                            val morphBounds =
+                                                if (transition.isRunning) {
+                                                    Modifier.sharedBounds(bottomBarState, this@AnimatedContent)
+                                                } else {
+                                                    Modifier
                                                 }
-                                            }
-
-                                            if (currentTab == DIYTabs.FREEZE) {
-                                                SegmentedDropdownMenu(
-                                                    expanded = isFreezeMenuExpanded,
-                                                    onDismissRequest = {
-                                                        isFreezeMenuExpanded = false
-                                                    },
-                                                    offset = DpOffset(0.dp, (-8).dp),
+                                            if (mode == "search") {
+                                                LaunchedEffect(Unit) { searchFocusRequester.requestFocus() }
+                                                Surface(
+                                                    modifier =
+                                                        Modifier
+                                                            .then(morphBounds)
+                                                            .windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets.ime))
+                                                            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                                                            .fillMaxWidth(),
+                                                    shape = SearchBarDefaults.inputFieldShape,
+                                                    color = SearchBarDefaults.colors().containerColor,
+                                                    shadowElevation = 6.dp,
                                                 ) {
-                                                    val fabColors =
-                                                        MenuDefaults.itemColors(
-                                                            textColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                            leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                            trailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                        )
-                                                    val itemBg =
-                                                        MaterialTheme.colorScheme.primaryContainer
-
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(stringResource(R.string.action_freeze)) },
-                                                        onClick = {
-                                                            HapticUtil.performVirtualKeyHaptic(view)
-                                                            isFreezeMenuExpanded = false
-                                                            viewModel.freezeAllAuto(context)
+                                                    SearchBarDefaults.InputField(
+                                                        query = searchQuery,
+                                                        onQueryChange = onSearchQueryChange,
+                                                        onSearch = {
+                                                            focusManager.clearFocus()
+                                                            if (isFreezeSearch) freezeSearchSubmitSignal++
                                                         },
-                                                        itemContainerColor = itemBg,
-                                                        colors = fabColors,
-                                                        leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                                                contentDescription = null,
-                                                                modifier = Modifier.size(18.dp),
+                                                        expanded = true,
+                                                        onExpandedChange = {},
+                                                        modifier = Modifier.focusRequester(searchFocusRequester),
+                                                        placeholder = {
+                                                            Text(
+                                                                stringResource(if (isFreezeSearch) R.string.search_frozen_apps_placeholder else R.string.search_placeholder),
+                                                                maxLines = 1,
                                                             )
                                                         },
-                                                    )
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(stringResource(R.string.action_unfreeze)) },
-                                                        onClick = {
-                                                            HapticUtil.performVirtualKeyHaptic(view)
-                                                            isFreezeMenuExpanded = false
-                                                            viewModel.unfreezeAllAuto(context)
-                                                        },
-                                                        itemContainerColor = itemBg,
-                                                        colors = fabColors,
                                                         leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                                                contentDescription = null,
-                                                                modifier = Modifier.size(18.dp),
-                                                            )
+                                                            IconButton(onClick = {
+                                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                                closeSearch()
+                                                            }) {
+                                                                Icon(
+                                                                    painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                                                                    contentDescription = stringResource(R.string.content_desc_back),
+                                                                )
+                                                            }
+                                                        },
+                                                        trailingIcon = {
+                                                            if (!isFreezeSearch && viewModel.isSearching.value) {
+                                                                LoadingIndicator(modifier = Modifier.size(32.dp))
+                                                            } else if (searchQuery.isNotEmpty()) {
+                                                                IconButton(onClick = { onSearchQueryChange("") }) {
+                                                                    Icon(
+                                                                        painter = painterResource(id = R.drawable.rounded_close_24),
+                                                                        contentDescription = stringResource(R.string.action_clear),
+                                                                    )
+                                                                }
+                                                            }
                                                         },
                                                     )
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(stringResource(R.string.action_freeze_all)) },
-                                                        onClick = {
-                                                            HapticUtil.performVirtualKeyHaptic(view)
-                                                            isFreezeMenuExpanded = false
-                                                            viewModel.freezeAllManual(context)
-                                                        },
-                                                        itemContainerColor = itemBg,
-                                                        colors = fabColors,
-                                                        leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                                                contentDescription = null,
-                                                                modifier = Modifier.size(18.dp),
-                                                            )
-                                                        },
-                                                    )
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(stringResource(R.string.action_unfreeze_all)) },
-                                                        onClick = {
-                                                            HapticUtil.performVirtualKeyHaptic(view)
-                                                            isFreezeMenuExpanded = false
-                                                            viewModel.unfreezeAllManual(context)
-                                                        },
-                                                        itemContainerColor = itemBg,
-                                                        colors = fabColors,
-                                                        leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                                                contentDescription = null,
-                                                                modifier = Modifier.size(18.dp),
-                                                            )
-                                                        },
-                                                    )
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(stringResource(R.string.label_settings)) },
-                                                        onClick = {
-                                                            HapticUtil.performVirtualKeyHaptic(view)
-                                                            isFreezeMenuExpanded = false
-                                                            startActivity(
-                                                                Intent(
-                                                                    context,
-                                                                    FeatureSettingsActivity::class.java,
-                                                                ).apply {
-                                                                    putExtra("feature", "Freeze")
+                                                }
+                                            } else {
+                                                EssentialsFloatingToolbar(
+                                                    modifier = morphBounds,
+                                                    selectedIndex = pagerState.currentPage,
+                                                    title = if (isDetail) detailSpec?.title ?: routeTitle else null,
+                                                    isBeta = isDetail && detailSpec?.isBeta == true,
+                                                    onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
+                                                backCollapsed = isDetail && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
+                                                    items =
+                                                        tabs.mapIndexed { index, tab ->
+                                                            ToolbarItem(
+                                                                iconRes = tab.iconRes,
+                                                                labelRes = tab.title,
+                                                                onClick = {
+                                                                    HapticUtil.performUIHaptic(view)
+                                                                    scope.launch {
+                                                                        jumpToTab(index)
+                                                                    }
                                                                 },
+                                                                badge =
+                                                                    if (tab == DIYTabs.SETTINGS && (isTranslationModeActive || isUpdateAvailable)) {
+                                                                        { SettingsTabBadge(isTranslationModeActive) }
+                                                                    } else {
+                                                                        null
+                                                                    },
+                                                                iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
                                                             )
                                                         },
-                                                        itemContainerColor = itemBg,
-                                                        colors = fabColors,
-                                                        leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.rounded_settings_24),
-                                                                contentDescription = null,
-                                                                modifier = Modifier.size(18.dp),
-                                                            )
-                                                        },
-                                                    )
-                                                }
-                                            }
+                                                    floatingActionButton = {
+                                                        Box {
+                                                            // Menu anchor
+                                                            FloatingActionButton(
+                                                                onClick = {
+                                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                                    if (isDetail) {
+                                                                        (detailSpec?.fabAction ?: detailSpec?.onHelpClick)?.invoke()
+                                                                    } else when (currentTab) {
+                                                                        DIYTabs.ESSENTIALS -> {
+                                                                            isSearchActive = true
+                                                                        }
 
-                                            val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
+                                                                        DIYTabs.YOUR_ANDROID -> {
+                                                                            if (gitHubUser != null) {
+                                                                                showFabProfileMenu = true
+                                                                            } else {
+                                                                                showGitHubAuthSheet = true
+                                                                            }
+                                                                        }
 
-                                            if (isTranslationModeActive &&
-                                                (currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE)
-                                            ) {
-                                                Badge(
-                                                    modifier =
-                                                        Modifier
-                                                            .align(Alignment.TopEnd)
-                                                            .offset(x = 6.dp, y = (-6).dp)
-                                                            .size(28.dp),
-                                                    containerColor = MaterialTheme.colorScheme.tertiary,
-                                                    contentColor = MaterialTheme.colorScheme.onTertiary,
-                                                ) {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.rounded_translate_24),
-                                                        contentDescription = "Translation Mode Active",
-                                                        modifier =
-                                                            Modifier
-                                                                .fillMaxSize()
-                                                                .padding(4.dp),
-                                                    )
-                                                }
-                                            } else if (isUpdateAvailable &&
-                                                (currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE)
-                                            ) {
-                                                Badge(
-                                                    modifier =
-                                                        Modifier
-                                                            .align(Alignment.TopEnd)
-                                                            .offset(x = 6.dp, y = (-6).dp)
-                                                            .size(28.dp),
-                                                    containerColor = MaterialTheme.colorScheme.error,
-                                                    contentColor = MaterialTheme.colorScheme.onError,
-                                                ) {
-                                                    val composition by rememberLottieComposition(
-                                                        LottieCompositionSpec.RawRes(R.raw.update_motion),
-                                                    )
-                                                    val progress by animateLottieCompositionAsState(
-                                                        composition = composition,
-                                                        iterations = LottieConstants.IterateForever,
-                                                    )
-                                                    val onErrorColor =
-                                                        MaterialTheme.colorScheme.onError
-                                                    val dynamicProperties =
-                                                        rememberLottieDynamicProperties(
-                                                            rememberLottieDynamicProperty(
-                                                                property = LottieProperty.COLOR_FILTER,
-                                                                value =
-                                                                    PorterDuffColorFilter(
-                                                                        onErrorColor.toArgb(),
-                                                                        PorterDuff.Mode.SRC_ATOP,
+                                                                        DIYTabs.SETTINGS -> {
+                                                                            showBugReportSheet = true
+                                                                        }
+
+                                                                        DIYTabs.FREEZE -> {
+                                                                            isSearchActive = true
+                                                                        }
+
+                                                                        DIYTabs.DIY -> {
+                                                                            showNewAutomationSheet = true
+                                                                        }
+                                                                    }
+                                                                },
+                                                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                                shape = MaterialTheme.shapes.large,
+                                                                elevation =
+                                                                    androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                                                                        0.dp,
+                                                                        0.dp,
+                                                                        0.dp,
+                                                                        0.dp,
                                                                     ),
-                                                                keyPath = arrayOf("**"),
-                                                            ),
-                                                        )
+                                                            ) {
+                                                                val fabKey: Any = if (isDetail) "detail:${detailSpec?.fabIconRes}" else currentTab
+                                                                AnimatedContent(
+                                                                    targetState = fabKey,
+                                                                    transitionSpec = {
+                                                                        (fadeIn() + androidx.compose.animation.scaleIn(initialScale = 0.6f)) togetherWith
+                                                                            (fadeOut() + androidx.compose.animation.scaleOut(targetScale = 0.6f))
+                                                                    },
+                                                                    label = "fab_icon",
+                                                                ) { key ->
+                                                                    if (key !is DIYTabs) {
+                                                                        Icon(
+                                                                            painter = painterResource(id = detailSpec?.fabIconRes ?: R.drawable.rounded_help_24),
+                                                                            contentDescription = detailSpec?.fabContentDescription ?: stringResource(R.string.action_help_guide),
+                                                                        )
+                                                                    } else {
+                                                                        when (key) {
+                                                                            DIYTabs.ESSENTIALS -> {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.rounded_search_24),
+                                                                                    contentDescription = stringResource(R.string.label_search_content_description),
+                                                                                )
+                                                                            }
 
-                                                    LottieAnimation(
-                                                        composition = composition,
-                                                        progress = { progress },
-                                                        dynamicProperties = dynamicProperties,
-                                                        modifier =
-                                                            Modifier
-                                                                .fillMaxSize()
-                                                                .padding(2.dp),
-                                                    )
-                                                }
+                                                                            DIYTabs.YOUR_ANDROID -> {
+                                                                                if (gitHubUser != null) {
+                                                                                    coil.compose.AsyncImage(
+                                                                                        model = gitHubUser!!.avatarUrl,
+                                                                                        contentDescription = stringResource(R.string.action_profile),
+                                                                                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                                                                        modifier =
+                                                                                            Modifier
+                                                                                                .size(24.dp)
+                                                                                                .clip(androidx.compose.foundation.shape.CircleShape),
+                                                                                        placeholder = painterResource(id = R.drawable.brand_github),
+                                                                                        error = painterResource(id = R.drawable.brand_github),
+                                                                                    )
+                                                                                } else {
+                                                                                    Icon(
+                                                                                        painter = painterResource(id = R.drawable.brand_github),
+                                                                                        contentDescription = stringResource(R.string.action_sign_in_github),
+                                                                                    )
+                                                                                }
+                                                                            }
+
+                                                                            DIYTabs.SETTINGS -> {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.rounded_bug_report_24),
+                                                                                    contentDescription = stringResource(R.string.action_report_bug),
+                                                                                )
+                                                                            }
+
+                                                                            DIYTabs.FREEZE -> {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.rounded_search_24),
+                                                                                    contentDescription = stringResource(R.string.label_search_content_description),
+                                                                                )
+                                                                            }
+
+                                                                            DIYTabs.DIY -> {
+                                                                                Icon(
+                                                                                    painter = painterResource(id = R.drawable.rounded_add_24),
+                                                                                    contentDescription = stringResource(R.string.diy_editor_new_title),
+                                                                                )
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if (!isDetail && currentTab == DIYTabs.YOUR_ANDROID && gitHubUser != null) {
+                                                                SegmentedDropdownMenu(
+                                                                    expanded = showFabProfileMenu,
+                                                                    onDismissRequest = { showFabProfileMenu = false },
+                                                                ) {
+                                                                    SegmentedDropdownMenuItem(
+                                                                        text = { Text(gitHubUser!!.name ?: gitHubUser!!.login) },
+                                                                        onClick = { showFabProfileMenu = false },
+                                                                        leadingIcon = {
+                                                                            Icon(
+                                                                                painter = painterResource(id = R.drawable.brand_github),
+                                                                                contentDescription = null,
+                                                                            )
+                                                                        },
+                                                                    )
+                                                                    SegmentedDropdownMenuItem(
+                                                                        text = { Text(stringResource(R.string.action_sign_out)) },
+                                                                        onClick = {
+                                                                            gitHubAuthViewModel.signOut(context)
+                                                                            showFabProfileMenu = false
+                                                                        },
+                                                                        leadingIcon = {
+                                                                            Icon(
+                                                                                painter = painterResource(id = R.drawable.rounded_logout_24),
+                                                                                contentDescription = null,
+                                                                            )
+                                                                        },
+                                                                    )
+                                                                }
+                                                            }
+
+                                                        }
+                                                    },
+                                                )
                                             }
                                         }
-                                    },
-                                )
+                                    }
+                                }
 
                                 val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
-                                HorizontalPager(
-                                    state = pagerState,
-                                    modifier =
-                                        Modifier
-                                            .scale(1f - (backProgress.value * 0.05f))
-                                            .alpha(1f - (backProgress.value * 0.3f))
-                                            .progressiveBlur(
-                                                blurRadius = if (isBlurEnabled) 40f else 0f,
-                                                height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
-                                                direction = BlurDirection.BOTTOM,
-                                            )
-                                            .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
-                                    userScrollEnabled = isSwipeTabsEnabled,
-                                ) { targetPage ->
-                                    val statusBarHeight =
-                                        WindowInsets.statusBars
-                                            .asPaddingValues()
-                                            .calculateTopPadding()
-                                    val topContentPadding = statusBarHeight
-                                    val bottomToolbarPadding = 150.dp
-                                    val contentPadding =
-                                        PaddingValues(
-                                            top = topContentPadding,
-                                            bottom = bottomToolbarPadding,
-                                            start = 16.dp,
-                                            end = 16.dp,
-                                        )
+                                val bottomBlurHeight by androidx.compose.animation.core.animateDpAsState(
+                                    targetValue =
+                                        when {
+                                            isAtHome -> 130.dp
+                                            topRoute is AppRoute.Wallpaper -> 0.dp
+                                            else -> 150.dp
+                                        },
+                                    label = "bottom_blur_height",
+                                )
+                                val bottomBlurHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) { bottomBlurHeight.toPx() }
 
-                                    when (tabs[targetPage]) {
-                                        DIYTabs.ESSENTIALS -> {
-                                            SetupFeatures(
-                                                viewModel = viewModel,
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentPadding = contentPadding,
-                                                onHelpClick = { showInstructionsSheet = true },
-                                                onNavigateToTab = { targetTab ->
-                                                    val tabIndex = tabs.indexOf(targetTab)
-                                                    if (tabIndex != -1) {
-                                                        scope.launch {
-                                                            pagerState.animateScrollToPage(tabIndex)
+                                CompositionLocalProvider(
+                                    LocalSelectedFeatureIds provides if (paneLayout != null) backStack.openFeatureIds() else emptySet(),
+                                    LocalOpenAutomationId provides
+                                        if (paneLayout != null) (topRoute as? AppRoute.AutomationEditor)?.automationId else null,
+                                ) {
+                                    NavDisplay(
+                                        backStack = backStack,
+                                        modifier =
+                                            Modifier
+                                                .fillMaxSize()
+                                                .progressiveBlur(
+                                                    blurRadius = if (isBlurEnabled) 40f else 0f,
+                                                    height = bottomBlurHeightPx,
+                                                    direction = BlurDirection.BOTTOM,
+                                                ),
+                                        onBack = { navViewModel.pop() },
+                                        sceneStrategies = listOf(paneStrategy),
+                                        entryDecorators =
+                                            listOf(
+                                                rememberSaveableStateHolderNavEntryDecorator(),
+                                                rememberViewModelStoreNavEntryDecorator(),
+                                            ),
+                                        transitionSpec = {
+                                            if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.push()
+                                        },
+                                        popTransitionSpec = {
+                                            if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.pop()
+                                        },
+                                        predictivePopTransitionSpec = { swipeEdge ->
+                                            if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.predictivePop(swipeEdge)
+                                        },
+                                        entryProvider =
+                                            entryProvider<AppRoute> {
+                                                entry<AppRoute.Home>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.Home)) {
+                                                    UnderlayBlur(route = AppRoute.Home, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        androidx.compose.runtime.CompositionLocalProvider(
+                                                            androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner provides this@MainActivity,
+                                                        ) {
+                                                            HorizontalPager(
+                                                                state = pagerState,
+                                                                modifier =
+                                                                    Modifier
+                                                                        .fillMaxSize()
+                                                                        .scale(1f - (backProgress.value * 0.05f))
+                                                                        .alpha(1f - (backProgress.value * 0.3f))
+                                                                        .graphicsLayer {
+                                                                            val p = tabSwitchProgress.value
+                                                                            alpha = p.coerceIn(0f, 1f)
+                                                                            translationX = (1f - p) * tabSwitchDirection * 48.dp.toPx()
+                                                                            val sc = 0.96f + 0.04f * p
+                                                                            scaleX = sc
+                                                                            scaleY = sc
+                                                                        }
+                                                                        .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
+                                                                userScrollEnabled = isSwipeTabsEnabled && !isSearchActive && isAtHome,
+                                                            ) { targetPage ->
+                                                                val statusBarHeight =
+                                                                    WindowInsets.statusBars
+                                                                        .asPaddingValues()
+                                                                        .calculateTopPadding()
+                                                                val topContentPadding = statusBarHeight
+                                                                val bottomToolbarPadding = 150.dp
+                                                                val contentPadding =
+                                                                    PaddingValues(
+                                                                        top = topContentPadding,
+                                                                        bottom = bottomToolbarPadding,
+                                                                        start = 16.dp,
+                                                                        end = 16.dp,
+                                                                    )
+
+                                                                when (tabs[targetPage]) {
+                                                                    DIYTabs.ESSENTIALS -> {
+                                                                        SetupFeatures(
+                                                                            viewModel = viewModel,
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            contentPadding = contentPadding,
+                                                                            isSearchActive = isSearchActive,
+                                                                            onHelpClick = { showInstructionsSheet = true },
+                                                                            onNavigateToTab = { targetTab ->
+                                                                                val tabIndex = tabs.indexOf(targetTab)
+                                                                                if (tabIndex != -1) {
+                                                                                    scope.launch {
+                                                                                        jumpToTab(tabIndex)
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                        )
+                                                                    }
+
+                                                                    DIYTabs.FREEZE -> {
+                                                                        FreezeGridUI(
+                                                                            viewModel = viewModel,
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            contentPadding = contentPadding,
+                                                                            onGetStartedClick = {
+                                                                                startActivity(
+                                                                                    Intent(
+                                                                                        context,
+                                                                                        FeatureSettingsActivity::class.java,
+                                                                                    ).apply {
+                                                                                        putExtra("feature", "Freeze")
+                                                                                    },
+                                                                                )
+                                                                            },
+                                                                            onSettingsClick = {
+                                                                                startActivity(
+                                                                                    Intent(
+                                                                                        context,
+                                                                                        FeatureSettingsActivity::class.java,
+                                                                                    ).apply {
+                                                                                        putExtra("feature", "Freeze")
+                                                                                    },
+                                                                                )
+                                                                            },
+                                                                            searchQuery = freezeSearchQuery,
+                                                                            searchSubmitSignal = freezeSearchSubmitSignal,
+                                                                        )
+                                                                    }
+
+                                                                    DIYTabs.DIY -> {
+                                                                        DIYScreen(
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            contentPadding = contentPadding,
+                                                                            showNewAutomationSheet = showNewAutomationSheet,
+                                                                            onDismissNewAutomationSheet = {
+                                                                                showNewAutomationSheet = false
+                                                                            },
+                                                                            onNewAutomationClick = {
+                                                                                showNewAutomationSheet = true
+                                                                            },
+                                                                        )
+                                                                    }
+
+                                                                    DIYTabs.YOUR_ANDROID -> {
+                                                                        YourAndroidContent(
+                                                                            deviceInfo = deviceInfo,
+                                                                            updatesViewModel = updatesViewModel,
+                                                                            hasRunStartupAnimation = yourAndroidViewModel.hasRunStartupAnimation,
+                                                                            onAnimationRun = { yourAndroidViewModel.hasRunStartupAnimation = true },
+                                                                            exportLauncher = exportLauncher,
+                                                                            importLauncher = importLauncher,
+                                                                            backupAppListLauncher = backupAppListLauncher,
+                                                                            viewModel = yourAndroidViewModel,
+                                                                            onAddRepoClick = { showAddRepoSheet = true },
+                                                                            onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                        )
+                                                                    }
+
+                                                                    DIYTabs.SETTINGS -> {
+                                                                        SettingsContent(
+                                                                            viewModel = viewModel,
+                                                                            contentPadding = contentPadding,
+                                                                            expandPermissionsInitial = navViewModel.expandSettingsPermissions,
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     }
-                                                },
-                                            )
-                                        }
-
-                                        DIYTabs.FREEZE -> {
-                                            FreezeGridUI(
-                                                viewModel = viewModel,
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentPadding = contentPadding,
-                                                onGetStartedClick = {
-                                                    startActivity(
-                                                        Intent(
-                                                            context,
-                                                            FeatureSettingsActivity::class.java,
-                                                        ).apply {
-                                                            putExtra("feature", "Freeze")
-                                                        },
-                                                    )
-                                                },
-                                                onSettingsClick = {
-                                                    startActivity(
-                                                        Intent(
-                                                            context,
-                                                            FeatureSettingsActivity::class.java,
-                                                        ).apply {
-                                                            putExtra("feature", "Freeze")
-                                                        },
-                                                    )
-                                                },
-                                            )
-                                        }
-
-                                        DIYTabs.DIY -> {
-                                            DIYScreen(
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentPadding = contentPadding,
-                                                showNewAutomationSheet = showNewAutomationSheet,
-                                                onDismissNewAutomationSheet = {
-                                                    showNewAutomationSheet = false
-                                                },
-                                                onNewAutomationClick = {
-                                                    showNewAutomationSheet = true
-                                                },
-                                            )
-                                        }
-                                    }
+                                                }
+                                                entry<AppRoute.PixelSearchbarSettings>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.PixelSearchbarSettings)) {
+                                                    UnderlayBlur(route = AppRoute.PixelSearchbarSettings, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsScreen(
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                entry<AppRoute.Wallpaper>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.WallpaperRouteScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                entry<AppRoute.AutomationEditor>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.AutomationEditorScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                entry<AppRoute.FeatureSettings>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            FeatureSettingsScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                    )
                                 }
                             }
                         }
@@ -952,7 +1234,20 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         Log.d("MainActivity", "onNewIntent with action: ${intent.action}")
+        AppRoutes.fromIntent(intent)?.let { navViewModel.navigate(it) }
         handleLocationIntent(intent)
+    }
+
+    override fun startActivity(
+        intent: Intent,
+        options: Bundle?,
+    ) {
+        val route = AppRoutes.fromIntent(intent)
+        if (route != null && intent.component?.className != MainActivity::class.java.name) {
+            navViewModel.navigate(route)
+            return
+        }
+        super.startActivity(intent, options)
     }
 
     private fun handleLocationIntent(intent: Intent?) {
@@ -964,6 +1259,50 @@ class MainActivity : AppCompatActivity() {
                     }
                 startActivity(settingsIntent)
             }
+        }
+    }
+}
+
+@Composable
+private fun SettingsTabBadge(isTranslationMode: Boolean) {
+    if (isTranslationMode) {
+        Badge(
+            modifier = Modifier.size(18.dp),
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_translate_24),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize().padding(2.dp),
+            )
+        }
+    } else {
+        Badge(
+            modifier = Modifier.size(18.dp),
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError,
+        ) {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.update_motion))
+            val progress by animateLottieCompositionAsState(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+            )
+            val onErrorColor = MaterialTheme.colorScheme.onError
+            val dynamicProperties =
+                rememberLottieDynamicProperties(
+                    rememberLottieDynamicProperty(
+                        property = LottieProperty.COLOR_FILTER,
+                        value = PorterDuffColorFilter(onErrorColor.toArgb(), PorterDuff.Mode.SRC_ATOP),
+                        keyPath = arrayOf("**"),
+                    ),
+                )
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
+                dynamicProperties = dynamicProperties,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }

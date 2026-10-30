@@ -619,6 +619,8 @@
     <string name="tab_apps">Toepassings</string>
     <string name="tab_freeze_subtitle">Gedeaktiveerde toepassings</string>
     <string name="tab_diy_subtitle">Doen dit self</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Soek en bestuur programme</string>
     <string name="feat_app_updates_title">Programopdaterings</string>
     <string name="tab_app_updates_title">Programopdaterings</string>

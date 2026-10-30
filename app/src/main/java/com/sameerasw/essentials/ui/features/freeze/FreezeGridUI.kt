@@ -9,6 +9,13 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.SplitButtonDefaults
+import androidx.compose.material3.SplitButtonLayout
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
@@ -36,8 +43,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -45,8 +50,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,9 +67,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
@@ -77,8 +77,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -109,6 +107,8 @@ fun FreezeGridUI(
     onGetStartedClick: (() -> Unit)? = null,
     onAppLaunched: (() -> Unit)? = null,
     onSettingsClick: (() -> Unit)? = null,
+    searchQuery: String = "",
+    searchSubmitSignal: Int = 0,
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -120,10 +120,7 @@ fun FreezeGridUI(
     val frozenStates = remember { mutableStateMapOf<String, Boolean>() }
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    var isFocused by remember { mutableStateOf(false) }
 
     val freezeTags by viewModel.freezeTags
     val freezeAppTagMap by viewModel.freezeAppTagMap
@@ -156,6 +153,16 @@ fun FreezeGridUI(
         remember(searchQuery, filteredApps) {
             if (searchQuery.isNotBlank() && filteredApps.isNotEmpty()) filteredApps.first() else null
         }
+
+    LaunchedEffect(searchSubmitSignal) {
+        if (searchSubmitSignal > 0) {
+            bestMatch?.let { app ->
+                HapticUtil.performVirtualKeyHaptic(view)
+                viewModel.launchAndUnfreezeApp(context, app.packageName)
+                onAppLaunched?.invoke()
+            }
+        }
+    }
 
     // Refresh frozen states when active
     DisposableEffect(lifecycleOwner) {
@@ -229,11 +236,14 @@ fun FreezeGridUI(
         } else {
             val scrollState = androidx.compose.foundation.rememberScrollState()
             val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+            val headerState = rememberPullTitleHeaderState()
+            val frozenCount = pickedApps.count { frozenStates[it.packageName] == true }
 
             Column(
                 modifier =
                     Modifier
                         .fillMaxSize()
+                        .nestedScroll(headerState.nestedScrollConnection)
                         .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                         .verticalScroll(scrollState)
                         .pointerInput(Unit) {
@@ -242,62 +252,48 @@ fun FreezeGridUI(
             ) {
                 Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
 
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
+                PullTitleHeader(
+                    title = stringResource(R.string.tab_freeze),
+                    state = headerState,
+                    caption = stringResource(R.string.freeze_header_caption, frozenCount, pickedApps.size),
+                )
+
+                Row(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .focusRequester(focusRequester)
-                            .onFocusChanged { isFocused = it.isFocused },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.rounded_search_24),
-                            contentDescription = stringResource(R.string.label_search_content_description),
-                            modifier = Modifier.size(24.dp),
-                        )
-                    },
-                    trailingIcon = {
-                        if (searchQuery.isNotEmpty()) {
-                            IconButton(onClick = {
-                                searchQuery = ""
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FreezeSplitButton(
+                        iconRes = R.drawable.rounded_mode_cool_24,
+                        text = stringResource(R.string.action_freeze),
+                        menuText = stringResource(R.string.action_freeze_all),
+                        onClick = { viewModel.freezeAllAuto(context) },
+                        onMenuClick = { viewModel.freezeAllManual(context) },
+                    )
+                    FreezeSplitButton(
+                        iconRes = R.drawable.rounded_mode_cool_off_24,
+                        text = stringResource(R.string.action_unfreeze),
+                        menuText = stringResource(R.string.action_unfreeze_all),
+                        onClick = { viewModel.unfreezeAllAuto(context) },
+                        onMenuClick = { viewModel.unfreezeAllManual(context) },
+                    )
+                    if (onSettingsClick != null) {
+                        FilledTonalIconButton(
+                            onClick = {
                                 HapticUtil.performVirtualKeyHaptic(view)
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_close_24),
-                                    contentDescription = stringResource(R.string.action_stop),
-                                )
-                            }
-                        }
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.search_frozen_apps_placeholder))
-                    },
-                    shape = MaterialTheme.shapes.extraExtraLarge,
-                    singleLine = true,
-                    colors =
-                        OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
-                        ),
-                    keyboardOptions =
-                        KeyboardOptions(
-                            imeAction = ImeAction.Search,
-                            capitalization = KeyboardCapitalization.Words,
-                        ),
-                    keyboardActions =
-                        KeyboardActions(
-                            onSearch = {
-                                bestMatch?.let { app ->
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    viewModel.launchAndUnfreezeApp(context, app.packageName)
-                                    onAppLaunched?.invoke()
-                                }
+                                onSettingsClick()
                             },
-                        ),
-                )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_settings_24),
+                                contentDescription = stringResource(R.string.label_settings),
+                            )
+                        }
+                    }
+                }
 
                 if (freezeTags.isNotEmpty()) {
                     androidx.compose.foundation.lazy.LazyRow(
@@ -794,4 +790,70 @@ fun AppGridItem(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun FreezeSplitButton(
+    iconRes: Int,
+    text: String,
+    menuText: String,
+    onClick: () -> Unit,
+    onMenuClick: () -> Unit,
+) {
+    val view = LocalView.current
+    var isMenuExpanded by remember { mutableStateOf(false) }
+
+    SplitButtonLayout(
+        leadingButton = {
+            SplitButtonDefaults.LeadingButton(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onClick()
+                },
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text)
+            }
+        },
+        trailingButton = {
+            Box {
+                SplitButtonDefaults.TrailingButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        isMenuExpanded = true
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
+                        contentDescription = menuText,
+                    )
+                }
+                SegmentedDropdownMenu(
+                    expanded = isMenuExpanded,
+                    onDismissRequest = { isMenuExpanded = false },
+                ) {
+                    SegmentedDropdownMenuItem(
+                        text = { Text(menuText) },
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            isMenuExpanded = false
+                            onMenuClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                            )
+                        },
+                    )
+                }
+            }
+        },
+    )
 }

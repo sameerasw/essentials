@@ -619,6 +619,8 @@
     <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Uitgeschakelde apps</string>
     <string name="tab_diy_subtitle">Doe-het-zelf</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Vind en beheer apps</string>
     <string name="feat_app_updates_title">Appupdates</string>
     <string name="tab_app_updates_title">Appupdates</string>

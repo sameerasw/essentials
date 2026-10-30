@@ -675,6 +675,8 @@
     <string name="tab_apps">Sovellukset</string>
     <string name="tab_freeze_subtitle">Poistetut sovellukset</string>
     <string name="tab_diy_subtitle">Tee se itse</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Etsi ja hallinnoi sovelluksia</string>
     <string name="feat_app_updates_title">Sovelluspäivitykset</string>
     <string name="tab_app_updates_title">Sovelluspäivitykset</string>

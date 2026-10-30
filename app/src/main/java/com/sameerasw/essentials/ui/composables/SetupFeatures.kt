@@ -9,13 +9,24 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
+import com.sameerasw.essentials.ui.navigation.LocalListPaneWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import com.sameerasw.essentials.ui.components.FavoriteGrid
+import com.sameerasw.essentials.BuildConfig
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -23,66 +34,34 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
@@ -106,26 +85,18 @@ import com.sameerasw.essentials.ui.features.permissions.PermissionsSearchResultC
 import com.sameerasw.essentials.ui.features.tiles.QSTilesSearchResultCard
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.PermissionUIHelper
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
-import com.sameerasw.essentials.ui.modifiers.liquidRipple
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
-import com.sameerasw.essentials.utils.DeviceUtils
-import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun SetupFeatures(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    searchRequested: Boolean = false,
-    onSearchHandled: () -> Unit = {},
+    isSearchActive: Boolean = false,
     onHelpClick: () -> Unit = {},
     onNavigateToTab: ((com.sameerasw.essentials.domain.DIYTabs) -> Unit)? = null,
 ) {
@@ -144,7 +115,6 @@ fun SetupFeatures(
     viewModel.isDynamicNightLightEnabled.value
 
     viewModel.isScreenLockedSecurityEnabled.value
-    val isRippleEnabled by viewModel.isRippleEnabled
     val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
     val context = LocalContext.current
 
@@ -907,23 +877,7 @@ fun SetupFeatures(
 
     val lazyListState = rememberLazyListState()
     val view = LocalView.current
-    val focusRequester = remember { FocusRequester() }
-    var isFocused by remember { mutableStateOf(false) }
-    val focusManager = LocalFocusManager.current
     val searchQuery = viewModel.searchQuery.value
-
-    BackHandler(enabled = isFocused || searchQuery.isNotEmpty()) {
-        focusManager.clearFocus()
-        viewModel.onSearchQueryChanged("", context)
-        isFocused = false
-    }
-
-    LocalSoftwareKeyboardController.current
-    WindowInsets.isImeVisible
-
-    val pullRefreshState = rememberPullToRefreshState()
-    var isRefreshing by rememberSaveable { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
 
     val allFeatures =
         FeatureRegistry.getFilteredFeatures(
@@ -932,612 +886,323 @@ fun SetupFeatures(
             viewModel.isShowLegacyFeatures.value,
         )
 
-    LaunchedEffect(searchRequested) {
-        if (searchRequested) {
-            lazyListState.animateScrollToItem(0)
-            delay(100)
-            focusRequester.requestFocus()
-            onSearchHandled()
+    val searchResults = viewModel.searchResults.value
+    val isSearchingViewModel = viewModel.isSearching.value
+    val recentSearches by viewModel.recentSearches
+    val matchingTiles =
+        remember(searchQuery, viewModel.isEnableUnsupportedFeatures.value, viewModel.isUseUsageAccess.value) {
+            QSTileRegistry.searchTiles(
+                context = context,
+                query = searchQuery,
+                includeUnsupported = viewModel.isEnableUnsupportedFeatures.value,
+                isUseUsageStats = viewModel.isUseUsageAccess.value,
+            )
         }
-    }
-
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-    var shouldResetRefreshing by rememberSaveable { mutableStateOf(false) }
-
-    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
-        val observer =
-            androidx.lifecycle.LifecycleEventObserver { _, event ->
-                if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
-                    if (shouldResetRefreshing) {
-                        scope.launch {
-                            delay(200)
-                            isRefreshing = false
-                            shouldResetRefreshing = false
-                        }
-                    }
+    val matchingPermissions =
+        remember(searchQuery, viewModel) {
+            PermissionUIHelper.searchPermissions(
+                context = context,
+                query = searchQuery,
+                viewModel = viewModel,
+                activity = context as? Activity,
+            )
+        }
+    val freezePickedApps by viewModel.freezePickedApps
+    val matchingFrozenApps =
+        remember(searchQuery, freezePickedApps) {
+            if (searchQuery.isBlank()) {
+                emptyList()
+            } else {
+                freezePickedApps.filter { app ->
+                    (app.appName.contains(searchQuery, ignoreCase = true) ||
+                        app.packageName.contains(searchQuery, ignoreCase = true)) &&
+                        FreezeManager.isAppFrozen(context, app.packageName)
                 }
             }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
         }
-    }
-
-    LaunchedEffect(isRefreshing) {
-        if (isRefreshing) {
-            HapticUtil.performUIHaptic(view)
-            val intent = Intent(context, YourAndroidActivity::class.java)
-            val options =
-                androidx.core.app.ActivityOptionsCompat.makeCustomAnimation(
-                    context,
-                    R.anim.anim_slide_in_top,
-                    R.anim.anim_stay,
-                )
-            context.startActivity(intent, options.toBundle())
-            shouldResetRefreshing = true
-        }
-    }
-
-    var rippleTrigger by remember { mutableStateOf(0) }
-    var textCenterOffset by remember { mutableStateOf(Offset.Zero) }
-
-    var lastHapticBucket by remember { mutableStateOf(0) }
-    LaunchedEffect(pullRefreshState.distanceFraction) {
-        val fraction = pullRefreshState.distanceFraction
-        val currentBucket = (fraction * 10).toInt()
-
-        if (fraction >= 1f && lastHapticBucket < 10) {
-            HapticUtil.performUIHaptic(view)
-            rippleTrigger++
-            lastHapticBucket = 10
-        } else if (fraction < 1f && currentBucket != lastHapticBucket) {
-            if (currentBucket > lastHapticBucket) {
-                HapticUtil.performSliderHaptic(view)
-            }
-            lastHapticBucket = currentBucket
-        }
-
-        if (fraction == 0f) {
-            lastHapticBucket = 0
-        }
-    }
-
-    PullToRefreshBox(
-        isRefreshing = isRefreshing,
-        onRefresh = { isRefreshing = true },
-        state = pullRefreshState,
-        indicator = { },
-        modifier = modifier
-            .fillMaxSize()
-            .liquidRipple(
-                trigger = rippleTrigger,
-                origin = textCenterOffset,
-                enabled = isRippleEnabled,
-                durationMillis = 2800,
-                amplitudeDp = 34f,
-                frequency = 12f,
-                decay = 4.5f,
-                speedDp = 1400f,
-            ),
-    ) {
-        val deviceInfo = DeviceUtils.getDeviceInfo(context)
-        val displayFraction = if (isRefreshing) 1f else pullRefreshState.distanceFraction
-        val thresholdPassed = displayFraction >= 1f
-        val statusBarPadding = contentPadding.calculateTopPadding()
-
-        val cardExpansion by androidx.compose.animation.core.animateDpAsState(
-            targetValue = 120.dp * displayFraction.coerceIn(0f, 1f),
-            animationSpec =
-                androidx.compose.animation.core
-                    .spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow),
-            label = "cardExpansion",
-        )
-
-        val containerColor by androidx.compose.animation.animateColorAsState(
-            targetValue = if (thresholdPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerLow,
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 300),
-            label = "containerColor",
-        )
-
-        val contentColor by androidx.compose.animation.animateColorAsState(
-            targetValue = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 300),
-            label = "contentColor",
-        )
-
-        val borderColor by androidx.compose.animation.animateColorAsState(
-            targetValue = if (thresholdPassed) Color.Transparent else MaterialTheme.colorScheme.outlineVariant,
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 300),
-            label = "borderColor",
-        )
-
-        val chevronAlpha by androidx.compose.animation.core.animateFloatAsState(
-            targetValue = if (thresholdPassed) 0f else 1f,
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 300),
-            label = "chevronAlpha",
-        )
-
-        val chevronWidth by androidx.compose.animation.core.animateDpAsState(
-            targetValue = if (thresholdPassed) 0.dp else 24.dp + 8.dp, // size + spacer
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 300),
-            label = "chevronWidth",
-        )
-
-        val fontWeight by androidx.compose.animation.core.animateIntAsState(
-            targetValue = if (thresholdPassed) 700 else 500,
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 100),
-            label = "fontWeight",
-        )
-
-        val textScale by androidx.compose.animation.core.animateFloatAsState(
-            targetValue = if (thresholdPassed) 1.5f else 1f,
-            animationSpec =
-                androidx.compose.animation.core
-                    .tween(durationMillis = 300),
-            label = "textScale",
-        )
-
-        val fontWidth =
-            remember(displayFraction) {
-                (100f + (displayFraction.coerceIn(0f, 1f) * 50f)).toInt().toFloat()
-            }
-        val fontFamily =
-            remember(fontWidth, fontWeight) {
-                FontFamily(
-                    Font(
-                        R.font.google_sans_flex,
-                        variationSettings =
-                            FontVariation.Settings(
-                                FontVariation.width(fontWidth),
-                                FontVariation.weight(fontWeight),
-                                FontVariation.Setting("ROND", 100f),
-                            ),
-                    ),
-                )
-            }
-
-        val searchQuery = viewModel.searchQuery.value
-        val searchResults = viewModel.searchResults.value
-        val isSearchingViewModel = viewModel.isSearching.value
-        val recentSearches by viewModel.recentSearches
-        val matchingTiles =
-            remember(searchQuery, viewModel.isEnableUnsupportedFeatures.value, viewModel.isUseUsageAccess.value) {
-                QSTileRegistry.searchTiles(
-                    context = context,
-                    query = searchQuery,
-                    includeUnsupported = viewModel.isEnableUnsupportedFeatures.value,
-                    isUseUsageStats = viewModel.isUseUsageAccess.value,
-                )
-            }
-        val matchingPermissions =
-            remember(searchQuery, viewModel) {
-                PermissionUIHelper.searchPermissions(
-                    context = context,
-                    query = searchQuery,
-                    viewModel = viewModel,
-                    activity = context as? Activity,
-                )
-            }
-        val freezePickedApps by viewModel.freezePickedApps
-        val matchingFrozenApps =
-            remember(searchQuery, freezePickedApps) {
-                if (searchQuery.isBlank()) {
-                    emptyList()
-                } else {
-                    freezePickedApps.filter { app ->
-                        (app.appName.contains(searchQuery, ignoreCase = true) ||
-                            app.packageName.contains(searchQuery, ignoreCase = true)) &&
-                            FreezeManager.isAppFrozen(context, app.packageName)
-                    }
-                }
-            }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+    val appVersion = remember { "v${BuildConfig.VERSION_NAME}" }
+    val headerState = rememberPullTitleHeaderState()
 
-    LazyColumn(
-        state = lazyListState,
-        modifier =
-            modifier
-                .fillMaxSize()
-                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
-        contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding() + 64.dp),
-    ) {
-            item {
-                // My Android Hero Card
-                OutlinedCard(
-                    onClick = {
-                        HapticUtil.performUIHaptic(view)
-                        context.startActivity(Intent(context, YourAndroidActivity::class.java))
-                    },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 0.dp, bottom = 0.dp)
-                            .height(64.dp + statusBarPadding + cardExpansion),
-                    shape =
-                        RoundedCornerShape(
-                            topStart = 0.dp,
-                            topEnd = 0.dp,
-                            bottomStart = 28.dp,
-                            bottomEnd = 28.dp,
-                        ),
-                    colors =
-                        CardDefaults.outlinedCardColors(
-                            containerColor = containerColor,
-                            contentColor = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                        ),
-                    border = BorderStroke(1.dp, borderColor),
-                ) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Spacer(modifier = Modifier.height(statusBarPadding))
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Box(
-                                    modifier =
-                                        Modifier
-                                            .width(chevronWidth)
-                                            .graphicsLayer { alpha = chevronAlpha },
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.KeyboardArrowDown,
-                                            contentDescription = null,
-                                            modifier =
-                                                Modifier
-                                                    .size(24.dp)
-                                                    .graphicsLayer {
-                                                        rotationZ =
-                                                            (displayFraction * 180f).coerceIn(0f, 180f)
-                                                    },
-                                            tint = contentColor,
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                    }
-                                }
-                                Text(
-                                    text = deviceInfo.deviceName,
-                                    style =
-                                        MaterialTheme.typography.titleMedium.copy(
-                                            fontFamily = fontFamily,
-                                        ),
-                                    modifier =
-                                        Modifier
-                                            .onGloballyPositioned { coords ->
-                                                val pos = coords.positionInRoot()
-                                                val size = coords.size
-                                                textCenterOffset = Offset(
-                                                    x = pos.x + (size.width / 2f),
-                                                    y = pos.y + (size.height / 2f),
-                                                )
-                                            }
-                                            .graphicsLayer {
-                                                scaleX = textScale
-                                                scaleY = textScale
-                                            },
-                                    color = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+    val listPaneWidth = LocalListPaneWidth.current
+    val hasValidFavorites =
+        remember(pinnedFeatureKeys) {
+            val ids = FeatureRegistry.ALL_FEATURES.mapTo(HashSet()) { it.id }
+            pinnedFeatureKeys.any { it in ids }
+        }
+    val gridEligible = listPaneWidth != null && hasValidFavorites && !isSearchActive && searchQuery.isEmpty()
 
-            item {
-                // Search Bar
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = {
-                        viewModel.onSearchQueryChanged(it, context)
-                    },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .focusRequester(focusRequester)
-                            .onFocusChanged {
-                                isFocused = it.isFocused
-                            },
-                    leadingIcon = {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .padding(start = 12.dp, end = 4.dp)
-                                    .size(40.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            androidx.compose.animation.AnimatedVisibility(
-                                visible = isSearchingViewModel,
-                                enter = androidx.compose.animation.fadeIn(),
-                                exit = androidx.compose.animation.fadeOut(),
-                            ) {
-                                androidx.compose.material3.CircularProgressIndicator(
-                                    modifier = Modifier.size(20.dp),
-                                    strokeWidth = 2.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-
-                            androidx.compose.animation.AnimatedVisibility(
-                                visible = !isSearchingViewModel,
-                                enter = androidx.compose.animation.fadeIn(),
-                                exit = androidx.compose.animation.fadeOut(),
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_search_24),
-                                    contentDescription = stringResource(R.string.label_search_content_description),
-                                    modifier = Modifier.size(24.dp),
-                                )
-                            }
-                        }
-                    },
-                    placeholder = {
-                        if (!isFocused && searchQuery.isEmpty()) {
-                            Text(
-                                text = stringResource(R.string.search_placeholder),
-                                style = MaterialTheme.typography.bodyLarge,
-                                maxLines = 1,
-                                modifier = Modifier.basicMarquee(),
-                            )
-                        }
-                    },
-                    shape = MaterialTheme.shapes.extraExtraLarge,
-                    singleLine = true,
-                    colors =
-                        OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-                        ),
-                    trailingIcon = {
-                        if (isFocused || searchQuery.isNotEmpty()) {
-                            IconButton(onClick = {
-                                if (searchQuery.isNotEmpty()) {
-                                    viewModel.onSearchQueryChanged("", context)
-                                } else {
-                                    focusManager.clearFocus()
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Clear,
-                                    contentDescription = "Clear search",
-                                )
-                            }
-                        }
-                    },
-                )
-            }
-
-            item {
-                // Favorites
-                AnimatedVisibility(
-                    visible = !isFocused && pinnedFeatureKeys.isNotEmpty() && searchQuery.isEmpty(),
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically(),
-                ) {
-                    FavoriteCarousel(
-                        pinnedKeys = pinnedFeatureKeys,
-                        onFeatureClick = { feature ->
-                            BiometricSecurityHelper.runWithAuth(
-                                activity = context as FragmentActivity,
-                                feature = feature,
-                                action = {
-                                    feature.onClick(context, viewModel)
-                                },
-                            )
-                        },
-                        onFeatureLongClick = { feature ->
-                            viewModel.togglePinFeature(feature.id)
-                        },
-                        onReorderClick = {
-                            showReorderFavoritesSheet = true
-                        },
-                        modifier = Modifier.padding(bottom = 16.dp),
-                    )
-                }
-            }
-
-            if (isFocused && searchQuery.isEmpty()) {
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val showFavoritesGrid = gridEligible && maxWidth >= listPaneWidth!! + 280.dp
+        val listWidth = if (gridEligible) listPaneWidth!!.coerceAtMost(maxWidth) else maxWidth
+        LazyColumn(
+            state = lazyListState,
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .width(listWidth)
+                    .nestedScroll(headerState.nestedScrollConnection)
+                    .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
+            contentPadding =
+                PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding() + 64.dp,
+                ),
+        ) {
                 item {
-                    RecentSearchesSection(
-                        recentSearches = recentSearches,
-                        allFeatures = allFeatures,
-                        pinnedFeatureKeys = pinnedFeatureKeys,
-                        context = context,
-                        viewModel = viewModel,
+                    PullTitleHeader(
+                        title = stringResource(R.string.tab_essentials),
+                        caption = appVersion,
+                        state = headerState,
                     )
                 }
-            } else if (searchQuery.isNotEmpty()) {
-                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty() && matchingFrozenApps.isEmpty()) {
-                    item {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 64.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            Text(
-                                text = "¯\\_(ツ)_/¯",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                            Text(
-                                text = stringResource(id = R.string.search_no_results, searchQuery),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                                maxLines = 2,
-                                modifier =
-                                    Modifier
-                                        .padding(top = 8.dp)
-                                        .padding(horizontal = 32.dp),
-                            )
-                        }
+                item {
+                    // Favorites
+                    AnimatedVisibility(
+                        visible = !showFavoritesGrid && !isSearchActive && pinnedFeatureKeys.isNotEmpty() && searchQuery.isEmpty(),
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
+                    ) {
+                        FavoriteCarousel(
+                            pinnedKeys = pinnedFeatureKeys,
+                            onFeatureClick = { feature ->
+                                BiometricSecurityHelper.runWithAuth(
+                                    activity = context as FragmentActivity,
+                                    feature = feature,
+                                    action = {
+                                        feature.onClick(context, viewModel)
+                                    },
+                                )
+                            },
+                            onFeatureLongClick = { feature ->
+                                viewModel.togglePinFeature(feature.id)
+                            },
+                            onReorderClick = {
+                                showReorderFavoritesSheet = true
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp),
+                        )
                     }
                 }
 
-                if (!isSearchingViewModel) {
+                if (isSearchActive && searchQuery.isEmpty()) {
                     item {
-                        SearchResultsSection(
-                            searchResults = searchResults,
+                        RecentSearchesSection(
+                            recentSearches = recentSearches,
                             allFeatures = allFeatures,
                             pinnedFeatureKeys = pinnedFeatureKeys,
                             context = context,
                             viewModel = viewModel,
-                            onNavigateToTab = onNavigateToTab,
                         )
                     }
-                }
-            } else if (!isFocused) {
-                val topLevelFeatures =
-                    allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
-                val featureMap = topLevelFeatures.associateBy { it.id }
-
-                val sectionFeatureIdsList =
-                    listOf(
-                        listOf(
-                            "Notifications",
-                            "Sound",
-                            "Display",
-                            "Maps power saving mode",
-                            "Daily Wallpaper",
-                            "Widgets",
-                        ),
-                        listOf(
-                            "Input",
-                            "Power and battery",
-                            "Quick settings tiles",
-                            "Watch",
-                        ),
-                        listOf(
-                            "Security",
-                            "Networks",
-                        ),
-                        listOf(
-                            "Location reached",
-                            "Watermark",
-                        ),
-                    )
-
-                val assignedIds = sectionFeatureIdsList.flatten().toSet()
-                val unassignedFeatures = topLevelFeatures.filter { it.id !in assignedIds }
-
-                val sections =
-                    sectionFeatureIdsList
-                        .map { ids ->
-                            ids.mapNotNull { featureMap[it] }
-                        }.filter { it.isNotEmpty() } +
-                        if (unassignedFeatures.isNotEmpty()) {
-                            listOf(
-                                unassignedFeatures,
-                            )
-                        } else {
-                            emptyList()
-                        }
-
-                sections.forEachIndexed { sectionIndex, sectionFeatures ->
-                    item {
-                        RoundedCardContainer(
-                            modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .padding(bottom = 12.dp),
-                        ) {
-                            sectionFeatures.forEach { feature ->
-                                FeatureCard(
-                                    title = feature.title,
-                                    isEnabled = feature.isEnabled(viewModel),
-                                    onToggle = { enabled ->
-                                        BiometricSecurityHelper.runWithAuth(
-                                            activity = context as FragmentActivity,
-                                            feature = feature,
-                                            isToggle = true,
-                                            action = {
-                                                feature.onToggle(viewModel, context, enabled)
-                                            },
-                                        )
-                                    },
-                                    onClick = {
-                                        BiometricSecurityHelper.runWithAuth(
-                                            activity = context as FragmentActivity,
-                                            feature = feature,
-                                            action = {
-                                                feature.onClick(context, viewModel)
-                                            },
-                                        )
-                                    },
-                                    iconRes = feature.iconRes,
-                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                                    isToggleEnabled = feature.isToggleEnabled(viewModel, context),
-                                    showToggle = feature.showToggle,
-                                    hasMoreSettings = feature.hasMoreSettings,
-                                    onDisabledToggleClick = {
-                                        if (feature.id == "Screen locked security") {
-                                            feature.onClick(context, viewModel)
-                                        } else {
-                                            currentFeature = feature.title
-                                            showSheet = true
-                                        }
-                                    },
-                                    description = feature.description,
-                                    isBeta = feature.isBeta,
-                                    isLegacy = feature.isLegacy,
-                                    isUnsupported = !feature.isDeviceSupported(context),
-                                    isPinned = pinnedFeatureKeys.contains(feature.id),
-                                    onPinToggle = {
-                                        viewModel.togglePinFeature(feature.id)
-                                    },
-                                    onHelpClick =
-                                        if (feature.aboutDescription != null) {
-                                            {
-                                                selectedHelpFeature = feature
-                                                showHelpSheet = true
-                                            }
-                                        } else {
-                                            null
-                                        },
-                                    hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                } else if (searchQuery.isNotEmpty()) {
+                    if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty() && matchingFrozenApps.isEmpty()) {
+                        item {
+                            Column(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 64.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Text(
+                                    text = "¯\\_(ツ)_/¯",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.search_no_results, searchQuery),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                    maxLines = 2,
+                                    modifier =
+                                        Modifier
+                                            .padding(top = 8.dp)
+                                            .padding(horizontal = 32.dp),
                                 )
                             }
                         }
                     }
-                }
 
-                item {
-                    ListExpandToggleButton(
-                        isExpanded = false,
-                        onToggle = {
-                            showInstructionsSheet = true
-                        },
-                        title = R.string.label_help_guide,
-                        description = R.string.label_help_guide,
-                        iconRes = R.drawable.rounded_help_24,
-                        modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp, bottom = 12.dp),
-                    )
+                    if (!isSearchingViewModel) {
+                        item {
+                            SearchResultsSection(
+                                searchResults = searchResults,
+                                allFeatures = allFeatures,
+                                pinnedFeatureKeys = pinnedFeatureKeys,
+                                context = context,
+                                viewModel = viewModel,
+                                onNavigateToTab = onNavigateToTab,
+                            )
+                        }
+                    }
+                } else if (!isSearchActive) {
+                    val topLevelFeatures =
+                        allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
+                    val featureMap = topLevelFeatures.associateBy { it.id }
+
+                    val sectionFeatureIdsList =
+                        listOf(
+                            listOf(
+                                "Notifications",
+                                "Sound",
+                                "Display",
+                                "Maps power saving mode",
+                                "Daily Wallpaper",
+                                "Widgets",
+                            ),
+                            listOf(
+                                "Input",
+                                "Power and battery",
+                                "Quick settings tiles",
+                                "Watch",
+                            ),
+                            listOf(
+                                "Security",
+                                "Networks",
+                            ),
+                            listOf(
+                                "Location reached",
+                                "Watermark",
+                            ),
+                        )
+
+                    val assignedIds = sectionFeatureIdsList.flatten().toSet()
+                    val unassignedFeatures = topLevelFeatures.filter { it.id !in assignedIds }
+
+                    val sections =
+                        sectionFeatureIdsList
+                            .map { ids ->
+                                ids.mapNotNull { featureMap[it] }
+                            }.filter { it.isNotEmpty() } +
+                            if (unassignedFeatures.isNotEmpty()) {
+                                listOf(
+                                    unassignedFeatures,
+                                )
+                            } else {
+                                emptyList()
+                            }
+
+                    sections.forEachIndexed { sectionIndex, sectionFeatures ->
+                        item {
+                            RoundedCardContainer(
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(bottom = 12.dp),
+                            ) {
+                                sectionFeatures.forEach { feature ->
+                                    FeatureCard(
+                                        title = feature.title,
+                                        isSelected = feature.id in LocalSelectedFeatureIds.current,
+                                        isEnabled = feature.isEnabled(viewModel),
+                                        onToggle = { enabled ->
+                                            BiometricSecurityHelper.runWithAuth(
+                                                activity = context as FragmentActivity,
+                                                feature = feature,
+                                                isToggle = true,
+                                                action = {
+                                                    feature.onToggle(viewModel, context, enabled)
+                                                },
+                                            )
+                                        },
+                                        onClick = {
+                                            BiometricSecurityHelper.runWithAuth(
+                                                activity = context as FragmentActivity,
+                                                feature = feature,
+                                                action = {
+                                                    feature.onClick(context, viewModel)
+                                                },
+                                            )
+                                        },
+                                        iconRes = feature.iconRes,
+                                        modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                                        isToggleEnabled = feature.isToggleEnabled(viewModel, context),
+                                        showToggle = feature.showToggle,
+                                        hasMoreSettings = feature.hasMoreSettings,
+                                        onDisabledToggleClick = {
+                                            if (feature.id == "Screen locked security") {
+                                                feature.onClick(context, viewModel)
+                                            } else {
+                                                currentFeature = feature.title
+                                                showSheet = true
+                                            }
+                                        },
+                                        description = feature.description,
+                                        isBeta = feature.isBeta,
+                                        isLegacy = feature.isLegacy,
+                                        isUnsupported = !feature.isDeviceSupported(context),
+                                        isPinned = pinnedFeatureKeys.contains(feature.id),
+                                        onPinToggle = {
+                                            viewModel.togglePinFeature(feature.id)
+                                        },
+                                        onHelpClick =
+                                            if (feature.aboutDescription != null) {
+                                                {
+                                                    selectedHelpFeature = feature
+                                                    showHelpSheet = true
+                                                }
+                                            } else {
+                                                null
+                                            },
+                                        hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        ListExpandToggleButton(
+                            isExpanded = false,
+                            onToggle = {
+                                showInstructionsSheet = true
+                            },
+                            title = R.string.label_help_guide,
+                            description = R.string.label_help_guide,
+                            iconRes = R.drawable.rounded_help_24,
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 16.dp, bottom = 12.dp),
+                        )
+                    }
                 }
-            }
+        }
+        if (showFavoritesGrid) {
+            FavoriteGrid(
+                pinnedKeys = pinnedFeatureKeys,
+                onFeatureClick = { feature ->
+                    BiometricSecurityHelper.runWithAuth(
+                        activity = context as FragmentActivity,
+                        feature = feature,
+                        action = {
+                            feature.onClick(context, viewModel)
+                        },
+                    )
+                },
+                onFeatureLongClick = { feature ->
+                    viewModel.togglePinFeature(feature.id)
+                },
+                onReorderClick = {
+                    showReorderFavoritesSheet = true
+                },
+                modifier =
+                    Modifier
+                        .offset(x = listWidth)
+                        .width(maxWidth - listWidth)
+                        .fillMaxHeight(),
+                contentPadding =
+                    PaddingValues(
+                        top = contentPadding.calculateTopPadding() + 140.dp,
+                        bottom = contentPadding.calculateBottomPadding() + 64.dp,
+                        end = 16.dp,
+                    ),
+            )
         }
     }
 }
@@ -1615,6 +1280,7 @@ private fun RecentSearchesSection(
             validSearches.forEach { result ->
                 FeatureCard(
                     title = result.title,
+                    isSelected = result.featureKey in LocalSelectedFeatureIds.current,
                     isEnabled = true,
                     onToggle = {},
                     onClick = {
@@ -1762,6 +1428,7 @@ private fun SearchResultsSection(
                     for (result in visibleResults) {
                         FeatureCard(
                             title = result.title,
+                            isSelected = result.featureKey in LocalSelectedFeatureIds.current,
                             isEnabled = true,
                             onToggle = {},
                             onClick = {
