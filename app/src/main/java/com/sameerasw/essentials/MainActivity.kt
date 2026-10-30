@@ -332,6 +332,7 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
+                    var isDiyMacrosShown by remember { mutableStateOf(false) }
                     var isSearchActive by remember { mutableStateOf(false) }
                     var freezeSearchQuery by remember { mutableStateOf("") }
                     var freezeSearchSubmitSignal by remember { androidx.compose.runtime.mutableIntStateOf(0) }
@@ -910,7 +911,14 @@ class MainActivity : AppCompatActivity() {
                                                                             DIYTabs.DIY -> {
                                                                                 Icon(
                                                                                     painter = painterResource(id = R.drawable.rounded_add_24),
-                                                                                    contentDescription = stringResource(R.string.diy_editor_new_title),
+                                                                                    contentDescription =
+                                                                                        stringResource(
+                                                                                            if (isDiyMacrosShown) {
+                                                                                                R.string.diy_new_macro
+                                                                                            } else {
+                                                                                                R.string.diy_editor_new_title
+                                                                                            },
+                                                                                        ),
                                                                                 )
                                                                             }
                                                                         }
@@ -1099,6 +1107,9 @@ class MainActivity : AppCompatActivity() {
                                                                             },
                                                                             onNewAutomationClick = {
                                                                                 showNewAutomationSheet = true
+                                                                            },
+                                                                            onShowMacrosChange = {
+                                                                                isDiyMacrosShown = it
                                                                             },
                                                                         )
                                                                     }

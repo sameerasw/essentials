@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.diy.Macro
 import com.sameerasw.essentials.domain.diy.State
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
@@ -63,6 +64,14 @@ class DIYViewModel(
                 initialValue = emptyList(),
             )
 
+    val macros: StateFlow<List<Macro>> =
+        repository.macros
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
+
     /**
      * Executes the delete automation operation.
      *
@@ -70,6 +79,15 @@ class DIYViewModel(
      */
     fun deleteAutomation(id: String) {
         repository.removeAutomation(id)
+    }
+
+    /**
+     * Executes the delete macro operation.
+     *
+     * @param id [String] Target id.
+     */
+    fun deleteMacro(id: String) {
+        repository.removeMacro(id)
     }
 
     /**
@@ -112,6 +130,18 @@ class DIYViewModel(
             }
         viewModelScope.launch {
             CombinedActionExecutor.executeAll(context, actionsToTest)
+        }
+    }
+
+    /**
+     * Runs the macro's action(s) immediately.
+     *
+     * @param macro [Macro] Target macro.
+     */
+    fun testMacro(macro: Macro) {
+        val context = getApplication<Application>().applicationContext
+        viewModelScope.launch {
+            CombinedActionExecutor.executeAll(context, macro.actionList)
         }
     }
 
