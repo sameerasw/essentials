@@ -48,19 +48,27 @@ class AppNavigationViewModel : ViewModel() {
     val backStack = mutableStateListOf<AppRoute>(AppRoute.Home)
     var pendingTab by mutableStateOf<DIYTabs?>(null)
     var expandSettingsPermissions by mutableStateOf(false)
+    var lastNavWasPop by mutableStateOf(false)
 
     fun navigate(route: AppRoute) {
         if (route is AppRoute.HomeTab) {
+            if (backStack.size > 1) lastNavWasPop = true
             while (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
             if (route.expandPermissions) expandSettingsPermissions = true
             pendingTab = route.tab
             return
         }
-        if (backStack.lastOrNull() != route) backStack.add(route)
+        if (backStack.lastOrNull() != route) {
+            lastNavWasPop = false
+            backStack.add(route)
+        }
     }
 
     fun pop() {
-        if (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
+        if (backStack.size > 1) {
+            lastNavWasPop = true
+            backStack.removeAt(backStack.lastIndex)
+        }
     }
 }
 

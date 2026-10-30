@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 
 data class BottomBarSpec(
@@ -20,6 +23,8 @@ data class BottomBarSpec(
 @Stable
 class BottomBarHost {
     private val specs = mutableStateMapOf<AppRoute, BottomBarSpec>()
+
+    var dismissProgress by mutableFloatStateOf(0f)
 
     fun specFor(route: AppRoute): BottomBarSpec? = specs[route]
 

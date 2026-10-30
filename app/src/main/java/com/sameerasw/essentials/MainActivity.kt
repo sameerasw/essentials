@@ -758,6 +758,7 @@ class MainActivity : AppCompatActivity() {
                                                     title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                     isBeta = isDetail && detailSpec?.isBeta == true,
                                                     onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
+                                                backCollapsed = isDetail && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
                                                     items =
                                                         tabs.mapIndexed { index, tab ->
                                                             ToolbarItem(
@@ -1029,7 +1030,7 @@ class MainActivity : AppCompatActivity() {
                                     entryProvider =
                                         entryProvider<AppRoute> {
                                             entry<AppRoute.Home> {
-                                                UnderlayBlur(isTop = backStack.lastOrNull() == AppRoute.Home) {
+                                                UnderlayBlur(route = AppRoute.Home, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     androidx.compose.runtime.CompositionLocalProvider(
                                                         androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner provides this@MainActivity,
                                                     ) {
@@ -1158,7 +1159,7 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
                                             entry<AppRoute.PixelSearchbarSettings> {
-                                                UnderlayBlur(isTop = backStack.lastOrNull() == AppRoute.PixelSearchbarSettings) {
+                                                UnderlayBlur(route = AppRoute.PixelSearchbarSettings, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
                                                             Modifier
@@ -1172,7 +1173,7 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
                                             entry<AppRoute.Wallpaper> { route ->
-                                                UnderlayBlur(isTop = backStack.lastOrNull() == route) {
+                                                UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
                                                             Modifier
@@ -1187,7 +1188,7 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
                                             entry<AppRoute.AutomationEditor> { route ->
-                                                UnderlayBlur(isTop = backStack.lastOrNull() == route) {
+                                                UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
                                                             Modifier
@@ -1202,7 +1203,7 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
                                             entry<AppRoute.FeatureSettings> { route ->
-                                                UnderlayBlur(isTop = backStack.lastOrNull() == route) {
+                                                UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
                                                             Modifier

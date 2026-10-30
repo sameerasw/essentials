@@ -9,6 +9,11 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.remember
@@ -91,10 +96,16 @@ fun EssentialsFloatingToolbar(
     floatingActionButton: (@Composable () -> Unit)? = null,
     scrollBehavior: FloatingToolbarScrollBehavior? = null,
     expanded: Boolean = true,
+    backCollapsed: Boolean = false,
 ) {
     val view = LocalView.current
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val titleWidth = (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
+    val collapse by animateFloatAsState(
+        targetValue = if (backCollapsed) 1f else 0f,
+        animationSpec = tween(380, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f)),
+        label = "back_collapse",
+    )
     var latestTitle by remember { mutableStateOf(title) }
     var latestOnBack by remember { mutableStateOf(onBackClick) }
     if (title != null) latestTitle = title
@@ -177,7 +188,10 @@ fun EssentialsFloatingToolbar(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 latestOnBack?.invoke()
                             },
-                            modifier = Modifier.size(48.dp),
+                            modifier =
+                                Modifier
+                                    .height(48.dp)
+                                    .width(48.dp + (8.dp + titleWidth) * if (latestTitle != null) collapse else 0f),
                             colors =
                                 IconButtonDefaults.filledIconButtonColors(
                                     contentColor = MaterialTheme.colorScheme.primary,
@@ -192,13 +206,15 @@ fun EssentialsFloatingToolbar(
                         }
 
                         if (latestTitle != null) {
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(8.dp * (1f - collapse)))
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                                 modifier =
                                     Modifier
-                                        .width(titleWidth)
+                                        .width(titleWidth * (1f - collapse))
+                                        .clipToBounds()
+                                        .graphicsLayer { alpha = 1f - collapse }
                                         .padding(horizontal = 8.dp)
                                         .align(Alignment.CenterVertically),
                             ) {

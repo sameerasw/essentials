@@ -38,13 +38,23 @@ object AppNavTransitions {
             sizeTransform = null,
         )
 
+    const val BACK_THRESHOLD = 0.05f
+    const val GESTURE_PHASE = 0.8f
+    val thresholdProgress = BACK_THRESHOLD * GESTURE_PHASE
+
+    private const val GESTURE_SLIDE = 0.12f
+    private const val THRESHOLD_BOOST = 0.14f
+
     private val elasticSlide =
         Easing { t ->
-            if (t < 0.8f) {
-                val x = t / 0.8f
-                0.12f * (1f - (1f - x) * (1f - x) * (1f - x))
+            if (t < GESTURE_PHASE) {
+                val x = t / GESTURE_PHASE
+                val elastic = GESTURE_SLIDE * (1f - (1f - x) * (1f - x) * (1f - x))
+                val b = ((x - BACK_THRESHOLD) / 0.05f).coerceIn(0f, 1f)
+                elastic + THRESHOLD_BOOST * b * b * (3f - 2f * b)
             } else {
-                0.12f + 0.88f * ((t - 0.8f) / 0.2f)
+                val start = GESTURE_SLIDE + THRESHOLD_BOOST
+                start + (1f - start) * ((t - GESTURE_PHASE) / (1f - GESTURE_PHASE))
             }
         }
 

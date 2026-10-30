@@ -3,12 +3,16 @@ package com.sameerasw.essentials.ui.navigation
 import android.os.Build
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -36,27 +40,56 @@ private val cornerEasing =
 
 @Composable
 fun UnderlayBlur(
-    isTop: Boolean,
+    route: AppRoute,
+    backStack: List<AppRoute>,
+    lastNavWasPop: Boolean,
     content: @Composable () -> Unit,
 ) {
     val transition = LocalNavAnimatedContentScope.current.transition
+    val isTop = backStack.lastOrNull() == route
+    val isDismissing = isTop || route !in backStack
+    val isRevealed = !isTop || lastNavWasPop
+    val underlayFactor: (EnterExitState) -> Float = { state ->
+        when (state) {
+            EnterExitState.Visible -> 0f
+            EnterExitState.PreEnter -> if (isRevealed) 1f else 0f
+            EnterExitState.PostExit -> if (isDismissing) 0f else 1f
+        }
+    }
     val blurDp by transition.animateFloat(
         transitionSpec = { tween(400, easing = gestureBlurEasing) },
         label = "underlay_blur",
     ) { state ->
-        if (isTop || state == EnterExitState.Visible) 0f else 12f
+        12f * underlayFactor(state)
     }
     val cornerDp by transition.animateFloat(
         transitionSpec = { tween(400, easing = cornerEasing) },
         label = "dismiss_corner",
     ) { state ->
-        if (isTop && state == EnterExitState.PostExit) 32f else 0f
+        if (isDismissing && state == EnterExitState.PostExit) 32f else 0f
+    }
+    val dismissProgress by transition.animateFloat(
+        transitionSpec = { tween(400, easing = LinearEasing) },
+        label = "dismiss_progress",
+    ) { state ->
+        if (isDismissing && state == EnterExitState.PostExit) 1f else 0f
+    }
+    val barHost = LocalBottomBarHost.current
+    if (barHost != null) {
+        LaunchedEffect(barHost, isDismissing) {
+            if (isDismissing) {
+                snapshotFlow { dismissProgress }.collect { barHost.dismissProgress = it }
+            }
+        }
+        DisposableEffect(barHost) {
+            onDispose { barHost.dismissProgress = 0f }
+        }
     }
     val dim by transition.animateFloat(
         transitionSpec = { tween(400, easing = gestureBlurEasing) },
         label = "underlay_dim",
     ) { state ->
-        if (isTop || state == EnterExitState.Visible) 0f else 0.25f
+        0.25f * underlayFactor(state)
     }
 
     Box(
