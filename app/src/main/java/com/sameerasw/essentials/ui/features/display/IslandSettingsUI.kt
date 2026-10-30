@@ -11,6 +11,8 @@ package com.sameerasw.essentials.ui.features.display
 
 import androidx.compose.runtime.key
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.foundation.layout.Row
 import sh.calvin.reorderable.ReorderableColumn
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.IslandPriorityEntries
@@ -113,6 +115,8 @@ fun IslandSettingsUI(
     var savedRaw by remember { mutableStateOf(prioritySettings.getIslandPriorityOrder().orEmpty()) }
     val savedOrder = remember(savedRaw, providerEntries) { IslandPriorityEntries.normalize(savedRaw, providerEntries) }
     var workingOrder by remember { mutableStateOf(savedOrder) }
+    var savedBubble by remember { mutableStateOf(prioritySettings.getIslandBubbleItems()) }
+    var workingBubble by remember { mutableStateOf(savedBubble) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
@@ -239,16 +243,50 @@ fun IslandSettingsUI(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp)
+                    .highlight(highlightSetting == "island_bubble_max"),
+            ) {
+                Text(
+                    text = stringResource(R.string.island_bubble_max_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                Text(
+                    text = stringResource(R.string.island_bubble_max_desc),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                SegmentedPicker(
+                    items = listOf(1, 2, 3),
+                    selectedItem = viewModel.islandBubbleMax.value,
+                    onItemSelected = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandBubbleMax(it)
+                    },
+                    labelProvider = { it.toString() },
+                    title = R.string.island_bubble_max_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
 
         RoundedCardContainer(
             spacing = 2.dp,
             cornerRadius = 24.dp,
         ) {
+            val bubbleIds = if (reorderMode) workingBubble else savedBubble
+            val bubbleNote = stringResource(R.string.island_bubble_item_shown)
             val renderEntry: @Composable (String, (@Composable () -> Unit)?) -> Unit = { entryId, handle ->
                 when (entryId) {
                     "calls" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_call_24,
                         title = stringResource(R.string.island_show_calls_title),
                         isChecked = viewModel.isIslandShowCalls.value && PermissionUtils.hasCallPermissions(context),
@@ -265,6 +303,7 @@ fun IslandSettingsUI(
                     )
                     "notifications" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_notifications_unread_24,
                         title = stringResource(R.string.island_section_notifications),
                         isChecked = viewModel.isIslandShowNotifications.value,
@@ -282,8 +321,21 @@ fun IslandSettingsUI(
                         },
                         modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
                     )
+                    "progress" -> IconToggleItem(
+                        dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
+                        iconRes = R.drawable.rounded_downloading_24,
+                        title = stringResource(R.string.island_notif_keep_progress_title),
+                        isChecked = viewModel.isIslandNotifKeepProgress.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandNotifKeepProgress(checked)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "island_notif_keep_progress"),
+                    )
                     "time" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_schedule_24,
                         title = stringResource(R.string.island_show_time_title),
                         isChecked = viewModel.isIslandShowTimeBattery.value,
@@ -296,6 +348,7 @@ fun IslandSettingsUI(
                     )
                     "battery" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_battery_android_0_24,
                         title = stringResource(R.string.island_show_battery_title),
                         isChecked = viewModel.isIslandShowBattery.value,
@@ -308,6 +361,7 @@ fun IslandSettingsUI(
                     )
                     "flashlight" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_flashlight_on_24,
                         title = stringResource(R.string.feat_flashlight_title),
                         isChecked = viewModel.isIslandShowFlashlight.value,
@@ -319,6 +373,7 @@ fun IslandSettingsUI(
                     )
                     "timer" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_timer_24,
                         title = stringResource(R.string.island_show_timers_title),
                         isChecked = viewModel.isIslandShowTimers.value,
@@ -331,6 +386,7 @@ fun IslandSettingsUI(
                     )
                     "media" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_motion_play_24,
                         title = stringResource(R.string.duo_show_media_title),
                         isChecked = viewModel.isIslandShowMedia.value,
@@ -343,6 +399,7 @@ fun IslandSettingsUI(
                     )
                     "conscious_gate" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_pause_24,
                         title = stringResource(R.string.feat_conscious_gate_title),
                         isChecked = viewModel.isIslandShowConsciousGate.value,
@@ -360,6 +417,7 @@ fun IslandSettingsUI(
                     )
                     "caffeinate" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_coffee_24,
                         title = stringResource(R.string.feat_caffeinate_title),
                         isChecked = viewModel.isIslandShowCaffeinate.value,
@@ -372,6 +430,7 @@ fun IslandSettingsUI(
                     )
                     "travel" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.round_navigation_24,
                         title = stringResource(R.string.feat_location_reached_title),
                         isChecked = viewModel.isIslandShowTravel.value,
@@ -383,6 +442,7 @@ fun IslandSettingsUI(
                     )
                     "calendar" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_calendar_today_24,
                         title = stringResource(R.string.status_glance_show_calendar_title),
                         isChecked = viewModel.isIslandShowCalendar.value,
@@ -399,6 +459,7 @@ fun IslandSettingsUI(
                     )
                     "sound_mode" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_volume_up_24,
                         title = stringResource(R.string.island_show_sound_mode_title),
                         isChecked = viewModel.isIslandShowSoundMode.value,
@@ -411,6 +472,7 @@ fun IslandSettingsUI(
                     )
                     "network" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_android_wifi_3_bar_24,
                         title = stringResource(R.string.island_show_network_title),
                         isChecked = viewModel.isIslandShowNetwork.value,
@@ -423,6 +485,7 @@ fun IslandSettingsUI(
                     )
                     "alarm" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_alarm_24,
                         title = stringResource(R.string.island_show_alarm_title),
                         isChecked = viewModel.isIslandShowAlarm.value,
@@ -435,6 +498,7 @@ fun IslandSettingsUI(
                     )
                     "navigation" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.round_navigation_24,
                         title = stringResource(R.string.island_show_navigation_title),
                         isChecked = viewModel.isIslandShowNavigation.value,
@@ -447,6 +511,7 @@ fun IslandSettingsUI(
                     )
                     "hotspot" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_wifi_tethering_24,
                         title = stringResource(R.string.island_show_hotspot_title),
                         isChecked = viewModel.isIslandShowHotspot.value,
@@ -464,6 +529,7 @@ fun IslandSettingsUI(
                     )
                     "devices" -> IconToggleItem(
                         dragHandle = handle,
+                        description = if (entryId in bubbleIds) bubbleNote else null,
                         iconRes = R.drawable.rounded_bluetooth_24,
                         title = stringResource(R.string.island_show_devices_title),
                         isChecked = viewModel.isIslandShowDevices.value && PermissionUtils.hasBluetoothPermission(context),
@@ -484,6 +550,7 @@ fun IslandSettingsUI(
                         if (provider != null) {
                             IconToggleItem(
                                 dragHandle = handle,
+                                description = if (entryId in bubbleIds) bubbleNote else null,
                                 leadingIcon = ProviderAppIcon(provider.packageName),
                                 title = provider.label,
                                 isChecked = !ProviderTrustStore(prioritySettings).isHiddenFromIsland(packageName),
@@ -512,16 +579,35 @@ fun IslandSettingsUI(
                             entryId,
                             if (reorderMode) {
                                 {
-                                    IconButton(
-                                        modifier = Modifier.draggableHandle(),
-                                        onClick = {},
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.rounded_drag_handle_24),
-                                            contentDescription = stringResource(R.string.content_desc_drag_reorder),
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            modifier = Modifier.size(24.dp),
-                                        )
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (entryId != "notifications" && IslandPriorityEntries.all.any { it.id == entryId }) {
+                                            val inBubble = entryId in workingBubble
+                                            IconToggleButton(
+                                                checked = inBubble,
+                                                onCheckedChange = { checked ->
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    workingBubble = if (checked) workingBubble + entryId else workingBubble - entryId
+                                                },
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.rounded_bubble_24),
+                                                    contentDescription = stringResource(R.string.island_bubble_item_toggle),
+                                                    tint = if (inBubble) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                                    modifier = Modifier.size(22.dp),
+                                                )
+                                            }
+                                        }
+                                        IconButton(
+                                            modifier = Modifier.draggableHandle(),
+                                            onClick = {},
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_drag_handle_24),
+                                                contentDescription = stringResource(R.string.content_desc_drag_reorder),
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.size(24.dp),
+                                            )
+                                        }
                                     }
                                 }
                             } else {
@@ -537,14 +623,20 @@ fun IslandSettingsUI(
             editing = reorderMode,
             onStart = {
                 workingOrder = savedOrder
+                workingBubble = savedBubble
                 reorderMode = true
             },
             onSave = {
                 prioritySettings.setIslandPriorityOrder(workingOrder.takeIf { it != IslandPriorityEntries.defaultOrder(providerEntries) })
+                prioritySettings.setIslandBubbleItems(workingBubble)
                 savedRaw = workingOrder
+                savedBubble = workingBubble
                 reorderMode = false
             },
-            onReset = { workingOrder = IslandPriorityEntries.defaultOrder(providerEntries) },
+            onReset = {
+                workingOrder = IslandPriorityEntries.defaultOrder(providerEntries)
+                workingBubble = emptySet()
+            },
         )
 
         RoundedCardContainer(

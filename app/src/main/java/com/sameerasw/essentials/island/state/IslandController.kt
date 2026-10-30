@@ -17,8 +17,10 @@ data class IslandUiState(
     val focusedKey: String? = null,
     val sideBubble: SideBubble? = null,
     val sideBubbleKey: String? = null,
+    val bubbleKeys: List<String> = emptyList(),
 ) {
     val focused: IslandItem? get() = focusedKey?.let { items[it] }
+    val bubbled: List<IslandItem> get() = bubbleKeys.mapNotNull { items[it] }
 }
 
 fun interface Cancellable {
@@ -37,8 +39,17 @@ class IslandController(
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
+    var maxItems: Int = Int.MAX_VALUE
     var balanceCompact: Boolean = true
+    var balanceMirror: Boolean = false
     var chipsEnabled: Boolean = false
+        set(value) {
+            if (field != value) unitWidths.clear()
+            field = value
+        }
+
+    var widthBudget: Float = Float.MAX_VALUE
+    var bubbleMax: Int = 1
     var secondaryBubbleEnabled: Boolean = true
     var secondaryBubbleOverlap: Boolean = false
     private var feedbackActive = false
@@ -94,6 +105,27 @@ class IslandController(
     }
 
     fun relayout() = recompute()
+
+    private var bubbleCells = 0
+
+    fun setBubbleCells(cells: Int) {
+        if (cells == bubbleCells) return
+        bubbleCells = cells
+        recompute()
+    }
+
+    private val unitWidths = HashMap<String, HashMap<String, Float>>()
+
+    fun setUnitWidth(itemKey: String, unitKey: String, cells: Float) {
+        val units = unitWidths.getOrPut(itemKey) { HashMap() }
+        val old = units[unitKey]
+        if (old != null && kotlin.math.abs(old - cells) < 0.25f) return
+        units[unitKey] = cells
+        if (widthBudget < Float.MAX_VALUE) recompute()
+    }
+
+    private fun widthOf(entry: CompactEntry): Float =
+        unitWidths[entry.itemKey]?.values?.sum()?.takeIf { it > 0f } ?: entry.cellKeys.size.toFloat()
 
     fun setSuppressed(value: Boolean) {
         if (suppressed == value) return
@@ -297,8 +329,9 @@ class IslandController(
                 }
             }
         val usesBubbleOnly = bubbleOwner?.sideBubble?.whenOccupiedOnly == true
-        val arrangement = CompactLayoutEngine.arrange(
-            items.values.filter { it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) }.map { item ->
+        val entries = items.values
+            .filter { it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) }
+            .map { item ->
                 CompactEntry(
                     item.key,
                     item.effectivePriority,
@@ -309,12 +342,39 @@ class IslandController(
                     item.companionOnly,
                     chipsEnabled && item.chip,
                 )
-            },
+            }
+        val sideExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0
+        fun arrange(list: List<CompactEntry>, endCells: Int, itemCap: Int = maxItems) = CompactLayoutEngine.arrange(
+            list,
             anchorProvider(),
             maxCells = maxCells,
-            leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
+            leftExtra = sideExtra - endCells,
             balance = balanceCompact,
+            maxItems = itemCap,
+            mirror = balanceMirror,
+            maxWidth = if (anchorProvider() == CameraAnchor.Center) {
+                widthBudget - (if (sideExtra > 0) sideExtra + BUBBLE_ROOM else 0f) - (if (endCells > 0) endCells + BUBBLE_ROOM else 0f)
+            } else {
+                Float.MAX_VALUE
+            },
+            widthOf = ::widthOf,
         )
+        val allMarked = if (anchorProvider() != CameraAnchor.Center) {
+            emptyList()
+        } else {
+            entries
+                .filter { items[it.itemKey]?.inBubble == true && !it.pinned && it.cellKeys.isNotEmpty() }
+                .sortedBy { it.priority }
+        }
+        val marked = allMarked.take(minOf(bubbleMax, maxItems))
+        val endCells = if (bubbleCells > 0) bubbleCells else marked.sumOf { it.cellKeys.size }
+        val withBubble = if (marked.isEmpty()) {
+            null
+        } else {
+            arrange(entries - allMarked.toSet(), endCells, itemCap = maxItems - marked.size)
+        }
+        val bubbled = if (withBubble == null || withBubble.visibleItems.isEmpty()) emptyList() else marked
+        val arrangement = if (bubbled.isEmpty()) arrange(entries, 0) else withBubble!!
         val focusedKey = expandedKey ?: peekKey
         val stage = when {
             feedbackActive && !suppressed && expandedKey == null && peekKey == null -> IslandStage.Compact
@@ -325,7 +385,14 @@ class IslandController(
             else -> IslandStage.Compact
         }
         val previous = _state.value.stage
-        _state.value = IslandUiState(stage, items, arrangement, focusedKey, bubbleOwner?.sideBubble, bubbleOwner?.key)
+        _state.value = IslandUiState(
+            stage, items, arrangement, focusedKey, bubbleOwner?.sideBubble, bubbleOwner?.key,
+            bubbled.map { it.itemKey },
+        )
         if (previous != stage) onStageChanged?.invoke(stage)
+    }
+
+    private companion object {
+        const val BUBBLE_ROOM = 0.5f
     }
 }

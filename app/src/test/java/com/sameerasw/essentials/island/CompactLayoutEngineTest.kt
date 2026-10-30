@@ -34,6 +34,27 @@ class CompactLayoutEngineTest {
     @Test fun singleCellItemsGoToOuterEnds() =
         assertEquals("flash.icon time | battery notif.icon", visual(listOf(time, battery, catchUp, flash)))
 
+    private fun mirrored(mirror: Boolean): String {
+        val a = CompactLayoutEngine.arrange(listOf(time, battery, media), leftExtra = -3, balance = true, mirror = mirror)
+        return (a.before.reversed() + "|" + a.after).joinToString(" ")
+    }
+
+    @Test fun heavyRightBubbleLeavesLayoutWithoutMirror() =
+        assertEquals("battery time | media.eq media.art", mirrored(false))
+
+    @Test fun mirrorPullsItemsLeftOfHeavyRightBubble() =
+        assertEquals("battery time media.art media.eq |", mirrored(true))
+
+    @Test fun maxItemsCountsDynamicOnly() {
+        val a = CompactLayoutEngine.arrange(listOf(time, battery, catchUp, flash), maxItems = 1)
+        assertEquals(setOf("time", "battery", "notif"), a.visibleItems)
+    }
+
+    @Test fun rightBubblePullsCellsLeft() {
+        val a = CompactLayoutEngine.arrange(listOf(time, battery, catchUp, flash), leftExtra = -2)
+        assertEquals("flash.icon notif.icon time | battery", (a.before.reversed() + "|" + a.after).joinToString(" "))
+    }
+
     @Test fun mediaAloneSplitsAroundCamera() =
         assertEquals("media.art | media.eq", visual(listOf(media)))
 
@@ -75,4 +96,21 @@ class CompactLayoutEngineTest {
 
     @Test fun balanceLeavesPinnedOnLeft() =
         assertEquals("time | flash.icon media.eq media.art", withBubble(listOf(time, flash, media), balance = true))
+
+    private fun budgeted(maxWidth: Float, widths: Map<String, Float> = emptyMap()): Set<String> =
+        CompactLayoutEngine.arrange(
+            listOf(time, battery, catchUp, flash),
+            maxCells = 8,
+            maxWidth = maxWidth,
+            widthOf = { widths[it.itemKey] ?: it.cellKeys.size.toFloat() },
+        ).visibleItems
+
+    @Test fun widthBudgetDropsLowestPriorityFirst() =
+        assertEquals(setOf("time", "battery", "notif"), budgeted(maxWidth = 3f))
+
+    @Test fun widthBudgetKeepsPinnedEvenWhenTight() =
+        assertEquals(setOf("time", "battery"), budgeted(maxWidth = 1f))
+
+    @Test fun measuredWidthsCountInsteadOfCellCount() =
+        assertEquals(setOf("time", "battery", "flash"), budgeted(maxWidth = 3.5f, widths = mapOf("notif" to 2f)))
 }
