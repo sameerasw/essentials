@@ -9,6 +9,13 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.navigation.LocalListPaneWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import com.sameerasw.essentials.ui.components.FavoriteGrid
 import com.sameerasw.essentials.BuildConfig
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
@@ -917,241 +924,285 @@ fun SetupFeatures(
     val appVersion = remember { "v${BuildConfig.VERSION_NAME}" }
     val headerState = rememberPullTitleHeaderState()
 
-    LazyColumn(
-        state = lazyListState,
-        modifier =
-            modifier
-                .fillMaxSize()
-                .nestedScroll(headerState.nestedScrollConnection)
-                .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
-        contentPadding =
-            PaddingValues(
-                top = contentPadding.calculateTopPadding(),
-                bottom = contentPadding.calculateBottomPadding() + 64.dp,
-            ),
-    ) {
-            item {
-                PullTitleHeader(
-                    title = stringResource(R.string.tab_essentials),
-                    caption = appVersion,
-                    state = headerState,
-                )
-            }
-            item {
-                // Favorites
-                AnimatedVisibility(
-                    visible = !isSearchActive && pinnedFeatureKeys.isNotEmpty() && searchQuery.isEmpty(),
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically(),
-                ) {
-                    FavoriteCarousel(
-                        pinnedKeys = pinnedFeatureKeys,
-                        onFeatureClick = { feature ->
-                            BiometricSecurityHelper.runWithAuth(
-                                activity = context as FragmentActivity,
-                                feature = feature,
-                                action = {
-                                    feature.onClick(context, viewModel)
-                                },
-                            )
-                        },
-                        onFeatureLongClick = { feature ->
-                            viewModel.togglePinFeature(feature.id)
-                        },
-                        onReorderClick = {
-                            showReorderFavoritesSheet = true
-                        },
-                        modifier = Modifier.padding(bottom = 16.dp),
-                    )
-                }
-            }
+    val listPaneWidth = LocalListPaneWidth.current
+    val hasValidFavorites =
+        remember(pinnedFeatureKeys) {
+            val ids = FeatureRegistry.ALL_FEATURES.mapTo(HashSet()) { it.id }
+            pinnedFeatureKeys.any { it in ids }
+        }
+    val gridEligible = listPaneWidth != null && hasValidFavorites && !isSearchActive && searchQuery.isEmpty()
 
-            if (isSearchActive && searchQuery.isEmpty()) {
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val showFavoritesGrid = gridEligible && maxWidth >= listPaneWidth!! + 280.dp
+        val listWidth = if (gridEligible) listPaneWidth!!.coerceAtMost(maxWidth) else maxWidth
+        LazyColumn(
+            state = lazyListState,
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .width(listWidth)
+                    .nestedScroll(headerState.nestedScrollConnection)
+                    .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
+            contentPadding =
+                PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding() + 64.dp,
+                ),
+        ) {
                 item {
-                    RecentSearchesSection(
-                        recentSearches = recentSearches,
-                        allFeatures = allFeatures,
-                        pinnedFeatureKeys = pinnedFeatureKeys,
-                        context = context,
-                        viewModel = viewModel,
+                    PullTitleHeader(
+                        title = stringResource(R.string.tab_essentials),
+                        caption = appVersion,
+                        state = headerState,
                     )
                 }
-            } else if (searchQuery.isNotEmpty()) {
-                if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty() && matchingFrozenApps.isEmpty()) {
-                    item {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 64.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            Text(
-                                text = "¯\\_(ツ)_/¯",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                            Text(
-                                text = stringResource(id = R.string.search_no_results, searchQuery),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                                maxLines = 2,
-                                modifier =
-                                    Modifier
-                                        .padding(top = 8.dp)
-                                        .padding(horizontal = 32.dp),
-                            )
-                        }
+                item {
+                    // Favorites
+                    AnimatedVisibility(
+                        visible = !showFavoritesGrid && !isSearchActive && pinnedFeatureKeys.isNotEmpty() && searchQuery.isEmpty(),
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically(),
+                    ) {
+                        FavoriteCarousel(
+                            pinnedKeys = pinnedFeatureKeys,
+                            onFeatureClick = { feature ->
+                                BiometricSecurityHelper.runWithAuth(
+                                    activity = context as FragmentActivity,
+                                    feature = feature,
+                                    action = {
+                                        feature.onClick(context, viewModel)
+                                    },
+                                )
+                            },
+                            onFeatureLongClick = { feature ->
+                                viewModel.togglePinFeature(feature.id)
+                            },
+                            onReorderClick = {
+                                showReorderFavoritesSheet = true
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp),
+                        )
                     }
                 }
 
-                if (!isSearchingViewModel) {
+                if (isSearchActive && searchQuery.isEmpty()) {
                     item {
-                        SearchResultsSection(
-                            searchResults = searchResults,
+                        RecentSearchesSection(
+                            recentSearches = recentSearches,
                             allFeatures = allFeatures,
                             pinnedFeatureKeys = pinnedFeatureKeys,
                             context = context,
                             viewModel = viewModel,
-                            onNavigateToTab = onNavigateToTab,
                         )
                     }
-                }
-            } else if (!isSearchActive) {
-                val topLevelFeatures =
-                    allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
-                val featureMap = topLevelFeatures.associateBy { it.id }
-
-                val sectionFeatureIdsList =
-                    listOf(
-                        listOf(
-                            "Notifications",
-                            "Sound",
-                            "Display",
-                            "Maps power saving mode",
-                            "Daily Wallpaper",
-                            "Widgets",
-                        ),
-                        listOf(
-                            "Input",
-                            "Power and battery",
-                            "Quick settings tiles",
-                            "Watch",
-                        ),
-                        listOf(
-                            "Security",
-                            "Networks",
-                        ),
-                        listOf(
-                            "Location reached",
-                            "Watermark",
-                        ),
-                    )
-
-                val assignedIds = sectionFeatureIdsList.flatten().toSet()
-                val unassignedFeatures = topLevelFeatures.filter { it.id !in assignedIds }
-
-                val sections =
-                    sectionFeatureIdsList
-                        .map { ids ->
-                            ids.mapNotNull { featureMap[it] }
-                        }.filter { it.isNotEmpty() } +
-                        if (unassignedFeatures.isNotEmpty()) {
-                            listOf(
-                                unassignedFeatures,
-                            )
-                        } else {
-                            emptyList()
-                        }
-
-                sections.forEachIndexed { sectionIndex, sectionFeatures ->
-                    item {
-                        RoundedCardContainer(
-                            modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .padding(bottom = 12.dp),
-                        ) {
-                            sectionFeatures.forEach { feature ->
-                                FeatureCard(
-                                    title = feature.title,
-                                    isEnabled = feature.isEnabled(viewModel),
-                                    onToggle = { enabled ->
-                                        BiometricSecurityHelper.runWithAuth(
-                                            activity = context as FragmentActivity,
-                                            feature = feature,
-                                            isToggle = true,
-                                            action = {
-                                                feature.onToggle(viewModel, context, enabled)
-                                            },
-                                        )
-                                    },
-                                    onClick = {
-                                        BiometricSecurityHelper.runWithAuth(
-                                            activity = context as FragmentActivity,
-                                            feature = feature,
-                                            action = {
-                                                feature.onClick(context, viewModel)
-                                            },
-                                        )
-                                    },
-                                    iconRes = feature.iconRes,
-                                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                                    isToggleEnabled = feature.isToggleEnabled(viewModel, context),
-                                    showToggle = feature.showToggle,
-                                    hasMoreSettings = feature.hasMoreSettings,
-                                    onDisabledToggleClick = {
-                                        if (feature.id == "Screen locked security") {
-                                            feature.onClick(context, viewModel)
-                                        } else {
-                                            currentFeature = feature.title
-                                            showSheet = true
-                                        }
-                                    },
-                                    description = feature.description,
-                                    isBeta = feature.isBeta,
-                                    isLegacy = feature.isLegacy,
-                                    isUnsupported = !feature.isDeviceSupported(context),
-                                    isPinned = pinnedFeatureKeys.contains(feature.id),
-                                    onPinToggle = {
-                                        viewModel.togglePinFeature(feature.id)
-                                    },
-                                    onHelpClick =
-                                        if (feature.aboutDescription != null) {
-                                            {
-                                                selectedHelpFeature = feature
-                                                showHelpSheet = true
-                                            }
-                                        } else {
-                                            null
-                                        },
-                                    hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                } else if (searchQuery.isNotEmpty()) {
+                    if (!isSearchingViewModel && searchResults.isEmpty() && matchingTiles.isEmpty() && matchingPermissions.isEmpty() && matchingFrozenApps.isEmpty()) {
+                        item {
+                            Column(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 64.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Text(
+                                    text = "¯\\_(ツ)_/¯",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.search_no_results, searchQuery),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                    maxLines = 2,
+                                    modifier =
+                                        Modifier
+                                            .padding(top = 8.dp)
+                                            .padding(horizontal = 32.dp),
                                 )
                             }
                         }
                     }
-                }
 
-                item {
-                    ListExpandToggleButton(
-                        isExpanded = false,
-                        onToggle = {
-                            showInstructionsSheet = true
-                        },
-                        title = R.string.label_help_guide,
-                        description = R.string.label_help_guide,
-                        iconRes = R.drawable.rounded_help_24,
-                        modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp, bottom = 12.dp),
-                    )
+                    if (!isSearchingViewModel) {
+                        item {
+                            SearchResultsSection(
+                                searchResults = searchResults,
+                                allFeatures = allFeatures,
+                                pinnedFeatureKeys = pinnedFeatureKeys,
+                                context = context,
+                                viewModel = viewModel,
+                                onNavigateToTab = onNavigateToTab,
+                            )
+                        }
+                    }
+                } else if (!isSearchActive) {
+                    val topLevelFeatures =
+                        allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
+                    val featureMap = topLevelFeatures.associateBy { it.id }
+
+                    val sectionFeatureIdsList =
+                        listOf(
+                            listOf(
+                                "Notifications",
+                                "Sound",
+                                "Display",
+                                "Maps power saving mode",
+                                "Daily Wallpaper",
+                                "Widgets",
+                            ),
+                            listOf(
+                                "Input",
+                                "Power and battery",
+                                "Quick settings tiles",
+                                "Watch",
+                            ),
+                            listOf(
+                                "Security",
+                                "Networks",
+                            ),
+                            listOf(
+                                "Location reached",
+                                "Watermark",
+                            ),
+                        )
+
+                    val assignedIds = sectionFeatureIdsList.flatten().toSet()
+                    val unassignedFeatures = topLevelFeatures.filter { it.id !in assignedIds }
+
+                    val sections =
+                        sectionFeatureIdsList
+                            .map { ids ->
+                                ids.mapNotNull { featureMap[it] }
+                            }.filter { it.isNotEmpty() } +
+                            if (unassignedFeatures.isNotEmpty()) {
+                                listOf(
+                                    unassignedFeatures,
+                                )
+                            } else {
+                                emptyList()
+                            }
+
+                    sections.forEachIndexed { sectionIndex, sectionFeatures ->
+                        item {
+                            RoundedCardContainer(
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(bottom = 12.dp),
+                            ) {
+                                sectionFeatures.forEach { feature ->
+                                    FeatureCard(
+                                        title = feature.title,
+                                        isEnabled = feature.isEnabled(viewModel),
+                                        onToggle = { enabled ->
+                                            BiometricSecurityHelper.runWithAuth(
+                                                activity = context as FragmentActivity,
+                                                feature = feature,
+                                                isToggle = true,
+                                                action = {
+                                                    feature.onToggle(viewModel, context, enabled)
+                                                },
+                                            )
+                                        },
+                                        onClick = {
+                                            BiometricSecurityHelper.runWithAuth(
+                                                activity = context as FragmentActivity,
+                                                feature = feature,
+                                                action = {
+                                                    feature.onClick(context, viewModel)
+                                                },
+                                            )
+                                        },
+                                        iconRes = feature.iconRes,
+                                        modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                                        isToggleEnabled = feature.isToggleEnabled(viewModel, context),
+                                        showToggle = feature.showToggle,
+                                        hasMoreSettings = feature.hasMoreSettings,
+                                        onDisabledToggleClick = {
+                                            if (feature.id == "Screen locked security") {
+                                                feature.onClick(context, viewModel)
+                                            } else {
+                                                currentFeature = feature.title
+                                                showSheet = true
+                                            }
+                                        },
+                                        description = feature.description,
+                                        isBeta = feature.isBeta,
+                                        isLegacy = feature.isLegacy,
+                                        isUnsupported = !feature.isDeviceSupported(context),
+                                        isPinned = pinnedFeatureKeys.contains(feature.id),
+                                        onPinToggle = {
+                                            viewModel.togglePinFeature(feature.id)
+                                        },
+                                        onHelpClick =
+                                            if (feature.aboutDescription != null) {
+                                                {
+                                                    selectedHelpFeature = feature
+                                                    showHelpSheet = true
+                                                }
+                                            } else {
+                                                null
+                                            },
+                                        hasBadge = if (feature.id == "Watch") isWearUpdateRequired else false,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        ListExpandToggleButton(
+                            isExpanded = false,
+                            onToggle = {
+                                showInstructionsSheet = true
+                            },
+                            title = R.string.label_help_guide,
+                            description = R.string.label_help_guide,
+                            iconRes = R.drawable.rounded_help_24,
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 16.dp, bottom = 12.dp),
+                        )
+                    }
                 }
-            }
         }
+        if (showFavoritesGrid) {
+            FavoriteGrid(
+                pinnedKeys = pinnedFeatureKeys,
+                onFeatureClick = { feature ->
+                    BiometricSecurityHelper.runWithAuth(
+                        activity = context as FragmentActivity,
+                        feature = feature,
+                        action = {
+                            feature.onClick(context, viewModel)
+                        },
+                    )
+                },
+                onFeatureLongClick = { feature ->
+                    viewModel.togglePinFeature(feature.id)
+                },
+                onReorderClick = {
+                    showReorderFavoritesSheet = true
+                },
+                modifier =
+                    Modifier
+                        .offset(x = listWidth)
+                        .width(maxWidth - listWidth)
+                        .fillMaxHeight(),
+                contentPadding =
+                    PaddingValues(
+                        top = contentPadding.calculateTopPadding() + 140.dp,
+                        bottom = contentPadding.calculateBottomPadding() + 64.dp,
+                        end = 16.dp,
+                    ),
+            )
+        }
+    }
 }
 
 @Composable

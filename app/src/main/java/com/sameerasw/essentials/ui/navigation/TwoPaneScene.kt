@@ -1,5 +1,12 @@
 package com.sameerasw.essentials.ui.navigation
 
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.foundation.layout.offset
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.animation.core.animateDpAsState
 import kotlin.coroutines.cancellation.CancellationException
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.TileMode
@@ -66,7 +73,7 @@ fun rememberPaneLayout(): PaneLayout? {
                 return@remember PaneLayout(left, gap, right)
             }
         }
-        val left = (windowWidth * 0.4f).coerceAtLeast(MIN_LIST_WIDTH).coerceAtMost(windowWidth - MIN_DETAIL_WIDTH)
+        val left = (windowWidth * 0.5f).coerceAtLeast(MIN_LIST_WIDTH).coerceAtMost(windowWidth - MIN_DETAIL_WIDTH)
         PaneLayout(left, 0.dp, windowWidth - left)
     }
 }
@@ -87,28 +94,37 @@ data class TwoPaneScene(
     override val entries: List<NavEntry<AppRoute>> = listOfNotNull(listEntry, parentDetailEntry, detailEntry)
 
     override val content: @Composable () -> Unit = {
-        Row(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.surfaceContainer),
         ) {
+            val fullWidth = layout.leftWidth + layout.gap + layout.rightWidth
+            val listWidth by animateDpAsState(
+                targetValue = if (detailEntry != null) layout.leftWidth else fullWidth,
+                animationSpec = spring(dampingRatio = 0.95f, stiffness = 380f),
+                label = "list_pane_width",
+            )
             Box(
                 modifier =
                     Modifier
-                        .width(layout.leftWidth)
-                        .fillMaxHeight(),
+                        .width(listWidth)
+                        .fillMaxHeight()
+                        .clipToBounds(),
             ) {
-                listEntry.Content()
+                CompositionLocalProvider(LocalListPaneWidth provides layout.leftWidth) {
+                    listEntry.Content()
+                }
             }
-            Spacer(modifier = Modifier.width(layout.gap))
-            Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-            ) {
-                if (detailEntry != null) {
+            if (detailEntry != null) {
+                Box(
+                    modifier =
+                        Modifier
+                            .offset { IntOffset((listWidth + layout.gap).roundToPx(), 0) }
+                            .width(layout.rightWidth)
+                            .fillMaxHeight(),
+                ) {
                     key(detailEntry.contentKey) {
                         DetailPane(detailEntry, parentDetailEntry)
                     }
@@ -125,19 +141,21 @@ class TwoPaneSceneStrategy(
         val paneLayout = layout ?: return null
         val last = entries.lastOrNull() ?: return null
         val lastRoute = last.route ?: return null
-        if (lastRoute is AppRoute.Home) return null
         val list = entries.first()
         if (list.route !is AppRoute.Home) return null
         return TwoPaneScene(
             key = list.contentKey,
             listEntry = list,
-            detailEntry = last,
-            parentDetailEntry = entries.getOrNull(entries.lastIndex - 1)?.takeIf { it.route !is AppRoute.Home },
+            detailEntry = if (lastRoute is AppRoute.Home) null else last,
+            parentDetailEntry =
+                if (lastRoute is AppRoute.Home) null else entries.getOrNull(entries.lastIndex - 1)?.takeIf { it.route !is AppRoute.Home },
             layout = paneLayout,
             previousEntries = entries.dropLast(1),
         )
     }
 }
+
+val LocalListPaneWidth = compositionLocalOf<Dp?> { null }
 
 class PaneNavigation(
     val pop: () -> Unit,
