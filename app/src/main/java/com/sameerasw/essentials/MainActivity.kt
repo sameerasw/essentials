@@ -76,6 +76,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -330,6 +331,25 @@ class MainActivity : AppCompatActivity() {
                             initialPage = initialPage,
                             pageCount = { tabs.size },
                         )
+                    val tabSwitchProgress = remember { Animatable(1f) }
+                    var tabSwitchDirection by remember { androidx.compose.runtime.mutableFloatStateOf(1f) }
+                    val jumpToTab: suspend (Int) -> Unit = { target ->
+                        val current = pagerState.currentPage
+                        if (kotlin.math.abs(target - current) <= 1) {
+                            pagerState.animateScrollToPage(target)
+                        } else {
+                            tabSwitchDirection = if (target > current) 1f else -1f
+                            tabSwitchProgress.snapTo(0f)
+                            pagerState.scrollToPage(target)
+                            tabSwitchProgress.animateTo(
+                                1f,
+                                androidx.compose.animation.core.spring(
+                                    dampingRatio = androidx.compose.animation.core.Spring.DampingRatioLowBouncy,
+                                    stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow,
+                                ),
+                            )
+                        }
+                    }
 
                     LaunchedEffect(intent) {
                         intent?.getStringExtra("target_tab")?.let { tabName ->
@@ -385,7 +405,7 @@ class MainActivity : AppCompatActivity() {
                                 backProgress.snapTo(backEvent.progress)
                             }
                             scope.launch {
-                                pagerState.animateScrollToPage(initialPage)
+                                jumpToTab(initialPage)
                             }
                             scope.launch {
                                 backProgress.animateTo(
@@ -690,10 +710,11 @@ class MainActivity : AppCompatActivity() {
                                                             onClick = {
                                                                 HapticUtil.performUIHaptic(view)
                                                                 scope.launch {
-                                                                    pagerState.animateScrollToPage(index)
+                                                                    jumpToTab(index)
                                                                 }
                                                             },
                                                             hasBadge = tab == DIYTabs.SETTINGS && isUpdateAvailable && currentTab != DIYTabs.SETTINGS,
+                                                            iconScale = if (tab == DIYTabs.ESSENTIALS) 1.2f else 1f,
                                                         )
                                                     },
                                                 floatingActionButton = {
@@ -905,6 +926,14 @@ class MainActivity : AppCompatActivity() {
                                         Modifier
                                             .scale(1f - (backProgress.value * 0.05f))
                                             .alpha(1f - (backProgress.value * 0.3f))
+                                            .graphicsLayer {
+                                                val p = tabSwitchProgress.value
+                                                alpha = p.coerceIn(0f, 1f)
+                                                translationX = (1f - p) * tabSwitchDirection * 48.dp.toPx()
+                                                val sc = 0.96f + 0.04f * p
+                                                scaleX = sc
+                                                scaleY = sc
+                                            }
                                             .progressiveBlur(
                                                 blurRadius = if (isBlurEnabled) 40f else 0f,
                                                 height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
@@ -939,7 +968,7 @@ class MainActivity : AppCompatActivity() {
                                                     val tabIndex = tabs.indexOf(targetTab)
                                                     if (tabIndex != -1) {
                                                         scope.launch {
-                                                            pagerState.animateScrollToPage(tabIndex)
+                                                            jumpToTab(tabIndex)
                                                         }
                                                     }
                                                 },

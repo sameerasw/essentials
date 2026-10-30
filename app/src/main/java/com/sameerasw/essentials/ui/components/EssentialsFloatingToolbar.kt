@@ -55,6 +55,7 @@ data class ToolbarItem(
     val labelRes: Int,
     val onClick: () -> Unit,
     val hasBadge: Boolean = false,
+    val iconScale: Float = 1f,
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -194,6 +195,8 @@ fun EssentialsFloatingToolbar(
                 }
             } else {
                 // TABBED MODE
+                val itemGap = 2.dp
+
                 items.forEachIndexed { index, item ->
                     val isSelected = selectedIndex == index
 
@@ -208,7 +211,7 @@ fun EssentialsFloatingToolbar(
                     )
 
                     val spacerWidth by animateDpAsState(
-                        targetValue = if (index < items.size - 1) 8.dp else 0.dp,
+                        targetValue = if (index < items.size - 1) itemGap else 0.dp,
                         animationSpec =
                             spring(
                                 dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -254,7 +257,7 @@ fun EssentialsFloatingToolbar(
                                             } else {
                                                 MaterialTheme.colorScheme.background
                                             },
-                                        modifier = Modifier.size(24.dp),
+                                        modifier = Modifier.size(24.dp * item.iconScale),
                                     )
                                     if (item.hasBadge) {
                                         Canvas(
