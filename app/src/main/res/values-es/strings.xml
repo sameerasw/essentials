@@ -1930,4 +1930,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
     <string name="island_battery_icon_conditional_title">Icono para algunas condiciones</string>
     <string name="feat_aod_wallpaper_keep_on_media">Mostrar cuando los medios se estan reproduciendo</string>
+    <string name="feat_hilight_desc">Ilumina los LEDs traseros para notificaciones y progreso en vivo</string>
+    <string name="feat_hilight_notifications_title">Efectos de notificaciones</string>
+    <string name="hilight_notifications_desc">Reproduce el efecto propio de cada aplicación cuando las notificaciones llegan</string>
+    <string name="hilight_progress_title">Progreso en vivo</string>
 </resources>
