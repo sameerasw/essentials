@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
+import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,15 @@ class SignalPlugin : BaseIslandPlugin() {
     private var telephonyCallback: Any? = null
     private var level = 0
     private var airplane = false
+
+    //
+    // Carrier-promoted display network type reported by TelephonyDisplayInfo.
+    // On 5G non-standalone (NSA) deployments the modem stays camped on the LTE anchor carrier, so
+    // TelephonyManager.dataNetworkType keeps reporting NETWORK_TYPE_LTE even on a "5G" network.
+    // The system status bar shows 5G by reading this override instead, so mirror it here.
+    //
+    @Volatile
+    private var overrideNetworkType = OVERRIDE_NONE
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) = render()
@@ -94,9 +104,17 @@ class SignalPlugin : BaseIslandPlugin() {
         val c = ctx ?: return
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val callback = object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
+                // One callback carrying both listeners keeps the registration lifecycle in a single place.
+                val callback = object : TelephonyCallback(),
+                    TelephonyCallback.SignalStrengthsListener,
+                    TelephonyCallback.DisplayInfoListener {
                     override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
                         level = signalStrength.level.coerceIn(0, 4)
+                        render()
+                    }
+
+                    override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+                        updateOverrideType(telephonyDisplayInfo)
                         render()
                     }
                 }
@@ -110,13 +128,33 @@ class SignalPlugin : BaseIslandPlugin() {
                         level = signalStrength?.level?.coerceIn(0, 4) ?: 0
                         c.mainHandler.post { render() }
                     }
+
+                    @Deprecated("Deprecated in Java")
+                    override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+                        // PhoneStateListener dispatch is off the main looper on pre-S, so hop back.
+                        updateOverrideType(telephonyDisplayInfo)
+                        c.mainHandler.post { render() }
+                    }
                 }
                 @Suppress("DEPRECATION")
-                manager.listen(listener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
+                manager.listen(
+                    listener,
+                    PhoneStateListener.LISTEN_SIGNAL_STRENGTHS or PhoneStateListener.LISTEN_DISPLAY_INFO_CHANGED,
+                )
                 telephonyCallback = listener
             }
         } catch (_: Exception) {
         }
+    }
+
+    private fun updateOverrideType(displayInfo: TelephonyDisplayInfo) {
+        overrideNetworkType =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                displayInfo.overrideNetworkType
+            } else {
+                @Suppress("DEPRECATION")
+                displayInfo.overrideNetworkType
+            }
     }
 
     private fun unregisterTelephony() {
@@ -151,7 +189,15 @@ class SignalPlugin : BaseIslandPlugin() {
         TelephonyManager.NETWORK_TYPE_UNKNOWN
     }
 
-    private fun modeLabel(type: Int): String? = when (type) {
+    private fun modeLabel(type: Int): String? = when {
+        // The override wins over the raw modem type: on 5G NSA the modem is camped on the LTE
+        // anchor while NR runs as a secondary carrier, so dataNetworkType still reports LTE.
+        overrideNetworkType == OVERRIDE_NR_NSA ||
+            overrideNetworkType == OVERRIDE_NR_ADVANCED -> "5G"
+        else -> radioLabel(type)
+    }
+
+    private fun radioLabel(type: Int): String? = when (type) {
         TelephonyManager.NETWORK_TYPE_NR -> "5G"
         TelephonyManager.NETWORK_TYPE_LTE -> "4G"
         TelephonyManager.NETWORK_TYPE_HSPAP,
@@ -269,5 +315,12 @@ class SignalPlugin : BaseIslandPlugin() {
     companion object {
         const val KEY = "signal"
         private const val LOW_LEVEL = 1
+
+        // TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_* are API 30+, but the callback that delivers
+        // them exists from API 24. Mirror the constants so they resolve on every supported level and
+        // keep the lookup free of a per-frame SDK_INT branch.
+        private const val OVERRIDE_NONE = 0
+        private const val OVERRIDE_NR_NSA = 3
+        private const val OVERRIDE_NR_ADVANCED = 5
     }
 }
