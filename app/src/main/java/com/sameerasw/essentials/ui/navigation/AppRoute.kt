@@ -14,6 +14,7 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.SettingsActivity
 import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WallpaperActivity
@@ -49,6 +50,7 @@ class AppNavigationViewModel : ViewModel() {
     var pendingTab by mutableStateOf<DIYTabs?>(null)
     var expandSettingsPermissions by mutableStateOf(false)
     var lastNavWasPop by mutableStateOf(false)
+    var isTwoPane = false
 
     fun navigate(route: AppRoute) {
         if (route is AppRoute.HomeTab) {
@@ -57,6 +59,20 @@ class AppNavigationViewModel : ViewModel() {
             if (route.expandPermissions) expandSettingsPermissions = true
             pendingTab = route.tab
             return
+        }
+        if (isTwoPane) {
+            val keepUntil =
+                if (route is AppRoute.FeatureSettings) {
+                    val parentId = FeatureRegistry.ALL_FEATURES.find { it.id == route.featureId }?.parentFeatureId
+                    if (parentId == null) {
+                        0
+                    } else {
+                        backStack.indexOfLast { it is AppRoute.FeatureSettings && it.featureId == parentId }.coerceAtLeast(0)
+                    }
+                } else {
+                    0
+                }
+            while (backStack.size > keepUntil + 1) backStack.removeAt(backStack.lastIndex)
         }
         if (backStack.lastOrNull() != route) {
             lastNavWasPop = false

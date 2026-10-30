@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.layout.offset
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.SharedTransitionLayout
@@ -101,9 +102,10 @@ fun EssentialsFloatingToolbar(
     scrollBehavior: FloatingToolbarScrollBehavior? = null,
     expanded: Boolean = true,
     backCollapsed: Boolean = false,
+    availableWidth: Dp? = null,
 ) {
     val view = LocalView.current
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val screenWidth = availableWidth ?: LocalConfiguration.current.screenWidthDp.dp
     val titleWidth = (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
     val collapse by animateFloatAsState(
         targetValue = if (backCollapsed) 1f else 0f,

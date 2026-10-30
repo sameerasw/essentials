@@ -9,8 +9,12 @@
 
 package com.sameerasw.essentials
 
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
+import com.sameerasw.essentials.ui.navigation.rememberPaneLayout
+import com.sameerasw.essentials.ui.navigation.TwoPaneSceneStrategy
+import com.sameerasw.essentials.ui.navigation.ROUTE_METADATA_KEY
 import com.sameerasw.essentials.ui.navigation.UnderlayBlur
 import com.sameerasw.essentials.ui.navigation.LocalBottomBarHost
 import com.sameerasw.essentials.ui.navigation.BottomBarHost
@@ -294,6 +298,11 @@ class MainActivity : AppCompatActivity() {
                     val backStack = navViewModel.backStack
                     val topRoute = backStack.lastOrNull() ?: AppRoute.Home
                     val isAtHome = backStack.size <= 1
+                    val paneLayout = rememberPaneLayout()
+                    val paneStrategy = remember(paneLayout) { TwoPaneSceneStrategy(paneLayout) }
+                    navViewModel.isTwoPane = paneLayout != null
+                    val barRoute = topRoute
+                    val barAtHome = barRoute is AppRoute.Home
                     val context = LocalContext.current
                     val view = LocalView.current
                     try {
@@ -669,11 +678,11 @@ class MainActivity : AppCompatActivity() {
                                             .zIndex(1f),
                                 ) {
                                     val bottomBarState = rememberSharedContentState(key = "bottom_bar")
-                                    val isDetail = !isAtHome
+                                    val isDetail = !barAtHome
                                     val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
-                                    val detailSpec = if (isDetail) bottomBarHost.specFor(topRoute) else null
+                                    val detailSpec = if (isDetail) bottomBarHost.specFor(barRoute) else null
                                     val routeTitle =
-                                        when (val route = topRoute) {
+                                        when (val route = barRoute) {
                                             is AppRoute.FeatureSettings ->
                                                 com.sameerasw.essentials.domain.registry.FeatureRegistry.ALL_FEATURES
                                                     .find { it.id == route.featureId }
@@ -683,7 +692,7 @@ class MainActivity : AppCompatActivity() {
                                             is AppRoute.Wallpaper -> stringResource(R.string.feat_daily_wallpaper_title)
                                             else -> ""
                                         }
-                                    val barMode = if (isAtHome && isSearchActive) "search" else "bar"
+                                    val barMode = if (barAtHome && isSearchActive) "search" else "bar"
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
                                         contentAlignment = Alignment.BottomCenter,
@@ -760,7 +769,7 @@ class MainActivity : AppCompatActivity() {
                                                     title = if (isDetail) detailSpec?.title ?: routeTitle else null,
                                                     isBeta = isDetail && detailSpec?.isBeta == true,
                                                     onBackClick = if (isDetail) detailSpec?.onBack ?: { navViewModel.pop() } else null,
-                                                backCollapsed = isDetail && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
+                                                backCollapsed = isDetail && paneLayout == null && bottomBarHost.dismissProgress >= AppNavTransitions.thresholdProgress,
                                                     items =
                                                         tabs.mapIndexed { index, tab ->
                                                             ToolbarItem(
@@ -958,6 +967,7 @@ class MainActivity : AppCompatActivity() {
                                                 direction = BlurDirection.BOTTOM,
                                             ),
                                     onBack = { navViewModel.pop() },
+                                    sceneStrategies = listOf(paneStrategy),
                                     entryDecorators =
                                         listOf(
                                             rememberSaveableStateHolderNavEntryDecorator(),
@@ -968,7 +978,7 @@ class MainActivity : AppCompatActivity() {
                                     predictivePopTransitionSpec = { swipeEdge -> AppNavTransitions.predictivePop(swipeEdge) },
                                     entryProvider =
                                         entryProvider<AppRoute> {
-                                            entry<AppRoute.Home> {
+                                            entry<AppRoute.Home>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.Home)) {
                                                 UnderlayBlur(route = AppRoute.Home, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     androidx.compose.runtime.CompositionLocalProvider(
                                                         androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner provides this@MainActivity,
@@ -989,7 +999,7 @@ class MainActivity : AppCompatActivity() {
                                                                         scaleY = sc
                                                                     }
                                                                     .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
-                                                            userScrollEnabled = isSwipeTabsEnabled && !isSearchActive,
+                                                            userScrollEnabled = isSwipeTabsEnabled && !isSearchActive && isAtHome,
                                                         ) { targetPage ->
                                                             val statusBarHeight =
                                                                 WindowInsets.statusBars
@@ -1097,7 +1107,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                             }
-                                            entry<AppRoute.PixelSearchbarSettings> {
+                                            entry<AppRoute.PixelSearchbarSettings>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.PixelSearchbarSettings)) {
                                                 UnderlayBlur(route = AppRoute.PixelSearchbarSettings, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
@@ -1111,7 +1121,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                             }
-                                            entry<AppRoute.Wallpaper> { route ->
+                                            entry<AppRoute.Wallpaper>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
                                                 UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
@@ -1126,7 +1136,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                             }
-                                            entry<AppRoute.AutomationEditor> { route ->
+                                            entry<AppRoute.AutomationEditor>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
                                                 UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =
@@ -1141,7 +1151,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                             }
-                                            entry<AppRoute.FeatureSettings> { route ->
+                                            entry<AppRoute.FeatureSettings>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
                                                 UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
                                                     Box(
                                                         modifier =

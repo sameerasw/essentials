@@ -23,6 +23,7 @@ lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 navigationevent = "1.2.0-rc01"
 navigation3 = "1.2.0"
+material3Adaptive = "1.3.0"
 lifecycleViewmodelNavigation3 = "2.11.0"
 composeBom = "2026.06.01"
 lottieCompose = "6.7.1"
@@ -88,6 +89,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-navigationevent = { group = "androidx.navigationevent", name = "navigationevent", version.ref = "navigationevent" }
 androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
+androidx-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "material3Adaptive" }
 androidx-lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNavigation3" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }

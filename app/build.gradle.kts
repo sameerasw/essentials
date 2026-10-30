@@ -174,6 +174,7 @@ dependencies {
     implementation(libs.androidx.navigationevent)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(platform(libs.androidx.compose.bom))
 
