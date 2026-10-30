@@ -361,6 +361,7 @@ class NotificationListener : NotificationListenerService() {
         super.onListenerConnected()
         instance = this
         populateActiveUnreadNotifications()
+        NotificationAutoDismisser.resync(this)
         try {
             val pm = getSystemService(POWER_SERVICE) as PowerManager
             isScreenLocked = !pm.isInteractive
@@ -582,6 +583,7 @@ class NotificationListener : NotificationListenerService() {
     override fun onDestroy() {
         super.onDestroy()
         instance = null
+        NotificationAutoDismisser.clear()
         progressDestroyed = true
         progressHandler.removeCallbacks(progressRefreshRunnable)
         progressExecutor.shutdownNow()
@@ -1071,6 +1073,7 @@ class NotificationListener : NotificationListenerService() {
 
         LiveUpdateSnoozer.onPosted(this, sbn)
         val isRepost = NotificationRepostFilter.isUnchangedRepost(sbn)
+        NotificationAutoDismisser.onPosted(this, sbn, isRepost)
         if (CallNotificationParser.isCall(sbn)) CallStateRepository.onCallNotificationPosted(applicationContext, sbn)
         if (ChronometerRepository.isCandidate(sbn)) ChronometerRepository.onPosted(applicationContext, sbn)
         if (isOngoingScreenCaptureNotification(sbn)) {
@@ -1504,6 +1507,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         if (LiveUpdateSnoozer.isSnoozedByUs(sbn.key)) return
+        NotificationAutoDismisser.onRemoved(sbn.key)
         NotificationRepostFilter.forget(sbn.key)
         HilightProgressTracker.onRemoved(sbn.key)
         CallStateRepository.onCallNotificationRemoved(sbn.key)
