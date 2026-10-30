@@ -1,7 +1,11 @@
 package com.sameerasw.essentials.ui.components
 
 import android.view.View
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.platform.LocalDensity
@@ -97,6 +100,7 @@ fun PullTitleHeader(
     title: String,
     state: PullTitleHeaderState,
     modifier: Modifier = Modifier,
+    expandableContent: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     val fraction = state.fraction
     val fontFamily =
@@ -114,26 +118,39 @@ fun PullTitleHeader(
             )
         }
 
-    Box(
+    val baseStyle = MaterialTheme.typography.displaySmall
+
+    Column(
         modifier =
             modifier
                 .fillMaxWidth()
                 .height(state.height)
-                .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center,
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
+        if (expandableContent != null) {
+            Box(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                expandableContent()
+            }
+        }
         Text(
             text = title,
-            style = MaterialTheme.typography.displaySmall.copy(fontFamily = fontFamily),
+            style =
+                baseStyle.copy(
+                    fontFamily = fontFamily,
+                    fontSize = baseStyle.fontSize * (1f + fraction * 0.25f),
+                ),
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             maxLines = 1,
-            modifier =
-                Modifier.graphicsLayer {
-                    val scale = 1f + fraction * 0.25f
-                    scaleX = scale
-                    scaleY = scale
-                },
+            modifier = Modifier.basicMarquee(),
         )
     }
 }

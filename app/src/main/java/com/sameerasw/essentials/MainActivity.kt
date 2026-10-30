@@ -626,7 +626,7 @@ class MainActivity : AppCompatActivity() {
                                                     Modifier
                                                         .sharedBounds(bottomBarState, this@AnimatedContent)
                                                         .windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets.ime))
-                                                        .padding(horizontal = 16.dp)
+                                                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                                                         .fillMaxWidth(),
                                                 shape = SearchBarDefaults.inputFieldShape,
                                                 color = SearchBarDefaults.colors().containerColor,

@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.ui.graphics.Color
+import com.sameerasw.essentials.utils.DeviceImageMapper
 import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
 import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.content.Context
@@ -541,62 +545,10 @@ fun YourAndroidContent(
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val scrollState = rememberScrollState()
-    val overscrollOffset =
-        remember {
-            androidx.compose.animation.core
-                .Animatable(0f)
-        }
-    val scope = rememberCoroutineScope()
     val view = LocalView.current
-
-    val nestedScrollConnection =
-        remember {
-            object : androidx.compose.ui.input.nestedscroll.NestedScrollConnection {
-                override fun onPreScroll(
-                    available: androidx.compose.ui.geometry.Offset,
-                    source: androidx.compose.ui.input.nestedscroll.NestedScrollSource,
-                ): androidx.compose.ui.geometry.Offset {
-                    if (available.y < 0 && overscrollOffset.value > 0) {
-                        val toConsume =
-                            if (overscrollOffset.value + available.y >= 0) available.y else -overscrollOffset.value
-                        scope.launch {
-                            overscrollOffset.snapTo(overscrollOffset.value + toConsume)
-                        }
-                        return androidx.compose.ui.geometry
-                            .Offset(0f, toConsume)
-                    }
-                    return androidx.compose.ui.geometry.Offset.Zero
-                }
-
-                override fun onPostScroll(
-                    consumed: androidx.compose.ui.geometry.Offset,
-                    available: androidx.compose.ui.geometry.Offset,
-                    source: androidx.compose.ui.input.nestedscroll.NestedScrollSource,
-                ): androidx.compose.ui.geometry.Offset {
-                    if (available.y > 0 && scrollState.value == 0) {
-                        val prevValue = overscrollOffset.value
-                        if (prevValue >= 350f) return androidx.compose.ui.geometry.Offset.Zero
-
-                        val newValue = (prevValue + available.y * 0.5f).coerceAtMost(350f)
-                        scope.launch {
-                            overscrollOffset.snapTo(newValue)
-                        }
-
-                        // Haptic feedback when stretched significantly
-                        if (prevValue < 300f && newValue >= 300f) {
-                            HapticUtil.performUIHaptic(view)
-                        }
-
-                        return androidx.compose.ui.geometry
-                            .Offset(0f, available.y)
-                    }
-                    return super.onPostScroll(consumed, available, source)
-                }
-            }
-        }
-
     var isStartupAnimationRunning by remember { mutableStateOf(hasRunStartupAnimation) }
-    val headerState = rememberPullTitleHeaderState()
+    val headerState = rememberPullTitleHeaderState(minHeight = 320.dp, maxHeight = 480.dp)
+    val androidLogoRes = remember(deviceInfo) { DeviceImageMapper.getAndroidLogo(deviceInfo) }
 
     LaunchedEffect(hasRunStartupAnimation) {
         if (!hasRunStartupAnimation) {
@@ -639,25 +591,8 @@ fun YourAndroidContent(
                     blurRadius = if (isBlurEnabled) 40f else 0f,
                     height = with(LocalDensity.current) { 150.dp.toPx() },
                     direction = BlurDirection.BOTTOM,
-                ).nestedScroll(nestedScrollConnection)
+                )
                 .nestedScroll(headerState.nestedScrollConnection)
-                .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            val event = awaitPointerEvent()
-                            if (event.type == androidx.compose.ui.input.pointer.PointerEventType.Release && overscrollOffset.value > 0) {
-                                scope.launch {
-                                    overscrollOffset.animateTo(
-                                        0f,
-                                        androidx.compose.animation.core.spring(
-                                            stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow,
-                                        ),
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
                 .scrollMotionBlur(scrollState, enabled = mainViewModel.isMotionBlurEnabled.value)
                 .verticalScroll(scrollState)
                 .padding(
@@ -675,13 +610,33 @@ fun YourAndroidContent(
         PullTitleHeader(
             title = deviceInfo.deviceName,
             state = headerState,
+            expandableContent =
+                if (androidLogoRes != 0) {
+                    {
+                        Icon(
+                            painter = painterResource(id = androidLogoRes),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .aspectRatio(1f)
+                                    .padding(vertical = 12.dp)
+                                    .graphicsLayer {
+                                        alpha = contentAlphaState.value
+                                        translationY = contentOffsetState.value.toPx()
+                                    },
+                        )
+                    }
+                } else {
+                    null
+                },
         )
 
         DeviceHeroCard(
             deviceInfo = deviceInfo,
             contentAlpha = { contentAlphaState.value },
             contentOffset = { contentOffsetState.value },
-            overscrollOffset = overscrollOffset.value,
         )
 
         // Apps Section

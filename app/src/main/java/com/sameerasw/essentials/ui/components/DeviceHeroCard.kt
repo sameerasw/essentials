@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -59,7 +58,6 @@ import coil.request.ImageRequest
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.Shapes
-import com.sameerasw.essentials.utils.DeviceImageMapper
 import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
@@ -70,7 +68,6 @@ fun DeviceHeroCard(
     deviceInfo: DeviceInfo,
     contentAlpha: () -> Float = { 1f },
     contentOffset: () -> Dp = { 0.dp },
-    overscrollOffset: Float = 0f,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -116,27 +113,6 @@ fun DeviceHeroCard(
                 .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val androidLogoRes = DeviceImageMapper.getAndroidLogo(deviceInfo)
-        val density = androidx.compose.ui.platform.LocalDensity.current
-        val extraSize = with(density) { (overscrollOffset).toDp() }
-
-        if (androidLogoRes != 0) {
-            Icon(
-                painter = painterResource(id = androidLogoRes),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier =
-                    Modifier
-                        .graphicsLayer {
-                            alpha = contentAlpha()
-                            translationY = contentOffset().toPx()
-                            scaleX = 1f + (overscrollOffset / 1000f)
-                            scaleY = 1f + (overscrollOffset / 1000f)
-                        }.size(200.dp + extraSize)
-                        .padding(top = 12.dp, bottom = 32.dp),
-            )
-        }
-
         // Manufacturer Model
         Text(
             text = "${deviceInfo.manufacturer.replaceFirstChar { it.uppercase() }} ${deviceInfo.model} (${deviceInfo.hardware})",
