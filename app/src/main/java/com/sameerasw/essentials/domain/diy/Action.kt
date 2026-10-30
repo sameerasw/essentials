@@ -48,6 +48,8 @@ sealed interface Action {
         @SerializedName("pattern") val pattern: HilightPattern = HilightPattern.GLOW,
         @SerializedName("color") val color: Int = HilightEffect.DEFAULT_COLOR,
         @SerializedName("durationMs") val durationMs: Long = HilightEffect.DEFAULT_DURATION_MS,
+        @SerializedName("brightness") val brightness: Int = 100,
+        @SerializedName("repeats") val repeats: Int = 0,
     ) : Action {
         override val title: Int get() = R.string.diy_action_hilight
         override val icon: Int get() = R.drawable.rounded_auto_awesome_24
@@ -56,7 +58,7 @@ sealed interface Action {
 
         // Gson sets an unknown pattern name to null despite the non-null type
         @Suppress("USELESS_ELVIS")
-        fun toEffect() = HilightEffect(pattern ?: HilightPattern.GLOW, color, durationMs)
+        fun toEffect() = HilightEffect(pattern ?: HilightPattern.GLOW, color, durationMs, brightness, repeats)
     }
 
     @Keep
