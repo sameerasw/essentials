@@ -370,6 +370,13 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
+                    LaunchedEffect(navViewModel.pendingTab) {
+                        navViewModel.pendingTab?.let { tab ->
+                            val index = tabs.indexOf(tab)
+                            if (index != -1) jumpToTab(index)
+                            navViewModel.pendingTab = null
+                        }
+                    }
 
                     LaunchedEffect(intent) {
                         intent?.getStringExtra("target_tab")?.let { tabName ->
@@ -663,11 +670,15 @@ class MainActivity : AppCompatActivity() {
                                     val isDetail = !isAtHome
                                     val detailSpec = if (isDetail) bottomBarHost.specFor(topRoute) else null
                                     val routeTitle =
-                                        (topRoute as? AppRoute.FeatureSettings)?.let { route ->
-                                            com.sameerasw.essentials.domain.registry.FeatureRegistry.ALL_FEATURES
-                                                .find { it.id == route.featureId }
-                                                ?.let { stringResource(it.title) }
-                                                ?: route.featureId
+                                        when (val route = topRoute) {
+                                            is AppRoute.FeatureSettings ->
+                                                com.sameerasw.essentials.domain.registry.FeatureRegistry.ALL_FEATURES
+                                                    .find { it.id == route.featureId }
+                                                    ?.let { stringResource(it.title) }
+                                                    ?: route.featureId
+                                            is AppRoute.PixelSearchbarSettings -> stringResource(R.string.pixel_searchbar_settings_title)
+                                            is AppRoute.Wallpaper -> stringResource(R.string.feat_daily_wallpaper_title)
+                                            else -> ""
                                         }
                                     val barMode = if (isAtHome && isSearchActive) "search" else "bar"
                                     Box(
@@ -985,7 +996,12 @@ class MainActivity : AppCompatActivity() {
                                 val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
 
                                 val bottomBlurHeight by androidx.compose.animation.core.animateDpAsState(
-                                    targetValue = if (isAtHome) 130.dp else 150.dp,
+                                    targetValue =
+                                        when {
+                                            isAtHome -> 130.dp
+                                            topRoute is AppRoute.Wallpaper -> 0.dp
+                                            else -> 150.dp
+                                        },
                                     label = "bottom_blur_height",
                                 )
                                 val bottomBlurHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) { bottomBlurHeight.toPx() }
@@ -1130,11 +1146,50 @@ class MainActivity : AppCompatActivity() {
                                                                 SettingsContent(
                                                                     viewModel = viewModel,
                                                                     contentPadding = contentPadding,
+                                                                    expandPermissionsInitial = navViewModel.expandSettingsPermissions,
                                                                     modifier = Modifier.fillMaxSize(),
                                                                 )
                                                             }
                                                         }
                                                     }
+                                                }
+                                            }
+                                            entry<AppRoute.PixelSearchbarSettings> {
+                                                Box(
+                                                    modifier =
+                                                        Modifier
+                                                            .fillMaxSize()
+                                                            .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                ) {
+                                                    com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsScreen(
+                                                        onBack = { navViewModel.pop() },
+                                                    )
+                                                }
+                                            }
+                                            entry<AppRoute.Wallpaper> { route ->
+                                                Box(
+                                                    modifier =
+                                                        Modifier
+                                                            .fillMaxSize()
+                                                            .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                ) {
+                                                    com.sameerasw.essentials.ui.activities.WallpaperRouteScreen(
+                                                        route = route,
+                                                        onBack = { navViewModel.pop() },
+                                                    )
+                                                }
+                                            }
+                                            entry<AppRoute.AutomationEditor> { route ->
+                                                Box(
+                                                    modifier =
+                                                        Modifier
+                                                            .fillMaxSize()
+                                                            .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                ) {
+                                                    com.sameerasw.essentials.ui.activities.AutomationEditorScreen(
+                                                        route = route,
+                                                        onBack = { navViewModel.pop() },
+                                                    )
                                                 }
                                             }
                                             entry<AppRoute.FeatureSettings> { route ->
@@ -1201,7 +1256,7 @@ class MainActivity : AppCompatActivity() {
         options: Bundle?,
     ) {
         val route = AppRoutes.fromIntent(intent)
-        if (route != null && intent.component?.className == FeatureSettingsActivity::class.java.name) {
+        if (route != null && intent.component?.className != MainActivity::class.java.name) {
             navViewModel.navigate(route)
             return
         }

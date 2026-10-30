@@ -17,6 +17,7 @@ import android.app.Activity
 import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
 import com.sameerasw.essentials.ui.navigation.BottomBarSpec
 import com.sameerasw.essentials.ui.navigation.AppRoutes
+import com.sameerasw.essentials.ui.navigation.findFragmentActivity
 import com.sameerasw.essentials.ui.navigation.AppRoute
 import android.os.Build
 import android.os.Bundle
@@ -1573,27 +1574,6 @@ fun FeatureSettingsScreen(
 class FeatureSettingsActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val featureId = intent.getStringExtra("feature") ?: intent.getStringExtra("FEATURE_ID")
-        if (featureId != null) {
-            startActivity(
-                Intent(this, MainActivity::class.java).apply {
-                    putExtra(AppRoutes.EXTRA_NAV_FEATURE, featureId)
-                    intent.getStringExtra("highlight_setting")?.let { putExtra("highlight_setting", it) }
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                },
-            )
-        }
-        finish()
-        @Suppress("DEPRECATION")
-        overridePendingTransition(0, 0)
+        AppRoutes.redirectToMain(this)
     }
-}
-
-private fun Context.findFragmentActivity(): FragmentActivity {
-    var ctx: Context = this
-    while (ctx is ContextWrapper) {
-        if (ctx is FragmentActivity) return ctx
-        ctx = ctx.baseContext
-    }
-    error("FeatureSettingsScreen must be hosted in a FragmentActivity")
 }
