@@ -9,6 +9,20 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -24,7 +38,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -80,6 +93,12 @@ fun EssentialsFloatingToolbar(
     expanded: Boolean = true,
 ) {
     val view = LocalView.current
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val titleWidth = (screenWidth - 32.dp - 56.dp - 8.dp - 16.dp - 48.dp - 8.dp).coerceIn(0.dp, 192.dp)
+    var latestTitle by remember { mutableStateOf(title) }
+    var latestOnBack by remember { mutableStateOf(onBackClick) }
+    if (title != null) latestTitle = title
+    if (onBackClick != null) latestOnBack = onBackClick
 
     val finalFab: (@Composable () -> Unit)? =
         when {
@@ -141,143 +160,164 @@ fun EssentialsFloatingToolbar(
                 toolbarContainerColor = MaterialTheme.colorScheme.primary,
             ),
         content = {
-            if (onBackClick != null) {
-                // BACK BUTTON - Unified with Tabbed style (pop-out effect)
-                IconButton(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onBackClick()
-                    },
-                    modifier = Modifier.size(48.dp),
-                    colors =
-                        IconButtonDefaults.filledIconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.primary,
-                            containerColor = MaterialTheme.colorScheme.background,
-                        ),
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_arrow_back_24),
-                        contentDescription = stringResource(R.string.content_desc_back),
-                        modifier = Modifier.size(24.dp),
-                    )
-                }
-
-                if (title != null) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier =
-                            Modifier
-                                .widthIn(min = 100.dp, max = 250.dp)
-                                .padding(horizontal = 8.dp)
-                                .align(Alignment.CenterVertically),
-                    ) {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.background,
-                            maxLines = 1,
-                            modifier =
-                                Modifier
-                                    .basicMarquee()
-                                    .weight(1f, fill = false),
-                        )
-                        if (isBeta) {
-                            com.sameerasw.essentials.ui.core.cards.FeatureTagIcon(
-                                iconRes = R.drawable.rounded_science_24,
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                contentDescription = stringResource(R.string.label_beta),
-                            )
-                        }
-                    }
-                }
-            } else {
-                // TABBED MODE
-                val itemGap = 2.dp
-
-                items.forEachIndexed { index, item ->
-                    val isSelected = selectedIndex == index
-
-                    val itemWidth by animateDpAsState(
-                        targetValue = if (expanded || isSelected) 48.dp else 0.dp,
-                        animationSpec =
-                            spring(
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow,
-                            ),
-                        label = "item_width_$index",
-                    )
-
-                    val spacerWidth by animateDpAsState(
-                        targetValue = if (index < items.size - 1) itemGap else 0.dp,
-                        animationSpec =
-                            spring(
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow,
-                            ),
-                        label = "spacer_width_$index",
-                    )
-
-                    if (itemWidth > 0.dp || isSelected) {
+            AnimatedContent(
+                targetState = onBackClick != null,
+                transitionSpec = {
+                    (fadeIn() + scaleIn(initialScale = 0.85f)) togetherWith
+                        (fadeOut() + scaleOut(targetScale = 0.85f)) using SizeTransform(clip = false)
+                },
+                contentAlignment = Alignment.Center,
+                label = "toolbar_mode",
+            ) { isBackMode ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (isBackMode) {
+                        // BACK BUTTON - Unified with Tabbed style (pop-out effect)
                         IconButton(
                             onClick = {
                                 HapticUtil.performVirtualKeyHaptic(view)
-                                item.onClick()
+                                latestOnBack?.invoke()
                             },
-                            modifier =
-                                Modifier
-                                    .width(itemWidth)
-                                    .height(48.dp),
+                            modifier = Modifier.size(48.dp),
                             colors =
-                                if (isSelected) {
-                                    IconButtonDefaults.filledIconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.primary,
-                                        containerColor = MaterialTheme.colorScheme.background,
-                                    )
-                                } else {
-                                    IconButtonDefaults.iconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.background,
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                    )
-                                },
+                                IconButtonDefaults.filledIconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.primary,
+                                    containerColor = MaterialTheme.colorScheme.background,
+                                ),
                         ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                                contentDescription = stringResource(R.string.content_desc_back),
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+
+                        if (latestTitle != null) {
+                            Spacer(modifier = Modifier.width(8.dp))
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                                modifier =
+                                    Modifier
+                                        .width(titleWidth)
+                                        .padding(horizontal = 8.dp)
+                                        .align(Alignment.CenterVertically),
                             ) {
-                                Box {
-                                    Icon(
-                                        painter = painterResource(id = item.iconRes),
-                                        contentDescription = stringResource(id = item.labelRes),
-                                        tint =
-                                            if (isSelected) {
-                                                MaterialTheme.colorScheme.primary
-                                            } else {
-                                                MaterialTheme.colorScheme.background
-                                            },
-                                        modifier = Modifier.size(24.dp * item.iconScale),
+                                AnimatedContent(
+                                    targetState = latestTitle,
+                                    transitionSpec = {
+                                        (fadeIn() + slideInVertically { it / 2 }) togetherWith
+                                            (fadeOut() + slideOutVertically { -it / 2 }) using SizeTransform(clip = false)
+                                    },
+                                    modifier = Modifier.weight(1f, fill = false),
+                                    contentAlignment = Alignment.Center,
+                                    label = "toolbar_title",
+                                ) { shownTitle ->
+                                    Text(
+                                        text = shownTitle ?: "",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.background,
+                                        maxLines = 1,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.basicMarquee(),
                                     )
-                                    if (item.hasBadge) {
-                                        Canvas(
-                                            modifier =
-                                                Modifier
-                                                    .size(8.dp)
-                                                    .align(Alignment.TopEnd),
-                                        ) {
-                                            drawCircle(
-                                                color = Color.Red,
-                                            )
-                                        }
-                                    }
+                                }
+                                if (isBeta) {
+                                    com.sameerasw.essentials.ui.core.cards.FeatureTagIcon(
+                                        iconRes = R.drawable.rounded_science_24,
+                                        containerColor = MaterialTheme.colorScheme.background,
+                                        contentColor = MaterialTheme.colorScheme.primary,
+                                        contentDescription = stringResource(R.string.label_beta),
+                                    )
                                 }
                             }
                         }
+                    } else {
+                        // TABBED MODE
+                        val itemGap = 2.dp
 
-                        // Animated spacing between buttons
-                        if (index < items.size - 1) {
-                            Spacer(modifier = Modifier.width(spacerWidth))
+                        items.forEachIndexed { index, item ->
+                            val isSelected = selectedIndex == index
+
+                            val itemWidth by animateDpAsState(
+                                targetValue = if (expanded || isSelected) 48.dp else 0.dp,
+                                animationSpec =
+                                    spring(
+                                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                                        stiffness = Spring.StiffnessLow,
+                                    ),
+                                label = "item_width_$index",
+                            )
+
+                            val spacerWidth by animateDpAsState(
+                                targetValue = if (index < items.size - 1) itemGap else 0.dp,
+                                animationSpec =
+                                    spring(
+                                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                                        stiffness = Spring.StiffnessLow,
+                                    ),
+                                label = "spacer_width_$index",
+                            )
+
+                            if (itemWidth > 0.dp || isSelected) {
+                                IconButton(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        item.onClick()
+                                    },
+                                    modifier =
+                                        Modifier
+                                            .width(itemWidth)
+                                            .height(48.dp),
+                                    colors =
+                                        if (isSelected) {
+                                            IconButtonDefaults.filledIconButtonColors(
+                                                contentColor = MaterialTheme.colorScheme.primary,
+                                                containerColor = MaterialTheme.colorScheme.background,
+                                            )
+                                        } else {
+                                            IconButtonDefaults.iconButtonColors(
+                                                contentColor = MaterialTheme.colorScheme.background,
+                                                containerColor = MaterialTheme.colorScheme.primary,
+                                            )
+                                        },
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center,
+                                    ) {
+                                        Box {
+                                            Icon(
+                                                painter = painterResource(id = item.iconRes),
+                                                contentDescription = stringResource(id = item.labelRes),
+                                                tint =
+                                                    if (isSelected) {
+                                                        MaterialTheme.colorScheme.primary
+                                                    } else {
+                                                        MaterialTheme.colorScheme.background
+                                                    },
+                                                modifier = Modifier.size(24.dp * item.iconScale),
+                                            )
+                                            if (item.hasBadge) {
+                                                Canvas(
+                                                    modifier =
+                                                        Modifier
+                                                            .size(8.dp)
+                                                            .align(Alignment.TopEnd),
+                                                ) {
+                                                    drawCircle(
+                                                        color = Color.Red,
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Animated spacing between buttons
+                                if (index < items.size - 1) {
+                                    Spacer(modifier = Modifier.width(spacerWidth))
+                                }
+                            }
                         }
                     }
                 }

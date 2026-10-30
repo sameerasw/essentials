@@ -310,7 +310,9 @@
             android:name=".FeatureSettingsActivity"
             android:exported="false"
             android:label="Feature Settings"
-            android:theme="@style/Theme.Essentials"></activity>
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.NoDisplay"></activity>
 
         <activity
             android:name=".ui.activities.YourAndroidActivity"
