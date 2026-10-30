@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.ui.navigation
 
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -28,28 +30,41 @@ object AppNavTransitions {
 
     fun pop(): ContentTransform =
         ContentTransform(
-            targetContentEnter =
-                scaleIn(tween(300, easing = FastOutSlowInEasing), initialScale = 0.92f) +
-                    fadeIn(tween(220)),
+            targetContentEnter = EnterTransition.None,
             initialContentExit =
-                slideOutHorizontally(slideSpec) { it / 3 } +
-                    fadeOut(tween(200)),
+                slideOutHorizontally(slideSpec) { it } +
+                    scaleOut(tween(300), targetScale = 0.95f),
             targetContentZIndex = -1f,
+            sizeTransform = null,
         )
+
+    private val elasticSlide =
+        Easing { t ->
+            if (t < 0.8f) {
+                val x = t / 0.8f
+                0.12f * (1f - (1f - x) * (1f - x) * (1f - x))
+            } else {
+                0.12f + 0.88f * ((t - 0.8f) / 0.2f)
+            }
+        }
+
+    private val gestureScale =
+        Easing { t ->
+            val x = (t / 0.8f).coerceAtMost(1f)
+            1f - (1f - x) * (1f - x)
+        }
 
     fun predictivePop(
         @NavigationEvent.SwipeEdge swipeEdge: Int,
     ): ContentTransform {
         val direction = if (swipeEdge == NavigationEvent.EDGE_RIGHT) -1 else 1
         return ContentTransform(
-            targetContentEnter =
-                scaleIn(tween(300), initialScale = 0.92f) +
-                    fadeIn(tween(300)),
+            targetContentEnter = EnterTransition.None,
             initialContentExit =
-                scaleOut(tween(300), targetScale = 0.85f) +
-                    slideOutHorizontally(tween(300)) { direction * it / 4 } +
-                    fadeOut(tween(300)),
+                slideOutHorizontally(tween(400, easing = elasticSlide)) { direction * it } +
+                    scaleOut(tween(400, easing = gestureScale), targetScale = 0.9f),
             targetContentZIndex = -1f,
+            sizeTransform = null,
         )
     }
 }
