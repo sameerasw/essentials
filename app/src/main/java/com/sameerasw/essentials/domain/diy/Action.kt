@@ -169,6 +169,17 @@ sealed interface Action {
     }
 
     @Keep
+    data class DeviceCare(
+        @SerializedName("clearCache") val clearCache: Boolean = true,
+        @SerializedName("closeApps") val closeApps: Boolean = true,
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_device_care
+        override val icon: Int get() = R.drawable.rounded_mop_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+        override val isConfigurable: Boolean get() = true
+    }
+
+    @Keep
     data object TurnOffLowPower : Action {
         override val title: Int = R.string.diy_action_low_power_off
         override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
