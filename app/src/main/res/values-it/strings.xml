@@ -418,7 +418,7 @@
     <string name="feat_link_actions_desc">Gestisci i collegamenti con più app</string>
     <string name="feat_snooze_notifications_title">Posticipare le notifiche di sistema</string>
     <string name="feat_snooze_notifications_desc">Posticipare le notifiche persistenti</string>
-    <string name="feat_qs_tiles_title">Riquadri delle impostazioni rapide</string>
+    <string name="feat_qs_tiles_title">Riquadri del pannello rapido</string>
     <string name="feat_qs_tiles_desc">Visualizza tutto</string>
     <string name="feat_button_remap_title">Rimappatura dei pulsanti</string>
     <string name="feat_button_remap_desc">Rimappare le azioni dei pulsanti hardware</string>
