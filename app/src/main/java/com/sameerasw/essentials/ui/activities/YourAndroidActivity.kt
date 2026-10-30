@@ -9,6 +9,8 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -594,6 +596,7 @@ fun YourAndroidContent(
         }
 
     var isStartupAnimationRunning by remember { mutableStateOf(hasRunStartupAnimation) }
+    val headerState = rememberPullTitleHeaderState()
 
     LaunchedEffect(hasRunStartupAnimation) {
         if (!hasRunStartupAnimation) {
@@ -637,6 +640,7 @@ fun YourAndroidContent(
                     height = with(LocalDensity.current) { 150.dp.toPx() },
                     direction = BlurDirection.BOTTOM,
                 ).nestedScroll(nestedScrollConnection)
+                .nestedScroll(headerState.nestedScrollConnection)
                 .pointerInput(Unit) {
                     awaitPointerEventScope {
                         while (true) {
@@ -668,6 +672,11 @@ fun YourAndroidContent(
                 ),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        PullTitleHeader(
+            title = deviceInfo.deviceName,
+            state = headerState,
+        )
+
         DeviceHeroCard(
             deviceInfo = deviceInfo,
             contentAlpha = { contentAlphaState.value },

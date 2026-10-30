@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
@@ -229,11 +232,13 @@ fun FreezeGridUI(
         } else {
             val scrollState = androidx.compose.foundation.rememberScrollState()
             val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+            val headerState = rememberPullTitleHeaderState()
 
             Column(
                 modifier =
                     Modifier
                         .fillMaxSize()
+                        .nestedScroll(headerState.nestedScrollConnection)
                         .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                         .verticalScroll(scrollState)
                         .pointerInput(Unit) {
@@ -241,6 +246,11 @@ fun FreezeGridUI(
                         },
             ) {
                 Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+
+                PullTitleHeader(
+                    title = stringResource(R.string.tab_freeze),
+                    state = headerState,
+                )
 
                 OutlinedTextField(
                     value = searchQuery,

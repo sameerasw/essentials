@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -910,19 +913,27 @@ fun SetupFeatures(
         }
 
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+    val headerState = rememberPullTitleHeaderState()
 
     LazyColumn(
         state = lazyListState,
         modifier =
             modifier
                 .fillMaxSize()
+                .nestedScroll(headerState.nestedScrollConnection)
                 .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
         contentPadding =
             PaddingValues(
-                top = contentPadding.calculateTopPadding() + 8.dp,
+                top = contentPadding.calculateTopPadding(),
                 bottom = contentPadding.calculateBottomPadding() + 64.dp,
             ),
     ) {
+            item {
+                PullTitleHeader(
+                    title = stringResource(R.string.tab_essentials),
+                    state = headerState,
+                )
+            }
             item {
                 // Favorites
                 AnimatedVisibility(

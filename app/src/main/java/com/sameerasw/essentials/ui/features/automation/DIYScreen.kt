@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -143,6 +146,7 @@ fun DIYScreen(
                     }
                 val lazyListState = rememberLazyListState()
                 val view = androidx.compose.ui.platform.LocalView.current
+                val headerState = rememberPullTitleHeaderState()
 
                 @Composable
                 fun AutomationRow(automation: Automation) {
@@ -180,6 +184,7 @@ fun DIYScreen(
                     modifier =
                         Modifier
                             .fillMaxSize()
+                            .nestedScroll(headerState.nestedScrollConnection)
                             .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding =
@@ -191,6 +196,12 @@ fun DIYScreen(
                 ) {
                     item {
                         Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+                    }
+                    item {
+                        PullTitleHeader(
+                            title = stringResource(R.string.tab_diy),
+                            state = headerState,
+                        )
                     }
                     item {
                         AnimatedVisibility(

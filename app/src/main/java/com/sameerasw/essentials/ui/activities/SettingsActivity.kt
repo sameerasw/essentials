@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials
 
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.activities.WallpaperStagingActivity
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -597,6 +600,7 @@ fun SettingsContent(
     val sentryMode by viewModel.sentryReportMode
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
     val scrollState = rememberScrollState()
+    val headerState = rememberPullTitleHeaderState()
     var permissionsSectionY by remember { mutableStateOf<Float?>(null) }
 
     LaunchedEffect(expandPermissionsInitial, permissionsSectionY) {
@@ -609,6 +613,7 @@ fun SettingsContent(
         modifier =
             modifier
                 .fillMaxSize()
+                .nestedScroll(headerState.nestedScrollConnection)
                 .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                 .verticalScroll(scrollState)
                 .padding(contentPadding),
@@ -616,6 +621,11 @@ fun SettingsContent(
         horizontalAlignment = Alignment.Start,
     ) {
         val view = LocalView.current
+
+        PullTitleHeader(
+            title = stringResource(R.string.label_settings),
+            state = headerState,
+        )
 
         // Help & Guides
         RoundedCardContainer {
