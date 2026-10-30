@@ -1768,4 +1768,9 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_battery_idle_color_title">En veille</string>
+    <string name="battery_show_percentage_title">Montrer le pourcentage</string>
+    <string name="island_battery_percentage_conditional_title">% o seulement pour les conditions en dessous</string>
+    <string name="island_battery_icon_conditional_title">Afficher l\'icône pour les conditions d\'en dessous </string>
+    <string name="island_battery_style_title">Style de la batterie</string>
 </resources>
