@@ -1538,7 +1538,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="setting_app_icon_desc">Personaliza el icono que se muestra en la pantalla de inicio</string>
     <string name="app_icon_default">Predeterminado</string>
     <string name="app_icon_legacy">Heredado</string>
-    <string name="app_icon_black">Dinamico</string>
+    <string name="app_icon_black">Dinámico</string>
     <string name="watch_notif_sync_choose_apps">Selecciona las apps</string>
     <string name="watch_notif_sync_choose_apps_desc">Solo las apps seleccionadas se sincronizarán con el reloj</string>
     <string name="watch_watchface_title">Esfera de reloj </string>
@@ -1615,11 +1615,11 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="perm_bubbles_title">Burbujas Flotantes</string>
     <string name="duo_auto_detect_title">Detectar Cámara automaticamente</string>
     <string name="duo_auto_detect_desc">Automaticamente localiza la cámara frontal</string>
-    <string name="duo_camera_offset_x_title">Posicion horizontal</string>
-    <string name="duo_camera_offset_y_title">Posicuon vertical</string>
+    <string name="duo_camera_offset_x_title">Posición horizontal</string>
+    <string name="duo_camera_offset_y_title">Posición vertical</string>
     <string name="duo_camera_size_title">Tamaño de la cámara</string>
     <string name="duo_ring_radius_title">Radio del anillo</string>
-    <string name="duo_show_battery_title">Bateria</string>
+    <string name="duo_show_battery_title">Batería</string>
     <string name="duo_show_battery_percentage_title">Porcentaje de Bateria</string>
     <string name="cat_networks">Conexiones</string>
     <string name="duo_battery_low_color_title">Bateria baja (&lt;20%)</string>
@@ -1661,7 +1661,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="duo_enable_desc">El que no se dobla, pero hace cosas geniales</string>
     <string name="duo_enable_title">Habilitar Duo</string>
     <string name="duo_rotate_album_art_title">Girar caratula del album</string>
-    <string name="feat_status_glance_title">Vistaso del estado</string>
+    <string name="feat_status_glance_title">Vistazo del estado</string>
     <string name="feat_status_glance_desc">En una superposicion para el estado</string>
     <string name="status_glance_enable_title">Habilitar Vistaso del estado</string>
     <string name="status_glance_enable_desc">Muestra un vistaso del estado</string>
@@ -1897,7 +1897,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
-    <string name="island_themed_app_icons_title">Use themed app icons</string>
+    <string name="island_themed_app_icons_title">Usar iconos de aplicaciones tematizados </string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
@@ -1930,4 +1930,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
     <string name="island_battery_icon_conditional_title">Icono para algunas condiciones</string>
     <string name="feat_aod_wallpaper_keep_on_media">Mostrar cuando los medios se estan reproduciendo</string>
+    <string name="island_animation_speed_title">Velocidad de animación</string>
+    <string name="island_section_icon_color">Color de iconos</string>
+    <string name="app_colors_custom">Personalizado </string>
+    <string name="island_themed_text_title">Color de texto tematizado </string>
 </resources>
