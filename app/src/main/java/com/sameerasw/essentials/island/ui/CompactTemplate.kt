@@ -93,6 +93,22 @@ private fun slotChipped(i: Int, beforeSlots: Int, beforeUnits: List<SlotUnit>, a
 
 private class CellEntry(val itemKey: String, val cell: CompactCell)
 
+/**
+ * Applies an item's own tint to just that item's cell.
+ *
+ * Only items that declare `outlineAccent` are scoped (the battery, which uses it for its
+ * charging/low/critical state colour). Items that declare `accent` keep inheriting the island-wide
+ * accent from the root provider - that is the dynamic theming they are designed around, and
+ * re-applying it per cell would be redundant rather than helpful.
+ */
+@Composable
+private fun ScopedSelfTint(
+    tint: Color?,
+    content: @Composable () -> Unit,
+) {
+    if (tint == null) content() else CompositionLocalProvider(LocalIslandIconColor provides tint, content = content)
+}
+
 private class SlotUnit(
     val key: String,
     val itemKey: String,
@@ -232,7 +248,7 @@ fun CompactTemplate(
                                             },
                                         ),
                                     contentAlignment = Alignment.Center,
-                                ) { member.cell.content() }
+                                ) { ScopedSelfTint(state.items[member.itemKey]?.selfTint) { member.cell.content() } }
                             }
                         }
                     }
@@ -240,7 +256,7 @@ fun CompactTemplate(
                     Box(
                         modifier = tap.height(spec.cellSize).defaultMinSize(minWidth = spec.cellSize),
                         contentAlignment = Alignment.Center,
-                    ) { unit.cells[0].cell.content() }
+                    ) { ScopedSelfTint(state.items[unit.itemKey]?.selfTint) { unit.cells[0].cell.content() } }
                 }
             }
         }
