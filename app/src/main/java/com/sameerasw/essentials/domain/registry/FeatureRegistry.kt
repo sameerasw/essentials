@@ -822,6 +822,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_time_tap_opens_clock_title,
+                            R.string.island_time_tap_opens_clock_desc,
+                            "island_show_time_battery",
+                        ),
+                        SearchSetting(
                             R.string.island_show_battery_title,
                             R.string.island_battery_style_title,
                             "island_show_battery",

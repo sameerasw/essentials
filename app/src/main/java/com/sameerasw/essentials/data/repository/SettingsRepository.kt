@@ -578,6 +578,7 @@ class SettingsRepository(
         const val KEY_ISLAND_TIME_PERIOD = "island_time_period"
         const val KEY_ISLAND_TIME_LEADING_ZERO = "island_time_leading_zero"
         const val KEY_ISLAND_TIME_DAY_SUFFIX = "island_time_day_suffix"
+        const val KEY_ISLAND_TIME_TAP_OPENS_CLOCK = "island_time_tap_opens_clock"
         const val ISLAND_TIME_FORMAT_SYSTEM = "system"
         const val ISLAND_TIME_FORMAT_12H = "12h"
         const val ISLAND_TIME_FORMAT_24H = "24h"

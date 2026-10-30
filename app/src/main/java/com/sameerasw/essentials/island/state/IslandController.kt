@@ -126,6 +126,8 @@ class IslandController(
                 true
             } ?: false
             IslandStage.Compact -> {
+                val tapped = itemKey?.let { current.items[it] }
+                if (tapped?.expanded == null && tapped?.interactions?.onTap?.invoke() == true) return true
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
                     ?: fallbackTapKey?.invoke()?.let { current.items[it] }?.takeIf { it.expanded != null }
