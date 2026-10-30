@@ -72,7 +72,7 @@ object AppNavTransitions {
             targetContentEnter = EnterTransition.None,
             initialContentExit =
                 slideOutHorizontally(tween(400, easing = elasticSlide)) { direction * it } +
-                    scaleOut(tween(400, easing = gestureScale), targetScale = 0.9f),
+                    scaleOut(tween(400, easing = gestureScale), targetScale = 0.82f),
             targetContentZIndex = -1f,
             sizeTransform = null,
         )
