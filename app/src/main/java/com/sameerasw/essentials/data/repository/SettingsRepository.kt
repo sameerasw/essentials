@@ -637,6 +637,7 @@ class SettingsRepository(
         const val KEY_ISLAND_PROVIDERS_HIDDEN = "island_providers_hidden"
         const val KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY = "island_providers_launcher_only"
         const val KEY_ISLAND_PROVIDERS_HIDE_LOCKED = "island_providers_hide_locked"
+        const val KEY_ISLAND_PROVIDERS_ON_UPDATE = "island_providers_on_update"
 
         private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
         const val KEY_ISLAND_CALENDAR_EMOJIS = "island_calendar_emojis"
@@ -4379,6 +4380,18 @@ class SettingsRepository(
 
     fun getIslandPeekDurationMs(): Long = getLong(KEY_ISLAND_PEEK_DURATION_MS, 3500L)
     fun setIslandPeekDurationMs(value: Long) = putLong(KEY_ISLAND_PEEK_DURATION_MS, value)
+
+    fun getIslandProvidersShowOnUpdate(): Set<String> =
+        getString(KEY_ISLAND_PROVIDERS_ON_UPDATE)
+            ?.let { runCatching { gson.fromJson<List<String>>(it, object : TypeToken<List<String>>() {}.type) }.getOrNull() }
+            .orEmpty()
+            .toSet()
+
+    fun setIslandProviderShowOnUpdate(packageName: String, on: Boolean) {
+        val current = getIslandProvidersShowOnUpdate()
+        val next = if (on) current + packageName else current - packageName
+        putString(KEY_ISLAND_PROVIDERS_ON_UPDATE, next.takeIf { it.isNotEmpty() }?.let(gson::toJson))
+    }
 
     fun isIslandMediaPeekSongChangeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE, true)
     fun setIslandMediaPeekSongChangeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE, enabled)

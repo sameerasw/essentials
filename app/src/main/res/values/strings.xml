@@ -3367,6 +3367,8 @@
     <string name="duo_tap_for_brief_title">Tap for Brief</string>
     <string name="island_hide_when_locked_title">Hide when locked</string>
     <string name="island_launcher_only_title">Only show on launcher</string>
+    <string name="island_show_on_update_title">Show on update only</string>
+    <string name="island_show_on_update_desc">Peek briefly when the app sends new info instead of staying on the island</string>
     <string name="island_launcher_only_desc">Hide while an app is open</string>
     <string name="island_alarm_window_title">Show alarms within</string>
     <string name="island_alarm_window_hours">%1$d hours</string>

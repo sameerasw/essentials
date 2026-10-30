@@ -493,6 +493,7 @@ fun IslandSettingsUI(
                                     providerVersion++
                                 },
                                 onSettingsClick = { providerOptionsFor = provider.packageName to provider.label },
+                                modifier = Modifier.highlight(highlightSetting == "island_provider_show_on_update"),
                             )
                         }
                     }

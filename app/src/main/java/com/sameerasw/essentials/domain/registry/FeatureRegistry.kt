@@ -907,6 +907,11 @@ object FeatureRegistry {
                             R.string.duo_show_media_title,
                             "island_media_show_like",
                         ),
+                        SearchSetting(
+                            R.string.island_show_on_update_title,
+                            R.string.island_show_on_update_desc,
+                            "island_provider_show_on_update",
+                        ),
                     ),
                 parentFeatureId = "Display",
             ) {
