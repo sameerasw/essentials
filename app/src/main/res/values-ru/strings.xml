@@ -360,7 +360,7 @@
     <string name="feat_circle_to_search_gesture_title">Жест для \"Обвести и найти\"</string>
     <string name="feat_circle_to_search_gesture_desc">Нажмите и удерживайте нижнюю часть экрана, чтобы активировать функцию \"Обвести и найти\"</string>
     <string name="feat_circle_to_search_gesture_height_title">Высота зоны жеста</string>
-    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Отрегулируйте высоту области касания внизу </string>
     <string name="feat_other_customizations_title">Другие настройки</string>
     <string name="feat_other_customizations_desc">Дополнительные настройки и модификации системы</string>
     <string name="status_bar_icons_disclaimer">Обратите внимание, что реализация этих функций может зависеть от производителя оригинального оборудования, а некоторые из них могут быть вообще недоступны.</string>
@@ -1599,7 +1599,7 @@
     <string name="duo_show_battery_title">Батарея</string>
     <string name="duo_show_battery_percentage_title">Уровень заряда батареи</string>
     <string name="cat_networks">Сети</string>
-    <string name="duo_show_time_title">Часы</string>
+    <string name="duo_show_time_title">Время</string>
     <string name="duo_show_media_title">Воспроизведение медиа</string>
     <string name="duo_show_progress_title">Индикация прогресса </string>
     <string name="duo_show_flashlight_title">Фонарик</string>
@@ -1840,7 +1840,7 @@
     <string name="feat_lockscreen_shortcuts_desc">Запускайте собственные действия с экрана блокировки</string>
     <string name="feat_navigation_desc">Бар жестов, навигационные жесты и настройки панели навигации </string>
     <string name="feat_hilight_desc">Подсветите задние светодиоды для уведомлений и живого прогресса </string>
-    <string name="widget_stack_interval_seconds">Уведомлять о новых уведомлениях</string>
+    <string name="widget_stack_interval_seconds">Управлять выученными словами</string>
     <string name="setting_hidden_debugging_title">Скрытая поддержка отладки</string>
     <string name="label_battery_current_avg">Средний ток </string>
     <string name="tile_default_launcher">Лаунчер по умолчанию</string>
@@ -1897,7 +1897,7 @@
     <string name="feat_aod_wallpaper_compat_title">Режим совместимости</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
-    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">Отключить расширение статусной панели </string>
     <string name="island_themed_app_icons_title">Тематические иконки</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
     <string name="diy_cts_method_title">Trigger method</string>
@@ -2001,4 +2001,17 @@
     <string name="island_otp_timeout_title">Показывать коды </string>
     <string name="island_otp_bypass_filter_title">Показ кодов из любого приложения </string>
     <string name="island_notif_show_title">Показ уведомлений </string>
+    <string name="feat_circle_to_search_gesture_width_title">Ширина зоны жестов </string>
+    <string name="feat_circle_to_search_gesture_width_desc">Отрегулируйте ширину сенсорной области внизу </string>
+    <string name="back_gesture_add_app">Добавить приложение </string>
+    <string name="back_gesture_add_app_desc">Используйте разные ширины краёв, пока приложение открыто </string>
+    <string name="feat_back_gesture_right_title">Ширина правого края </string>
+    <string name="feat_back_gesture_default_width_desc">Как далеко от края смахивает назад. То же самое, что и чувствительность спины в настройках системы. </string>
+    <string name="feat_back_gesture_left_title">Ширина левого края </string>
+    <string name="label_force_all_apps_standby">Заставить остановится</string>
+    <string name="desc_force_all_apps_standby">Поместите все приложения в корзину остановки, когда они активны. </string>
+    <string name="label_adjust_brightness_factor">Фактор корректировки яркости </string>
+    <string name="about_desc_haptics">Переключите вибрацию системы и сенсорную обратную связь вместе. Требуется разрешение на изменение настроек системы. </string>
+    <string name="tile_haptics">Вибрация</string>
+    <string name="app_overcast">Погода</string>
 </resources>
