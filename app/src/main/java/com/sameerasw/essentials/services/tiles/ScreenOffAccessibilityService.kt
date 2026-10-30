@@ -22,10 +22,13 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
 import android.media.session.MediaSessionManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.os.SystemClock
 import android.os.Vibrator
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
@@ -55,7 +58,9 @@ import com.sameerasw.essentials.services.handlers.LockscreenShortcutsHandler
 import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
 import com.sameerasw.essentials.services.handlers.VolumeStepsHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
+import com.sameerasw.essentials.utils.CameraSession
 import com.sameerasw.essentials.utils.FreezeManager
+import com.sameerasw.essentials.utils.PowerButtonGestures
 import com.sameerasw.essentials.utils.VolumePanelDetector
 import com.sameerasw.essentials.utils.media.AppVolumeController
 import com.sameerasw.essentials.utils.performHapticFeedback
@@ -107,6 +112,60 @@ class ScreenOffAccessibilityService :
     private var isLightSensorRegistered = false
     private var isProximityRegisteredForPocket = false
     private var isProximityRegistered = false
+    private var isCameraCallbackRegistered = false
+
+    @Volatile private var cameraSessions: List<CameraSession> = emptyList()
+    private val cameraIdToLens = mutableMapOf<String, Int>()
+
+    private val cameraAvailabilityCallback =
+        object : CameraManager.AvailabilityCallback() {
+            override fun onCameraUnavailable(cameraId: String) {
+                val facing =
+                    try {
+                        val cameraManager = getSystemService(CameraManager::class.java)
+                        cameraManager?.getCameraCharacteristics(cameraId)?.get(CameraCharacteristics.LENS_FACING)
+                    } catch (_: Exception) {
+                        null
+                    }
+                if (facing != null) {
+                    cameraIdToLens[cameraId] = facing
+                    val session = CameraSession(lens = facing, openedAt = SystemClock.elapsedRealtime())
+                    cameraSessions = (cameraSessions + session).takeLast(3)
+                }
+            }
+
+            override fun onCameraAvailable(cameraId: String) {
+                val facing = cameraIdToLens[cameraId] ?: return
+                val now = SystemClock.elapsedRealtime()
+                val index = cameraSessions.indexOfLast { it.lens == facing && it.closedAt == null }
+                if (index != -1) {
+                    val updated = cameraSessions.toMutableList()
+                    updated[index] = updated[index].copy(closedAt = now)
+                    cameraSessions = updated.toList()
+                }
+            }
+        }
+
+    private fun updateCameraLensTracking() {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val shouldTrack = prefs.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, false)
+        val cameraManager = getSystemService(CameraManager::class.java) ?: return
+        if (shouldTrack && !isCameraCallbackRegistered) {
+            try {
+                cameraManager.registerAvailabilityCallback(cameraAvailabilityCallback, uiHandler)
+                isCameraCallbackRegistered = true
+            } catch (_: Exception) {
+            }
+        } else if (!shouldTrack && isCameraCallbackRegistered) {
+            try {
+                cameraManager.unregisterAvailabilityCallback(cameraAvailabilityCallback)
+            } catch (_: Exception) {
+            }
+            isCameraCallbackRegistered = false
+            cameraSessions = emptyList()
+            cameraIdToLens.clear()
+        }
+    }
 
     private fun updatePocketModeExcludedAppsSet() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -317,6 +376,14 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_APP_VOLUME_LEVELS
             ) {
                 AppVolumeController.updateState(this)
+            } else if (key == "button_remap_enabled" ||
+                key == "button_remap_use_shizuku" ||
+                key == SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF ||
+                key == SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON ||
+                key == SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP
+            ) {
+                updateCameraLensTracking()
+                updateInputEventListener()
             }
         }
 
@@ -328,7 +395,13 @@ class ScreenOffAccessibilityService :
         flashlightHandler = FlashlightHandler(this, serviceScope)
         notificationLightingHandler = NotificationLightingHandler(this)
         volumeStepsHandler = VolumeStepsHandler(this)
-        buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler, volumeStepsHandler)
+        buttonRemapHandler =
+            ButtonRemapHandler(
+                this,
+                flashlightHandler,
+                volumeStepsHandler,
+                cameraSessions = { cameraSessions },
+            )
         appFlowHandler = AppFlowHandler(this, this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
@@ -386,7 +459,7 @@ class ScreenOffAccessibilityService :
                             lockscreenShortcutsHandler.onScreenOn()
                             islandOverlayHandler.updateState()
                             freezeHandler.removeCallbacks(freezeRunnable)
-                            stopInputEventListener()
+                            updateInputEventListener()
                             updateOmniOverlay()
                             updatePocketModeSensors()
                         }
@@ -402,7 +475,7 @@ class ScreenOffAccessibilityService :
                             appFlowHandler.clearAuthenticated()
                             appFlowHandler.clearConsciousGate()
                             scheduleFreeze()
-                            startInputEventListenerIfEnabled()
+                            updateInputEventListener()
                             ambientGlanceHandler.checkAndShowOnScreenOff()
                             aodWallpaperOverlayHandler.onScreenOff()
                             duoOverlayHandler.onScreenOff()
@@ -434,6 +507,10 @@ class ScreenOffAccessibilityService :
 
                         InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> {
                             buttonRemapHandler.handleExternalVolumeLongPress(intent)
+                        }
+
+                        InputEventListenerService.ACTION_POWER_GESTURE -> {
+                            buttonRemapHandler.handlePowerGesture(intent)
                         }
 
                         "SHOW_AMBIENT_GLANCE",
@@ -473,6 +550,7 @@ class ScreenOffAccessibilityService :
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_USER_PRESENT)
                 addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
+                addAction(InputEventListenerService.ACTION_POWER_GESTURE)
                 addAction("SHOW_AMBIENT_GLANCE")
                 addAction("HIDE_AMBIENT_GLANCE_TEMPORARILY")
                 addAction("FORCE_TURN_OFF_AOD")
@@ -494,6 +572,8 @@ class ScreenOffAccessibilityService :
 
         updatePocketModeExcludedAppsSet()
         updatePocketModeSensors()
+        updateInputEventListener()
+        updateCameraLensTracking()
     }
 
     private fun scheduleFreeze() {
@@ -591,6 +671,15 @@ class ScreenOffAccessibilityService :
                 sensorManager.unregisterListener(this, it)
             }
             isLightSensorRegistered = false
+        }
+        if (isCameraCallbackRegistered) {
+            try {
+                getSystemService(CameraManager::class.java)?.unregisterAvailabilityCallback(cameraAvailabilityCallback)
+            } catch (_: Exception) {
+            }
+            isCameraCallbackRegistered = false
+            cameraSessions = emptyList()
+            cameraIdToLens.clear()
         }
         windowHandler.removeCallbacksAndMessages(null)
         windowThread.quitSafely()
@@ -1036,6 +1125,16 @@ class ScreenOffAccessibilityService :
     }
 
     private var isInputEventListenerRequested = false
+
+    private fun updateInputEventListener() {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("button_remap_enabled", false)
+        val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
+        val needed =
+            isEnabled && useShizuku &&
+                (!isScreenOn || PowerButtonGestures.isListenerNeeded(SettingsRepository(this)))
+        if (needed) startInputEventListenerIfEnabled() else stopInputEventListener()
+    }
 
     private fun startInputEventListenerIfEnabled() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)

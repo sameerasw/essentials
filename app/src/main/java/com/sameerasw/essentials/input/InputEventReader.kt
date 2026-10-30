@@ -21,6 +21,7 @@ class InputEventReader(
         const val EV_KEY = 1
         const val KEY_VOLUMEUP = 115
         const val KEY_VOLUMEDOWN = 114
+        const val KEY_POWER = 116
     }
 
     private var process: Process? = null

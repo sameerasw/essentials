@@ -25,21 +25,32 @@ import android.view.KeyEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.domain.model.PowerChoice
+import com.sameerasw.essentials.domain.model.RemapInput
+import com.sameerasw.essentials.domain.model.RemapScreenState
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.services.InputEventListenerService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.utils.CameraFlipButton
+import com.sameerasw.essentials.utils.CameraSession
+import com.sameerasw.essentials.utils.PowerButtonGestures
+import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.utils.lensInUseAt
+import com.sameerasw.essentials.utils.openLens
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ButtonRemapHandler(
     private val service: AccessibilityService,
     private val flashlightHandler: FlashlightHandler,
     private val volumeStepsHandler: VolumeStepsHandler,
+    private val cameraSessions: () -> List<CameraSession> = { emptyList() },
 ) {
     private val settingsRepository = SettingsRepository(service)
     private val handler = Handler(Looper.getMainLooper())
@@ -49,6 +60,9 @@ class ButtonRemapHandler(
     private var lastPendingActions: List<Action> = emptyList()
     private var sequenceJob: Job? = null
     private val longPressTimeout = 500L
+    private val powerSettleMs = 250L
+    private val flipAttempts = 10
+    private val flipRetryMs = 300L
 
     var isVolumeDialogVisible: Boolean = false
 
@@ -86,19 +100,14 @@ class ButtonRemapHandler(
         val isAod = isAodShowing()
 
         val shellReady =
-            com.sameerasw.essentials.utils.ShellUtils
-                .isAvailable(service) &&
-                com.sameerasw.essentials.utils.ShellUtils.hasPermission(
-                    service,
-                )
+            ShellUtils.isAvailable(service) &&
+                ShellUtils.hasPermission(service)
         val devicePathDetected =
             !prefs.getString("shizuku_detected_device_path", null).isNullOrEmpty()
 
         val useShell =
             isButtonRemapUseShizuku ||
-                com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(
-                    service,
-                )
+                ShellUtils.isRootEnabled(service)
 
         if (useShell && isButtonRemapEnabled && shellReady && devicePathDetected && !isScreenInteractive && !isAod) {
             val isTorchControl =
@@ -206,6 +215,78 @@ class ButtonRemapHandler(
         }
     }
 
+    fun handlePowerGesture(intent: Intent) {
+        val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("button_remap_enabled", false)) return
+
+        val gestureName = intent.getStringExtra(InputEventListenerService.EXTRA_POWER_GESTURE)
+        val screenOn = intent.getBooleanExtra(InputEventListenerService.EXTRA_SCREEN_ON_BEFORE, true)
+
+        when (gestureName) {
+            "DOUBLE_PRESS" -> {
+                val firstPressAt = intent.getLongExtra(InputEventListenerService.EXTRA_FIRST_PRESS_AT, 0L)
+                val lensBefore = if (firstPressAt > 0) lensInUseAt(cameraSessions(), firstPressAt) else null
+                val flip =
+                    screenOn &&
+                        settingsRepository.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, false) &&
+                        lensBefore != null
+                if (flip) {
+                    scope.launch {
+                        delay(powerSettleMs)
+                        flipCamera(lensBefore)
+                    }
+                }
+            }
+            "HOLD" -> {
+                if (!PowerButtonGestures.isHoldHandled(settingsRepository)) return
+                val slot = RemapSlot(RemapInput.POWER_HOLD, if (screenOn) RemapScreenState.ON else RemapScreenState.OFF)
+                val choice = settingsRepository.getPowerChoice(slot)
+                scope.launch {
+                    delay(powerSettleMs)
+                    when (choice) {
+                        PowerChoice.ASSISTANT -> {
+                            sendKey("KEYCODE_WAKEUP")
+                            sendKey("KEYCODE_ASSIST")
+                        }
+                        PowerChoice.POWER_MENU -> {
+                            sendKey("KEYCODE_WAKEUP")
+                            service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
+                        }
+                        PowerChoice.ACTIONS -> {
+                            sendKey(if (screenOn) "KEYCODE_WAKEUP" else "KEYCODE_SLEEP")
+                            handleLongPress(settingsRepository.getRemapActions(slot.prefKey))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun flipCamera(lensBefore: Int) {
+        var attemptsLeft = flipAttempts
+        var openLens: Int? = null
+        while (attemptsLeft > 0) {
+            delay(flipRetryMs)
+            attemptsLeft--
+            openLens = openLens(cameraSessions())
+            if (openLens != null) break
+        }
+        if (openLens == null || openLens != lensBefore) return
+
+        if (CameraFlipButton.click(service)) return
+        while (attemptsLeft > 0) {
+            delay(flipRetryMs)
+            attemptsLeft--
+            if (CameraFlipButton.click(service)) return
+        }
+    }
+
+    private suspend fun sendKey(keyCode: String) {
+        withContext(Dispatchers.IO) {
+            ShellUtils.runCommand(service, "input keyevent $keyCode", notifyOnError = false)
+        }
+    }
+
     private fun isFlashlightMapped(keyCode: Int): Boolean =
         listOf(true, false).any { isScreenOn ->
             RemapSlot
@@ -274,5 +355,4 @@ class ButtonRemapHandler(
         } catch (_: Exception) {
             false
         }
-
 }
