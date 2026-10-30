@@ -42,6 +42,49 @@ class IslandControllerTest {
 
     @Test fun hiddenWithoutItems() = assertEquals(IslandStage.Hidden, stage)
 
+    private fun bubbleItem(key: String, priority: Int) = item(key, priority).also { it.inBubble = true }
+
+    @Test fun markedItemsFillBubbleUpToMaxByPriority() {
+        controller.bubbleMax = 2
+        controller.setItems("a", listOf(item("a", priority = 10)))
+        controller.setItems("nav", listOf(bubbleItem("nav", 20)))
+        controller.setItems("caf", listOf(bubbleItem("caf", 40)))
+        controller.setItems("media", listOf(bubbleItem("media", 30)))
+        val state = controller.state.value
+        assertEquals(listOf("nav", "media"), state.bubbleKeys)
+        assertEquals(setOf("a"), state.arrangement.visibleItems)
+    }
+
+    @Test fun bubbleItemsCountTowardMaxItems() {
+        controller.maxItems = 3
+        controller.bubbleMax = 2
+        controller.setItems("nav", listOf(bubbleItem("nav", 20)))
+        controller.setItems("media", listOf(bubbleItem("media", 25)))
+        listOf("a" to 10, "b" to 30, "c" to 40).forEach { (k, p) -> controller.setItems(k, listOf(item(k, priority = p))) }
+        val state = controller.state.value
+        assertEquals(listOf("nav", "media"), state.bubbleKeys)
+        assertEquals(setOf("a"), state.arrangement.visibleItems)
+    }
+
+    @Test fun measuredBubbleWidthPullsCellsLeft() {
+        controller.setItems("nav", listOf(bubbleItem("nav", 20)))
+        controller.setItems("x", listOf(item("x", priority = 30)))
+        controller.setItems("y", listOf(item("y", priority = 40)))
+        assertEquals(listOf("y.icon"), controller.state.value.arrangement.after)
+
+        controller.setBubbleCells(3)
+        assertEquals(emptyList<String>(), controller.state.value.arrangement.after)
+    }
+
+    @Test fun markedItemStaysInlineWhenAlone() {
+        controller.setItems("nav", listOf(bubbleItem("nav", 20)))
+        assertEquals(emptyList<String>(), controller.state.value.bubbleKeys)
+        assert("nav" in controller.state.value.arrangement.visibleItems)
+
+        controller.setItems("a", listOf(item("a", priority = 10)))
+        assertEquals(listOf("nav"), controller.state.value.bubbleKeys)
+    }
+
     @Test fun tapTogglesCompactAndExpanded() {
         controller.setItems("media", listOf(item("media")))
         assertEquals(IslandStage.Compact, stage)

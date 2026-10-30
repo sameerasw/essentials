@@ -806,6 +806,19 @@ fun IslandBehaviorSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_format_align_center_24,
+                title = stringResource(R.string.island_balance_mirror_title),
+                description = stringResource(R.string.island_balance_mirror_desc),
+                isChecked = viewModel.isIslandBalanceMirror.value,
+                enabled = viewModel.isIslandBalanceCompact.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandBalanceMirror(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_balance_mirror"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_touch_app_24,
                 title = stringResource(R.string.island_dismiss_on_outside_title),
                 isChecked = viewModel.isIslandDismissOnOutside.value,

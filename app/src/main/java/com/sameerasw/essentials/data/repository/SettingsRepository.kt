@@ -611,6 +611,7 @@ class SettingsRepository(
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
+        const val KEY_ISLAND_BALANCE_MIRROR = "island_balance_mirror"
         const val KEY_ISLAND_SECONDARY_BUBBLE = "island_secondary_bubble"
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
         const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
@@ -666,6 +667,8 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NAVIGATION = "island_show_navigation"
         const val KEY_ISLAND_NAVIGATION_ON_NEW = "island_navigation_on_new"
         const val KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND = "island_navigation_peek_after_expand"
+        const val KEY_ISLAND_BUBBLE_ITEMS = "island_bubble_items"
+        const val KEY_ISLAND_BUBBLE_MAX = "island_bubble_max"
         const val ISLAND_NAVIGATION_ON_NEW_EXPAND = "expand"
         const val ISLAND_NAVIGATION_ON_NEW_PEEK = "peek"
         const val ISLAND_NAVIGATION_ON_NEW_OFF = "off"
@@ -4282,6 +4285,11 @@ class SettingsRepository(
 
     fun isIslandNavigationPeekAfterExpandEnabled(): Boolean = getBoolean(KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND, false)
     fun setIslandNavigationPeekAfterExpandEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND, enabled)
+    fun getIslandBubbleItems(): Set<String> =
+        getString(KEY_ISLAND_BUBBLE_ITEMS, null)?.split(",")?.filter { it.isNotBlank() }?.toSet().orEmpty()
+    fun setIslandBubbleItems(ids: Set<String>) = putString(KEY_ISLAND_BUBBLE_ITEMS, ids.joinToString(","))
+    fun getIslandBubbleMax(): Int = getInt(KEY_ISLAND_BUBBLE_MAX, 1).coerceIn(1, 3)
+    fun setIslandBubbleMax(value: Int) = putInt(KEY_ISLAND_BUBBLE_MAX, value)
 
     fun getIslandNavigationExpandDistance(): Int = getInt(KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE, 200)
     fun setIslandNavigationExpandDistance(meters: Int) = putInt(KEY_ISLAND_NAVIGATION_EXPAND_DISTANCE, meters)
@@ -4355,6 +4363,10 @@ class SettingsRepository(
     fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
+
+    fun isIslandBalanceMirrorEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_MIRROR, false)
+
+    fun setIslandBalanceMirrorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_MIRROR, enabled)
 
     fun isIslandSecondaryBubbleEnabled(): Boolean = getBoolean(KEY_ISLAND_SECONDARY_BUBBLE, true)
 

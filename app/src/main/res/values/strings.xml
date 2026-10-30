@@ -3153,7 +3153,9 @@
     <string name="island_hide_in_fullscreen_title">Hide in full screen</string>
     <string name="island_secondary_bubble_title">Secondary bubble</string>
     <string name="island_balance_compact_title">Visually balance compact island</string>
-    <string name="island_max_items_title">Max items to show</string>
+    <string name="island_balance_mirror_title">Balance around the right bubble</string>
+    <string name="island_balance_mirror_desc">Also move items left of the camera when the right bubble outweighs the left side</string>
+    <string name="island_max_items_title">Show up to (items)</string>
     <string name="island_always_gestures_title">Always available gestures</string>
     <string name="island_always_gestures_desc">Keep the gesture area available even while island is hidden</string>
     <string name="island_section_visuals">Visuals</string>
@@ -3328,6 +3330,10 @@
     <string name="island_navigation_expand_meters">%d m</string>
     <string name="island_navigation_peek_after_expand_title">Line peek after expanding</string>
     <string name="island_navigation_peek_after_expand_desc">When off, the island goes straight back to compact</string>
+    <string name="island_bubble_max_title">Bubble items at once</string>
+    <string name="island_bubble_max_desc">Mark items with the bubble icon in reorder mode to always show them beside the island</string>
+    <string name="island_bubble_item_toggle">Show in bubble</string>
+    <string name="island_bubble_item_shown">Shown in bubble</string>
     <string name="island_show_hotspot_title">Hotspot</string>
     <string name="island_hotspot_desc">Shows while your hotspot is on, with connected devices and data shared</string>
     <plurals name="island_hotspot_clients">

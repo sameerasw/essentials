@@ -237,6 +237,7 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandBalanceMirror = mutableStateOf(false)
     val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
@@ -262,6 +263,7 @@ class MainViewModel : ViewModel() {
     val islandNavigationOnNew = mutableStateOf(SettingsRepository.ISLAND_NAVIGATION_ON_NEW_PEEK)
     val islandNavigationExpandDistance = mutableIntStateOf(200)
     val isIslandNavigationPeekAfterExpand = mutableStateOf(false)
+    val islandBubbleMax = mutableStateOf(1)
     val isIslandShowHotspot = mutableStateOf(false)
     val isIslandShowDevices = mutableStateOf(true)
     val isIslandBriefEnabled = mutableStateOf(false)
@@ -1025,6 +1027,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_NAVIGATION_PEEK_AFTER_EXPAND ->
                         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+
+                    SettingsRepository.KEY_ISLAND_BUBBLE_MAX ->
+                        islandBubbleMax.value = settingsRepository.getIslandBubbleMax()
 
                     SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED ->
                         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
@@ -2517,6 +2522,7 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandBalanceMirror.value = settingsRepository.isIslandBalanceMirrorEnabled()
         isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
@@ -2547,6 +2553,7 @@ class MainViewModel : ViewModel() {
         islandNavigationOnNew.value = settingsRepository.getIslandNavigationOnNew()
         islandNavigationExpandDistance.intValue = settingsRepository.getIslandNavigationExpandDistance()
         isIslandNavigationPeekAfterExpand.value = settingsRepository.isIslandNavigationPeekAfterExpandEnabled()
+        islandBubbleMax.value = settingsRepository.getIslandBubbleMax()
         isIslandShowHotspot.value = settingsRepository.isIslandShowHotspotEnabled()
         isIslandShowDevices.value = settingsRepository.isIslandShowDevicesEnabled()
         isIslandBriefEnabled.value = settingsRepository.isIslandBriefEnabled()
@@ -5800,6 +5807,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNavigationPeekAfterExpandEnabled(enabled)
     }
 
+    fun setIslandBubbleMax(value: Int) {
+        islandBubbleMax.value = value
+        settingsRepository.setIslandBubbleMax(value)
+    }
+
     fun setIslandShowHotspot(enabled: Boolean) {
         isIslandShowHotspot.value = enabled
         settingsRepository.setIslandShowHotspotEnabled(enabled)
@@ -5945,6 +5957,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBalanceCompact(enabled: Boolean) {
         isIslandBalanceCompact.value = enabled
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
+    }
+
+    fun setIslandBalanceMirror(enabled: Boolean) {
+        isIslandBalanceMirror.value = enabled
+        settingsRepository.setIslandBalanceMirrorEnabled(enabled)
     }
 
     fun setIslandBondEdge(enabled: Boolean) {

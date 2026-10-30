@@ -195,6 +195,7 @@ class MediaPlugin : BaseIslandPlugin() {
                 key = ITEM_KEY,
                 priority = IslandPriority.MEDIA,
                 placement = CompactPlacement.Dynamic,
+                compactEndSide = true,
                 compact = listOf(
                     CompactCell("media.art") { MediaArtCue(t.artwork, accent, 22.dp) },
                     CompactCell("media.eq") {
