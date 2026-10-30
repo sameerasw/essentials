@@ -1774,4 +1774,9 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_battery_icon_conditional_title">Afficher l\'icône pour les conditions d\'en dessous </string>
     <string name="island_battery_style_title">Style de la batterie</string>
     <string name="island_battery_only_low_title">Montrer uniquement quand la batterie est faible</string>
+    <string name="island_camera_position_title">Position de la caméra</string>
+    <string name="island_camera_position_left">Gauche</string>
+    <string name="island_camera_position_center">Centre</string>
+    <string name="island_camera_position_right">Droite</string>
+    <string name="island_keep_on_landscape_title">Garder en mode portrait</string>
 </resources>
