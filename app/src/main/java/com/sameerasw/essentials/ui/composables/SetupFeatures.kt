@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import com.sameerasw.essentials.ui.navigation.LocalListPaneWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.offset
@@ -1097,6 +1098,7 @@ fun SetupFeatures(
                                 sectionFeatures.forEach { feature ->
                                     FeatureCard(
                                         title = feature.title,
+                                        isSelected = feature.id in LocalSelectedFeatureIds.current,
                                         isEnabled = feature.isEnabled(viewModel),
                                         onToggle = { enabled ->
                                             BiometricSecurityHelper.runWithAuth(
@@ -1278,6 +1280,7 @@ private fun RecentSearchesSection(
             validSearches.forEach { result ->
                 FeatureCard(
                     title = result.title,
+                    isSelected = result.featureKey in LocalSelectedFeatureIds.current,
                     isEnabled = true,
                     onToggle = {},
                     onClick = {
@@ -1425,6 +1428,7 @@ private fun SearchResultsSection(
                     for (result in visibleResults) {
                         FeatureCard(
                             title = result.title,
+                            isSelected = result.featureKey in LocalSelectedFeatureIds.current,
                             isEnabled = true,
                             onToggle = {},
                             onClick = {

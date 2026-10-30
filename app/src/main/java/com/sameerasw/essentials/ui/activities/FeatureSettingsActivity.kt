@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import androidx.fragment.app.FragmentActivity
 import android.content.Intent
 import android.content.ContextWrapper
@@ -933,6 +934,7 @@ fun FeatureSettingsScreen(
                                     FeatureCard(
                                         modifier = Modifier.highlight(highlightSetting == child.id),
                                         title = child.title,
+                                        isSelected = child.id in LocalSelectedFeatureIds.current,
                                         description = child.description,
                                         iconRes = child.iconRes,
                                         isEnabled =

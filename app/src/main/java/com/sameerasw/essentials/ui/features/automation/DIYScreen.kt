@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.clickable
@@ -174,6 +175,7 @@ fun DIYScreen(
                         },
                         selectionMode = selectionMode,
                         selected = automation.id in selectedIds,
+                        isOpen = automation.id == LocalOpenAutomationId.current,
                         onSelectedChange = { checked ->
                             selectionMode = true
                             selectedIds =

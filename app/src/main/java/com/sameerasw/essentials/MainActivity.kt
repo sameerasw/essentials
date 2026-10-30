@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
+import androidx.compose.runtime.CompositionLocalProvider
+import com.sameerasw.essentials.ui.navigation.openFeatureIds
+import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
@@ -966,224 +970,230 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 val bottomBlurHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) { bottomBlurHeight.toPx() }
 
-                                NavDisplay(
-                                    backStack = backStack,
-                                    modifier =
-                                        Modifier
-                                            .fillMaxSize()
-                                            .progressiveBlur(
-                                                blurRadius = if (isBlurEnabled) 40f else 0f,
-                                                height = bottomBlurHeightPx,
-                                                direction = BlurDirection.BOTTOM,
+                                CompositionLocalProvider(
+                                    LocalSelectedFeatureIds provides if (paneLayout != null) backStack.openFeatureIds() else emptySet(),
+                                    LocalOpenAutomationId provides
+                                        if (paneLayout != null) (topRoute as? AppRoute.AutomationEditor)?.automationId else null,
+                                ) {
+                                    NavDisplay(
+                                        backStack = backStack,
+                                        modifier =
+                                            Modifier
+                                                .fillMaxSize()
+                                                .progressiveBlur(
+                                                    blurRadius = if (isBlurEnabled) 40f else 0f,
+                                                    height = bottomBlurHeightPx,
+                                                    direction = BlurDirection.BOTTOM,
+                                                ),
+                                        onBack = { navViewModel.pop() },
+                                        sceneStrategies = listOf(paneStrategy),
+                                        entryDecorators =
+                                            listOf(
+                                                rememberSaveableStateHolderNavEntryDecorator(),
+                                                rememberViewModelStoreNavEntryDecorator(),
                                             ),
-                                    onBack = { navViewModel.pop() },
-                                    sceneStrategies = listOf(paneStrategy),
-                                    entryDecorators =
-                                        listOf(
-                                            rememberSaveableStateHolderNavEntryDecorator(),
-                                            rememberViewModelStoreNavEntryDecorator(),
-                                        ),
-                                    transitionSpec = {
-                                        if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.push()
-                                    },
-                                    popTransitionSpec = {
-                                        if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.pop()
-                                    },
-                                    predictivePopTransitionSpec = { swipeEdge ->
-                                        if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.predictivePop(swipeEdge)
-                                    },
-                                    entryProvider =
-                                        entryProvider<AppRoute> {
-                                            entry<AppRoute.Home>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.Home)) {
-                                                UnderlayBlur(route = AppRoute.Home, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
-                                                    androidx.compose.runtime.CompositionLocalProvider(
-                                                        androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner provides this@MainActivity,
-                                                    ) {
-                                                        HorizontalPager(
-                                                            state = pagerState,
-                                                            modifier =
-                                                                Modifier
-                                                                    .fillMaxSize()
-                                                                    .scale(1f - (backProgress.value * 0.05f))
-                                                                    .alpha(1f - (backProgress.value * 0.3f))
-                                                                    .graphicsLayer {
-                                                                        val p = tabSwitchProgress.value
-                                                                        alpha = p.coerceIn(0f, 1f)
-                                                                        translationX = (1f - p) * tabSwitchDirection * 48.dp.toPx()
-                                                                        val sc = 0.96f + 0.04f * p
-                                                                        scaleX = sc
-                                                                        scaleY = sc
-                                                                    }
-                                                                    .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
-                                                            userScrollEnabled = isSwipeTabsEnabled && !isSearchActive && isAtHome,
-                                                        ) { targetPage ->
-                                                            val statusBarHeight =
-                                                                WindowInsets.statusBars
-                                                                    .asPaddingValues()
-                                                                    .calculateTopPadding()
-                                                            val topContentPadding = statusBarHeight
-                                                            val bottomToolbarPadding = 150.dp
-                                                            val contentPadding =
-                                                                PaddingValues(
-                                                                    top = topContentPadding,
-                                                                    bottom = bottomToolbarPadding,
-                                                                    start = 16.dp,
-                                                                    end = 16.dp,
-                                                                )
+                                        transitionSpec = {
+                                            if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.push()
+                                        },
+                                        popTransitionSpec = {
+                                            if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.pop()
+                                        },
+                                        predictivePopTransitionSpec = { swipeEdge ->
+                                            if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.predictivePop(swipeEdge)
+                                        },
+                                        entryProvider =
+                                            entryProvider<AppRoute> {
+                                                entry<AppRoute.Home>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.Home)) {
+                                                    UnderlayBlur(route = AppRoute.Home, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        androidx.compose.runtime.CompositionLocalProvider(
+                                                            androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner provides this@MainActivity,
+                                                        ) {
+                                                            HorizontalPager(
+                                                                state = pagerState,
+                                                                modifier =
+                                                                    Modifier
+                                                                        .fillMaxSize()
+                                                                        .scale(1f - (backProgress.value * 0.05f))
+                                                                        .alpha(1f - (backProgress.value * 0.3f))
+                                                                        .graphicsLayer {
+                                                                            val p = tabSwitchProgress.value
+                                                                            alpha = p.coerceIn(0f, 1f)
+                                                                            translationX = (1f - p) * tabSwitchDirection * 48.dp.toPx()
+                                                                            val sc = 0.96f + 0.04f * p
+                                                                            scaleX = sc
+                                                                            scaleY = sc
+                                                                        }
+                                                                        .scrollMotionBlur(pagerState, enabled = isMotionBlurEnabled),
+                                                                userScrollEnabled = isSwipeTabsEnabled && !isSearchActive && isAtHome,
+                                                            ) { targetPage ->
+                                                                val statusBarHeight =
+                                                                    WindowInsets.statusBars
+                                                                        .asPaddingValues()
+                                                                        .calculateTopPadding()
+                                                                val topContentPadding = statusBarHeight
+                                                                val bottomToolbarPadding = 150.dp
+                                                                val contentPadding =
+                                                                    PaddingValues(
+                                                                        top = topContentPadding,
+                                                                        bottom = bottomToolbarPadding,
+                                                                        start = 16.dp,
+                                                                        end = 16.dp,
+                                                                    )
 
-                                                            when (tabs[targetPage]) {
-                                                                DIYTabs.ESSENTIALS -> {
-                                                                    SetupFeatures(
-                                                                        viewModel = viewModel,
-                                                                        modifier = Modifier.fillMaxSize(),
-                                                                        contentPadding = contentPadding,
-                                                                        isSearchActive = isSearchActive,
-                                                                        onHelpClick = { showInstructionsSheet = true },
-                                                                        onNavigateToTab = { targetTab ->
-                                                                            val tabIndex = tabs.indexOf(targetTab)
-                                                                            if (tabIndex != -1) {
-                                                                                scope.launch {
-                                                                                    jumpToTab(tabIndex)
+                                                                when (tabs[targetPage]) {
+                                                                    DIYTabs.ESSENTIALS -> {
+                                                                        SetupFeatures(
+                                                                            viewModel = viewModel,
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            contentPadding = contentPadding,
+                                                                            isSearchActive = isSearchActive,
+                                                                            onHelpClick = { showInstructionsSheet = true },
+                                                                            onNavigateToTab = { targetTab ->
+                                                                                val tabIndex = tabs.indexOf(targetTab)
+                                                                                if (tabIndex != -1) {
+                                                                                    scope.launch {
+                                                                                        jumpToTab(tabIndex)
+                                                                                    }
                                                                                 }
-                                                                            }
-                                                                        },
-                                                                    )
-                                                                }
+                                                                            },
+                                                                        )
+                                                                    }
 
-                                                                DIYTabs.FREEZE -> {
-                                                                    FreezeGridUI(
-                                                                        viewModel = viewModel,
-                                                                        modifier = Modifier.fillMaxSize(),
-                                                                        contentPadding = contentPadding,
-                                                                        onGetStartedClick = {
-                                                                            startActivity(
-                                                                                Intent(
-                                                                                    context,
-                                                                                    FeatureSettingsActivity::class.java,
-                                                                                ).apply {
-                                                                                    putExtra("feature", "Freeze")
-                                                                                },
-                                                                            )
-                                                                        },
-                                                                        onSettingsClick = {
-                                                                            startActivity(
-                                                                                Intent(
-                                                                                    context,
-                                                                                    FeatureSettingsActivity::class.java,
-                                                                                ).apply {
-                                                                                    putExtra("feature", "Freeze")
-                                                                                },
-                                                                            )
-                                                                        },
-                                                                        searchQuery = freezeSearchQuery,
-                                                                        searchSubmitSignal = freezeSearchSubmitSignal,
-                                                                    )
-                                                                }
+                                                                    DIYTabs.FREEZE -> {
+                                                                        FreezeGridUI(
+                                                                            viewModel = viewModel,
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            contentPadding = contentPadding,
+                                                                            onGetStartedClick = {
+                                                                                startActivity(
+                                                                                    Intent(
+                                                                                        context,
+                                                                                        FeatureSettingsActivity::class.java,
+                                                                                    ).apply {
+                                                                                        putExtra("feature", "Freeze")
+                                                                                    },
+                                                                                )
+                                                                            },
+                                                                            onSettingsClick = {
+                                                                                startActivity(
+                                                                                    Intent(
+                                                                                        context,
+                                                                                        FeatureSettingsActivity::class.java,
+                                                                                    ).apply {
+                                                                                        putExtra("feature", "Freeze")
+                                                                                    },
+                                                                                )
+                                                                            },
+                                                                            searchQuery = freezeSearchQuery,
+                                                                            searchSubmitSignal = freezeSearchSubmitSignal,
+                                                                        )
+                                                                    }
 
-                                                                DIYTabs.DIY -> {
-                                                                    DIYScreen(
-                                                                        modifier = Modifier.fillMaxSize(),
-                                                                        contentPadding = contentPadding,
-                                                                        showNewAutomationSheet = showNewAutomationSheet,
-                                                                        onDismissNewAutomationSheet = {
-                                                                            showNewAutomationSheet = false
-                                                                        },
-                                                                        onNewAutomationClick = {
-                                                                            showNewAutomationSheet = true
-                                                                        },
-                                                                    )
-                                                                }
+                                                                    DIYTabs.DIY -> {
+                                                                        DIYScreen(
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            contentPadding = contentPadding,
+                                                                            showNewAutomationSheet = showNewAutomationSheet,
+                                                                            onDismissNewAutomationSheet = {
+                                                                                showNewAutomationSheet = false
+                                                                            },
+                                                                            onNewAutomationClick = {
+                                                                                showNewAutomationSheet = true
+                                                                            },
+                                                                        )
+                                                                    }
 
-                                                                DIYTabs.YOUR_ANDROID -> {
-                                                                    YourAndroidContent(
-                                                                        deviceInfo = deviceInfo,
-                                                                        updatesViewModel = updatesViewModel,
-                                                                        hasRunStartupAnimation = yourAndroidViewModel.hasRunStartupAnimation,
-                                                                        onAnimationRun = { yourAndroidViewModel.hasRunStartupAnimation = true },
-                                                                        exportLauncher = exportLauncher,
-                                                                        importLauncher = importLauncher,
-                                                                        backupAppListLauncher = backupAppListLauncher,
-                                                                        viewModel = yourAndroidViewModel,
-                                                                        onAddRepoClick = { showAddRepoSheet = true },
-                                                                        onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
-                                                                        modifier = Modifier.fillMaxSize(),
-                                                                    )
-                                                                }
+                                                                    DIYTabs.YOUR_ANDROID -> {
+                                                                        YourAndroidContent(
+                                                                            deviceInfo = deviceInfo,
+                                                                            updatesViewModel = updatesViewModel,
+                                                                            hasRunStartupAnimation = yourAndroidViewModel.hasRunStartupAnimation,
+                                                                            onAnimationRun = { yourAndroidViewModel.hasRunStartupAnimation = true },
+                                                                            exportLauncher = exportLauncher,
+                                                                            importLauncher = importLauncher,
+                                                                            backupAppListLauncher = backupAppListLauncher,
+                                                                            viewModel = yourAndroidViewModel,
+                                                                            onAddRepoClick = { showAddRepoSheet = true },
+                                                                            onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                        )
+                                                                    }
 
-                                                                DIYTabs.SETTINGS -> {
-                                                                    SettingsContent(
-                                                                        viewModel = viewModel,
-                                                                        contentPadding = contentPadding,
-                                                                        expandPermissionsInitial = navViewModel.expandSettingsPermissions,
-                                                                        modifier = Modifier.fillMaxSize(),
-                                                                    )
+                                                                    DIYTabs.SETTINGS -> {
+                                                                        SettingsContent(
+                                                                            viewModel = viewModel,
+                                                                            contentPadding = contentPadding,
+                                                                            expandPermissionsInitial = navViewModel.expandSettingsPermissions,
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                        )
+                                                                    }
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 }
-                                            }
-                                            entry<AppRoute.PixelSearchbarSettings>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.PixelSearchbarSettings)) {
-                                                UnderlayBlur(route = AppRoute.PixelSearchbarSettings, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .fillMaxSize()
-                                                                .background(MaterialTheme.colorScheme.surfaceContainer),
-                                                    ) {
-                                                        com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsScreen(
-                                                            onBack = { navViewModel.pop() },
-                                                        )
+                                                entry<AppRoute.PixelSearchbarSettings>(metadata = mapOf(ROUTE_METADATA_KEY to AppRoute.PixelSearchbarSettings)) {
+                                                    UnderlayBlur(route = AppRoute.PixelSearchbarSettings, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsScreen(
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            entry<AppRoute.Wallpaper>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
-                                                UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .fillMaxSize()
-                                                                .background(MaterialTheme.colorScheme.surfaceContainer),
-                                                    ) {
-                                                        com.sameerasw.essentials.ui.activities.WallpaperRouteScreen(
-                                                            route = route,
-                                                            onBack = { navViewModel.pop() },
-                                                        )
+                                                entry<AppRoute.Wallpaper>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.WallpaperRouteScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            entry<AppRoute.AutomationEditor>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
-                                                UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .fillMaxSize()
-                                                                .background(MaterialTheme.colorScheme.surfaceContainer),
-                                                    ) {
-                                                        com.sameerasw.essentials.ui.activities.AutomationEditorScreen(
-                                                            route = route,
-                                                            onBack = { navViewModel.pop() },
-                                                        )
+                                                entry<AppRoute.AutomationEditor>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.AutomationEditorScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            entry<AppRoute.FeatureSettings>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
-                                                UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
-                                                    Box(
-                                                        modifier =
-                                                            Modifier
-                                                                .fillMaxSize()
-                                                                .background(MaterialTheme.colorScheme.surfaceContainer),
-                                                    ) {
-                                                        FeatureSettingsScreen(
-                                                            route = route,
-                                                            onBack = { navViewModel.pop() },
-                                                        )
+                                                entry<AppRoute.FeatureSettings>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(route = route, backStack = backStack, lastNavWasPop = navViewModel.lastNavWasPop) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            FeatureSettingsScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        },
-                                )
+                                            },
+                                    )
+                                }
                             }
                         }
 

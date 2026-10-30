@@ -138,3 +138,17 @@ fun Context.findFragmentActivity(): FragmentActivity {
     }
     error("Screen must be hosted in a FragmentActivity")
 }
+
+val LocalSelectedFeatureIds = androidx.compose.runtime.compositionLocalOf<Set<String>> { emptySet() }
+
+fun List<AppRoute>.openFeatureIds(): Set<String> =
+    mapNotNullTo(HashSet()) { route ->
+        when (route) {
+            is AppRoute.FeatureSettings -> route.featureId
+            is AppRoute.PixelSearchbarSettings -> "Pixel Searchbar"
+            is AppRoute.Wallpaper -> "Daily Wallpaper"
+            else -> null
+        }
+    }
+
+val LocalOpenAutomationId = androidx.compose.runtime.compositionLocalOf<String?> { null }
