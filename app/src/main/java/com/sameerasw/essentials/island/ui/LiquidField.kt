@@ -203,6 +203,6 @@ fun LiquidBridges(field: LiquidField, color: Color = Color.Black, modifier: Modi
         modifier
             .fillMaxSize()
             .onGloballyPositioned { origin = it.positionInRoot() }
-            .drawBehind { field.draw(this, origin, color) },
+            .drawBehind { if (!IslandMotion.expressive) field.draw(this, origin, color) },
     )
 }

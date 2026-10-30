@@ -59,6 +59,7 @@ class LiquidBody(private val spec: LiquidSpec, private val field: LiquidField? =
 
     fun observe(size: IntSize, position: Offset) {
         if (field != null && bond != null) field.report(Rect(position, size.toSize()), bond)
+        if (IslandMotion.expressive) return
         val now = System.nanoTime()
         val w = size.width.toFloat()
         val h = size.height.toFloat()

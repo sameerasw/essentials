@@ -970,6 +970,11 @@ object FeatureRegistry {
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
                         ),
+                        SearchSetting(
+                            R.string.island_section_animation,
+                            R.string.island_animation_style_desc,
+                            "island_animation_style",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

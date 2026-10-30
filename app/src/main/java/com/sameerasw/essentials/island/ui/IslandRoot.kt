@@ -936,8 +936,8 @@ private fun IslandRootContent(
                     // While hiding, the pill keeps its last visible size until its turn to close into the camera.
                     val baseW = if (hiding && holdSize[0] > 0) holdSize[0] else preW
                     val baseH = if (hiding && holdSize[1] > 0) holdSize[1] else preH
-                    val heightProgress = (squash.value / 0.4f).coerceIn(0f, 1f)
-                    val widthProgress = ((squash.value - 0.2f) / 0.8f).coerceIn(0f, 1f)
+                    val heightProgress = if (IslandMotion.expressive) squash.value.coerceIn(0f, 1f) else (squash.value / 0.4f).coerceIn(0f, 1f)
+                    val widthProgress = if (IslandMotion.expressive) heightProgress else ((squash.value - 0.2f) / 0.8f).coerceIn(0f, 1f)
                     val w = lerp(baseW, minSurfaceWidth, widthProgress)
                     val h = lerp(baseH, minSurfaceHeight, heightProgress).coerceAtLeast(minSurfaceHeight)
                     if (!hiding) {

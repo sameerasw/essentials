@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -34,6 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -499,6 +502,47 @@ fun IslandVisualsSettingsUI(
                 onSettingsClick = { showPulseShadowSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
             )
+        }
+
+        IslandSettingsSection(R.string.island_section_animation) {
+            val animSettings = remember { SettingsRepository(context) }
+            var style by remember {
+                mutableStateOf(animSettings.getString(SettingsRepository.KEY_ISLAND_ANIMATION_STYLE, null) ?: SettingsRepository.ISLAND_ANIMATION_LIQUID)
+            }
+            val styleLabels = mapOf(
+                SettingsRepository.ISLAND_ANIMATION_LIQUID to stringResource(R.string.island_animation_liquid),
+                SettingsRepository.ISLAND_ANIMATION_EXPRESSIVE to stringResource(R.string.island_animation_expressive),
+            )
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd))
+                    .background(MaterialTheme.colorScheme.surfaceBright)
+                    .highlight(highlightSetting == "island_animation_style"),
+            ) {
+                SegmentedPicker(
+                    items = styleLabels.keys.toList(),
+                    selectedItem = style,
+                    onItemSelected = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        style = it
+                        animSettings.putString(SettingsRepository.KEY_ISLAND_ANIMATION_STYLE, it)
+                    },
+                    labelProvider = { styleLabels[it].orEmpty() },
+                    title = R.string.island_section_animation,
+                    containerColor = Color.Transparent,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Text(
+                    text = stringResource(
+                        if (style == SettingsRepository.ISLAND_ANIMATION_EXPRESSIVE) R.string.island_animation_expressive_desc
+                        else R.string.island_animation_liquid_desc
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 14.dp, top = 2.dp),
+                )
+            }
         }
 
         IslandSettingsSection(R.string.island_section_icon_color) {
