@@ -2353,12 +2353,23 @@ class NotificationListener : NotificationListenerService() {
             bitmap = appIcon
         }
 
+        var smallIconBitmap: Bitmap? = null
+        try {
+            notif.smallIcon?.loadDrawable(this)?.let { smallIconBitmap = AppUtil.drawableToBitmap(it) }
+        } catch (_: Exception) {}
+
+        val themedBubble = SettingsRepository(this).isIslandNotifThemedBubbleActive()
+        val paletteSource = if (themedBubble) {
+            runCatching { AppUtil.drawableToBitmap(packageManager.getApplicationIcon(sbn.packageName)) }.getOrNull() ?: bitmap
+        } else {
+            bitmap
+        }
         var appColor: Int? = null
         if (notif.color != 0 && notif.color != android.graphics.Color.TRANSPARENT) {
             appColor = notif.color
-        } else if (bitmap != null) {
+        } else if (paletteSource != null) {
             try {
-                val palette = androidx.palette.graphics.Palette.from(bitmap).generate()
+                val palette = androidx.palette.graphics.Palette.from(paletteSource).generate()
                 val vibrant = palette.getVibrantColor(0)
                 val dominant = palette.getDominantColor(0)
                 if (vibrant != 0) {
@@ -2403,6 +2414,8 @@ class NotificationListener : NotificationListenerService() {
             appIcon = appIcon,
             actions = actionList,
             chatIcon = chatIcon,
+            themedIcon = if (themedBubble) AppIconUtil.monochromeAppIcon(this, sbn.packageName) else null,
+            smallIcon = smallIconBitmap,
         )
     }
 

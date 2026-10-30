@@ -55,6 +55,19 @@ object AppIconUtil {
         val icon = pm.getApplicationIcon(packageName)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return icon
         if (!SettingsRepository(context).getBoolean(SettingsRepository.KEY_ISLAND_THEMED_APP_ICONS, false)) return icon
+        return themed(context, monochromeCandidate(pm, packageName, icon) ?: icon) ?: icon
+    }
+
+    fun monochromeAppIcon(context: Context, packageName: String): Bitmap? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return null
+        val pm = context.packageManager
+        val icon = runCatching { pm.getApplicationIcon(packageName) }.getOrNull() ?: return null
+        val adaptive = monochromeCandidate(pm, packageName, icon) ?: return null
+        return (themed(context, adaptive) as? BitmapDrawable)?.bitmap
+    }
+
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun monochromeCandidate(pm: PackageManager, packageName: String, icon: Drawable): Drawable? {
         val launcher = android.content.Intent(android.content.Intent.ACTION_MAIN).addCategory(android.content.Intent.CATEGORY_LAUNCHER).setPackage(packageName)
         val candidates = listOf(icon) + (
             try {
@@ -63,8 +76,7 @@ object AppIconUtil {
                 emptyList()
             }
             )
-        val withMonochrome = candidates.firstOrNull { (it as? AdaptiveIconDrawable)?.monochrome != null }
-        return themed(context, withMonochrome ?: icon) ?: icon
+        return candidates.firstOrNull { (it as? AdaptiveIconDrawable)?.monochrome != null }
     }
 
     enum class ThemedMode { MONO, DUO }

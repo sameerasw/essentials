@@ -888,6 +888,11 @@ object FeatureRegistry {
                             "island_notif_hub",
                         ),
                         SearchSetting(
+                            R.string.island_notif_themed_bubble_title,
+                            R.string.island_notif_hub_title,
+                            "island_notif_hub",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
