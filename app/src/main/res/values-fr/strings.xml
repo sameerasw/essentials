@@ -1779,4 +1779,6 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_camera_position_center">Centre</string>
     <string name="island_camera_position_right">Droite</string>
     <string name="island_keep_on_landscape_title">Garder en mode portrait</string>
+    <string name="island_animation_speed_title">Vitesse des animations</string>
+    <string name="island_themed_text_title">Couleur de texte personnalisée</string>
 </resources>
