@@ -135,7 +135,7 @@ private enum class SwipeIntent { Hide, Dismiss }
 
 // The window never moves; the surface is always horizontally centred in it (= on the camera).
 // Only the surface's width/height/corner animate, read in layout/draw so frames don't recompose.
-private fun readableOnDark(color: Color): Color {
+internal fun readableOnDark(color: Color): Color {
     var result = color
     var steps = 0
     while (result.luminance() < 0.4f && steps < 10) {
@@ -156,8 +156,7 @@ fun IslandRoot(
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val focused = state.items[state.focusedKey]
-    val dynamicAccent = (focused?.outlineAccent ?: focused?.accent)
-        ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.let { it.outlineAccent ?: it.accent } }
+    val dynamicAccent = focused?.accent
     val iconBase = if (targetSpec.iconMaterialYou) primary else Color.White
     val iconTarget = if (targetSpec.iconDynamic) {
         dynamicAccent ?: iconBase

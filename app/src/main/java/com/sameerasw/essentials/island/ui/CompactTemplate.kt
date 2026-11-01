@@ -237,10 +237,27 @@ fun CompactTemplate(
                         }
                     }
                 } else {
-                    Box(
-                        modifier = tap.height(spec.cellSize).defaultMinSize(minWidth = spec.cellSize),
-                        contentAlignment = Alignment.Center,
-                    ) { unit.cells[0].cell.content() }
+                    val item = state.items[unit.itemKey]
+                    val itemAccent = item?.accent?.let { readableOnDark(it) }
+                    val unitIconColor = if (spec.iconDynamic && itemAccent != null) {
+                        animateColorAsState(itemAccent, label = "compactItemIcon").value
+                    } else {
+                        LocalIslandIconColor.current
+                    }
+                    val unitTextColor = if (spec.themedText && itemAccent != null) {
+                        animateColorAsState(pastelOf(itemAccent), label = "compactItemText").value
+                    } else {
+                        LocalIslandTextColor.current
+                    }
+                    CompositionLocalProvider(
+                        LocalIslandIconColor provides unitIconColor,
+                        LocalIslandTextColor provides unitTextColor,
+                    ) {
+                        Box(
+                            modifier = tap.height(spec.cellSize).defaultMinSize(minWidth = spec.cellSize),
+                            contentAlignment = Alignment.Center,
+                        ) { unit.cells[0].cell.content() }
+                    }
                 }
             }
         }
