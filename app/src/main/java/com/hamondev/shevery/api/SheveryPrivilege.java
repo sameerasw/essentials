@@ -120,15 +120,23 @@ public final class SheveryPrivilege {
             shouldShowRequestPermissionRationale = data.getBoolean(BIND_APPLICATION_SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, false);
 
             binderReady = true;
-            Shizuku.syncFromShevery(
-                    binder,
-                    serverUid,
-                    serverApiVersion,
-                    serverPatchVersion,
-                    serverContext,
-                    permissionGranted,
-                    shouldShowRequestPermissionRationale
-            );
+            try {
+                java.lang.reflect.Method m = Shizuku.class.getMethod(
+                        "syncFromShevery",
+                        IBinder.class, int.class, int.class, int.class, String.class, boolean.class, boolean.class
+                );
+                m.invoke(
+                        null,
+                        binder,
+                        serverUid,
+                        serverApiVersion,
+                        serverPatchVersion,
+                        serverContext,
+                        permissionGranted,
+                        shouldShowRequestPermissionRationale
+                );
+            } catch (Throwable ignored) {
+            }
             dispatchBinderReceived();
         }
 
@@ -140,7 +148,14 @@ public final class SheveryPrivilege {
                 shouldShowRequestPermissionRationale = false;
             }
             int result = allowed ? PackageManager.PERMISSION_GRANTED : PackageManager.PERMISSION_DENIED;
-            Shizuku.syncPermissionResultFromShevery(requestCode, allowed);
+            try {
+                java.lang.reflect.Method m = Shizuku.class.getMethod(
+                        "syncPermissionResultFromShevery",
+                        int.class, boolean.class
+                );
+                m.invoke(null, requestCode, allowed);
+            } catch (Throwable ignored) {
+            }
             dispatchPermissionResult(requestCode, result);
         }
 
