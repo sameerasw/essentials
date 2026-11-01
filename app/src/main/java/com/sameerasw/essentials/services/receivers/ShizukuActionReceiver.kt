@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.utils.SheveryUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 class ShizukuActionReceiver : BroadcastReceiver() {
@@ -42,7 +43,11 @@ class ShizukuActionReceiver : BroadcastReceiver() {
                 }
             }
 
-            ShizukuUtils.toggleShizuku(context, start = true)
+            if (ShellUtils.isSheveryEnabled(context)) {
+                SheveryUtils.toggleShevery(context, start = true)
+            } else {
+                ShizukuUtils.toggleShizuku(context, start = true)
+            }
         }
     }
 }

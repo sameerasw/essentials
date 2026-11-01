@@ -19,6 +19,7 @@ import android.os.Looper
 import android.widget.Toast
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.services.receivers.SecurityReceiver
+import com.sameerasw.essentials.utils.SheveryUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import eu.darken.porter.bridge.PorterShizukuBridge
 import kotlinx.coroutines.CoroutineScope
@@ -52,6 +53,7 @@ class EssentialsApp : Application() {
         } catch (_: Throwable) {
         }
 
+        SheveryUtils.initialize(this)
         PorterShizukuBridge.start(CoroutineScope(SupervisorJob() + Dispatchers.Default))
         ShizukuUtils.initialize()
         com.sameerasw.essentials.utils.CarConnectionMonitor

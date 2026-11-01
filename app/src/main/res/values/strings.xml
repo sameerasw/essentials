@@ -2002,6 +2002,7 @@
     <string name="setting_privileged_mode_title">Privileged access</string>
     <string name="privileged_mode_auto">Auto</string>
     <string name="privileged_mode_shizuku">Shizuku</string>
+    <string name="privileged_mode_shevery">Shevery</string>
     <string name="privileged_mode_dhizuku">Dhizuku</string>
     <string name="privileged_mode_porter">Porter</string>
     <string name="privileged_mode_root">Root</string>
@@ -2659,6 +2660,7 @@
     <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
     <string name="pixel_searchbar_style_music">Music</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
+    <string name="action_restart_shevery">Restart Shevery</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
 
     <!-- Pocket Mode -->
@@ -3511,6 +3513,12 @@
     <string name="shizuku_permission_missing_title">Shizuku permission missing</string>
     <string name="shizuku_permission_missing_desc">Please grant Shizuku permission for Essentials.</string>
     <string name="shizuku_permission_missing_feature_desc">Please grant Shizuku permission for Essentials to use %1$s.</string>
+    <string name="shevery_not_running_title">Shevery is not running</string>
+    <string name="shevery_not_running_desc">Please start Shevery to enable features.</string>
+    <string name="shevery_not_running_feature_desc">Please start Shevery to use %1$s.</string>
+    <string name="shevery_permission_missing_title">Shevery permission missing</string>
+    <string name="shevery_permission_missing_desc">Please grant Shevery permission for Essentials.</string>
+    <string name="shevery_permission_missing_feature_desc">Please grant Shevery permission for Essentials to use %1$s.</string>
     <string name="shizuku_status_alerts_channel_name">Shizuku Status Alerts</string>
     <string name="conscious_gate_island_wasting_time">Wasting time</string>
     <string name="conscious_gate_island_remaining">remaining</string>

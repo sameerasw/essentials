@@ -14,6 +14,7 @@ import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 class PermissionViewModel : ViewModel() {
@@ -39,8 +40,8 @@ class PermissionViewModel : ViewModel() {
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isReadPhoneStateEnabled.value = PermissionUtils.hasReadPhoneStatePermission(context)
         isPostNotificationsEnabled.value = PermissionUtils.isPostNotificationsEnabled(context)
-        isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
-        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        isShizukuAvailable.value = ShellUtils.isAvailable(context)
+        isShizukuPermissionGranted.value = ShellUtils.hasPermission(context)
         isNotificationListenerEnabled.value =
             PermissionUtils.hasNotificationListenerPermission(context)
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)

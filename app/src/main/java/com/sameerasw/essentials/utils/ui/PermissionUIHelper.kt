@@ -70,6 +70,8 @@ object PermissionUIHelper {
                     shizukuActionEnabled =
                         if (viewModel.isRootEnabled.value) {
                             viewModel.isRootAvailable.value
+                        } else if (ShellUtils.isSheveryEnabled(context)) {
+                            SheveryUtils.hasPermission()
                         } else {
                             ShizukuUtils
                                 .hasPermission()
@@ -77,6 +79,10 @@ object PermissionUIHelper {
                     shizukuAction = {
                         if (viewModel.isRootEnabled.value) {
                             if (RootUtils.runCommand("pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS")) {
+                                viewModel.check(context)
+                            }
+                        } else if (ShellUtils.isSheveryEnabled(context)) {
+                            if (SheveryUtils.grantWriteSecureSettingsPermission()) {
                                 viewModel.check(context)
                             }
                         } else {
@@ -583,6 +589,8 @@ object PermissionUIHelper {
                     shizukuActionEnabled =
                         if (viewModel.isRootEnabled.value) {
                             viewModel.isRootAvailable.value
+                        } else if (ShellUtils.isSheveryEnabled(context)) {
+                            SheveryUtils.hasPermission()
                         } else {
                             ShizukuUtils.hasPermission()
                         },
@@ -593,6 +601,9 @@ object PermissionUIHelper {
                             if (RootUtils.runCommand(command)) {
                                 viewModel.check(context)
                             }
+                        } else if (ShellUtils.isSheveryEnabled(context)) {
+                            SheveryUtils.runCommand(command)
+                            viewModel.check(context)
                         } else {
                             ShizukuUtils.runCommand(command)
                             viewModel.check(context)

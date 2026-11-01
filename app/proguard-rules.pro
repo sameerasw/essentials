@@ -22,6 +22,9 @@
 -keep class rikka.shizuku.** { *; }
 -keep class dev.rikka.shizuku.** { *; }
 
+# Shevery rules
+-keep class com.hamondev.shevery.** { *; }
+
 # Kotlin Reflect
 -keep class kotlin.reflect.** { *; }
 -keep class com.sameerasw.essentials.domain.model.** { *; }
