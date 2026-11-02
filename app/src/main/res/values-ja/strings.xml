@@ -1970,7 +1970,15 @@
     <string name="face_unlock_auto_illuminate_title">スリープ解除時に自動点灯</string>
     <string name="face_unlock_trigger_unlock_title">ロック解除のトリガー</string>
     <string name="overlay_mode_skip">スキップ</string>
-    <string name="perm_install_packages_title">アプリをインストールする</string>
-    <string name="perm_install_packages_desc">アプリのアップデートを自動的にダウンロードしてインストールするために必要</string>
+    <string name="perm_install_packages_title">不明なアプリをインストールする</string>
+    <string name="perm_install_packages_desc">アプリのアップデートを自動的にダウンロードしてインストールするために必要です。</string>
     <string name="perm_contacts_title">連絡先</string>
+    <string name="perm_bubbles_title">フローティングバブル</string>
+    <string name="perm_bubbles_desc">他のアプリの上にフローティングの会話バブルでウェブプレビューを開くことを許可する</string>
+    <string name="perm_local_network_title">ローカルネットワークにアクセス</string>
+    <string name="perm_local_network_desc">Android 17では、ユーザーが許可しない限り、アプリがWi-Fiネットワーク上のデバイスと通信することをブロックします。Essentialsは、ローカルネットワーク経由でスマートウォッチと連携するために、この機能を必要とします。</string>
+    <string name="perm_sensitive_notifications_title">センシティブな通知を読む</string>
+    <string name="perm_sensitive_notifications_desc">Androidは通知リスナーからワンタイムコードを非表示にします。Essentialsは、アイランド上でコードを表示するためにこのアクセス権限を必要とします。</string>
+    <string name="perm_files_media_desc">Pixel Searchの検索結果に写真、動画、音声、ドキュメントを検索して表示するには、Essentialsがファイルとメディアにアクセスするための権限が必要です。</string>
+    <string name="perm_contacts_desc">Pixel Searchの検索結果に連絡先を表示するには、Essentialsが連絡先を読み取る権限を必要とします。</string>
 </resources>
