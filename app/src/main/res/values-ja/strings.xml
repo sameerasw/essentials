@@ -1970,4 +1970,7 @@
     <string name="face_unlock_auto_illuminate_title">スリープ解除時に自動点灯</string>
     <string name="face_unlock_trigger_unlock_title">ロック解除のトリガー</string>
     <string name="overlay_mode_skip">スキップ</string>
+    <string name="perm_install_packages_title">アプリをインストールする</string>
+    <string name="perm_install_packages_desc">アプリのアップデートを自動的にダウンロードしてインストールするために必要</string>
+    <string name="perm_contacts_title">連絡先</string>
 </resources>
