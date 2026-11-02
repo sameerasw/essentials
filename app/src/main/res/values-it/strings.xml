@@ -28,7 +28,7 @@
     <string name="app_lock_description">Proteggi le tue app con l\'autenticazione biometrica. Le app bloccate richiedono l\'autenticazione all\'avvio e rimangono sbloccate fino allo spegnimento dello schermo.</string>
     <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
-    <string name="setting_use_usage_access_title">Usa acesso utilizzo</string>
+    <string name="setting_use_usage_access_title">Usa accesso utilizzo</string>
     <string name="setting_use_usage_access_desc">Invece di Accessibilità (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
@@ -418,7 +418,7 @@
     <string name="feat_link_actions_desc">Gestisci i collegamenti con più app</string>
     <string name="feat_snooze_notifications_title">Posticipare le notifiche di sistema</string>
     <string name="feat_snooze_notifications_desc">Posticipare le notifiche persistenti</string>
-    <string name="feat_qs_tiles_title">Riquadri delle impostazioni rapide</string>
+    <string name="feat_qs_tiles_title">Riquadri del pannello rapido</string>
     <string name="feat_qs_tiles_desc">Visualizza tutto</string>
     <string name="feat_button_remap_title">Rimappatura dei pulsanti</string>
     <string name="feat_button_remap_desc">Rimappare le azioni dei pulsanti hardware</string>
@@ -612,7 +612,7 @@
     <string name="perm_battery_optimization_title">Ottimizzazione della batteria</string>
     <string name="perm_battery_optimization_desc">Assicurarsi che il servizio non venga interrotto dal sistema per risparmiare energia.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Elementi essenziali</string>
+    <string name="tab_essentials">Essenziali</string>
     <string name="tab_freeze">Congelare</string>
     <string name="tab_freeze_title">Congelato</string>
     <string name="tab_diy">Fai da te</string>
@@ -690,7 +690,7 @@
     <string name="label_haptic_feedback">Feedback Aptico</string>
     <string name="label_updates">Aggiornamenti</string>
     <string name="label_auto_check_updates">Controlla in automatico gli aggiornamenti</string>
-    <string name="desc_auto_check_updates">Controlla gli aggiornamenti all\'apertura dell\'app</string>
+    <string name="desc_auto_check_updates">Controlla gli aggiornamenti quando Essentials viene aperto</string>
     <string name="action_all_set">Fatto</string>
     <string name="action_check_whats_new">Cosa c\'è di nuovo?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
@@ -1485,7 +1485,7 @@
     <string name="app_icon_google">Spettro</string>
     <string name="duo_desc">Non si piega</string>
     <string name="feat_power_saving_title">Risparmio energetico</string>
-    <string name="feat_standby_apps_title">App standby</string>
+    <string name="feat_standby_apps_title">App in standby</string>
     <string name="feat_mobile_data_always_on_title">Dati mobili sempre attivi</string>
     <string name="setting_location_reached_full_screen_alarm_title">Allarme a schermo intero</string>
     <string name="feat_watch_controls_title">Personalizza</string>
@@ -1499,7 +1499,7 @@
     <string name="qs_secure_sensitive_tiles_desc">Richiedi lo sblocco prima di attivare i riquadri QS sensibili mentre sono bloccati</string>
     <string name="tile_url_shortener">Accorcia URL</string>
     <string name="tile_url_shortener_subtitle">Accorcia Appunti</string>
-    <string name="feat_standby_apps_desc">Ottimizza attività delle app nel background</string>
+    <string name="feat_standby_apps_desc">Ottimizza attività delle app in background</string>
     <string name="feat_power_saving_desc">Configura le policies del risparmio energetico</string>
     <string name="feat_notification_snoozing_title">Posticipa le notifiche</string>
     <string name="feat_notification_snoozing_desc">Riprogramma le notifiche</string>
@@ -1511,7 +1511,7 @@
     <string name="feat_wireless_display_certification_title">Certificazione display wireless</string>
     <string name="feat_wireless_display_certification_desc">Mostra le opzioni per la certificazione del display wireless</string>
     <string name="qs_secure_sensitive_tiles_title">Proteggi i riquadri sensibili</string>
-    <string name="tile_lockdown_mode_desc">Schermo spento e Tile Quick Settings</string>
+    <string name="tile_lockdown_mode_desc">Pulsante spegnimento schermo nel pannello rapido</string>
     <string name="label_motion_blur">Sfocatura di movimento</string>
     <string name="setting_show_legacy_features_title">Mostra opzioni legacy</string>
     <string name="setting_show_legacy_features_desc">Queste opzioni potrebbero non ricevere aggiornamenti futuri a causa di limiti tecnici o perché non sono essenziali.</string>
@@ -1572,7 +1572,7 @@
     <string name="feat_lockscreen_shortcuts_title">Scorciatoie della schermata di blocco</string>
     <string name="feat_widget_stack_title">Sovrapponi/Impila Widget</string>
     <string name="feat_widget_stack_desc">Sovrapponi widget e scorri da uno all\'altro</string>
-    <string name="watch_watchface_desc">Personalizza la watchface</string>
+    <string name="watch_watchface_desc">Personalizza il quadrante orologio</string>
     <string name="feat_sync_sound_mode_title">Modalità audio</string>
     <string name="feat_sync_sound_mode_desc">Sincronizza automaticamente con l\'orologio</string>
     <string name="watch_notif_sync_desc">Solo per il launcher</string>
@@ -1640,7 +1640,7 @@
     <string name="screenshot_auto_clean_note">Per ogni nuovo screenshot viene inviata una notifica silenziosa che consente di conservarlo. Gli screenshot contrassegnati come preferiti vengono sempre conservati.</string>
     <string name="feat_screenshot_share_cleanup_title">Elimina screenshots condivisi</string>
     <string name="feat_screenshot_share_cleanup_desc">Elimina gli screenshot dopo la condivisione</string>
-    <string name="smart_pixels_disable_on_cast_title">Disabilità durante proiezione schermo</string>
+    <string name="smart_pixels_disable_on_cast_title">Disabilita durante proiezione schermo</string>
     <string name="smart_pixels_disable_on_cast_desc">Disabilità in automatico l\'overlay quando si proietta o condivide lo schermo</string>
     <string name="smart_pixels_intensity_title">Intensità</string>
     <string name="pocket_mode_use_light_title">Usa il sensore di luce</string>
@@ -1703,4 +1703,7 @@
     <string name="label_low_power_trigger_level">Soglia di attivazione personalizzata</string>
     <string name="desc_low_power_trigger_level">per il risparmio energetico</string>
     <string name="feat_mobile_data_always_on_desc">Mantieni attivi i dati mobili anche quando è attiva una connessione Wi-Fi</string>
+    <string name="watch_watchface_title">Quadrante Orologio</string>
+    <string name="feat_watch_wireless_debugging_title">Debug Wireless</string>
+    <string name="feat_screenshots_title">Pulizia screenshot</string>
 </resources>
