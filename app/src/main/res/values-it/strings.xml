@@ -1702,7 +1702,7 @@
     <string name="label_apply_after_reboot">Applica dopo il riavvio</string>
     <string name="label_low_power_trigger_level">Soglia di attivazione personalizzata</string>
     <string name="desc_low_power_trigger_level">per il risparmio energetico</string>
-    <string name="feat_mobile_data_always_on_desc">Mantieni attivi i dati mobili anche quando è attiva una connessione Wi-Fi</string>
+    <string name="feat_mobile_data_always_on_desc">Mantieni i dati mobili attivi anche quando il WiFi è connesso</string>
     <string name="watch_watchface_title">Quadrante Orologio</string>
     <string name="feat_watch_wireless_debugging_title">Debug Wireless</string>
     <string name="feat_screenshots_title">Pulizia screenshot</string>
