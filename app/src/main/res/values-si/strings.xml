@@ -1221,17 +1221,17 @@
     <string name="feat_sound_haptics_title">ශබ්දය සහ හප්ටික්ස්</string>
     <string name="feat_sound_haptics_desc">පරිමාව සහ හප්ටික් ලක්ෂණ</string>
     <string name="feat_security_privacy_title">ආරක්ෂාව සහ පෞද්ගලිකත්වය</string>
-    <string name="feat_security_privacy_desc">ඔබගේ උපාංගය ආරක්ෂා කර සුරක්ෂිත කරන්න</string>
+    <string name="feat_security_privacy_desc">ඔබගේ phone එක ආරක්ෂා කර සුරක්ෂිත කරන්න</string>
     <string name="feat_notifications_alerts_title">දැනුම්දීම් සහ ඇඟවීම්</string>
     <string name="feat_notifications_alerts_desc">ඔබේ ප්‍රමුඛතා කිසිවිටෙක අතපසු නොකරන්න</string>
-    <string name="feat_input_actions_title">ආදාන සහ ක්රියා</string>
-    <string name="feat_input_actions_desc">ඔබගේ උපාංගය පහසුවෙන් පාලනය කරන්න</string>
+    <string name="feat_input_actions_title">ආදාන සහ ක්‍රියා</string>
+    <string name="feat_input_actions_desc">ඔයාගෙ phone එක පහසුවෙන් හසුරුවන්න</string>
     <string name="feat_widgets_title">විජට්</string>
     <string name="feat_widgets_desc">ඔබගේ මුල් තිරය මත බැලූ බැල්මට</string>
-    <string name="feat_display_visuals_title">ප්රදර්ශනය කරන්න</string>
+    <string name="feat_display_visuals_title">පෙනුම</string>
     <string name="feat_display_visuals_desc">ඔබේ අත්දැකීම් වැඩි දියුණු කිරීමට දර්ශන</string>
-    <string name="feat_watch_title">නරඹන්න</string>
-    <string name="feat_watch_desc">WearOS සමඟ ඒකාබද්ධ කිරීම්</string>
+    <string name="feat_watch_title">ඔරලෝසුව</string>
+    <string name="feat_watch_desc">ඔබේ WearOS ඔරලෝසුව සමඟ ඒකාබද්ධ කිරීම්</string>
     <string name="watch_no_companion_title">ඔරලෝසුවක් අනාවරණය නොවීය</string>
     <string name="watch_no_companion_desc">ඔබේ ඔරලෝසුවේ Essentials Wear companion යෙදුම ස්ථාපනය කර නොමැති බව පෙනේ.</string>
     <string name="watch_install_companion_action">Companion ස්ථාපනය කරන්න</string>
@@ -1452,8 +1452,8 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
-    <string name="feat_daily_wallpaper_title">වොල්පෙපර්ස්</string>
-    <string name="feat_daily_wallpaper_desc">දිනපතා තෝරාගත් අලුත් වොල්පෙපර්</string>
+    <string name="feat_daily_wallpaper_title">Wallpaper</string>
+    <string name="feat_daily_wallpaper_desc">දිනපතා තෝරාගත් අලුත් wallpaper</string>
     <string name="feat_flashlight_title">පන්දම</string>
     <string name="feat_power_battery_title">බැටරි සුරැකුම්</string>
     <string name="feat_notification_snoozing_title">දැන්වීම් කල්දැමීම </string>
@@ -1494,4 +1494,6 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="feat_networks_desc">ගුවන් විදුලි සහ network පාලනය</string>
+    <string name="feat_power_battery_desc">Battery බහින විදිහ පාලනය කරන්න</string>
 </resources>
