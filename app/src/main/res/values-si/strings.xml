@@ -948,7 +948,7 @@
         <item>කාලය හමාරයි</item>
     </string-array>
     <string name="label_keyboard_always_dark">සෑම විටම අඳුරු තේමාව</string>
-    <string name="label_keyboard_pitch_black">තාර කළු තේමාව</string>
+    <string name="label_keyboard_pitch_black">තද කළු තේමාව</string>
     <string name="label_keyboard_clipboard_enabled">ක්ලිප්බෝඩ් ඉතිහාසය</string>
     <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
     <string name="label_keyboard_accented_characters">Accented characters</string>
