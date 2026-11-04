@@ -419,7 +419,7 @@
     <string name="feat_snooze_notifications_title">Mettre en attente les notifications système</string>
     <string name="feat_snooze_notifications_desc">Mettre en attente les notifications persistantes</string>
     <string name="feat_qs_tiles_title">Blocs des Réglages rapides</string>
-    <string name="feat_qs_tiles_desc">Voir tous</string>
+    <string name="feat_qs_tiles_desc">Tout voir</string>
     <string name="feat_button_remap_title">Réattribution de boutons</string>
     <string name="feat_button_remap_desc">Réattribuez les boutons physiques de l\'appareil</string>
     <string name="feat_dynamic_night_light_title">Éclairage nocturne dynamique</string>
@@ -1790,4 +1790,6 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="feat_volume_steps_title">Étapes du volume</string>
+    <string name="feat_app_volume_title">Volume d\'une application</string>
 </resources>
