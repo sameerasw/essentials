@@ -116,6 +116,20 @@ class ScreenOffAccessibilityService :
     private var isProximityRegistered = false
     private var isCameraCallbackRegistered = false
 
+    private val remapReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                if (!::buttonRemapHandler.isInitialized) return
+                when (intent?.action) {
+                    InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> buttonRemapHandler.handleExternalVolumeLongPress(intent)
+                    InputEventListenerService.ACTION_POWER_GESTURE -> buttonRemapHandler.handlePowerGesture(intent)
+                }
+            }
+        }
+
     @Volatile private var cameraSessions: List<CameraSession> = emptyList()
     private val cameraIdToLens = mutableMapOf<String, Int>()
 
@@ -507,14 +521,6 @@ class ScreenOffAccessibilityService :
                             updateOmniOverlay()
                         }
 
-                        InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> {
-                            buttonRemapHandler.handleExternalVolumeLongPress(intent)
-                        }
-
-                        InputEventListenerService.ACTION_POWER_GESTURE -> {
-                            buttonRemapHandler.handlePowerGesture(intent)
-                        }
-
                         "SHOW_AMBIENT_GLANCE",
                         "HIDE_AMBIENT_GLANCE_TEMPORARILY",
                         -> {
@@ -551,8 +557,6 @@ class ScreenOffAccessibilityService :
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_USER_PRESENT)
-                addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
-                addAction(InputEventListenerService.ACTION_POWER_GESTURE)
                 addAction("SHOW_AMBIENT_GLANCE")
                 addAction("HIDE_AMBIENT_GLANCE_TEMPORARILY")
                 addAction("FORCE_TURN_OFF_AOD")
@@ -565,6 +569,14 @@ class ScreenOffAccessibilityService :
                 addAction(FlashlightActionReceiver.ACTION_DECREASE)
             }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
+        registerReceiver(
+            remapReceiver,
+            IntentFilter().apply {
+                addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
+                addAction(InputEventListenerService.ACTION_POWER_GESTURE)
+            },
+            RECEIVER_NOT_EXPORTED,
+        )
 
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .registerOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -627,7 +639,7 @@ class ScreenOffAccessibilityService :
             } catch (_: Exception) {
                 true
             }
-        if (!interactive) startInputEventListenerIfEnabled()
+        if (!interactive) startInputEventListenerIfEnabled() else updateInputEventListener()
     }
 
     private fun updateOmniOverlay() {
@@ -655,6 +667,10 @@ class ScreenOffAccessibilityService :
         Shizuku.removeBinderReceivedListener(shizukuBinderListener)
         try {
             unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
+        try {
+            unregisterReceiver(remapReceiver)
         } catch (_: Exception) {
         }
         LiveUpdateSnoozer.release()
@@ -1161,8 +1177,8 @@ class ScreenOffAccessibilityService :
         val isEnabled = prefs.getBoolean("button_remap_enabled", false)
         val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
         val needed =
-            isEnabled && useShizuku &&
-                (!isScreenOn || PowerButtonGestures.isListenerNeeded(SettingsRepository(this)))
+            isEnabled &&
+                ((useShizuku && !isScreenOn) || PowerButtonGestures.isListenerNeeded(SettingsRepository(this)))
         if (needed) startInputEventListenerIfEnabled() else stopInputEventListener()
     }
 
@@ -1171,7 +1187,7 @@ class ScreenOffAccessibilityService :
         val isEnabled = prefs.getBoolean("button_remap_enabled", false)
         val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
 
-        if (isEnabled && useShizuku) {
+        if (isEnabled && (useShizuku || PowerButtonGestures.isListenerNeeded(SettingsRepository(this)))) {
             try {
                 val intent = Intent(this, InputEventListenerService::class.java)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

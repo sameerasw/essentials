@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.core.sheets.CameraFlipInfoBottomSheet
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.PowerChoice
@@ -396,16 +397,17 @@ fun ButtonRemapSettingsUI(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
 
+                    var showCameraFlipInfo by remember { mutableStateOf(false) }
+                    if (showCameraFlipInfo) {
+                        CameraFlipInfoBottomSheet(onDismissRequest = { showCameraFlipInfo = false })
+                    }
+
                     RoundedCardContainer(spacing = 2.dp) {
                         IconToggleItem(
                             iconRes = R.drawable.rounded_photo_camera_24,
                             title = stringResource(R.string.button_remap_power_camera_flip_title),
-                            description =
-                                stringResource(
-                                    R.string.button_remap_power_camera_flip_desc,
-                                    stringResource(R.string.button_remap_use_shizuku_title),
-                                ),
                             isChecked = viewModel.isPowerCameraFlipEnabled.value,
+                            onInfoClick = { showCameraFlipInfo = true },
                             onCheckedChange = { enabled ->
                                 viewModel.setPowerCameraFlipEnabled(enabled)
                             },
