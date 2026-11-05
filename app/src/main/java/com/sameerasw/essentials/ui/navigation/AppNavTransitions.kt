@@ -114,6 +114,15 @@ object AppNavTransitions {
         return from + (1f - from) * FastOutSlowInEasing.transform(u)
     }
 
+    fun releaseAware(base: Easing): Easing =
+        Easing { t ->
+            if (underlayMode != UnderlayMode.Predictive) {
+                base.transform(t)
+            } else {
+                afterRelease(t) { base.transform(it * GESTURE_PHASE) }
+            }
+        }
+
     private val predictiveSlide = Easing { t -> afterRelease(t) { elasticSlide.transform(it * GESTURE_PHASE) } }
 
     private val predictiveScale = Easing { t -> afterRelease(t) { gestureScale.transform(it * GESTURE_PHASE) } }
