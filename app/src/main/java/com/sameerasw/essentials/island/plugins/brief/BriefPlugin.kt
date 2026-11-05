@@ -381,8 +381,8 @@ private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, sc
                 scope.collapse()
             },
             scope = scope,
-            emoji = remember(event.calendarId) {
-                SettingsRepository(context).getIslandCalendarEmojis()[event.calendarId]
+            icon = remember(event.calendarId) {
+                SettingsRepository(context).getIslandCalendarIcons()[event.calendarId]
             },
             drawBackground = false,
         )

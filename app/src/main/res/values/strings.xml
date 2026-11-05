@@ -1555,8 +1555,6 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
-    <string name="island_calendar_emoji_hint">Emoji (leave empty for default)</string>
-    <string name="island_calendar_emoji_invalid">Enter a single emoji</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="action_enable">Enable</string>
