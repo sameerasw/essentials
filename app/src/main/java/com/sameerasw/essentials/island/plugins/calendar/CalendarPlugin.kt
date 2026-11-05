@@ -39,6 +39,7 @@ class CalendarPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_CALENDAR_PRIORITY_MINUTES,
         SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
         SettingsRepository.KEY_ISLAND_CALENDAR_COMPACT_TIME,
+        SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING,
         SettingsRepository.KEY_ISLAND_TIME_FORMAT,
         SettingsRepository.KEY_ISLAND_TIME_LEADING_ZERO,
         SettingsRepository.KEY_ISLAND_TIME_PERIOD,
@@ -72,6 +73,7 @@ class CalendarPlugin : BaseIslandPlugin() {
                     c.settings.getStatusGlanceCalendarTimeframe(),
                     ids,
                     c.settings.isStatusGlanceCalendarShowAllDayEnabled(),
+                    c.settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING, false),
                 )
             }
             if (ctx == null) return@launch
