@@ -35,13 +35,17 @@ class CalendarPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_SHOW_CALENDAR,
         SettingsRepository.KEY_ISLAND_SHOW_GLOW,
-        SettingsRepository.KEY_ISLAND_CALENDAR_EMOJIS,
+        SettingsRepository.KEY_ISLAND_CALENDAR_ICONS,
         SettingsRepository.KEY_ISLAND_CALENDAR_PRIORITY_MINUTES,
         SettingsRepository.KEY_ISLAND_CALENDAR_HIDE_LOCKED,
         SettingsRepository.KEY_ISLAND_CALENDAR_COMPACT_TIME,
+        SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING,
         SettingsRepository.KEY_ISLAND_TIME_FORMAT,
         SettingsRepository.KEY_ISLAND_TIME_LEADING_ZERO,
         SettingsRepository.KEY_ISLAND_TIME_PERIOD,
+        SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS,
+        SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME,
+        SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
     )
 
     private var event: UpcomingCalendarEvent? = null
@@ -69,6 +73,7 @@ class CalendarPlugin : BaseIslandPlugin() {
                     c.settings.getStatusGlanceCalendarTimeframe(),
                     ids,
                     c.settings.isStatusGlanceCalendarShowAllDayEnabled(),
+                    c.settings.getBoolean(SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING, false),
                 )
             }
             if (ctx == null) return@launch
@@ -97,7 +102,7 @@ class CalendarPlugin : BaseIslandPlugin() {
             CalendarEventUtil.formatRelativeTimeCompact(e.startTimeMillis, now)
         }
         val showGlow = settings.isIslandShowGlowEnabled()
-        val emoji = settings.getIslandCalendarEmojis()[e.calendarId]
+        val icon = settings.getIslandCalendarIcons()[e.calendarId]
         val priorityMs = settings.getIslandCalendarPriorityMinutes() * 60_000L
         val urgent = priorityMs > 0 && e.startTimeMillis - now in 0..priorityMs
         publish(
@@ -108,18 +113,18 @@ class CalendarPlugin : BaseIslandPlugin() {
                 bypassLauncherOnly = urgent,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("cal.icon") { CalendarGlyph(emoji, size = 18.dp, tint = islandAccent()) },
+                    CompactCell("cal.icon") { CalendarGlyph(icon, size = 18.dp, tint = islandAccent()) },
                     CompactCell("cal.time") { RollingText(short) },
                 ),
                 line = LineContent(
-                    icon = { CalendarGlyph(emoji, size = 20.dp, tint = islandAccent()) },
+                    icon = { CalendarGlyph(icon, size = 20.dp, tint = islandAccent()) },
                     start = e.title,
                     end = full,
                 ),
                 expanded = ExpandedContent { scope ->
                     CalendarExpanded(
                         event = e,
-                        emoji = emoji,
+                        icon = icon,
                         relative = full,
                         countdown = short,
                         showGlow = showGlow,

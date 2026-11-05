@@ -33,6 +33,8 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.PowerChoice
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
@@ -154,6 +156,25 @@ class SettingsRepository(
         }
     }
 
+    fun getPowerChoice(slot: RemapSlot): PowerChoice {
+        val defaultChoice = slot.defaultChoice ?: PowerChoice.ASSISTANT
+        val key = slot.choicePrefKey ?: return defaultChoice
+        val value = prefs.getString(key, null) ?: return defaultChoice
+        return try {
+            PowerChoice.valueOf(value)
+        } catch (_: IllegalArgumentException) {
+            defaultChoice
+        }
+    }
+
+    fun setPowerChoice(
+        slot: RemapSlot,
+        choice: PowerChoice,
+    ) {
+        val key = slot.choicePrefKey ?: return
+        prefs.edit().putString(key, choice.name).apply()
+    }
+
     companion object {
         const val PREFS_NAME = "essentials_prefs"
 
@@ -249,6 +270,13 @@ class SettingsRepository(
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION = "button_remap_vol_down_action" // Legacy
         const val KEY_BUTTON_REMAP_VOL_UP_ACTION_ON = "button_remap_vol_up_action_on"
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON = "button_remap_vol_down_action_on"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_ACTION_OFF = "button_remap_power_hold_action_off"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_ACTION_ON = "button_remap_power_hold_action_on"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF = "button_remap_power_hold_choice_off"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON = "button_remap_power_hold_choice_on"
+        const val KEY_BUTTON_REMAP_POWER_OVERRIDDEN = "button_remap_power_overridden"
+        const val KEY_BUTTON_REMAP_POWER_ORIGINAL = "button_remap_power_original"
+        const val KEY_BUTTON_REMAP_POWER_CAMERA_FLIP = "button_remap_power_camera_flip"
         const val KEY_BUTTON_REMAP_HAPTIC_TYPE = "button_remap_haptic_type"
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy
         const val KEY_BUTTON_REMAP_MIGRATION_DONE = "button_remap_action_migration_done"
@@ -547,6 +575,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
         const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
+        const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
         const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
@@ -639,7 +668,7 @@ class SettingsRepository(
         const val KEY_ISLAND_PROVIDERS_HIDE_LOCKED = "island_providers_hide_locked"
 
         private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
-        const val KEY_ISLAND_CALENDAR_EMOJIS = "island_calendar_emojis"
+        const val KEY_ISLAND_CALENDAR_ICONS = "island_calendar_icons"
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
         const val KEY_ISLAND_TIMERS_FILTER_APPS = "island_timers_filter_apps"
         const val KEY_ISLAND_TIMERS_SELECTED_APPS = "island_timers_selected_apps"
@@ -4201,20 +4230,20 @@ class SettingsRepository(
     fun setIslandDevicesBatteryOnlyLowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW, enabled)
     fun setIslandBatteryPercentageConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, enabled)
 
-    fun getIslandCalendarEmojis(): Map<Long, String> =
+    fun getIslandCalendarIcons(): Map<Long, String> =
         try {
-            val json = org.json.JSONObject(getString(KEY_ISLAND_CALENDAR_EMOJIS, "{}") ?: "{}")
+            val json = org.json.JSONObject(getString(KEY_ISLAND_CALENDAR_ICONS, "{}") ?: "{}")
             json.keys().asSequence().mapNotNull { key -> key.toLongOrNull()?.let { it to json.getString(key) } }.toMap()
         } catch (_: Exception) {
             emptyMap()
         }
 
-    fun setIslandCalendarEmoji(calendarId: Long, emoji: String?) {
-        val updated = getIslandCalendarEmojis().toMutableMap()
-        if (emoji.isNullOrBlank()) updated.remove(calendarId) else updated[calendarId] = emoji
+    fun setIslandCalendarIcon(calendarId: Long, icon: String?) {
+        val updated = getIslandCalendarIcons().toMutableMap()
+        if (icon.isNullOrBlank()) updated.remove(calendarId) else updated[calendarId] = icon
         val json = org.json.JSONObject()
         updated.forEach { (id, value) -> json.put(id.toString(), value) }
-        putString(KEY_ISLAND_CALENDAR_EMOJIS, json.toString())
+        putString(KEY_ISLAND_CALENDAR_ICONS, json.toString())
     }
 
     fun isIslandShowTimersEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIMERS, true)

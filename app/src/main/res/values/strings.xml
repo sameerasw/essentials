@@ -246,6 +246,19 @@
     <string name="button_remap_add_action">Add action</string>
     <string name="button_remap_no_actions">No actions. The button works normally.</string>
     <string name="button_remap_sequence_hint">Actions run in order from top to bottom. Drag to reorder.</string>
+    <string name="button_remap_section_button">Button</string>
+    <string name="button_remap_power">Power</string>
+    <string name="button_remap_double_press">Double press</string>
+    <string name="button_remap_press_and_hold">Press and hold</string>
+    <string name="button_remap_default_suffix">%1$s (default)</string>
+    <string name="button_remap_power_assistant">Digital assistant</string>
+    <string name="button_remap_power_menu">Power menu</string>
+    <string name="button_remap_power_actions">Custom actions</string>
+    <string name="button_remap_power_no_actions">No actions. This gesture does nothing.</string>
+    <string name="button_remap_power_hint">Double press always uses Android\'s camera gesture. Digital assistant uses Android\'s own gesture while both screen states keep it.</string>
+    <string name="button_remap_power_hold_handled_hint">Essentials runs this gesture, so turn on \"%1$s\". Holding no longer opens the power menu unless you pick it.</string>
+    <string name="button_remap_power_camera_flip_title">Flip camera with double press</string>
+    <string name="button_remap_power_camera_flip_desc">Double press opens the camera. While a camera app is open, double press switches between the front and back cameras. Needs \"%1$s\". May not work in every camera app.</string>
     <string name="diy_action_open_activity">Open Activity</string>
     <string name="activity_icon_title">Shortcut icon</string>
     <string name="activity_icon_source_activity">Activity</string>
@@ -296,6 +309,16 @@
     <string name="hilight_pattern_flash">Flash</string>
     <string name="hilight_pattern_sweep">Sweep</string>
     <string name="hilight_pattern_rainbow">Rainbow</string>
+    <string name="hilight_pattern_pulse">Pulse</string>
+    <string name="hilight_pattern_ripple">Ripple</string>
+    <string name="hilight_pattern_sparkle">Sparkle</string>
+    <string name="hilight_pattern_battery">Battery level</string>
+    <string name="hilight_repeats_title">Repeat</string>
+    <string name="hilight_repeats_value">%1$d×</string>
+    <string name="hilight_brightness_title">Brightness</string>
+    <string name="hilight_brightness_value">%1$d%%</string>
+    <string name="hilight_app_effect_summary_repeats">%1$s · %2$d×</string>
+    <string name="hilight_auto_color_title">Match app color</string>
     <string name="hilight_progress_title">Live progress</string>
     <string name="feat_hilight_notifications_title">Notification effects</string>
     <string name="feat_hilight_progress_desc">Show download and live update progress on the LEDs</string>
@@ -1058,6 +1081,10 @@
     <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
     <string name="search_remap_flashlight_title">Flashlight toggle</string>
     <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
+    <string name="search_remap_power_camera_flip_title">Flip camera with double press</string>
+    <string name="search_remap_power_camera_flip_desc">Double press the power button to switch between front and back cameras</string>
+    <string name="search_remap_power_hold_title">Power button press and hold</string>
+    <string name="search_remap_power_hold_desc">Digital assistant, power menu or custom actions</string>
     <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
     <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
     <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
@@ -1544,8 +1571,6 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
-    <string name="island_calendar_emoji_hint">Emoji (leave empty for default)</string>
-    <string name="island_calendar_emoji_invalid">Enter a single emoji</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="action_enable">Enable</string>
@@ -1680,6 +1705,20 @@
         <item>torch</item>
         <item>pulse</item>
         <item>notification</item>
+    </string-array>
+    <string-array name="keywords_power_camera_flip">
+        <item>power</item>
+        <item>camera</item>
+        <item>flip</item>
+        <item>selfie</item>
+        <item>double</item>
+    </string-array>
+    <string-array name="keywords_power_hold">
+        <item>power</item>
+        <item>hold</item>
+        <item>long press</item>
+        <item>assistant</item>
+        <item>power menu</item>
     </string-array>
     <string-array name="keywords_pocket_detection">
         <item>pocket</item>
@@ -3120,6 +3159,7 @@
     <string name="status_glance_calendar_select_calendars_title">Calendars to show</string>
     <string name="status_glance_calendar_no_calendars">No calendars found on device</string>
     <string name="status_glance_calendar_event_in_time">in %1$s</string>
+    <string name="status_glance_calendar_event_now">Now</string>
     <string name="status_glance_section_gestures">Gestures</string>
     <string name="status_glance_action_tap_title">Single tap</string>
     <string name="status_glance_action_tap_media_desc">Play / Pause when media is playing</string>
@@ -3602,6 +3642,22 @@
     <string name="island_chips_title">Island chips</string>
     <string name="island_time_chip_title">Show in chip</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_show_ongoing_title">Show ongoing events</string>
+    <string name="icon_category_general">General</string>
+    <string name="icon_category_celebrations">Celebrations</string>
+    <string name="icon_category_people">People</string>
+    <string name="icon_category_work">Work</string>
+    <string name="icon_category_education">Education &amp; tech</string>
+    <string name="icon_category_health">Health &amp; care</string>
+    <string name="icon_category_sports">Sports</string>
+    <string name="icon_category_motorsport">Motorsport</string>
+    <string name="icon_category_food">Food &amp; drink</string>
+    <string name="icon_category_shopping">Shopping &amp; money</string>
+    <string name="icon_category_home">Home &amp; places</string>
+    <string name="icon_category_civic">Faith &amp; civic</string>
+    <string name="icon_category_entertainment">Entertainment</string>
+    <string name="icon_category_travel">Travel</string>
+    <string name="icon_category_nature">Nature &amp; weather</string>
     <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>

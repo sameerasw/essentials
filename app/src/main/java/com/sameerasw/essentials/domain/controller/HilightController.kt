@@ -9,10 +9,17 @@
 
 package com.sameerasw.essentials.domain.controller
 
+import android.content.Context
+import android.content.IntentFilter
+import android.content.Intent
+import android.os.BatteryManager
 import android.os.IBinder
 import android.os.SystemClock
+import com.sameerasw.essentials.EssentialsApp
 import com.sameerasw.essentials.domain.model.HilightEffect
 import com.sameerasw.essentials.domain.model.HilightFrames
+import com.sameerasw.essentials.domain.model.HilightPattern
+import com.sameerasw.essentials.utils.AppColorUtil
 import com.sameerasw.essentials.utils.hardware.HilightLights
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,11 +46,50 @@ object HilightController {
     fun play(
         effect: HilightEffect,
         onStarted: (() -> Unit)? = null,
-    ): Boolean =
-        play(
-            durationMs = effect.durationMs.coerceAtLeast(HilightEffect.MIN_DURATION_MS),
+    ): Boolean {
+        val ledCount = HilightLights.array()?.ids?.size ?: HilightEffect.DEFAULT_LED_COUNT
+        val batteryLevel =
+            if (effect.pattern == HilightPattern.BATTERY) {
+                currentBatteryLevel()
+            } else {
+                100
+            }
+        return play(
+            durationMs = HilightFrames.durationMs(effect, ledCount),
             onStarted = onStarted,
-        ) { elapsedMs, ledCount -> HilightFrames.frame(effect, elapsedMs, ledCount) }
+        ) { elapsedMs, count -> HilightFrames.frame(effect, elapsedMs, count, batteryLevel) }
+    }
+
+    private fun currentBatteryLevel(): Int {
+        val context = EssentialsApp.context
+        val capacity =
+            try {
+                context.getSystemService(BatteryManager::class.java)?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+            } catch (_: Exception) {
+                null
+            }
+        if (capacity != null && capacity in 1..100) return capacity
+        val sticky = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = sticky?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = sticky?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+        return if (level >= 0 && scale > 0) (level * 100 / scale).coerceIn(0, 100) else 100
+    }
+
+    // Plays in the app's colour when autoColor is on; the lookup is cached after the first call
+    fun playForApp(
+        context: Context,
+        packageName: String,
+        effect: HilightEffect,
+        onStarted: (() -> Unit)? = null,
+    ): Boolean {
+        if (!effect.autoColor) return play(effect, onStarted)
+        if (!HilightLights.isAccessGranted()) return false
+        onStarted?.invoke()
+        AppColorUtil.resolveColor(context, packageName) { color ->
+            play(effect.copy(color = HilightEffect.appColorOr(color, effect.color)))
+        }
+        return true
+    }
 
     // Shows frame(elapsedMs, ledCount) until durationMs, replacing whatever is playing
     @Synchronized
