@@ -41,17 +41,17 @@ class ActionListJsonTest {
 
     @Test
     fun deviceCareRoundTrip() {
-        val actions = listOf(Action.DeviceCare(clearCache = false, closeApps = true))
+        val actions = listOf(Action.DeviceCare(clearCache = false, closeApps = true, showResult = true))
         assertEquals(actions, ActionGsonAdapter.listFromJson(ActionGsonAdapter.listToJson(actions)))
     }
 
     @Test
-    fun deviceCareDefaultsLoadWithBothOptionsTrue() {
+    fun deviceCareDefaultsLoad() {
         val singleAction = ActionGsonAdapter.fromJson("""{"type":"DeviceCare"}""")
-        assertEquals(Action.DeviceCare(clearCache = true, closeApps = true), singleAction)
+        assertEquals(Action.DeviceCare(clearCache = true, closeApps = false, showResult = false), singleAction)
 
         val json = """[{"type":"DeviceCare"}]"""
-        val expected = listOf(Action.DeviceCare(clearCache = true, closeApps = true))
+        val expected = listOf(Action.DeviceCare(clearCache = true, closeApps = false, showResult = false))
         assertEquals(expected, ActionGsonAdapter.listFromJson(json))
     }
 }

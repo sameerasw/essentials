@@ -1490,13 +1490,12 @@
     <string name="diy_send_notification_body">Message</string>
     <string name="diy_send_notification_label">Label</string>
     <string name="diy_action_device_care">Device care</string>
-    <string name="diy_device_care_desc">Free up storage and memory without closing what you\'re using</string>
+    <string name="diy_device_care_desc">Clears cached files that apps rebuild when needed. Closing background apps is best for an occasional manual run: Android already frees memory from idle apps, and closed apps start slower and use more battery next time. Apps you\'re using, music, calls, your keyboard, launcher, default apps, watch, accessibility and notification apps are skipped.</string>
     <string name="diy_device_care_clear_cache">Clear app caches</string>
-    <string name="diy_device_care_clear_cache_desc">Deletes temporary files that apps can rebuild</string>
     <string name="diy_device_care_close_apps">Close background apps</string>
-    <string name="diy_device_care_close_apps_desc">Skips what you\'re using, music, your keyboard and launcher</string>
-    <string name="diy_device_care_done">Device care: %1$s freed</string>
-    <string name="diy_device_care_done_apps">Device care: background apps closed</string>
+    <string name="diy_device_care_show_result">Show result</string>
+    <string name="diy_device_care_done">Device care: about %1$s freed</string>
+    <string name="diy_device_care_finished">Device care finished</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_set_charging_mode">Set Charging Mode</string>
     <string name="diy_action_notification_lighting">Trigger notification lighting</string>

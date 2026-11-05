@@ -49,6 +49,7 @@ fun DeviceCareSettingsSheet(
     val view = LocalView.current
     var clearCache by remember { mutableStateOf(initialAction.clearCache) }
     var closeApps by remember { mutableStateOf(initialAction.closeApps) }
+    var showResult by remember { mutableStateOf(initialAction.showResult) }
 
     EssentialsBottomSheet(onDismissRequest = onDismiss) {
         Column(
@@ -75,16 +76,20 @@ fun DeviceCareSettingsSheet(
                 IconToggleItem(
                     iconRes = R.drawable.rounded_cleaning_services_24,
                     title = stringResource(R.string.diy_device_care_clear_cache),
-                    description = stringResource(R.string.diy_device_care_clear_cache_desc),
                     isChecked = clearCache,
                     onCheckedChange = { clearCache = it },
                 )
                 IconToggleItem(
                     iconRes = R.drawable.rounded_memory_24,
                     title = stringResource(R.string.diy_device_care_close_apps),
-                    description = stringResource(R.string.diy_device_care_close_apps_desc),
                     isChecked = closeApps,
                     onCheckedChange = { closeApps = it },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = stringResource(R.string.diy_device_care_show_result),
+                    isChecked = showResult,
+                    onCheckedChange = { showResult = it },
                 )
             }
 
@@ -120,6 +125,7 @@ fun DeviceCareSettingsSheet(
                             Action.DeviceCare(
                                 clearCache = clearCache,
                                 closeApps = closeApps,
+                                showResult = showResult,
                             ),
                         )
                     },

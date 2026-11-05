@@ -173,7 +173,8 @@ sealed interface Action {
     @Keep
     data class DeviceCare(
         @SerializedName("clearCache") val clearCache: Boolean = true,
-        @SerializedName("closeApps") val closeApps: Boolean = true,
+        @SerializedName("closeApps") val closeApps: Boolean = false,
+        @SerializedName("showResult") val showResult: Boolean = false,
     ) : Action {
         override val title: Int get() = R.string.diy_action_device_care
         override val icon: Int get() = R.drawable.rounded_mop_24
