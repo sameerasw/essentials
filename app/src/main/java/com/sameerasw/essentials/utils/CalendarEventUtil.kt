@@ -68,7 +68,7 @@ object CalendarEventUtil {
         }
     }
 
-    fun queryNextUpcomingEvent(context: Context, timeframe: String, selectedCalendarIds: Set<Long>, showAllDay: Boolean = false): UpcomingCalendarEvent? {
+    fun queryNextUpcomingEvent(context: Context, timeframe: String, selectedCalendarIds: Set<Long>, showAllDay: Boolean = false, includeOngoing: Boolean = false): UpcomingCalendarEvent? {
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return null
         }
@@ -133,7 +133,8 @@ object CalendarEventUtil {
                     if (rawTitle.isNullOrBlank()) continue
 
                     val begin = cursor.getLong(beginIndex)
-                    if (begin in now..maxTimeMillis) {
+                    val ongoing = includeOngoing && begin < now && cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.END)) > now
+                    if (ongoing || begin in now..maxTimeMillis) {
                         val location = if (locationIndex != -1) cursor.getString(locationIndex)?.trim()?.takeIf { it.isNotBlank() } else null
                         fun str(col: String) = cursor.getColumnIndex(col).takeIf { it != -1 }?.let { cursor.getString(it) }?.trim()?.takeIf { it.isNotBlank() }
                         val colorIndex = cursor.getColumnIndex(CalendarContract.Instances.DISPLAY_COLOR)

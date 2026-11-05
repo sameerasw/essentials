@@ -179,6 +179,14 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                         viewModel.setStatusGlanceCalendarShowAllDay(checked)
                     },
                 )
+
+                if (allowIconEdit) {
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_CALENDAR_SHOW_ONGOING,
+                        iconRes = R.drawable.rounded_calendar_today_24,
+                        title = stringResource(R.string.island_calendar_show_ongoing_title),
+                    )
+                }
             }
 
             Text(
