@@ -68,6 +68,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
@@ -87,6 +88,7 @@ import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.DuoBatteryLevels
 import com.sameerasw.essentials.utils.PermissionGrantUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.PowerButtonGestures
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ScreenshotCleaner
@@ -141,6 +143,8 @@ class MainViewModel : ViewModel() {
     val isButtonRemapPauseOnVolumeDialog = mutableStateOf(true)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
     val remapActions = mutableStateMapOf<RemapSlot, List<Action>>()
+    val powerChoices = mutableStateMapOf<RemapSlot, PowerChoice>()
+    val isPowerCameraFlipEnabled = mutableStateOf(false)
     val isHilightNotificationsEnabled = mutableStateOf(false)
     val isHilightOnlyWhenScreenOff = mutableStateOf(true)
     val isHilightSkipDnd = mutableStateOf(true)
@@ -2408,7 +2412,12 @@ class MainViewModel : ViewModel() {
 
         RemapSlot.ALL.forEach { slot ->
             remapActions[slot] = settingsRepository.getRemapActions(slot.prefKey)
+            if (slot.choicePrefKey != null) {
+                powerChoices[slot] = settingsRepository.getPowerChoice(slot)
+            }
         }
+        isPowerCameraFlipEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, false)
 
         isHilightNotificationsEnabled.value = settingsRepository.isHilightNotificationsEnabled()
         isHilightOnlyWhenScreenOff.value = settingsRepository.isHilightOnlyWhenScreenOff()
@@ -5258,6 +5267,18 @@ class MainViewModel : ViewModel() {
     ) {
         isButtonRemapEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_ENABLED, enabled)
+        if (!enabled) {
+            PowerButtonGestures.restoreDefaults(context, settingsRepository)
+        } else {
+            val hasNonDefaultChoice =
+                RemapSlot.ALL.any { slot ->
+                    slot.choicePrefKey != null &&
+                        (powerChoices[slot] ?: slot.defaultChoice) != slot.defaultChoice
+                }
+            if (hasNonDefaultChoice || isPowerCameraFlipEnabled.value) {
+                PowerButtonGestures.sync(context, settingsRepository)
+            }
+        }
     }
 
     // Pause remap while the system volume dialog is visible
@@ -5302,6 +5323,21 @@ class MainViewModel : ViewModel() {
     ) {
         remapActions[slot] = actions
         settingsRepository.setRemapActions(slot.prefKey, actions)
+    }
+
+    fun setPowerChoice(
+        slot: RemapSlot,
+        choice: PowerChoice,
+        context: Context,
+    ) {
+        powerChoices[slot] = choice
+        settingsRepository.setPowerChoice(slot, choice)
+        PowerButtonGestures.sync(context, settingsRepository)
+    }
+
+    fun setPowerCameraFlipEnabled(enabled: Boolean) {
+        isPowerCameraFlipEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, enabled)
     }
 
     fun setVolumeStepsEnabled(enabled: Boolean) {

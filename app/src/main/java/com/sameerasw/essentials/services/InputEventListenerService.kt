@@ -10,19 +10,25 @@
 package com.sameerasw.essentials.services
 
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import android.util.Log
 import android.view.Display
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.input.InputDeviceScanner
+import com.sameerasw.essentials.input.PowerPressDetector
 import com.sameerasw.essentials.input.VolumeLongPressDetector
 import com.sameerasw.essentials.input.VolumePressEvent
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
+import com.sameerasw.essentials.utils.PowerButtonGestures
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,6 +48,10 @@ class InputEventListenerService : Service() {
         const val EXTRA_DIRECTION = "direction"
         const val EXTRA_DURATION_MS = "duration_ms"
         const val ACTION_STOP = "com.sameerasw.essentials.STOP_INPUT_LISTENER"
+        const val ACTION_POWER_GESTURE = "com.sameerasw.essentials.POWER_GESTURE"
+        const val EXTRA_POWER_GESTURE = "power_gesture"
+        const val EXTRA_SCREEN_ON_BEFORE = "screen_on_before"
+        const val EXTRA_FIRST_PRESS_AT = "first_press_at"
         private const val NOTIFICATION_ID = 4242
         const val PREF_LISTENER_ACTIVE = "shizuku_listener_active"
         private const val WATCHDOG_RETRY_MS = 2_000L
@@ -67,16 +77,43 @@ class InputEventListenerService : Service() {
         }
     }
 
-    private fun isFeatureEnabled(): Boolean {
+    private val settingsRepo by lazy { SettingsRepository(this) }
+
+    private fun wantsVolume(): Boolean {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         return prefs.getBoolean("button_remap_enabled", false) &&
             prefs.getBoolean("button_remap_use_shizuku", false)
+    }
+
+    private fun wantsPower(): Boolean =
+        getSharedPreferences("essentials_prefs", MODE_PRIVATE).getBoolean("button_remap_enabled", false) &&
+            PowerButtonGestures.isListenerNeeded(settingsRepo)
+
+    private fun isFeatureEnabled(): Boolean = wantsVolume() || wantsPower()
+
+    private fun isVolumeListening(): Boolean = detector?.isListening == true
+
+    private fun isPowerListening(): Boolean = synchronized(powerDetectors) { powerDetectors.any { it.isListening } }
+
+    private fun isFullyListening(): Boolean =
+        (!wantsVolume() || isVolumeListening()) && (!wantsPower() || isPowerListening())
+
+    private fun updatePowerOverride() {
+        if (wantsPower() && isPowerListening()) {
+            PowerButtonGestures.onListenerAvailable(this, settingsRepo)
+        } else {
+            PowerButtonGestures.onListenerUnavailable(this, settingsRepo)
+        }
     }
 
     private var scope: CoroutineScope? = null
     private var detector: VolumeLongPressDetector? = null
     private var collectJob: Job? = null
     private val startMutex = Mutex()
+    private val powerDetectors = mutableListOf<PowerPressDetector>()
+    private val powerCollectJobs = mutableListOf<Job>()
+
+    @Volatile private var screenOn = true
     private lateinit var shizukuHelper: ShizukuPermissionHelper
     private var isTorchOn = false
 
@@ -91,6 +128,19 @@ class InputEventListenerService : Service() {
             }
         }
 
+    private val screenReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                when (intent?.action) {
+                    Intent.ACTION_SCREEN_ON -> screenOn = true
+                    Intent.ACTION_SCREEN_OFF -> screenOn = false
+                }
+            }
+        }
+
     private val binderReceivedListener =
         Shizuku.OnBinderReceivedListener {
             Log.d("InputEventListener", "Shizuku binder received, attempting to start listening")
@@ -101,6 +151,7 @@ class InputEventListenerService : Service() {
         Shizuku.OnBinderDeadListener {
             Log.w("InputEventListener", "Shizuku binder died, stopping listener")
             stopListening()
+            PowerButtonGestures.onListenerUnavailable(this, settingsRepo)
         }
 
     override fun onCreate() {
@@ -142,6 +193,20 @@ class InputEventListenerService : Service() {
             }
         }
 
+        val powerManager = getSystemService(POWER_SERVICE) as? PowerManager
+        screenOn = powerManager?.isInteractive ?: true
+
+        val filter =
+            IntentFilter().apply {
+                addAction(Intent.ACTION_SCREEN_ON)
+                addAction(Intent.ACTION_SCREEN_OFF)
+            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(screenReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(screenReceiver, filter)
+        }
+
         Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
 
@@ -151,11 +216,13 @@ class InputEventListenerService : Service() {
             while (isActive) {
                 if (!isFeatureEnabled()) {
                     stopListening()
+                    PowerButtonGestures.onListenerUnavailable(this@InputEventListenerService, settingsRepo)
                     stopSelf()
                     return@launch
                 }
-                if (detector?.isListening != true) startListeningNow()
-                val listening = detector?.isListening == true
+                if (!isFullyListening()) startListeningNow()
+                val listening = isFullyListening()
+                updatePowerOverride()
                 if (listening) {
                     retryDelay = WATCHDOG_RETRY_MS
                     delay(WATCHDOG_IDLE_MS)
@@ -174,7 +241,7 @@ class InputEventListenerService : Service() {
 
     private suspend fun startListeningNow() {
         startMutex.withLock {
-            if (detector?.isListening == true) return
+            if (isFullyListening()) return
             stopListening()
 
             val permitted =
@@ -191,6 +258,13 @@ class InputEventListenerService : Service() {
                 return
             }
 
+            if (wantsVolume()) startVolumeListening()
+            if (wantsPower()) startPowerListening()
+        }
+    }
+
+    private suspend fun startVolumeListening() {
+        run {
             val devices =
                 withContext(Dispatchers.IO) {
                     try {
@@ -332,11 +406,59 @@ class InputEventListenerService : Service() {
         }
     }
 
+    private suspend fun startPowerListening() {
+        run {
+            val powerPaths =
+                withContext(Dispatchers.IO) {
+                    try {
+                        InputDeviceScanner().scanForPowerDevices(this@InputEventListenerService)
+                    } catch (_: Exception) {
+                        emptyList()
+                    }
+                }
+
+            powerPaths.forEach { path ->
+                val pDetector =
+                    PowerPressDetector(
+                        path,
+                        { screenOn },
+                    )
+                val job =
+                    scope?.launch {
+                        pDetector.events.collect { event ->
+                            sendBroadcast(
+                                Intent(ACTION_POWER_GESTURE).apply {
+                                    putExtra(EXTRA_POWER_GESTURE, event.gesture.name)
+                                    putExtra(EXTRA_SCREEN_ON_BEFORE, event.screenOnBefore)
+                                    putExtra(EXTRA_FIRST_PRESS_AT, event.firstPressAt)
+                                    setPackage(packageName)
+                                },
+                            )
+                        }
+                    }
+                synchronized(powerDetectors) {
+                    powerDetectors.add(pDetector)
+                    job?.let { powerCollectJobs.add(it) }
+                }
+                scope?.let { pDetector.startListening(it) }
+            }
+        }
+    }
+
     private fun stopListening() {
         collectJob?.cancel()
         collectJob = null
         detector?.stopListening()
         detector = null
+        val toStop =
+            synchronized(powerDetectors) {
+                powerCollectJobs.forEach { it.cancel() }
+                powerCollectJobs.clear()
+                val list = powerDetectors.toList()
+                powerDetectors.clear()
+                list
+            }
+        toStop.forEach { it.stopListening() }
         setListenerActive(false)
     }
 
@@ -348,7 +470,7 @@ class InputEventListenerService : Service() {
     }
 
     private fun ensureListening() {
-        if (detector?.isListening != true) startListening()
+        if (!isFullyListening()) startListening()
     }
 
     override fun onStartCommand(
@@ -383,9 +505,14 @@ class InputEventListenerService : Service() {
                 ?.unregisterTorchCallback(torchCallback)
         } catch (_: Exception) {
         }
+        try {
+            unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
         Shizuku.removeBinderReceivedListener(binderReceivedListener)
         Shizuku.removeBinderDeadListener(binderDeadListener)
         stopListening()
+        PowerButtonGestures.onListenerUnavailable(this, settingsRepo)
         scope?.cancel()
         super.onDestroy()
     }

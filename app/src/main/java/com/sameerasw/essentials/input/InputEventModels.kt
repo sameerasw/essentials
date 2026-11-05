@@ -39,3 +39,11 @@ sealed class VolumePressEvent {
 }
 
 enum class VolumeDirection { UP, DOWN }
+
+enum class PowerGesture { DOUBLE_PRESS, HOLD }
+
+data class PowerPressEvent(
+    val gesture: PowerGesture,
+    val screenOnBefore: Boolean,
+    val firstPressAt: Long = 0L,
+)
