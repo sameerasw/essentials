@@ -48,7 +48,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -95,6 +94,8 @@ import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.DIYViewModel
 
+private val SectionSwitchSpace = 80.dp
+
 @Composable
 fun DIYScreen(
     modifier: Modifier = Modifier,
@@ -103,6 +104,7 @@ fun DIYScreen(
     showNewAutomationSheet: Boolean = false,
     onDismissNewAutomationSheet: () -> Unit = {},
     onNewAutomationClick: (() -> Unit)? = null,
+    showMacros: Boolean = false,
     onShowMacrosChange: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -110,11 +112,6 @@ fun DIYScreen(
     val automations by viewModel.automations.collectAsState()
     val macros by viewModel.macros.collectAsState()
     val focusManager = LocalFocusManager.current
-
-    var showMacros by rememberSaveable { mutableStateOf(false) }
-
-    // MainActivity labels its + button for the section shown here
-    LaunchedEffect(showMacros) { onShowMacrosChange(showMacros) }
 
     var showGenAIPill by remember { mutableStateOf(false) }
     val genAIState by viewModel.genAIState.collectAsState()
@@ -146,19 +143,6 @@ fun DIYScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
         ) {
-            Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
-            DIYSectionSwitch(
-                showMacros = showMacros,
-                onShowMacrosChange = {
-                    exitSelection()
-                    showMacros = it
-                },
-                modifier =
-                    Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(bottom = 16.dp),
-            )
-
             AnimatedContent(
                 targetState = showMacros,
                 label = "diy_section",
@@ -180,9 +164,6 @@ fun DIYScreen(
                     MacroList(
                         macros = macros,
                         contentPadding = contentPadding,
-                        onNewMacro = {
-                            context.startActivity(MacroEditorActivity.createIntent(context, null))
-                        },
                         onOpen = { macro ->
                             context.startActivity(MacroEditorActivity.createIntent(context, macro.id))
                         },
@@ -195,7 +176,10 @@ fun DIYScreen(
                     )
                 } else if (automations.isEmpty()) {
                     Box(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(top = contentPadding.calculateTopPadding() + SectionSwitchSpace),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
@@ -273,6 +257,7 @@ fun DIYScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding =
                             PaddingValues(
+                                top = contentPadding.calculateTopPadding() + SectionSwitchSpace,
                                 bottom = contentPadding.calculateBottomPadding(),
                                 start = 16.dp,
                                 end = 16.dp,
@@ -412,15 +397,19 @@ fun DIYScreen(
             }
         }
 
-        if (showNewAutomationSheet && showMacros) {
-            // The FAB in MainActivity always requests a new automation; redirect to the macro editor when in the Macros tab
-            LaunchedEffect(showNewAutomationSheet) {
-                context.startActivity(MacroEditorActivity.createIntent(context, null))
-                onDismissNewAutomationSheet()
-            }
-        }
+        DIYSectionSwitch(
+            showMacros = showMacros,
+            onShowMacrosChange = {
+                exitSelection()
+                onShowMacrosChange(it)
+            },
+            modifier =
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = contentPadding.calculateTopPadding()),
+        )
 
-        if (showNewAutomationSheet && !showMacros) {
+        if (showNewAutomationSheet) {
             NewAutomationSheet(
                 onDismiss = onDismissNewAutomationSheet,
                 onOptionSelected = { type ->
@@ -519,15 +508,16 @@ private fun SelectionActionButton(
 private fun MacroList(
     macros: List<Macro>,
     contentPadding: PaddingValues,
-    onNewMacro: () -> Unit,
     onOpen: (Macro) -> Unit,
     onTest: (Macro) -> Unit,
     onDelete: (Macro) -> Unit,
 ) {
     if (macros.isEmpty()) {
-        val view = LocalView.current
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = contentPadding.calculateTopPadding() + SectionSwitchSpace),
             contentAlignment = Alignment.Center,
         ) {
             Column(
@@ -538,15 +528,6 @@ private fun MacroList(
                     text = stringResource(R.string.diy_no_macros),
                     textAlign = TextAlign.Center,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onNewMacro()
-                    },
-                ) {
-                    Text(stringResource(R.string.diy_new_macro))
-                }
             }
         }
     } else {
@@ -568,6 +549,7 @@ private fun MacroList(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding =
                 PaddingValues(
+                    top = contentPadding.calculateTopPadding() + SectionSwitchSpace,
                     bottom = contentPadding.calculateBottomPadding(),
                     start = 16.dp,
                     end = 16.dp,

@@ -93,6 +93,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -332,7 +333,7 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
-                    var isDiyMacrosShown by remember { mutableStateOf(false) }
+                    var isDiyMacrosShown by rememberSaveable { mutableStateOf(false) }
                     var isSearchActive by remember { mutableStateOf(false) }
                     var freezeSearchQuery by remember { mutableStateOf("") }
                     var freezeSearchSubmitSignal by remember { androidx.compose.runtime.mutableIntStateOf(0) }
@@ -835,7 +836,11 @@ class MainActivity : AppCompatActivity() {
                                                                         }
 
                                                                         DIYTabs.DIY -> {
-                                                                            showNewAutomationSheet = true
+                                                                            if (isDiyMacrosShown) {
+                                                                                navViewModel.navigate(AppRoute.MacroEditor())
+                                                                            } else {
+                                                                                showNewAutomationSheet = true
+                                                                            }
                                                                         }
                                                                     }
                                                                 },
@@ -1110,6 +1115,7 @@ class MainActivity : AppCompatActivity() {
                                                                             onNewAutomationClick = {
                                                                                 showNewAutomationSheet = true
                                                                             },
+                                                                            showMacros = isDiyMacrosShown,
                                                                             onShowMacrosChange = {
                                                                                 isDiyMacrosShown = it
                                                                             },
@@ -1183,6 +1189,25 @@ class MainActivity : AppCompatActivity() {
                                                                     .background(MaterialTheme.colorScheme.surfaceContainer),
                                                         ) {
                                                             com.sameerasw.essentials.ui.activities.AutomationEditorScreen(
+                                                                route = route,
+                                                                onBack = { navViewModel.pop() },
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                entry<AppRoute.MacroEditor>(metadata = { mapOf(ROUTE_METADATA_KEY to it) }) { route ->
+                                                    UnderlayBlur(
+                                                        route = route,
+                                                        backStack = backStack,
+                                                        lastNavWasPop = navViewModel.lastNavWasPop,
+                                                    ) {
+                                                        Box(
+                                                            modifier =
+                                                                Modifier
+                                                                    .fillMaxSize()
+                                                                    .background(MaterialTheme.colorScheme.surfaceContainer),
+                                                        ) {
+                                                            com.sameerasw.essentials.ui.activities.MacroEditorScreen(
                                                                 route = route,
                                                                 onBack = { navViewModel.pop() },
                                                             )
