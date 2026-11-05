@@ -6549,7 +6549,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun toggleStatusGlanceCalendarSelection(calendarId: Long) {
-        val currentIds = statusGlanceSelectedCalendarIds.value.toMutableSet()
+        val currentIds = statusGlanceSelectedCalendarIds.value.ifEmpty {
+            statusGlanceAvailableCalendars.map { it.id.toString() }.toSet()
+        }.toMutableSet()
         val idString = calendarId.toString()
         if (currentIds.contains(idString)) {
             currentIds.remove(idString)
