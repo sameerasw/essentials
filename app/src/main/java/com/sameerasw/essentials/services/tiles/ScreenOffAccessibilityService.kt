@@ -33,6 +33,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.InputEventListenerService
+import rikka.shizuku.Shizuku
 import com.sameerasw.essentials.services.LiveUpdateSnoozer
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
@@ -104,6 +105,7 @@ class ScreenOffAccessibilityService :
     private val keyguardManager by lazy { getSystemService(KEYGUARD_SERVICE) as KeyguardManager }
 
     private var isScreenOn = true
+    private var isA11yConnected = false
     private var isLightSensorRegistered = false
     private var isProximityRegisteredForPocket = false
     private var isProximityRegistered = false
@@ -520,6 +522,7 @@ class ScreenOffAccessibilityService :
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        isA11yConnected = true
         serviceInfo =
             serviceInfo.apply {
                 flags = flags or
@@ -530,6 +533,21 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        Shizuku.addBinderReceivedListenerSticky(shizukuBinderListener)
+        restartInputEventListenerIfScreenOff()
+    }
+
+    private val shizukuBinderListener =
+        Shizuku.OnBinderReceivedListener { restartInputEventListenerIfScreenOff() }
+
+    private fun restartInputEventListenerIfScreenOff() {
+        val interactive =
+            try {
+                (getSystemService(POWER_SERVICE) as android.os.PowerManager).isInteractive
+            } catch (_: Exception) {
+                true
+            }
+        if (!interactive) startInputEventListenerIfEnabled()
     }
 
     private fun updateOmniOverlay() {
@@ -554,6 +572,7 @@ class ScreenOffAccessibilityService :
     }
 
     override fun onDestroy() {
+        Shizuku.removeBinderReceivedListener(shizukuBinderListener)
         try {
             unregisterReceiver(screenReceiver)
         } catch (_: Exception) {
@@ -597,7 +616,7 @@ class ScreenOffAccessibilityService :
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
-        instance = null
+        if (instance === this) instance = null
         super.onDestroy()
     }
 
@@ -971,7 +990,11 @@ class ScreenOffAccessibilityService :
         flags: Int,
         startId: Int,
     ): Int {
-        val action = intent?.action ?: return super.onStartCommand(intent, flags, startId)
+        val action = intent?.action
+        if (action == null) {
+            if (!isA11yConnected) stopSelf(startId)
+            return START_NOT_STICKY
+        }
 
         when (action) {
             "LOCK_SCREEN" -> {
@@ -1032,7 +1055,14 @@ class ScreenOffAccessibilityService :
                     intent,
                 )
         }
-        return super.onStartCommand(intent, flags, startId)
+        if (!isA11yConnected) stopSelf(startId)
+        return START_NOT_STICKY
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        isA11yConnected = false
+        stopSelf()
+        return super.onUnbind(intent)
     }
 
     private var isInputEventListenerRequested = false

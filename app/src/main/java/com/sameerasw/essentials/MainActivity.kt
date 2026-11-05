@@ -975,6 +975,7 @@ class MainActivity : AppCompatActivity() {
                                     LocalOpenAutomationId provides
                                         if (paneLayout != null) (topRoute as? AppRoute.AutomationEditor)?.automationId else null,
                                 ) {
+                                    AppNavTransitions.TrackPredictiveBackRelease()
                                     NavDisplay(
                                         backStack = backStack,
                                         modifier =
@@ -991,6 +992,7 @@ class MainActivity : AppCompatActivity() {
                                             listOf(
                                                 rememberSaveableStateHolderNavEntryDecorator(),
                                                 rememberViewModelStoreNavEntryDecorator(),
+                                                remember { AppNavTransitions.predictiveBackDecorator<AppRoute>() },
                                             ),
                                         transitionSpec = {
                                             if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.push()
