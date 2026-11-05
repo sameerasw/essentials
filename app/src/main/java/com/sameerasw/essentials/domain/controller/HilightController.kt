@@ -10,6 +10,8 @@
 package com.sameerasw.essentials.domain.controller
 
 import android.content.Context
+import android.content.IntentFilter
+import android.content.Intent
 import android.os.BatteryManager
 import android.os.IBinder
 import android.os.SystemClock
@@ -48,9 +50,7 @@ object HilightController {
         val ledCount = HilightLights.array()?.ids?.size ?: HilightEffect.DEFAULT_LED_COUNT
         val batteryLevel =
             if (effect.pattern == HilightPattern.BATTERY) {
-                EssentialsApp.context
-                    .getSystemService(BatteryManager::class.java)
-                    ?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: 100
+                currentBatteryLevel()
             } else {
                 100
             }
@@ -58,6 +58,21 @@ object HilightController {
             durationMs = HilightFrames.durationMs(effect, ledCount),
             onStarted = onStarted,
         ) { elapsedMs, count -> HilightFrames.frame(effect, elapsedMs, count, batteryLevel) }
+    }
+
+    private fun currentBatteryLevel(): Int {
+        val context = EssentialsApp.context
+        val capacity =
+            try {
+                context.getSystemService(BatteryManager::class.java)?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+            } catch (_: Exception) {
+                null
+            }
+        if (capacity != null && capacity in 1..100) return capacity
+        val sticky = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = sticky?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = sticky?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+        return if (level >= 0 && scale > 0) (level * 100 / scale).coerceIn(0, 100) else 100
     }
 
     // Plays in the app's colour when autoColor is on; the lookup is cached after the first call
@@ -69,8 +84,9 @@ object HilightController {
     ): Boolean {
         if (!effect.autoColor) return play(effect, onStarted)
         if (!HilightLights.isAccessGranted()) return false
+        onStarted?.invoke()
         AppColorUtil.resolveColor(context, packageName) { color ->
-            play(effect.copy(color = HilightEffect.appColorOr(color, effect.color)), onStarted)
+            play(effect.copy(color = HilightEffect.appColorOr(color, effect.color)))
         }
         return true
     }
