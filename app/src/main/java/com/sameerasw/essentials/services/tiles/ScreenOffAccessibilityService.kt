@@ -105,6 +105,7 @@ class ScreenOffAccessibilityService :
     private val keyguardManager by lazy { getSystemService(KEYGUARD_SERVICE) as KeyguardManager }
 
     private var isScreenOn = true
+    private var isA11yConnected = false
     private var isLightSensorRegistered = false
     private var isProximityRegisteredForPocket = false
     private var isProximityRegistered = false
@@ -521,6 +522,7 @@ class ScreenOffAccessibilityService :
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        isA11yConnected = true
         serviceInfo =
             serviceInfo.apply {
                 flags = flags or
@@ -614,7 +616,7 @@ class ScreenOffAccessibilityService :
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
-        instance = null
+        if (instance === this) instance = null
         super.onDestroy()
     }
 
@@ -988,7 +990,11 @@ class ScreenOffAccessibilityService :
         flags: Int,
         startId: Int,
     ): Int {
-        val action = intent?.action ?: return super.onStartCommand(intent, flags, startId)
+        val action = intent?.action
+        if (action == null) {
+            if (!isA11yConnected) stopSelf(startId)
+            return START_NOT_STICKY
+        }
 
         when (action) {
             "LOCK_SCREEN" -> {
@@ -1049,7 +1055,14 @@ class ScreenOffAccessibilityService :
                     intent,
                 )
         }
-        return super.onStartCommand(intent, flags, startId)
+        if (!isA11yConnected) stopSelf(startId)
+        return START_NOT_STICKY
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        isA11yConnected = false
+        stopSelf()
+        return super.onUnbind(intent)
     }
 
     private var isInputEventListenerRequested = false
