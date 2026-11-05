@@ -274,10 +274,10 @@ private fun CalendarIconSheet(
                 modifier = Modifier.padding(start = 8.dp),
             )
             IconGridPicker(
-                icons = CalendarIcons.all,
-                selectedIconName = selected ?: CalendarIcons.all.first(),
+                categories = CalendarIcons.categories,
+                selectedIconName = selected ?: CalendarIcons.default,
                 onIconSelected = { icon ->
-                    val value = icon.takeIf { it != CalendarIcons.all.first() }
+                    val value = icon.takeIf { it != CalendarIcons.default }
                     selected = value
                     onSave(value)
                 },
