@@ -11,16 +11,13 @@ package com.sameerasw.essentials.ui.features.display.sheets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +39,9 @@ import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
-import com.sameerasw.essentials.utils.EmojiUtil
+import com.sameerasw.essentials.island.plugins.calendar.CalendarIcons
+import com.sameerasw.essentials.island.plugins.calendar.rememberCalendarIconRes
+import com.sameerasw.essentials.ui.core.pickers.IconGridPicker
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -60,7 +59,7 @@ fun StatusGlanceCalendarOptionsBottomSheet(
 
     LaunchedEffect(Unit) {
         viewModel.fetchStatusGlanceCalendars(context)
-        if (allowIconEdit) viewModel.loadIslandCalendarEmojis()
+        if (allowIconEdit) viewModel.loadIslandCalendarIcons()
     }
 
     val timeframes = listOf(
@@ -219,10 +218,10 @@ fun StatusGlanceCalendarOptionsBottomSheet(
                         cornerRadius = 24.dp,
                     ) {
                         accountCalendars.forEach { calendar ->
-                            val emoji = if (allowIconEdit) viewModel.islandCalendarEmojis.value[calendar.id] else null
+                            val icon = if (allowIconEdit) viewModel.islandCalendarIcons.value[calendar.id] else null
                             IconToggleItem(
-                                title = if (emoji != null) "$emoji  ${calendar.name}" else calendar.name,
-                                iconRes = R.drawable.rounded_calendar_today_24,
+                                title = calendar.name,
+                                iconRes = rememberCalendarIconRes(icon),
                                 isChecked = calendar.isSelected,
                                 onCheckedChange = {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -239,10 +238,10 @@ fun StatusGlanceCalendarOptionsBottomSheet(
     }
 
     editingCalendar?.let { calendar ->
-        CalendarEmojiSheet(
+        CalendarIconSheet(
             calendarName = calendar.name,
-            initial = viewModel.islandCalendarEmojis.value[calendar.id].orEmpty(),
-            onSave = { emoji -> viewModel.setIslandCalendarEmoji(calendar.id, emoji) },
+            initial = viewModel.islandCalendarIcons.value[calendar.id],
+            onSave = { icon -> viewModel.setIslandCalendarIcon(calendar.id, icon) },
             onDismissRequest = { editingCalendar = null },
         )
     }
@@ -250,23 +249,22 @@ fun StatusGlanceCalendarOptionsBottomSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CalendarEmojiSheet(
+private fun CalendarIconSheet(
     calendarName: String,
-    initial: String,
+    initial: String?,
     onSave: (String?) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    val view = LocalView.current
-    var input by remember { mutableStateOf(initial) }
-    val trimmed = input.trim()
-    val valid = trimmed.isEmpty() || EmojiUtil.isSingleEmoji(trimmed)
+    var selected by remember { mutableStateOf(initial) }
 
-    EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
+    EssentialsBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
@@ -275,47 +273,16 @@ private fun CalendarEmojiSheet(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = 8.dp),
             )
-            OutlinedTextField(
-                value = input,
-                onValueChange = { input = it },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                isError = !valid,
-                placeholder = { Text(stringResource(R.string.island_calendar_emoji_hint)) },
-                supportingText = if (!valid) {
-                    { Text(stringResource(R.string.island_calendar_emoji_invalid)) }
-                } else {
-                    null
+            IconGridPicker(
+                icons = CalendarIcons.all,
+                selectedIconName = selected ?: CalendarIcons.all.first(),
+                onIconSelected = { icon ->
+                    val value = icon.takeIf { it != CalendarIcons.all.first() }
+                    selected = value
+                    onSave(value)
                 },
-                textStyle = MaterialTheme.typography.headlineSmall,
-                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(bottom = 32.dp),
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                OutlinedButton(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onSave(null)
-                        onDismissRequest()
-                    },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(stringResource(R.string.action_reset))
-                }
-                Button(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onSave(trimmed.ifEmpty { null })
-                        onDismissRequest()
-                    },
-                    enabled = valid,
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(stringResource(R.string.action_save))
-                }
-            }
         }
     }
 }
