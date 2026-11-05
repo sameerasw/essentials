@@ -33,6 +33,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.InputEventListenerService
+import rikka.shizuku.Shizuku
 import com.sameerasw.essentials.services.LiveUpdateSnoozer
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
@@ -530,6 +531,21 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        Shizuku.addBinderReceivedListenerSticky(shizukuBinderListener)
+        restartInputEventListenerIfScreenOff()
+    }
+
+    private val shizukuBinderListener =
+        Shizuku.OnBinderReceivedListener { restartInputEventListenerIfScreenOff() }
+
+    private fun restartInputEventListenerIfScreenOff() {
+        val interactive =
+            try {
+                (getSystemService(POWER_SERVICE) as android.os.PowerManager).isInteractive
+            } catch (_: Exception) {
+                true
+            }
+        if (!interactive) startInputEventListenerIfEnabled()
     }
 
     private fun updateOmniOverlay() {
@@ -554,6 +570,7 @@ class ScreenOffAccessibilityService :
     }
 
     override fun onDestroy() {
+        Shizuku.removeBinderReceivedListener(shizukuBinderListener)
         try {
             unregisterReceiver(screenReceiver)
         } catch (_: Exception) {

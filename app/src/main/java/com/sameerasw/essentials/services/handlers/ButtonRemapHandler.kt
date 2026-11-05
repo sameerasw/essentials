@@ -85,14 +85,9 @@ class ButtonRemapHandler(
 
         val isAod = isAodShowing()
 
-        val shellReady =
-            com.sameerasw.essentials.utils.ShellUtils
-                .isAvailable(service) &&
-                com.sameerasw.essentials.utils.ShellUtils.hasPermission(
-                    service,
-                )
         val devicePathDetected =
             !prefs.getString("shizuku_detected_device_path", null).isNullOrEmpty()
+        val listenerActive = prefs.getBoolean(InputEventListenerService.PREF_LISTENER_ACTIVE, false)
 
         val useShell =
             isButtonRemapUseShizuku ||
@@ -100,7 +95,12 @@ class ButtonRemapHandler(
                     service,
                 )
 
-        if (useShell && isButtonRemapEnabled && shellReady && devicePathDetected && !isScreenInteractive && !isAod) {
+        val shizukuOwnsKeys =
+            useShell && isButtonRemapEnabled && devicePathDetected && listenerActive && !isScreenInteractive && !isAod &&
+                com.sameerasw.essentials.utils.ShellUtils.isAvailable(service) &&
+                com.sameerasw.essentials.utils.ShellUtils.hasPermission(service)
+
+        if (shizukuOwnsKeys) {
             val isTorchControl =
                 flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
