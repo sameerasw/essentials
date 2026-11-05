@@ -20,6 +20,7 @@ import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.reflect.KClass
 
 object DIYRepository {
@@ -150,26 +151,22 @@ object DIYRepository {
     }
 
     fun addMacro(macro: Macro) {
-        val current = _macros.value.toMutableList()
-        current.add(macro)
-        _macros.value = current
+        _macros.update { it + macro }
         saveMacrosToPrefs()
     }
 
     fun updateMacro(macro: Macro) {
-        val current = _macros.value.toMutableList()
-        val index = current.indexOfFirst { it.id == macro.id }
-        if (index != -1) {
-            current[index] = macro
-            _macros.value = current
-            saveMacrosToPrefs()
+        if (_macros.value.none { it.id == macro.id }) return
+        _macros.update { current ->
+            current.map { if (it.id == macro.id) macro else it }
         }
+        saveMacrosToPrefs()
     }
 
     fun removeMacro(id: String) {
-        val current = _macros.value.toMutableList()
-        current.removeAll { it.id == id }
-        _macros.value = current
+        _macros.update { current ->
+            current.filter { it.id != id }
+        }
         saveMacrosToPrefs()
     }
 

@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.displayName
 import com.sameerasw.essentials.domain.diy.matches
 import com.sameerasw.essentials.domain.model.AppSelection
@@ -154,8 +156,9 @@ fun GestureActionPickerSheet(
                     )
                 }
 
-                val actionCategories = remember {
-                    ActionRegistry.getCategories() + listOfNotNull(ActionRegistry.getMacroCategory())
+                val macros by DIYRepository.macros.collectAsState()
+                val actionCategories = remember(macros) {
+                    ActionRegistry.getCategories() + listOfNotNull(ActionRegistry.getMacroCategory(macros))
                 }
 
                 var expandedActionCategory by remember {

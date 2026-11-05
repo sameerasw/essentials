@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -45,13 +46,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
-import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.displayName
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.CustomSettingsSheet
 import com.sameerasw.essentials.ui.core.sheets.DimWallpaperSettingsSheet
@@ -822,10 +824,11 @@ private fun RemapAddActionSheet(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val macros by DIYRepository.macros.collectAsState()
     val actionCategories =
-        remember(screenOnOnly, categories, showMacros) {
+        remember(screenOnOnly, categories, showMacros, macros) {
             val base = categories ?: ActionRegistry.getCategories(screenOnOnly = screenOnOnly)
-            val macroCategory = if (showMacros) ActionRegistry.getMacroCategory() else null
+            val macroCategory = if (showMacros) ActionRegistry.getMacroCategory(macros, screenOnOnly) else null
             if (macroCategory != null) base + macroCategory else base
         }
     var expandedActionCategory by remember(screenOnOnly) {

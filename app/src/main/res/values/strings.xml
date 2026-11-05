@@ -1472,6 +1472,8 @@
     <string name="diy_macro_name">Name</string>
     <string name="diy_no_macros">No macros yet. A macro is a list of actions you can reuse anywhere.</string>
     <string name="diy_macro_deleted_label">Deleted macro</string>
+    <string name="diy_delete_macro_title">Delete macro?</string>
+    <string name="diy_delete_macro_desc">Gestures, button remaps and automations that use %1$s will stop running it.</string>
     <plurals name="diy_macro_action_count">
         <item quantity="one">%d action</item>
         <item quantity="other">%d actions</item>

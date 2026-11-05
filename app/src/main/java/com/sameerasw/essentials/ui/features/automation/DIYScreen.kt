@@ -48,12 +48,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -512,6 +514,42 @@ private fun MacroList(
     onTest: (Macro) -> Unit,
     onDelete: (Macro) -> Unit,
 ) {
+    val view = LocalView.current
+    var pendingDelete by remember { mutableStateOf<Macro?>(null) }
+
+    val macroToDelete = pendingDelete
+    if (macroToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { pendingDelete = null },
+            title = { Text(stringResource(R.string.diy_delete_macro_title)) },
+            text = { Text(stringResource(R.string.diy_delete_macro_desc, macroToDelete.name)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDelete(macroToDelete)
+                        pendingDelete = null
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.action_delete),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        pendingDelete = null
+                    },
+                ) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
+    }
+
     if (macros.isEmpty()) {
         Box(
             modifier =
@@ -565,7 +603,7 @@ private fun MacroList(
                         onTest(macro)
                     },
                     onDelete = {
-                        onDelete(macro)
+                        pendingDelete = macro
                     },
                 )
             }

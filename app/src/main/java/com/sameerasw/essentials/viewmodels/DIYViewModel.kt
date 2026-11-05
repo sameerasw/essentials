@@ -23,6 +23,9 @@ import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
 import com.sameerasw.essentials.domain.genai.GenAIAutomationService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,6 +51,9 @@ class DIYViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
     private val repository = DIYRepository
+
+    // Not cancelled with the screen, so a test run with Wait finishes
+    private val testRunScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private val _genAIState = MutableStateFlow<GenAIState>(GenAIState.Idle)
     val genAIState: StateFlow<GenAIState> = _genAIState.asStateFlow()
@@ -81,11 +87,6 @@ class DIYViewModel(
         repository.removeAutomation(id)
     }
 
-    /**
-     * Executes the delete macro operation.
-     *
-     * @param id [String] Target id.
-     */
     fun deleteMacro(id: String) {
         repository.removeMacro(id)
     }
@@ -133,14 +134,9 @@ class DIYViewModel(
         }
     }
 
-    /**
-     * Runs the macro's action(s) immediately.
-     *
-     * @param macro [Macro] Target macro.
-     */
     fun testMacro(macro: Macro) {
         val context = getApplication<Application>().applicationContext
-        viewModelScope.launch {
+        testRunScope.launch {
             CombinedActionExecutor.executeAll(context, macro.actionList)
         }
     }
