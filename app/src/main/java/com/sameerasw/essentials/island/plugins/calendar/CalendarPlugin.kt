@@ -42,6 +42,9 @@ class CalendarPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_TIME_FORMAT,
         SettingsRepository.KEY_ISLAND_TIME_LEADING_ZERO,
         SettingsRepository.KEY_ISLAND_TIME_PERIOD,
+        SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SELECTED_CALENDARS,
+        SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_TIMEFRAME,
+        SettingsRepository.KEY_STATUS_GLANCE_CALENDAR_SHOW_ALL_DAY,
     )
 
     private var event: UpcomingCalendarEvent? = null

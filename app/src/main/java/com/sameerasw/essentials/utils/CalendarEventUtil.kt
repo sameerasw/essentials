@@ -32,6 +32,7 @@ data class UpcomingCalendarEvent(
 
 object CalendarEventUtil {
     fun formatRelativeTime(context: Context, eventTimeMillis: Long, now: Long): String {
+        if (eventTimeMillis <= now) return context.getString(R.string.status_glance_calendar_event_now)
         val diffMillis = (eventTimeMillis - now).coerceAtLeast(0L)
         val minutes = (diffMillis / (60 * 1000L)).toInt()
         val hours = minutes / 60
@@ -53,6 +54,7 @@ object CalendarEventUtil {
     }
 
     fun formatRelativeTimeCompact(eventTimeMillis: Long, now: Long): String {
+        if (eventTimeMillis <= now) return "Now"
         val diffMillis = (eventTimeMillis - now).coerceAtLeast(0L)
         val minutes = (diffMillis / (60 * 1000L)).toInt()
         val hours = minutes / 60
