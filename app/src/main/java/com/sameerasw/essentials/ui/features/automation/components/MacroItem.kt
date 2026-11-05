@@ -53,14 +53,19 @@ fun MacroItem(
     onRun: () -> Unit = {},
     onDelete: () -> Unit = {},
     modifier: Modifier = Modifier,
+    isOpen: Boolean = false,
 ) {
     val view = LocalView.current
+    val containerColor by androidx.compose.animation.animateColorAsState(
+        targetValue = if (isOpen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceBright,
+        label = "macro_open",
+    )
     var showMenu by remember { mutableStateOf(false) }
 
     Card(
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
+                containerColor = containerColor,
             ),
         shape = MaterialTheme.shapes.extraSmall,
         modifier =

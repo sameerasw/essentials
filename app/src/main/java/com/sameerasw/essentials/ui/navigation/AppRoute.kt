@@ -159,3 +159,4 @@ fun List<AppRoute>.openFeatureIds(): Set<String> =
     }
 
 val LocalOpenAutomationId = androidx.compose.runtime.compositionLocalOf<String?> { null }
+val LocalOpenMacroId = androidx.compose.runtime.compositionLocalOf<String?> { null }

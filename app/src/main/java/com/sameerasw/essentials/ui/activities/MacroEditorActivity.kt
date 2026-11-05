@@ -157,7 +157,7 @@ fun MacroEditorScreen(
                             .padding(
                                 start = 16.dp,
                                 end = 16.dp,
-                                top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                                top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 16.dp,
                             ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {

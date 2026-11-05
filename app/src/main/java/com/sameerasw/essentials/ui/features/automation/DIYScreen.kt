@@ -93,6 +93,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.NewAutomationSheet
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
+import com.sameerasw.essentials.ui.navigation.LocalOpenMacroId
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.DIYViewModel
 
@@ -577,12 +578,14 @@ private fun MacroList(
                     .getBoolean("motion_blur", false)
             }
         val macrosLazyListState = rememberLazyListState()
+        val headerState = rememberPullTitleHeaderState()
 
         LazyColumn(
             state = macrosLazyListState,
             modifier =
                 Modifier
                     .fillMaxSize()
+                    .nestedScroll(headerState.nestedScrollConnection)
                     .scrollMotionBlur(macrosLazyListState, enabled = isMotionBlurEnabled),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding =
@@ -593,6 +596,13 @@ private fun MacroList(
                     end = 16.dp,
                 ),
         ) {
+            item {
+                PullTitleHeader(
+                    title = stringResource(R.string.tab_diy),
+                    state = headerState,
+                    caption = stringResource(R.string.diy_header_caption),
+                )
+            }
             items(macros, key = { it.id }) { macro ->
                 MacroItem(
                     macro = macro,
@@ -605,6 +615,7 @@ private fun MacroList(
                     onDelete = {
                         pendingDelete = macro
                     },
+                    isOpen = macro.id == LocalOpenMacroId.current,
                 )
             }
         }

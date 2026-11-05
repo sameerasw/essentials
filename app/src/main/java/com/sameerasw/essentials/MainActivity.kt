@@ -10,6 +10,7 @@
 package com.sameerasw.essentials
 
 import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
+import com.sameerasw.essentials.ui.navigation.LocalOpenMacroId
 import androidx.compose.runtime.CompositionLocalProvider
 import com.sameerasw.essentials.ui.navigation.openFeatureIds
 import com.sameerasw.essentials.ui.navigation.LocalSelectedFeatureIds
@@ -987,6 +988,8 @@ class MainActivity : AppCompatActivity() {
                                     LocalSelectedFeatureIds provides if (paneLayout != null) backStack.openFeatureIds() else emptySet(),
                                     LocalOpenAutomationId provides
                                         if (paneLayout != null) (topRoute as? AppRoute.AutomationEditor)?.automationId else null,
+                                    LocalOpenMacroId provides
+                                        if (paneLayout != null) (topRoute as? AppRoute.MacroEditor)?.macroId else null,
                                 ) {
                                     AppNavTransitions.TrackPredictiveBackRelease()
                                     NavDisplay(
