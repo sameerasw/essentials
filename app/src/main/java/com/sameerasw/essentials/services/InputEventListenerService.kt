@@ -25,10 +25,14 @@ import com.sameerasw.essentials.input.VolumePressEvent
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import rikka.shizuku.Shizuku
 
@@ -39,10 +43,14 @@ class InputEventListenerService : Service() {
         const val EXTRA_DURATION_MS = "duration_ms"
         const val ACTION_STOP = "com.sameerasw.essentials.STOP_INPUT_LISTENER"
         private const val NOTIFICATION_ID = 4242
+        const val PREF_LISTENER_ACTIVE = "shizuku_listener_active"
+        private const val WATCHDOG_RETRY_MS = 2_000L
+        private const val WATCHDOG_IDLE_MS = 10_000L
+        private const val WATCHDOG_MAX_RETRY_MS = 60_000L
     }
 
-    private fun startForegroundSafely(notification: android.app.Notification) {
-        try {
+    private fun startForegroundSafely(notification: android.app.Notification): Boolean {
+        return try {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 startForeground(
                     NOTIFICATION_ID,
@@ -52,20 +60,41 @@ class InputEventListenerService : Service() {
             } else {
                 startForeground(NOTIFICATION_ID, notification)
             }
+            true
         } catch (e: Exception) {
             Log.e("InputEventListener", "Failed to start foreground", e)
+            false
         }
+    }
+
+    private fun isFeatureEnabled(): Boolean {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        return prefs.getBoolean("button_remap_enabled", false) &&
+            prefs.getBoolean("button_remap_use_shizuku", false)
     }
 
     private var scope: CoroutineScope? = null
     private var detector: VolumeLongPressDetector? = null
+    private var collectJob: Job? = null
+    private val startMutex = Mutex()
     private lateinit var shizukuHelper: ShizukuPermissionHelper
     private var isTorchOn = false
+
+    private val torchCallback =
+        object : android.hardware.camera2.CameraManager.TorchCallback() {
+            override fun onTorchModeChanged(
+                cameraId: String,
+                enabled: Boolean,
+            ) {
+                super.onTorchModeChanged(cameraId, enabled)
+                isTorchOn = enabled
+            }
+        }
 
     private val binderReceivedListener =
         Shizuku.OnBinderReceivedListener {
             Log.d("InputEventListener", "Shizuku binder received, attempting to start listening")
-            startListening()
+            ensureListening()
         }
 
     private val binderDeadListener =
@@ -77,6 +106,7 @@ class InputEventListenerService : Service() {
     override fun onCreate() {
         super.onCreate()
         shizukuHelper = ShizukuPermissionHelper(this)
+        setListenerActive(false)
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -98,49 +128,76 @@ class InputEventListenerService : Service() {
                 .setSmallIcon(android.R.drawable.star_on)
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .build()
-        startForegroundSafely(notification)
-
-        if (!com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) {
-            val cameraManager =
-                getSystemService(CAMERA_SERVICE) as android.hardware.camera2.CameraManager
-            cameraManager.registerTorchCallback(
-                object :
-                    android.hardware.camera2.CameraManager.TorchCallback() {
-                    override fun onTorchModeChanged(
-                        cameraId: String,
-                        enabled: Boolean,
-                    ) {
-                        super.onTorchModeChanged(cameraId, enabled)
-                        isTorchOn = enabled
-                    }
-                },
-                null,
-            )
+        if (!startForegroundSafely(notification)) {
+            stopSelf()
+            return
         }
 
-        Shizuku.addBinderReceivedListener(binderReceivedListener)
+        if (!com.sameerasw.essentials.utils.DeviceUtils.isTorchAccessRestricted()) {
+            try {
+                (getSystemService(CAMERA_SERVICE) as? android.hardware.camera2.CameraManager)
+                    ?.registerTorchCallback(torchCallback, null)
+            } catch (e: Exception) {
+                Log.w("InputEventListener", "Torch callback unavailable", e)
+            }
+        }
+
+        Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
 
         scope?.launch {
             delay(500)
-            startListening()
+            var retryDelay = WATCHDOG_RETRY_MS
+            while (isActive) {
+                if (!isFeatureEnabled()) {
+                    stopListening()
+                    stopSelf()
+                    return@launch
+                }
+                if (detector?.isListening != true) startListeningNow()
+                val listening = detector?.isListening == true
+                if (listening) {
+                    retryDelay = WATCHDOG_RETRY_MS
+                    delay(WATCHDOG_IDLE_MS)
+                } else {
+                    setListenerActive(false)
+                    delay(retryDelay)
+                    retryDelay = (retryDelay * 2).coerceAtMost(WATCHDOG_MAX_RETRY_MS)
+                }
+            }
         }
     }
 
     private fun startListening() {
-        scope?.launch {
+        scope?.launch { startListeningNow() }
+    }
+
+    private suspend fun startListeningNow() {
+        startMutex.withLock {
+            if (detector?.isListening == true) return
             stopListening()
 
-            if (!com.sameerasw.essentials.utils.ShellUtils
-                    .hasPermission(this@InputEventListenerService)
-            ) {
+            val permitted =
+                withContext(Dispatchers.IO) {
+                    try {
+                        com.sameerasw.essentials.utils.ShellUtils
+                            .hasPermission(this@InputEventListenerService)
+                    } catch (_: Exception) {
+                        false
+                    }
+                }
+            if (!permitted) {
                 Log.e("InputEventListener", "Shell permission not granted")
-                return@launch
+                return
             }
 
             val devices =
                 withContext(Dispatchers.IO) {
-                    InputDeviceScanner().scanForVolumeDevices()
+                    try {
+                        InputDeviceScanner().scanForVolumeDevices()
+                    } catch (_: Exception) {
+                        emptyList()
+                    }
                 }
 
             if (devices.isEmpty()) {
@@ -149,7 +206,7 @@ class InputEventListenerService : Service() {
                     .edit()
                     .remove("shizuku_detected_device_path")
                     .apply()
-                return@launch
+                return
             }
 
             val devicePath = devices.first().path
@@ -163,7 +220,7 @@ class InputEventListenerService : Service() {
             val activeDetector = VolumeLongPressDetector(devicePath, 500)
             detector = activeDetector
 
-            launch {
+            collectJob = scope?.launch {
                 activeDetector.events.collect { event ->
                     val powerManager =
                         getSystemService(POWER_SERVICE) as android.os.PowerManager
@@ -271,13 +328,27 @@ class InputEventListenerService : Service() {
                 }
             }
 
-            activeDetector.startListening(this)
+            scope?.let { setListenerActive(activeDetector.startListening(it)) }
         }
     }
 
     private fun stopListening() {
+        collectJob?.cancel()
+        collectJob = null
         detector?.stopListening()
         detector = null
+        setListenerActive(false)
+    }
+
+    private fun setListenerActive(active: Boolean) {
+        getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            .edit()
+            .putBoolean(PREF_LISTENER_ACTIVE, active)
+            .apply()
+    }
+
+    private fun ensureListening() {
+        if (detector?.isListening != true) startListening()
     }
 
     override fun onStartCommand(
@@ -293,16 +364,25 @@ class InputEventListenerService : Service() {
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setOngoing(true)
                 .build()
-        startForegroundSafely(notification)
+        if (!startForegroundSafely(notification) || !isFeatureEnabled()) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
         if (intent?.action == ACTION_STOP) {
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             return START_NOT_STICKY
         }
+        ensureListening()
         return START_STICKY
     }
 
     override fun onDestroy() {
+        try {
+            (getSystemService(CAMERA_SERVICE) as? android.hardware.camera2.CameraManager)
+                ?.unregisterTorchCallback(torchCallback)
+        } catch (_: Exception) {
+        }
         Shizuku.removeBinderReceivedListener(binderReceivedListener)
         Shizuku.removeBinderDeadListener(binderDeadListener)
         stopListening()
