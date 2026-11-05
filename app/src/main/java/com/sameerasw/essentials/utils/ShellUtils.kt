@@ -39,6 +39,9 @@ object ShellUtils {
         val selected = getSelectedMode(context)
         if (selected != PrivilegedMode.AUTO) return selected
         return when {
+            SheveryUtils.isSheveryAvailable() -> PrivilegedMode.SHEVERY
+            ShizukuUtils.isShizukuAvailable() -> PrivilegedMode.SHIZUKU
+            SheveryUtils.isSheveryInstalled(context) -> PrivilegedMode.SHEVERY
             ShizukuUtils.isShizukuInstalled(context) -> PrivilegedMode.SHIZUKU
             ShizukuUtils.isPorterInstalled(context) -> PrivilegedMode.PORTER
             ShizukuUtils.isDhizukuInstalled(context) -> PrivilegedMode.DHIZUKU
@@ -48,28 +51,31 @@ object ShellUtils {
 
     fun isRootEnabled(context: Context): Boolean = resolveMode(context) == PrivilegedMode.ROOT
 
+    fun isSheveryEnabled(context: Context): Boolean = resolveMode(context) == PrivilegedMode.SHEVERY
+
     fun usesShizukuBinder(context: Context): Boolean =
-        resolveMode(context).let { it == PrivilegedMode.SHIZUKU || it == PrivilegedMode.PORTER }
+        resolveMode(context).let { it == PrivilegedMode.SHIZUKU || it == PrivilegedMode.PORTER || it == PrivilegedMode.SHEVERY }
 
     fun usesAuthToken(context: Context): Boolean =
         when (resolveMode(context)) {
             PrivilegedMode.SHIZUKU -> !ShizukuUtils.isSheveryFork(context)
+            PrivilegedMode.SHEVERY -> true
             PrivilegedMode.PORTER -> true
             else -> false
         }
 
     fun isAvailable(context: Context): Boolean =
-        if (isRootEnabled(context)) {
-            RootUtils.isRootAvailable()
-        } else {
-            ShizukuUtils.isShizukuAvailable()
+        when (resolveMode(context)) {
+            PrivilegedMode.ROOT -> RootUtils.isRootAvailable()
+            PrivilegedMode.SHEVERY -> SheveryUtils.isSheveryAvailable()
+            else -> ShizukuUtils.isShizukuAvailable()
         }
 
     fun hasPermission(context: Context): Boolean =
-        if (isRootEnabled(context)) {
-            RootUtils.isRootPermissionGranted()
-        } else {
-            ShizukuUtils.hasPermission()
+        when (resolveMode(context)) {
+            PrivilegedMode.ROOT -> RootUtils.isRootPermissionGranted()
+            PrivilegedMode.SHEVERY -> SheveryUtils.hasPermission()
+            else -> ShizukuUtils.hasPermission()
         }
 
     private val commandExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "shell-commands") }
@@ -95,6 +101,38 @@ object ShellUtils {
     ) {
         if (isRootEnabled(context)) {
             RootUtils.runCommand(command)
+        } else if (isSheveryEnabled(context)) {
+            if (!SheveryUtils.isSheveryAvailable()) {
+                if (notifyOnError) {
+                    val message = if (!featureName.isNullOrBlank()) {
+                        context.getString(R.string.shevery_not_running_feature_desc, featureName)
+                    } else {
+                        context.getString(R.string.shevery_not_running_desc)
+                    }
+                    notifyShizukuError(
+                        context,
+                        context.getString(R.string.shevery_not_running_title),
+                        message,
+                    )
+                }
+                return
+            }
+            if (!SheveryUtils.hasPermission()) {
+                if (notifyOnError) {
+                    val message = if (!featureName.isNullOrBlank()) {
+                        context.getString(R.string.shevery_permission_missing_feature_desc, featureName)
+                    } else {
+                        context.getString(R.string.shevery_permission_missing_desc)
+                    }
+                    notifyShizukuError(
+                        context,
+                        context.getString(R.string.shevery_permission_missing_title),
+                        message,
+                    )
+                }
+                return
+            }
+            SheveryUtils.runCommand(command)
         } else {
             if (!ShizukuUtils.isShizukuAvailable()) {
                 if (notifyOnError) {
@@ -180,6 +218,49 @@ object ShellUtils {
     ): Process? {
         return if (isRootEnabled(context)) {
             RootUtils.newProcess(command)
+        } else if (isSheveryEnabled(context)) {
+            if (!SheveryUtils.isSheveryAvailable()) {
+                if (notifyOnError) {
+                    val message = if (!featureName.isNullOrBlank()) {
+                        context.getString(R.string.shevery_not_running_feature_desc, featureName)
+                    } else {
+                        context.getString(R.string.shevery_not_running_desc)
+                    }
+                    notifyShizukuError(
+                        context,
+                        context.getString(R.string.shevery_not_running_title),
+                        message,
+                    )
+                }
+                return null
+            }
+            if (!SheveryUtils.hasPermission()) {
+                if (notifyOnError) {
+                    val message = if (!featureName.isNullOrBlank()) {
+                        context.getString(R.string.shevery_permission_missing_feature_desc, featureName)
+                    } else {
+                        context.getString(R.string.shevery_permission_missing_desc)
+                    }
+                    notifyShizukuError(
+                        context,
+                        context.getString(R.string.shevery_permission_missing_title),
+                        message,
+                    )
+                }
+                return null
+            }
+            try {
+                SheveryUtils.newProcess(command)
+            } catch (e: Exception) {
+                if (notifyOnError) {
+                    notifyShizukuError(
+                        context,
+                        "Shevery execution error",
+                        "An error occurred while running command: ${e.localizedMessage}",
+                    )
+                }
+                null
+            }
         } else {
             if (!ShizukuUtils.isShizukuAvailable()) {
                 if (notifyOnError) {
@@ -275,6 +356,12 @@ object ShellUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
 
+        val restartActionTitle = if (isSheveryEnabled(context)) {
+            context.getString(R.string.action_restart_shevery)
+        } else {
+            context.getString(R.string.action_restart_shizuku)
+        }
+
         val builder =
             NotificationCompat
                 .Builder(context, channelId)
@@ -286,7 +373,7 @@ object ShellUtils {
                 .setContentIntent(pendingIntent)
                 .addAction(
                     R.drawable.rounded_power_settings_new_24,
-                    context.getString(R.string.action_restart_shizuku),
+                    restartActionTitle,
                     restartPendingIntent,
                 )
 

@@ -94,6 +94,7 @@ import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ScreenshotCleaner
 import com.sameerasw.essentials.utils.PrivilegedMode
 import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.utils.SheveryUtils
 import com.sameerasw.essentials.utils.StatusBarInsetsUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.SplitScreenUtil
@@ -8474,8 +8475,13 @@ class MainViewModel : ViewModel() {
      * Executes the request shizuku permission operation.
      */
     fun requestShizukuPermission() {
-        ShizukuUtils.requestPermission()
-        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        if (ShellUtils.isSheveryEnabled(EssentialsApp.context)) {
+            SheveryUtils.requestPermission()
+            isShizukuPermissionGranted.value = SheveryUtils.hasPermission()
+        } else {
+            ShizukuUtils.requestPermission()
+            isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        }
     }
 
     /**
@@ -8485,11 +8491,15 @@ class MainViewModel : ViewModel() {
      * @return The resulting Boolean data.
      */
     fun grantWriteSecureSettingsWithShizuku(context: Context): Boolean {
-        val success = ShizukuUtils.grantWriteSecureSettingsPermission()
+        val success = if (ShellUtils.isSheveryEnabled(context)) {
+            SheveryUtils.grantWriteSecureSettingsPermission()
+        } else {
+            ShizukuUtils.grantWriteSecureSettingsPermission()
+        }
         if (success) {
             // Refresh the write secure settings check
             isWriteSecureSettingsEnabled.value = canWriteSecureSettings(context)
-            isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+            isShizukuPermissionGranted.value = ShellUtils.hasPermission(context)
         }
         return success
     }
