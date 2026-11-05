@@ -726,7 +726,9 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
     <string name="about_desc_caffeinate">Caffeine ngăn màn hình của bạn tự động tắt.\n\nGiữ cho màn hình của bạn luôn ở trạng thái bật trong một khoảng thời gian cụ thể hoặc vô thời hạn. Hữu ích khi đọc những bài viết dài hoặc tham khảo một công thức nấu ăn.</string>
     <string name="about_desc_maps_power_saving">Nhận chế độ Tiết kiệm năng lượng Google Maps độc quyền của dòng Pixel 10 với nền đen tuyền tối thiểu để hiển thị trên màn hình khóa của bạn trên bất kỳ thiết bị Android nào. Bắt đầu phiên điều hướng, tắt màn hình và bật lại.</string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
+    <string name="about_desc_flashlight_pulse">Nháy đèn pin khi bạn nhận được thông báo.
+
+Trên các thiết bị có hỗ trợ phần cứng điều chỉnh độ sáng đèn pin, hiệu ứng nháy được mô phỏng mượt mà.</string>
     <string name="about_desc_snooze_notifications">Báo lại các thông báo hệ thống liên tục khó chịu mà không thể sửa đổi theo mặc định. \n\nVui lòng đợi cho đến khi thông báo đến rồi truy cập tính năng này, nơi kênh thông báo của nó\' sẽ được liệt kê. Chọn mục đó để tạm ẩn cho lần tiếp theo.\n\nMọi thông báo đã tạm ẩn vẫn có thể được truy cập từ lịch sử thông báo của bạn trong Android.</string>
     <string name="about_desc_quick_settings_tiles">Thêm các ô tùy chỉnh vào bảng Cài đặt nhanh của bạn.\n\nNhấn và giữ bất kỳ ô nào trong số chúng để tìm hiểu chức năng của chúng.</string>
     <string name="about_desc_button_remap">Sắp xếp lại các nút phần cứng của bạn để thực hiện các hành động và phím tắt khác nhau.\n\nTùy chỉnh điều xảy ra khi bạn nhấn và giữ các nút âm lượng với một số điều kiện nhất định. \n\nMột số hành vi như kích hoạt tắt màn hình hoặc điều khiển đèn pin có thể do OEM phụ thuộc vào việc triển khai chúng và có thể không hoạt động trên tất cả các thiết bị như mong đợi. Một số tình huống có thể được giải quyết bằng cách sử dụng quyền Shizuku nhưng có thể không mang lại trải nghiệm tương tự do quá trình triển khai.</string>
@@ -771,7 +773,11 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="about_desc_bubbles">Bật hoặc tắt bong bóng thông báo nổi.\n\nNhanh chóng chuyển đổi cài đặt toàn hệ thống cho bong bóng hội thoại.</string>
     <string name="about_desc_sensitive_content">Ẩn nội dung nhạy cảm trên màn hình khóa.\n\nChuyển đổi xem nội dung thông báo được hiển thị hay ẩn khi thiết bị của bạn bị khóa.</string>
     <string name="about_desc_tap_to_wake">Chuyển đổi chức năng nhấn để đánh thức.\n\nBật hoặc tắt khả năng đánh thức màn hình của bạn bằng một lần nhấn.</string>
-    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
+    <string name="about_desc_aod">Điều khiển Màn hình luôn bật tại một nơi. Bật hoặc tắt tính năng này, đồng thời xem nhanh giờ, thông báo và thông tin khác chỉ bằng một cái nhìn khi màn hình tắt.
+
+Bạn cũng có thể buộc tính năng này tắt khi không có thông báo và hiển thị hình nền phía sau đồng hồ bằng một lớp phủ.
+
+Cần có quyền ghi cài đặt bảo mật để bật hoặc tắt tính năng này, và cần có quyền Trợ năng để sử dụng tùy chọn buộc tắt.</string>
     <string name="about_desc_notification_glance">Tự động kiểm soát Màn hình luôn bật dựa trên thông báo của bạn. Khi có tin nhắn hoặc cảnh báo đến từ một ứng dụng đã chọn, AOD sẽ tiếp tục hoạt động cho đến khi bạn loại bỏ thông báo, đảm bảo bạn không bao giờ bỏ lỡ thông tin quan trọng mà không gây lãng phí pin khi không có cảnh báo nào.</string>
     <string name="about_desc_mono_audio">Kết hợp các kênh âm thanh thành mono.\n\nHữu ích khi sử dụng một chiếc tai nghe duy nhất hoặc cho mục đích hỗ trợ tiếp cận.</string>
     <string name="about_desc_flashlight_tile">Chuyển đổi đèn pin.\n\nNhấn lâu sẽ mở ra các điều khiển để điều chỉnh cường độ, điều này có thể cần triển khai phần cứng mà một số thiết bị có thể thiếu.</string>
@@ -1315,7 +1321,13 @@ Nếu thiết bị của bạn không hỗ trợ hiển thị lớp phủ đè l
     <string name="label_animator_duration_scale">Thang thời lượng hoạt hình</string>
     <string name="label_transition_animation_scale">Quy mô hoạt ảnh chuyển tiếp</string>
     <string name="label_window_animation_scale">Tỷ lệ hoạt ảnh cửa sổ</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">Điều chỉnh giao diện và cảm nhận tổng thể của hệ thống.
+
+Thay đổi tỷ lệ và độ đậm của phông chữ, tỷ lệ hiển thị (chiều rộng nhỏ nhất) và tốc độ hoạt ảnh của cửa sổ, hiệu ứng chuyển tiếp và trình tạo hoạt ảnh. Bạn cũng có thể đặt thời gian chờ màn hình và bật tự động xoay.
+
+Chuyển đổi giữa cấu hình Mặc định và chế độ Găng tay chỉ bằng một lần chạm. Chế độ Găng tay điều chỉnh tỷ lệ giao diện người dùng và tăng độ nhạy cảm ứng để màn hình phản hồi tốt hơn khi bạn đeo găng tay hoặc dùng miếng dán bảo vệ màn hình. Có ô Cài đặt nhanh để bật hoặc tắt chế độ này nhanh chóng.
+
+Một số cài đặt có thể yêu cầu quyền nâng cao hoặc khởi động lại thiết bị để có hiệu lực trong một số ứng dụng. Có thể cần Shizuku hoặc quyền root để điều chỉnh tỷ lệ. </string>
     <string name="about_desc_screen_refresh_rate">Thiết lập tốc độ làm mới màn hình tùy chỉnh bằng Shizuku. Chế độ cố định (Fixed mode) khóa cả tốc độ làm mới tối thiểu và tối đa ở cùng một giá trị, trong khi chế độ dải (range mode) cho phép bạn thiết lập các giá trị tối thiểu và tối đa riêng biệt. Lệnh đặt lại (Reset) sẽ xóa các thiết lập tùy chỉnh và đưa thiết bị trở về cơ chế quản lý tốc độ làm mới mặc định của hệ thống.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1426,7 +1438,7 @@ Sử dụng các phím tắt tùy chỉnh để đảm bảo các cài đặt đ
     <string name="lock_screen_clock_inflate">Inflate</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Number Overlap</string>
-    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_weather">Thời tiết</string>
     <string name="lock_screen_clock_select_label">Select Clock Style</string>
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
@@ -1716,7 +1728,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="status_glance_enable_desc">Hiển thị trạng thái nhanh</string>
     <string name="feat_aod_wallpaper_title">Hiển thị hình nền trên màn hình AOD</string>
     <string name="feat_aod_wallpaper_use_album_art">Sử dụng ảnh bìa album</string>
-    <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_share_lock">Chia sẻ cùng hình nền màn hình khóa</string>
     <string name="feat_aod_wallpaper_keep_on_media">Tiếp tục trong khi phát nhạc</string>
     <string name="feat_aod_wallpaper_media_apps">Bỏ qua các ứng dụng đa phương tiện</string>
     <string name="feat_aod_wallpaper_timeout">Thời gian chờ hình nền</string>
@@ -1999,15 +2011,45 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="screenshot_auto_clean_note">Mỗi ảnh chụp màn hình mới đều đi kèm một thông báo kín đáo để bạn chọn giữ lại. Những ảnh chụp màn hình được gắn dấu sao sẽ luôn được lưu giữ.</string>
     <string name="screenshots_cleaned_count_title">Ảnh chụp màn hình đã được làm sạch</string>
     <string name="screenshots_storage_saved_title">Đã lưu vào bộ nhớ</string>
-    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
-    <string name="label_shake_for_help">Shake for help</string>
-    <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
+    <string name="about_desc_duo">Cái này không gấp được
+
+Một giao diện hiển thị trạng thái kiểu iPhone Duo, hiển thị trạng thái pin, mạng, phương tiện và nhiều hơn nữa trong một giao diện người dùng nhỏ gọn, tối giản, lý tưởng nhất là xung quanh camera, với nhiều mục để hiển thị và cử chỉ để tương tác.
+
+Đối với các thiết bị có thể gập lại, hãy đảm bảo tắt tùy chọn \'Tự động phát hiện camera\' nếu nó không đáng tin cậy và tự căn chỉnh Duo với vị trí camera bên trong và bên ngoài, sau đó Essentials sẽ ghi nhớ bố cục của bạn.</string>
+    <string name="label_shake_for_help">Lắc để trợ giúp</string>
+    <string name="about_desc_island">Dynamic island dành cho Android của bạn, bao quanh phần khoét hình camera.
+
+Nó tập hợp tất cả thông tin trực tiếp vào một không gian nhỏ gọn, có thể mở rộng: thông báo với phản hồi nhanh, phương tiện truyền thông với ảnh bìa album và điều khiển, cuộc gọi, hẹn giờ và đồng hồ bấm giờ, báo thức, sự kiện lịch, điều hướng, cập nhật tiến độ, điểm truy cập và trạng thái mạng, thiết bị được kết nối, đèn pin, chế độ âm thanh, caffeine, thông tin du lịch, thời gian và pin.
+
+Các ứng dụng của bên thứ ba có thể kết nối với island để hiển thị nội dung trực tiếp của riêng họ, và bạn có thể chọn ứng dụng nào được phép sử dụng.
+
+Tương tác với màn hình bằng các cử chỉ đơn giản như chạm, vuốt lên và trượt dọc theo vùng điều khiển để điều chỉnh âm lượng, độ sáng và nhiều hơn nữa, đồng thời gán các thao tác chạm riêng của bạn.
+
+Tùy chỉnh gần như mọi thứ, bao gồm vị trí và kích thước camera với tính năng tự động phát hiện, chiều rộng, vị trí đặt, hiệu ứng hình ảnh như độ sáng, đường viền và bóng nhấp nháy, kích thước mở rộng và độ bo tròn, thời gian hiển thị, nội dung hiển thị và thời điểm hiển thị, ẩn thông báo hệ thống và biểu tượng thanh trạng thái, cũng như các tùy chọn bảo mật cho màn hình khóa.
+
+Nó cũng có thể được kết hợp với Duo để tạo thành một khu vực camera thống nhất.</string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
-    <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
-    <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
-    <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
-    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
-    <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
+    <string name="about_desc_flashlight">Kiểm soát đèn pin tốt hơn.
+
+Điều chỉnh độ sáng, tăng và giảm sáng mượt mà, đồng thời dùng các phím âm lượng để thay đổi cường độ. Hiển thị độ sáng được cập nhật theo thời gian thực trên thanh trạng thái.
+
+Tự động tắt đèn khi điện thoại ở trong túi, giảm độ sáng khi sử dụng lâu để tránh quá nhiệt hoặc luôn tắt đèn, ngay cả khi màn hình đang bật.
+
+Việc điều khiển độ sáng cần có hỗ trợ phần cứng mà một số thiết bị không có. </string>
+    <string name="about_desc_face_illumination">Giúp tính năng mở khóa bằng khuôn mặt nhận diện bạn trong bóng tối.
+
+Khi màn hình bật sáng trong điều kiện thiếu sáng, Essentials sẽ làm sáng màn hình bằng ánh sáng dịu có màu để camera trước có thể nhìn thấy khuôn mặt bạn. Bạn có thể đặt ngưỡng ánh sáng môi trường để quyết định khi nào tính năng này được kích hoạt, chọn màu ánh sáng và chọn xem màn hình tự động sáng khi bật lên hay chỉ sáng khi bạn kích hoạt tính năng.
+
+Tính năng này cũng có thể tự kích hoạt mở khóa cho bạn. Cần có quyền Trợ năng.</string>
+    <string name="about_desc_link_actions">Chọn cách mở liên kết thay vì bị bó buộc vào một ứng dụng duy nhất.
+
+Khi bạn mở một liên kết, Essentials cho phép bạn chọn trong số nhiều ứng dụng để xử lý liên kết đó. Bạn cũng có thể mở liên kết trong bong bóng, sao chép, chia sẻ, rút gọn hoặc tạo mã QR.</string>
+    <string name="about_desc_daily_wallpaper">Giữ hình nền luôn mới mẻ với hình nền được tuyển chọn mỗi ngày hoặc đặt hình nền động.
+
+Chọn hình nền, xem trước và xếp hàng hình nền cho ngày mai trước khi áp dụng, đồng thời quản lý hình nền động ở cùng một nơi.</string>
+    <string name="about_desc_watch">Tích hợp giữa điện thoại và đồng hồ Wear OS của bạn.
+
+Cài đặt ứng dụng đồng hành Essentials trên đồng hồ để đồng bộ hóa thông báo và cuộc gọi, khóa điện thoại từ đồng hồ, tùy chỉnh mặt đồng hồ và các tiện ích, đồng bộ hóa chế độ âm thanh và trạng thái vị trí, cài đặt eSIM và bật tính năng gỡ lỗi không dây từ xa.</string>
     <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
     <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
@@ -2026,12 +2068,12 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Island chips</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
-    <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
+    <string name="feat_aod_wallpaper_compat_title">Chế độ tương thích</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
-    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
-    <string name="island_themed_app_icons_title">Use themed app icons</string>
-    <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">Vô hiệu hóa khi mở rộng thanh trạng thái</string>
+    <string name="island_themed_app_icons_title">Sử dụng biểu tượng ứng dụng theo chủ đề</string>
+    <string name="island_time_day_suffix_title">Hiển thị hậu tố ngày</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -2041,25 +2083,109 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="disable_interactions_in_full_screen_title">Vô hiệu hóa tương tác ở chế độ toàn màn hình</string>
     <string name="duo_tap_for_brief_title">Chạm để xem tóm tắt</string>
     <string name="island_notif_hub_title">Trung tâm thông báo</string>
-    <string name="island_notif_hub_desc">Thay thế các biểu tượng thông báo trên thanh trạng thái bằng hình ảnh từ island</string>
-    <string name="island_notif_tap_to_open_desc">Chạm vào thông báo được mở rộng để mở ứng dụng</string>
-    <string name="island_notif_follow_dnd_title">Theo trạng thái của chế độ Không làm phiền</string>
-    <string name="island_notif_follow_dnd_desc">Ẩn các thông báo mà chế độ Không làm phiền đã tắt</string>
+    <string name="island_notif_hub_desc">Thay thế các biểu tượng thông báo trên thanh trạng thái bằng island</string>
+    <string name="island_notif_tap_to_open_desc">Nhấn vào thông báo đã mở rộng để mở ứng dụng của thông báo đó</string>
+    <string name="island_notif_follow_dnd_title">Theo dõi chế độ Không làm phiền</string>
+    <string name="island_notif_follow_dnd_desc">Ẩn các thông báo bị chế độ Không làm phiền tắt tiếng</string>
     <string name="island_notif_skip_silent_title">Bỏ qua thông báo im lặng</string>
-    <string name="island_notif_skip_silent_desc">Bỏ qua các thông báo không có âm thanh</string>
+    <string name="island_notif_skip_silent_desc">Bỏ qua các thông báo không phát ra âm thanh</string>
     <string name="island_notif_filter_apps_title">Lọc ứng dụng</string>
     <string name="island_notif_filter_apps_desc">Chỉ hiển thị thông báo từ các ứng dụng bạn chọn</string>
-    <string name="island_notif_queue_desc">Hiển thị thông báo theo từng đợt</string>
-    <string name="island_notif_queue_inline_title">Xếp hàng bên trong Island</string>
-    <string name="island_notif_queue_inline_desc">Hiển thị hàng đợi bên trong Island</string>
+    <string name="island_notif_queue_desc">Hiển thị các bản xem trước thông báo so le</string>
+    <string name="island_notif_queue_inline_title">Hàng đợi bên trong island</string>
+    <string name="island_notif_queue_inline_desc">Hiển thị hàng chờ bên trong island</string>
     <string name="island_otp_enabled_title">Phát hiện mã OTP</string>
     <string name="island_otp_tap_to_copy_title">Nhấn để sao chép</string>
-    <string name="island_otp_dismiss_after_copy_title">Xóa thông báo sau khi sao chép</string>
+    <string name="island_otp_dismiss_after_copy_title">Ẩn thông báo sau khi sao chép</string>
     <string name="island_otp_timeout_title">Hiển thị mã cho</string>
     <string name="island_otp_bypass_filter_title">Hiển thị mã từ bất kỳ ứng dụng nào</string>
-    <string name="island_notif_hub_include_silent">Bao gồm các thông báo im lặng</string>
-    <string name="island_notif_hub_group_apps">Nhóm từng ứng dụng</string>
-    <string name="island_notif_hub_chat_pictures">Ưu tiên ảnh trò chuyện hơn</string>
-    <string name="island_hide_icon_notifications">Số biểu tượng thông báo</string>
-    <string name="island_notif_show_title">Hiện thông báo</string>
+    <string name="island_notif_hub_include_silent">Bao gồm thông báo im lặng</string>
+    <string name="island_notif_hub_group_apps">Nhóm theo ứng dụng</string>
+    <string name="island_notif_hub_chat_pictures">Ưu tiên hình ảnh trong cuộc trò chuyện</string>
+    <string name="island_hide_icon_notifications">Biểu tượng thông báo</string>
+    <string name="island_notif_show_title">Hiển thị thông báo</string>
+    <string name="feat_back_gesture_left_title">Chiều rộng mép trái</string>
+    <string name="feat_back_gesture_default_width_desc">Khoảng cách tính từ mép màn hình mà thao tác vuốt sẽ kích hoạt chức năng quay lại. Giống với Độ nhạy quay lại trong cài đặt hệ thống.</string>
+    <string name="feat_back_gesture_right_title">Chiều rộng mép phải</string>
+    <string name="back_gesture_add_app">Thêm ứng dụng</string>
+    <string name="back_gesture_add_app_desc">Sử dụng độ rộng viền khác nhau khi ứng dụng đang mở</string>
+    <string name="feat_aod_wallpaper_extended_media">Hiển thị thông tin phát lại</string>
+    <string name="feat_aod_wallpaper_extended_app_icon">Thay ghi chú bằng biểu tượng ứng dụng</string>
+    <string name="feat_volume_steps_title">Mức âm lượng</string>
+    <string name="feat_volume_steps_desc">Thay đổi âm lượng phương tiện nhanh hơn sau mỗi lần nhấn phím</string>
+    <string name="feat_app_volume_title">Âm lượng ứng dụng</string>
+    <string name="feat_app_volume_desc">Đặt âm lượng riêng cho từng ứng dụng</string>
+    <string name="volume_steps_enable_title">Bật mức âm lượng</string>
+    <string name="volume_steps_per_press_title">Số mức mỗi lần nhấn</string>
+    <string name="app_volume_enable_title">Bật âm lượng ứng dụng</string>
+    <string name="app_volume_overlay_title">Lớp phủ giao diện điều khiển</string>
+    <string name="app_volume_add_app">Thêm ứng dụng</string>
+    <string name="app_volume_add_app_desc">Đặt âm lượng trước khi ứng dụng bắt đầu phát</string>
+    <string name="island_alarm_hide_time_title">Ẩn thời gian</string>
+    <string name="duo_battery_low_level_title">Mức pin thấp</string>
+    <string name="duo_battery_critical_level_title">Mức pin cực thấp</string>
+    <string name="island_navigation_peek_after_expand_title">Xem trước dòng sau khi mở rộng</string>
+    <string name="island_navigation_peek_after_expand_desc">Khi tắt, island sẽ lập tức trở lại trạng thái nhỏ gọn</string>
+    <string name="island_navigation_on_new_title">Chỉ dẫn mới</string>
+    <string name="island_navigation_expand_title">Mở rộng trước khi rẽ</string>
+    <string name="island_notif_keep_progress_desc">Hiển thị nội dung tải xuống và các tiến trình khác đang diễn ra</string>
+    <string name="island_notif_condensed_info_title">Phong cách nhìn trước</string>
+    <string name="island_notif_peek_style_full">Rộng</string>
+    <string name="island_call_show_compact">Nhỏ gọn</string>
+    <string name="island_notif_hub_order_priority">Ưu tiên </string>
+    <string name="island_notif_hub_order_recent">Gần đây</string>
+    <string name="island_notif_hub_overflow_title">Chỉ báo có thêm thông báo</string>
+    <string name="island_notif_hub_overflow_number">Số</string>
+    <string name="island_notif_hub_overflow_dot">Chấm</string>
+    <string name="island_time_leading_zero_title">Hiển thị số 0 ở đầu</string>
+    <string name="island_time_format_title">Định dạng thời gian</string>
+    <string name="island_time_format_12h">12 tiếng</string>
+    <string name="island_time_format_24h">24 tiếng</string>
+    <string name="island_time_show_seconds_title">Hiển thị giây</string>
+    <string name="island_battery_icon_conditional_title">Chỉ hiển thị biểu tượng trong các trường hợp dưới đây</string>
+    <string name="island_battery_peek_alerts_title">Hiển thị thông báo xem nhanh</string>
+    <string name="island_timers_filter_apps_title">Lọc ứng dụng</string>
+    <string name="island_media_show_like_title">Hiển thị nút yêu thích</string>
+    <string name="island_network_activity_title">Hiển thị hoạt động mạng</string>
+    <string name="island_show_signal_title">Hiển thị tín hiệu di động</string>
+    <string name="island_signal_wifi_title">Hiển thị tín hiệu Wi-Fi</string>
+    <string name="island_signal_low_only_title">Hiển thị khi tín hiệu yếu</string>
+    <string name="island_signal_show_mode_title">Hiển thị chế độ mạng</string>
+    <string name="island_caffeinate_show_time_title">Hiển thị thời gian</string>
+    <string name="island_hide_in_fullscreen_title">Ẩn trong chế độ toàn màn hình</string>
+    <string name="island_suppress_system_heads_up_title">Ẩn biểu ngữ thông báo hệ thống</string>
+    <string name="island_hide_live_updates_title">Tắt các bản cập nhật trực tiếp khi island đang hiển thị </string>
+    <string name="island_hide_icons_title">Ẩn các biểu tượng trên thanh trạng thái khi island xuất hiện</string>
+    <string name="island_dynamic_hide_status_bar_title">Ẩn các mục trên thanh trạng thái khi mở rộng</string>
+    <string name="island_secondary_style_title">Kiểu mục phụ</string>
+    <string name="island_notif_queue_style_stack">Ngăn xếp</string>
+    <string name="island_notif_queue_style_overlap">Chồng chéo</string>
+    <string name="island_section_icon_color">Màu biểu tượng</string>
+    <string name="app_colors_custom">Tùy chỉnh</string>
+    <string name="island_themed_text_title">Màu chữ theo chủ đề</string>
+    <string name="diy_action_caffeinate_on">Bật Caffein</string>
+    <string name="diy_action_caffeinate_off">Tắt Caffein</string>
+    <string name="diy_action_open_activity">Mở hoạt động</string>
+    <string name="diy_action_split_screen">Bật/tắt màn hình chia đôi</string>
+    <string name="diy_action_open_camera">Mở camera</string>
+    <string name="diy_action_open_video_camera">Mở máy quay video</string>
+    <string name="diy_action_open_qr_scanner">Mở trình quét mã QR</string>
+    <string name="diy_action_wait">Đợi</string>
+    <string name="diy_action_send_notification">Gửi thông báo</string>
+    <string name="diy_action_back_gesture_off">Tắt cử chỉ quay lại</string>
+    <string name="diy_action_back_gesture_on">Bật cử chỉ quay lại</string>
+    <string name="diy_action_toggle_dnd">Bật/tắt chế độ Không làm phiền</string>
+    <string name="diy_action_set_mode">Đặt chế độ</string>
+    <string name="about_desc_haptics">Bật/tắt chế độ rung hệ thống và phản hồi cảm ứng cùng lúc. Cần có quyền sửa đổi cài đặt hệ thống.</string>
+    <string name="about_desc_default_launcher">Mở trình chọn ứng dụng màn hình chính mặc định của hệ thống từ một ô Cài đặt nhanh.</string>
+    <string name="about_desc_duo_tile">Bật hoặc tắt lớp phủ vòng camera Duo trong Cài đặt nhanh.</string>
+    <string name="about_desc_island_tile">Bật hoặc tắt lớp phủ thông báo Island từ Cài đặt nhanh. </string>
+    <string name="about_desc_data_sim">Chuyển dữ liệu di động sang SIM đang hoạt động tiếp theo. Cần quyền Đọc trạng thái điện thoại và Shizuku hoặc quyền root; SIM được chọn cũng sẽ được bật dữ liệu di động.</string>
+    <string name="label_motion_blur_amount">Số lượng</string>
+    <string name="batteries_notification_title">Thông báo pin</string>
+    <string name="battery_show_percentage_title">Hiển thị phần trăm</string>
+    <string name="battery_separate_channels_title">Các kênh pin riêng biệt</string>
+    <string name="battery_separate_channels_desc">Tách riêng các kênh Trái/Phải</string>
+    <string name="label_apply_after_reboot">Áp dụng sau khi khởi động lại</string>
+    <string name="screen_locked_keep_qs_on_extended_unlock_title">Giữ QS ở chế độ mở khóa kéo dài</string>
 </resources>
