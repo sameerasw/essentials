@@ -2286,6 +2286,8 @@ class NotificationListener : NotificationListenerService() {
             }
         }
 
+        val messageSender = senderName
+
         if (senderName.isNullOrBlank()) {
             val convTitle = extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)?.toString()
             if (!convTitle.isNullOrBlank() && !convTitle.equals("You", ignoreCase = true)) {
@@ -2320,11 +2322,29 @@ class NotificationListener : NotificationListenerService() {
         try {
             notif.getLargeIcon()?.loadDrawable(this)?.let { largeIconBitmap = AppUtil.drawableToBitmap(it) }
         } catch (_: Exception) {}
-        val isGroupConversation = notif.extras.getBoolean(Notification.EXTRA_IS_GROUP_CONVERSATION)
-        val shortcutIcon = if (conversationIcon == null && personAvatar == null && largeIconBitmap == null) conversationShortcutIcon(sbn) else null
-        val chatIcon = (if (isGroupConversation) conversationIcon else null) ?: personAvatar ?: largeIconBitmap ?: conversationIcon ?: shortcutIcon
+        val conversationTitle = extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)?.toString()?.trim()
+        val isGroupConversation =
+            notif.extras.getBoolean(Notification.EXTRA_IS_GROUP_CONVERSATION) ||
+                (!conversationTitle.isNullOrBlank() && !messageSender.isNullOrBlank() && !conversationTitle.equals(messageSender, ignoreCase = true))
+        val groupName =
+            if (isGroupConversation) groupNameFrom(conversationTitle, title, messageSender) else null
 
-        var bitmap: Bitmap? = personAvatar
+        val chatIcon =
+            if (groupName != null) {
+                conversationIcon ?: conversationShortcutIcon(sbn) ?: largeIconBitmap?.takeIf { large -> personAvatar?.let { !large.sameAs(it) } ?: true }
+            } else {
+                val shortcutIcon = if (conversationIcon == null && personAvatar == null && largeIconBitmap == null) conversationShortcutIcon(sbn) else null
+                personAvatar ?: largeIconBitmap ?: conversationIcon ?: shortcutIcon
+            }
+
+        if (groupName != null) {
+            senderName = groupName
+            if (!messageSender.isNullOrBlank() && text.isNotBlank() && '\n' !in text && !text.startsWith("$messageSender:", ignoreCase = true)) {
+                text = "$messageSender: $text"
+            }
+        }
+
+        var bitmap: Bitmap? = if (groupName != null) chatIcon else personAvatar
         if (bitmap == null) {
             try {
                 val largeIcon = notif.getLargeIcon()
@@ -2404,6 +2424,26 @@ class NotificationListener : NotificationListenerService() {
             actions = actionList,
             chatIcon = chatIcon,
         )
+    }
+
+    private fun groupNameFrom(
+        conversationTitle: String?,
+        title: String,
+        messageSender: String?,
+    ): String? {
+        val countSuffix = Regex("\\s*\\(\\d+[^)]*\\)\\s*$")
+        val fromConversation = conversationTitle?.replace(countSuffix, "")?.trim()
+        if (!fromConversation.isNullOrBlank()) return fromConversation
+        var fromTitle = title.replace(countSuffix, "").trim()
+        if (!messageSender.isNullOrBlank()) {
+            listOf(": ", " @ ", " • ").forEach { sep ->
+                if (fromTitle.endsWith("$sep$messageSender", ignoreCase = true)) {
+                    fromTitle = fromTitle.dropLast(sep.length + messageSender.length).trim()
+                }
+            }
+            if (fromTitle.equals(messageSender, ignoreCase = true)) return null
+        }
+        return fromTitle.ifBlank { null }
     }
 
     // Ranking.getConversationShortcutInfo is missing from Android 11 framework builds
