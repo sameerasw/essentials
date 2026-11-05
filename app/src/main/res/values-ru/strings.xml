@@ -2016,4 +2016,10 @@
     <string name="about_desc_haptics">Переключите вибрацию системы и сенсорную обратную связь вместе. Требуется разрешение на изменение настроек системы. </string>
     <string name="tile_haptics">Вибрация</string>
     <string name="app_overcast">Погода</string>
+    <string name="app_volume_apps_section">Приложения </string>
+    <string name="label_battery_charging_policy">Политика зарядки</string>
+    <string name="label_battery_avg_remaining">Примерно до полной разрядки</string>
+    <string name="label_thermal_skin">Температура кожи </string>
+    <string name="label_auto_reset_battery_stats_title">Автоматический сброс </string>
+    <string name="label_auto_reset_battery_stats_desc">Автоматически сбрасывайте статистику батареи, когда устройство отключено от сети более % c заряда.</string>
 </resources>
