@@ -50,13 +50,20 @@ class CompactCell(
 
 class LineContent(
     val icon: @Composable () -> Unit,
-    val start: String,
-    val end: String,
+    start: String,
+    end: String,
     val endSlot: (@Composable () -> Unit)? = null,
     val showLeftIcon: Boolean = true,
     // Icon + title only on line peek
     val condensed: Boolean = false,
-)
+) {
+    val start: String = start.singleLine()
+    val end: String = end.singleLine()
+}
+
+private val LINE_BREAKS = Regex("\\s*[\\r\\n\\u2028\\u2029]+\\s*")
+
+private fun String.singleLine(): String = trim().replace(LINE_BREAKS, "  ")
 
 interface IslandExpandedScope {
     val spec: IslandLayoutSpec
