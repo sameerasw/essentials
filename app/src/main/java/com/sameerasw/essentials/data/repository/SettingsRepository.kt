@@ -275,6 +275,7 @@ class SettingsRepository(
         const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF = "button_remap_power_hold_choice_off"
         const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON = "button_remap_power_hold_choice_on"
         const val KEY_BUTTON_REMAP_POWER_OVERRIDDEN = "button_remap_power_overridden"
+        const val KEY_BUTTON_REMAP_POWER_ORIGINAL = "button_remap_power_original"
         const val KEY_BUTTON_REMAP_POWER_CAMERA_FLIP = "button_remap_power_camera_flip"
         const val KEY_BUTTON_REMAP_HAPTIC_TYPE = "button_remap_haptic_type"
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy

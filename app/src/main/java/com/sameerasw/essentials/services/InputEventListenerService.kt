@@ -28,6 +28,7 @@ import com.sameerasw.essentials.input.PowerPressDetector
 import com.sameerasw.essentials.input.VolumeLongPressDetector
 import com.sameerasw.essentials.input.VolumePressEvent
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
+import com.sameerasw.essentials.utils.PowerButtonGestures
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -76,10 +77,33 @@ class InputEventListenerService : Service() {
         }
     }
 
-    private fun isFeatureEnabled(): Boolean {
+    private val settingsRepo by lazy { SettingsRepository(this) }
+
+    private fun wantsVolume(): Boolean {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         return prefs.getBoolean("button_remap_enabled", false) &&
             prefs.getBoolean("button_remap_use_shizuku", false)
+    }
+
+    private fun wantsPower(): Boolean =
+        getSharedPreferences("essentials_prefs", MODE_PRIVATE).getBoolean("button_remap_enabled", false) &&
+            PowerButtonGestures.isListenerNeeded(settingsRepo)
+
+    private fun isFeatureEnabled(): Boolean = wantsVolume() || wantsPower()
+
+    private fun isVolumeListening(): Boolean = detector?.isListening == true
+
+    private fun isPowerListening(): Boolean = synchronized(powerDetectors) { powerDetectors.any { it.isListening } }
+
+    private fun isFullyListening(): Boolean =
+        (!wantsVolume() || isVolumeListening()) && (!wantsPower() || isPowerListening())
+
+    private fun updatePowerOverride() {
+        if (wantsPower() && isPowerListening()) {
+            PowerButtonGestures.onListenerAvailable(this, settingsRepo)
+        } else {
+            PowerButtonGestures.onListenerUnavailable(this, settingsRepo)
+        }
     }
 
     private var scope: CoroutineScope? = null
@@ -127,6 +151,7 @@ class InputEventListenerService : Service() {
         Shizuku.OnBinderDeadListener {
             Log.w("InputEventListener", "Shizuku binder died, stopping listener")
             stopListening()
+            PowerButtonGestures.onListenerUnavailable(this, settingsRepo)
         }
 
     override fun onCreate() {
@@ -191,11 +216,13 @@ class InputEventListenerService : Service() {
             while (isActive) {
                 if (!isFeatureEnabled()) {
                     stopListening()
+                    PowerButtonGestures.onListenerUnavailable(this@InputEventListenerService, settingsRepo)
                     stopSelf()
                     return@launch
                 }
-                if (detector?.isListening != true) startListeningNow()
-                val listening = detector?.isListening == true
+                if (!isFullyListening()) startListeningNow()
+                val listening = isFullyListening()
+                updatePowerOverride()
                 if (listening) {
                     retryDelay = WATCHDOG_RETRY_MS
                     delay(WATCHDOG_IDLE_MS)
@@ -214,7 +241,7 @@ class InputEventListenerService : Service() {
 
     private suspend fun startListeningNow() {
         startMutex.withLock {
-            if (detector?.isListening == true) return
+            if (isFullyListening()) return
             stopListening()
 
             val permitted =
@@ -231,6 +258,13 @@ class InputEventListenerService : Service() {
                 return
             }
 
+            if (wantsVolume()) startVolumeListening()
+            if (wantsPower()) startPowerListening()
+        }
+    }
+
+    private suspend fun startVolumeListening() {
+        run {
             val devices =
                 withContext(Dispatchers.IO) {
                     try {
@@ -369,10 +403,18 @@ class InputEventListenerService : Service() {
             }
 
             scope?.let { setListenerActive(activeDetector.startListening(it)) }
+        }
+    }
 
+    private suspend fun startPowerListening() {
+        run {
             val powerPaths =
                 withContext(Dispatchers.IO) {
-                    InputDeviceScanner().scanForPowerDevices(this@InputEventListenerService)
+                    try {
+                        InputDeviceScanner().scanForPowerDevices(this@InputEventListenerService)
+                    } catch (_: Exception) {
+                        emptyList()
+                    }
                 }
 
             powerPaths.forEach { path ->
@@ -428,7 +470,7 @@ class InputEventListenerService : Service() {
     }
 
     private fun ensureListening() {
-        if (detector?.isListening != true) startListening()
+        if (!isFullyListening()) startListening()
     }
 
     override fun onStartCommand(
@@ -470,6 +512,7 @@ class InputEventListenerService : Service() {
         Shizuku.removeBinderReceivedListener(binderReceivedListener)
         Shizuku.removeBinderDeadListener(binderDeadListener)
         stopListening()
+        PowerButtonGestures.onListenerUnavailable(this, settingsRepo)
         scope?.cancel()
         super.onDestroy()
     }
