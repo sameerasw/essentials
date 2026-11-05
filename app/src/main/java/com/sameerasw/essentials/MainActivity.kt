@@ -992,7 +992,7 @@ class MainActivity : AppCompatActivity() {
                                             listOf(
                                                 rememberSaveableStateHolderNavEntryDecorator(),
                                                 rememberViewModelStoreNavEntryDecorator(),
-                                                remember { AppNavTransitions.underlayCornerDecorator<AppRoute>() },
+                                                remember { AppNavTransitions.predictiveBackDecorator<AppRoute>() },
                                             ),
                                         transitionSpec = {
                                             if (initialState is TwoPaneScene || targetState is TwoPaneScene) AppNavTransitions.paneFade() else AppNavTransitions.push()

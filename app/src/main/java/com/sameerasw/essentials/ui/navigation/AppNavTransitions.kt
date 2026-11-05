@@ -11,6 +11,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.animation.togetherWith
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.animation.EnterExitState
@@ -26,6 +27,8 @@ import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.navigationevent.NavigationEvent
 import androidx.navigationevent.NavigationEventTransitionState
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
@@ -40,6 +43,7 @@ object AppNavTransitions {
 
     fun push(): ContentTransform {
         underlayMode = UnderlayMode.None
+        verticalPull = 0f
         return (
             slideInHorizontally(slideSpec) { it / 3 } +
                 fadeIn(tween(220, delayMillis = 40))
@@ -51,6 +55,7 @@ object AppNavTransitions {
 
     fun paneFade(): ContentTransform {
         underlayMode = UnderlayMode.None
+        verticalPull = 0f
         return ContentTransform(
             targetContentEnter = fadeIn(tween(180)),
             initialContentExit = fadeOut(tween(180)),
@@ -134,20 +139,67 @@ object AppNavTransitions {
     private const val FADE_START = 0.45f
     private const val FADE_END = 0.85f
 
+    const val VERTICAL_MAX = 0.08f
+    private const val VERTICAL_STIFFNESS = 3f
+
+    fun verticalElastic(dragFraction: Float): Float {
+        val d = kotlin.math.abs(dragFraction)
+        val v = 1f - 1f / (1f + d * VERTICAL_STIFFNESS)
+        return if (dragFraction < 0f) -v else v
+    }
+
+    @Volatile
+    private var verticalPull = 0f
+
+    private val predictiveVertical =
+        Easing { t ->
+            val p = releasedAt
+            when {
+                p < 0f -> verticalPull
+                t <= p && p > 0f -> verticalPull * (t / p)
+                else -> verticalPull
+            }
+        }
+
+    const val UNDERLAY_VERTICAL_RATIO = 0.4f
+
+    private val underlayVertical =
+        Easing { t ->
+            val p = releasedAt
+            val pull =
+                when {
+                    p < 0f -> verticalPull
+                    t <= p && p > 0f -> verticalPull * (t / p)
+                    else -> verticalPull * (1f - FastOutSlowInEasing.transform(((t - p) / (1f - p)).coerceIn(0f, 1f)))
+                }
+            1f - pull
+        }
+
     @Composable
     fun TrackPredictiveBackRelease() {
         val dispatcher = LocalNavigationEventDispatcherOwner.current?.navigationEventDispatcher ?: return
-        LaunchedEffect(dispatcher) {
+        val height = LocalWindowInfo.current.containerSize.height.toFloat().coerceAtLeast(1f)
+        LaunchedEffect(dispatcher, height) {
             var lastProgress = 0f
             var inGesture = false
+            var startY = 0f
             dispatcher.transitionState.collect { state ->
                 if (state is NavigationEventTransitionState.InProgress) {
-                    if (!inGesture) releasedAt = -1f
+                    val y = state.latestEvent.touchY
+                    if (!inGesture) {
+                        releasedAt = -1f
+                        startY = y
+                    }
                     inGesture = true
                     lastProgress = state.latestEvent.progress
+                    verticalPull = verticalElastic((y - startY) / height)
                 } else if (inGesture) {
                     inGesture = false
                     releasedAt = lastProgress
+                    launch {
+                        delay(600)
+                        if (!inGesture) verticalPull = 0f
+                    }
                 }
             }
         }
@@ -171,9 +223,21 @@ object AppNavTransitions {
         )
     }
 
-    fun <T : Any> underlayCornerDecorator(): NavEntryDecorator<T> =
+    fun <T : Any> predictiveBackDecorator(): NavEntryDecorator<T> =
         NavEntryDecorator { entry ->
             val scope = LocalNavAnimatedContentScope.current
+            val pull by scope.transition.animateFloat(
+                transitionSpec = {
+                    if (initialState == EnterExitState.PreEnter) {
+                        tween(400, easing = underlayVertical)
+                    } else {
+                        tween(400, easing = predictiveVertical)
+                    }
+                },
+                label = "verticalPull",
+            ) { state ->
+                if (state == EnterExitState.Visible) 0f else 1f
+            }
             val corner by scope.transition.animateFloat(
                 transitionSpec = {
                     when (underlayMode) {
@@ -190,6 +254,9 @@ object AppNavTransitions {
                     Modifier
                         .fillMaxSize()
                         .graphicsLayer {
+                            val entering = scope.transition.targetState == EnterExitState.Visible
+                            val ratio = if (entering) UNDERLAY_VERTICAL_RATIO else 1f
+                            translationY = pull * ratio * VERTICAL_MAX * size.height
                             if (corner > 0f) {
                                 shape = RoundedCornerShape(corner.dp)
                                 clip = true

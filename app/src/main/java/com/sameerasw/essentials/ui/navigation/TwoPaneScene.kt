@@ -15,6 +15,9 @@ import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.platform.LocalWindowInfo
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Animatable
 import androidx.activity.compose.PredictiveBackHandler
@@ -173,6 +176,8 @@ private fun DetailPane(
     val barHost = LocalBottomBarHost.current
     val gesture = remember { Animatable(0f) }
     val commit = remember { Animatable(0f) }
+    val vertical = remember { Animatable(0f) }
+    val windowHeight = LocalWindowInfo.current.containerSize.height.toFloat().coerceAtLeast(1f)
     val visibleState =
         remember {
             MutableTransitionState(paneNavigation?.lastNavWasPop?.invoke() == true).apply { targetState = true }
@@ -180,7 +185,10 @@ private fun DetailPane(
 
     PredictiveBackHandler(enabled = paneNavigation != null) { events ->
         try {
+            var startY = Float.NaN
             events.collect { event ->
+                if (startY.isNaN()) startY = event.touchY
+                vertical.snapTo(AppNavTransitions.verticalElastic((event.touchY - startY) / windowHeight))
                 gesture.snapTo(event.progress)
                 barHost?.dismissProgress = event.progress * AppNavTransitions.GESTURE_PHASE
             }
@@ -188,7 +196,10 @@ private fun DetailPane(
             paneNavigation?.pop?.invoke()
         } catch (e: CancellationException) {
             barHost?.dismissProgress = 0f
-            gesture.animateTo(0f, spring(dampingRatio = 0.9f, stiffness = 500f))
+            coroutineScope {
+                launch { vertical.animateTo(0f, spring(dampingRatio = 0.9f, stiffness = 500f)) }
+                gesture.animateTo(0f, spring(dampingRatio = 0.9f, stiffness = 500f))
+            }
         }
     }
 
@@ -211,6 +222,7 @@ private fun DetailPane(
                             scaleX = zoom
                             scaleY = zoom
                             translationX = -AppNavTransitions.UNDERLAY_SHIFT * underlay * size.width
+                            translationY = vertical.value * AppNavTransitions.VERTICAL_MAX * AppNavTransitions.UNDERLAY_VERTICAL_RATIO * (1f - c) * size.height
                             if (underlay > 0f) {
                                 shape = RoundedCornerShape((AppNavTransitions.UNDERLAY_CORNER * underlay).dp)
                                 clip = true
@@ -236,6 +248,7 @@ private fun DetailPane(
                     .fillMaxSize()
                     .graphicsLayer {
                         translationX = offset * size.width
+                        translationY = vertical.value * AppNavTransitions.VERTICAL_MAX * size.height
                         scaleX = scale
                         scaleY = scale
                         alpha = 1f - AppNavTransitions.commitFade(c)
