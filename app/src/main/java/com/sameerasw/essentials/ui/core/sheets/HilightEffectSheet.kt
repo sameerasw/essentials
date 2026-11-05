@@ -91,7 +91,6 @@ fun HilightEffectEditor(
                 IconToggleItem(
                     iconRes = R.drawable.rounded_palette_24,
                     title = stringResource(R.string.hilight_auto_color_title),
-                    description = stringResource(R.string.hilight_auto_color_desc),
                     isChecked = effect.autoColor,
                     onCheckedChange = { onEffectChange(effect.copy(autoColor = it)) },
                 )

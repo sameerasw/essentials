@@ -306,7 +306,6 @@
     <string name="hilight_brightness_value">%1$d%%</string>
     <string name="hilight_app_effect_summary_repeats">%1$s · %2$d×</string>
     <string name="hilight_auto_color_title">Match app color</string>
-    <string name="hilight_auto_color_desc">Use the app\'s icon color, or the one you set in Custom app colors</string>
     <string name="hilight_progress_title">Live progress</string>
     <string name="feat_hilight_notifications_title">Notification effects</string>
     <string name="feat_hilight_progress_desc">Show download and live update progress on the LEDs</string>

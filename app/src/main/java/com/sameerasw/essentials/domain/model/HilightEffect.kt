@@ -18,6 +18,7 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 @Keep
 enum class HilightPattern(
@@ -80,10 +81,28 @@ data class HilightEffect(
         const val DEFAULT_REPEATS = 3
         const val DEFAULT_LED_COUNT = 8
 
+        private const val MIN_LED_SATURATION = 0.25f
+        private const val MIN_LED_VALUE = 0.2f
+        private const val TARGET_LED_SATURATION = 0.7f
+
         fun appColorOr(
             appColor: Int,
             fallback: Int,
-        ): Int = if (appColor ushr 24 == 0) fallback else appColor
+        ): Int {
+            if (appColor ushr 24 == 0) return fallback
+            val r = (appColor shr 16) and 0xFF
+            val g = (appColor shr 8) and 0xFF
+            val b = appColor and 0xFF
+            val hi = maxOf(r, g, b)
+            val lo = minOf(r, g, b)
+            if (hi == 0) return fallback
+            val saturation = (hi - lo).toFloat() / hi
+            val value = hi / 255f
+            if (saturation < MIN_LED_SATURATION || value < MIN_LED_VALUE) return fallback
+            val boost = maxOf(saturation, TARGET_LED_SATURATION) / saturation
+            fun channel(c: Int): Int = (255f * (1f - (1f - c.toFloat() / hi) * boost)).roundToInt().coerceIn(0, 255)
+            return (0xFF shl 24) or (channel(r) shl 16) or (channel(g) shl 8) or channel(b)
+        }
     }
 }
 

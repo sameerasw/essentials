@@ -191,6 +191,19 @@ class HilightFramesTest {
     }
 
     @Test
+    fun appColorOrFallsBackForGreyAndDarkColors() {
+        assertEquals(red, HilightEffect.appColorOr(0xFF888888.toInt(), red))
+        assertEquals(red, HilightEffect.appColorOr(0xFFFFFFFF.toInt(), red))
+        assertEquals(red, HilightEffect.appColorOr(0xFF101820.toInt(), red))
+    }
+
+    @Test
+    fun appColorOrBoostsUsableColorsForLeds() {
+        assertEquals(0xFFFF0000.toInt(), HilightEffect.appColorOr(0xFF800000.toInt(), red))
+        assertEquals(0xFF4D4DFF.toInt(), HilightEffect.appColorOr(0xFF8080FF.toInt(), red))
+    }
+
+    @Test
     fun autoColorRoundTripsAndDefaultsOff() {
         val gson = Gson()
         val loaded = gson.fromJson(gson.toJson(HilightEffect(autoColor = true)), HilightEffect::class.java)
