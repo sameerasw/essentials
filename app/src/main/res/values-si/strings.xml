@@ -1494,4 +1494,5 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="duo_desc">This device doesn\'t fold</string>
 </resources>
