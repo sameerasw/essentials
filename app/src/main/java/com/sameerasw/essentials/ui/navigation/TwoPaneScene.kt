@@ -207,6 +207,14 @@ private fun DetailPane(
                     Modifier
                         .fillMaxSize()
                         .graphicsLayer {
+                            val zoom = 1f - (1f - AppNavTransitions.UNDERLAY_SCALE) * underlay
+                            scaleX = zoom
+                            scaleY = zoom
+                            translationX = -AppNavTransitions.UNDERLAY_SHIFT * underlay * size.width
+                            if (underlay > 0f) {
+                                shape = RoundedCornerShape((AppNavTransitions.UNDERLAY_CORNER * underlay).dp)
+                                clip = true
+                            }
                             val radius = (12f * underlay).dp.toPx()
                             renderEffect =
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && radius > 0.5f) {
@@ -230,6 +238,7 @@ private fun DetailPane(
                         translationX = offset * size.width
                         scaleX = scale
                         scaleY = scale
+                        alpha = 1f - AppNavTransitions.commitFade(c)
                         if (active) {
                             shape = RoundedCornerShape(corner.dp)
                             clip = true
