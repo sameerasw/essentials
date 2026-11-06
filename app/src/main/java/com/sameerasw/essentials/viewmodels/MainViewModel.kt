@@ -303,7 +303,7 @@ class MainViewModel : ViewModel() {
     val isIslandNotifHubPreferChatPictures = mutableStateOf(true)
     val islandNotifHubOrder = mutableStateOf(SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC)
     val islandNotifHubOverflow = mutableStateOf(com.sameerasw.essentials.island.model.QueueOverflow.Number)
-    val isIslandNotifTapToOpen = mutableStateOf(false)
+    val isIslandTapToOpenExpanded = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
     val isIslandOtpEnabled = mutableStateOf(false)
@@ -1022,8 +1022,8 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS ->
                         islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
 
-                    SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
-                        isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
+                    SettingsRepository.KEY_ISLAND_TAP_TO_OPEN_EXPANDED ->
+                        isIslandTapToOpenExpanded.value = settingsRepository.isIslandTapToOpenExpandedEnabled()
 
                     SettingsRepository.KEY_ISLAND_SHOW_NAVIGATION ->
                         isIslandShowNavigation.value = settingsRepository.isIslandShowNavigationEnabled()
@@ -2608,7 +2608,7 @@ class MainViewModel : ViewModel() {
         isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
         isIslandNotifHubPreferChatPictures.value = settingsRepository.isIslandNotifHubPreferChatPictures()
         islandNotifHubOverflow.value = settingsRepository.getIslandNotifHubOverflow()
-        isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
+        isIslandTapToOpenExpanded.value = settingsRepository.isIslandTapToOpenExpandedEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
@@ -6212,9 +6212,9 @@ class MainViewModel : ViewModel() {
         settingsRepository.updateIslandNotifFilterAppSelection(packageName, enabled)
     }
 
-    fun setIslandNotifTapToOpen(enabled: Boolean) {
-        isIslandNotifTapToOpen.value = enabled
-        settingsRepository.setIslandNotifTapToOpenEnabled(enabled)
+    fun setIslandTapToOpenExpanded(enabled: Boolean) {
+        isIslandTapToOpenExpanded.value = enabled
+        settingsRepository.setIslandTapToOpenExpandedEnabled(enabled)
     }
 
     fun setIslandNotifKeepProgress(enabled: Boolean) {

@@ -1838,6 +1838,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_line_peek_desc">Kurz Aktualisierungen auf der gesamten Insel anzeigen, dann zur Kompaktansicht zurückkehren</string>
     <string name="island_hide_in_owner_app_title">Komplikation innerhalb der App ausblenden</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
     <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
@@ -2045,8 +2046,6 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_battery_peek_alerts_title">Vorschaubenachrichtigungen einblenden </string>
     <string name="duo_battery_low_level_title">Niedriger Akkustand</string>
     <string name="duo_battery_critical_level_title">Kritischer Akkustand </string>
-    <string name="island_notif_tap_to_open_title">Tippen um Benachrichtigungen zu öffnen</string>
-    <string name="island_notif_tap_to_open_desc">Tippe auf eine erweiterte Benachrichtigung um die jeweilige App zu öffnen</string>
     <string name="island_notif_hub_title">Benachrichtigungszentrale</string>
     <string name="island_notif_hub_desc">Statusleistenbenachrichtigungen durch Island ersetzen</string>
     <string name="island_notif_hub_order_priority">Priorität</string>

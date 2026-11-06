@@ -256,6 +256,7 @@ class IslandCoordinator(
             },
         )
         controller.fallbackTapKey = { BriefPlugin.ITEM_KEY.takeIf { settings.isIslandBriefEnabled() } }
+        controller.opensOnExpandedTap = { it.key != BriefPlugin.ITEM_KEY && settings.isIslandTapToOpenExpandedEnabled() }
         controller.onStageChanged = { stage ->
             if (stage != IslandStage.Expanded) windowHost.setTextInput(false)
             windowHost.onStageChanged(stage)

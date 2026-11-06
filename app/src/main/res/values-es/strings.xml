@@ -1759,6 +1759,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_section_notifications">Notificaciones</string>
     <string name="island_hide_on_shade_title">Ocultar cuando Barra de Estado se desliza</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Ocultar al tocar fuera de la notificación</string>
     <string name="island_show_when_title">Mostrar al</string>
     <string name="island_show_when_unlocked">Desbloquear</string>

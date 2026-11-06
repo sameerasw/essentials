@@ -747,6 +747,7 @@ class SettingsRepository(
         const val ISLAND_NOTIF_HUB_ORDER_PRIORITY = "priority"
         const val ISLAND_NOTIF_HUB_ORDER_RECENT = "recent"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
+        const val KEY_ISLAND_TAP_TO_OPEN_EXPANDED = "island_tap_to_open_expanded"
         const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
         const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
         const val KEY_ISLAND_OTP_DISMISS_AFTER_COPY = "island_otp_dismiss_after_copy"
@@ -4557,8 +4558,9 @@ class SettingsRepository(
     fun updateIslandNotifFilterAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST, packageName, enabled)
 
-    fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
-    fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
+    fun isIslandTapToOpenExpandedEnabled(): Boolean =
+        getBoolean(KEY_ISLAND_TAP_TO_OPEN_EXPANDED, getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false))
+    fun setIslandTapToOpenExpandedEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TAP_TO_OPEN_EXPANDED, enabled)
 
     fun isIslandOtpEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_ENABLED, false)
     fun setIslandOtpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_OTP_ENABLED, enabled)
