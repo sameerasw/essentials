@@ -17,15 +17,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 
 @Composable
 fun RollingText(text: String, modifier: Modifier = Modifier, style: TextStyle = IslandTextStyles.compact) {
     val tracker = remember { DirectionTracker() }
     val rollDown = tracker.update(text)
+    // Enforce LTR layout for numeric/time displays on RTL locales while preserving RTL for text.
+    // See: https://github.com/sameerasw/essentials/issues/1555
     val direction = if (text.isRtlText()) LayoutDirection.Rtl else LayoutDirection.Ltr
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
         Row(modifier.clipToBounds()) {
