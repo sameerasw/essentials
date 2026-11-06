@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -66,6 +67,12 @@ fun IslandSoundModeOptionsBottomSheet(
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandSoundModeKeepIcon(checked)
                     },
+                )
+                IslandPrefToggle(
+                    settingKey = SettingsRepository.KEY_ISLAND_SOUND_MODE_VIBRATE_SHAKE,
+                    iconRes = R.drawable.rounded_mobile_vibrate_24,
+                    title = stringResource(R.string.island_sound_mode_vibrate_shake_title),
+                    defaultValue = true,
                 )
             }
         }

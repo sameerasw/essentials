@@ -14,6 +14,7 @@ import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.ExpandedContent
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
+import com.sameerasw.essentials.island.model.IslandShake
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
@@ -38,7 +39,7 @@ import java.util.Locale
 class CallPlugin : BaseIslandPlugin() {
     override val id = "call"
 
-    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_CALLS)
+    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_SHOW_CALLS, SettingsRepository.KEY_ISLAND_CALL_RING_SHAKE)
 
     private fun popUp() {
         val c = ctx ?: return
@@ -148,6 +149,7 @@ class CallPlugin : BaseIslandPlugin() {
                 key = ITEM_KEY,
                 priority = IslandPriority.CALL,
                 placement = CompactPlacement.Dynamic,
+                shake = IslandShake.Ringing.takeIf { ringing && settings.getBoolean(SettingsRepository.KEY_ISLAND_CALL_RING_SHAKE, true) },
                 compact = listOf(
                     CompactCell("call.avatar") { IslandBitmap(photo, 22.dp, circle = true, fallbackRes = R.drawable.rounded_call_24) },
                     if (ringing) {

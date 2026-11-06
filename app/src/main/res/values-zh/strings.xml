@@ -1647,7 +1647,6 @@
     <string name="island_border_outline_dynamic_title">自适应(随播放专辑主题色同步变化)</string>
     <string name="island_border_outline_hide_expanded_title">灵动岛展开后隐藏边框</string>
     <string name="island_border_outline_thickness_title">边框加粗</string>
-    <string name="island_pulse_shadow_size_title">边框发散光影</string>
     <string name="island_pulse_shadow_duration_title">持续时间</string>
     <string name="island_pulse_shadow_spread_title">扩散范围</string>
     <string name="duo_camera_offset_x_title">平移</string>
