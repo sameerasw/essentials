@@ -1837,6 +1837,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_line_peek_title">Linienansicht</string>
     <string name="island_line_peek_desc">Kurz Aktualisierungen auf der gesamten Insel anzeigen, dann zur Kompaktansicht zurückkehren</string>
     <string name="island_hide_in_owner_app_title">Komplikation innerhalb der App ausblenden</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
     <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>

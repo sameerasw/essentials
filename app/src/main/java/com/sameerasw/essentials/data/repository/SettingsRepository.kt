@@ -633,6 +633,7 @@ class SettingsRepository(
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_ANIMATION_SPEED = "island_animation_speed"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
+        const val KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP = "island_hide_media_in_owner_app"
         const val KEY_ISLAND_HIDE_ON_SHADE = "island_hide_on_shade"
         const val KEY_ISLAND_KEEP_ON_LANDSCAPE = "island_keep_on_landscape"
         const val KEY_ISLAND_KEEP_IN_FULLSCREEN = "island_keep_in_fullscreen"
@@ -4357,6 +4358,10 @@ class SettingsRepository(
 
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)
+
+    fun isIslandHideMediaInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, false)
+
+    fun setIslandHideMediaInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, enabled)
 
     fun isIslandKeepOnLandscapeEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
 

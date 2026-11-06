@@ -235,6 +235,7 @@ class MainViewModel : ViewModel() {
     val islandFontScale = mutableFloatStateOf(1f)
     val islandAnimationSpeed = mutableFloatStateOf(1f)
     val isIslandHideInOwnerApp = mutableStateOf(false)
+    val isIslandHideMediaInOwnerApp = mutableStateOf(false)
     val isIslandHideOnShade = mutableStateOf(false)
     val isIslandKeepOnLandscape = mutableStateOf(false)
     val isIslandKeepInFullscreen = mutableStateOf(false)
@@ -2524,6 +2525,7 @@ class MainViewModel : ViewModel() {
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
         islandAnimationSpeed.floatValue = settingsRepository.getIslandAnimationSpeed()
         isIslandHideInOwnerApp.value = settingsRepository.isIslandHideInOwnerAppEnabled()
+        isIslandHideMediaInOwnerApp.value = settingsRepository.isIslandHideMediaInOwnerAppEnabled()
         isIslandHideOnShade.value = settingsRepository.isIslandHideOnShadeEnabled()
         isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
         isIslandKeepInFullscreen.value = settingsRepository.isIslandKeepInFullscreenEnabled()
@@ -5956,6 +5958,11 @@ class MainViewModel : ViewModel() {
     fun setIslandDismissOnOutside(enabled: Boolean) {
         isIslandDismissOnOutside.value = enabled
         settingsRepository.setIslandDismissOnOutsideEnabled(enabled)
+    }
+
+    fun setIslandHideMediaInOwnerApp(enabled: Boolean) {
+        isIslandHideMediaInOwnerApp.value = enabled
+        settingsRepository.setIslandHideMediaInOwnerAppEnabled(enabled)
     }
 
     fun setIslandHideInOwnerApp(enabled: Boolean) {

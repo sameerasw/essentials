@@ -66,6 +66,7 @@ class IslandController(
     private var stickyFocus = false
 
     private var hiddenPackage: String? = null
+    private var hiddenSources: Set<String>? = null
     private var launcherOnlySources: Set<String> = emptySet()
     private var launcherOnlyProviders: Set<String> = emptySet()
     private var onLauncher = true
@@ -75,9 +76,10 @@ class IslandController(
         recompute()
     }
 
-    fun setHiddenPackage(packageName: String?) {
-        if (hiddenPackage == packageName) return
+    fun setHiddenPackage(packageName: String?, onlySources: Set<String>? = null) {
+        if (hiddenPackage == packageName && hiddenSources == onlySources) return
         hiddenPackage = packageName
+        hiddenSources = onlySources
         recompute()
     }
 
@@ -261,13 +263,14 @@ class IslandController(
     private fun allItems(): Map<String, IslandItem> =
         itemsBySource
             .flatMap { (source, items) ->
-                when {
+                val visible = when {
                     onLauncher -> items
                     source in launcherOnlySources -> items.filter { it.bypassLauncherOnly }
                     else -> items.filter { it.bypassLauncherOnly || it.key.substringBefore(':') !in launcherOnlyProviders }
                 }
+                val hideHere = hiddenPackage != null && hiddenSources?.contains(source) != false
+                if (hideHere) visible.filter { it.sourcePackage != hiddenPackage } else visible
             }
-            .filter { hiddenPackage == null || it.sourcePackage != hiddenPackage }
             .map(::inlineBubbleIfDisabled)
             .associateBy { it.key }
 

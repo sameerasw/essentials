@@ -34,7 +34,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class MediaPlugin : BaseIslandPlugin() {
-    override val id = "media"
+    override val id = ID
 
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_SHOW_MEDIA,
@@ -306,6 +306,7 @@ class MediaPlugin : BaseIslandPlugin() {
     }
 
     companion object {
+        const val ID = "media"
         const val ITEM_KEY = "media"
         private const val PAUSED_GRACE_MS = 3000L
     }

@@ -343,7 +343,11 @@ class IslandCoordinator(
     }
 
     private fun applyOwnerAppHiding() {
-        controller.setHiddenPackage(foregroundPackage.takeIf { settings.isIslandHideInOwnerAppEnabled() })
+        when {
+            settings.isIslandHideInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage)
+            settings.isIslandHideMediaInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage, setOf(MediaPlugin.ID))
+            else -> controller.setHiddenPackage(null)
+        }
     }
 
     fun updateConsciousGateState() {
@@ -798,7 +802,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR,
             SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, SettingsRepository.KEY_ISLAND_HIDE_ICONS -> syncStatusBar()
             SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
-            SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP -> applyOwnerAppHiding()
+            SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP, SettingsRepository.KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values, SettingsRepository.KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY -> applyLauncherOnly()
             SettingsRepository.KEY_ISLAND_HIDE_ON_SHADE -> applySuppression()
             SettingsRepository.KEY_ISLAND_PREVIEW_RING -> if (running) applyPreviewRing()
