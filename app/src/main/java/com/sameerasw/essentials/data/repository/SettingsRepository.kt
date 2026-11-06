@@ -718,6 +718,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
+        const val KEY_ISLAND_MEDIA_PLAYER_STYLE = "island_media_player_style"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
         const val KEY_ISLAND_NOTIF_PEEK_STYLE = "island_notif_peek_style"
@@ -4457,6 +4458,10 @@ class SettingsRepository(
     fun isIslandMediaUseArtColorEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, true)
 
     fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
+
+    fun getIslandMediaPlayerStyle(): String = getString(KEY_ISLAND_MEDIA_PLAYER_STYLE, null) ?: "default"
+
+    fun setIslandMediaPlayerStyle(style: String) = putString(KEY_ISLAND_MEDIA_PLAYER_STYLE, style)
 
     fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
     fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)

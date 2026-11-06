@@ -42,6 +42,7 @@ class MediaPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS,
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE,
         SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR,
+        SettingsRepository.KEY_ISLAND_MEDIA_PLAYER_STYLE,
     )
 
     private val ART_RETRY_DELAYS_MS = longArrayOf(1500L, 3000L)
@@ -181,6 +182,7 @@ class MediaPlugin : BaseIslandPlugin() {
             return
         }
         val artAccent = artAccent(t)
+        val playerStyle = MediaPlayerStyle.from(settings.getIslandMediaPlayerStyle())
         val isPlaying = playing
         val isLiked = liked
         val canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS)
@@ -218,7 +220,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, mediaAccent(artAccent)) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName)
+                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName, style = playerStyle)
                 },
                 accent = artAccent,
                 onOpen = { openPlayer() },
@@ -270,6 +272,7 @@ class MediaPlugin : BaseIslandPlugin() {
             canSkipForward = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_NEXT),
             packageName = t.packageName,
             playerAccent = t.accent?.let { Color(it) },
+            style = MediaPlayerStyle.from(settings.getIslandMediaPlayerStyle()),
         )
     }
 

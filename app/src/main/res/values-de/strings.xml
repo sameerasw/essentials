@@ -1951,6 +1951,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_timers_filter_apps_title">App-Filter</string>
     <string name="island_media_show_like_title">\"Gefällt mir\" Button  anzeigen</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_media_show_previous_title">\"Vorherige Titel\" Button anzeigen </string>
     <string name="island_media_keep_when_paused_title">Wiedergabefortsetzung beibehalten</string>
     <string name="island_caffeinate_show_time_title">Zeit anzeigen</string>

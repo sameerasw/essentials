@@ -188,6 +188,7 @@ fun EqualizerBars(
     color: Color,
     modifier: Modifier = Modifier,
     size: Dp = 18.dp,
+    outline: Color? = null,
 ) {
     val barColor = if (LocalIslandChipInk.current != null) Color.Black else color
     val levels = remember { mutableStateListOf(0.16f, 0.16f, 0.16f) }
@@ -209,6 +210,15 @@ fun EqualizerBars(
         val barWidth = this.size.width / 5f
         animated.forEachIndexed { i, level ->
             val h = this.size.height * level
+            if (outline != null) {
+                val pad = barWidth * 0.3f
+                drawRoundRect(
+                    color = outline,
+                    topLeft = Offset(barWidth * (i * 2f) - pad, (this.size.height - h) / 2f - pad),
+                    size = Size(barWidth + pad * 2f, h + pad * 2f),
+                    cornerRadius = CornerRadius(barWidth / 2f + pad),
+                )
+            }
             drawRoundRect(
                 color = barColor,
                 topLeft = Offset(barWidth * (i * 2f), (this.size.height - h) / 2f),

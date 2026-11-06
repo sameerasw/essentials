@@ -2020,4 +2020,5 @@
     <string name="tile_haptics">Вибрация</string>
     <string name="app_overcast">Погода</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
 </resources>

@@ -1929,6 +1929,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_media_show_previous_title">Botón de canción anterior</string>
     <string name="island_media_show_like_title">Botón de \"me gusta\"</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_in_fullscreen_title">Ocultar en pantalla completa</string>
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
     <string name="island_battery_icon_conditional_title">Icono para algunas condiciones</string>
