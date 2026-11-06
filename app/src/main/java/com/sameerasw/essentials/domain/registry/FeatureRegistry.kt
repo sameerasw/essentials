@@ -823,7 +823,7 @@ object FeatureRegistry {
                         ),
                         SearchSetting(
                             R.string.island_time_tap_opens_clock_title,
-                            R.string.island_time_tap_opens_clock_desc,
+                            R.string.island_show_time_title,
                             "island_show_time_battery",
                         ),
                         SearchSetting(
