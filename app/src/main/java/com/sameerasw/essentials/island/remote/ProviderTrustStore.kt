@@ -47,6 +47,10 @@ class ProviderTrustStore(private val settings: SettingsRepository) {
     fun setHideWhenLocked(packageName: String, on: Boolean) =
         setPackage(SettingsRepository.KEY_ISLAND_PROVIDERS_HIDE_LOCKED, packageName, on)
 
+    fun showOnUpdate(): Set<String> = settings.getIslandProvidersShowOnUpdate()
+
+    fun setShowOnUpdate(packageName: String, on: Boolean) = settings.setIslandProviderShowOnUpdate(packageName, on)
+
     private fun packages(key: String): Set<String> =
         settings.getString(key)
             ?.let { runCatching { gson.fromJson<List<String>>(it, object : TypeToken<List<String>>() {}.type) }.getOrNull() }

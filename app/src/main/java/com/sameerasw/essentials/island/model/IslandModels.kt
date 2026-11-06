@@ -150,6 +150,7 @@ class IslandItem(
     val priorityOverride: Int? = null,
     // Identifies the content currently shown, so a new one pulses even when the item key is unchanged.
     val contentId: String? = null,
+    val updateKey: String? = null,
     
     val compactVisible: Boolean = true,
     val needsCompanyAtCenter: Boolean = false,
@@ -182,6 +183,7 @@ class IslandItem(
         sourcePackage = sourcePackage,
         priorityOverride = priorityOverride,
         contentId = contentId,
+        updateKey = updateKey,
         compactVisible = true,
         needsCompanyAtCenter = needsCompanyAtCenter,
         sideBubble = null,

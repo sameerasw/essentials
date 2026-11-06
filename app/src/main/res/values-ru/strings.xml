@@ -1773,6 +1773,7 @@
     <string name="conscious_gate_select_apps_title">Выбрать приложения</string>
     <string name="status_glance_calendar_timeframe_title">Показывать предстоящие события в</string>
     <string name="island_launcher_only_title">Показывать только в лаунчере </string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="status_glance_calendar_show_all_day_title">Показывать события на весь день </string>
     <string name="conscious_gate_delay_title">Длительность паузы</string>
     <string name="conscious_gate_reappear_desc">Снова показывать экран паузы при непрерывном использовании приложения</string>
