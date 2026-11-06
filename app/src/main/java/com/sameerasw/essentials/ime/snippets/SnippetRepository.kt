@@ -101,16 +101,13 @@ class SnippetRepository private constructor(context: Context) {
         scope.launch { saveToFile(updated) }
     }
 
-    fun findMatching(word: String): List<Snippet> {
-        val query = word.trim()
-        if (query.isEmpty()) return emptyList()
-
-        val isTriggerPrefix = query.startsWith("!") || query.startsWith("/") || query.startsWith(":") || query.startsWith(";")
-        return _snippets.value.filter { snippet ->
-            snippet.keyword.equals(query, ignoreCase = true) ||
-                (isTriggerPrefix && snippet.keyword.startsWith(query, ignoreCase = true))
-        }
+    fun addSnippets(newSnippets: List<Snippet>) {
+        if (newSnippets.isEmpty()) return
+        val updated = _snippets.updateAndGet { current -> current + newSnippets }
+        scope.launch { saveToFile(updated) }
     }
+
+    fun findMatching(word: String): List<Snippet> = SnippetMatcher.findMatching(word, _snippets.value)
 
     companion object {
         private const val TAG = "SnippetRepository"

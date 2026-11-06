@@ -2406,6 +2406,30 @@ object FeatureRegistry {
                             "keyboard_haptics",
                             R.array.keywords_vibration,
                         ),
+                        SearchSetting(
+                            R.string.label_keyboard_snippets,
+                            R.string.desc_keyboard_snippets,
+                            "keyboard_snippets",
+                            R.array.keywords_snippets,
+                        ),
+                        SearchSetting(
+                            R.string.snippets_universal_title,
+                            R.string.snippets_universal_desc,
+                            "snippets_universal",
+                            R.array.keywords_snippets,
+                        ),
+                        SearchSetting(
+                            R.string.snippets_universal_auto_expand,
+                            R.string.snippets_universal_auto_expand_desc,
+                            "snippets_universal_auto_expand",
+                            R.array.keywords_snippets,
+                        ),
+                        SearchSetting(
+                            R.string.snippets_display_style_title,
+                            R.string.snippets_display_style_desc,
+                            "snippets_display_style",
+                            R.array.keywords_snippets,
+                        ),
                     ),
                 parentFeatureId = "Input",
             ) {

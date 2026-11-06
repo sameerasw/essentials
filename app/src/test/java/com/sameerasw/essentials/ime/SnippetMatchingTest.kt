@@ -4,163 +4,145 @@
  *
  * Feature Module: Unit Tests - IME
  * File: SnippetMatchingTest.kt
- * Description: Unit tests for Raycast-style snippet prefix matching and case-insensitivity.
+ * Description: Unit tests for snippet matching, the typing pre-check and in-field replacement.
  */
 
 package com.sameerasw.essentials.ime
 
 import com.sameerasw.essentials.ime.snippets.Snippet
+import com.sameerasw.essentials.ime.snippets.SnippetMatcher
+import com.sameerasw.essentials.ime.snippets.SnippetReplacement
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SnippetMatchingTest {
+    private val snippets =
+        listOf(
+            Snippet(title = "Current Date", keyword = "!date", content = "{date}"),
+            Snippet(title = "Shrug", keyword = "!shrug", content = "¯\\_(ツ)_/¯"),
+            Snippet(title = "Email Address", keyword = "/email", content = "user@example.com"),
+            Snippet(title = "Phone Number", keyword = ":phone", content = "+123456789"),
+            Snippet(title = "Meeting Link", keyword = ";meet", content = "https://meet.google.com/xyz"),
+        )
 
-    private val snippets = listOf(
-        Snippet(title = "Current Date", keyword = "!date", content = "{date}"),
-        Snippet(title = "Shrug", keyword = "!shrug", content = "¯\\_(ツ)_/¯"),
-        Snippet(title = "Email Address", keyword = "/email", content = "user@example.com"),
-        Snippet(title = "Phone Number", keyword = ":phone", content = "+123456789"),
-        Snippet(title = "Meeting Link", keyword = ";meet", content = "https://meet.google.com/xyz"),
-    )
-
-    private fun findMatching(word: String, list: List<Snippet>): List<Snippet> {
-        val query = word.trim()
-        if (query.isEmpty()) return emptyList()
-
-        val isTriggerPrefix = query.startsWith("!") || query.startsWith("/") || query.startsWith(":") || query.startsWith(";")
-        return list.filter { snippet ->
-            snippet.keyword.equals(query, ignoreCase = true) ||
-                (isTriggerPrefix && snippet.keyword.startsWith(query, ignoreCase = true))
-        }
-    }
+    private fun find(word: String) = SnippetMatcher.findMatching(word, snippets)
 
     @Test
     fun findMatching_exactKeyword_matchesCaseInsensitive() {
-        val resultsLower = findMatching("!date", snippets)
-        assertEquals(1, resultsLower.size)
-        assertEquals("!date", resultsLower.first().keyword)
-
-        val resultsUpper = findMatching("!DATE", snippets)
-        assertEquals(1, resultsUpper.size)
-        assertEquals("!date", resultsUpper.first().keyword)
+        assertEquals(listOf("!date"), find("!date").map { it.keyword })
+        assertEquals(listOf("!date"), find("!DATE").map { it.keyword })
     }
 
     @Test
     fun findMatching_triggerPrefix_matchesCandidates() {
-        val resultsExclamation = findMatching("!", snippets)
-        assertEquals(2, resultsExclamation.size)
-
-        val resultsSlash = findMatching("/em", snippets)
-        assertEquals(1, resultsSlash.size)
-        assertEquals("/email", resultsSlash.first().keyword)
-
-        val resultsColon = findMatching(":ph", snippets)
-        assertEquals(1, resultsColon.size)
-        assertEquals(":phone", resultsColon.first().keyword)
-
-        val resultsSemicolon = findMatching(";me", snippets)
-        assertEquals(1, resultsSemicolon.size)
-        assertEquals(";meet", resultsSemicolon.first().keyword)
+        assertEquals(2, find("!").size)
+        assertEquals(listOf("/email"), find("/em").map { it.keyword })
+        assertEquals(listOf(":phone"), find(":ph").map { it.keyword })
+        assertEquals(listOf(";meet"), find(";me").map { it.keyword })
     }
 
     @Test
     fun findMatching_ordinaryText_doesNotTriggerSubstringMatching() {
-        // Normal typing like "the", "date", "shrug" should not trigger prefix matching unless explicit trigger prefix is typed
-        val resultsOrdinary = findMatching("sh", snippets)
-        assertTrue(resultsOrdinary.isEmpty())
-
-        val resultsTitleSubstring = findMatching("Date", snippets)
-        assertTrue(resultsTitleSubstring.isEmpty())
+        assertTrue(find("sh").isEmpty())
+        assertTrue(find("Date").isEmpty())
     }
 
     @Test
     fun findMatching_emptyQuery_returnsEmpty() {
-        val results = findMatching("   ", snippets)
-        assertTrue(results.isEmpty())
-    }
-
-    private fun calculateReplacementIndex(fullText: String, cursor: Int, targetWord: String): Int {
-        return if (cursor in targetWord.length..fullText.length &&
-            fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
-        ) {
-            cursor - targetWord.length
-        } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
-            fullText.length - targetWord.length
-        } else if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
-            val trimmed = fullText.trimEnd()
-            trimmed.length - targetWord.trimEnd().length
-        } else {
-            -1
-        }
+        assertTrue(find("   ").isEmpty())
     }
 
     @Test
-    fun replaceKeyword_cursorAtEnd_calculatesCorrectIndex() {
+    fun mightTrigger_ordinaryTyping_isFalse() {
+        assertFalse(SnippetMatcher.mightTrigger("Hello wor", snippets, autoExpandEnabled = true))
+        assertFalse(SnippetMatcher.mightTrigger("see you at 5 ", snippets, autoExpandEnabled = true))
+    }
+
+    @Test
+    fun mightTrigger_triggerPrefixOrKeyword_isTrue() {
+        assertTrue(SnippetMatcher.mightTrigger("hello !da", snippets, autoExpandEnabled = false))
+        assertTrue(SnippetMatcher.mightTrigger("hello !date", snippets, autoExpandEnabled = false))
+    }
+
+    @Test
+    fun mightTrigger_spaceAfterKeyword_onlyWhenAutoExpandOn() {
+        assertTrue(SnippetMatcher.mightTrigger("hello !date ", snippets, autoExpandEnabled = true))
+        assertFalse(SnippetMatcher.mightTrigger("hello !date ", snippets, autoExpandEnabled = false))
+        assertFalse(SnippetMatcher.mightTrigger("hello !unknown ", snippets, autoExpandEnabled = true))
+    }
+
+    @Test
+    fun replace_cursorAtEnd_replacesKeyword() {
         val text = "Meeting today at !time "
-        val index = calculateReplacementIndex(text, text.length, "!time ")
-        assertEquals(text.indexOf("!time "), index)
+        val result = SnippetReplacement.compute(text, text.length, "!time ", "5:00 pm ")
+        assertEquals("Meeting today at 5:00 pm ", result?.newText)
+        assertEquals(result?.newText?.length, result?.cursor)
     }
 
     @Test
-    fun replaceKeyword_withTrailingWhitespace_calculatesCorrectIndex() {
-        val text = "Search !date  "
-        val index = calculateReplacementIndex(text, -1, "!date")
-        assertEquals(text.indexOf("!date"), index)
+    fun replace_keywordAlsoAtEndOfText_doesNotDeleteTextAfterCursor() {
+        // Regression: the old logic replaced from the first keyword to the end of the field.
+        val text = "!date foo !date"
+        val cursor = "!date ".length
+        val result = SnippetReplacement.compute(text, cursor, "!date ", "2026-10-18 ")
+        assertEquals("2026-10-18 foo !date", result?.newText)
+        assertEquals("2026-10-18 ".length, result?.cursor)
     }
 
     @Test
-    fun replaceKeyword_cursorInMiddle_doesNotReplaceEarlierOccurrence() {
-        val text = "!date and some text and !date"
-        val secondIndex = text.lastIndexOf("!date")
-        val index = calculateReplacementIndex(text, text.length, "!date")
-        assertEquals(secondIndex, index)
-    }
-
-    @Test
-    fun replaceKeyword_cursorMismatched_returnsNegativeOne() {
-        val text = "Here is !date and typing here"
-        val index = calculateReplacementIndex(text, text.length, "!date")
-        assertEquals(-1, index)
-    }
-
-    private fun buildReplacementText(fullText: String, cursor: Int, targetWord: String, replacement: String): String? {
-        val targetIndex =
-            if (cursor in targetWord.length..fullText.length &&
-                fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
-            ) {
-                cursor - targetWord.length
-            } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
-                fullText.length - targetWord.length
-            } else if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
-                val trimmed = fullText.trimEnd()
-                trimmed.length - targetWord.trimEnd().length
-            } else {
-                return null
-            }
-
-        val actualWordEnd =
-            if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
-                fullText.length
-            } else {
-                (targetIndex + targetWord.length).coerceAtMost(fullText.length)
-            }
-
-        return fullText.substring(0, targetIndex) + replacement + fullText.substring(actualWordEnd)
-    }
-
-    @Test
-    fun buildReplacementText_replacesCleanlyWithoutDoubleTrailingSpaces() {
-        val text = "Search !date  "
-        val replaced = buildReplacementText(text, -1, "!date", "2026-10-18 ")
-        assertEquals("Search 2026-10-18 ", replaced)
-    }
-
-    @Test
-    fun buildReplacementText_middleCursor_preservesSurroundingText() {
+    fun replace_cursorInMiddle_preservesSurroundingText() {
         val text = "Before !date after"
         val cursor = text.indexOf("!date") + "!date".length
-        val replaced = buildReplacementText(text, cursor, "!date", "2026-10-18 ")
-        assertEquals("Before 2026-10-18  after", replaced)
+        val result = SnippetReplacement.compute(text, cursor, "!date", "2026-10-18 ")
+        assertEquals("Before 2026-10-18  after", result?.newText)
+    }
+
+    @Test
+    fun replace_laterOccurrence_usesCursorNotLastIndexOf() {
+        val text = "!date and some text and !date"
+        val firstEnd = "!date".length
+        val result = SnippetReplacement.compute(text, firstEnd, "!date", "X")
+        assertEquals("X and some text and !date", result?.newText)
+    }
+
+    @Test
+    fun replace_cursorMismatched_returnsNullAndNeverGuesses() {
+        val text = "Here is !date and typing here"
+        assertNull(SnippetReplacement.compute(text, text.length, "!date", "X"))
+    }
+
+    @Test
+    fun replace_noSelectionReported_replacesOnlyTrailingKeyword() {
+        val text = "Search !date"
+        val result = SnippetReplacement.compute(text, -1, "!date", "2026-10-18 ")
+        assertEquals("Search 2026-10-18 ", result?.newText)
+    }
+
+    @Test
+    fun replace_noSelectionReported_toleratesTrailingWhitespaceOnly() {
+        val text = "Search !date  "
+        val result = SnippetReplacement.compute(text, -1, "!date", "X")
+        assertEquals("Search X  ", result?.newText)
+    }
+
+    @Test
+    fun replace_noSelectionReported_keywordInMiddle_returnsNull() {
+        assertNull(SnippetReplacement.compute("!date and more", -1, "!date", "X"))
+    }
+
+    @Test
+    fun replace_isCaseInsensitive() {
+        val result = SnippetReplacement.compute("say !DATE", "say !DATE".length, "!date", "today")
+        assertNotNull(result)
+        assertEquals("say today", result?.newText)
+    }
+
+    @Test
+    fun replace_emptyTarget_returnsNull() {
+        assertNull(SnippetReplacement.compute("abc", 3, "", "X"))
     }
 }

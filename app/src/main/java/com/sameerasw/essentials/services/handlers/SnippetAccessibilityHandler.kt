@@ -32,6 +32,8 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ime.snippets.Snippet
 import com.sameerasw.essentials.ime.snippets.SnippetExpander
+import com.sameerasw.essentials.ime.snippets.SnippetMatcher
+import com.sameerasw.essentials.ime.snippets.SnippetReplacement
 import com.sameerasw.essentials.ime.snippets.SnippetRepository
 import com.sameerasw.essentials.island.service.IslandCoordinator
 import com.sameerasw.essentials.island.service.OverlayLifecycleOwner
@@ -80,6 +82,8 @@ class SnippetAccessibilityHandler(
     @Volatile
     private var isPerformingReplacement = false
 
+    private var suggestionActive = false
+
     fun updateSettings() {
         isUniversalEnabled = settingsRepository.isSnippetsUniversalEnabled()
         isAutoExpandEnabled = settingsRepository.isSnippetsUniversalAutoExpandEnabled()
@@ -115,6 +119,15 @@ class SnippetAccessibilityHandler(
 
         val eventPkg = event.packageName?.toString().orEmpty()
         if (eventPkg == service.packageName) return
+
+        // Cheap exit for ordinary typing, before any accessibility node work.
+        val eventText = event.text.joinToString("")
+        if (eventText.isNotEmpty() &&
+            !SnippetMatcher.mightTrigger(eventText, snippetRepository.snippets.value, isAutoExpandEnabled)
+        ) {
+            if (suggestionActive) dismissAllSuggestions()
+            return
+        }
 
         val sourceNode = event.source ?: return
         if (event.isPassword || sourceNode.isPassword || isPasswordField(sourceNode)) return
@@ -160,9 +173,7 @@ class SnippetAccessibilityHandler(
 
             if (candidateWord.isNotBlank()) {
                 val matchingSnippet =
-                    snippetRepository.snippets.value.firstOrNull { snippet ->
-                        snippet.keyword.equals(candidateWord, ignoreCase = true)
-                    }
+                    SnippetMatcher.findExact(candidateWord, snippetRepository.snippets.value)
 
                 if (matchingSnippet != null && matchingSnippet.autoExpandOnSpace) {
                     val expanded = SnippetExpander.expand(matchingSnippet.content, service)
@@ -209,42 +220,18 @@ class SnippetAccessibilityHandler(
                 ?: lastKnownText.takeIf { it.isNotEmpty() }
                 ?: return false
 
-            val cursor = node.textSelectionEnd
-            // Verify cursor is at the end of targetWord to prevent replacing arbitrary occurrences
-            val targetIndex =
-                if (cursor in targetWord.length..fullText.length &&
-                    fullText.substring(cursor - targetWord.length, cursor).equals(targetWord, ignoreCase = true)
-                ) {
-                    cursor - targetWord.length
-                } else if (fullText.endsWith(targetWord, ignoreCase = true)) {
-                    fullText.length - targetWord.length
-                } else if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
-                    val trimmed = fullText.trimEnd()
-                    trimmed.length - targetWord.trimEnd().length
-                } else {
-                    return false
-                }
-
-            val actualWordEnd =
-                if (fullText.trimEnd().endsWith(targetWord.trimEnd(), ignoreCase = true)) {
-                    fullText.length
-                } else {
-                    (targetIndex + targetWord.length).coerceAtMost(fullText.length)
-                }
-
-            val newText =
-                fullText.substring(0, targetIndex) +
-                    replacement +
-                    fullText.substring(actualWordEnd)
+            val result =
+                SnippetReplacement.compute(fullText, node.textSelectionEnd, targetWord, replacement)
+                    ?: return false
 
             val args =
                 Bundle().apply {
-                    putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, newText)
+                    putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, result.newText)
                 }
             val success = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
             if (!success) return false
 
-            val newCursorPos = (targetIndex + replacement.length).coerceIn(0, newText.length)
+            val newCursorPos = result.cursor.coerceIn(0, result.newText.length)
             val cursorArgs =
                 Bundle().apply {
                     putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, newCursorPos)
@@ -331,6 +318,7 @@ class SnippetAccessibilityHandler(
     }
 
     private fun showSuggestion(snippet: Snippet) {
+        suggestionActive = true
         val mode = settingsRepository.getSnippetsSuggestionDisplayMode()
         val onExpand = { expandSnippet(snippet) }
 
@@ -386,6 +374,7 @@ class SnippetAccessibilityHandler(
     }
 
     fun dismissAllSuggestions() {
+        suggestionActive = false
         hideFloatingPill()
         islandCoordinator?.hideSnippet()
         duoOverlayHandler?.hideSnippetSuggestion()

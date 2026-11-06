@@ -10,6 +10,9 @@
 
 package com.sameerasw.essentials.ui.features.apps.sheets
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +48,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,11 +63,16 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ime.snippets.Snippet
+import com.sameerasw.essentials.ime.snippets.SnippetBackup
+import com.sameerasw.essentials.ime.snippets.SnippetKeywordRules
 import com.sameerasw.essentials.ime.snippets.SnippetRepository
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +88,56 @@ fun SnippetsBottomSheet(
     var editingSnippet by remember { mutableStateOf<Snippet?>(null) }
     var isCreatingNew by remember { mutableStateOf(false) }
     var deletingSnippet by remember { mutableStateOf<Snippet?>(null) }
+    val scope = rememberCoroutineScope()
+
+    fun toast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    val exportLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            scope.launch {
+                val ok =
+                    withContext(Dispatchers.IO) {
+                        runCatching {
+                            context.contentResolver.openOutputStream(uri)?.use {
+                                it.write(SnippetBackup.toJson(repository.snippets.value).toByteArray(Charsets.UTF_8))
+                            } != null
+                        }.getOrDefault(false)
+                    }
+                toast(
+                    context.getString(
+                        if (ok) R.string.snippets_export_done else R.string.snippets_export_failed,
+                    ),
+                )
+            }
+        }
+
+    val importLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            scope.launch {
+                val result =
+                    withContext(Dispatchers.IO) {
+                        runCatching {
+                            context.contentResolver.openInputStream(uri)?.use { SnippetBackup.read(it) }
+                        }.getOrNull()?.let { SnippetBackup.parse(it, repository.snippets.value) }
+                    }
+                if (result == null) {
+                    toast(context.getString(R.string.snippets_import_invalid))
+                } else {
+                    repository.addSnippets(result.imported)
+                    toast(
+                        context.getString(
+                            R.string.snippets_import_done,
+                            result.imported.size,
+                            result.skipped,
+                        ),
+                    )
+                }
+            }
+        }
 
     val filteredSnippets =
         remember(snippets, searchQuery) {
@@ -124,6 +183,7 @@ fun SnippetsBottomSheet(
         val initial = editingSnippet
         SnippetEditSheet(
             snippet = initial,
+            existing = snippets,
             onDismissRequest = {
                 isCreatingNew = false
                 editingSnippet = null
@@ -192,6 +252,50 @@ fun SnippetsBottomSheet(
                                 text = stringResource(R.string.desc_keyboard_snippets),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Backup: export / import snippets as JSON
+            item(key = "backup_actions") {
+                RoundedCardContainer(spacing = 2.dp) {
+                    listOf(
+                        Triple(
+                            R.drawable.rounded_save_24,
+                            R.string.snippets_export,
+                            { exportLauncher.launch("essentials-snippets.json") },
+                        ),
+                        Triple(
+                            R.drawable.rounded_download_24,
+                            R.string.snippets_import,
+                            { importLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) },
+                        ),
+                    ).forEach { (icon, label, action) ->
+                        Row(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.surfaceBright)
+                                    .clickable {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        action()
+                                    }
+                                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                painter = painterResource(icon),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp),
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            Text(
+                                text = stringResource(label),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                     }
@@ -364,6 +468,7 @@ fun SnippetsBottomSheet(
 @Composable
 private fun SnippetEditSheet(
     snippet: Snippet?,
+    existing: List<Snippet>,
     onDismissRequest: () -> Unit,
     onSave: (Snippet) -> Unit,
 ) {
@@ -373,7 +478,15 @@ private fun SnippetEditSheet(
     var content by remember { mutableStateOf(snippet?.content.orEmpty()) }
     var autoExpandOnSpace by remember { mutableStateOf(snippet?.autoExpandOnSpace ?: true) }
 
-    val isValid = keyword.isNotBlank() && content.isNotBlank()
+    // An untouched legacy keyword may keep saving so old snippets stay editable.
+    val keywordProblem =
+        if (snippet != null && keyword.trim() == snippet.keyword) {
+            null
+        } else {
+            SnippetKeywordRules.validate(keyword, existing, snippet?.id)
+        }
+    val showKeywordError = keyword.isNotEmpty() && keywordProblem != null
+    val isValid = keywordProblem == null && content.isNotBlank()
 
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -412,6 +525,19 @@ private fun SnippetEditSheet(
                 onValueChange = { keyword = it },
                 label = { Text(stringResource(R.string.snippets_keyword)) },
                 placeholder = { Text(stringResource(R.string.snippets_keyword_placeholder)) },
+                isError = showKeywordError,
+                supportingText = {
+                    Text(
+                        stringResource(
+                            if (keywordProblem != null && showKeywordError) {
+                                keywordProblemMessage(keywordProblem)
+                            } else {
+                                R.string.snippets_keyword_hint
+                            },
+                            SnippetKeywordRules.MAX_LENGTH,
+                        ),
+                    )
+                },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -507,6 +633,16 @@ private fun SnippetEditSheet(
         }
     }
 }
+
+private fun keywordProblemMessage(problem: SnippetKeywordRules.Problem): Int =
+    when (problem) {
+        SnippetKeywordRules.Problem.Empty -> R.string.snippets_keyword_hint
+        SnippetKeywordRules.Problem.ContainsWhitespace -> R.string.snippets_keyword_error_whitespace
+        SnippetKeywordRules.Problem.MissingTrigger -> R.string.snippets_keyword_error_trigger
+        SnippetKeywordRules.Problem.TriggerOnly -> R.string.snippets_keyword_error_trigger_only
+        SnippetKeywordRules.Problem.TooLong -> R.string.snippets_keyword_error_too_long
+        SnippetKeywordRules.Problem.Duplicate -> R.string.snippets_keyword_error_duplicate
+    }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

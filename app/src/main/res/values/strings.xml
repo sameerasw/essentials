@@ -28,7 +28,7 @@
     <string name="shut_up_restore_keyboard">Restore keyboard</string>
     <string name="shut_up_restore_delay_title">Restoration Delay</string>
     <string name="shut_up_restore_delay_desc">Wait time before restoring settings after exiting a Shut-Up! app</string>
-    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<b>• Text Snippets (optional, off by default):</b>\nWhen you turn on external keyboard support, the typed text in the field you are editing is read on this device only to expand your snippet keywords. Text in password fields is ignored. It is never stored or transmitted.\n\n<small>Apart from the optional Text Snippets feature, no input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">App Freezing</string>
     <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
     <string name="freeze_shortcut_short_label">Frozen Apps</string>
@@ -1734,6 +1734,16 @@
         <item>padding</item>
         <item>haptic</item>
         <item>input</item>
+    </string-array>
+    <string-array name="keywords_snippets">
+        <item>snippet</item>
+        <item>text</item>
+        <item>expand</item>
+        <item>shortcut</item>
+        <item>template</item>
+        <item>keyboard</item>
+        <item>autocomplete</item>
+        <item>raycast</item>
     </string-array>
     <string-array name="keywords_flashlight">
         <item>light</item>
@@ -3702,6 +3712,18 @@
     <string name="snippets_content_placeholder">Expanded snippet text</string>
     <string name="snippets_selected">Selected</string>
     <string name="snippets_external_keyboards_header">Gboard &amp; external keyboards</string>
+    <string name="snippets_keyword_hint">Start with !, /, : or ; and use no spaces</string>
+    <string name="snippets_keyword_error_whitespace">The keyword cannot contain spaces</string>
+    <string name="snippets_keyword_error_trigger">Start the keyword with !, /, : or ; so normal words are never replaced</string>
+    <string name="snippets_keyword_error_trigger_only">Add at least one character after the trigger</string>
+    <string name="snippets_keyword_error_too_long">Use at most %1$d characters</string>
+    <string name="snippets_keyword_error_duplicate">Another snippet already uses this keyword</string>
+    <string name="snippets_export">Export snippets</string>
+    <string name="snippets_import">Import snippets</string>
+    <string name="snippets_export_done">Snippets exported</string>
+    <string name="snippets_export_failed">Could not export snippets</string>
+    <string name="snippets_import_invalid">This file is not a valid snippets backup</string>
+    <string name="snippets_import_done">Imported %1$d, skipped %2$d</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
     <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
