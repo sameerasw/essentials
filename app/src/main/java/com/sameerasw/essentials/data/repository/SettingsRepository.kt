@@ -471,6 +471,11 @@ class SettingsRepository(
         const val KEY_PIXEL_SEARCH_RESULT_FILES = "pixel_search_result_files"
         const val KEY_PIXEL_SEARCH_BUBBLES_WEB = "pixel_search_bubbles_web"
         const val KEY_PIXEL_SEARCH_ENGINE = "pixel_search_engine"
+        const val KEY_PIXEL_SEARCH_BLUR = "pixel_search_blur_enabled"
+        const val KEY_PIXEL_SEARCH_WALLPAPER_BG = "pixel_search_wallpaper_bg"
+        const val KEY_PIXEL_SEARCH_BLUR_RADIUS = "pixel_search_blur_radius"
+        const val KEY_PIXEL_SEARCH_SCRIM_AUTO = "pixel_search_scrim_auto"
+        const val KEY_PIXEL_SEARCH_SCRIM_ALPHA = "pixel_search_scrim_alpha"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_USE_RIPPLE = "use_ripple"
@@ -3790,6 +3795,21 @@ class SettingsRepository(
 
     fun getPixelSearchEngine(): String = getString(KEY_PIXEL_SEARCH_ENGINE, "Google") ?: "Google"
     fun setPixelSearchEngine(engine: String) = putString(KEY_PIXEL_SEARCH_ENGINE, engine)
+
+    fun isPixelSearchBlurEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_BLUR, true)
+    fun setPixelSearchBlurEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_BLUR, enabled)
+
+    fun isPixelSearchWallpaperBackgroundEnabled(): Boolean = getBoolean(KEY_PIXEL_SEARCH_WALLPAPER_BG, true)
+    fun setPixelSearchWallpaperBackgroundEnabled(enabled: Boolean) = putBoolean(KEY_PIXEL_SEARCH_WALLPAPER_BG, enabled)
+
+    fun getPixelSearchBlurRadius(): Float = getFloat(KEY_PIXEL_SEARCH_BLUR_RADIUS, 60f)
+    fun setPixelSearchBlurRadius(radius: Float) = putFloat(KEY_PIXEL_SEARCH_BLUR_RADIUS, radius)
+
+    fun isPixelSearchScrimAuto(): Boolean = getBoolean(KEY_PIXEL_SEARCH_SCRIM_AUTO, true)
+    fun setPixelSearchScrimAuto(auto: Boolean) = putBoolean(KEY_PIXEL_SEARCH_SCRIM_AUTO, auto)
+
+    fun getPixelSearchScrimAlpha(): Float = getFloat(KEY_PIXEL_SEARCH_SCRIM_ALPHA, 0.55f)
+    fun setPixelSearchScrimAlpha(alpha: Float) = putFloat(KEY_PIXEL_SEARCH_SCRIM_ALPHA, alpha)
 
     fun isBubbleWebFullscreen(): Boolean = getBoolean(KEY_BUBBLE_WEB_FULLSCREEN, false)
     fun setBubbleWebFullscreen(fullscreen: Boolean) = putBoolean(KEY_BUBBLE_WEB_FULLSCREEN, fullscreen)

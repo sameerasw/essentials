@@ -75,7 +75,10 @@ fun UnsupportedFeaturesConfirmationSheet(
             )
 
             RoundedCardContainer(
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false),
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),

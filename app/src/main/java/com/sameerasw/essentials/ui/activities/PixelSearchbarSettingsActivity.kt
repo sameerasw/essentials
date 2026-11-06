@@ -90,6 +90,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.FeatureHelpBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PixelSearchBlurOptionsBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.ShakeForHelp
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
@@ -320,6 +321,7 @@ fun PixelSearchbarSettingsUI(
     var pendingWidgetId by remember { mutableStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
     var showWidgetPicker by remember { mutableStateOf(false) }
     var isWidgetUnsupported by remember { mutableStateOf(false) }
+    var showBlurOptionsSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentType) {
         while (currentType == "widget") {
@@ -981,9 +983,31 @@ fun PixelSearchbarSettingsUI(
                             }
                         }
                     }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val blurEnabled = viewModel.pixelSearchBlur.value
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_blur_on_24,
+                            title = stringResource(R.string.pref_pixel_search_blur_title),
+                            description = stringResource(R.string.pref_pixel_search_blur_desc),
+                            isChecked = blurEnabled,
+                            onCheckedChange = { checked ->
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setPixelSearchBlurEnabled(checked)
+                            },
+                            onSettingsClick = { showBlurOptionsSheet = true },
+                        )
+                    }
                 }
             }
         }
+    }
+
+    if (showBlurOptionsSheet) {
+        PixelSearchBlurOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showBlurOptionsSheet = false },
+        )
     }
 
     if (showPermissionSheet) {
