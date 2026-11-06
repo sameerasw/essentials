@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.ActionRegistry
+import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.diy.displayName
+import com.sameerasw.essentials.domain.diy.matches
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -152,14 +156,15 @@ fun GestureActionPickerSheet(
                     )
                 }
 
-                val actionCategories = remember {
-                    ActionRegistry.getCategories()
+                val macros by DIYRepository.macros.collectAsState()
+                val actionCategories = remember(macros) {
+                    ActionRegistry.getCategories() + listOfNotNull(ActionRegistry.getMacroCategory(macros))
                 }
 
                 var expandedActionCategory by remember {
                     mutableStateOf<Int?>(
                         actionCategories.firstOrNull { category ->
-                            category.actions.any { currentAction != null && it::class == currentAction::class }
+                            category.actions.any { it.matches(currentAction) }
                         }?.titleRes ?: actionCategories.firstOrNull()?.titleRes
                     )
                 }
@@ -176,9 +181,9 @@ fun GestureActionPickerSheet(
                     ) {
                         category.actions.forEach { action ->
                             val resolvedAction =
-                                if (currentAction != null && currentAction::class == action::class) currentAction else action
+                                currentAction?.takeIf { action.matches(it) } ?: action
                             val isSelected =
-                                currentAction != null && currentAction::class == resolvedAction::class
+                                action.matches(currentAction)
                             val missing = getMissingPermissionsHelper(resolvedAction)
 
                             fun showMissingPermissionSheet() {
@@ -188,7 +193,7 @@ fun GestureActionPickerSheet(
                             }
 
                             RemapActionItem(
-                                title = stringResource(resolvedAction.title),
+                                title = resolvedAction.displayName(context),
                                 iconRes = resolvedAction.icon,
                                 isSelected = isSelected,
                                 hasSettings = resolvedAction.isConfigurable ||

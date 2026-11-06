@@ -17,11 +17,15 @@ import androidx.lifecycle.viewModelScope
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.diy.Macro
 import com.sameerasw.essentials.domain.diy.State
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.genai.AutomationSuggestion
 import com.sameerasw.essentials.domain.genai.GenAIAutomationService
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,6 +52,9 @@ class DIYViewModel(
 ) : AndroidViewModel(application) {
     private val repository = DIYRepository
 
+    // Not cancelled with the screen, so a test run with Wait finishes
+    private val testRunScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     private val _genAIState = MutableStateFlow<GenAIState>(GenAIState.Idle)
     val genAIState: StateFlow<GenAIState> = _genAIState.asStateFlow()
 
@@ -63,6 +70,14 @@ class DIYViewModel(
                 initialValue = emptyList(),
             )
 
+    val macros: StateFlow<List<Macro>> =
+        repository.macros
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
+
     /**
      * Executes the delete automation operation.
      *
@@ -70,6 +85,10 @@ class DIYViewModel(
      */
     fun deleteAutomation(id: String) {
         repository.removeAutomation(id)
+    }
+
+    fun deleteMacro(id: String) {
+        repository.removeMacro(id)
     }
 
     /**
@@ -112,6 +131,13 @@ class DIYViewModel(
             }
         viewModelScope.launch {
             CombinedActionExecutor.executeAll(context, actionsToTest)
+        }
+    }
+
+    fun testMacro(macro: Macro) {
+        val context = getApplication<Application>().applicationContext
+        testRunScope.launch {
+            CombinedActionExecutor.executeAll(context, macro.actionList)
         }
     }
 
