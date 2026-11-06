@@ -284,6 +284,7 @@ class MainViewModel : ViewModel() {
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
+    val isIslandMediaUseArtColor = mutableStateOf(true)
     val isIslandMediaShowLike = mutableStateOf(true)
     val islandNotifPeekStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL)
     val isIslandNotifKeepProgress = mutableStateOf(true)
@@ -967,6 +968,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS ->
                         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
+
+                    SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR ->
+                        isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
 
                     SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE ->
                         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
@@ -2582,6 +2586,7 @@ class MainViewModel : ViewModel() {
         isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
+        isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
         islandNotifPeekStyle.value = settingsRepository.getIslandNotifPeekStyle()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
@@ -6095,6 +6100,11 @@ class MainViewModel : ViewModel() {
     fun setIslandMediaShowPrevious(enabled: Boolean) {
         isIslandMediaShowPrevious.value = enabled
         settingsRepository.setIslandMediaShowPreviousEnabled(enabled)
+    }
+
+    fun setIslandMediaUseArtColor(enabled: Boolean) {
+        isIslandMediaUseArtColor.value = enabled
+        settingsRepository.setIslandMediaUseArtColorEnabled(enabled)
     }
 
     fun setIslandMediaShowLike(enabled: Boolean) {

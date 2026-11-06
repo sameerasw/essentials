@@ -171,4 +171,5 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
     <string name="diy_header_caption">Automate essentials</string>
     <string name="freeze_header_caption">%1$d/%2$d apps</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

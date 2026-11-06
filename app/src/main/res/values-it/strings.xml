@@ -1706,4 +1706,5 @@
     <string name="watch_watchface_title">Quadrante Orologio</string>
     <string name="feat_watch_wireless_debugging_title">Debug Wireless</string>
     <string name="feat_screenshots_title">Pulizia screenshot</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

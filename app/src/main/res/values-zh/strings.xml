@@ -1790,4 +1790,5 @@
     <string name="island_notif_filter_apps_title">筛选应用</string>
     <string name="island_notif_skip_silent_title">跳过静音通知</string>
     <string name="island_notif_follow_dnd_title">跟随勿扰模式</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

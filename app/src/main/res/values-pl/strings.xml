@@ -1648,4 +1648,5 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="screenshots_storage_saved_title">Oszczędzono pamięci</string>
     <string name="freeze_tag_color_coded_title">Kolorowo kodowany tag</string>
     <string name="freeze_tag_color_coded_desc">Pokaż kolory tagów w siatce aplikacji</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

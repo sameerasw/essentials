@@ -1982,4 +1982,5 @@
     <string name="perm_files_media_desc">Pixel Searchの検索結果に写真、動画、音声、ドキュメントを検索して表示するには、Essentialsがファイルとメディアにアクセスするための権限が必要です。</string>
     <string name="perm_contacts_desc">Pixel Searchの検索結果に連絡先を表示するには、Essentialsが連絡先を読み取る権限を必要とします。</string>
     <string name="perm_sensitive_notifications_instructions">Shizukuまたはroot権限で付与するか、ADB経由でコマンドを実行してください。</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

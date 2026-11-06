@@ -805,6 +805,16 @@ fun IslandSettingsUI(
                             },
                             modifier = Modifier.highlight(highlightSetting == "island_media_show_like"),
                         )
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_palette_24,
+                            title = stringResource(R.string.island_media_use_art_color_title),
+                            isChecked = viewModel.isIslandMediaUseArtColor.value,
+                            onCheckedChange = { checked ->
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setIslandMediaUseArtColor(checked)
+                            },
+                            modifier = Modifier.highlight(highlightSetting == "island_media_use_art_color"),
+                        )
                     }
                     Text(
                         text = stringResource(R.string.duo_media_skip_apps_title),

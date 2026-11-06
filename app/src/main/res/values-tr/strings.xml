@@ -2045,6 +2045,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_media_keep_when_paused_title">Duraklatıldığında da aktif tut</string>
     <string name="island_media_show_previous_title">Önceki parça düğmesini göster</string>
     <string name="island_media_show_like_title">\"Beğen\" düğmesini göster</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="notification_lighting_ripple_sparkle_title">Işıltı</string>
     <string name="notification_lighting_ripple_sparkle_count_title">Işıltı sayısı</string>
     <string name="notification_lighting_ripple_sparkle_size_title">Işıltı boyutu</string>
