@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.flashlight
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import com.sameerasw.essentials.utils.DeviceUtils
 import androidx.compose.material3.MaterialTheme
 import android.content.Context
@@ -124,13 +126,13 @@ class FlashlightPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = if (levels) {
                     listOf(
-                        CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
+                        CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp, tint = islandAccent()) },
                         CompactCell("flash.level") { RollingText(percentText) },
                     )
                 } else {
-                    listOf(CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) })
+                    listOf(CompactCell("flash.icon") { IslandIcon(R.drawable.rounded_flashlight_on_24, size = 18.dp, tint = islandAccent()) })
                 },
-                line = LineContent(icon = { IslandIcon(R.drawable.rounded_flashlight_on_24, tint = MaterialTheme.colorScheme.primary) }, start = "", end = percentText),
+                line = LineContent(icon = { IslandIcon(R.drawable.rounded_flashlight_on_24, tint = islandAccent()) }, start = "", end = percentText),
                 expanded = ExpandedContent { scope ->
                     Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedBottomPadding)) {
                         scope.CameraRow(
@@ -141,7 +143,7 @@ class FlashlightPlugin : BaseIslandPlugin() {
                         TorchBeam(
                             level = if (levels) value / 100f else 1f,
                             adjustable = levels,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = islandAccent(),
                             onChange = ::setFraction,
                             onLampTap = {
                                 turnOff()

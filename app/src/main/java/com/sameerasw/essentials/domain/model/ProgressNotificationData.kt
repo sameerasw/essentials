@@ -23,4 +23,5 @@ data class ProgressNotificationData(
     val text: String? = null,
     val appName: String? = null,
     val contentIntent: PendingIntent? = null,
+    val actions: List<NotificationActionItem> = emptyList(),
 )

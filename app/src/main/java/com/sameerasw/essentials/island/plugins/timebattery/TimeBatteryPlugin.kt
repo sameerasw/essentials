@@ -1,11 +1,24 @@
 package com.sameerasw.essentials.island.plugins.timebattery
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
+import com.sameerasw.essentials.island.ui.islandTextColor
+import com.sameerasw.essentials.island.ui.IslandTextStyles
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import com.sameerasw.essentials.island.IslandTimeFormat
+import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color as AndroidColor
 import android.os.BatteryManager
+import android.provider.AlarmClock
 import android.os.PowerManager
 import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +28,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
+import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
@@ -35,6 +49,14 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_SHOW_TIME_BATTERY,
         SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS,
+        SettingsRepository.KEY_ISLAND_TIME_FORMAT,
+        SettingsRepository.KEY_ISLAND_TIME_PERIOD,
+        SettingsRepository.KEY_ISLAND_TIME_LEADING_ZERO,
+        SettingsRepository.KEY_ISLAND_TIME_DAY_SUFFIX,
+        SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK,
+        SettingsRepository.KEY_ISLAND_TIME_HIDE_LOCKED,
+        SettingsRepository.KEY_ISLAND_TIME_CHIP,
+        SettingsRepository.KEY_ISLAND_BATTERY_HIDE_LOCKED,
         SettingsRepository.KEY_ISLAND_SHOW_BATTERY,
         SettingsRepository.KEY_ISLAND_BATTERY_STYLE,
         SettingsRepository.KEY_ISLAND_BATTERY_PERCENTAGE,
@@ -57,6 +79,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     )
 
     private var time = ""
+    private var day = ""
     private var level = -1
     private var charging = false
     private var shielded = false
@@ -130,6 +153,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 addAction(Intent.ACTION_TIME_TICK)
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
+                addAction(Intent.ACTION_USER_PRESENT)
                 addAction(Intent.ACTION_TIME_CHANGED)
                 addAction(Intent.ACTION_TIMEZONE_CHANGED)
             },
@@ -168,9 +192,12 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     private fun showSeconds() = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false)
 
     private fun readTime() {
-        val base = if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm"
-        val pattern = if (showSeconds()) "$base:ss" else base
-        time = SimpleDateFormat(pattern, Locale.getDefault()).format(Date())
+        time = IslandTimeFormat.format(context, settings, System.currentTimeMillis(), seconds = showSeconds())
+        day = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_DAY_SUFFIX, false)) {
+            SimpleDateFormat("EEE", Locale.getDefault()).format(Date())
+        } else {
+            ""
+        }
     }
 
     private fun readBattery(intent: Intent?) {
@@ -214,13 +241,17 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
 
     private fun render() {
         ctx ?: return
-        val showTime = settings.isIslandShowTimeBatteryEnabled()
-        val showBatteryItem = settings.isIslandShowBatteryEnabled()
+        val locked = (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
+        val showTime = settings.isIslandShowTimeBatteryEnabled() &&
+            !(locked && settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_HIDE_LOCKED, false))
+        val showBatteryItem = settings.isIslandShowBatteryEnabled() &&
+            !(locked && settings.getBoolean(SettingsRepository.KEY_ISLAND_BATTERY_HIDE_LOCKED, false))
         if (!showTime && !showBatteryItem) {
             publish(emptyList())
             return
         }
         val timeText = time
+        val dayText = day
         val batteryLevel = level
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
@@ -239,8 +270,25 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             priority = IslandPriority.TIME,
             placement = CompactPlacement.Pinned,
             needsCompanyAtCenter = settings.isIslandBatteryIconConditional(),
+            chip = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_CHIP, false),
+            interactions = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK, true)) {
+                InteractionOverrides(onTap = { openClock(); true })
+            } else {
+                InteractionOverrides.Default
+            },
             compact = listOf(
-                CompactCell("time") { RollingText(timeText) },
+                CompactCell("time") {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RollingText(timeText)
+                        if (dayText.isNotEmpty()) {
+                            Text(
+                                dayText,
+                                style = IslandTextStyles.compact.copy(fontSize = 8.sp, color = islandTextColor(0.7f)),
+                                modifier = Modifier.padding(start = 2.dp),
+                            )
+                        }
+                    }
+                },
             ),
         )
         val batteryItem = IslandItem(
@@ -253,8 +301,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             compact = listOf(
                 CompactCell("battery") {
                     when {
-                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: MaterialTheme.colorScheme.primary, showLevel = showLevel)
-                        else -> BatteryRing(batteryLevel, displayColor ?: MaterialTheme.colorScheme.primary, showLevel = showLevel)
+                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
+                        else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
                     }
                 },
             ),
@@ -263,14 +311,14 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 LineContent(
                     icon = {
                         when {
-                            iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: MaterialTheme.colorScheme.primary, showLevel = false)
-                            else -> BatteryRing(batteryLevel, displayColor ?: MaterialTheme.colorScheme.primary, showLevel = false)
+                            iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = false)
+                            else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = false)
                         }
                     },
                     start = "$batteryLevel%",
                     end = label,
                     endSlot = if (showShield) {
-                        { IslandIcon(R.drawable.rounded_shield_filled_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) }
+                        { IslandIcon(R.drawable.rounded_shield_filled_24, size = 18.dp, tint = islandAccent()) }
                     } else {
                         null
                     },
@@ -283,6 +331,13 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 System.currentTimeMillis() < peekUntil
             )
         publish(listOfNotNull(timeItem.takeIf { showTime }, batteryItem.takeIf { showBattery }))
+    }
+
+    private fun openClock() {
+        try {
+            context.startActivity(Intent(AlarmClock.ACTION_SHOW_ALARMS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (_: Exception) {
+        }
     }
 
     private fun idleColor(): Color? {

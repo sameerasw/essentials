@@ -304,6 +304,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_arrow_back_24,
                 category = R.string.cat_interface,
                 description = R.string.feat_back_gesture_desc,
+                aboutDescription = R.string.about_desc_back_gesture,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 showToggle = false,
                 parentFeatureId = "Navigation",
@@ -348,6 +349,7 @@ object FeatureRegistry {
                 permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
                 hasMoreSettings = true,
                 showToggle = true,
+                isLegacy = true,
                 parentFeatureId = "Display",
                 animationRes = R.raw.aod_animation,
             ) {
@@ -531,6 +533,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_cell_wifi_24,
                 category = R.string.cat_connectivity,
                 description = R.string.feat_network_download_rate_limit_desc,
+                aboutDescription = R.string.about_desc_network_download_rate_limit,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 parentFeatureId = "Networks",
                 hasMoreSettings = false,
@@ -550,6 +553,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_mobile_24,
                 category = R.string.cat_connectivity,
                 description = R.string.feat_mobile_data_always_on_desc,
+                aboutDescription = R.string.about_desc_mobile_data_always_on,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 parentFeatureId = "Networks",
                 hasMoreSettings = false,
@@ -568,6 +572,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_cast_24,
                 category = R.string.cat_connectivity,
                 description = R.string.feat_wireless_display_certification_desc,
+                aboutDescription = R.string.about_desc_wireless_display_certification,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
                 parentFeatureId = "Networks",
                 hasMoreSettings = false,
@@ -586,6 +591,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_android_cell_dual_4_bar_24,
                 category = R.string.cat_connectivity,
                 description = R.string.feat_sim_names_desc,
+                aboutDescription = R.string.about_desc_sim_names,
                 permissionKeys = listOf("SHIZUKU", "READ_PHONE_STATE"),
                 parentFeatureId = "Networks",
                 hasMoreSettings = false,
@@ -605,6 +611,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_watch_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_watch_desc,
+                aboutDescription = R.string.about_desc_watch,
                 showToggle = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -776,7 +783,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_motion_play_24,
                 category = R.string.cat_interface,
                 description = R.string.duo_desc,
-                aboutDescription = R.string.duo_desc,
+                aboutDescription = R.string.about_desc_duo,
                 permissionKeys = listOf("ACCESSIBILITY"),
                 hasMoreSettings = true,
                 showToggle = true,
@@ -802,16 +809,20 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_upcoming_24,
                 category = R.string.cat_interface,
                 description = R.string.island_desc,
-                aboutDescription = R.string.island_desc,
+                aboutDescription = R.string.about_desc_island,
                 permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
                 hasMoreSettings = true,
                 showToggle = true,
-                isBeta = true,
                 animationRes = R.raw.island_motion,
                 searchableSettings =
                     listOf(
                         SearchSetting(
                             R.string.island_show_time_title,
+                            R.string.island_show_time_title,
+                            "island_show_time_battery",
+                        ),
+                        SearchSetting(
+                            R.string.island_time_tap_opens_clock_title,
                             R.string.island_show_time_title,
                             "island_show_time_battery",
                         ),
@@ -909,7 +920,7 @@ object FeatureRegistry {
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
                     context: Context,
-                ) = viewModel.isAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
+                ) = viewModel.isAccessibilityEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,
@@ -1019,6 +1030,11 @@ object FeatureRegistry {
                             "island_secondary_bubble",
                         ),
                         SearchSetting(
+                            R.string.island_secondary_style_title,
+                            R.string.island_notif_queue_style_search_desc,
+                            "island_secondary_style",
+                        ),
+                        SearchSetting(
                             R.string.island_balance_compact_title,
                             R.string.island_section_behavior,
                             "island_balance_compact",
@@ -1065,11 +1081,6 @@ object FeatureRegistry {
                             "island_notif_keep_progress",
                         ),
                         SearchSetting(
-                            R.string.island_notif_compact_heads_up_title,
-                            R.string.island_notif_compact_heads_up_desc,
-                            "island_notif_compact_heads_up",
-                        ),
-                        SearchSetting(
                             R.string.island_notif_condensed_info_title,
                             R.string.island_notif_peek_style_search_desc,
                             "island_notif_peek_style",
@@ -1078,11 +1089,6 @@ object FeatureRegistry {
                             R.string.island_notif_queue_title,
                             R.string.island_notif_queue_desc,
                             "island_notif_queue",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_queue_style_title,
-                            R.string.island_notif_queue_style_search_desc,
-                            "island_notif_queue_style",
                         ),
                         SearchSetting(
                             R.string.island_notif_queue_inline_title,
@@ -1422,6 +1428,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_link_24,
                 category = R.string.cat_interaction,
                 description = R.string.feat_link_actions_desc,
+                aboutDescription = R.string.about_desc_link_actions,
                 showToggle = false,
                 parentFeatureId = "Input",
             ) {
@@ -1474,7 +1481,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_flashlight_on_24,
                 category = R.string.cat_interaction,
                 description = R.string.feat_flashlight_desc,
-                aboutDescription = R.string.about_desc_flashlight_tile,
+                aboutDescription = R.string.about_desc_flashlight,
                 parentFeatureId = "Input",
                 showToggle = false,
                 hasMoreSettings = true,
@@ -1769,7 +1776,6 @@ object FeatureRegistry {
             },
             object : Feature(
                 id = "Button remap",
-                contributors = listOf("jawzf"),
                 title = R.string.feat_button_remap_title,
                 iconRes = R.drawable.rounded_switch_access_3_24,
                 category = R.string.cat_interaction,
@@ -1804,6 +1810,18 @@ object FeatureRegistry {
                             R.string.search_remap_flashlight_desc,
                             "flashlight_toggle",
                             R.array.keywords_flashlight,
+                        ),
+                        SearchSetting(
+                            R.string.search_remap_power_camera_flip_title,
+                            R.string.search_remap_power_camera_flip_desc,
+                            "power_camera_flip",
+                            R.array.keywords_power_camera_flip,
+                        ),
+                        SearchSetting(
+                            R.string.search_remap_power_hold_title,
+                            R.string.search_remap_power_hold_desc,
+                            "power_hold",
+                            R.array.keywords_power_hold,
                         ),
                         SearchSetting(
                             R.string.search_flashlight_pocket_title,
@@ -2266,9 +2284,10 @@ object FeatureRegistry {
                 category = R.string.cat_display,
                 description = R.string.feat_pocket_mode_desc,
                 permissionKeys = listOf("ACCESSIBILITY"),
-                aboutDescription = R.string.feat_pocket_mode_desc,
+                aboutDescription = R.string.about_desc_pocket_mode,
                 parentFeatureId = "Display",
                 hasMoreSettings = true,
+                contributors = listOf("Mudit200408"),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isPocketModeEnabled.value
 
@@ -2470,6 +2489,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_wallpaper_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_daily_wallpaper_desc,
+                aboutDescription = R.string.about_desc_daily_wallpaper,
                 showToggle = false,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -2516,7 +2536,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_lock_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_lock_from_watch_desc,
-                aboutDescription = R.string.feat_lock_from_watch_desc,
+                aboutDescription = R.string.about_desc_lock_from_watch,
                 parentFeatureId = "Watch",
                 hasMoreSettings = true,
                 showToggle = false,
@@ -2535,7 +2555,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_edit_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_watch_controls_desc,
-                aboutDescription = R.string.feat_watch_controls_desc,
+                aboutDescription = R.string.about_desc_watch_controls,
                 parentFeatureId = "Watch",
                 hasMoreSettings = true,
                 showToggle = false,
@@ -2554,7 +2574,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_watch_24,
                 category = R.string.cat_tools,
                 description = R.string.watch_watchface_desc,
-                aboutDescription = R.string.watch_watchface_desc,
+                aboutDescription = R.string.about_desc_watchface,
                 parentFeatureId = "Watch",
                 hasMoreSettings = true,
                 showToggle = false,
@@ -2573,7 +2593,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_widgets_24,
                 category = R.string.cat_tools,
                 description = R.string.watch_complications_desc,
-                aboutDescription = R.string.watch_complications_desc,
+                aboutDescription = R.string.about_desc_complications,
                 parentFeatureId = "Watch",
                 hasMoreSettings = true,
                 showToggle = false,
@@ -2592,7 +2612,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_notification_settings_24,
                 category = R.string.cat_tools,
                 description = R.string.watch_notif_sync_desc,
-                aboutDescription = R.string.watch_notif_sync_desc,
+                aboutDescription = R.string.about_desc_notification_sync,
                 permissionKeys = listOf("NOTIFICATION_LISTENER"),
                 parentFeatureId = "Watch",
                 hasMoreSettings = true,
@@ -2618,7 +2638,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_call_24,
                 category = R.string.cat_tools,
                 description = R.string.watch_call_sync_desc,
-                aboutDescription = R.string.watch_call_sync_desc,
+                aboutDescription = R.string.about_desc_call_sync,
                 permissionKeys = listOf("READ_PHONE_STATE", "ANSWER_PHONE_CALLS", "READ_CONTACTS", "READ_CALL_LOG"),
                 parentFeatureId = "Watch",
                 hasMoreSettings = false,
@@ -2645,6 +2665,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_adb_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_watch_wireless_debugging_desc,
+                aboutDescription = R.string.about_desc_watch_wireless_debugging,
                 permissionKeys = listOf("LOCAL_NETWORK"),
                 parentFeatureId = "Watch",
                 hasMoreSettings = true,
@@ -2681,6 +2702,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_sim_card_24,
                 category = R.string.cat_tools,
                 description = R.string.watch_esim_install_desc,
+                aboutDescription = R.string.about_desc_watch_esim_install,
                 parentFeatureId = "Watch",
                 hasMoreSettings = false,
                 showToggle = false,
@@ -2706,6 +2728,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_volume_up_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_sync_sound_mode_desc,
+                aboutDescription = R.string.about_desc_sync_sound_mode,
                 parentFeatureId = "Watch",
                 hasMoreSettings = false,
                 showToggle = true,
@@ -2734,6 +2757,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_navigation_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_sync_location_reached_desc,
+                aboutDescription = R.string.about_desc_sync_location_reached,
                 parentFeatureId = "Watch",
                 hasMoreSettings = false,
                 showToggle = true,
@@ -2831,6 +2855,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_headphones_24,
                 category = R.string.cat_system,
                 description = R.string.feat_qs_tiles_desc,
+                aboutDescription = R.string.about_desc_mono_audio_tile,
                 searchTargetFeatureId = "Quick settings tiles",
                 permissionKeys =
                     if (ShellUtils.isRootEnabled(EssentialsApp.context)) {
@@ -2956,7 +2981,7 @@ object FeatureRegistry {
                 iconRes = R.drawable.rounded_face_24,
                 category = R.string.cat_tools,
                 description = R.string.feat_face_unlock_brightness_desc,
-                aboutDescription = R.string.feat_face_unlock_brightness_desc,
+                aboutDescription = R.string.about_desc_face_illumination,
                 permissionKeys = listOf("ACCESSIBILITY"),
                 searchableSettings =
                     listOf(
@@ -3003,31 +3028,42 @@ object FeatureRegistry {
                 category = R.string.cat_tools,
                 description = R.string.feat_screenshots_desc,
                 aboutDescription = R.string.about_desc_screenshots,
+                contributors = listOf("jawzf"),
                 permissionKeys = listOf("ACCESSIBILITY", "STORAGE"),
                 showToggle = false,
                 searchableSettings =
-                    listOf(
-                        SearchSetting(
-                            R.string.feat_screenshot_share_cleanup_title,
-                            R.string.feat_screenshots_title,
-                            "screenshot_share_cleanup_enabled",
-                        ),
-                        SearchSetting(
-                            R.string.screenshot_share_cleanup_delay_title,
-                            R.string.feat_screenshots_title,
-                            "screenshot_share_cleanup_delay",
-                        ),
-                        SearchSetting(
-                            R.string.screenshot_auto_clean_title,
-                            R.string.feat_screenshots_title,
-                            "screenshot_auto_clean_enabled",
-                        ),
-                        SearchSetting(
-                            R.string.screenshot_auto_clean_days_title,
-                            R.string.feat_screenshots_title,
-                            "screenshot_auto_clean_days",
-                        ),
-                    ),
+                    buildList {
+                        if (DeviceUtils.isGoogleDevice()) {
+                            add(
+                                SearchSetting(
+                                    R.string.feat_screenshot_share_cleanup_title,
+                                    R.string.feat_screenshots_title,
+                                    "screenshot_share_cleanup_enabled",
+                                ),
+                            )
+                            add(
+                                SearchSetting(
+                                    R.string.screenshot_share_cleanup_delay_title,
+                                    R.string.feat_screenshots_title,
+                                    "screenshot_share_cleanup_delay",
+                                ),
+                            )
+                        }
+                        add(
+                            SearchSetting(
+                                R.string.screenshot_auto_clean_title,
+                                R.string.feat_screenshots_title,
+                                "screenshot_auto_clean_enabled",
+                            ),
+                        )
+                        add(
+                            SearchSetting(
+                                R.string.screenshot_auto_clean_days_title,
+                                R.string.feat_screenshots_title,
+                                "screenshot_auto_clean_days",
+                            ),
+                        )
+                    },
                 parentFeatureId = "Security",
             ) {
                 override fun isEnabled(viewModel: MainViewModel) =
@@ -3039,8 +3075,7 @@ object FeatureRegistry {
                     enabled: Boolean,
                 ) {}
 
-                override fun isDeviceSupported(context: Context) =
-                    DeviceUtils.isGoogleDevice() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                override fun isDeviceSupported(context: Context) = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
             },
             object : Feature(
                 id = "Lockdown mode",
@@ -3049,6 +3084,7 @@ object FeatureRegistry {
                 category = R.string.cat_tools,
                 description = R.string.tile_lockdown_mode_desc,
                 aboutDescription = R.string.tile_lockdown_mode_about_desc,
+                contributors = listOf("thekrdev"),
                 permissionKeys = listOf("DEVICE_ADMIN"),
                 showToggle = true,
                 isVisibleInMain = true,

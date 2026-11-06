@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.timer
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -151,12 +153,12 @@ class TimerPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("timer.icon") {
-                        IslandIcon(icon, size = 18.dp, tint = if (entry.running) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.6f))
+                        IslandIcon(icon, size = 18.dp, tint = if (entry.running) islandAccent() else Color.White.copy(alpha = 0.6f))
                     },
                     CompactCell("timer.time") { RollingText(time) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(icon, tint = MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(icon, tint = islandAccent()) },
                     start = label,
                     end = time,
                 ),
@@ -169,7 +171,7 @@ class TimerPlugin : BaseIslandPlugin() {
                             scope.CameraRow(
                                 horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
                                 start = {
-                                    Box(Modifier.padding(horizontal = 4.dp)) { IslandIcon(icon, size = 20.dp, tint = MaterialTheme.colorScheme.primary) }
+                                    Box(Modifier.padding(horizontal = 4.dp)) { IslandIcon(icon, size = 20.dp, tint = islandAccent()) }
                                     MarqueeText(
                                         text = if (more > 0) "$label  +$more" else label,
                                         style = IslandTextStyles.title,

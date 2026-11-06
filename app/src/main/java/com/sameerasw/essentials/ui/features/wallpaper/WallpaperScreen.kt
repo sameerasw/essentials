@@ -9,6 +9,9 @@
 
 package com.sameerasw.essentials.ui.composables.wallpaper
 
+import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
+import com.sameerasw.essentials.ui.navigation.BottomBarSpec
+import com.sameerasw.essentials.ui.navigation.AppRoute
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
@@ -124,6 +127,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun WallpaperScreen(
+    route: AppRoute,
     onBack: () -> Unit,
     viewModel: MainViewModel,
     initialTab: String = "daily",
@@ -822,20 +826,14 @@ fun WallpaperScreen(
             }
         }
 
-        EssentialsFloatingToolbar(
-            title = stringResource(R.string.feat_daily_wallpaper_title),
-            onBackClick = {
-                HapticUtil.performUIHaptic(view)
-                onBack()
-            },
-            onHelpClick = {
-                HapticUtil.performUIHaptic(view)
-                showHelpSheet = true
-            },
-            modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .zIndex(1f),
+        ProvideBottomBar(
+            route = route,
+            spec =
+                BottomBarSpec(
+                    title = stringResource(R.string.feat_daily_wallpaper_title),
+                    onBack = onBack,
+                    onHelpClick = { showHelpSheet = true },
+                ),
         )
 
         if (showHelpSheet) {

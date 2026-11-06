@@ -40,9 +40,11 @@ object ServiceUtils {
     fun startRequiredServices(context: Context) {
         val settingsRepository = SettingsRepository(context)
 
-        startAppDetectionServiceIfNeeded(context, settingsRepository)
-        startBatteryNotificationServiceIfNeeded(context, settingsRepository)
-        schedulePeriodicAppUpdateCheck(context, settingsRepository)
+        CoroutineScope(Dispatchers.IO).launch {
+            startAppDetectionServiceIfNeeded(context, settingsRepository)
+            startBatteryNotificationServiceIfNeeded(context, settingsRepository)
+            schedulePeriodicAppUpdateCheck(context, settingsRepository)
+        }
         applyPostRebootSettings(context, settingsRepository)
         StackHost.startIfNeeded(context)
     }

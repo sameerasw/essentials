@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
@@ -46,6 +47,16 @@ fun IslandBatteryOptionsBottomSheet(
                         viewModel.setIslandBatteryPeekAlerts(checked)
                     },
                 )
+            }
+
+            if (rememberIslandShowsWhileLocked()) {
+                RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                    IslandPrefToggle(
+                        settingKey = SettingsRepository.KEY_ISLAND_BATTERY_HIDE_LOCKED,
+                        iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                        title = stringResource(R.string.island_hide_when_locked_title),
+                    )
+                }
             }
 
             IslandBatteryOptions(

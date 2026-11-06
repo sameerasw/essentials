@@ -151,7 +151,7 @@ fun IslandSignalOptionsBottomSheet(onDismissRequest: () -> Unit) {
                     actionLabel = R.string.permission_grant_action,
                     action = {
                         (context as? Activity)?.let {
-                            ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.READ_PHONE_STATE), 1001)
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(it, arrayOf(Manifest.permission.READ_PHONE_STATE), 1001)
                         }
                     },
                     isGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED,

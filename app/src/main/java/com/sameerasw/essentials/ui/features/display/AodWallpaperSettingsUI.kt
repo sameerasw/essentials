@@ -36,11 +36,13 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.core.sheets.AodCompatibilityInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -59,6 +61,7 @@ fun AodWallpaperSettingsUI(
     val view = LocalView.current
 
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
+    var showCompatInfoSheet by remember { mutableStateOf(false) }
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
 
     val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
@@ -290,6 +293,22 @@ fun AodWallpaperSettingsUI(
                 exit = shrinkVertically() + fadeOut(),
             ) {
                 IconToggleItem(
+                    iconRes = R.drawable.rounded_image_24,
+                    title = stringResource(R.string.feat_aod_wallpaper_share_lock),
+                    isChecked = viewModel.isAodWallpaperShareLock.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setAodWallpaperShareLock(checked)
+                    },
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isAlbumArtEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
                     iconRes = R.drawable.rounded_timer_24,
                     title = stringResource(R.string.feat_aod_wallpaper_keep_on_media),
                     isChecked = if (isTimeoutNever) true else isKeepOnMedia,
@@ -384,7 +403,27 @@ fun AodWallpaperSettingsUI(
             }
         }
 
+        val compatSettings = remember { SettingsRepository(context) }
+        var compatMode by remember { mutableStateOf(compatSettings.getBoolean(SettingsRepository.KEY_AOD_WALLPAPER_COMPAT, false)) }
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_bug_report_24,
+                title = stringResource(R.string.feat_aod_wallpaper_compat_title),
+                isChecked = compatMode,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    compatMode = checked
+                    compatSettings.putBoolean(SettingsRepository.KEY_AOD_WALLPAPER_COMPAT, checked)
+                },
+                onInfoClick = { showCompatInfoSheet = true },
+            )
+        }
+
         Spacer(modifier = Modifier.height(80.dp))
+
+        if (showCompatInfoSheet) {
+            AodCompatibilityInfoBottomSheet(onDismissRequest = { showCompatInfoSheet = false })
+        }
 
         if (showMediaAppSelectionSheet) {
             AppSelectionSheet(

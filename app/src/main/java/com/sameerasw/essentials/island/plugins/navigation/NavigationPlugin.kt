@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.navigation
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -74,16 +76,17 @@ class NavigationPlugin : BaseIslandPlugin() {
 
     override fun refresh() {
         ctx ?: return
-        data = NotificationListener.getLatestNavigationNotification()
+        data = stabilized(NotificationListener.getLatestNavigationNotification())
         render()
     }
 
     private fun update(next: NavigationNotificationData?) {
         val c = ctx ?: return
-        val turned = next?.instruction != null && next.instruction != data?.instruction
-        data = next
+        val stable = stabilized(next)
+        val turned = stable?.instruction != null && stable.instruction != data?.instruction
+        data = stable
         render()
-        if (next == null) {
+        if (stable == null) {
             c.mainHandler.removeCallbacks(endExpand)
             c.mainHandler.removeCallbacks(peekAfterCollapse)
             c.mainHandler.removeCallbacks(endRoute)
@@ -94,9 +97,9 @@ class NavigationPlugin : BaseIslandPlugin() {
         if (!enabled()) return
         val focused = c.focusedKey()
         val action = trigger.decide(
-            instruction = next.instruction.orEmpty(),
+            instruction = stable.instruction.orEmpty(),
             turned = turned,
-            meters = NavigationParser.meters(next.distance),
+            meters = NavigationParser.meters(stable.distance),
             threshold = settings.getIslandNavigationExpandDistance(),
             onNew = settings.getIslandNavigationOnNew(),
             canPeek = settings.isIslandLineStageEnabled(),
@@ -108,6 +111,12 @@ class NavigationPlugin : BaseIslandPlugin() {
             NavigationTrigger.Action.Peek -> c.request(PluginRequest.Peek(ITEM_KEY, settings.getIslandPeekDurationMs()))
             NavigationTrigger.Action.None -> {}
         }
+    }
+
+    private fun stabilized(next: NavigationNotificationData?): NavigationNotificationData? {
+        val previous = data?.maneuver ?: return next
+        val incoming = next?.maneuver ?: return next
+        return if (previous !== incoming && previous.sameAs(incoming)) next.copy(maneuver = previous) else next
     }
 
     private fun expand(c: IslandPluginContext) {
@@ -143,7 +152,7 @@ class NavigationPlugin : BaseIslandPlugin() {
                 expanded = ExpandedContent { scope ->
                     NavigationExpanded(
                         data = d,
-                        accent = MaterialTheme.colorScheme.primary,
+                        accent = islandAccent(),
                         onOpen = { open(d) },
                         onExit = d.exitIntent?.let { intent ->
                             {
@@ -183,7 +192,7 @@ internal fun Maneuver(d: NavigationNotificationData, size: Int) {
         IslandIcon(
             R.drawable.round_navigation_24,
             size = size.dp,
-            tint = MaterialTheme.colorScheme.primary
+            tint = islandAccent()
         )
     }
 }

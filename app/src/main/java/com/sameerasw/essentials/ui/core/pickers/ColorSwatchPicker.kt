@@ -61,6 +61,25 @@ val DUO_PRESET_COLORS =
         "#FF1744", // Bright Red
     )
 
+val ISLAND_ICON_PASTEL_COLORS =
+    listOf(
+        "#FFFFFF",
+        "#FFB3BA",
+        "#FFDFBA",
+        "#FFFFBA",
+        "#BAFFC9",
+        "#A0E7E5",
+        "#BAE1FF",
+        "#C7CEEA",
+        "#D5BAFF",
+        "#E0BBE4",
+        "#FFC8DD",
+        "#FFDAC1",
+        "#CDEAC0",
+        "#B4F8C8",
+        "#FBE7C6",
+    )
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorSwatchPicker(

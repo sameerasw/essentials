@@ -67,6 +67,9 @@ class IslandWindowHost(
         val lifecycle = OverlayLifecycleOwner().also { it.onCreate() }
         val compose = ComposeView(context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                requestedFrameRate = View.REQUESTED_FRAME_RATE_CATEGORY_HIGH
+            }
             setContent {
                 val gated = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
                 CompositionLocalProvider(LocalHapticFeedback provides gated) { content() }

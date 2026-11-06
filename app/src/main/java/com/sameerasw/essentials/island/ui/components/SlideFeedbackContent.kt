@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.ui.components
 
+import com.sameerasw.essentials.island.ui.motionSpring
+
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.aspectRatio
 import android.graphics.Bitmap
@@ -68,7 +70,7 @@ fun SlideFeedbackCompact(feedback: SlideFeedback, spec: IslandLayoutSpec) {
                 modifier = Modifier.defaultMinSize(minWidth = spec.cellSize),
                 contentAlignment = Alignment.Center,
             ) {
-                IslandIcon(feedback.iconRes(), tint = MaterialTheme.colorScheme.primary)
+                IslandIcon(feedback.iconRes(), tint = islandAccent())
             }
         },
     ) { measurables, constraints ->
@@ -154,7 +156,7 @@ fun MediaArtCue(artwork: Bitmap?, accent: Color, size: Dp) {
     val liked by IslandMediaCue.liked.collectAsState()
     val pop by animateFloatAsState(
         targetValue = if (liked) 1f else 0f,
-        animationSpec = spring(dampingRatio = 0.5f, stiffness = 500f),
+        animationSpec = motionSpring(dampingRatio = 0.5f, stiffness = 500f),
         label = "likedPop",
     )
     Box(

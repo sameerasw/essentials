@@ -360,41 +360,6 @@ fun LockScreenClockSettingsUI(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                viewModel.resetLockScreenClock(context)
-                (context as? Activity)?.finish()
-            },
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-            shape = RoundedCornerShape(24.dp),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                ),
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_refresh_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                )
-                Text(
-                    text = stringResource(R.string.lock_screen_clock_reset),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
-        }
-
         Spacer(modifier = Modifier.height(32.dp))
     }
 }

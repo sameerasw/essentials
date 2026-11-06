@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.plugins.signal
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
+import com.sameerasw.essentials.utils.NetworkUtil
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -204,15 +207,15 @@ class SignalPlugin : BaseIslandPlugin() {
                     placement = CompactPlacement.Dynamic,
                     compact = listOf(
                         CompactCell("signal.offline") {
-                            IslandIcon(R.drawable.rounded_android_cell_dual_5_bar_alert_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary)
+                            IslandIcon(R.drawable.rounded_android_cell_dual_5_bar_alert_24, size = 18.dp, tint = islandAccent())
                         },
                     ),
                 ),
             )
             return
         }
-        val caps = connectivity.getNetworkCapabilities(connectivity.activeNetwork)
-        val wifiLevel = if (settings.isIslandSignalWifiEnabled() && caps?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+        val caps = NetworkUtil.underlyingWifi(connectivity)
+        val wifiLevel = if (settings.isIslandSignalWifiEnabled() && caps != null) {
             readWifiLevel(caps)
         } else {
             null
@@ -235,7 +238,7 @@ class SignalPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("signal.bars") {
-                        SignalIndicator(wifiLevel, bars, MaterialTheme.colorScheme.primary, shownLabel)
+                        SignalIndicator(wifiLevel, bars, islandAccent(), shownLabel)
                     },
                 ),
             ),
@@ -246,9 +249,13 @@ class SignalPlugin : BaseIslandPlugin() {
         val wifi = context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         var rssi: Int? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) rssi = (caps.transportInfo as? WifiInfo)?.rssi
-        if (rssi == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (rssi == null || rssi <= -127) {
             @Suppress("DEPRECATION")
-            rssi = wifi?.connectionInfo?.rssi
+            rssi = try {
+                wifi?.connectionInfo?.rssi
+            } catch (_: Exception) {
+                null
+            }
         }
         if (rssi == null || rssi <= -127) return 0
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && wifi != null) {

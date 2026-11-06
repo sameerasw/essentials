@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.devices
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
@@ -282,10 +284,10 @@ class DevicesPlugin : BaseIslandPlugin() {
                 outlineAccent = color ?: idleColor(),
                 compact = listOf(
                     CompactCell("devices.battery.level") { DeviceBattery(d.level, iconStyle, showLevel, color ?: idleColor()) },
-                    CompactCell("devices.battery.icon") { IslandIcon(d.iconRes, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
+                    CompactCell("devices.battery.icon") { IslandIcon(d.iconRes, size = 18.dp, tint = islandAccent()) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(d.iconRes, tint = MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(d.iconRes, tint = islandAccent()) },
                     start = d.name,
                     end = "${d.level}%",
                 ),
@@ -299,10 +301,10 @@ class DevicesPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.DEVICES,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("devices.icon") { IslandIcon(e.iconRes, size = 18.dp, tint = tint ?: MaterialTheme.colorScheme.primary) },
+                    CompactCell("devices.icon") { IslandIcon(e.iconRes, size = 18.dp, tint = tint ?: islandAccent()) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(e.iconRes, tint = tint ?: MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(e.iconRes, tint = tint ?: islandAccent()) },
                     start = e.name,
                     end = context.getString(if (e.connected) R.string.island_devices_connected else R.string.island_devices_disconnected),
                     endSlot = if (battery >= 0) {
@@ -364,8 +366,8 @@ class DevicesPlugin : BaseIslandPlugin() {
 @Composable
 private fun DeviceBattery(level: Int, iconStyle: Boolean, showLevel: Boolean, color: Color?) {
     if (iconStyle) {
-        BatteryGlyph(level, color ?: MaterialTheme.colorScheme.primary, showLevel = showLevel)
+        BatteryGlyph(level, color ?: islandAccent(), showLevel = showLevel)
     } else {
-        BatteryRing(level, color ?: MaterialTheme.colorScheme.primary, showLevel = showLevel)
+        BatteryRing(level, color ?: islandAccent(), showLevel = showLevel)
     }
 }

@@ -199,7 +199,7 @@ fun NetworksSettingsUI(
                     actionLabel = if (hasReadPhoneState) R.string.perm_action_granted else R.string.perm_action_grant,
                     action = {
                         (context as? Activity)?.let {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 it,
                                 arrayOf(Manifest.permission.READ_PHONE_STATE),
                                 102,

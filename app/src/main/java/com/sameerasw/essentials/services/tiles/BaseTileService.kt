@@ -134,6 +134,15 @@ abstract class BaseTileService : TileService() {
 
     protected fun areUnsupportedFeaturesEnabled(): Boolean = SettingsRepository(this).isEnableUnsupportedFeatures()
 
+    protected fun startActivityAndCollapseCompat(intent: Intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
+        } else {
+            @Suppress("DEPRECATION")
+            startActivityAndCollapse(intent)
+        }
+    }
+
     protected fun openTilesSettings() {
         val intent =
             Intent(this, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {

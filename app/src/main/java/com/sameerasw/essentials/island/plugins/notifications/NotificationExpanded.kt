@@ -54,6 +54,7 @@ import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
 import com.sameerasw.essentials.domain.model.NotificationActionItem
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
 import com.sameerasw.essentials.island.ui.components.ConnectedItem
@@ -111,7 +112,7 @@ fun NotificationExpanded(
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = message,
-                        style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp, lineHeight = 20.sp),
+                        style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp),
                         maxLines = 7,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
@@ -205,7 +206,7 @@ private fun ReplyField(
                     scope.keepAlive()
                 },
                 singleLine = true,
-                textStyle = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp),
+                textStyle = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp),
                 cursorBrush = SolidColor(accent),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, capitalization = KeyboardCapitalization.Sentences),
                 keyboardActions = KeyboardActions(onSend = { send() }),

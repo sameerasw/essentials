@@ -22,6 +22,18 @@ import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 
 object PermissionUtils {
+    fun requestPermissionsSafely(
+        activity: android.app.Activity,
+        permissions: Array<String>,
+        requestCode: Int,
+    ) {
+        try {
+            androidx.core.app.ActivityCompat.requestPermissions(activity, permissions, requestCode)
+        } catch (e: IllegalStateException) {
+            android.util.Log.w("PermissionUtils", "Permission request unavailable", e)
+        }
+    }
+
     /**
      * Executes the is accessibility service enabled operation.
      *

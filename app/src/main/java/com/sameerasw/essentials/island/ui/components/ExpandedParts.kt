@@ -1,9 +1,19 @@
 package com.sameerasw.essentials.island.ui.components
 
+import com.sameerasw.essentials.island.ui.LocalIslandTextColor
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.layout.ContentScale
+import android.graphics.Bitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 import androidx.compose.foundation.Image
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.Offset
@@ -161,7 +171,13 @@ fun ConnectedButtonRow(
                         }
                     },
                 contentAlignment = Alignment.Center,
-            ) { item.content() }
+            ) {
+                if (item.container != null) {
+                    CompositionLocalProvider(LocalIslandIconColor provides null, LocalIslandTextColor provides null) { item.content() }
+                } else {
+                    item.content()
+                }
+            }
         }
     }
 }
@@ -181,21 +197,25 @@ fun ConnectedTextLabel(text: String) {
 fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier = Modifier) {
     if (image == null) return
     val clearTop = cameraClearance
+    val soft by produceState<ImageBitmap?>(null, image) {
+        value = withContext(Dispatchers.Default) { runCatching { softened(image.asAndroidBitmap()) }.getOrNull()?.asImageBitmap() }
+    }
     Box(modifier) {
-        Image(
-            bitmap = image,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            
-            modifier = Modifier
-                .matchParentSize()
-                .graphicsLayer {
-                    scaleX = 1.08f
-                    scaleY = 1.08f
-                }
-                .blur(40.dp)
-                .alpha(0.67f),
-        )
+        soft?.let { blurred ->
+            Image(
+                bitmap = blurred,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.Medium,
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer {
+                        scaleX = 1.08f
+                        scaleY = 1.08f
+                    }
+                    .alpha(0.67f),
+            )
+        }
         Box(
             Modifier.matchParentSize().drawBehind {
                 val top = clearTop.toPx().coerceAtMost(size.height)
@@ -215,4 +235,12 @@ fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier 
             },
         )
     }
+}
+
+private fun softened(source: Bitmap): Bitmap {
+    val readable = if (source.config == Bitmap.Config.HARDWARE) source.copy(Bitmap.Config.ARGB_8888, false) else source
+    val width = 28
+    val height = (width * readable.height / readable.width.toFloat()).roundToInt().coerceAtLeast(8)
+    val mid = Bitmap.createScaledBitmap(readable, width * 2, height * 2, true)
+    return Bitmap.createScaledBitmap(mid, width, height, true)
 }

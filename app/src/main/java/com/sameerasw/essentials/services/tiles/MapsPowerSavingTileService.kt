@@ -31,7 +31,7 @@ class MapsPowerSavingTileService : BaseTileService() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                     putExtra("feature", "Maps power saving mode")
                 }
-            startActivityAndCollapse(intent)
+            startActivityAndCollapseCompat(intent)
             return
         }
         super.onClick()

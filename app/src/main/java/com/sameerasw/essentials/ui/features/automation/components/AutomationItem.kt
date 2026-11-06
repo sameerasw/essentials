@@ -83,14 +83,19 @@ fun AutomationItem(
     selectionMode: Boolean = false,
     selected: Boolean = false,
     onSelectedChange: (Boolean) -> Unit = {},
+    isOpen: Boolean = false,
 ) {
     val view = LocalView.current
+    val containerColor by androidx.compose.animation.animateColorAsState(
+        targetValue = if (isOpen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceBright,
+        label = "automation_open",
+    )
     var showMenu by remember { mutableStateOf(false) }
 
     Card(
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
+                containerColor = containerColor,
             ),
         shape = MaterialTheme.shapes.extraSmall,
         modifier =

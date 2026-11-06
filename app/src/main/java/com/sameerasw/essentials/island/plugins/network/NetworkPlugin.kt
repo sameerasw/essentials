@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.plugins.network
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
+import com.sameerasw.essentials.utils.NetworkUtil
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -66,9 +69,11 @@ class NetworkPlugin : BaseIslandPlugin() {
     override fun onStart() {
         val c = ctx ?: return
         airplane = readAirplane()
-        wifiNetwork = connectivity.activeNetwork?.takeIf {
-            connectivity.getNetworkCapabilities(it)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
-        }
+        wifiNetwork = connectivity.allNetworks.firstOrNull { network ->
+            connectivity.getNetworkCapabilities(network)?.let {
+                it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) && !it.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+            } == true
+        }.takeIf { NetworkUtil.isWifiConnected(connectivity) }
         ssid = wifiNetwork?.let { WifiUtil.getCurrentSsid(context) }
         try {
             val request = NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build()
@@ -102,7 +107,7 @@ class NetworkPlugin : BaseIslandPlugin() {
     override fun refresh() = render()
 
     private fun onWifi(network: Network, caps: NetworkCapabilities) {
-        if (ctx == null || !caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return
+        if (ctx == null || !caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) return
         if (network == wifiNetwork) {
             if (ssid == null) ssidFrom(caps)?.let { ssid = it }
             return
@@ -179,11 +184,11 @@ class NetworkPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("network.wifi.icon") {
-                        IslandIcon(R.drawable.rounded_android_wifi_3_bar_24, size = 18.dp, tint = tint ?: MaterialTheme.colorScheme.primary)
+                        IslandIcon(R.drawable.rounded_android_wifi_3_bar_24, size = 18.dp, tint = tint ?: islandAccent())
                     },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(R.drawable.rounded_android_wifi_3_bar_24, tint = tint ?: MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(R.drawable.rounded_android_wifi_3_bar_24, tint = tint ?: islandAccent()) },
                     start = context.getString(if (e.connected) R.string.island_network_connected_to else R.string.island_network_disconnected_from),
                     end = e.name,
                 ),
@@ -196,7 +201,7 @@ class NetworkPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("network.airplane.icon") {
-                        IslandIcon(R.drawable.rounded_flight_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary)
+                        IslandIcon(R.drawable.rounded_flight_24, size = 18.dp, tint = islandAccent())
                     },
                 ),
             )

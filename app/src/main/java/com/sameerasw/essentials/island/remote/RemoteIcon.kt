@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.remote
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
@@ -17,7 +19,7 @@ import com.sameerasw.island.sdk.IslandTone
 fun RemoteIcon(bitmap: Bitmap?, tone: String, size: Dp = 18.dp) {
     if (bitmap == null) return
     val color = when (tone) {
-        IslandTone.ACCENT -> MaterialTheme.colorScheme.primary
+        IslandTone.ACCENT -> islandAccent()
         IslandTone.ALERT -> MaterialTheme.colorScheme.error
         else -> null
     }

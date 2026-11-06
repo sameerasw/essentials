@@ -29,14 +29,22 @@ internal object ZenModeController {
         val id: String,
         val name: String,
         val isEnabled: Boolean,
+        val type: Int = AutomaticZenRule.TYPE_UNKNOWN,
     )
 
     enum class Result { DONE, NOT_FOUND, NO_CONDITION }
 
     fun getModes(): List<Mode> =
         modeRules()
-            .map { (id, rule) -> Mode(id, rule.name?.toString().orEmpty(), rule.isEnabled) }
+            .map { (id, rule) -> Mode(id, rule.name?.toString().orEmpty(), rule.isEnabled, rule.type) }
             .sortedBy { it.name.lowercase() }
+
+    fun activeModes(): List<Mode> =
+        modeRules()
+            .filter { (id, rule) ->
+                rule.isEnabled &&
+                    (invoke("getAutomaticZenRuleState", arrayOf(String::class.java), id) as? Int) == Condition.STATE_TRUE
+            }.map { (id, rule) -> Mode(id, rule.name?.toString().orEmpty(), rule.isEnabled, rule.type) }
 
     fun setActive(
         modeId: String,

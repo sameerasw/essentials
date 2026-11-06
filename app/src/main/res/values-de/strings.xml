@@ -619,6 +619,8 @@
     <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Deaktivierte Apps</string>
     <string name="tab_diy_subtitle">Do-It-Yourself</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Apps suchen und verwalten</string>
     <string name="feat_app_updates_title">App-Aktualisierungen</string>
     <string name="tab_app_updates_title">App-Aktualisierungen</string>
@@ -721,10 +723,10 @@
 Falls Ihr Gerät keine Overlays über dem Always-On-Display (AOD) unterstützt, können Sie alternativ den in den Android-Einstellungen verfügbaren Bildschirmschoner „Ambiente“ verwenden, während das Gerät geladen wird.</string>
     <string name="about_desc_notification_lighting">Benachrichtigungslich sorgt für einen schönen Randbeleuchtungseffekt, wenn du eine Benachrichtigung erhälst.\n\nDu kannst den Animationsstil, die Farben und das Verhalten individuell anpassen. Die Funktion ist auch bei ausgeschaltetem Bildschirm (abhängig vom Hersteller) oder über der aktuellen App verfügbar. Wähle Apps, Benachrichtigungsprioritäten oder welches Verhalten das Benachrichtigungslich haben soll mit den entsprechen Steuerungselementen aus. Falls dein Hersteller Overlays über dem Always-On-Display nicht unterstützt, nutze die unten aufgeführte Option „Ambient-Display“.</string>
     <string name="about_desc_screen_off_widget">Schalte den Bildschirm ganz einfach mit einem Fingertipp auf ein transparentes, in der Größe anpassbares Widget aus, das deinen Startbildschirm weder mit Symbolen noch mit unnötigen Elementen überfüllt.</string>
-    <string name="about_desc_statusbar_icons">Übernehme die volle Kontrolle über die Symbole in deiner Statusleiste.\n\nBlende bestimmte Symbole wie WLAN, Bluetooth oder Mobilfunkdaten aus, um deine Statusleiste übersichtlich zu halten. Außerdem kannst du das Uhrenformat und die Akkuanzeige mit einigen praktischen Einstellungsoptionen anpassen. Dies ist eine Liste der verfügbaren AOSP-Einstellungen; daher unterstützt das Betriebssystem Ihres Geräts möglicherweise nicht alle Optionen.</string>
+    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
     <string name="about_desc_caffeinate">Mit „Koffein“ verhinderst du, dass sich der Bildschirm automatisch ausschaltet.\n\nHalten deinen Bildschirm für eine bestimmte Zeit oder auf unbestimmte Zeit aktiv. Dies ist nützlich, wenn du z. B. lange Artikel liest oder ein Rezept nachschlägst.</string>
     <string name="about_desc_maps_power_saving">Hole dir den exklusiven Energiesparmodus von Google Maps aus der Pixel 10-Serie mit dem minimalistischen, tiefschwarzen Hintergrund, der auf Ihrem Sperrbildschirm angezeigt wird auf jedes Android-Gerät. Starte eine Navigation, dann schalte den Bildschirm aus und wieder ein. </string>
-    <string name="about_desc_flashlight_pulse">Blitze mit der Taschenlampe, wenn du eine Benachrichtigung bekommst.\n\nBei Geräten mit Hardwareunterstützung für das Dimmen der Taschenlampe wird der Puls sanft animiert.</string>
+    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
     <string name="about_desc_snooze_notifications">Schalte lästige, hartnäckige Systembenachrichtigungen stumm, die standardmäßig nicht angepasst werden können. 
 
 Warte bis die Benachrichtigung erscheint, und rufe dann diese Funktion auf, in der der Benachrichtigungskanal aufgeführt wird. Wähle diesen aus, um die Benachrichtigung ab dem nächsten Mal stummzuschalten.
@@ -795,9 +797,7 @@ Eine praktische Kachel, um den Klingelmodus ändern zu können, ohne die Lautst�
 
 Legen Sie fest, ob Benachrichtigungsinhalte angezeigt oder ausgeblendet werden, wenn Ihr Gerät gesperrt ist.</string>
     <string name="about_desc_tap_to_wake">Toggle tap to wake functionality.\n\nEnable or disable the ability to wake your screen with a tap.</string>
-    <string name="about_desc_aod">Always-on-Display umschalten.
-
-Das Always-on-Display schnell aktivieren oder deaktivieren, um Informationen auf einen Blick anzuzeigen</string>
+    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
     <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
     <string name="about_desc_mono_audio">Kombiniere Audiokanäle zu Mono.
 
@@ -1123,14 +1123,10 @@ ADB-Debugging-Zugriff direkt über die Schnelleinstellungen aktivieren oder deak
     <string name="instruction_section_shizuku_desc">Shizuku ist eine leistungsstarkes App, mit der andere Apps System-APIs direkt mit ADB- oder Root-Berechtigungen nutzen können. Es wird für Funktionen wie den Energiesparmodus von Maps und für die Einfrieren-Funktion benötigt. Es hilft auch dabei, bestimmte Berechtigungen wie WRITE_SECURE_SETTINGS zu erteilen. \n\nDie Play Store-Version von Shizuku ist jedoch möglicherweise veraltet und auf neueren Android-Versionen wahrscheinlich nicht mehr verwendbar. In diesem Fall lade bitte die neueste Version von GitHub oder einen aktuellen Fork davon herunter.</string>
     <string name="instruction_section_maps_title">Maps-Energiesparmodus</string>
     <string name="instruction_section_maps_desc">Diese Funktion aktiviert automatisch den Energiesparmodus von Google Maps, der derzeit exklusiv für die Pixel 10-Serie verfügbar ist. Ein Community-Mitglied hat herausgefunden, wie man ihn auf jedem Android-Gerät nutzen kann, indem man die Maps-MinMode-Aktivität mit Root-Rechten startet. \n\nAnschließend habe ich ihn mit Tasker so automatisiert, dass er sich automatisch aktiviert, wenn sich der Bildschirm während einer Navigationssitzung ausschaltet, und konnte dann dasselbe mit nur mit Shizuku-Laufzeitberechtigungen erreichen. \n\nDie Funktion ist für die Anzeige mit dem Always-on-Display der Pixel 10-Serie vorgesehen. Aus diesem Grund kann es vorkommen, dass gelegentlich eine Meldung auf dem Display erscheint, dass der Querformatmodus nicht unterstützt wird. Dies lässt sich durch die App nicht vermeiden und kann ignoriert werden.</string>
-    <string name="instruction_section_silent_title">Stiller Tonmodus</string>
-    <string name="instruction_section_silent_desc">Möglicherweise hast du bemerkt, dass der Lautlos-Modus auch den Nicht-stören-Modus auslöst. \n\nDies liegt daran, wie Android dies implementiert hat, denn selbst wenn wir dieselbe API verwenden, um in den Vibrationsmodus zu wechseln, wird aus irgendeinem Grund neben dem Lautlos-Modus auch der Nicht-stören-Modus aktiviert, was derzeit nicht vermeidbar ist. :(</string>
     <string name="instruction_section_freeze_title">Was ist Einfrieren?</string>
     <string name="instruction_section_freeze_desc">Pausiere und vermeide Ablenkungen durch Apps, während du ein wenig Strom sparst, indem du verhinderst, dass Apps im Hintergrund ausgeführt werden. Geeignet für selten verwendete Apps. \n\nNicht empfohlen für Kommunikationsdienste, da diese in Notfällen nicht benachrichtigen, es sei denn, du hebst die Sperre auf. \n\nEs wird dringend empfohlen, System-Apps nicht zu sperren, da dies zur Systeminstabilität führen kann. Gehe mit Vorsicht vor, du wurdest gewarnt. \n\nInspiriert von Hail &lt;3</string>
     <string name="instruction_section_security_title">Sind App-Sperre und Sicherheit bei Bildschirmsperre tatsächlich sicher?</string>
     <string name="instruction_section_security_desc">Definitiv nicht. \n\nKeine Drittanbieteranwendung kann die regulären Geräteinteraktionen zu 100 % beeinträchtigen, und selbst die App-Sperre ist nur eine Überlagerung ausgewählter Apps, um Interaktionen mit ihnen zu verhindern. Es gibt Umgehungsmöglichkeiten, und das ganze ist nicht hundertprozentig sicher. \n\nDas Gleiche gilt für die Sicherheitsfunktion zur Bildschirmsperre, die erkennt, wenn jemand versucht, mit den Netzwerk-Kacheln zu interagieren, die aus irgendeinem Grund für jeden auf Pixels weiterhin zugänglich sind. Wenn du dir also genug Mühe gibst, kannst du diese möglicherweise dennoch ändern, insbesondere wenn du die Schenlleinstellungs-Kachel für den Flugmodus hinzugefügt hast. Diese App kann Interaktionen damit nicht verhindern. \n\nDiese Funktionen sind nur als Experimente für den gelegentlichen Gebrauch gedacht und würden niemals als starke Sicherheits- und Datenschutzlösungen empfohlen werden. \n\nSichere Alternativen:\n - App-Sperre: Vertrauliches Profil und sicherer Ordner auf Pixel- und Samsung-Geräten\n - Verhindern des Zugriffs auf mobile Netzwerke: Stellen Sie sicher, dass Ihre Diebstahlschutz- und Offline-/Ausschalt-Einstellungen für „Mein Gerät finden” aktiviert sind. Eventuell möchtest du dir auch Graphene OS ansehen.</string>
-    <string name="instruction_section_statusbar_title">Icons der Statusleiste</string>
-    <string name="instruction_section_statusbar_desc">Möglicherweise stellest du fest, dass auch nach dem Zurücksetzen der Statusleisten-Symbole einige Symbole, wie z. B. die Symbole für die Geräteausrichtung und kabelgebundene Kopfhörer, weiterhin sichtbar bleiben. Dies liegt daran, wie die Statusleisten-Blacklist in Android implementiert ist und wie Ihr OEM diese möglicherweise angepasst hat. \nEventuell sind weitere Anpassungen erforderlich. \n\nAußerdem funktionieren möglicherweise nicht alle Optionen zur Sichtbarkeit von Symbolen, da diese von den OEM-Implementierungen und der Verfügbarkeit abhängen.</string>
     <string name="instruction_section_lighting_title">Das Benachrichtigungslicht funktioniert nicht</string>
     <string name="instruction_section_lighting_desc">Das hängt vom OEM ab. Einige wie OneUI scheinen keine Überlagerungen über dem Always-On-Display zuzulassen, wodurch die Lichteffekte nicht angezeigt werden können. Versuche in diesem Fall, das Ambient-Display als Workaround zu verwenden. </string>
     <string name="instruction_section_button_title">Die Neuzuweisung der Tasten funktioniert nicht, wenn das Display ausgeschaltet ist</string>
@@ -1361,9 +1357,7 @@ Es zeigt den Akkustand all Ihrer verbundenen Geräte in einer einzigen, permanen
     <string name="label_animator_duration_scale">Animationsdauerfaktor</string>
     <string name="label_transition_animation_scale">Übergangsanimationsfaktor</string>
     <string name="label_window_animation_scale">Fensteranimationsfaktor</string>
-    <string name="about_desc_text_animations">Passe die systemweite Schriftgröße, Schriftstärke und Animationsgeschwindigkeit an. Beachte dabei, dass für bestimmte Einstellungen erweiterte Berechtigungen oder ein Neustart des Geräts erforderlich sein könnte, damit die Änderungen in einzelnen Apps wirksam werden.
-
-Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder Root-Berechtigungen erforderlich.</string>
+    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
     <string name="about_desc_screen_refresh_rate">Lege mithilfe von Shizuku eine benutzerdefinierte Bildwiederholrate fest. Der Modus „Fest“ fixiert sowohl die minimale als auch die maximale Bildwiederholrate auf einen einzigen Wert, während im Modus „Bereich“ separate Werte für das Minimum und das Maximum definiert werden können. Die Option „Zurücksetzen“ hebt die benutzerdefinierte Einstellung auf und stellt das vom System verwaltete Verhalten der Bildwiederholrate wieder her.</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1386,7 +1380,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
     <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
     <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
-    <string name="feat_aod_force_turn_off_title">Zwingen das AOD auszuschalten</string>
+    <string name="feat_aod_force_turn_off_title">AOD zwingen, auszubleiben </string>
     <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
@@ -1516,7 +1510,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="feat_pocket_mode_desc">Verhindere versehentliche Berührungen in der Tasche</string>
     <string name="feat_power_battery_title">Stromversorgung und Akku</string>
     <string name="feat_power_battery_desc">Energiesparrichtlinien konfigurieren</string>
-    <string name="feat_flashlight_desc">Verbessert das Taschenlampenverhalten</string>
+    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
     <string name="feat_notification_snoozing_title">Benachrichtigung stummschalten</string>
     <string name="feat_notification_snoozing_desc">Benachrichtigungen neu planen</string>
     <string name="feat_safe_volume_title">Warnung vor sicherer Lautstärke deaktivieren</string>
@@ -1524,8 +1518,8 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="feat_pixel_searchbar_desc">Ersetzt die Standard-Suchleiste vom Pixel Launcher.</string>
     <string name="feat_pixel_searchbar_title">Suchtleiste ersetzen</string>
     <string name="settings_translated_texts">Übersetzt </string>
-    <string name="settings_translated_texts_desc">%d Änderung(en) ausstehend tippen zum Absenden oder löschen</string>
-    <string name="setting_swipe_tabs_title">Zwischen Taps wischen</string>
+    <string name="settings_translated_texts_desc">%d Änderung(en) ausstehend - Berühren, um einzureichen oder zu verwerfen</string>
+    <string name="setting_swipe_tabs_title">Zwischen Tabs wischen</string>
     <string name="setting_swipe_tabs_desc">Auf dem Startbildschirm </string>
     <string name="setting_enable_unsupported_features_title">Nicht unterstützte Funktionen aktivieren</string>
     <string name="setting_enable_unsupported_features_desc">OEM-spezifische oder redundante Funktionen anzeigen, die standardmäßig ausgeblendet sind.</string>
@@ -1634,7 +1628,7 @@ Für Anpassungen der Skalierung sind möglicherweise zusätzlich Shizuku- oder R
     <string name="feat_wireless_display_certification_title">Zertifizierung für drahtlose Bildschirme</string>
     <string name="feat_wireless_display_certification_desc">Zeigt Optionen für die Zertifizierung für drahtlose Bildschirme</string>
     <string name="about_desc_smart_pixels">Lege mithilfe des Barrierefreiheitsdienstes ein anpassbares Schachbrettmuster aus schwarz geschalteten Pixeln über den Bildschirm, um bei OLED-Displays Strom zu sparen.</string>
-    <string name="about_desc_other_customizations">Erweiterte Anpassungsmöglichkeiten für das Display und die System-Benutzeroberfläche, einschließlich Sichtbarkeit der Gestenleiste, Höhe von „Circle to Search“, Rotationsvorschlägen, Einstellungs-Overlays, transparenter Navigationsleiste und GPU-Bildschirmkomposition.</string>
+    <string name="about_desc_other_customizations">Extra display and system UI tweaks in one place.\n\nHide the gesture bar (optionally keeping it on the launcher), change the Circle to Search gesture, make the navigation bar transparent, disable the rotation suggestion button, allow overlays over system Settings, and prefer GPU for screen composing, which resets on reboot.\n\nSome options need Shizuku or accessibility permission, and results may vary by device and OS version.</string>
     <string name="about_desc_pixel_searchbar">Ersetze die Standard-Suchleiste des Pixel Launchers auf deinem Startbildschirm. Du kannst die Anzeige so anpassen, dass entweder nichts (leer) oder das aktuelle Datum angezeigt wird.
 
 Bitte beachte, dass die Aktivierung dieser Funktion dazu führen kann, dass die „Auf einen Blick“-Widgets des Pixel Launchers (z. B. Sport- oder Finanz-Widgets) nicht mehr ordnungsgemäß funktionieren.
@@ -1709,7 +1703,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="status_glance_show_calendar_title">Kalenderereignisse</string>
     <string name="duo_show_media_title">Medienwiedergabe</string>
     <string name="duo_show_time_title">Uhrzeit</string>
-    <string name="duo_show_battery_title">Akku</string>
+    <string name="duo_show_battery_title">Batterie</string>
     <string name="status_glance_calendar_timeframe_title">Anstehende Ereignisse anzeigen in</string>
     <string name="status_glance_battery_icon_size_title">Größe des Akkusymbols</string>
     <string name="status_glance_battery_show_otherwise_title">Andernfalls anzeigen</string>
@@ -1746,7 +1740,7 @@ Zudem muss die Einstellung unter Umständen mehrfach angewendet werden, damit si
     <string name="duo_battery_critical_color_title">Kritisch niedriger Akkustand (&lt;10%)</string>
     <string name="duo_battery_power_save_color_title">Energiesparmodus</string>
     <string name="duo_show_progress_title">Fortschrittsbenachrichtigungen</string>
-    <string name="duo_material_you_title">Material You-Farben verwenden</string>
+    <string name="duo_material_you_title">Material You Farben</string>
     <string name="duo_action_tap_title">Tippen</string>
     <string name="duo_action_swipe_down_title">Nach unten wischen</string>
     <string name="duo_action_horizontal_slide_title">Horizontal wischen</string>
@@ -1800,6 +1794,7 @@ Die Schaltfläche \"Weiter\" bleibt für einige Sekunden deaktiviert, damit Sie 
     <string name="feat_aod_wallpaper_title">Hintergrundbild auf AOD</string>
     <string name="feat_aod_wallpaper_desc">Überlagerung verwenden</string>
     <string name="feat_aod_wallpaper_use_album_art">Albumcover verwenden</string>
+    <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
     <string name="about_desc_aod_wallpaper">Zeigt Ihr Hintergrundbild hinter der Uhr auf dem Always On Display mithilfe einer Überlagerung an, mit einstellbarer Deckkraft, Unschärfe, Vignette und Schwarzwert. Sie können auch ein benutzerdefiniertes Bild auswählen oder das Albumcover der aktuell abgespielten Musik anzeigen.
 
 Dies funktioniert nur mit statischen Hintergrundbildern. Live- und Videohintergründe werden nicht unterstützt.
@@ -1822,7 +1817,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_enable_desc">Dynamische Insel anzeigen</string>
     <string name="island_max_width_title">Maximale Breite</string>
     <string name="island_expanded_width_title">Erweiterte Breite</string>
-    <string name="island_cutout_gap_title">Kamera Lücke</string>
+    <string name="island_cutout_gap_title">Kameralücke</string>
     <string name="island_expanded_roundness_title">Erweiterter Eckradius</string>
     <string name="island_expanded_padding_title">Erweiterter Abstand</string>
     <string name="island_expanded_top_padding_title">Erweiterter oberer Abstand</string>
@@ -1832,7 +1827,6 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="duo_hide_when_screen_off_title">Ausblenden, wenn Bildschirm aus</string>
     <string name="island_tap_action_title">Tippaktion</string>
     <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
-    <string name="island_suppress_system_heads_up_title">System-Headsup ausblenden</string>
     <string name="island_catch_up_title">Nachholen</string>
     <string name="island_catch_up_desc">Letzte Benachrichtigung länger auf der Insel anzeigen</string>
     <string name="conscious_gate_feel_every_second_title">Spüre jede verschwendete Sekunde</string>
@@ -1843,10 +1837,8 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_line_peek_title">Linienansicht</string>
     <string name="island_line_peek_desc">Kurz Aktualisierungen auf der gesamten Insel anzeigen, dann zur Kompaktansicht zurückkehren</string>
     <string name="island_hide_in_owner_app_title">Komplikation innerhalb der App ausblenden</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
-    <string name="island_dynamic_hide_status_bar_title">Alle ausblenden, wenn erweitert</string>
-    <string name="island_notif_compact_heads_up_title">Kompakte Benachrichtigungen</string>
-    <string name="island_notif_compact_heads_up_desc">Neue Benachrichtigungen als Zeilenvorschau anzeigen</string>
     <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
     <string name="island_catch_up_timeout_title">Nachholdauer</string>
@@ -1885,8 +1877,6 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_keep_on_landscape_title">Im Querformat behalten</string>
     <string name="island_landscape_top_spacing_title">Oberer Abstand im Querformat</string>
     <string name="island_bond_edge_title">Mit Display-Aussparung verbinden, wenn inaktiv</string>
-    <string name="island_hide_live_updates_title">Live-Updates dynamisch ausblenden</string>
-    <string name="island_compact_hide_status_bar_title">Alle Elemente für kompakte Inseln ausblenden</string>
     <string name="island_max_items_title">Maximale Anzahl anzuzeigender Elemente</string>
     <string name="island_section_notifications">Benachrichtigungen</string>
     <string name="island_always_gestures_title">Immer verfügbare Gesten</string>
@@ -1911,21 +1901,20 @@ Selten – Selten verwendet; Aufgaben, Alarme und Internetnutzung im Hintergrund
 
 Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich gebündelte Aufgaben und ein Alarm pro Tag. Beste Akkuersparnis, unterbricht zeitnahe Benachrichtigungen</string>
     <string name="feat_face_unlock_brightness_title">Gesichtsbeleuchtung</string>
-    <string name="feat_face_unlock_brightness_desc">Stoßhelligkeit bei schwachem Licht</string>
+    <string name="feat_face_unlock_brightness_desc">Bei schlechtem Licht die Helligkeit erhöhen </string>
     <string name="face_unlock_ambient_threshold_title">Umgebungslichtschwelle</string>
     <string name="face_unlock_auto_illuminate_title">Automatische Beleuchtung beim Aufwachen</string>
     <string name="face_unlock_trigger_unlock_title">Entsperren auslösen</string>
     <string name="face_unlock_light_tint_title">Leichte Tönung</string>
     <string name="label_online_help_media">Online-Hilfemedien</string>
-    <string name="haptic_mode_stronger">Stärkee</string>
+    <string name="haptic_mode_stronger">Stärker</string>
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
     <string name="keep_in_full_screen_title">Im Vollbildmodus behalten</string>
-    <string name="island_hide_icons_title">Statusleistensymbole dynamisch ausblenden</string>
     <string name="island_battery_style_title">Akkustil</string>
     <string name="island_battery_only_low_title">Nur bei niedrigem Akkustand anzeigen</string>
     <string name="island_battery_icon_conditional_title">Symbol nur unter folgenden Bedingungen</string>
-    <string name="battery_show_percentage_title">Prozentanzeige</string>
+    <string name="battery_show_percentage_title">Prozent anzeigen</string>
     <string name="island_battery_percentage_conditional_title">% nur unter folgenden Bedingungen</string>
     <string name="island_battery_idle_color_title">Leerlauffarbe</string>
     <string name="island_time_show_seconds_title">Sekunden anzeigen</string>
@@ -1959,6 +1948,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_timers_show_screen_recorder_title">Bildschirmaufzeichnung anzeigen</string>
     <string name="island_timers_filter_apps_title">App-Filter</string>
     <string name="island_media_show_like_title">\"Gefällt mir\" Button  anzeigen</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_show_previous_title">\"Vorherige Titel\" Button anzeigen </string>
     <string name="island_media_keep_when_paused_title">Wiedergabefortsetzung beibehalten</string>
     <string name="island_caffeinate_show_time_title">Zeit anzeigen</string>
@@ -1968,7 +1958,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_show_signal_title">Mobilfunksignal anzeigen</string>
     <string name="island_network_activity_title">Netzwerkaktivität anzeigen</string>
     <string name="island_signal_low_only_title">Anzeige bei schwachem Signal</string>
-    <string name="island_alarm_window_title">Alarme anzeigen innerhalb</string>
+    <string name="island_alarm_window_title">Wecker anzeigen innerhalb</string>
     <string name="island_alarm_hide_time_title">Zeit ausblenden</string>
     <string name="feat_widget_stack_desc">Widgets stapeln und zwischen ihnen wechseln</string>
     <string name="feat_widget_stack_title">Widget-Stapel</string>
@@ -1991,4 +1981,89 @@ Wenn die Tastenbelegung eine Aktion für langes Drücken einer Lautstärketaste 
     <string name="about_desc_app_volume">Verringert die Audioausgabe einer App, ohne die Medienlautstärke für alle anderen Apps zu ändern. Wählen Sie für jede App eine Stufe aus. Diese wird jedes Mal angewendet, wenn die App Ton abspielt, auch im Hintergrund.
 
 Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber hinausgehen. Einige Spiele und Audio-Apps mit niedriger Latenz ignorieren die Stufe möglicherweise. Shizuku muss ausgeführt werden, damit neue Stufen angewendet werden. Starten Sie es daher nach einem Neustart erneut</string>
+    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
+    <string name="label_shake_for_help">Schütteln für Hilfe</string>
+    <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
+    <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
+    <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
+    <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
+    <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
+    <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
+    <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
+    <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
+    <string name="about_desc_watch_esim_install">Install an eSIM on your Pixel Watch even in regions where it is not officially supported.\n\nExperimental. It relies on a hidden screen in the Pixel Watch app that may change, and installation success cannot be confirmed here.</string>
+    <string name="about_desc_sync_sound_mode">Automatically keeps your watch sound mode in sync with your phone.\n\nWhen you switch your phone between sound, vibrate and silent, your watch follows.</string>
+    <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
+    <string name="about_desc_lock_from_watch">Lock your phone remotely from your watch.\n\nHandy if you left your phone somewhere and want to secure it right away.</string>
+    <string name="about_desc_watch_controls">Customize the controls shown on your watch.\n\nChoose which actions are available so the watch shows only what you need.</string>
+    <string name="about_desc_watchface">Customize the Essentials watchface on your Wear OS watch.\n\nChange its look and settings from your phone.</string>
+    <string name="about_desc_complications">Customize the complication widgets shown on your watchface.\n\nChoose which info appears and where, such as flashlight status or other glance items.</string>
+    <string name="about_desc_notification_sync">Sync notifications between your phone and your watch.\n\nThis is only used for the launcher and is not a full notification mirror.</string>
+    <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
+    <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
+    <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="island_chips_title">Island Pillen</string>
+    <string name="island_calendar_compact_time_title">Kompakte Zeit</string>
+    <string name="feat_aod_wallpaper_compat_title">Kompatibilitätsmodus</string>
+    <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
+    <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
+    <string name="island_themed_app_icons_title">Icon Farben ändern </string>
+    <string name="island_time_day_suffix_title">Tag anzeigen</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
+    <string name="diy_cts_method_title">Trigger method</string>
+    <string name="diy_cts_method_accessibility">Accessibility</string>
+    <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="feat_screenshots_desc">Geteilte und/oder alte Bildschirmfotos beseitigen </string>
+    <string name="feat_screenshots_title">Bildschirmfotos aufräumen </string>
+    <string name="feat_aod_wallpaper_extended_media">Wiedergabeinformationen zeigen</string>
+    <string name="island_section_behavior">Verhalten</string>
+    <string name="island_section_duration">Dauer</string>
+    <string name="island_section_visuals">Anzeige</string>
+    <string name="island_section_placement">Position</string>
+    <string name="app_colors_custom">Benutzerdefiniert</string>
+    <string name="island_themed_text_title">Text Farbe ändern</string>
+    <string name="island_secondary_style_title">Anzeige der Blasen</string>
+    <string name="island_hide_in_fullscreen_title">Bei Vollbild ausblenden </string>
+    <string name="disable_interactions_in_full_screen_title">Bei Vollbild Interaktion verhindern </string>
+    <string name="island_hide_status_bar_title">Statusleiste ausblenden</string>
+    <string name="island_suppress_system_heads_up_title">System Benachrichtigen verhindern </string>
+    <string name="island_hide_live_updates_title">Live Updates verhindern</string>
+    <string name="island_hide_icons_title">Statusleistensymbole ausblenden bei aktiver Island </string>
+    <string name="island_dynamic_hide_status_bar_title">Statusleistenelemente ausblenden bei erweiterter Island </string>
+    <string name="island_call_sticky_title">Nicht automatisch schließen </string>
+    <string name="island_call_show_compact">Kompakt</string>
+    <string name="island_time_format_24h">24 Stunden</string>
+    <string name="island_time_format_12h">12 Stunden</string>
+    <string name="island_time_leading_zero_title">Vorangestellte 0</string>
+    <string name="island_time_chip_title">Als Pille anzeigen </string>
+    <string name="island_battery_peek_alerts_title">Vorschaubenachrichtigungen einblenden </string>
+    <string name="duo_battery_low_level_title">Niedriger Akkustand</string>
+    <string name="duo_battery_critical_level_title">Kritischer Akkustand </string>
+    <string name="island_notif_tap_to_open_title">Tippen um Benachrichtigungen zu öffnen</string>
+    <string name="island_notif_tap_to_open_desc">Tippe auf eine erweiterte Benachrichtigung um die jeweilige App zu öffnen</string>
+    <string name="island_notif_hub_title">Benachrichtigungszentrale</string>
+    <string name="island_notif_hub_desc">Statusleistenbenachrichtigungen durch Island ersetzen</string>
+    <string name="island_notif_hub_order_priority">Priorität</string>
+    <string name="island_notif_hub_order_recent">Zuletzt</string>
+    <string name="island_notif_hub_include_silent">Stumme Benachrichtigungen einschließen</string>
+    <string name="island_notif_hub_group_apps">Nach Apps gruppieren </string>
+    <string name="island_notif_hub_chat_pictures">Chat Icons bevorzugen</string>
+    <string name="island_hide_icon_notifications">Benachtigungssymbole</string>
+    <string name="island_notif_hub_overflow_title">Indikation weiterer Benachrichtigungen </string>
+    <string name="island_notif_hub_overflow_number">Anzahl</string>
+    <string name="island_notif_hub_overflow_dot">Punkt </string>
+    <string name="island_notif_condensed_info_title">Vorschaudesign </string>
+    <string name="island_notif_peek_style_full">Breit</string>
+    <string name="island_media_peek_song_change_title">Song wechseln </string>
+    <string name="island_signal_show_mode_title">Netzmodus anzeigen</string>
+    <string name="diy_volume_channel_alarm">Wecker</string>
+    <string name="island_brief_show_alarm_title">Nächsten Wecker anzeigen</string>
+    <string name="island_brief_two_line_header_title">Zweizeiliger Header</string>
+    <string name="duo_slide_mirror_direction_title">Richtungen spiegeln</string>
+    <string name="island_combine_with_duo">Kombinieren mit Duo</string>
 </resources>

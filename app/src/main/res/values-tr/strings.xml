@@ -77,7 +77,7 @@
     <string name="essentials_on_display_force_fill_while_charging_title">Şarjdayken her zaman kullan</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">Seçilen moddan bağımsız olarak, cihaz prize takılıyken Dolum modunu zorlar</string>
     <string name="label_size">Boyut</string>
-    <string name="feat_notification_glance_title">Bildirim bakışı</string>
+    <string name="feat_notification_glance_title">Bildirimlere göz atma</string>
     <string name="feat_notification_glance_desc">Bildirimler beklemedeyken AOD\'yi açık tutun</string>
     <string name="notification_glance_same_as_lighting_title">Bildirim aydınlatmasıyla aynı uygulamalar</string>
     <string name="notification_glance_desc">Bu özellik, seçilen bir uygulamadan bir bildirim geldiğinde Daima Açık Ekran\'ı dinamik olarak etkinleştirecek ve eşleşen tüm bildirimler kapatıldığında bu özelliği devre dışı bırakacaktır. Uygulamaları seçin veya bildirim aydınlatmasıyla aynı seçimi kullanın.</string>
@@ -358,7 +358,7 @@
     <string name="feat_hide_gesture_bar_on_launcher_title">Launcher\'da göster</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Dinamik olarak hareket çubuğunu yalnızca ana ekranda olduğunuzda gösterir</string>
     <string name="feat_circle_to_search_gesture_title">Aramak için daire hareketi</string>
-    <string name="feat_circle_to_search_gesture_desc">Aramak için Daire\'yi başlatmak için alt alana uzun basın</string>
+    <string name="feat_circle_to_search_gesture_desc">Seçerek Arat\'ı başlatmak için alt alana uzun basın</string>
     <string name="feat_circle_to_search_gesture_height_title">Hareket bölgesi yüksekliği</string>
     <string name="feat_circle_to_search_gesture_height_desc">Alt kısımdaki dokunma alanının yüksekliğini ayarlayın</string>
     <string name="feat_other_customizations_title">Diğer özelleştirmeler</string>
@@ -416,7 +416,7 @@
     <string name="diy_editor_edit_title">Otomasyonu Düzenle</string>
     <string name="feat_link_actions_title">Bağlantı eylemleri</string>
     <string name="feat_link_actions_desc">Birden fazla uygulamayla bağlantıları yönetin</string>
-    <string name="feat_snooze_notifications_title">Sistem bildirimlerini erteleyin</string>
+    <string name="feat_snooze_notifications_title">Sistem bildirimlerini erteleme</string>
     <string name="feat_snooze_notifications_desc">Kalıcı bildirimleri ertele</string>
     <string name="feat_qs_tiles_title">Hızlı ayar kutucukları</string>
     <string name="feat_qs_tiles_desc">Tümünü görüntüle</string>
@@ -619,6 +619,8 @@
     <string name="tab_apps">Uygulamalar</string>
     <string name="tab_freeze_subtitle">Devre dışı bırakılan uygulamalar</string>
     <string name="tab_diy_subtitle">Kendin yap</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Uygulamaları bulun ve yönetin</string>
     <string name="feat_app_updates_title">Uygulama Güncellemeleri</string>
     <string name="tab_app_updates_title">Uygulama Güncellemeleri</string>
@@ -654,7 +656,7 @@
     <string name="label_disabled">Devre dışı</string>
     <string name="tile_adaptive_brightness">Uyarlanabilir Parlaklık</string>
     <string name="tile_maps_power_saving">Haritalar Güç Tasarrufu</string>
-    <string name="action_search">Aramak</string>
+    <string name="action_search">Ara</string>
     <string name="action_stop">Durmak</string>
     <string name="label_search">Aramak</string>
     <string name="search_frozen_apps_placeholder">Dondurulmuş uygulamaları ara</string>
@@ -719,10 +721,18 @@
     <string name="about_desc_essentials_on_display">Essentials On Display müzik çalarken ve oynatma değiştiğinde kilit ekranınızda Şimdi Çalıyor katmanını gösterir. \n\nCihazınız AOD katmanında gösterme özelliğini desteklemiyorsa, şarj sırasında alternatif olarak Android ayarlarınızda eklenen Ortam ekran koruyucusunu kullanabilirsiniz.</string>
     <string name="about_desc_notification_lighting">Bildirim Aydınlatması, bildirim aldığınızda güzel bir kenar aydınlatma efekti ekler.\n\nAnimasyon stilini, renklerini ve davranışını özelleştirebilirsiniz. Ekran kapalıyken (OEM\'e bağlı) veya mevcut uygulamanızın üstündeyken bile çalışır. Verilen kontrollerden uygulamaları, bildirim önceliğini veya hangi davranışı tetiklemesi gerektiğini seçin. Eğer OEM\'iniz AOD üzerindeki yer alan kaplamaları desteklemiyorsa, aşağıda bulunan Ortam ekranı seçeneğini kullanın.</string>
     <string name="about_desc_screen_off_widget">Ana ekranınıza simge veya herhangi bir karışıklık eklemeyen, şeffaf, yeniden boyutlandırılabilir bir widget\'a dokunarak ekranı kolayca kapatın.</string>
-    <string name="about_desc_statusbar_icons">Durum çubuğu simgeleriniz üzerinde tam kontrole sahip olun.\n\nDurum çubuğunuzu temiz tutmak için WiFi, Bluetooth veya hücresel veri gibi belirli simgeleri gizleyin. Ayrıca bazı akıllı kontrollerle saat formatını ve pil göstergesini de özelleştirebilirsiniz. Bunlar mevcut AOSP kontrollerinin listesidir; dolayısıyla cihazınızın işletim sistemi tüm kontrollere uymayabilir.</string>
+    <string name="about_desc_statusbar_icons">Durum çubuğunuzun tam kontrolünü elinize alın.
+
+WiFi, Bluetooth veya hücresel veri gibi bireysel simgeleri gizleyin, tüm sistem veya bildirim simgelerini aynı anda gizleyin veya cihaz kilitliyken yalnızca sistem simgelerini gizleyin. Akıllı görünürlük, WiFi bağlıyken veya belirli modlarda mobil veriyi otomatik olarak gizleyebilir.
+
+Ayrıca saatte saniyeleri gösterebilir, konumunu değiştirebilir veya gizleyebilir, pil yüzdesini gösterebilir, kamera ve mikrofon simgelerini gizleyebilir veya tüm durum çubuğunu gizleyebilirsiniz. Bazı gelişmiş özellikler için Shizuku veya Root erişimi gereklidir.
+
+Bunlar AOSP kontrolleridir, bu nedenle cihazınızın işletim sistemi bunların hepsini desteklemeyebilir.</string>
     <string name="about_desc_caffeinate">Kafein, ekranınızın otomatik olarak kapanmasını engeller.\n\nEkranınızı belirli bir süre veya süresiz olarak uyanık tutun. Uzun makaleleri okurken veya bir tarife atıfta bulunurken kullanışlıdır.</string>
     <string name="about_desc_maps_power_saving">Pixel 10 serisine özel Google Haritalar Güç Tasarrufu modunu, herhangi bir Android cihazınızda kilit ekranınızın üzerinde görüntülenecek minimal, simsiyah bir arka planla edinin. Bir navigasyon oturumu başlatın, ekranı kapatın ve tekrar açın. </string>
-    <string name="about_desc_flashlight_pulse">Bir bildirim aldığınızda el fenerini çalıştırın.\n\nCihazların el feneri karartması için donanım desteği varsa, darbe sorunsuz bir şekilde canlandırılacaktır.</string>
+    <string name="about_desc_flashlight_pulse">Bildirim aldığınızda el fenerini titreştirin.
+
+El feneri karartma özelliğine sahip donanım desteği olan cihazlarda, titreşme hareketi yumuşak bir animasyonla gerçekleşir.</string>
     <string name="about_desc_snooze_notifications">Varsayılan olarak değiştirilemeyen can sıkıcı kalıcı sistem bildirimlerini erteleyin. 
 
 Lütfen bildirim gelene kadar bekleyin ve ardından bu özelliğe gidin, bildirim kanalı listelenecektir. Bir sonraki sefere ertelemek için bunu seçin.
@@ -773,7 +783,11 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="about_desc_bubbles">Kayan bildirim balonlarını etkinleştirin veya devre dışı bırakın.\n\nKonuşma balonları için sistem genelindeki ayara hızla geçiş yapın.</string>
     <string name="about_desc_sensitive_content">Kilit ekranında hassas içeriği gizleyin.\n\nCihazınız kilitliyken bildirim içeriğinin gösterilmesini veya gizlenmesini seçin.</string>
     <string name="about_desc_tap_to_wake">Dokunarak uyandırma işlevine geçiş yapın.\n\nEkranınızı bir dokunuşla uyandırma özelliğini etkinleştirin veya devre dışı bırakın.</string>
-    <string name="about_desc_aod">Her Zaman Açık Ekran\'a geçiş yapın.\n\nBilgileri bir bakışta görüntülemek için her zaman açık ekranı hızlı bir şekilde etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_aod">Her Zaman Açık Ekran özelliğini tek bir yerden kontrol edin. Açıp kapatabilir ve ekran kapalıyken bile saati, bildirimleri ve diğer bilgileri hızlıca kontrol edebilirsiniz.
+
+Ayrıca, bildirim olmadığında kapanmasını zorlayabilir ve bir katman kullanarak duvar kağıdınızı saatin arkasında gösterebilirsiniz.
+
+Bu özelliği etkinleştirmek için güvenli ayarlar yazma izni, zorla kapatma seçeneği için ise erişilebilirlik izni gereklidir.</string>
     <string name="about_desc_notification_glance">Daima Açık Ekranınızı bildirimlerinize göre otomatik olarak kontrol edin. Seçilen bir uygulamadan bir mesaj veya uyarı geldiğinde, siz bildirimi kapatana kadar AOD açık kalacak ve hiçbir uyarı olmadığında pilinizi boşa harcamadan önemli bilgileri asla kaçırmamanızı sağlayacak.</string>
     <string name="about_desc_mono_audio">Ses kanallarını mono olarak birleştirin.\n\nTek bir kulaklık kullanıldığında veya erişilebilirlik amacıyla kullanışlıdır.</string>
     <string name="about_desc_flashlight_tile">El fenerini açın/kapatın.\n\nUzun süre basılı tutmak, bazı cihazlarda bulunmayabilecek donanım uygulaması gerektiren yoğunluk ayarı kontrollerini açar.</string>
@@ -1086,14 +1100,10 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="instruction_section_maps_title">Haritalar güç tasarrufu modu</string>
     <string name="instruction_section_maps_desc">Bu özellik, şu anda Pixel 10 serisine özel olan Google Haritalar güç tasarrufu modunu otomatik olarak tetikler. Bir topluluk üyesi, haritaların minMode etkinliğini kök ayrıcalıklarıyla başlatarak herhangi bir Android cihazda hala kullanılabilir olduğunu keşfetti. \n\nVe ardından, bir gezinme oturumu sırasında ekran kapandığında otomatik olarak tetiklenecek şekilde Tasker ile otomatik hale getirdim ve ardından sadece çalışma zamanı Shizuku izinleriyle aynı şeyi başarabildim. \n\nBu özellik, Pixel 10 serisinin AOD\'sinde gösterilmek üzere tasarlanmıştır; bu nedenle, zaman zaman ekranda yatay modu desteklemediğine dair bir mesaj belirebilir.
  Bu, uygulama tarafından önlenemez ve göz ardı edebilirsiniz.</string>
-    <string name="instruction_section_silent_title">Sessiz ses modu</string>
-    <string name="instruction_section_silent_desc">Sessiz modun aynı zamanda DND\'yi de tetiklediğini fark etmiş olabilirsiniz. \n\nBu, Android\'in bunu uygulama şeklinden kaynaklanmaktadır; titreşim moduna geçmek için aynı API\'yi kullansak bile, nedense sessiz modla birlikte DND\'yi de açar ve bu şu anda önlenebilir değil. :(</string>
     <string name="instruction_section_freeze_title">Dondurmak nedir?</string>
     <string name="instruction_section_freeze_desc">Uygulamaları duraklatın ve dikkatinizi dağıtacak şeylerden uzak durun, aynı zamanda arka planda çalışan uygulamaları önleyerek biraz güç tasarrufu yapın. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nDolu\'dan İlham Alındı ​​&lt;3</string>
     <string name="instruction_section_security_title">Uygulama kilidi ve ekran kilitli güvenlik gerçekten güvenli midir?</string>
     <string name="instruction_section_security_desc">Kesinlikle hayır. \n\nHerhangi bir 3. parti uygulama, normal cihaz etkileşimlerine %%100 müdahale edemez ve hatta uygulama kilidi bile, onlarla etkileşimi önlemek için yalnızca seçilen uygulamaların üzerinde bir kaplamadır. Geçici çözümler var ve kusursuz değil. \n\nAynı şey, herhangi bir nedenle Pixels\'teki herkes için hala erişilebilir olan ağ döşemeleriyle etkileşime girmeye çalışan birini algılayan ekran kilitli güvenlik özelliği için de geçerlidir. Yani yeterince uğraşırlarsa yine de onları değiştirebilirler ve özellikle de uçuş modu QS kutucuğu eklediyseniz, bu uygulama onunla etkileşimi engelleyemez. \n\nBu özellikler hafif kullanım için yapılan deneylerdir ve hiçbir zaman güçlü güvenlik ve gizlilik çözümleri olarak önerilmez. \n\nGüvenli alternatifler:\n - Uygulama kilidi: Pixels ve Samsung\'da Özel Alan ve Güvenli klasör\n - Mobil ağ erişimini engelleme: Hırsızlığa karşı koruma ve çevrimdışı/kapat cihazımı bul ayarlarınızın açık olduğundan emin olun. Graphene Os\'ye de bakabilirsiniz.</string>
-    <string name="instruction_section_statusbar_title">Durum çubuğu simgeleri</string>
-    <string name="instruction_section_statusbar_desc">Durum çubuğu simgelerini sıfırladıktan sonra bile cihaz döndürme, kablolu kulaklık simgeleri gibi bazı simgelerin görünür kalabileceğini fark edebilirsiniz. Bunun nedeni, durum çubuğu kara listesinin Android\'de nasıl uygulandığı ve OEM\'inizin bunları nasıl özelleştirmiş olabileceğidir. \nDaha fazla ayarlamaya ihtiyacınız olabilir. \n\nAyrıca, OEM uygulamalarına ve kullanılabilirliğine bağlı olduklarından tüm simge görünürlük seçenekleri çalışmayabilir.</string>
     <string name="instruction_section_lighting_title">Bildirim aydınlatması çalışmıyor</string>
     <string name="instruction_section_lighting_desc">OEM\'e bağlıdır. OneUI gibi bazıları, AOD\'nin üzerinde aydınlatma efektlerinin gösterilmesini engelleyen kaplamalara izin vermiyor gibi görünüyor. Bu durumda geçici çözüm olarak ortam görüntüsünü deneyin. </string>
     <string name="instruction_section_button_title">Düğme yeniden eşlemesi ekran kapalıyken çalışmıyor</string>
@@ -1173,7 +1183,7 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="shape_flat">Düz</string>
     <string name="shape_inverse">Ters</string>
     <string name="feat_batteries_title">Piller</string>
-    <string name="feat_batteries_desc">Cihazınızın pil seviyelerini izleyin</string>
+    <string name="feat_batteries_desc">Cihaz pil seviyelerinizi izleyin</string>
     <string name="batteries_widget_label">Pil Durumu</string>
     <string name="connect_to_airsync">AirSync\'e bağlanın</string>
     <string name="connect_to_airsync_summary">Bağlı Mac cihazınızın pilini AirSync\'te görüntüleyin</string>
@@ -1322,7 +1332,13 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="label_animator_duration_scale">Animatör süre ölçeği</string>
     <string name="label_transition_animation_scale">Geçiş animasyonu ölçeği</string>
     <string name="label_window_animation_scale">Pencere animasyon ölçeği</string>
-    <string name="about_desc_text_animations">Sistem genelinde yazı tipi ölçeğini, ağırlığını ve animasyon hızlarını ayarlayın. Bazı ayarların, belirli uygulamaların değişiklikleri yansıtması için gelişmiş izinler veya cihazın yeniden başlatılması gerektirebileceğini unutmayın. \n\nÖlçek ayarlamaları için ek shizuku veya root izni gerekli olabilir</string>
+    <string name="about_desc_text_animations">Tüm sisteminizin görünümünü ve hissini ayarlayın.
+
+Yazı tipi ölçeğini ve kalınlığını, ekran ölçeğini (en küçük genişlik) ve pencereler, geçişler ve animasyonlar için animasyon hızlarını değiştirin. Ayrıca ekran zaman aşımını ve otomatik döndürmeyi de ayarlayabilirsiniz.
+
+Tek dokunuşla Varsayılan ve Eldiven modu profilleri arasında geçiş yapın. Eldiven modu, kullanıcı arayüzü ölçeğini ayarlar ve dokunma hassasiyetini artırarak ekranın eldiven veya ekran koruyucularla daha iyi yanıt vermesini sağlar. Hızlı Ayarlar kutucuğu, bunu hızlıca değiştirmek için kullanılabilir.
+
+Bazı ayarların değişikliklerin yansıması için gelişmiş izinler veya belirli uygulamalar için cihazın yeniden başlatılması gerekebilir. Ölçek ayarlamaları için shizuku veya root izni gerekebilir.</string>
     <string name="about_desc_screen_refresh_rate">Shizuku kullanarak özel bir ekran yenileme hızı ayarlayın. Sabit mod, hem minimum hem de en yüksek yenileme hızını tek bir değere kilitlerken, aralık modu ayrı minimum ve en yüksek değerler tanımlamanıza olanak tanır. Sıfırlama, özel ayarı temizler ve cihazı sistem tarafından yönetilen yenileme davranışına döndürür.</string>
     <string name="refresh_rate_section_mode">Mod</string>
     <string name="refresh_rate_section_values">Yenileme Hızı</string>
@@ -1345,7 +1361,7 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="search_refresh_rate_range_desc">Minimum ve en yüksek yenileme hızlarını ayrı ayrı yapılandırın</string>
     <string name="search_refresh_rate_reset_title">Yenileme Hızını Sıfırla</string>
     <string name="search_refresh_rate_reset_desc">Özel yenileme hızı ayarını temizler</string>
-    <string name="feat_aod_force_turn_off_title">AOD\'yi kapatmaya zorla</string>
+    <string name="feat_aod_force_turn_off_title">AOD kapatmaya zorla</string>
     <string name="feat_aod_force_turn_off_desc">Bildirim olmadığında AOD\'yi kapatmaya zorlayın. Erişilebilirlik izni gerektirir.</string>
     <string name="feat_auto_accessibility_title">Otomatik erişilebilirlik</string>
     <string name="feat_auto_accessibility_desc">WRITE_SECURE_SETTINGS kullanılarak eksikse, uygulama başlatıldığında erişilebilirlik iznini otomatik olarak verir.</string>
@@ -1470,7 +1486,7 @@ Kolayca filigran eklemek için bir görüntüyü doğrudan başka bir uygulamada
     <string name="feat_power_battery_title">Güç ve pil</string>
     <string name="feat_power_battery_desc">Enerji tasarrufu politikalarını yapılandırın</string>
     <string name="feat_flashlight_title">El feneri</string>
-    <string name="feat_flashlight_desc">El fenerinin çalışma şeklini iyileştirin</string>
+    <string name="feat_flashlight_desc">Parlaklık, solma ve güvenlik kontrolleri</string>
     <string name="flashlight_pocket_title">Cep tespiti</string>
     <string name="flashlight_pocket_desc">Telefon cebinizdeyken el fenerini kapat</string>
     <string name="flashlight_overheat_title">Aşırı ısınmayı önleme</string>
@@ -1525,7 +1541,7 @@ Ve ayarın etkili olması için birden fazla kez uygulanması gerekebilir.</stri
     <string name="feat_smart_pixels_desc">Güç tasarrufu için pikselleri karartın</string>
     <string name="feat_smart_pixels_title">Akıllı pikseller</string>
     <string name="about_desc_smart_pixels">Erişilebilirlik hizmetini kullanarak OLED ekranlarda güç tasarrufu sağlamak için ekran üzerine özelleştirilebilir, karartılmış piksellerden oluşan kareli bir desen yerleştirin.</string>
-    <string name="cat_navigation">Gezinme çubuğu</string>
+    <string name="cat_navigation">Navigasyon</string>
     <string name="feat_transparent_navigation_bar_desc">Sistem gezinme çubuğunun arka planını şeffaf hale getirin</string>
     <string name="feat_transparent_navigation_bar_title">Şeffaf gezinme çubuğu</string>
     <string name="feat_allow_overlays_in_settings_desc">Uygulamaların sistem Ayarları\'nın üzerine katmanlar çizmesine izin verin</string>
@@ -1670,9 +1686,10 @@ Devam et düğmesi birkaç saniyeliğine devre dışı kalır; böylece karar ve
     <string name="feat_aod_wallpaper_title">AOD\'de duvar kağıdı</string>
     <string name="feat_aod_wallpaper_desc">Katman kullanarak</string>
     <string name="feat_aod_wallpaper_use_album_art">Albüm görselini kullan</string>
+    <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
     <string name="island_title">Ada</string>
     <string name="island_desc">Dinamik ada</string>
-    <string name="island_enable_title">Ada\'yı Etkinleştir</string>
+    <string name="island_enable_title">Ada\'yı etkinleştir</string>
     <string name="island_enable_desc">Dinamik adayı göster</string>
     <string name="about_desc_aod_wallpaper">Ayarlanabilir opaklık, bulanıklık, vinyet ve siyah eşiği seçenekleriyle, Her Zaman Açık Ekran\'da saatin arkasında duvar kağıdınızı bir katman olarak gösterir. Ayrıca özel bir görsel seçebilir veya o sırada çalan müziğin albüm kapağını görüntüleyebilirsiniz.
 
@@ -1837,14 +1854,204 @@ Seviyeler yalnızca normal ses seviyesinin altına inebilir, asla üstüne çık
 
 Düğme yeniden eşleme bir ses seviyesi tuşu için uzun basma eylemi varsa, o tuşa basılı tutmak ses seviyesini değiştirmek yerine eylemi çalıştırır ve kısa basma yine de ses seviyesini adım boyutu kadar değiştirir. Ses paneli açıkken, Düğme yeniden eşleme varsayılan olarak duraklatılır, bu nedenle tuşa basılı tutmak ses seviyesini değiştirir. Eylemin her zaman öncelikli olmasını istiyorsanız, Düğme yeniden eşlemede \"Ses iletişim kutusu açıkken devre dışı bırak\" seçeneğini kapatın.</string>
     <string name="button_remap_pause_on_volume_dialog_title">Ses iletişim kutusu açıkken devre dışı bırak</string>
-    <string name="feat_screenshots_title">Ekran Görüntüleri</string>
-    <string name="feat_screenshots_desc">Paylaşılan ve eski ekran görüntülerini temizleyin.</string>
-    <string name="island_brief_desc">Olan bitenler hakkında kısa bir bilgi edinin.</string>
+    <string name="feat_screenshots_title">Ekran görüntüsü temizleme</string>
+    <string name="feat_screenshots_desc">Paylaşılan ve eski ekran görüntülerini temizleyin</string>
+    <string name="island_brief_desc">Olan bitenler hakkında kısa bir bilgi edinin</string>
     <string name="duo_action_horizontal_slide_track">Parçayı değiştir</string>
     <string name="island_always_gestures_title">Her zaman kullanılabilir hareketler</string>
-    <string name="island_section_placement">Adanın Yeri</string>
+    <string name="island_section_placement">Konum</string>
     <string name="island_section_visuals">Görseller</string>
     <string name="island_preview_ring_title">Hizalama ipucunu göster</string>
     <string name="island_camera_position_center">Orta</string>
     <string name="icon_network_speed">İnternet Hızı</string>
+    <string name="island_section_duration">Süre</string>
+    <string name="island_section_behavior">Davranış</string>
+    <string name="about_desc_screenshots">Galeriyi tek seferlik ekran görüntülerinden arındırır. Paylaşılan ekran görüntüleri, paylaşımdan hemen sonra veya biraz sonra silinebilir ve her yeni ekran görüntüsü bildirimde görünmediği veya Fotoğraflar uygulamasında yıldızlanmadığı sürece birkaç gün sonra otomatik olarak silinebilir. Silinen ekran görüntüleri, Dosyalar veya Fotoğraflar uygulamasından 30 gün boyunca geri yüklenebilir.</string>
+    <string name="screenshot_auto_clean_title">Ekran görüntülerini otomatik temizle</string>
+    <string name="screenshot_auto_clean_note">Her yeni ekran görüntüsü için, kaydedilmesi gerektiğine dair sessiz bir bildirim gönderilir. Yıldızlanmış ekran görüntüleri her zaman saklanır.</string>
+    <string name="screenshots_cleaned_count_title">Temizlenen ekran görüntüsü</string>
+    <string name="screenshots_storage_saved_title">Kazanılan depolama alanı</string>
+    <string name="feat_navigation_desc">Hareket çubuğu, gezinme hareketleri ve gezinme çubuğu ince ayarları</string>
+    <string name="about_desc_duo">Bu katlanmıyor
+
+Pil, ağ, medya durumu ve daha fazlasını kompakt, minimalist bir arayüzde, ideal olarak kameranızın etrafında, gösterilecek çeşitli öğeler ve etkileşim için hareketlerle gösteren iPhone Duo tarzı bir durum göstergesi.
+
+Katlanabilir cihazlar için, güvenilir değilse \'Kamerayı otomatik algıla\' seçeneğini kapatın ve Duo\'yu iç ve dış kamera konumlarınızla manuel olarak hizalayın; ardından Essentials düzeninizi hatırlayacaktır.</string>
+    <string name="label_shake_for_help">Yardım için salla</string>
+    <string name="about_desc_island">Android cihazınız için, kamera yuvasının etrafında dinamik bir ada.
+
+Canlı bilgileri tek bir kompakt, genişletilebilir alanda bir araya getirir: hızlı yanıtlarla bildirimler, albüm kapağı ve kontrollerle medya, aramalar, zamanlayıcılar ve kronometreler, alarmlar, takvim etkinlikleri, navigasyon, ilerleme güncellemeleri, hotspot ve ağ durumu, bağlı cihazlar, el feneri, ses modu, kafein, seyahat bilgileri ve saat ve pil durumu.
+
+Üçüncü taraf uygulamalar, kendi canlı içeriklerini göstermek için ada ile eşleşebilir ve hangilerinin izin verileceğini siz seçersiniz.
+
+Ses seviyesi, parlaklık ve daha fazlası için dokunma, yukarı kaydırma ve ada boyunca kaydırma gibi basit hareketlerle etkileşim kurun ve kendi dokunma eylemlerinizi atayın.
+
+Otomatik algılama ile kamera konumu ve boyutu, genişlik, yerleşim, parlama, konturlar ve darbe gölgeleri gibi görseller, genişletilmiş boyut ve yuvarlaklık, görüntüleme süreleri, neyin ne zaman gösterileceği, sistem başlıklarını ve durum çubuğu simgelerini gizleme ve kilitli ekranlar için gizlilik seçenekleri dahil olmak üzere neredeyse her şeyi özelleştirin.
+
+Tek bir birleşik kamera alanı için Duo ile de birleştirilebilir.</string>
+    <string name="about_desc_pocket_mode">Telefonunuz cebinizdeyken veya çantanızdayken yanlışlıkla dokunmaları önler.
+
+Yakınlık sensörü kapatıldığında, Cep modu, yanlışlıkla yapılan dokunmaları etkisiz hale getiren bir engelleme ekranı gösterir. Kapatmak için herhangi bir ses tuşuna basın. Daha iyi doğruluk için yakınlık sensörüyle birlikte ışık sensörünü de kullanabilir, tetikleme gecikmesi ekleyebilir ve yalnızca cihaz kilitliyken tetiklemeyi seçebilirsiniz.
+
+Tetiklememesi gereken uygulamaları hariç tutun. Varsayılan olarak yayın yaparken veya oyun oynarken çalışmaz.
+
+Erişilebilirlik izni gereklidir. Bazı sensörleri eksik olan cihazlarda, etkinleştirilmesi derin uyku modunu bozabilir ve daha yüksek pil tüketimine neden olabilir.</string>
+    <string name="about_desc_flashlight">El feneriniz üzerinde daha fazla kontrol sahibi olun.
+
+Parlaklığı ayarlayın, kademeli olarak açıp kapatın ve ses tuşlarını kullanarak yoğunluğu değiştirin. Parlaklığı durum çubuğunda canlı güncelleme olarak gösterin.
+
+Telefonunuz cebinizdeyken otomatik olarak kapatın, uzun süreli kullanımda aşırı ısınmayı önlemek için parlaklığı düşürün veya ekran açıkken bile her zaman kapatın.
+
+Parlaklık kontrolü, bazı cihazlarda bulunmayan donanım desteği gerektirir.</string>
+    <string name="about_desc_face_illumination">Karanlıkta yüz tanıma özelliğinin sizi tanımasına yardımcı olur.
+
+Ekran düşük ışıkta uyandığında, Essentials ön kameranın yüzünüzü görebilmesi için ekranı yumuşak, renkli bir ışıkla aydınlatır. Ne zaman devreye gireceğine karar veren ortam ışığı eşiğini ayarlayabilir, ışık tonunu seçebilir ve uyandığında otomatik olarak mı yoksa yalnızca siz tetiklediğinizde mi aydınlanacağını belirleyebilirsiniz.
+
+Ayrıca sizin için kilidi açmayı da tetikleyebilir. Erişilebilirlik izni gereklidir.</string>
+    <string name="about_desc_link_actions">Tek bir uygulamaya bağlı kalmak yerine, bağlantıların nasıl açılacağını seçin.
+
+Bir bağlantıyı açtığınızda, Essentials, onu işlemek için birden fazla uygulama arasından seçim yapmanıza olanak tanır; bu uygulamalar arasında bağlantıyı bir baloncuk içinde açma, kopyalama, paylaşma veya kısaltıp QR kodu oluşturma seçenekleri bulunur.</string>
+    <string name="about_desc_daily_wallpaper">Duvar kağıdınızı günlük olarak seçilen bir duvar kağıdıyla güncel tutun veya canlı bir duvar kağıdı ayarlayın.
+
+Duvar kağıdınızı seçin, yarınki duvar kağıdını uygulanmadan önce inceleyin ve sıraya alın ve canlı duvar kağıdınızı tek bir yerden yönetin.</string>
+    <string name="about_desc_watch">Telefonunuz ve Wear OS saatiniz arasında entegrasyonlar.
+
+Bildirimleri ve aramaları senkronize etmek, telefonunuzu saatten kilitlemek, saat kadranını ve komplikasyonları özelleştirmek, ses modunu ve konum durumunu senkronize etmek, eSIM yüklemek ve kablosuz hata ayıklamayı uzaktan etkinleştirmek için Essentials yardımcı uygulamasını saatinize yükleyin.</string>
+    <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
+    <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
+    <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_watch_wireless_debugging">Telefonunuzdan uzaktan saatinizde kablosuz hata ayıklamayı etkinleştirin.
+
+Bu, ADB üzerinden bağlanmak istediğinizde saatin geliştirici seçeneklerinde gezinmenize gerek kalmamasını sağlar.</string>
+    <string name="about_desc_watch_esim_install">Resmi olarak desteklenmediği bölgelerde bile Pixel Saatinize eSIM yükleyin.
+
+Deneyseldir. Pixel Watch uygulamasındaki gizli bir ekrana bağlıdır ve bu ekran değişebilir; bu nedenle yükleme başarısı burada doğrulanamaz.</string>
+    <string name="about_desc_sync_sound_mode">Saatinizin ses modunu telefonunuzla otomatik olarak senkronize eder.
+
+Telefonunuzu ses, titreşim ve sessiz modları arasında değiştirdiğinizde, saatiniz de buna uyum sağlar.</string>
+    <string name="about_desc_sync_location_reached">Henüz orada mıyız durumunu saatinize gönderir.
+
+Durum, cihaz kutucuğunda gösterilir, böylece hedefinize ne kadar yakın olduğunuzu doğrudan bileğinizden görebilirsiniz.</string>
+    <string name="about_desc_lock_from_watch">Telefonunuzu saatinizden uzaktan kilitleyin.
+
+Telefonunuzu bir yerde unuttuysanız ve hemen güvence altına almak istiyorsanız kullanışlıdır.</string>
+    <string name="about_desc_watch_controls">Saatinizde gösterilen kontrolleri özelleştirin.
+
+Hangi işlemlerin kullanılabilir olacağını seçerek, saatin yalnızca ihtiyacınız olanları göstermesini sağlayın.</string>
+    <string name="about_desc_watchface">Wear OS saatinizdeki Essentials saat kadranını özelleştirin.
+
+Görünümünü ve ayarlarını telefonunuzdan değiştirin.</string>
+    <string name="about_desc_complications">Saat kadranınızda gösterilen komplikasyon widget\'larını özelleştirin.
+
+Hangi bilgilerin nerede görüneceğini seçin; örneğin el feneri durumu veya diğer genel bakış öğeleri.</string>
+    <string name="about_desc_notification_sync">Telefonunuz ve saatiniz arasında bildirimleri senkronize edin.
+
+Bu yalnızca launcher için kullanılır ve tam bir bildirim aynası değildir.</string>
+    <string name="about_desc_call_sync">Telefonunuz ve saatiniz arasında arama durumunu senkronize edin.
+
+Bu yalnızca başlatıcı için kullanılır ve tam bir arama yöneticisi değildir.</string>
+    <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
+    <string name="about_desc_back_gesture">Sistem geri hareketine ince ayar yapın.
+
+Sol ve sağ hareket alanları için kenar genişliklerini ayarlayın ve uygulama bazında geri hareket davranışını belirleyin. Güvenli ayarlar izni gerektirir.</string>
+    <string name="island_chips_title">Island chips</string>
+    <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="feat_aod_wallpaper_compat_title">Uyumluluk modu</string>
+    <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
+    <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
+    <string name="island_themed_app_icons_title">Use themed app icons</string>
+    <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
+    <string name="diy_cts_method_title">Trigger method</string>
+    <string name="diy_cts_method_accessibility">Accessibility</string>
+    <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="batteries_notification_title">Pil bildirimi</string>
+    <string name="battery_show_percentage_title">Yüzdeyi göster</string>
+    <string name="battery_separate_channels_title">Pil kanallarını ayır</string>
+    <string name="feat_aod_wallpaper_extended_media">Oynatma bilgilerini göster</string>
+    <string name="feat_aod_wallpaper_extended_app_icon">Notu uygulama simgesiyle değiştir</string>
+    <string name="about_desc_other_customizations">Ekstra ekran ve sistem arayüzü ince ayarları tek bir yerde.
+
+Hareket çubuğunu gizleyin (isteğe bağlı olarak başlatıcıda tutun), Seçerek Arat hareketini değiştirin, gezinme çubuğunu şeffaf hale getirin, döndürme önerisi düğmesini devre dışı bırakın, sistem Ayarları üzerinde yer paylaşımlarına izin verin ve ekran kompozisyonu için GPU\'yu tercih edin (bu ayar yeniden başlatmada sıfırlanır).
+
+Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cihaza ve işletim sistemi sürümüne göre değişebilir.</string>
+    <string name="feat_split_screen_gesture_title">Bölünmüş ekran hareketi</string>
+    <string name="feat_split_screen_gesture_desc">Geçerli uygulamayı bölmek veya birleştirmek için alttan yukarı doğru iki parmağınızı kaydırın</string>
+    <string name="feat_back_gesture_title">Geri hareketi</string>
+    <string name="feat_back_gesture_desc">Kenar genişlikleri ve uygulama başına geri hareketi</string>
+    <string name="back_gesture_add_app">Uygulama ekle</string>
+    <string name="back_gesture_add_app_desc">Bir uygulama açıkken farklı kenar genişlikleri kullanın</string>
+    <string name="feat_back_gesture_left_title">Sol kenar genişliği</string>
+    <string name="feat_back_gesture_right_title">Sağ kenar genişliği</string>
+    <string name="feat_back_gesture_default_width_desc">Kenardan ne kadar içeride kaydırma hareketinin geri tetiklediğini belirler. Sistem ayarlarındaki Geri hassasiyeti ile aynıdır.</string>
+    <string name="island_hide_status_bar_title">Durum çubuğunu gizle</string>
+    <string name="tile_default_launcher">Varsayılan launcher</string>
+    <string name="about_desc_default_launcher">QS kutucuğundan sistem varsayılan ana ekran uygulaması seçicisini açın.</string>
+    <string name="pixel_searchbar_style_empty">Boş</string>
+    <string name="pixel_searchbar_style_date">Tarih</string>
+    <string name="diy_volume_channel_music">Müzik</string>
+    <string name="pixel_searchbar_background_pill_desc">Tarihi bir kutunun içinde gösterin</string>
+    <string name="app_volume_apps_section">Uygulamalar</string>
+    <string name="pixel_search_results_apps_desc">Yüklü uygulamaları arayın ve başlatın</string>
+    <string name="pixel_search_results_media_title">Fotoğraflar &amp; videolar</string>
+    <string name="pixel_search_results_media_desc">Fotoğraf, video ve GIF arayın</string>
+    <string name="pixel_search_results_files_title">Dosyalar &amp; belgeler</string>
+    <string name="pixel_search_results_files_desc">Belgeleri, ses dosyalarını ve indirilen dosyaları arayın</string>
+    <string name="pixel_search_results_contacts_desc">Hızlı arama ve mesaj işlemleriyle kişileri bulun</string>
+    <string name="perm_contacts_title">Kişiler</string>
+    <string name="pixel_search_results_settings_title">Essentials ayarları</string>
+    <string name="pixel_search_results_settings_desc">Özellikleri ve ayarların doğrudan derin bağlantılarını arayın</string>
+    <string name="pixel_search_results_shortcuts_title">Kısayollar</string>
+    <string name="pixel_search_results_shortcuts_desc">Hızlı işlemleri ve launcher kısayollarını arayın</string>
+    <string name="pixel_search_results_web_title">Web arama</string>
+    <string name="pixel_search_results_web_desc">Google\'da veya varsayılan tarayıcıda arama seçeneklerini göster</string>
+    <string name="pixel_search_use_bubbles_title">Web araması için baloncuklar kullan</string>
+    <string name="pixel_search_use_bubbles_desc">Arama sonuçlarını ve bağlantıları kayan baloncuk şeklinde açılır pencere olarak görüntüleyin</string>
+    <string name="pixel_search_engine_title">Arama motoru</string>
+    <string name="pixel_search_engine_desc">Web\'de arama yaparken kullanılan varsayılan arama sağlayıcısı</string>
+    <string name="label_usage_data">Kullanım Verisi</string>
+    <string name="island_max_items_title">Gösterilecek maksimum öğe sayısı</string>
+    <string name="island_show_timers_title">Zamanlayıcılar ve kronometreler</string>
+    <string name="island_brief_show_alarm_title">Yaklaşan alarmı göster</string>
+    <string name="island_brief_title">Kısa bilgilendirme</string>
+    <string name="duo_action_horizontal_slide_track_desc">Sadece medya oynatılırken aktif olur</string>
+    <string name="duo_slide_mirror_direction_title">Tersi yönler</string>
+    <string name="island_always_gestures_desc">Ada gizliyken bile hareket alanını erişilebilir tutun</string>
+    <string name="island_call_show_compact">Kompakt</string>
+    <string name="island_call_show_expanded">Genişletilmiş</string>
+    <string name="island_call_show_peek">Göz at</string>
+    <string name="island_call_sticky_title">Otomatik olarak daraltma</string>
+    <string name="island_notif_show_title">Bildirimleri göster</string>
+    <string name="island_notif_tap_to_open_title">Dokunarak bildirimleri açın</string>
+    <string name="island_notif_tap_to_open_desc">Genişletilmiş bir bildirime dokunarak uygulamasını açın</string>
+    <string name="island_notif_hub_title">Bildirim Merkezi</string>
+    <string name="island_notif_hub_desc">Durum çubuğu bildirim ikonlarını ada içine taşı</string>
+    <string name="island_notif_filter_apps_title">Uygulamaları filtrele</string>
+    <string name="island_notif_filter_apps_desc">Sadece seçtiğin uygulamalardan gelen bildirimleri göster</string>
+    <string name="island_notif_skip_silent_title">Sessiz bildirimleri atla</string>
+    <string name="island_notif_skip_silent_desc">Ses çıkarmadan gelen bildirimleri yok say</string>
+    <string name="island_notif_follow_dnd_title">\"Rahatsız Etmeyin\" modunu takip edin</string>
+    <string name="island_notif_follow_dnd_desc">“Rahatsız Etmeyin” modunun sessize aldığı bildirimleri gizle</string>
+    <string name="island_notif_keep_progress_title">İlerleme bildirimlerini tut</string>
+    <string name="island_notif_keep_progress_desc">İndirmeleri ve diğer devam eden işlemleri göster</string>
+    <string name="island_otp_enabled_title">Doğrulama kodlarını algıla</string>
+    <string name="island_otp_tap_to_copy_title">Dokunarak kopyala</string>
+    <string name="island_otp_dismiss_after_copy_title">Kopyaladıktan sonra bildirimi kapat</string>
+    <string name="island_otp_bypass_filter_title">Herhangi bir uygulamadan kodları göster</string>
+    <string name="island_navigation_expand_title">Dönüşten önce genişlet</string>
+    <string name="island_navigation_peek_after_expand_desc">Kapalıyken ada hemen kompakt haline geri döner</string>
+    <string name="island_media_peek_song_change_title">Şarkı değişiminde görüntüle</string>
+    <string name="island_media_keep_when_paused_title">Duraklatıldığında da aktif tut</string>
+    <string name="island_media_show_previous_title">Önceki parça düğmesini göster</string>
+    <string name="island_media_show_like_title">\"Beğen\" düğmesini göster</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="notification_lighting_ripple_sparkle_title">Işıltı</string>
+    <string name="notification_lighting_ripple_sparkle_count_title">Işıltı sayısı</string>
+    <string name="notification_lighting_ripple_sparkle_size_title">Işıltı boyutu</string>
+    <string name="flashlight_speed_label">Hız</string>
+    <string name="notification_lighting_ripple_repeat_count_title">Tekrar sayısı</string>
+    <string name="notification_lighting_ripple_wave_size_title">Dalga boyutu</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
 </resources>

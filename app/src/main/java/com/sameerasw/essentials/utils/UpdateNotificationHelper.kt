@@ -47,7 +47,7 @@ object UpdateNotificationHelper {
         createNotificationChannel(context)
 
         val mainIntent =
-            Intent(context, MainActivity::class.java).apply {
+            com.sameerasw.essentials.utils.AppIconUtil.mainIntent(context).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra("show_update_sheet", true)
             }
@@ -106,7 +106,7 @@ object UpdateNotificationHelper {
         createNotificationChannel(context)
 
         val mainIntent =
-            Intent(context, MainActivity::class.java).apply {
+            com.sameerasw.essentials.utils.AppIconUtil.mainIntent(context).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
         val contentPendingIntent =

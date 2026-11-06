@@ -9,6 +9,7 @@
 
 package com.sameerasw.essentials.services.handlers
 
+import com.sameerasw.essentials.utils.NetworkUtil
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -206,9 +207,7 @@ class StatusBarIconHandler(
 
     private fun isWifiConnected(): Boolean {
         return try {
-            val network = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+            NetworkUtil.isWifiConnected(connectivityManager)
         } catch (e: Exception) {
             false
         }

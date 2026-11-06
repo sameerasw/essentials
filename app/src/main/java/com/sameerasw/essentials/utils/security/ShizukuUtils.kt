@@ -140,7 +140,7 @@ object ShizukuUtils {
             val process = service.newProcess(arrayOf("sh", "-c", command), null, "/")
             process?.waitFor()
         } catch (
-            @Suppress("UNUSED_PARAMETER") e: RemoteException,
+            @Suppress("UNUSED_PARAMETER") e: Exception,
         ) {
             // Command execution failed
         }

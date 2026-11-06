@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.domain.diy.ActionRegistry
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.CategoryExpandableSection
@@ -261,6 +262,9 @@ fun ActionSequenceEditor(
                         updateActions(emptyList())
                     },
                 )
+                if (action is Action.CircleToSearch) {
+                    CircleToSearchMethodCard(action) { updateActions(listOf(it)) }
+                }
             } else {
                 ReorderableColumn(
                     list = actions,
@@ -275,19 +279,26 @@ fun ActionSequenceEditor(
                 ) { index, action, isDragging ->
                     key(rowIds.getOrNull(index) ?: index) {
                         ReorderableItem {
-                            RemapSequenceItem(
-                                position = index + 1,
-                                action = action,
-                                isDragging = isDragging,
-                                hasSettings = hasActionSettings(action),
-                                dragHandleModifier = Modifier.draggableHandle(),
-                                showOrder = true,
-                                onSettingsClick = { openActionSettings(index, action) },
-                                onRemove = {
-                                    if (index in rowIds.indices) rowIds.removeAt(index)
-                                    updateActions(actions.toMutableList().apply { removeAt(index) })
-                                },
-                            )
+                            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                RemapSequenceItem(
+                                    position = index + 1,
+                                    action = action,
+                                    isDragging = isDragging,
+                                    hasSettings = hasActionSettings(action),
+                                    dragHandleModifier = Modifier.draggableHandle(),
+                                    showOrder = true,
+                                    onSettingsClick = { openActionSettings(index, action) },
+                                    onRemove = {
+                                        if (index in rowIds.indices) rowIds.removeAt(index)
+                                        updateActions(actions.toMutableList().apply { removeAt(index) })
+                                    },
+                                )
+                                if (action is Action.CircleToSearch) {
+                                    CircleToSearchMethodCard(action) { updated ->
+                                        updateActions(actions.toMutableList().apply { this[index] = updated })
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -867,6 +878,26 @@ private fun RemapAddActionSheet(
             }
         }
     }
+}
+
+@Composable
+private fun CircleToSearchMethodCard(
+    action: Action.CircleToSearch,
+    onChange: (Action.CircleToSearch) -> Unit,
+) {
+    val labels =
+        mapOf(
+            Action.CircleToSearchMethod.ACCESSIBILITY to stringResource(R.string.diy_cts_method_accessibility),
+            Action.CircleToSearchMethod.SHIZUKU to stringResource(R.string.diy_cts_method_shizuku),
+        )
+    SegmentedPicker(
+        items = labels.keys.toList(),
+        selectedItem = action.method,
+        onItemSelected = { onChange(action.copy(method = it)) },
+        labelProvider = { labels[it].orEmpty() },
+        title = R.string.diy_cts_method_title,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 private fun hasActionSettings(action: Action): Boolean =

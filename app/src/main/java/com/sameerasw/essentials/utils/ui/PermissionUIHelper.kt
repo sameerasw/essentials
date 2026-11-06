@@ -149,7 +149,7 @@ object PermissionUIHelper {
                     actionLabel = if (viewModel.isPostNotificationsEnabled.value) R.string.perm_action_granted else R.string.perm_action_grant,
                     action = {
                         if (activity != null) {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 activity,
                                 arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
                                 103,
@@ -175,7 +175,7 @@ object PermissionUIHelper {
                     actionLabel = if (viewModel.isReadPhoneStateEnabled.value) R.string.perm_action_granted else R.string.perm_action_grant,
                     action = {
                         if (activity != null) {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 activity,
                                 arrayOf(android.Manifest.permission.READ_PHONE_STATE),
                                 102,
@@ -272,7 +272,7 @@ object PermissionUIHelper {
                     actionLabel = if (viewModel.isCalendarPermissionGranted.value) R.string.perm_action_granted else R.string.perm_action_grant,
                     action = {
                         if (activity != null) {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 activity,
                                 arrayOf(
                                     android.Manifest.permission.READ_CALENDAR,
@@ -343,7 +343,7 @@ object PermissionUIHelper {
                                         android.Manifest.permission.BLUETOOTH_ADMIN,
                                     )
                                 }
-                            ActivityCompat.requestPermissions(activity, permissions, 105)
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(activity, permissions, 105)
                         }
                     },
                     isGranted = viewModel.isBluetoothPermissionGranted.value,
@@ -405,7 +405,7 @@ object PermissionUIHelper {
                     actionLabel = if (isGranted) R.string.perm_action_granted else R.string.perm_action_grant,
                     action = {
                         if (targetActivity != null) {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 targetActivity,
                                 arrayOf(android.Manifest.permission.READ_CONTACTS),
                                 110,
@@ -467,7 +467,7 @@ object PermissionUIHelper {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 perms.add(android.Manifest.permission.ANSWER_PHONE_CALLS)
                             }
-                            ActivityCompat.requestPermissions(targetActivity, perms.toTypedArray(), 109)
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(targetActivity, perms.toTypedArray(), 109)
                         }
                     },
                     isGranted = isGranted,
@@ -505,7 +505,7 @@ object PermissionUIHelper {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                             PermissionUtils.openManageExternalStorageSettings(context)
                         } else if (targetActivity != null) {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 targetActivity,
                                 arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
                                 110,

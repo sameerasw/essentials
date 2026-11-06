@@ -11,10 +11,13 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import com.sameerasw.essentials.island.ui.IslandTextStyles
@@ -23,22 +26,34 @@ import com.sameerasw.essentials.island.ui.IslandTextStyles
 fun RollingText(text: String, modifier: Modifier = Modifier, style: TextStyle = IslandTextStyles.compact) {
     val tracker = remember { DirectionTracker() }
     val rollDown = tracker.update(text)
-    Row(modifier.clipToBounds()) {
-        text.forEachIndexed { index, char ->
-            key(text.length - index) {
-                AnimatedContent(
-                    targetState = char,
-                    transitionSpec = {
-                        val slide = spring<IntOffset>(dampingRatio = 0.8f, stiffness = 500f)
-                        val sign = if (rollDown) -1 else 1
-                        (slideInVertically(slide) { sign * it } + fadeIn())
-                            .togetherWith(slideOutVertically(slide) { -sign * it } + fadeOut())
-                            .using(SizeTransform(clip = true))
-                    },
-                    label = "roll",
-                ) { Text(it.toString(), style = style) }
+    val direction = if (text.isRtlText()) LayoutDirection.Rtl else LayoutDirection.Ltr
+    CompositionLocalProvider(LocalLayoutDirection provides direction) {
+        Row(modifier.clipToBounds()) {
+            text.forEachIndexed { index, char ->
+                key(text.length - index) {
+                    AnimatedContent(
+                        targetState = char,
+                        transitionSpec = {
+                            val slide = com.sameerasw.essentials.island.ui.motionSpring<IntOffset>(dampingRatio = 0.8f, stiffness = 500f)
+                            val sign = if (rollDown) -1 else 1
+                            (slideInVertically(slide) { sign * it } + fadeIn())
+                                .togetherWith(slideOutVertically(slide) { -sign * it } + fadeOut())
+                                .using(SizeTransform(clip = true))
+                        },
+                        label = "roll",
+                    ) { Text(it.toString(), style = style) }
+                }
             }
         }
+    }
+}
+
+private fun String.isRtlText(): Boolean {
+    val first = firstOrNull { !it.isWhitespace() } ?: return false
+    if (first.isDigit()) return false
+    return any {
+        val dir = Character.getDirectionality(it)
+        dir == Character.DIRECTIONALITY_RIGHT_TO_LEFT || dir == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC
     }
 }
 

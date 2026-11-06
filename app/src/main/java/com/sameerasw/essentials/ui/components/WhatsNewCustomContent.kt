@@ -43,11 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.ui.core.sheets.HiddenDebuggingAutoDetectCard
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
+import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import com.sameerasw.essentials.island.remote.OvercastLink
 
 /**
  * Slot for custom content to be displayed in the "What's New" screen.
@@ -65,8 +65,6 @@ fun WhatsNewCustomContent(
         onPauseOrDispose { }
     }
 
-    val isInstalled = OvercastLink.isInstalled(context)
-
     fun toggle(section: Int) {
         HapticUtil.performUIHaptic(view)
         expandedSection = if (expandedSection == section) null else section
@@ -76,6 +74,19 @@ fun WhatsNewCustomContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxWidth(),
     ) {
+        ShakeForHelpCard(
+            expanded = expandedSection == 0,
+            onToggle = { toggle(0) },
+            mainViewModel = mainViewModel,
+        )
+
+        Text(
+            text = stringResource(R.string.whats_new_previous_updates),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+        )
+
         WhatsNewSectionCard(
             title = stringResource(R.string.whats_new_watchface_title),
             summary = stringResource(R.string.whats_new_watchface_summary),
@@ -90,79 +101,43 @@ fun WhatsNewCustomContent(
             )
             EssentialsWatchfacePromoContent()
         }
+    }
+}
 
+@Composable
+fun ShakeForHelpCard(
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    mainViewModel: MainViewModel = viewModel(),
+) {
+    val context = LocalContext.current
+    WhatsNewSectionCard(
+        title = "New: Shake to get help",
+        summary = "Shake your phone for instant help",
+        expanded = expanded,
+        onToggle = onToggle,
+        icon = { SectionIcon(R.drawable.rounded_mobile_vibrate_24) },
+    ) {
         Text(
-            text = stringResource(R.string.whats_new_previous_updates),
-            style = MaterialTheme.typography.titleSmall,
+            text = "Shake your phone anywhere in Essentials to open help for the screen you are on. Inside a feature you get that feature's guide, and everywhere else you get the general Help and Guides.",
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(start = 8.dp, top = 8.dp),
         )
 
-        WhatsNewSectionCard(
-            title = stringResource(R.string.whats_new_overcast_card_title),
-            summary = stringResource(R.string.whats_new_overcast_section_title),
-            expanded = expandedSection == 0,
-            onToggle = { toggle(0) },
-            icon = { SectionIcon(R.drawable.overcast_logo, tinted = false) },
-        ) {
-            Text(
-                text = stringResource(R.string.whats_new_overcast_desc),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            Text(
-                text = stringResource(R.string.whats_new_overcast_play_store_note),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            StackedActionCard(
-                iconRes = R.drawable.rounded_cloud_24,
-                title = stringResource(R.string.whats_new_overcast_card_title),
-                description =
-                    if (isInstalled) {
-                        stringResource(R.string.whats_new_overcast_status_installed)
-                    } else {
-                        stringResource(R.string.whats_new_overcast_status_not_installed)
-                    },
-                actionLabel =
-                    if (isInstalled) {
-                        stringResource(R.string.whats_new_overcast_action_open)
-                    } else {
-                        stringResource(R.string.whats_new_overcast_action_install)
-                    },
-                actionIconRes = if (isInstalled) R.drawable.rounded_open_in_new_24 else R.drawable.rounded_download_24,
-                isPrimaryAction = !isInstalled,
-                onAction = {
-                    if (isInstalled) OvercastLink.openApp(context) else OvercastLink.openInstallPage(context)
-                },
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_vibrate_24,
+                title = stringResource(R.string.label_shake_for_help),
+                isChecked = mainViewModel.isShakeForHelpEnabled.value,
+                onCheckedChange = { mainViewModel.setShakeForHelpEnabled(it, context) },
             )
         }
 
-        WhatsNewSectionCard(
-            title = stringResource(R.string.setting_hidden_debugging_title),
-            summary = stringResource(R.string.whats_new_hidden_debugging_summary),
-            expanded = expandedSection == 2,
-            onToggle = { toggle(2) },
-            icon = { SectionIcon(R.drawable.rounded_adb_24) },
-        ) {
-            listOf(
-                R.string.setting_hidden_debugging_help_1,
-                R.string.setting_hidden_debugging_help_2,
-                R.string.setting_hidden_debugging_help_3,
-            ).forEach { textRes ->
-                Text(
-                    text = stringResource(textRes),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            HiddenDebuggingAutoDetectCard(
-                onAutoDetected = { mainViewModel.setHiddenDebuggingSupport(true) },
-            )
-        }
+        Text(
+            text = "Give your phone a shake now to try it!",
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.primary,
+        )
     }
 }
 

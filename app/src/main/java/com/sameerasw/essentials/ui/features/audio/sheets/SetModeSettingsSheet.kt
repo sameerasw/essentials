@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -83,6 +85,7 @@ fun SetModeSettingsSheet(
         Column(
             modifier =
                 Modifier
+                    .weight(1f, fill = false)
                     .padding(16.dp)
                     .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -102,13 +105,15 @@ fun SetModeSettingsSheet(
 
             val turnOn = stringResource(R.string.diy_set_mode_turn_on)
             val turnOff = stringResource(R.string.diy_set_mode_turn_off)
-            SegmentedPicker(
-                items = listOf(true, false),
-                selectedItem = active,
-                onItemSelected = { active = it },
-                labelProvider = { if (it) turnOn else turnOff },
-                modifier = Modifier.fillMaxWidth(),
-            )
+            RoundedCardContainer(containerColor = MaterialTheme.colorScheme.surfaceBright) {
+                SegmentedPicker(
+                    items = listOf(true, false),
+                    selectedItem = active,
+                    onItemSelected = { active = it },
+                    labelProvider = { if (it) turnOn else turnOff },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
 
             val loadedModes = modes
             if (loadedModes != null && loadedModes.isEmpty()) {
@@ -118,7 +123,13 @@ fun SetModeSettingsSheet(
                     color = MaterialTheme.colorScheme.error,
                 )
             } else if (loadedModes != null) {
-                RoundedCardContainer(spacing = 2.dp) {
+                RoundedCardContainer(
+                    spacing = 2.dp,
+                    modifier =
+                        Modifier
+                            .weight(1f, fill = false)
+                            .verticalScroll(rememberScrollState()),
+                ) {
                     loadedModes.forEach { mode ->
                         val isSelected = selectedId == mode.id
                         Row(

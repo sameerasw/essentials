@@ -30,7 +30,7 @@ class UsbDebuggingTileService : BaseTileService() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                     putExtra("feature", "Quick settings tiles")
                 }
-            startActivityAndCollapse(intent)
+            startActivityAndCollapseCompat(intent)
             return
         }
         super.onClick()

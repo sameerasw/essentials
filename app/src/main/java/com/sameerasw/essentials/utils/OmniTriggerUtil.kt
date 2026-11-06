@@ -42,7 +42,7 @@ object OmniTriggerUtil {
         }
     }
 
-    fun trigger(context: Context): Boolean {
+    fun trigger(context: Context, useShizuku: Boolean = true): Boolean {
         ensureReflection()
 
         val bundle =
@@ -54,7 +54,7 @@ object OmniTriggerUtil {
 
         // 1. Try Shizuku logic
         val shizukuHelper = ShizukuPermissionHelper(context)
-        if (shizukuHelper.isReady() && shizukuHelper.hasPermission()) {
+        if (useShizuku && shizukuHelper.isReady() && shizukuHelper.hasPermission()) {
             val result =
                 runCatching {
                     val vis = ShizukuUtils.getSystemBinder("voiceinteraction")

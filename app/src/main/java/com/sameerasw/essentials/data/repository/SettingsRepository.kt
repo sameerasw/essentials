@@ -33,6 +33,8 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.PowerChoice
+import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
@@ -95,7 +97,7 @@ class SettingsRepository(
                     "Cycle sound modes" -> Action.CycleSoundModes
                     "Toggle media volume" -> Action.ToggleMediaVolume
                     "Like current song" -> Action.LikeCurrentSong
-                    "Circle to Search" -> Action.CircleToSearch
+                    "Circle to Search" -> Action.CircleToSearch()
                     else -> null
                 }
             setRemapAction(key, action)
@@ -152,6 +154,25 @@ class SettingsRepository(
             1 -> setRemapAction(key, actions.first())
             else -> prefs.edit().putString(key, ActionGsonAdapter.listToJson(actions)).apply()
         }
+    }
+
+    fun getPowerChoice(slot: RemapSlot): PowerChoice {
+        val defaultChoice = slot.defaultChoice ?: PowerChoice.ASSISTANT
+        val key = slot.choicePrefKey ?: return defaultChoice
+        val value = prefs.getString(key, null) ?: return defaultChoice
+        return try {
+            PowerChoice.valueOf(value)
+        } catch (_: IllegalArgumentException) {
+            defaultChoice
+        }
+    }
+
+    fun setPowerChoice(
+        slot: RemapSlot,
+        choice: PowerChoice,
+    ) {
+        val key = slot.choicePrefKey ?: return
+        prefs.edit().putString(key, choice.name).apply()
     }
 
     companion object {
@@ -249,6 +270,13 @@ class SettingsRepository(
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION = "button_remap_vol_down_action" // Legacy
         const val KEY_BUTTON_REMAP_VOL_UP_ACTION_ON = "button_remap_vol_up_action_on"
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON = "button_remap_vol_down_action_on"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_ACTION_OFF = "button_remap_power_hold_action_off"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_ACTION_ON = "button_remap_power_hold_action_on"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF = "button_remap_power_hold_choice_off"
+        const val KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON = "button_remap_power_hold_choice_on"
+        const val KEY_BUTTON_REMAP_POWER_OVERRIDDEN = "button_remap_power_overridden"
+        const val KEY_BUTTON_REMAP_POWER_ORIGINAL = "button_remap_power_original"
+        const val KEY_BUTTON_REMAP_POWER_CAMERA_FLIP = "button_remap_power_camera_flip"
         const val KEY_BUTTON_REMAP_HAPTIC_TYPE = "button_remap_haptic_type"
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy
         const val KEY_BUTTON_REMAP_MIGRATION_DONE = "button_remap_action_migration_done"
@@ -299,6 +327,7 @@ class SettingsRepository(
         const val KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT = "circle_to_search_gesture_height"
         const val KEY_CIRCLE_TO_SEARCH_GESTURE_WIDTH = "circle_to_search_gesture_width"
         const val KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED = "circle_to_search_preview_enabled"
+        const val KEY_CIRCLE_TO_SEARCH_HIDE_ON_SHADE = "circle_to_search_hide_on_shade"
         const val KEY_AUTO_UPDATE_ENABLED = "auto_update_enabled"
         const val KEY_UPDATE_NOTIFICATION_ENABLED = "update_notification_enabled"
         const val KEY_LAST_UPDATE_CHECK_TIME = "last_update_check_time"
@@ -423,9 +452,12 @@ class SettingsRepository(
         const val KEY_AOD_WALLPAPER_VIGNETTE = "aod_wallpaper_vignette"
         const val KEY_AOD_WALLPAPER_BLACK_THRESHOLD = "aod_wallpaper_black_threshold"
         const val KEY_AOD_WALLPAPER_CUSTOM_IMAGE = "aod_wallpaper_custom_image"
+        const val KEY_AOD_WALLPAPER_CUSTOM_IMAGE_VERSION = "aod_wallpaper_custom_image_version"
+        const val KEY_AOD_WALLPAPER_COMPAT = "aod_wallpaper_compat_mode"
         const val KEY_AOD_WALLPAPER_USE_ALBUM_ART = "aod_wallpaper_use_album_art"
         const val KEY_AOD_WALLPAPER_DISABLE_ON_DND = "aod_wallpaper_disable_on_dnd"
         const val KEY_AOD_WALLPAPER_KEEP_ON_MEDIA = "aod_wallpaper_keep_on_media"
+        const val KEY_AOD_WALLPAPER_SHARE_LOCK = "aod_wallpaper_share_lock"
         const val KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS = "aod_wallpaper_media_excluded_apps"
         const val KEY_AOD_WALLPAPER_EXTENDED_MEDIA = "aod_wallpaper_extended_media"
         const val KEY_AOD_WALLPAPER_EXTENDED_APP_ICON = "aod_wallpaper_extended_app_icon"
@@ -445,6 +477,7 @@ class SettingsRepository(
         const val KEY_MOTION_BLUR = "motion_blur"
         const val KEY_MOTION_BLUR_SCALE = "motion_blur_scale"
         const val KEY_ONLINE_HELP_MEDIA = "online_help_media"
+        const val KEY_SHAKE_FOR_HELP = "shake_for_help"
         const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
@@ -538,8 +571,13 @@ class SettingsRepository(
         const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
         const val ISLAND_SHOW_WHEN_ALWAYS = "always"
         const val KEY_ISLAND_NOTIF_CONCEAL_LOCKED = "island_notif_conceal_locked"
+        const val KEY_ISLAND_NOTIF_DISABLE_LOCKED = "island_notif_disable_locked"
         const val KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES = "island_notif_conceal_chat_pictures"
         const val KEY_ISLAND_CALENDAR_HIDE_LOCKED = "island_calendar_hide_locked"
+        const val KEY_ISLAND_CALENDAR_COMPACT_TIME = "island_calendar_compact_time"
+        const val KEY_ISLAND_CALENDAR_SHOW_ONGOING = "island_calendar_show_ongoing"
+        const val KEY_ISLAND_TIME_HIDE_LOCKED = "island_time_hide_locked"
+        const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
@@ -556,6 +594,25 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_CONSCIOUS_GATE = "island_show_conscious_gate"
         const val KEY_ISLAND_SHOW_TIME_BATTERY = "island_show_time_battery"
         const val KEY_ISLAND_TIME_SHOW_SECONDS = "island_time_show_seconds"
+        const val KEY_ISLAND_THEMED_TEXT = "island_themed_text"
+        const val KEY_ISLAND_THEMED_APP_ICONS = "island_themed_app_icons"
+        const val KEY_ISLAND_CHIPS = "island_chips"
+        const val KEY_ISLAND_TIME_CHIP = "island_time_chip"
+        const val KEY_ISLAND_ICON_COLOR_MODE = "island_icon_color_mode"
+        const val KEY_ISLAND_ICON_COLOR_CUSTOM = "island_icon_color_custom"
+        const val KEY_ISLAND_ICON_MATERIAL_YOU = "island_icon_material_you"
+        const val ISLAND_ICON_COLOR_DYNAMIC = "dynamic"
+        const val ISLAND_ICON_COLOR_CUSTOM = "custom"
+        const val KEY_ISLAND_TIME_FORMAT = "island_time_format"
+        const val KEY_ISLAND_TIME_PERIOD = "island_time_period"
+        const val KEY_ISLAND_TIME_LEADING_ZERO = "island_time_leading_zero"
+        const val KEY_ISLAND_TIME_DAY_SUFFIX = "island_time_day_suffix"
+        const val KEY_ISLAND_TIME_TAP_OPENS_CLOCK = "island_time_tap_opens_clock"
+        const val ISLAND_TIME_FORMAT_SYSTEM = "system"
+        const val ISLAND_TIME_FORMAT_12H = "12h"
+        const val ISLAND_TIME_FORMAT_24H = "24h"
+        const val ISLAND_TIME_PERIOD_NONE = "none"
+        const val ISLAND_TIME_PERIOD_AM_PM = "am_pm"
         const val KEY_ISLAND_SHOW_BATTERY = "island_show_battery"
         const val KEY_ISLAND_SHOW_FLASHLIGHT = "island_show_flashlight"
         const val KEY_ISLAND_BATTERY_STYLE = "island_battery_style"
@@ -575,7 +632,9 @@ class SettingsRepository(
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
+        const val KEY_ISLAND_ANIMATION_SPEED = "island_animation_speed"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
+        const val KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP = "island_hide_media_in_owner_app"
         const val KEY_ISLAND_HIDE_ON_SHADE = "island_hide_on_shade"
         const val KEY_ISLAND_KEEP_ON_LANDSCAPE = "island_keep_on_landscape"
         const val KEY_ISLAND_KEEP_IN_FULLSCREEN = "island_keep_in_fullscreen"
@@ -588,6 +647,7 @@ class SettingsRepository(
         const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
         const val KEY_ISLAND_HIDE_LIVE_UPDATES = "island_hide_live_updates"
+        const val KEY_ISLAND_HIDE_STATUS_BAR_INSETS = "island_hide_status_bar_insets"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
         const val KEY_ISLAND_ORIENTATION_PROFILES = "island_orientation_profiles"
         const val KEY_ISLAND_HIDE_PORTRAIT = "island_hide_portrait"
@@ -610,7 +670,7 @@ class SettingsRepository(
         const val KEY_ISLAND_PROVIDERS_HIDE_LOCKED = "island_providers_hide_locked"
 
         private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
-        const val KEY_ISLAND_CALENDAR_EMOJIS = "island_calendar_emojis"
+        const val KEY_ISLAND_CALENDAR_ICONS = "island_calendar_icons"
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
         const val KEY_ISLAND_TIMERS_FILTER_APPS = "island_timers_filter_apps"
         const val KEY_ISLAND_TIMERS_SELECTED_APPS = "island_timers_selected_apps"
@@ -654,13 +714,14 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE = "island_media_peek_song_change"
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
+        const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
-        const val KEY_ISLAND_NOTIF_COMPACT_HEADS_UP = "island_notif_compact_heads_up"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
         const val KEY_ISLAND_NOTIF_PEEK_STYLE = "island_notif_peek_style"
         const val ISLAND_NOTIF_PEEK_STYLE_FULL = "full"
         const val ISLAND_NOTIF_PEEK_STYLE_COMPACT = "compact"
         const val ISLAND_NOTIF_PEEK_STYLE_MINIMAL = "minimal"
+        const val ISLAND_NOTIF_PEEK_STYLE_EXPANDED = "expanded"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_NOTIF_QUEUE_STYLE = "island_notif_queue_style"
@@ -674,7 +735,9 @@ class SettingsRepository(
         const val KEY_ISLAND_SHOW_NOTIFICATIONS = "island_show_notifications"
         const val KEY_ISLAND_NOTIF_HUB = "island_notif_hub"
         const val KEY_ISLAND_NOTIF_HUB_ICONS = "island_notif_hub_icons"
+        const val KEY_ISLAND_NOTIF_HUB_CHAT_PICTURES = "island_notif_hub_chat_pictures"
         const val KEY_ISLAND_NOTIF_HUB_ORDER = "island_notif_hub_order"
+        const val KEY_ISLAND_NOTIF_HUB_OVERFLOW = "island_notif_hub_overflow"
         const val KEY_ISLAND_NOTIF_HUB_SILENT = "island_notif_hub_silent"
         const val KEY_ISLAND_NOTIF_HUB_GROUP = "island_notif_hub_group"
         const val ISLAND_NOTIF_HUB_ORDER_DYNAMIC = "dynamic"
@@ -1891,6 +1954,23 @@ class SettingsRepository(
         }
     }
 
+    fun resetKeysWithPrefixes(prefixes: List<String>) {
+        val protected =
+            setOf(
+                KEY_GITHUB_ACCESS_TOKEN,
+                KEY_GITHUB_WORKFLOW_TOKEN,
+                KEY_SHIZUKU_AUTH_TOKEN,
+                KEY_SNOOZE_DISCOVERED_CHANNELS,
+                KEY_MAPS_DISCOVERED_CHANNELS,
+                KEY_SHUT_UP_ORIGINAL_SETTINGS,
+            )
+        val editor = prefs.edit()
+        prefs.all.keys
+            .filter { key -> key !in protected && prefixes.any { key.startsWith(it) } }
+            .forEach { editor.remove(it) }
+        editor.apply()
+    }
+
     /**
      * Executes the export configs operation.
      *
@@ -2223,6 +2303,10 @@ class SettingsRepository(
     fun isOnlineHelpMediaEnabled(): Boolean = getBoolean(KEY_ONLINE_HELP_MEDIA, true)
 
     fun setOnlineHelpMediaEnabled(enabled: Boolean) = putBoolean(KEY_ONLINE_HELP_MEDIA, enabled)
+
+    fun isShakeForHelpEnabled(): Boolean = getBoolean(KEY_SHAKE_FOR_HELP, true)
+
+    fun setShakeForHelpEnabled(enabled: Boolean) = putBoolean(KEY_SHAKE_FOR_HELP, enabled)
 
     /**
      * Executes the set shut up attempt shizuku restart enabled operation.
@@ -4160,20 +4244,20 @@ class SettingsRepository(
     fun setIslandDevicesBatteryOnlyLowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW, enabled)
     fun setIslandBatteryPercentageConditional(enabled: Boolean) = putBoolean(KEY_ISLAND_BATTERY_PERCENTAGE_CONDITIONAL, enabled)
 
-    fun getIslandCalendarEmojis(): Map<Long, String> =
+    fun getIslandCalendarIcons(): Map<Long, String> =
         try {
-            val json = org.json.JSONObject(getString(KEY_ISLAND_CALENDAR_EMOJIS, "{}") ?: "{}")
+            val json = org.json.JSONObject(getString(KEY_ISLAND_CALENDAR_ICONS, "{}") ?: "{}")
             json.keys().asSequence().mapNotNull { key -> key.toLongOrNull()?.let { it to json.getString(key) } }.toMap()
         } catch (_: Exception) {
             emptyMap()
         }
 
-    fun setIslandCalendarEmoji(calendarId: Long, emoji: String?) {
-        val updated = getIslandCalendarEmojis().toMutableMap()
-        if (emoji.isNullOrBlank()) updated.remove(calendarId) else updated[calendarId] = emoji
+    fun setIslandCalendarIcon(calendarId: Long, icon: String?) {
+        val updated = getIslandCalendarIcons().toMutableMap()
+        if (icon.isNullOrBlank()) updated.remove(calendarId) else updated[calendarId] = icon
         val json = org.json.JSONObject()
         updated.forEach { (id, value) -> json.put(id.toString(), value) }
-        putString(KEY_ISLAND_CALENDAR_EMOJIS, json.toString())
+        putString(KEY_ISLAND_CALENDAR_ICONS, json.toString())
     }
 
     fun isIslandShowTimersEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIMERS, true)
@@ -4279,11 +4363,17 @@ class SettingsRepository(
 
     fun isIslandHideLiveUpdatesEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, false)
     fun setIslandHideLiveUpdatesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, enabled)
+    fun isIslandHideStatusBarInsetsEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_STATUS_BAR_INSETS, false)
+    fun setIslandHideStatusBarInsetsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_STATUS_BAR_INSETS, enabled)
     fun isIslandDismissOnOutsideEnabled(): Boolean = getBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, false)
     fun setIslandDismissOnOutsideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_DISMISS_ON_OUTSIDE, enabled)
 
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)
+
+    fun isIslandHideMediaInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, false)
+
+    fun setIslandHideMediaInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, enabled)
 
     fun isIslandKeepOnLandscapeEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
 
@@ -4325,6 +4415,9 @@ class SettingsRepository(
 
     fun setIslandHideOnShadeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_ON_SHADE, enabled)
 
+    fun getIslandAnimationSpeed(): Float = getFloat(KEY_ISLAND_ANIMATION_SPEED, 1f)
+    fun setIslandAnimationSpeed(value: Float) = putFloat(KEY_ISLAND_ANIMATION_SPEED, value)
+
     fun getIslandFontScale(): Float = getFloat(KEY_ISLAND_FONT_SCALE, 1f)
     fun setIslandFontScale(value: Float) = putFloat(KEY_ISLAND_FONT_SCALE, value)
 
@@ -4343,6 +4436,10 @@ class SettingsRepository(
     fun isIslandMediaShowPreviousEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, false)
     fun setIslandMediaShowPreviousEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, enabled)
 
+    fun isIslandMediaUseArtColorEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, true)
+
+    fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
+
     fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
     fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)
 
@@ -4351,6 +4448,9 @@ class SettingsRepository(
 
     fun isIslandNotifHubIncludeSilent(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB_SILENT, false)
     fun setIslandNotifHubIncludeSilent(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB_SILENT, enabled)
+
+    fun isIslandNotifHubPreferChatPictures(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB_CHAT_PICTURES, true)
+    fun setIslandNotifHubPreferChatPictures(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB_CHAT_PICTURES, enabled)
 
     fun isIslandNotifHubGroupByApps(): Boolean = getBoolean(KEY_ISLAND_NOTIF_HUB_GROUP, false)
     fun setIslandNotifHubGroupByApps(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_HUB_GROUP, enabled)
@@ -4361,6 +4461,11 @@ class SettingsRepository(
             ?: ISLAND_NOTIF_HUB_ORDER_DYNAMIC
 
     fun setIslandNotifHubOrder(value: String) = putString(KEY_ISLAND_NOTIF_HUB_ORDER, value)
+
+    fun getIslandNotifHubOverflow(): com.sameerasw.essentials.island.model.QueueOverflow =
+        com.sameerasw.essentials.island.model.QueueOverflow.entries.firstOrNull { it.name == getString(KEY_ISLAND_NOTIF_HUB_OVERFLOW, null) }
+            ?: com.sameerasw.essentials.island.model.QueueOverflow.Number
+    fun setIslandNotifHubOverflow(value: com.sameerasw.essentials.island.model.QueueOverflow) = putString(KEY_ISLAND_NOTIF_HUB_OVERFLOW, value.name)
 
     // 0 = fit to the available width
     fun getIslandNotifHubIcons(): Int = getInt(KEY_ISLAND_NOTIF_HUB_ICONS, 0).coerceIn(0, 8)
@@ -4446,12 +4551,14 @@ class SettingsRepository(
     fun getIslandOtpTimeoutMs(): Long = getLong(KEY_ISLAND_OTP_TIMEOUT_MS, 60_000L)
     fun setIslandOtpTimeoutMs(ms: Long) = putLong(KEY_ISLAND_OTP_TIMEOUT_MS, ms)
 
-    fun isIslandNotifCompactHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, true)
-    fun setIslandNotifCompactHeadsUpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_COMPACT_HEADS_UP, enabled)
 
     fun getIslandNotifPeekStyle(): String =
-        getString(KEY_ISLAND_NOTIF_PEEK_STYLE, null)
-            ?: if (getBoolean(KEY_ISLAND_NOTIF_CONDENSED_INFO, false)) ISLAND_NOTIF_PEEK_STYLE_COMPACT else ISLAND_NOTIF_PEEK_STYLE_FULL
+        when (getString(KEY_ISLAND_NOTIF_PEEK_STYLE, null)) {
+            ISLAND_NOTIF_PEEK_STYLE_COMPACT -> ISLAND_NOTIF_PEEK_STYLE_COMPACT
+            ISLAND_NOTIF_PEEK_STYLE_EXPANDED -> ISLAND_NOTIF_PEEK_STYLE_EXPANDED
+            null -> if (getBoolean(KEY_ISLAND_NOTIF_CONDENSED_INFO, false)) ISLAND_NOTIF_PEEK_STYLE_COMPACT else ISLAND_NOTIF_PEEK_STYLE_FULL
+            else -> ISLAND_NOTIF_PEEK_STYLE_FULL
+        }
     fun setIslandNotifPeekStyle(style: String) = putString(KEY_ISLAND_NOTIF_PEEK_STYLE, style)
 
     fun isIslandNotifKeepProgressEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, true)

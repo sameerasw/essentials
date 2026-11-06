@@ -133,6 +133,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:label="Essentials"
             android:theme="@style/Theme.Essentials.Splash">
             <intent-filter>
@@ -303,25 +304,33 @@
         <activity
             android:name=".ui.activities.PixelSearchbarSettingsActivity"
             android:exported="true"
-            android:label="@string/pixel_searchbar_settings_title" />
+            android:label="@string/pixel_searchbar_settings_title"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true" />
 
         <activity
             android:name=".FeatureSettingsActivity"
             android:exported="false"
             android:label="Feature Settings"
-            android:theme="@style/Theme.Essentials"></activity>
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.NoDisplay"></activity>
 
         <activity
             android:name=".ui.activities.YourAndroidActivity"
             android:exported="false"
             android:label="@string/tab_your_android"
-            android:theme="@style/Theme.Essentials"></activity>
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true"
+            ></activity>
 
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="Settings"
-            android:theme="@style/Theme.Essentials"></activity>
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true"
+            ></activity>
         <activity
             android:name=".AppUpdatesActivity"
             android:exported="false"
@@ -366,7 +375,8 @@
             android:name=".ui.activities.AutomationEditorActivity"
             android:exported="false"
             android:label="@string/diy_editor_new_title"
-            android:theme="@style/Theme.Essentials" />
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true" />
 
 
         <service
@@ -649,7 +659,8 @@
             android:name=".ui.activities.WallpaperActivity"
             android:exported="false"
             android:label="@string/feat_daily_wallpaper_title"
-            android:theme="@style/Theme.Essentials" />
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true" />
 
         <activity
             android:name=".ui.activities.WallpaperStagingActivity"

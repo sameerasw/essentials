@@ -9,6 +9,7 @@ data class CompactEntry(
     val soloCellKeys: List<String> = emptyList(),
     val needsCompany: Boolean = false,
     val companionOnly: Boolean = false,
+    val keepTogether: Boolean = false,
 )
 
 // `before` / `after` are camera-relative and ordered inner (next to camera) → outer.
@@ -101,7 +102,7 @@ object CompactLayoutEngine {
                 val movedGap = kotlin.math.abs((left - size) - (right + size))
                 if (movedGap > gap || (movedGap == gap && left <= right)) break
                 before.removeAll(entry.cellKeys.toSet())
-                after += if (size == 2) entry.cellKeys.reversed() else entry.cellKeys
+                after.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
             }
         }
 
@@ -114,16 +115,17 @@ object CompactLayoutEngine {
                 val movedGap = kotlin.math.abs((left - size) - (right + size))
                 if (movedGap >= gap) break
                 before.removeAll(entry.cellKeys.toSet())
-                after += if (size == 2) entry.cellKeys.reversed() else entry.cellKeys
+                after.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
             }
         }
 
         val solo = selected.singleOrNull()
         if (solo != null && solo.soloCellKeys.isNotEmpty() && solo.cellKeys.size == 1) {
+            if (solo.keepTogether) return CompactArrangement(emptyList(), solo.soloCellKeys + solo.cellKeys, visible)
             return CompactArrangement(solo.soloCellKeys, solo.cellKeys, visible)
         }
 
-        if (before.isEmpty() && selected.size == 1 && after.size == 2) {
+        if (before.isEmpty() && selected.size == 1 && after.size == 2 && selected.first().cellKeys.size == 2) {
             val item = selected.first()
             return CompactArrangement(listOf(item.cellKeys[0]), listOf(item.cellKeys[1]), visible)
         }

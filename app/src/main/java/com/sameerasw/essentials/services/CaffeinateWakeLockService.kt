@@ -109,6 +109,7 @@ class CaffeinateWakeLockService : Service() {
         flags: Int,
         startId: Int,
     ): Int {
+        runCatching { startForeground(2, createNotification()) }
         when (intent?.action) {
             "STOP" -> {
                 stopForeground(STOP_FOREGROUND_REMOVE)
@@ -175,7 +176,7 @@ class CaffeinateWakeLockService : Service() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
         val mainIntent =
-            Intent(this, MainActivity::class.java).apply { putExtra("feature", "Caffeinate") }
+            com.sameerasw.essentials.utils.AppIconUtil.mainIntent(this).apply { putExtra("feature", "Caffeinate") }
         val mainPendingIntent =
             PendingIntent.getActivity(
                 this,
