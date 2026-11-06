@@ -302,6 +302,7 @@ private fun IslandRootContent(
     // Hidden: the width shrinks to a circle first, then the circle shrinks to nothing, so it never turns oval.
     val squash = remember { Animatable(0f) }
     val holdSize = remember { IntArray(2) }
+    val previewCompactSize = remember { IntArray(2) }
     val dismissOffset = remember { Animatable(0f) }
     var target by remember { mutableStateOf(IntSize.Zero) }
     var compactSize by remember { mutableStateOf(IntSize.Zero) }
@@ -498,6 +499,19 @@ private fun IslandRootContent(
             )
         }
     }
+    LaunchedEffect(stage) {
+        if (inspection || (stage != IslandStage.Line && stage != IslandStage.Expanded)) return@LaunchedEffect
+        var driven = false
+        snapshotFlow { collapse.value }.collect { c ->
+            if (c > 0.001f && currentState.sideBubble != null) {
+                driven = true
+                catchUpAnim.snapTo(((c - 0.2f) / 0.5f).coerceIn(0f, 1f))
+            } else if (driven) {
+                driven = false
+                catchUpAnim.snapTo(0f)
+            }
+        }
+    }
     // Hiding runs in order: secondary bubbles fold back first, then the main pill closes into the camera.
     LaunchedEffect(stage == IslandStage.Hidden) {
         if (inspection) return@LaunchedEffect
@@ -558,6 +572,9 @@ private fun IslandRootContent(
     fun catchShiftPx(): Float = sideBubbleProgress() * slackAnim.value / 2f
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
+    val liveSurfaceWidth = remember { mutableIntStateOf(0) }
+    fun visibleWidth(): Int =
+        if (collapse.value > 0f && liveSurfaceWidth.intValue > 0) liveSurfaceWidth.intValue else surfaceSize.width
     fun surfaceShiftFor(width: Int): Int = spec.growDirection * (width - cameraSlotPx) / 2
     fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
         lineShift.value.roundToInt() + catchShiftPx().roundToInt()
@@ -567,7 +584,7 @@ private fun IslandRootContent(
         if (spec.growDirection > 0) surfaceLeft(width) + width + bondedGapPx() else surfaceLeft(width) - bondedGapPx() - sideWidthLive()
     fun liveBubbleX(width: Int): Int {
         if (stage == IslandStage.Compact) bubbleAnchorWidth[0] = width
-        val anchorW = if (bubbleTucking && bubbleAnchorWidth[0] > 0) bubbleAnchorWidth[0] else width
+        val anchorW = if (bubbleTucking && bubbleAnchorWidth[0] > 0 && collapse.value <= 0f) bubbleAnchorWidth[0] else width
         val endX = bubbleX(anchorW)
         val startX = when {
             bubbleTucking && bubbleAbsorbing -> endX
@@ -734,7 +751,7 @@ private fun IslandRootContent(
                     layout { measurable, constraints ->
                         val p = measurable.measure(Constraints())
                         layout(constraints.maxWidth, constraints.maxHeight) {
-                            val w = surfaceSize.width
+                            val w = visibleWidth()
                             val sideX = queueX(w) + queueWidthLive() / 2f
                             val sideY = surfaceTopPx + bubbleSizePx / 2f
                             val belowX = surfaceLeft(w) + w / 2f
@@ -792,7 +809,7 @@ private fun IslandRootContent(
             Box(
                 Modifier
                     .layout { measurable, constraints ->
-                        val w = surfaceSize.width
+                        val w = visibleWidth()
                         val surfaceStart = surfaceLeft(w)
                         val bubbleStart = if (bubbleTucking) liveBubbleX(w) else bubbleX(w)
                         val left = minOf(bubbleStart, surfaceStart)
@@ -844,13 +861,13 @@ private fun IslandRootContent(
                             .fillMaxSize()
                             .drawBehind {
                                 val m = (1f - catchUpAnim.value).coerceIn(0f, 1f)
-                                val w = surfaceSize.width
+                                val w = visibleWidth()
                                 val h = liveSurfaceHeight.intValue.toFloat()
                                 if (w <= 0 || h <= 0f) return@drawBehind
                                 val fromL = if (bubbleOnlyLayout) {
                                     windowWidth / 2f - sideWidthLive() / 2f
                                 } else {
-                                    bubbleX(bubbleAnchorWidth[0].takeIf { it > 0 } ?: w).toFloat()
+                                    bubbleX(bubbleAnchorWidth[0].takeIf { it > 0 && collapse.value <= 0f } ?: w).toFloat()
                                 }
                                 val fromT = surfaceTopPx - surfaceTopPx * bond
                                 val toL = surfaceLeft(w).toFloat()
@@ -878,7 +895,7 @@ private fun IslandRootContent(
                             if (bubbleOnlyLayout) {
                                 IntOffset((windowWidth / 2 - sideWidthLive() / 2 + dragX.value).roundToInt(), surfaceTopPx)
                             } else {
-                                IntOffset(liveBubbleX(surfaceSize.width) + dragX.value.roundToInt(), surfaceTopPx - (surfaceTopPx * bond).roundToInt())
+                                IntOffset(liveBubbleX(visibleWidth()) + dragX.value.roundToInt(), surfaceTopPx - (surfaceTopPx * bond).roundToInt())
                             }
                         }
                         .liquid(bubbleLiquid)
@@ -939,6 +956,8 @@ private fun IslandRootContent(
             else -> fallbackCompact
         }
         val collapseEnd by animateIntSizeAsState(collapseEndTarget, IslandMotion.compactSize, label = "collapseEnd")
+        fun compactFloorWidth(): Int =
+            if (collapse.value > 0f && previewCompactSize[0] > 0) previewCompactSize[0] else collapseEnd.width
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -1001,7 +1020,11 @@ private fun IslandRootContent(
                 .layout { measurable, constraints ->
                     val child = measurable.measure(constraints)
                     val t = collapse.value.coerceIn(0f, 1f)
-                    val end = collapseEnd
+                    val end = if (t > 0f && previewCompactSize[0] > 0) {
+                        IntSize(previewCompactSize[0], previewCompactSize[1].coerceAtLeast(minSurfaceHeight))
+                    } else {
+                        collapseEnd
+                    }
                     // Never smaller than the camera, whatever a spring or fling does.
                     val preW = (if (t > 0f) lerp(child.width, end.width, t) else child.width).coerceAtLeast(minSurfaceWidth)
                     val preH = (if (t > 0f) lerp(child.height, end.height, t) else child.height).coerceAtLeast(minSurfaceHeight)
@@ -1018,6 +1041,7 @@ private fun IslandRootContent(
                         holdSize[1] = preH
                     }
                     liveSurfaceHeight.intValue = h
+                    liveSurfaceWidth.intValue = w
                     val range = (expandedHeight[0] - minSurfaceHeight).toFloat()
                     val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
                     edgeShift.floatValue = outsetPx * p
@@ -1044,7 +1068,7 @@ private fun IslandRootContent(
                 .onSizeChanged { surfaceSize = it }
                 .layout { measurable, constraints ->
                     val p = measurable.measure(constraints)
-                    val floorW = if (stage == IslandStage.Compact) maxOf(minSurfaceWidth, collapseEnd.width) else minSurfaceWidth
+                    val floorW = if (stage == IslandStage.Compact) maxOf(minSurfaceWidth, compactFloorWidth()) else minSurfaceWidth
                     val w = p.width.coerceAtLeast(floorW)
                     val h = p.height.coerceAtLeast(minSurfaceHeight)
                     layout(w, h) { p.place((w - p.width) / 2, 0) }
@@ -1069,7 +1093,7 @@ private fun IslandRootContent(
                 )
                 .layout { measurable, constraints ->
                     val p = measurable.measure(constraints)
-                    val floorW = if (stage == IslandStage.Compact) maxOf(minSurfaceWidth, collapseEnd.width) else minSurfaceWidth
+                    val floorW = if (stage == IslandStage.Compact) maxOf(minSurfaceWidth, compactFloorWidth()) else minSurfaceWidth
                     growTarget[0] = p.width.coerceAtLeast(floorW)
                     growTarget[1] = p.height.coerceAtLeast(minSurfaceHeight)
                     layout(p.width, p.height) { p.place(0, 0) }
@@ -1407,7 +1431,7 @@ private fun IslandRootContent(
                         .matchParentSize()
                         .graphicsLayer {
                             val t = collapse.value.coerceIn(0f, 1f)
-                            alpha = ((t - 0.3f) / 0.7f).coerceIn(0f, 1f)
+                            alpha = ((t - 0.15f) / 0.45f).coerceIn(0f, 1f)
                             val m = 1f - t
                             val scale = 1f + contentScaleFor(IslandStage.Compact) * m
                             scaleX = scale
@@ -1417,14 +1441,26 @@ private fun IslandRootContent(
                         },
                     contentAlignment = layerAlign,
                 ) {
-                    CompactTemplate(
-                        state = state,
-                        spec = spec,
-                        onCellTap = {},
-                        onCellLongPress = {},
-                        sideBubble = ::sideBubbleProgress,
-                        bubbleExtent = { bubbleGapPx + sideWidthLive() },
-                    )
+                    Box(
+                        Modifier.layout { measurable, constraints ->
+                            val p = measurable.measure(Constraints(maxHeight = constraints.maxHeight))
+                            previewCompactSize[0] = p.width.coerceAtLeast(minSurfaceWidth)
+                            previewCompactSize[1] = p.height
+                            layout(p.width, p.height) { p.place(0, 0) }
+                        },
+                    ) {
+                        CompactTemplate(
+                            state = state,
+                            spec = spec,
+                            onCellTap = {},
+                            onCellLongPress = {},
+                            sideBubble = ::sideBubbleProgress,
+                            bubbleExtent = { bubbleGapPx + sideWidthLive() },
+                            onSlack = { compactSlack.intValue = it },
+                            onBaseWidth = { compactBaseWidth.intValue = it },
+                            onNeedLeft = { compactNeedLeft.intValue = it },
+                        )
+                    }
                 }
             }
             }
