@@ -924,7 +924,7 @@ object FeatureRegistry {
                         ),
                         SearchSetting(
                             R.string.island_show_on_update_title,
-                            R.string.island_show_on_update_desc,
+                            R.string.island_providers_title,
                             "island_provider_show_on_update",
                         ),
                     ),

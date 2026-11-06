@@ -30,7 +30,6 @@ import com.sameerasw.island.sdk.IIslandProvider
 import com.sameerasw.island.sdk.IslandAction
 import com.sameerasw.island.sdk.IslandActionType
 import com.sameerasw.island.sdk.IslandCodec
-import com.sameerasw.island.sdk.IslandPayload
 import com.sameerasw.island.sdk.IslandSchema
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +49,6 @@ class ProviderConnection(
     private val scope: CoroutineScope,
     private val request: (PluginRequest) -> Unit,
     private val onItemsChanged: () -> Unit,
-    private val onUpdated: () -> Unit,
     private val onUnauthorized: () -> Unit,
 ) : RemoteItemHandler {
     private val _items = MutableStateFlow<List<IslandItem>>(emptyList())
@@ -68,7 +66,6 @@ class ProviderConnection(
     private var mapper: Job? = null
     private var retry: Job? = null
     private var retryDelayMs = INITIAL_RETRY_MS
-    private var lastPayload: IslandPayload? = null
 
     val packageName: String get() = info.packageName
 
@@ -211,10 +208,6 @@ class ProviderConnection(
         _items.value = decoded.payload.items.mapNotNull { RemoteItemMapper.map(it, decoded.assets, siblings, this) }
         RemoteBriefCards.set(info.packageName, decoded.payload.briefCards.map { RemoteBriefCard(info.packageName, it, decoded.assets, this) })
         onItemsChanged()
-        if (decoded.payload != lastPayload) {
-            lastPayload = decoded.payload
-            onUpdated()
-        }
     }
 
     private fun hostInfo(): HostInfo {

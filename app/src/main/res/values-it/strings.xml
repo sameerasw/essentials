@@ -1709,4 +1709,5 @@
     <string name="feat_screenshots_title">Pulizia screenshot</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
 </resources>

@@ -78,7 +78,6 @@ fun IslandAppOptionsBottomSheet(
                 IconToggleItem(
                     iconRes = R.drawable.rounded_sync_24,
                     title = stringResource(R.string.island_show_on_update_title),
-                    description = stringResource(R.string.island_show_on_update_desc),
                     isChecked = showOnUpdate,
                     onCheckedChange = {
                         HapticUtil.performVirtualKeyHaptic(view)

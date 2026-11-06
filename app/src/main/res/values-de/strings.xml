@@ -1919,6 +1919,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_battery_idle_color_title">Leerlauffarbe</string>
     <string name="island_time_show_seconds_title">Sekunden anzeigen</string>
     <string name="island_launcher_only_title">Nur im Launcher anzeigen</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">Ausblenden, solange eine App geöffnet ist</string>
     <string name="island_notif_show_title">Benachrichtigungen anzeigen</string>
     <string name="island_notif_filter_apps_title">Apps filtern</string>
