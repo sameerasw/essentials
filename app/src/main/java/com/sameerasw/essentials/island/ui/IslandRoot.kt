@@ -656,12 +656,10 @@ private fun IslandRootContent(
     
     val pillReveal = remember { Animatable(0f) }
     LaunchedEffect(queueShown) {
-        val expandedAlready = stage == IslandStage.Expanded && queueBelow.value >= 0.99f
         when {
-            queueShown && expandedAlready -> pillReveal.animateTo(1f, IslandMotion.float())
-            queueShown -> pillReveal.animateTo(1f, IslandMotion.float())
-            expandedAlready -> pillReveal.animateTo(0f, motionTween(240))
-            else -> pillReveal.animateTo(0f, motionTween(180))
+            queueShown -> pillReveal.animateTo(1f, IslandMotion.collapseFloat())
+            collapse.value > 0.5f -> pillReveal.snapTo(0f)
+            else -> pillReveal.animateTo(0f, IslandMotion.collapseFloat())
         }
     }
     LaunchedEffect(stage) {
@@ -742,7 +740,11 @@ private fun IslandRootContent(
         AnimatedVisibility(
             visible = queueShown,
             enter = if (stage == IslandStage.Expanded) EnterTransition.None else fadeIn(IslandMotion.contentIn()),
-            exit = if (stage == IslandStage.Expanded) fadeOut(motionTween(1, delayMillis = 260)) else fadeOut(IslandMotion.contentOut()),
+            exit = if (stage == IslandStage.Expanded || queueBelow.value > 0.5f) {
+                fadeOut(motionTween(1, delayMillis = 460))
+            } else {
+                fadeOut(IslandMotion.contentOut())
+            },
         ) {
             
             Box(Modifier.fillMaxSize()) {
@@ -759,13 +761,23 @@ private fun IslandRootContent(
                             val k = t()
                             val cx = sideX + (belowX - sideX) * k
                             val cy = sideY + (belowY - sideY) * k
-                            val reveal = if (slides) minOf(pillReveal.value, pillGate()) else 1f
-                            val tuck = if (slides) (1f - reveal) * (p.height + pillGapPx) else 0f
-                            p.placeWithLayer((cx - p.width / 2f).roundToInt(), (cy - p.height / 2f - tuck).roundToInt()) {
-                                val s = fromScale + (toScale - fromScale) * k
+                            val reveal = if (slides) {
+                                minOf(pillReveal.value, pillGate(), 1f - collapse.value).coerceIn(0f, 1f)
+                            } else {
+                                1f
+                            }
+                            val hiddenY = surfaceTopPx - edgeShift.floatValue + liveSurfaceHeight.intValue / 2f
+                            val y = if (slides) hiddenY + (cy - hiddenY) * reveal else cy
+                            val fit = if (slides && p.width > 0 && p.height > 0) {
+                                minOf(1f, w * 0.9f / p.width, liveSurfaceHeight.intValue * 0.9f / p.height)
+                            } else {
+                                1f
+                            }
+                            p.placeWithLayer((cx - p.width / 2f).roundToInt(), (y - p.height / 2f).roundToInt()) {
+                                val s = (fromScale + (toScale - fromScale) * k) * (fit + (1f - fit) * reveal)
                                 scaleX = s
                                 scaleY = s
-                                alpha = alphaOf(k) * (1f - collapse.value).coerceIn(0f, 1f) * (if (slides) pillGate() else 1f)
+                                alpha = if (slides) alphaOf(k) else alphaOf(k) * (1f - collapse.value).coerceIn(0f, 1f)
                             }
                         }
                     }
