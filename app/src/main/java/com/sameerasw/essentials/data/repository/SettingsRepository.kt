@@ -607,6 +607,7 @@ class SettingsRepository(
         const val KEY_ISLAND_TIME_PERIOD = "island_time_period"
         const val KEY_ISLAND_TIME_LEADING_ZERO = "island_time_leading_zero"
         const val KEY_ISLAND_TIME_DAY_SUFFIX = "island_time_day_suffix"
+        const val KEY_ISLAND_TIME_TAP_OPENS_CLOCK = "island_time_tap_opens_clock"
         const val ISLAND_TIME_FORMAT_SYSTEM = "system"
         const val ISLAND_TIME_FORMAT_12H = "12h"
         const val ISLAND_TIME_FORMAT_24H = "24h"
@@ -633,6 +634,7 @@ class SettingsRepository(
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_ANIMATION_SPEED = "island_animation_speed"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
+        const val KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP = "island_hide_media_in_owner_app"
         const val KEY_ISLAND_HIDE_ON_SHADE = "island_hide_on_shade"
         const val KEY_ISLAND_KEEP_ON_LANDSCAPE = "island_keep_on_landscape"
         const val KEY_ISLAND_KEEP_IN_FULLSCREEN = "island_keep_in_fullscreen"
@@ -712,6 +714,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE = "island_media_peek_song_change"
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
+        const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
         const val KEY_ISLAND_NOTIF_PEEK_STYLE = "island_notif_peek_style"
@@ -4357,6 +4360,10 @@ class SettingsRepository(
     fun isIslandHideInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, false)
     fun setIslandHideInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_IN_OWNER_APP, enabled)
 
+    fun isIslandHideMediaInOwnerAppEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, false)
+
+    fun setIslandHideMediaInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, enabled)
+
     fun isIslandKeepOnLandscapeEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
 
     fun setIslandKeepOnLandscapeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, enabled)
@@ -4417,6 +4424,10 @@ class SettingsRepository(
 
     fun isIslandMediaShowPreviousEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, false)
     fun setIslandMediaShowPreviousEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_PREVIOUS, enabled)
+
+    fun isIslandMediaUseArtColorEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, true)
+
+    fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
 
     fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
     fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)

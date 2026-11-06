@@ -839,6 +839,18 @@ fun IslandBehaviorSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_music_note_24,
+                title = stringResource(R.string.island_hide_media_in_owner_app_title),
+                isChecked = viewModel.isIslandHideInOwnerApp.value || viewModel.isIslandHideMediaInOwnerApp.value,
+                enabled = !viewModel.isIslandHideInOwnerApp.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandHideMediaInOwnerApp(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_hide_media_in_owner_app"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_pinch_24,
                 title = stringResource(R.string.island_hide_on_shade_title),
                 isChecked = viewModel.isIslandHideOnShade.value,

@@ -72,7 +72,7 @@ class MediaSnapshot(
     val title: String,
     val artist: String,
     val artwork: Bitmap?,
-    val accent: Color,
+    val accent: Color?,
     val playing: Boolean,
     val liked: Boolean,
     val actions: MediaActions,
@@ -265,3 +265,6 @@ fun MediaExpanded(
         }
     }
 }
+
+@Composable
+fun mediaAccent(artAccent: Color?): Color = artAccent ?: LocalIslandIconColor.current ?: Color.White

@@ -822,6 +822,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_time_tap_opens_clock_title,
+                            R.string.island_show_time_title,
+                            "island_show_time_battery",
+                        ),
+                        SearchSetting(
                             R.string.island_show_battery_title,
                             R.string.island_battery_style_title,
                             "island_show_battery",
@@ -915,7 +920,7 @@ object FeatureRegistry {
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
                     context: Context,
-                ) = viewModel.isAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
+                ) = viewModel.isAccessibilityEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,

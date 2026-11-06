@@ -72,6 +72,7 @@ import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.display.actions.GestureActionPickerSheet
 import com.sameerasw.essentials.ui.features.display.actions.HorizontalSlideModeSheet
+import com.sameerasw.essentials.services.handlers.SoundModeHandler
 import com.sameerasw.essentials.ui.features.display.actions.horizontalSlideDescription
 import com.sameerasw.essentials.ui.features.display.sheets.IslandAlarmOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandBatteryOptionsBottomSheet
@@ -129,6 +130,9 @@ fun IslandSettingsUI(
     var showBriefOptionsSheet by remember { mutableStateOf(highlightSetting == "island_brief_show_alarm") }
     var pickingGesture by remember { mutableStateOf<String?>(null) }
     var showSlideModeSheet by remember { mutableStateOf(false) }
+    val soundModeHandler = remember { SoundModeHandler(context) }
+    val essentialsPrefs = remember { context.getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE) }
+    var soundModeUseShizuku by remember { mutableStateOf(essentialsPrefs.getBoolean("sound_mode_use_shizuku", true)) }
 
     if (requestingPermissionsFor != null) {
         val (titleRes, permKeys) = requestingPermissionsFor!!
@@ -160,16 +164,8 @@ fun IslandSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     if (checked) {
-                        val missingPermissions = mutableListOf<String>()
                         if (!viewModel.isAccessibilityEnabled.value) {
-                            missingPermissions.add("ACCESSIBILITY")
-                        }
-                        if (!viewModel.isNotificationListenerEnabled.value) {
-                            missingPermissions.add("NOTIFICATION_LISTENER")
-                        }
-
-                        if (missingPermissions.isNotEmpty()) {
-                            requestingPermissionsFor = Pair(R.string.island_title, missingPermissions)
+                            requestingPermissionsFor = Pair(R.string.island_title, listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"))
                         } else {
                             viewModel.setIslandEnabled(true)
                         }
@@ -637,6 +633,30 @@ fun IslandSettingsUI(
             )
 
             AnimatedVisibility(
+                visible = viewModel.islandSlideMode.value == "sound_mode",
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_adb_24,
+                    title = stringResource(R.string.sound_mode_use_shizuku_title),
+                    isChecked = soundModeUseShizuku,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        soundModeUseShizuku = checked
+                        essentialsPrefs.edit().putBoolean("sound_mode_use_shizuku", checked).apply()
+                        if (!soundModeHandler.canChangeMode() || (checked && !soundModeHandler.isShizukuReady())) {
+                            viewModel.check(context)
+                            requestingPermissionsFor =
+                                R.string.duo_action_horizontal_slide_sound_mode to
+                                if (checked) listOf("SHIZUKU") else listOf("NOTIFICATION_POLICY")
+                        }
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_slide_sound_mode_shizuku"),
+                )
+            }
+
+            AnimatedVisibility(
                 visible = viewModel.isIslandSlideTrack.value || viewModel.islandSlideMode.value == "sound_mode",
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
@@ -721,7 +741,13 @@ fun IslandSettingsUI(
     if (showSlideModeSheet) {
         HorizontalSlideModeSheet(
             mode = viewModel.islandSlideMode.value,
-            onModeSelected = viewModel::setIslandSlideMode,
+            onModeSelected = { mode ->
+                viewModel.setIslandSlideMode(mode)
+                if (mode == "sound_mode" && !soundModeHandler.canChangeMode()) {
+                    viewModel.check(context)
+                    requestingPermissionsFor = R.string.duo_action_horizontal_slide_sound_mode to listOf("SHIZUKU", "NOTIFICATION_POLICY")
+                }
+            },
             onDismissRequest = { showSlideModeSheet = false },
         )
     }
@@ -778,6 +804,16 @@ fun IslandSettingsUI(
                                 viewModel.setIslandMediaShowLike(checked)
                             },
                             modifier = Modifier.highlight(highlightSetting == "island_media_show_like"),
+                        )
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_palette_24,
+                            title = stringResource(R.string.island_media_use_art_color_title),
+                            isChecked = viewModel.isIslandMediaUseArtColor.value,
+                            onCheckedChange = { checked ->
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setIslandMediaUseArtColor(checked)
+                            },
+                            modifier = Modifier.highlight(highlightSetting == "island_media_use_art_color"),
                         )
                     }
                     Text(
