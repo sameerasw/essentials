@@ -163,16 +163,8 @@ fun IslandSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     if (checked) {
-                        val missingPermissions = mutableListOf<String>()
                         if (!viewModel.isAccessibilityEnabled.value) {
-                            missingPermissions.add("ACCESSIBILITY")
-                        }
-                        if (!viewModel.isNotificationListenerEnabled.value) {
-                            missingPermissions.add("NOTIFICATION_LISTENER")
-                        }
-
-                        if (missingPermissions.isNotEmpty()) {
-                            requestingPermissionsFor = Pair(R.string.island_title, missingPermissions)
+                            requestingPermissionsFor = Pair(R.string.island_title, listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"))
                         } else {
                             viewModel.setIslandEnabled(true)
                         }

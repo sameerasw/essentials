@@ -915,7 +915,7 @@ object FeatureRegistry {
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
                     context: Context,
-                ) = viewModel.isAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
+                ) = viewModel.isAccessibilityEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,
