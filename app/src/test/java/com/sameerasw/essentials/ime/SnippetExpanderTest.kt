@@ -37,7 +37,10 @@ class SnippetExpanderTest {
     fun expand_timePlaceholder_replacesWithTime() {
         val template = "Current time is {time}."
         val result = SnippetExpander.expand(template, null)
-        assertTrue(result.contains("AM") || result.contains("PM"))
+        assertTrue(
+            "Unexpected time format: $result",
+            Regex("""Current time is \d{1,2}:\d{2}.?(am|pm)\.""", RegexOption.IGNORE_CASE).matches(result),
+        )
     }
 
     @Test

@@ -3697,6 +3697,11 @@
     <string name="snippets_action_insert">Insert</string>
     <string name="snippets_action_copy">Copy</string>
     <string name="snippets_action_copied">Copied to clipboard</string>
+    <string name="snippets_title_placeholder">e.g. My Email</string>
+    <string name="snippets_keyword_placeholder">e.g. !email</string>
+    <string name="snippets_content_placeholder">Expanded snippet text</string>
+    <string name="snippets_selected">Selected</string>
+    <string name="snippets_external_keyboards_header">Gboard &amp; external keyboards</string>
     <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
     <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
     <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>

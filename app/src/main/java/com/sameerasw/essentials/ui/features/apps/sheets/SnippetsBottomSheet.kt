@@ -208,7 +208,7 @@ fun SnippetsBottomSheet(
                     leadingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.rounded_search_24),
-                            contentDescription = "Search",
+                            contentDescription = stringResource(R.string.action_search),
                             modifier = Modifier.size(20.dp),
                         )
                     },
@@ -217,7 +217,7 @@ fun SnippetsBottomSheet(
                             IconButton(onClick = { searchQuery = "" }) {
                                 Icon(
                                     painter = painterResource(R.drawable.rounded_close_24),
-                                    contentDescription = "Clear",
+                                    contentDescription = stringResource(R.string.action_clear),
                                     modifier = Modifier.size(20.dp),
                                 )
                             }
@@ -401,7 +401,7 @@ private fun SnippetEditSheet(
                 value = title,
                 onValueChange = { title = it },
                 label = { Text(stringResource(R.string.snippets_snippet_title)) },
-                placeholder = { Text("e.g. My Email") },
+                placeholder = { Text(stringResource(R.string.snippets_title_placeholder)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -411,7 +411,7 @@ private fun SnippetEditSheet(
                 value = keyword,
                 onValueChange = { keyword = it },
                 label = { Text(stringResource(R.string.snippets_keyword)) },
-                placeholder = { Text("e.g. !email") },
+                placeholder = { Text(stringResource(R.string.snippets_keyword_placeholder)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -421,7 +421,7 @@ private fun SnippetEditSheet(
                 value = content,
                 onValueChange = { content = it },
                 label = { Text(stringResource(R.string.snippets_content)) },
-                placeholder = { Text("Expanded snippet text") },
+                placeholder = { Text(stringResource(R.string.snippets_content_placeholder)) },
                 minLines = 3,
                 maxLines = 6,
                 modifier = Modifier.fillMaxWidth(),
@@ -601,7 +601,7 @@ fun SnippetDisplayStyleSheet(
                                 {
                                     Icon(
                                         painter = painterResource(R.drawable.rounded_check_24),
-                                        contentDescription = "Selected",
+                                        contentDescription = stringResource(R.string.snippets_selected),
                                         tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.size(24.dp),
                                     )

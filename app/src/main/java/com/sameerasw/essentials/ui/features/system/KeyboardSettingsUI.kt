@@ -357,7 +357,7 @@ fun KeyboardSettingsUI(
 
         // Gboard & External Keyboards Section
         Text(
-            text = "Gboard & External Keyboards",
+            text = stringResource(R.string.snippets_external_keyboards_header),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,

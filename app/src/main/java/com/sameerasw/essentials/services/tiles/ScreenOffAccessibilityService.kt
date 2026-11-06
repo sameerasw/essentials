@@ -767,16 +767,11 @@ class ScreenOffAccessibilityService :
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
-            val eventPkg = event.packageName?.toString().orEmpty()
-            val isImeEvent = isKeyboardPackage(eventPkg)
-            if (!isImeEvent && ::snippetAccessibilityHandler.isInitialized) {
+            if (::snippetAccessibilityHandler.isInitialized &&
+                !isKeyboardPackage(event.packageName?.toString().orEmpty())
+            ) {
                 snippetAccessibilityHandler.onNonImeWindowChanged()
             }
-            checkFullscreenState()
-            checkStatusBarExpansion()
-            freezeHandler.removeCallbacks(shadeRecheckRunnable)
-            freezeHandler.postDelayed(shadeRecheckRunnable, 300)
-            checkVolumeDialogState()
             requestWindowScan()
             windowHandler.removeCallbacks(shadeRecheckRunnable)
             windowHandler.postDelayed(shadeRecheckRunnable, 300)
@@ -864,15 +859,13 @@ class ScreenOffAccessibilityService :
             statusGlanceHandler.setShadeExpanded(shadeExpanded)
             islandOverlayHandler.setShadeExpanded(shadeExpanded)
             duoOverlayHandler.setShadeExpanded(shadeExpanded)
+            if ((fullscreen == true || shadeExpanded) && ::snippetAccessibilityHandler.isInitialized) {
+                snippetAccessibilityHandler.hideFloatingPill()
+            }
             if (shadeExpandedNow != shadeExpanded) {
                 shadeExpandedNow = shadeExpanded
                 updateOmniOverlay()
             }
-        statusGlanceHandler.setShadeExpanded(expanded)
-        islandOverlayHandler.setShadeExpanded(expanded)
-        duoOverlayHandler.setShadeExpanded(expanded)
-        if (expanded && ::snippetAccessibilityHandler.isInitialized) {
-            snippetAccessibilityHandler.hideFloatingPill()
             buttonRemapHandler.isVolumeDialogVisible = volumeDialogVisible
             appVolumeOverlayHandler.onWindowsChanged()
         }
@@ -892,32 +885,6 @@ class ScreenOffAccessibilityService :
         }
     }
 
-    private fun checkFullscreenState() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                val currentWindows = windows
-                if (!currentWindows.isNullOrEmpty()) {
-                    val hasStatusBar = currentWindows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM }
-                    val appWindow = currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
-                        ?: currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION }
-
-                    if (appWindow != null) {
-                        val outBounds = android.graphics.Rect()
-                        appWindow.getBoundsInScreen(outBounds)
-                        val displayMetrics = resources.displayMetrics
-                        val isCoveringFullDisplay = outBounds.width() >= displayMetrics.widthPixels &&
-                            outBounds.height() >= displayMetrics.heightPixels
-
-                        val isFullscreen = isCoveringFullDisplay && !hasStatusBar
-                        duoOverlayHandler.setFullscreen(isFullscreen)
-                        statusGlanceHandler.setFullscreen(isFullscreen)
-                        islandOverlayHandler.setFullscreen(isFullscreen)
-                        if (isFullscreen && ::snippetAccessibilityHandler.isInitialized) {
-                            snippetAccessibilityHandler.hideFloatingPill()
-                        }
-                    }
-                }
-            } catch (_: Exception) {}
     private fun fullscreenOf(currentWindows: List<android.view.accessibility.AccessibilityWindowInfo>?): Boolean? {
         if (currentWindows.isNullOrEmpty()) return null
         return try {

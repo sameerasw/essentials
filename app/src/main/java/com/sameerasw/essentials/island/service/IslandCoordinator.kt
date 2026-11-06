@@ -158,7 +158,6 @@ class IslandCoordinator(
         HotspotPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
-        BatteryAlertsPlugin(),
         snippetPlugin,
     )
 
