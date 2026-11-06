@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.service
 
 import android.provider.Settings
+import android.os.SystemClock
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
@@ -294,11 +295,14 @@ class IslandCoordinator(
         }
     }
 
+    private var expandedShownAt = 0L
+
     // Anything the user touches outside the island collapses the expanded card, when enabled.
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
         if (textInputActive) return
         if (controller.state.value.stage != IslandStage.Expanded) return
+        if (SystemClock.uptimeMillis() - expandedShownAt < OUTSIDE_DISMISS_GRACE_MS) return
         mainHandler.post { controller.collapse() }
     }
 
@@ -498,6 +502,12 @@ class IslandCoordinator(
                 .map { it.stage to it.focusedKey }
                 .distinctUntilChanged()
                 .collect { (stage, key) -> plugins.forEach { it.onFocusChanged(stage, key) } }
+        }
+        newScope.launch {
+            controller.state
+                .map { Triple(it.stage, it.focusedKey, it.focused?.contentId) }
+                .distinctUntilChanged()
+                .collect { (stage) -> if (stage == IslandStage.Expanded) expandedShownAt = SystemClock.uptimeMillis() }
         }
         newScope.launch { IslandPreviewRequests.queue.collect { showQueuePreview() } }
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
@@ -823,6 +833,7 @@ class IslandCoordinator(
 
     private companion object {
         const val REVEAL_DELAY_MS = 160L
+        const val OUTSIDE_DISMISS_GRACE_MS = 2000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
         const val PREVIEW_SOURCE = "preview"
