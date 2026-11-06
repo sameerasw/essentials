@@ -570,6 +570,7 @@ private fun IslandRootContent(
         val anchorW = if (bubbleTucking && bubbleAnchorWidth[0] > 0) bubbleAnchorWidth[0] else width
         val endX = bubbleX(anchorW)
         val startX = when {
+            bubbleTucking && bubbleAbsorbing -> endX
             bubbleTucking -> windowWidth / 2 - sideWidthLive() / 2
             spec.growDirection > 0 -> surfaceLeft(width) + width - sideWidthLive()
             else -> surfaceLeft(width)
@@ -837,6 +838,32 @@ private fun IslandRootContent(
             val maxDrag = with(density) { 56.dp.toPx() }
             val threshold = with(density) { 28.dp.toPx() }
             Box(Modifier.fillMaxSize()) {
+                if (bubbleTucking && bubbleAbsorbing) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .drawBehind {
+                                val m = (1f - catchUpAnim.value).coerceIn(0f, 1f)
+                                val w = surfaceSize.width
+                                val h = liveSurfaceHeight.intValue.toFloat()
+                                if (w <= 0 || h <= 0f) return@drawBehind
+                                val fromL = if (bubbleOnlyLayout) {
+                                    windowWidth / 2f - sideWidthLive() / 2f
+                                } else {
+                                    bubbleX(bubbleAnchorWidth[0].takeIf { it > 0 } ?: w).toFloat()
+                                }
+                                val fromT = surfaceTopPx - surfaceTopPx * bond
+                                val toL = surfaceLeft(w).toFloat()
+                                val toT = surfaceTopPx - edgeShift.floatValue - surfaceTopPx * bond
+                                val l = fromL + (toL - fromL) * m
+                                val t = fromT + (toT - fromT) * m
+                                val r = fromL + sideWidthLive() + (toL + w - fromL - sideWidthLive()) * m
+                                val b = fromT + bubbleSizePx + (toT + h - fromT - bubbleSizePx) * m
+                                val corner = bubbleSizePx / 2f + (surfaceCornerPx(h, compactHeightPx, expandedCornerPx) - bubbleSizePx / 2f) * m
+                                drawRoundRect(Color.Black, Offset(l, t), Size(r - l, b - t), CornerRadius(corner))
+                            },
+                    )
+                }
                 IslandSideBubble(
                     ownerKey = lastBubbleKey,
                     bubbleFor = { knownBubbles[it] },
@@ -856,14 +883,15 @@ private fun IslandRootContent(
                         }
                         .liquid(bubbleLiquid)
                         .graphicsLayer {
+                            val absorbing = bubbleTucking && bubbleAbsorbing
                             val fades = bubbleOnlyLayout || stage == IslandStage.Hidden || bubbleTucking
-                            val appear = if (fades) catchUpAnim.value.coerceIn(0f, 1f) else 1f
-                            alpha = (1f - (abs(dragX.value) / maxDrag).coerceIn(0f, 0.8f)) * appear
-                            val appearScale = when {
-                                bubbleTucking && bubbleAbsorbing -> 1f + 0.2f * (1f - appear)
-                                fades -> 0.6f + 0.4f * appear
+                            val appear = when {
+                                absorbing -> ((catchUpAnim.value - 0.65f) / 0.35f).coerceIn(0f, 1f)
+                                fades -> catchUpAnim.value.coerceIn(0f, 1f)
                                 else -> 1f
                             }
+                            alpha = (1f - (abs(dragX.value) / maxDrag).coerceIn(0f, 0.8f)) * appear
+                            val appearScale = if (fades && !absorbing) 0.6f + 0.4f * appear else 1f
                             scaleX = appearScale
                             scaleY = appearScale
                         }
