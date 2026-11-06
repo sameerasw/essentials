@@ -26,6 +26,7 @@ import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PixelSearchScrim
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,6 +76,34 @@ fun PixelSearchBlurOptionsBottomSheet(
                     iconRes = R.drawable.rounded_blur_on_24,
                     valueFormatter = { "${it.toInt()} dp" },
                 )
+            }
+
+            RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_brightness_auto_24,
+                    title = stringResource(R.string.pref_pixel_search_scrim_auto_title),
+                    description = stringResource(R.string.pref_pixel_search_scrim_auto_desc),
+                    isChecked = viewModel.pixelSearchScrimAuto.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setPixelSearchScrimAuto(checked)
+                    },
+                )
+
+                if (!viewModel.pixelSearchScrimAuto.value) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.pref_pixel_search_scrim_strength_title),
+                        value = viewModel.pixelSearchScrimAlpha.floatValue * 100f,
+                        onValueChange = {
+                            HapticUtil.performUIHaptic(view)
+                            viewModel.setPixelSearchScrimAlpha(it / 100f)
+                        },
+                        valueRange = PixelSearchScrim.MIN_ALPHA * 100f..PixelSearchScrim.MAX_ALPHA * 100f,
+                        increment = 5f,
+                        iconRes = R.drawable.rounded_brightness_medium_24,
+                        valueFormatter = { "${it.toInt()}%" },
+                    )
+                }
             }
         }
     }

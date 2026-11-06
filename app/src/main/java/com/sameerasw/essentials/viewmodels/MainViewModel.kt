@@ -2964,6 +2964,8 @@ class MainViewModel : ViewModel() {
         pixelSearchBlur.value = settingsRepository.isPixelSearchBlurEnabled()
         pixelSearchWallpaperBackground.value = settingsRepository.isPixelSearchWallpaperBackgroundEnabled()
         pixelSearchBlurRadius.floatValue = settingsRepository.getPixelSearchBlurRadius()
+        pixelSearchScrimAuto.value = settingsRepository.isPixelSearchScrimAuto()
+        pixelSearchScrimAlpha.floatValue = settingsRepository.getPixelSearchScrimAlpha()
         pixelSearchEngine.value = settingsRepository.getPixelSearchEngine()
         isPocketModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
@@ -4767,6 +4769,8 @@ class MainViewModel : ViewModel() {
     val pixelSearchBlur = mutableStateOf(true)
     val pixelSearchWallpaperBackground = mutableStateOf(true)
     val pixelSearchBlurRadius = mutableFloatStateOf(60f)
+    val pixelSearchScrimAuto = mutableStateOf(true)
+    val pixelSearchScrimAlpha = mutableFloatStateOf(0.55f)
     val pixelSearchEngine = mutableStateOf("Google")
 
     fun setPixelSearchResultAppsEnabled(enabled: Boolean) {
@@ -4822,6 +4826,16 @@ class MainViewModel : ViewModel() {
     fun setPixelSearchBlurRadius(radius: Float) {
         pixelSearchBlurRadius.floatValue = radius
         settingsRepository.setPixelSearchBlurRadius(radius)
+    }
+
+    fun setPixelSearchScrimAuto(auto: Boolean) {
+        pixelSearchScrimAuto.value = auto
+        settingsRepository.setPixelSearchScrimAuto(auto)
+    }
+
+    fun setPixelSearchScrimAlpha(alpha: Float) {
+        pixelSearchScrimAlpha.floatValue = alpha
+        settingsRepository.setPixelSearchScrimAlpha(alpha)
     }
 
     fun setPixelSearchEngine(engine: String) {

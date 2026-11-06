@@ -145,6 +145,7 @@ import com.sameerasw.essentials.utils.ColorUtil
 import com.sameerasw.essentials.utils.FileSearchUtil
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PixelSearchScrim
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.utils.WindowingUtils
@@ -679,11 +680,15 @@ fun PixelSearchResultsScreen(
             false
         }
     }
-    val scrimAlpha = when {
-        !isBlurEffective -> 0.85f
-        !isWallpaperBg -> 0.45f
-        else -> 0.55f
-    }
+    val scrimAlpha =
+        remember {
+            PixelSearchScrim.alpha(
+                automatic = repository.isPixelSearchScrimAuto(),
+                manualAlpha = repository.getPixelSearchScrimAlpha(),
+                blurEffective = isBlurEffective,
+                wallpaperBackground = isWallpaperBg,
+            )
+        }
     val scrimColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = scrimAlpha)
 
     Box(
