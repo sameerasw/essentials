@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.BatteryManager
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.services.widgets.BatteriesWidgetReceiver
 import com.sameerasw.essentials.utils.BatteryStatsUtil
 
 class BatteryAutomationReceiver : BroadcastReceiver() {
@@ -43,6 +44,13 @@ class BatteryAutomationReceiver : BroadcastReceiver() {
                 isPlugged,
                 forceRecord = force,
             )
+        }
+
+        if (action == Intent.ACTION_POWER_CONNECTED || action == Intent.ACTION_POWER_DISCONNECTED) {
+            BatteriesWidgetReceiver.updateWidgets(context)
+            if (action == Intent.ACTION_POWER_DISCONNECTED) {
+                com.sameerasw.essentials.services.widgets.BatteryWidgetJobService.schedule(context)
+            }
         }
 
         if (action == Intent.ACTION_POWER_DISCONNECTED) {
