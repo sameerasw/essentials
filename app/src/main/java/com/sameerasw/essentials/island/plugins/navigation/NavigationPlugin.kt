@@ -23,6 +23,7 @@ import com.sameerasw.essentials.island.plugins.launchPackage
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.IslandIcon
+import com.sameerasw.essentials.island.ui.components.LocalIslandChipInk
 import com.sameerasw.essentials.island.ui.components.RollingText
 import com.sameerasw.essentials.services.NotificationListener
 
@@ -141,8 +142,8 @@ class NavigationPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.NAVIGATION,
                 placement = CompactPlacement.Dynamic,
                 compact = listOfNotNull(
-                    d.distance?.let { CompactCell("navigation.distance") { RollingText(it) } },
                     CompactCell("navigation.maneuver") { Maneuver(d, 18) },
+                    d.distance?.let { CompactCell("navigation.distance") { RollingText(it) } },
                 ),
                 line = LineContent(
                     icon = { Maneuver(d, 20) },
@@ -187,7 +188,7 @@ class NavigationPlugin : BaseIslandPlugin() {
 @Composable
 internal fun Maneuver(d: NavigationNotificationData, size: Int) {
     if (d.maneuver != null) {
-        IslandBitmap(d.maneuver, size.dp, fallbackRes = R.drawable.round_navigation_24)
+        IslandBitmap(d.maneuver, size.dp, fallbackRes = R.drawable.round_navigation_24, tint = LocalIslandChipInk.current)
     } else {
         IslandIcon(
             R.drawable.round_navigation_24,

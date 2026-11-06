@@ -267,7 +267,7 @@ fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX, overflo
     if (count > maxIcons && overflow == QueueOverflow.Dot) {
         return dotBase(size) + if (maxIcons > 1) size + size * OVERLAP_STEP * (maxIcons - 2) else 0.dp
     }
-    val gap = if (count > maxIcons && overflow != QueueOverflow.None) size * (OVERFLOW_STEP - OVERLAP_STEP) else 0.dp
+    val gap = if (count > maxIcons && maxIcons > 1 && overflow != QueueOverflow.None) size * (OVERFLOW_STEP - OVERLAP_STEP) else 0.dp
     return size + size * OVERLAP_STEP * (count.coerceIn(1, maxIcons) - 1) + gap
 }
 

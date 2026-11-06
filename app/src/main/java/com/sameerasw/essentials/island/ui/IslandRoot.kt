@@ -8,6 +8,8 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.EnterTransition
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.first
@@ -104,6 +106,8 @@ import com.sameerasw.essentials.island.ui.components.SlideFeedbackCompact
 import com.sameerasw.essentials.island.model.IslandItem
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import com.sameerasw.essentials.island.model.SideBubble
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.defaultMinSize
 import com.sameerasw.essentials.island.model.StackIcon
 import com.sameerasw.essentials.island.model.IslandStage
 import com.sameerasw.essentials.island.state.IslandUiState
@@ -121,6 +125,8 @@ interface IslandActions {
     fun onInteraction()
     fun onTextInputChanged(active: Boolean)
     fun onAdvance(): Boolean
+    fun onBubbleMeasured(cells: Int) {}
+    fun onCompactUnitMeasured(itemKey: String, unitKey: String, cells: Float) {}
     val compactGestures: CompactGestures get() = CompactGestures.None
 }
 
@@ -438,6 +444,22 @@ private fun IslandRootContent(
     val hasCompactCells = state.arrangement.before.isNotEmpty() || state.arrangement.after.isNotEmpty()
     val bubbleOnlyLayout = !hasCompactCells && spec.cameraPresence <= 0f
     val catchUpAnim = remember { Animatable(0f) }
+    val bubbledItems = state.bubbled
+    val endShown = bubbledItems.isNotEmpty() && stage == IslandStage.Compact
+    var lastBubbled by remember { mutableStateOf(emptyList<IslandItem>()) }
+    if (bubbledItems.isNotEmpty()) lastBubbled = bubbledItems
+    val endAnim = remember { Animatable(0f) }
+    val endWidthPx = remember { mutableIntStateOf(0) }
+    LaunchedEffect(endShown) {
+        if (inspection) {
+            endAnim.snapTo(if (endShown) 1f else 0f)
+            return@LaunchedEffect
+        }
+        endAnim.animateTo(
+            if (endShown) 1f else 0f,
+            if (!endShown && stage == IslandStage.Hidden) IslandMotion.hideBubble() else IslandMotion.smoothSpatial(),
+        )
+    }
     val liquidField = remember { LiquidField() }
     liquidField.reach = with(density) { spec.cameraGap.toPx() } * 0.8f
     val surfaceBond = remember(compactHeightPx, expandedCornerPx, bubbleOnlyLayout) {
@@ -471,7 +493,7 @@ private fun IslandRootContent(
             return@LaunchedEffect
         }
         withTimeoutOrNull(IslandMotion.HIDE_BUBBLE_MS + 120L) {
-            snapshotFlow { catchUpAnim.value }.first { it <= 0.02f }
+            snapshotFlow { maxOf(catchUpAnim.value, endAnim.value) }.first { it <= 0.02f }
         }
         squash.animateTo(1f, IslandMotion.squash())
         visible = false
@@ -516,20 +538,35 @@ private fun IslandRootContent(
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
     fun sideBubbleProgress(): Float =
         if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) catchUpAnim.value.coerceIn(0f, 1f) else 0f
+    fun endBubbleProgress(): Float =
+        if (spec.growDirection == 0 && (hasCompactCells || stage == IslandStage.Hidden)) endAnim.value.coerceIn(0f, 1f) else 0f
+    fun balanceProgress(): Float = maxOf(sideBubbleProgress(), endBubbleProgress())
+    fun balanceExtent(): Int {
+        val p = balanceProgress()
+        if (p <= 0f) return 0
+        val net = sideBubbleProgress() * (bubbleGapPx + sideWidthLive()) - endBubbleProgress() * (bubbleGapPx + endWidthPx.intValue)
+        return (net / p).roundToInt()
+    }
     val slackAnim = remember { Animatable(slackTarget.toFloat()) }
     LaunchedEffect(slackTarget) {
         if (inspection) slackAnim.snapTo(slackTarget.toFloat()) else slackAnim.animateTo(slackTarget.toFloat(), IslandMotion.smoothSpatial())
     }
-    fun catchShiftPx(): Float = sideBubbleProgress() * slackAnim.value / 2f
+    fun catchShiftPx(): Float = balanceProgress() * slackAnim.value / 2f
     val lineShift = remember { Animatable(0f) }
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
     fun surfaceShiftFor(width: Int): Int = spec.growDirection * (width - cameraSlotPx) / 2
     fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
         lineShift.value.roundToInt() + catchShiftPx().roundToInt()
+    val cellUnitPx = with(density) { (spec.cellSize + spec.cellSpacing).toPx() }
+    LaunchedEffect(endShown, endWidthPx.intValue) {
+        val w = endWidthPx.intValue
+        if (endShown && w > 0) actions.onBubbleMeasured((w / cellUnitPx).roundToInt().coerceAtLeast(1))
+    }
     // Bonded to the edge, the bubble closes the gap and slightly overlaps, so the liquid neck merges both into one body
     fun bondedGapPx(): Int = (bubbleGapPx * (1f - bond) - compactHeightPx * 0.08f * bond).roundToInt()
     fun bubbleX(width: Int): Int =
         if (spec.growDirection > 0) surfaceLeft(width) + width + bondedGapPx() else surfaceLeft(width) - bondedGapPx() - sideWidthLive()
+    fun endBubbleX(width: Int): Int = surfaceLeft(width) + width + bubbleGapPx
     val focusedItem = state.focused
     
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
@@ -614,14 +651,14 @@ private fun IslandRootContent(
 
     LaunchedEffect(
         target, windowWidth, stage, queueShown, pillSize, lineInsetActive, catchUpShown, hasCompactCells,
-        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget,
+        bubbleOnlyLayout, condensedLineActive, queueWidthPx, sideWidthPx, slackTarget, endShown, endWidthPx.intValue,
     ) {
         if (target == IntSize.Zero || windowWidth == 0) return@LaunchedEffect
         val g = if (stage == IslandStage.Expanded) outsetPx.roundToInt() else 0
         val shift = when {
             spec.growDirection != 0 || condensedLineActive -> 0
             lineInsetActive -> (queueWidthPx + bubbleGapPx) / 2
-            catchUpShown && hasCompactCells -> slackTarget / 2
+            (catchUpShown || endShown) && hasCompactCells -> slackTarget / 2
             else -> 0
         }
         val left = windowWidth / 2 - target.width / 2 + surfaceShiftFor(target.width) + shift
@@ -637,6 +674,11 @@ private fun IslandRootContent(
         } else if (catchUpShown) {
             val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - sideWidthPx
             bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + sideWidthPx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
+        }
+        if (endShown) {
+            val ew = endWidthPx.intValue
+            val bx = left + target.width + bubbleGapPx
+            bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + ew), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))
         }
         if (queueShown && stage == IslandStage.Expanded && pillSize != IntSize.Zero) {
             val pillLeft = left + (target.width - pillSize.width) / 2
@@ -849,6 +891,69 @@ private fun IslandRootContent(
                             )
                         },
                 )
+            }
+        }
+        val endData = lastBubbled
+        if (endData.isNotEmpty() && endAnim.value > 0.001f) {
+            val endBond = remember { LiquidBond("endBubble") }
+            val endLiquid = rememberLiquidBody(LiquidSpec.Droplet, endBond, liquidField)
+            val endShape = RoundedCornerShape(percent = 50)
+            Box(
+                Modifier
+                    .offset {
+                        val w = surfaceSize.width
+                        val endX = endBubbleX(w)
+                        val startX = surfaceLeft(w) + w - endWidthPx.intValue
+                        IntOffset((startX + (endX - startX) * endAnim.value).roundToInt(), surfaceTopPx - (surfaceTopPx * bond).roundToInt())
+                    }
+                    .liquid(endLiquid)
+                    .graphicsLayer {
+                        val appear = if (stage == IslandStage.Hidden) endAnim.value.coerceIn(0f, 1f) else 1f
+                        alpha = appear
+                        scaleX = 0.6f + 0.4f * appear
+                        scaleY = 0.6f + 0.4f * appear
+                    }
+                    .onSizeChanged { endWidthPx.intValue = it.width }
+                    .height(spec.compactHeight)
+                    .defaultMinSize(minWidth = spec.compactHeight)
+                    .clip(endShape)
+                    .background(Color.Black)
+                    .islandOutline(outlineFor(1f), spec.outlineThickness, endShape)
+                    .animateContentSize(IslandMotion.compactSize)
+                    .padding(horizontal = 3.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                AnimatedContent(
+                    targetState = endData,
+                    contentKey = { items -> items.map { it.key } },
+                    transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+                    label = "bubbleItems",
+                ) { bubbled ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing), verticalAlignment = Alignment.CenterVertically) {
+                        bubbled.forEach { item ->
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing / 2),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.pointerInput(item.key) {
+                                    detectTapGestures(
+                                        onTap = { handleTap(item.key) },
+                                        onLongPress = { handleLongPress(item.key) },
+                                    )
+                                },
+                            ) {
+                                item.compact.filterNot { it.soloOnly }.forEach { cell ->
+                                    val flush = cell.key.endsWith(".art") || cell.key.endsWith(".avatar")
+                                    Box(
+                                        Modifier
+                                            .height(spec.cellSize)
+                                            .then(if (flush) Modifier else Modifier.defaultMinSize(minWidth = spec.cellSize).padding(horizontal = 4.dp)),
+                                        contentAlignment = Alignment.Center,
+                                    ) { cell.content() }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         val collapseEndTarget = when {
@@ -1285,8 +1390,8 @@ private fun IslandRootContent(
                             layerKey.stage, layerItem, state, spec, actions, interactive = current,
                             onCellTap = ::handleTap,
                             onCellLongPress = ::handleLongPress,
-                            sideBubble = ::sideBubbleProgress,
-                            bubbleExtent = { bubbleGapPx + sideWidthLive() },
+                            sideBubble = ::balanceProgress,
+                            bubbleExtent = ::balanceExtent,
                             onSlack = { if (current) compactSlack.intValue = it },
                             onBaseWidth = { if (current) compactBaseWidth.intValue = it },
                             onNeedLeft = { if (current) compactNeedLeft.intValue = it },
@@ -1322,8 +1427,8 @@ private fun IslandRootContent(
                         spec = spec,
                         onCellTap = {},
                         onCellLongPress = {},
-                        sideBubble = ::sideBubbleProgress,
-                        bubbleExtent = { bubbleGapPx + sideWidthLive() },
+                        sideBubble = ::balanceProgress,
+                        bubbleExtent = ::balanceExtent,
                     )
                 }
             }
@@ -1449,6 +1554,7 @@ private fun StageContent(
                     onSlack = onSlack,
                     onBaseWidth = onBaseWidth,
                     onNeedLeft = onNeedLeft,
+                    onUnitWidth = a::onCompactUnitMeasured,
                 )
             }
         }

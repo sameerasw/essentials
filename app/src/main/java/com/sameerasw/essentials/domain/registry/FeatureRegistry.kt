@@ -1039,6 +1039,11 @@ object FeatureRegistry {
                             R.string.island_section_behavior,
                             "island_balance_compact",
                         ),
+                        SearchSetting(
+                            R.string.island_balance_mirror_title,
+                            R.string.island_section_behavior,
+                            "island_balance_mirror",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

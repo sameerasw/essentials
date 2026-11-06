@@ -35,15 +35,19 @@ object CompactLayoutEngine {
         maxCells: Int = MAX_CELLS,
         leftExtra: Int = 0,
         balance: Boolean = false,
+        maxItems: Int = Int.MAX_VALUE,
+        mirror: Boolean = false,
+        maxWidth: Float = Float.MAX_VALUE,
+        widthOf: (CompactEntry) -> Float = { it.cellKeys.size.toFloat() },
     ): CompactArrangement {
         val base = entries.filterNot { it.companionOnly }
         val companions = entries.filter { it.companionOnly }
         var effective = base
         if (anchor == CameraAnchor.Center && companions.isNotEmpty()) {
-            val alone = select(base, maxCells)
+            val alone = select(base, maxCells, maxItems, maxWidth, widthOf)
             if (alone.isNotEmpty() && alone.all { it.needsCompany }) effective = base + companions
         }
-        val selected = select(effective, maxCells)
+        val selected = select(effective, maxCells, maxItems, maxWidth, widthOf)
         if (selected.isEmpty()) return CompactArrangement.Empty
 
         val pinned = selected.filter { it.pinned }
@@ -65,8 +69,10 @@ object CompactLayoutEngine {
         val oneCell = dynamic.filter { it.cellKeys.size == 1 }
 
         val movable = mutableListOf<CompactEntry>()
+        val movableAfter = mutableListOf<CompactEntry>()
         if (twoCell.isNotEmpty()) {
             after += twoCell[0].cellKeys.reversed()
+            movableAfter += twoCell[0]
             pinned.forEach { before += it.cellKeys }
             twoCell.drop(1).forEach {
                 before += it.cellKeys.reversed()
@@ -78,6 +84,7 @@ object CompactLayoutEngine {
                     movable += it
                 } else {
                     after += it.cellKeys
+                    movableAfter += it
                 }
             }
         } else {
@@ -86,6 +93,7 @@ object CompactLayoutEngine {
             oneCell.forEach {
                 if (after.size <= before.size + leftExtra) {
                     after += it.cellKeys
+                    movableAfter += it
                 } else {
                     before += it.cellKeys
                     movable += it
@@ -119,6 +127,33 @@ object CompactLayoutEngine {
             }
         }
 
+        val rightExtra = -leftExtra
+        if (balance && mirror && rightExtra > 0) {
+            for (entry in movableAfter.sortedByDescending { it.priority }) {
+                val size = entry.cellKeys.size
+                val left = before.size
+                val right = after.size + rightExtra
+                val gap = kotlin.math.abs(left - right)
+                val movedGap = kotlin.math.abs((left + size) - (right - size))
+                if (movedGap > gap || (movedGap == gap && right <= left)) break
+                after.removeAll(entry.cellKeys.toSet())
+                before.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
+            }
+        }
+
+        if (balance && mirror && rightExtra >= WIDE_BUBBLE_CELLS) {
+            for (entry in pinned.filter { e -> e.cellKeys.all { it in after } }.sortedByDescending { it.priority }) {
+                val size = entry.cellKeys.size
+                val left = before.size
+                val right = after.size + rightExtra
+                val gap = kotlin.math.abs(left - right)
+                val movedGap = kotlin.math.abs((left + size) - (right - size))
+                if (movedGap >= gap) break
+                after.removeAll(entry.cellKeys.toSet())
+                before.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
+            }
+        }
+
         val solo = selected.singleOrNull()
         if (solo != null && solo.soloCellKeys.isNotEmpty() && solo.cellKeys.size == 1) {
             if (solo.keepTogether) return CompactArrangement(emptyList(), solo.soloCellKeys + solo.cellKeys, visible)
@@ -132,13 +167,26 @@ object CompactLayoutEngine {
         return CompactArrangement(before, after, visible)
     }
 
-    private fun select(entries: List<CompactEntry>, maxCells: Int): List<CompactEntry> {
+    private fun select(
+        entries: List<CompactEntry>,
+        maxCells: Int,
+        maxItems: Int,
+        maxWidth: Float = Float.MAX_VALUE,
+        widthOf: (CompactEntry) -> Float = { it.cellKeys.size.toFloat() },
+    ): List<CompactEntry> {
         var used = 0
+        var dynamic = 0
+        var width = entries.filter { it.pinned }.sumOf { widthOf(it).toDouble() }.toFloat()
         val result = mutableListOf<CompactEntry>()
         for (entry in entries.sortedBy { it.priority }) {
             val size = entry.cellKeys.size
             if (used + size > maxCells) continue
+            if (!entry.pinned && dynamic >= maxItems) continue
+            val w = if (entry.pinned) 0f else widthOf(entry)
+            if (!entry.pinned && width + w > maxWidth) continue
             used += size
+            width += w
+            if (!entry.pinned) dynamic++
             result += entry
         }
         return result

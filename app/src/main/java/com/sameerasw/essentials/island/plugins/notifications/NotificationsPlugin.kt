@@ -510,10 +510,10 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun bubbleCells(): Int {
         if (!hub() || settings.getIslandNotifQueueStyle() != SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) return 1
-        val cap = settings.getIslandNotifHubIcons().let { if (it == 0) AUTO_CELL_ICONS else it }
+        val cap = settings.getIslandNotifHubIcons().let { if (it == 0) 1 else it }
         val count = hubEntries().size
         val shown = count.coerceIn(1, cap)
-        val overflow = if (count > cap && settings.getIslandNotifHubOverflow() != QueueOverflow.None) 0.3f else 0f
+        val overflow = if (count > cap && cap > 1 && settings.getIslandNotifHubOverflow() != QueueOverflow.None) 0.3f else 0f
         return ceil(1f + 0.55f * (shown - 1) + overflow).toInt()
     }
 
@@ -1010,7 +1010,6 @@ class NotificationsPlugin : BaseIslandPlugin() {
         const val ITEM_KEY = "notifications"
         private const val MAX_QUEUE = 20
         private const val HUB_MAX_QUEUE = 200
-        private const val AUTO_CELL_ICONS = 4
         private const val COPIED_MS = 1_500L
         private const val REPLY_REPOST_WINDOW_MS = 10_000L
 
