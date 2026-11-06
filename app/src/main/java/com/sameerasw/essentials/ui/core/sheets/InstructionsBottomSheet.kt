@@ -45,6 +45,7 @@ import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
 fun InstructionsBottomSheet(onDismissRequest: () -> Unit) {
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    HelpSheetTracker.TrackOpen()
 
     EssentialsBottomSheet(
         onDismissRequest = onDismissRequest,

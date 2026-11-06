@@ -9,6 +9,13 @@
 
 package com.sameerasw.essentials.ui.composables
 
+import com.sameerasw.essentials.ui.navigation.LocalOpenAutomationId
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -143,6 +150,7 @@ fun DIYScreen(
                     }
                 val lazyListState = rememberLazyListState()
                 val view = androidx.compose.ui.platform.LocalView.current
+                val headerState = rememberPullTitleHeaderState()
 
                 @Composable
                 fun AutomationRow(automation: Automation) {
@@ -167,6 +175,7 @@ fun DIYScreen(
                         },
                         selectionMode = selectionMode,
                         selected = automation.id in selectedIds,
+                        isOpen = automation.id == LocalOpenAutomationId.current,
                         onSelectedChange = { checked ->
                             selectionMode = true
                             selectedIds =
@@ -180,90 +189,91 @@ fun DIYScreen(
                     modifier =
                         Modifier
                             .fillMaxSize()
+                            .nestedScroll(headerState.nestedScrollConnection)
                             .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding =
                         PaddingValues(
+                            top = contentPadding.calculateTopPadding(),
                             bottom = contentPadding.calculateBottomPadding(),
                             start = 16.dp,
                             end = 16.dp,
                         ),
                 ) {
                     item {
-                        Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
-                    }
-                    item {
-                        AnimatedVisibility(
-                            visible = selectionMode,
-                            enter = expandVertically() + fadeIn(),
-                            exit = shrinkVertically() + fadeOut(),
-                        ) {
-                            val selected = automations.filter { it.id in selectedIds }
-                            val hasEnabled = selected.any { it.isEnabled }
-                            val hasDisabled = selected.any { !it.isEnabled }
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(
-                                    text = stringResource(R.string.diy_selected_count, selected.size),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.padding(start = 16.dp),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        Column {
+                            PullTitleHeader(
+                                title = stringResource(R.string.tab_diy),
+                                state = headerState,
+                                caption = stringResource(R.string.diy_header_caption),
+                            )
+                            AnimatedVisibility(
+                                visible = selectionMode,
+                                enter = expandVertically() + fadeIn(),
+                                exit = shrinkVertically() + fadeOut(),
+                            ) {
+                                val selected = automations.filter { it.id in selectedIds }
+                                val hasEnabled = selected.any { it.isEnabled }
+                                val hasDisabled = selected.any { !it.isEnabled }
+                                Column(
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
-                                    SelectionActionButton(
-                                        icon = R.drawable.rounded_close_24,
-                                        text = stringResource(R.string.action_cancel),
-                                        outlined = true,
-                                        modifier = Modifier.weight(1f),
+                                    Text(
+                                        text = stringResource(R.string.diy_selected_count, selected.size),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        modifier = Modifier.padding(start = 16.dp),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        exitSelection()
-                                    }
-                                    if (hasEnabled) {
                                         SelectionActionButton(
-                                            icon = R.drawable.rounded_do_not_disturb_on_24,
-                                            text = stringResource(R.string.action_disable),
+                                            icon = R.drawable.rounded_close_24,
+                                            text = stringResource(R.string.action_cancel),
+                                            outlined = true,
                                             modifier = Modifier.weight(1f),
                                         ) {
                                             HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.setAutomationsEnabled(selectedIds, false)
+                                            exitSelection()
                                         }
-                                    }
-                                    if (hasDisabled) {
+                                        if (hasEnabled) {
+                                            SelectionActionButton(
+                                                icon = R.drawable.rounded_do_not_disturb_on_24,
+                                                text = stringResource(R.string.action_disable),
+                                                modifier = Modifier.weight(1f),
+                                            ) {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                viewModel.setAutomationsEnabled(selectedIds, false)
+                                            }
+                                        }
+                                        if (hasDisabled) {
+                                            SelectionActionButton(
+                                                icon = R.drawable.rounded_check_24,
+                                                text = stringResource(R.string.action_enable),
+                                                modifier = Modifier.weight(1f),
+                                            ) {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                viewModel.setAutomationsEnabled(selectedIds, true)
+                                            }
+                                        }
                                         SelectionActionButton(
-                                            icon = R.drawable.rounded_check_24,
-                                            text = stringResource(R.string.action_enable),
+                                            icon = R.drawable.rounded_delete_24,
+                                            text = stringResource(R.string.action_delete),
+                                            enabled = selected.isNotEmpty(),
                                             modifier = Modifier.weight(1f),
                                         ) {
                                             HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.setAutomationsEnabled(selectedIds, true)
+                                            viewModel.deleteAutomations(selectedIds)
+                                            exitSelection()
                                         }
-                                    }
-                                    SelectionActionButton(
-                                        icon = R.drawable.rounded_delete_24,
-                                        text = stringResource(R.string.action_delete),
-                                        enabled = selected.isNotEmpty(),
-                                        modifier = Modifier.weight(1f),
-                                    ) {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        viewModel.deleteAutomations(selectedIds)
-                                        exitSelection()
                                     }
                                 }
                             }
                         }
                     }
                     if (enabledAutomations.isNotEmpty()) {
-                        item {
-                            Text(
-                                text = stringResource(R.string.label_enabled),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(start = 16.dp),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
                         item {
                             RoundedCardContainer {
                                 enabledAutomations.forEach { automation ->
@@ -275,17 +285,46 @@ fun DIYScreen(
 
                     if (disabledAutomations.isNotEmpty()) {
                         item {
-                            Text(
-                                text = stringResource(R.string.label_disabled),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(start = 16.dp, top = 8.dp),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            var isDisabledExpanded by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+                            val chevronRotation by androidx.compose.animation.core.animateFloatAsState(
+                                targetValue = if (isDisabledExpanded) 180f else 0f,
+                                label = "disabled_chevron",
                             )
-                        }
-                        item {
-                            RoundedCardContainer {
-                                disabledAutomations.forEach { automation ->
-                                    AutomationRow(automation)
+                            Column {
+                                Row(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .clip(MaterialTheme.shapes.extraLarge)
+                                            .clickable {
+                                                HapticUtil.performUIHaptic(view)
+                                                isDisabledExpanded = !isDisabledExpanded
+                                            }.padding(start = 16.dp, end = 12.dp, top = 8.dp, bottom = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "${stringResource(R.string.label_disabled)} (${disabledAutomations.size})",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.graphicsLayer { rotationZ = chevronRotation },
+                                    )
+                                }
+                                AnimatedVisibility(
+                                    visible = isDisabledExpanded,
+                                    enter = expandVertically() + fadeIn(),
+                                    exit = shrinkVertically() + fadeOut(),
+                                ) {
+                                    RoundedCardContainer(modifier = Modifier.padding(top = 8.dp)) {
+                                        disabledAutomations.forEach { automation ->
+                                            AutomationRow(automation)
+                                        }
+                                    }
                                 }
                             }
                         }

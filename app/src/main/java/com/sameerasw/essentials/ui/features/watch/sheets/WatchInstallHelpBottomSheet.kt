@@ -48,6 +48,7 @@ import com.sameerasw.essentials.ui.components.CategoryExpandableSection
 import com.sameerasw.essentials.ui.components.EssentialsWatchfacePromoContent
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.HelpSheetTracker
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.WatchViewModel
 
@@ -58,6 +59,7 @@ fun WatchInstallHelpBottomSheet(
     viewModel: WatchViewModel = viewModel(),
 ) {
     LocalContext.current
+    HelpSheetTracker.TrackOpen()
     val uriHandler = LocalUriHandler.current
     val view = LocalView.current
 
@@ -183,7 +185,7 @@ fun WatchInstallHelpBottomSheet(
             var isWatchfaceSectionExpanded by remember { mutableStateOf(false) }
             CategoryExpandableSection(
                 title = stringResource(R.string.watch_watchface_title),
-                itemCount = 3,
+                itemCount = 1,
                 isExpanded = isWatchfaceSectionExpanded,
                 onToggleExpand = { isWatchfaceSectionExpanded = !isWatchfaceSectionExpanded },
             ) {

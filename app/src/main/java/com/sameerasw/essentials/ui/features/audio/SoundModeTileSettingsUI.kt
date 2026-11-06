@@ -13,6 +13,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -178,6 +179,7 @@ fun SoundModeTileSettingsUI(
                 .scrollMotionBlur(lazyListState, enabled = isMotionBlurEnabled)
                 .padding(horizontal = 16.dp),
         state = lazyListState,
+        contentPadding = PaddingValues(bottom = 160.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         items(activeModes.size, key = { activeModes[it] }) { index ->

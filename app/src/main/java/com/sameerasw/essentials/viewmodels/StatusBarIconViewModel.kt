@@ -10,6 +10,7 @@
 
 package com.sameerasw.essentials.viewmodels
 
+import com.sameerasw.essentials.utils.NetworkUtil
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -427,9 +428,7 @@ class StatusBarIconViewModel : ViewModel() {
         return try {
             val connectivityManager =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val network = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+            NetworkUtil.isWifiConnected(connectivityManager)
         } catch (
             @Suppress("UNUSED_PARAMETER") e: Exception,
         ) {

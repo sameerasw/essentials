@@ -247,12 +247,40 @@ class FaceUnlockBrightnessHandler(
         delays.forEach { handler.postDelayed(scanRunnable, it) }
     }
 
+    private val scanExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "face-unlock-scan") }
+    private var scanInFlight = false
+    private var scanQueued = false
+
     private fun update() {
         if (!canRun() || !isLowLight || brightnessView != null) {
             removePill()
             return
         }
-        if (!isMainLockscreenVisible()) {
+        if (scanInFlight) {
+            scanQueued = true
+            return
+        }
+        scanInFlight = true
+        scanExecutor.execute {
+            val visible = isMainLockscreenVisible()
+            handler.post {
+                scanInFlight = false
+                if (scanQueued) {
+                    scanQueued = false
+                    update()
+                } else {
+                    applyScan(visible)
+                }
+            }
+        }
+    }
+
+    private fun applyScan(visible: Boolean) {
+        if (!canRun() || !isLowLight || brightnessView != null) {
+            removePill()
+            return
+        }
+        if (!visible) {
             removePill()
             return
         }

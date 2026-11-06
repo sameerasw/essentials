@@ -43,6 +43,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -332,6 +333,25 @@ fun NavigationSettingsUI(
                     iconRes = R.drawable.rounded_border_bottom_24,
                     description = stringResource(R.string.feat_circle_to_search_gesture_width_desc),
                     valueFormatter = { "${it.toInt()} dp" },
+                )
+            }
+
+            AnimatedVisibility(
+                visible = viewModel.isCircleToSearchGestureEnabled.value,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) {
+                val shadeSettings = remember { SettingsRepository(context) }
+                var hideOnShade by remember { mutableStateOf(shadeSettings.getBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_HIDE_ON_SHADE, false)) }
+                IconToggleItem(
+                    title = stringResource(R.string.feat_circle_to_search_gesture_hide_on_shade),
+                    isChecked = hideOnShade,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performUIHaptic(view)
+                        hideOnShade = checked
+                        shadeSettings.putBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_HIDE_ON_SHADE, checked)
+                    },
+                    iconRes = R.drawable.rounded_visibility_off_24,
                 )
             }
         }

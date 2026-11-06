@@ -1,5 +1,9 @@
 package com.sameerasw.essentials.island.plugins.progress
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
+import com.sameerasw.essentials.island.ui.motionTween
+
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -43,6 +47,7 @@ import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.launchPackage
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
+import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.services.NotificationListener
 
@@ -98,7 +103,7 @@ class ProgressPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("progress.ring") {
-                        ProgressRing(progress, indeterminate, image, MaterialTheme.colorScheme.primary)
+                        ProgressRing(progress, indeterminate, image, islandAccent())
                     },
                 ),
                 expanded = ExpandedContent { scope ->
@@ -108,7 +113,12 @@ class ProgressPlugin : BaseIslandPlugin() {
                         text = d.text,
                         progress = progress,
                         indeterminate = indeterminate,
-                        accent = MaterialTheme.colorScheme.primary,
+                        accent = islandAccent(),
+                        actions = d.actions,
+                        onAction = { action ->
+                            IslandHaptics.button(context)
+                            NotificationListener.instance?.performNotificationAction(action)
+                        },
                         onOpen = { open(d) },
                         scope = scope,
                     )
@@ -120,7 +130,7 @@ class ProgressPlugin : BaseIslandPlugin() {
                     whenOccupiedOnly = true,
                     onOpen = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)) },
                     content = { bubbleSize ->
-                        ProgressRing(progress, indeterminate, image, MaterialTheme.colorScheme.primary, bubbleSize)
+                        ProgressRing(progress, indeterminate, image, islandAccent(), bubbleSize)
                     },
                 ),
             ),
@@ -142,7 +152,7 @@ internal fun ProgressRing(progress: Float, indeterminate: Boolean, icon: ImageBi
     val rotation by rememberInfiniteTransition(label = "progressSpin").animateFloat(
         initialValue = 0f,
         targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(1200, easing = LinearEasing), RepeatMode.Restart),
+        animationSpec = infiniteRepeatable(motionTween(1200, easing = LinearEasing), RepeatMode.Restart),
         label = "progressRotation",
     )
     Box(

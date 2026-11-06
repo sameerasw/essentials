@@ -523,7 +523,7 @@
     <string name="feat_link_actions_title">链接操作</string>
     <string name="feat_link_actions_desc">使用多个应用处理链接</string>
     <string name="feat_flashlight_title">闪光灯</string>
-    <string name="feat_flashlight_desc">改进闪光灯行为</string>
+    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
     <string name="label_restore_mode">恢复模式</string>
     <string name="feat_snooze_notifications_title">暂停系统通知</string>
     <string name="feat_snooze_notifications_desc">暂停常驻通知</string>
@@ -752,6 +752,8 @@
     <string name="tab_apps">应用</string>
     <string name="tab_freeze_subtitle">已禁用的应用</string>
     <string name="tab_diy_subtitle">自己动手</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">查找和管理应用</string>
     <string name="feat_app_updates_title">应用更新</string>
     <string name="tab_app_updates_title">应用更新</string>
@@ -863,10 +865,10 @@
     <string name="about_desc_essentials_on_display">Essentials 息屏显示会在播放音乐且播放内容变化时，在锁屏上显示 Now Playing 浮层。\n\n如果你的设备不支持在 AOD 上叠加浮层，你可以选择在 Android 设置中添加的 Ambience 屏保作为充电时的替代方案。</string>
     <string name="about_desc_notification_lighting">通知灯光会在你收到通知时添加美丽的边缘灯光效果。\n\n你可以自定义动画样式、颜色和行为。即使熄屏（取决于 OEM）或显示在当前应用之上也能工作。从给定的控件中选择应用、通知优先级或触发行为。如果你的 OEM 不支持在 AOD 之上叠加浮层，请使用下方找到的 Ambient display 选项。</string>
     <string name="about_desc_screen_off_widget">轻点透明的可调整大小的小部件即可轻松关闭屏幕，不会在主屏幕上添加图标或任何杂乱内容。</string>
-    <string name="about_desc_statusbar_icons">完全控制你的状态栏图标。\n\n隐藏 WiFi、蓝牙或蜂窝数据等特定图标，让状态栏保持整洁。你还可以通过一些智能控制自定义时钟格式和电池指示器。这些是可用的 AOSP 控制列表，因此你的设备系统可能不会遵循所有控制。</string>
+    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
     <string name="about_desc_caffeinate">Caffeinate 可防止屏幕自动关闭。\n\n在特定时间内或无限期保持屏幕唤醒。在阅读长文章或参考食谱时非常有用。</string>
     <string name="about_desc_maps_power_saving">在受支持的 Android 设备上，使用极简纯黑背景的 Google 地图省电模式覆盖在锁屏上显示。开始导航会话，关闭屏幕再重新打开。</string>
-    <string name="about_desc_flashlight_pulse">收到通知时脉冲闪光灯。\n\n对于硬件支持闪光灯调光的设备，脉冲将平滑动画。</string>
+    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
     <string name="about_desc_snooze_notifications">暂停默认情况下无法修改的烦人常驻系统通知。\n\n请等待通知到达，然后进入此功能，其中会列出其通知渠道。选择它即可从下次开始暂停。\n\n任何已暂停的通知仍然可以在 Android 的通知历史中访问。</string>
     <string name="about_desc_quick_settings_tiles">向快捷设置面板添加自定义磁贴。\n\n长按其中任意一个以了解其功能。</string>
     <string name="about_desc_button_remap">重映射硬件按键以执行不同的操作和快捷方式。\n\n自定义在特定条件下长按音量键时发生的行为。\n\n某些行为（如熄屏触发或闪光灯控制）可能取决于 OEM 的实现，可能无法在所有设备上按预期工作。某些情况可以通过 Shizuku 权限解决，但由于实现方式不同，可能无法提供相同的体验。</string>
@@ -911,7 +913,7 @@
     <string name="about_desc_bubbles">启用或禁用浮动通知气泡。\n\n快速切换对话气泡的系统级设置。</string>
     <string name="about_desc_sensitive_content">在锁屏上隐藏敏感内容。\n\n切换设备锁定时通知内容显示还是隐藏。</string>
     <string name="about_desc_tap_to_wake">切换点按唤醒功能。\n\n启用或禁用轻点屏幕唤醒屏幕的功能。</string>
-    <string name="about_desc_aod">切换 Always On Display。\n\n快速启用或禁用以快速查看信息的常亮显示。</string>
+    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
     <string name="about_desc_notification_glance">根据通知自动控制你的 Always On Display。当所选应用收到消息或提醒时，AOD 将保持开启，直到你清除通知，确保你不会错过重要信息，同时在无提醒时也不会浪费电池。</string>
     <string name="about_desc_mono_audio">将音频通道合并为单声道。\n\n使用单个耳塞或出于无障碍目的时非常有用。</string>
     <string name="about_desc_flashlight_tile">切换闪光灯。\n\n长按可打开亮度调节控制，这可能需要硬件实现，某些设备可能不支持。</string>
@@ -1314,8 +1316,6 @@
     <string name="instruction_section_maps_title">地图省电模式</string>
     <string name="instruction_section_maps_desc">此功能会在受支持的 Android 设备上自动触发 Google 地图省电模式。一位社区成员发现，通过 root 权限启动 maps minMode 活动仍然可以使用。\n\n然后，我用 Tasker 将其自动化，在导航会话期间屏幕关闭时自动触发，后来通过运行时 Shizuku 权限实现了同样的效果。\n\n它旨在叠加在导航体验之上，因此你可能会偶尔看到不支持横屏模式的消息。应用无法避免这一点，你可以忽略它。</string>
 
-    <string name="instruction_section_silent_title">静音声音模式</string>
-    <string name="instruction_section_silent_desc">你可能已经注意到，静音模式也会触发勿扰模式。\n\n这是由于 Android 的实现方式，即使我们使用相同的 API 切换到振动模式，它也会出于某种原因在静音模式的同时打开勿扰模式，目前这是无法避免的。:(</string>
 
     <string name="instruction_section_freeze_title">什么是冻结？</string>
     <string name="instruction_section_freeze_desc">暂停并远离应用干扰，同时节省一点电量，防止应用在后台运行。适合不常用的应用。\n\n不建议用于任何通讯服务，除非你解冻它们，否则它们在紧急情况下不会通知你。\n\n强烈建议不要冻结系统应用，因为它们可能导致系统不稳定。请谨慎操作，你已经受到警告。\n\n灵感来自 Hail &lt;3</string>
@@ -1323,8 +1323,6 @@
     <string name="instruction_section_security_title">应用锁和锁定安全真的安全吗？</string>
     <string name="instruction_section_security_desc">绝对不是。\n\n任何第三方应用都无法 100% 干预正常的设备交互，即使是应用锁也只是一个覆盖在所选应用之上的浮层，用于防止与它们交互。有变通方法，并非万无一失。\n\n锁定安全功能也是如此，它会检测有人试图与网络磁贴交互，在 Pixel 上这些磁贴出于某种原因仍然对任何人开放。所以如果他们足够努力，仍然可能更改它们，尤其是如果你添加了飞行模式 QS 磁贴，此应用无法防止与它交互。\n\n这些功能只是为轻度使用而做的实验，绝不会推荐作为强大的安全和隐私解决方案。\n\n安全替代方案：\n - 应用锁：Pixel 和三星上的隐私空间和安全文件夹\n - 防止移动网络访问：确保你的防盗保护和离线/关机查找我的设备设置已开启。你也可以考虑使用 Graphene OS。</string>
 
-    <string name="instruction_section_statusbar_title">状态栏图标</string>
-    <string name="instruction_section_statusbar_desc">你可能注意到，即使在重置状态栏图标后，某些图标（如设备旋转、有线耳机图标）仍会保持可见。这是由于 Android 中状态栏黑名单的实现方式以及你的 OEM 可能对其进行的自定义。\n你可能需要进一步调整。\n\n另外，并非所有图标可见性选项都能正常工作，因为它们取决于 OEM 的实现和可用性。</string>
 
     <string name="instruction_section_battery_saver_title">电源和电池设置如何工作？</string>
     <string name="instruction_section_battery_saver_desc">这些设置直接覆盖 Android 内部的电池保护程序策略常量（特别是全局设置表属性：battery_saver_constants）。\n\n当 Android 激活电池保护模式时，它会读取这些键以确定应限制哪些系统功能（例如降低屏幕亮度、禁用 AOD、限制 GPS 位置访问或将应用置于休眠状态）。\n\n如果你修改这些值，你的自定义电池保护策略将在下次开启电池保护程序时生效。你可以随时使用屏幕底部的按钮重置为默认值。写入这些系统配置需要 WRITE_SECURE_SETTINGS 权限。</string>
@@ -1364,17 +1362,11 @@
     <string name="instruction_section_diy_title">DIY 自动化</string>
     <string name="instruction_section_diy_desc">构建适合你日常使用的强大自定义例程。\n\n• 触发自动化：事件驱动的规则，事件发生时运行特定操作（例如断开充电器时触发触觉振动）。\n• 状态自动化：条件驱动的规则，进入状态（例如充电或时间窗口）时运行进入操作，离开时运行退出操作。\n• 应用自动化：启动或退出指定应用时自动应用配置文件或冻结/解冻标签。</string>
 
-    <string name="instruction_section_searchbar_title">Pixel 搜索栏自定义</string>
-    <string name="instruction_section_searchbar_desc">自定义你的 Glance 主屏幕搜索栏小部件。\n\n• 小部件响应性：Glance 小部件依赖系统广播更新，可能并非在所有启动器环境中都能即时更新。\n• 搜索引擎设置：点按操作使用设备上配置的默认系统搜索提供商，这可能因地区和 OEM 设置而异或受到限制。</string>
 
-    <string name="instruction_section_callvibes_title">通话振动与触觉</string>
-    <string name="instruction_section_callvibes_desc">在通话事件期间添加触觉反馈。\n\n• 接听电话：接听方接起电话时提供轻微的触觉振动。\n• 挂断电话：通话结束时提供反馈。\n• 权限：需要通知使用权和手机状态权限来监控通话状态。</string>
 
     <string name="instruction_section_backup_title">备份与恢复</string>
     <string name="instruction_section_backup_desc">跨设备保护并转移你的自定义设置。\n\n• 导出配置：生成 DIY 自动化、应用标签、磁贴配置和自定义偏好的 JSON 备份。\n• 导入配置：无需逐个重新配置即可轻松恢复你保存的设置文件。</string>
 
-    <string name="instruction_section_pocketmode_title">口袋模式</string>
-    <string name="instruction_section_pocketmode_desc">防止设备放在口袋、包中或屏幕朝下时发生意外触摸交互。\n\n• 距离与光线传感器：使用硬件距离和环境光传感器检测封闭空间。\n• 触摸阻止：在遮挡时暂时禁用屏幕触摸输入，防止意外的口袋拨号和应用启动。</string>
 
     <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">问题报告已复制到剪贴板</string>
@@ -1725,7 +1717,7 @@
     <string name="label_animator_duration_scale">动画器时长缩放</string>
     <string name="label_transition_animation_scale">过渡动画缩放</string>
     <string name="label_window_animation_scale">窗口动画缩放</string>
-    <string name="about_desc_text_animations">调整系统级字体缩放、粗细和动画速度。请注意，某些设置可能需要高级权限或重启设备才能让某些应用反映更改。\n\n缩放调整可能需要额外的 shizuku 或 root 权限</string>
+    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
     <string name="about_desc_screen_refresh_rate">使用 Shizuku 设置自定义屏幕刷新率。固定模式将最小和峰值刷新率都锁定为一个值，而范围模式允许你定义单独的最小值和峰值。重置会清除自定义覆盖并返回系统管理的刷新行为。</string>
     <string name="refresh_rate_section_mode">模式</string>
     <string name="refresh_rate_section_values">刷新率</string>
@@ -1917,7 +1909,7 @@
     <string name="feat_standby_apps_desc">优化应用后台活动</string>
     <string name="about_desc_networks">配置网络下载速度限制、即使连接 Wi-Fi 也保持移动数据持续活跃，并启用无线显示认证设置。</string>
     <string name="about_desc_standby_apps">管理 Android 应用待机存储桶（活跃、工作集、常用、极少、受限）以控制后台应用执行、网络使用和电池消耗。</string>
-    <string name="about_desc_other_customizations">高级显示和系统 UI 自定义，包括手势条可见性、圆圈搜索高度、旋转建议、设置浮层、透明导航栏和 GPU 屏幕合成。</string>
+    <string name="about_desc_other_customizations">Extra display and system UI tweaks in one place.\n\nHide the gesture bar (optionally keeping it on the launcher), change the Circle to Search gesture, make the navigation bar transparent, disable the rotation suggestion button, allow overlays over system Settings, and prefer GPU for screen composing, which resets on reboot.\n\nSome options need Shizuku or accessibility permission, and results may vary by device and OS version.</string>
     <string name="standby_bucket_active">活跃</string>
     <string name="standby_bucket_working_set">工作集</string>
     <string name="standby_bucket_frequent">常用</string>
@@ -2102,4 +2094,43 @@
     <string name="watch_notif_synced_icons_count">已同步 %1$d 个应用图标到手表</string>
     <string name="watch_call_sync_title">同步通话</string>
     <string name="watch_call_sync_desc">从手表同步和控制通话</string>
+    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
+    <string name="label_shake_for_help">Shake for help</string>
+    <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
+    <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
+    <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
+    <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
+    <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
+    <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
+    <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
+    <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
+    <string name="about_desc_watch_esim_install">Install an eSIM on your Pixel Watch even in regions where it is not officially supported.\n\nExperimental. It relies on a hidden screen in the Pixel Watch app that may change, and installation success cannot be confirmed here.</string>
+    <string name="about_desc_sync_sound_mode">Automatically keeps your watch sound mode in sync with your phone.\n\nWhen you switch your phone between sound, vibrate and silent, your watch follows.</string>
+    <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
+    <string name="about_desc_lock_from_watch">Lock your phone remotely from your watch.\n\nHandy if you left your phone somewhere and want to secure it right away.</string>
+    <string name="about_desc_watch_controls">Customize the controls shown on your watch.\n\nChoose which actions are available so the watch shows only what you need.</string>
+    <string name="about_desc_watchface">Customize the Essentials watchface on your Wear OS watch.\n\nChange its look and settings from your phone.</string>
+    <string name="about_desc_complications">Customize the complication widgets shown on your watchface.\n\nChoose which info appears and where, such as flashlight status or other glance items.</string>
+    <string name="about_desc_notification_sync">Sync notifications between your phone and your watch.\n\nThis is only used for the launcher and is not a full notification mirror.</string>
+    <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
+    <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
+    <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="island_chips_title">Island chips</string>
+    <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
+    <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
+    <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
+    <string name="island_themed_app_icons_title">Use themed app icons</string>
+    <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
+    <string name="diy_cts_method_title">Trigger method</string>
+    <string name="diy_cts_method_accessibility">Accessibility</string>
+    <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
 </resources>

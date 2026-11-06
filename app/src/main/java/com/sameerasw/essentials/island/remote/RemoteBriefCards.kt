@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.island.sdk.BriefCardPayload
 import com.sameerasw.island.sdk.IslandSurfaceKey
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +67,7 @@ fun RemoteBriefCardRow(card: RemoteBriefCard, onClick: () -> Unit, modifier: Mod
         Spacer(Modifier.width(12.dp))
         Text(
             text = payload.subtitle.orEmpty(),
-            style = IslandTextStyles.body.copy(color = Color.White, fontSize = 14.sp),
+            style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 14.sp),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),

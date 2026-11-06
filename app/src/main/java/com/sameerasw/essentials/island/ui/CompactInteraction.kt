@@ -29,7 +29,7 @@ class CompactJellyState {
     val stretchX = Animatable(0f)
     val stretchY = Animatable(0f)
 
-    suspend fun pressDown() = press.animateTo(1f, spring(0.6f, 900f))
+    suspend fun pressDown() = press.animateTo(1f, motionSpring(0.6f, 900f))
     suspend fun pressUp() = press.animateTo(0f, JellySpring)
 
     suspend fun releaseStretch(velocityX: Float, velocityY: Float) = coroutineScope {

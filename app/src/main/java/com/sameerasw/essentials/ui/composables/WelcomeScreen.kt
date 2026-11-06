@@ -57,6 +57,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -85,7 +86,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
+import com.sameerasw.essentials.ui.components.ShakeForHelpCard
 import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -633,6 +634,14 @@ fun FeatureIntroStepContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            var shakeCardExpanded by rememberSaveable { mutableStateOf(true) }
+            ShakeForHelpCard(
+                expanded = shakeCardExpanded,
+                onToggle = { shakeCardExpanded = !shakeCardExpanded },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = stringResource(R.string.feature_intro_desc),
                 style = MaterialTheme.typography.bodyLarge,
@@ -690,22 +699,7 @@ fun FeatureIntroStepContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = stringResource(R.string.help_guides_title),
-                style =
-                    MaterialTheme.typography.headlineSmall.copy(
-                        fontFamily = GoogleSansFlexRounded,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            HelpAndGuidesContent()
+            Spacer(modifier = Modifier.height(24.dp))
 
             Spacer(modifier = Modifier.height(8.dp))
 

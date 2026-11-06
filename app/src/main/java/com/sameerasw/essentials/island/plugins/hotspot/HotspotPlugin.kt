@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.hotspot
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import android.app.usage.NetworkStats
 import android.app.usage.NetworkStatsManager
 import android.content.BroadcastReceiver
@@ -183,7 +185,7 @@ class HotspotPlugin : BaseIslandPlugin() {
                     CompactCell("hotspot.icon") { HotspotIcon(count) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(R.drawable.rounded_wifi_tethering_24, tint = MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(R.drawable.rounded_wifi_tethering_24, tint = islandAccent()) },
                     start = context.getString(R.string.island_show_hotspot_title),
                     end = end,
                 ),
@@ -213,7 +215,7 @@ private fun HotspotIcon(count: Int?) {
         IslandIcon(
             R.drawable.rounded_wifi_tethering_24,
             size = 20.dp,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = islandAccent(),
             modifier = Modifier.align(Alignment.TopStart),
         )
         if (count != null) {
@@ -225,7 +227,7 @@ private fun HotspotIcon(count: Int?) {
             )
             Text(
                 text = if (count > 9) "9+" else count.toString(),
-                color = MaterialTheme.colorScheme.primary,
+                color = islandAccent(),
                 fontSize = if (count > 9) 6.sp else 8.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,

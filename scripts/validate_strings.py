@@ -9,6 +9,7 @@ Checks Android resource translation files for AAPT2 compilation & runtime string
 4. Unescaped Percentage Signs (%)
 5. Format Specifier Mismatches (compared against values/strings.xml)
 6. Invalid Escape Sequences
+7. Extra Translations (keys missing from values/strings.xml, fails lint ExtraTranslation)
 
 Usage:
   python3 scripts/validate_strings.py           # Validate all strings.xml files
@@ -177,6 +178,7 @@ def validate_file(file_path, base_strings, auto_fix=False):
     )
 
     new_lines = list(lines)
+    lines_to_drop = set()
 
     for idx, line in enumerate(lines, start=1):
         for match in string_tag_pattern.finditer(line):
@@ -200,6 +202,13 @@ def validate_file(file_path, base_strings, auto_fix=False):
             is_formatted = "false" if 'formatted="false"' in attrs else "true"
 
             item_issues = check_string_value(key, val, is_formatted)
+
+            if base_strings and os.path.basename(os.path.dirname(file_path)) != "values" and key not in base_strings:
+                item_issues.append({
+                    'type': 'EXTRA_TRANSLATION',
+                    'msg': f"'{key}' is not defined in values/strings.xml (lint ExtraTranslation).",
+                    'fixable': True
+                })
 
             # Format Specifier Comparison against base strings
             if key in base_strings:
@@ -244,6 +253,9 @@ def validate_file(file_path, base_strings, auto_fix=False):
                         temp = temp.replace('VALID_SPEC_', '')
                         fixed_val = temp.replace('DOUBLE_PERCENT_MARKER', '%%')
                         fixed_this_item = True
+                    elif issue['type'] == 'EXTRA_TRANSLATION':
+                        lines_to_drop.add(idx - 1)
+                        file_modified = True
                     elif issue['type'] == 'MALFORMED_FORMAT_SPECIFIER':
                         fixed_val = fixed_val.replace('ф', 'f')
                         fixed_this_item = True
@@ -259,7 +271,7 @@ def validate_file(file_path, base_strings, auto_fix=False):
 
     if auto_fix and file_modified:
         with open(file_path, 'w', encoding='utf-8') as f:
-            f.writelines(new_lines)
+            f.writelines(l for i, l in enumerate(new_lines) if i not in lines_to_drop)
 
     return issues_found, file_modified
 

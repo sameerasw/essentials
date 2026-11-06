@@ -1,11 +1,15 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.model.QueueOverflow
+
 import com.sameerasw.essentials.island.model.QueueInfo
 import com.sameerasw.essentials.island.model.StackIcon
 import android.widget.Toast
+import kotlin.math.ceil
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
 import android.content.Context
+import android.os.PowerManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
@@ -39,7 +43,6 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_CATCH_UP_ENABLED,
-        SettingsRepository.KEY_ISLAND_NOTIF_COMPACT_HEADS_UP,
         SettingsRepository.KEY_ISLAND_NOTIF_PEEK_STYLE,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
         SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
@@ -52,6 +55,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS_LIST,
         SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_ORDER,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_CHAT_PICTURES,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_OVERFLOW,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_SILENT,
+        SettingsRepository.KEY_ISLAND_NOTIF_HUB_GROUP,
+        SettingsRepository.KEY_ISLAND_NOTIF_DISABLE_LOCKED,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED,
         SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_CHAT_PICTURES,
         SettingsRepository.KEY_ISLAND_OTP_ENABLED,
@@ -69,6 +80,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     
     private var pendingPopUp = false
     private var catchingUp = false
+    private var pinnedKey: String? = null
 
     private fun busyElsewhere(): Boolean {
         val c = ctx ?: return false
@@ -82,13 +94,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val here = focusedKey == ITEM_KEY && (stage == IslandStage.Line || stage == IslandStage.Expanded)
         val left = wasHere && !here
         wasHere = here
-        if (left && !pendingPopUp && alerts.isNotEmpty() && settings.isIslandCatchUpEnabled()) {
+        if (left && !pendingPopUp && alerts.isNotEmpty() && currentAlert()?.hubOnly == false && settings.isIslandCatchUpEnabled()) {
             val c = ctx
             if (c != null) {
                 c.mainHandler.removeCallbacks(timeoutRunnable)
                 c.mainHandler.removeCallbacks(catchUpRunnable)
                 if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
             }
+            pinLatest()
             catchingUp = true
         }
         if (catchingUp) render()
@@ -111,10 +124,20 @@ class NotificationsPlugin : BaseIslandPlugin() {
         currentAlert()?.let { seen.add(it.key) }
     }
 
+    private fun cycles(from: ActiveNotificationAlert, to: ActiveNotificationAlert) = from.hubOnly || !to.hubOnly
+
     private fun advanceCurrent() {
         if (alerts.size < 2) return
-        currentIndex = (currentIndex.coerceIn(0, alerts.size - 1) + 1) % alerts.size
-        markSeen()
+        val start = currentIndex.coerceIn(0, alerts.size - 1)
+        val from = alerts[start]
+        for (offset in 1 until alerts.size) {
+            val index = (start + offset) % alerts.size
+            if (cycles(from, alerts[index])) {
+                currentIndex = index
+                markSeen()
+                return
+            }
+        }
     }
 
     private fun advanceToUnseen(): Boolean {
@@ -154,7 +177,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private val timeoutRunnable = Runnable { onTimeout() }
     private val catchUpRunnable = Runnable {
-        if (ctx?.isContentSuppressed?.invoke() == true) catchUpPaused = true else clearAll()
+        if (ctx?.isContentSuppressed?.invoke() == true) catchUpPaused = true else endSession()
     }
 
     private val replied = HashMap<String, Long>()
@@ -178,6 +201,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
             NotificationListener.addNotificationAlertListener(listener)
             registered = true
         }
+        if (hub()) syncHub()
     }
 
     override fun onStop() {
@@ -186,13 +210,86 @@ class NotificationsPlugin : BaseIslandPlugin() {
             registered = false
         }
         cancelTimers()
+        ctx?.mainHandler?.removeCallbacks(unpinRunnable)
+        pinnedKey = null
         alerts.clear()
         seen.clear()
     }
 
     override fun refresh() {
         if (ctx == null) return
-        if (!settings.isIslandShowNotificationsEnabled()) clearAll() else render()
+        if (!settings.isIslandShowNotificationsEnabled()) {
+            clearAll()
+            return
+        }
+        if (hub()) {
+            syncHub()
+        } else {
+            if (alerts.removeAll { it.hubOnly || it.ongoing }) currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+            if (alerts.isEmpty()) clearAll() else render()
+        }
+    }
+
+    private fun hub() = settings.isIslandNotifHubEnabled() && settings.isIslandShowNotificationsEnabled()
+
+    private fun maxQueue() = if (hub()) HUB_MAX_QUEUE else MAX_QUEUE
+
+    private var hubSyncGeneration = 0
+
+    private fun syncHub() {
+        val generation = ++hubSyncGeneration
+        val listener = NotificationListener.instance
+        if (listener == null) {
+            applyHub(emptyList())
+            return
+        }
+        listener.hubAlertsAsync { live ->
+            if (generation == hubSyncGeneration && ctx != null) applyHub(live)
+        }
+    }
+
+    private fun applyHub(allLive: List<ActiveNotificationAlert>) {
+        val live = allLive.filter { passesFilters(it) }
+        val liveKeys = live.mapTo(HashSet()) { it.key }
+        val stale = alerts.filter { it.key !in liveKeys && !it.key.startsWith("simulated_") }
+        stale.forEach { removeQuietly(it.key) }
+        live.forEach { alert ->
+            val index = alerts.indexOfFirst { it.key == alert.key }
+            if (index >= 0) {
+                alerts[index] = alert.copy(hubOnly = alerts[index].hubOnly)
+            } else {
+                insertSilently(alert)
+            }
+        }
+        if (alerts.isEmpty()) clearAll() else render()
+    }
+
+    private fun removeQuietly(key: String) {
+        val index = alerts.indexOfFirst { it.key == key }
+        if (index < 0) return
+        alerts.removeAt(index)
+        seen.remove(key)
+        if (index < currentIndex) currentIndex--
+        currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+    }
+
+    private fun insertSilently(alert: ActiveNotificationAlert) {
+        val at = alerts.indexOfFirst { it.timestamp < alert.timestamp }.let { if (it < 0) alerts.size else it }
+        alerts.add(at, alert)
+        if (at <= currentIndex && alerts.size > 1) currentIndex++
+        seen.add(alert.key)
+        while (alerts.size > maxQueue()) alerts.removeLast()
+    }
+
+    private fun addSilently(alert: ActiveNotificationAlert) {
+        if (!passesFilters(alert)) {
+            removeQuietly(alert.key)
+            render()
+            return
+        }
+        val index = alerts.indexOfFirst { it.key == alert.key }
+        if (index >= 0) alerts[index] = alert.copy(hubOnly = alerts[index].hubOnly) else insertSilently(alert)
+        render()
     }
 
     override fun onSuppressionChanged(suppressed: Boolean) {
@@ -218,6 +315,10 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     override fun onScreenStateChanged() {
+        if (hub()) {
+            syncHub()
+            return
+        }
         if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
 
@@ -240,13 +341,25 @@ class NotificationsPlugin : BaseIslandPlugin() {
 
     private fun maskOtp(code: String) = formatOtp(code).map { if (it == ' ') ' ' else '•' }.joinToString("")
 
+    private fun lockedOut(): Boolean =
+        settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_DISABLE_LOCKED, true) &&
+            ((context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true ||
+                (context.getSystemService(Context.POWER_SERVICE) as? PowerManager)?.isInteractive == false)
+
     private fun concealed(): Boolean =
         settings.getBoolean(SettingsRepository.KEY_ISLAND_NOTIF_CONCEAL_LOCKED, false) &&
             (context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.isKeyguardLocked == true
 
     private fun onPosted(alert: ActiveNotificationAlert) {
         val c = ctx ?: return
-        if (c.isContentSuppressed() || !settings.isIslandShowNotificationsEnabled() || !passesFilters(alert)) return
+        if (alert.hubOnly) {
+            if (hub()) addSilently(alert)
+            return
+        }
+        if (c.isContentSuppressed() || lockedOut() || !settings.isIslandShowNotificationsEnabled() || !passesFilters(alert)) {
+            if (hub()) addSilently(alert)
+            return
+        }
         val existing = alerts.indexOfFirst { it.key == alert.key }
         if (existing >= 0) {
             alerts[existing] = alert
@@ -266,7 +379,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         catchingUp = false
         if (queueEnabled() && showingHere()) {
             alerts.addLast(alert)
-            while (alerts.size > MAX_QUEUE) {
+            while (alerts.size > maxQueue()) {
                 alerts.removeAt(if (currentIndex == 0) 1 else 0)
                 if (currentIndex > 0) currentIndex--
             }
@@ -277,7 +390,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (waiting) alerts.addLast(alert) else alerts.addFirst(alert)
         if (!waiting) currentIndex = 0
         manualPick = false
-        val cap = if (queueEnabled()) MAX_QUEUE else 1
+        val cap = if (queueEnabled()) maxQueue() else 1
         while (alerts.size > cap) alerts.removeLast()
         if (minimal()) {
             pendingPopUp = false
@@ -306,7 +419,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         val c = ctx ?: return
         if (minimal()) return
         val otpNeedsExpand = currentAlert()?.let(::isOtp) == true && !settings.isIslandOtpTapToCopyEnabled()
-        val lineAvailable = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled() && !otpNeedsExpand
+        val lineAvailable = settings.isIslandLineStageEnabled() && !otpNeedsExpand &&
+            peekStyle() != SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_EXPANDED
         markSeen()
         c.request(
             if (lineAvailable) PluginRequest.Peek(ITEM_KEY, timeoutMs(), sticky = true)
@@ -317,9 +431,18 @@ class NotificationsPlugin : BaseIslandPlugin() {
     private fun onRemoved(key: String) {
         val index = alerts.indexOfFirst { it.key == key }
         if (index < 0) return
-        alerts.removeAt(index).also { seen.remove(it.key) }
+        val removed = alerts.removeAt(index).also { seen.remove(it.key) }
+        val wasCurrent = index == currentIndex && !removed.hubOnly
         if (index < currentIndex) currentIndex--
         currentIndex = currentIndex.coerceIn(0, (alerts.size - 1).coerceAtLeast(0))
+        if (wasCurrent && alerts.getOrNull(currentIndex)?.hubOnly == true) {
+            val fresh = (currentIndex until alerts.size).firstOrNull { !alerts[it].hubOnly }
+                ?: (currentIndex - 1 downTo 0).firstOrNull { !alerts[it].hubOnly }
+            if (fresh != null) {
+                currentIndex = fresh
+                markSeen()
+            }
+        }
         if (alerts.isEmpty()) clearAll() else render()
     }
 
@@ -334,7 +457,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
         }
         if (manualPick) {
             if (c.focusedKey() == ITEM_KEY) c.request(PluginRequest.Collapse(ITEM_KEY))
-            clearAll()
+            endSession()
             return
         }
         if (c.focusedKey() == ITEM_KEY && c.currentStage() == IslandStage.Line) {
@@ -347,13 +470,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
             scheduleTimeout()
             return
         }
-        if (settings.isIslandCatchUpEnabled() && alerts.isNotEmpty()) {
+        if (settings.isIslandCatchUpEnabled() && alerts.isNotEmpty() && currentAlert()?.hubOnly == false) {
             if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+            pinLatest()
             catchingUp = true
             render()
             return
         }
-        clearAll()
+        endSession()
     }
 
     private fun holdMinimal() {
@@ -363,8 +487,86 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         cancelTimers()
+        pinLatest()
         catchingUp = true
         if (!settings.isIslandCatchUpInfinite()) c.mainHandler.postDelayed(catchUpRunnable, settings.getIslandCatchUpTimeoutMs())
+    }
+
+    private val unpinRunnable = Runnable {
+        pinnedKey = null
+        render()
+    }
+
+    // The newest notification that just dropped into the catch-up bubble leads and gets a ring for the catch-up timeout
+    private fun pinLatest() {
+        val c = ctx ?: return
+        if (!hub() || settings.getIslandNotifHubOrder() != SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC) return
+        c.mainHandler.removeCallbacks(unpinRunnable)
+        pinnedKey = currentAlert()?.takeIf { !it.hubOnly }?.key
+        if (pinnedKey == null) return
+        val stay = settings.getIslandCatchUpStoredMs()
+        if (stay > 0L) c.mainHandler.postDelayed(unpinRunnable, stay)
+    }
+
+    private fun bubbleCells(): Int {
+        if (!hub() || settings.getIslandNotifQueueStyle() != SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP) return 1
+        val cap = settings.getIslandNotifHubIcons().let { if (it == 0) AUTO_CELL_ICONS else it }
+        val count = hubEntries().size
+        val shown = count.coerceIn(1, cap)
+        val overflow = if (count > cap && settings.getIslandNotifHubOverflow() != QueueOverflow.None) 0.3f else 0f
+        return ceil(1f + 0.55f * (shown - 1) + overflow).toInt()
+    }
+
+    private fun priorityRank(alert: ActiveNotificationAlert) = when {
+        alert.ongoing -> 0
+        alert.isConversation -> 1
+        alert.isSilent -> 3
+        else -> 2
+    }
+
+    private class HubEntry(val key: String, val alerts: List<ActiveNotificationAlert>, val grouped: Boolean) {
+        val lead = alerts.first()
+        val timestamp = alerts.maxOf { it.timestamp }
+    }
+
+    private fun entryRank(entry: HubEntry) = if (entry.grouped) {
+        if (entry.alerts.all { it.isSilent }) 3 else 2
+    } else {
+        priorityRank(entry.lead)
+    }
+
+    // Live updates and conversations always stand alone, everything else can fold into one entry per app
+    private fun hubEntries(): List<HubEntry> {
+        val shown = alerts
+            .filter { settings.isIslandNotifHubIncludeSilent() || !it.isSilent || it.ongoing }
+            .sortedByDescending { it.timestamp }
+        val entries = if (settings.isIslandNotifHubGroupByApps()) {
+            val chats = settings.isIslandNotifHubPreferChatPictures()
+            val standalone = shown.filter { it.ongoing || (chats && it.isConversation) }.map { HubEntry(it.key, listOf(it), grouped = false) }
+            val groups = shown.filterNot { it.ongoing || (chats && it.isConversation) }
+                .groupBy { it.packageName }
+                .map { (pkg, members) -> if (members.size == 1) HubEntry(members.first().key, members, grouped = false) else HubEntry("group:$pkg", members, grouped = true) }
+            standalone + groups
+        } else {
+            shown.map { HubEntry(it.key, listOf(it), grouped = false) }
+        }
+        val mode = settings.getIslandNotifHubOrder()
+        val recent = entries.sortedByDescending { it.timestamp }
+        if (mode == SettingsRepository.ISLAND_NOTIF_HUB_ORDER_RECENT) return recent
+        val byPriority = recent.sortedBy(::entryRank)
+        val pinned = pinnedKey
+            ?.takeIf { mode == SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC }
+            ?.let { key -> byPriority.firstOrNull { entry -> entry.alerts.any { it.key == key } } }
+        return if (pinned != null) listOf(pinned) + byPriority.filter { it !== pinned } else byPriority
+    }
+
+    private fun hubIconFor(entry: HubEntry): StackIcon {
+        val highlight = pinnedKey?.let { key -> entry.alerts.any { it.key == key } } == true
+        if (!entry.grouped) return stackIconFor(entry.lead, current = false, highlight = highlight)
+        val icon = entry.lead.appIcon ?: entry.lead.icon
+        return StackIcon(entry.key, onSelect = { select(entry.lead.key) }, highlight = highlight) { size ->
+            IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
+        }
     }
 
     private fun scheduleTimeout() {
@@ -379,7 +581,25 @@ class NotificationsPlugin : BaseIslandPlugin() {
         ctx?.mainHandler?.removeCallbacks(copiedRunnable)
     }
 
+    private fun endSession() {
+        if (!hub()) {
+            clearAll()
+            return
+        }
+        cancelTimers()
+        ctx?.mainHandler?.removeCallbacks(unpinRunnable)
+        pinnedKey = null
+        catchingUp = false
+        catchUpPaused = false
+        manualPick = false
+        pendingPopUp = false
+        for (i in alerts.indices) if (!alerts[i].hubOnly) alerts[i] = alerts[i].copy(hubOnly = true)
+        render()
+    }
+
     private fun clearAll() {
+        ctx?.mainHandler?.removeCallbacks(unpinRunnable)
+        pinnedKey = null
         catchingUp = false
         catchUpPaused = false
         copiedKey = null
@@ -418,16 +638,25 @@ class NotificationsPlugin : BaseIslandPlugin() {
             return
         }
         val alert = currentAlert()
-        if (alert == null) {
+        if (alert == null || lockedOut()) {
             publish(null)
             return
         }
         val index = alerts.indexOf(alert)
-        val next = if (queueEnabled()) alerts.getOrNull(index + 1) ?: alerts.getOrNull(index - 1) else null
+        val next = if (queueEnabled()) {
+            alerts.drop(index + 1).firstOrNull { cycles(alert, it) } ?: alerts.take(index).lastOrNull { cycles(alert, it) }
+        } else {
+            null
+        }
         val stack = alerts.map { stackIconFor(it, current = it === alert) }
-        val queued = waitingInOrder(alert).map { stackIconFor(it, current = false) }
+        val waitingAlerts = waitingInOrder(alert).filter { !it.hubOnly && it.key !in seen }
+        val queued = if (hub()) {
+            hubEntries().filter { entry -> entry.alerts.none { it === alert } }.map { hubIconFor(it) }
+        } else {
+            waitingAlerts.map { stackIconFor(it, current = false) }
+        }
         val minimal = minimal()
-        val waiting = if (minimal) queued else emptyList()
+        val waiting = if (minimal) waitingAlerts.map { stackIconFor(it, current = false) } else emptyList()
         val inlineQueue = minimal && waiting.isNotEmpty() && settings.isIslandNotifQueueInlineEnabled()
         val bubble = when {
             minimal && waiting.isNotEmpty() && !inlineQueue -> SideBubble(
@@ -437,11 +666,19 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 onDismiss = { clearWaiting() },
             )
             minimal -> null
+            hub() && hubEntries().isEmpty() -> null
             settings.isIslandCatchUpEnabled() -> SideBubble(
                 priority = SideBubblePriority.NOTIFICATION,
-                icons = alerts.map { stackIconFor(it, current = false) },
+                icons = if (hub()) {
+                    hubEntries().map { hubIconFor(it) }
+                } else {
+                    alerts.map { stackIconFor(it, current = false) }
+                },
                 onOpen = { select(alert.key) },
-                onDismiss = { clearAll() },
+                onDismiss = if (hub()) null else ({ clearAll() }),
+                maxIcons = if (hub()) settings.getIslandNotifHubIcons() else null,
+                overflow = if (hub()) settings.getIslandNotifHubOverflow() else QueueOverflow.Number,
+                cells = bubbleCells(),
             )
             else -> null
         }
@@ -482,7 +719,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun peekStyle(): String =
-        if (settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled()) {
+        if (settings.isIslandLineStageEnabled()) {
             settings.getIslandNotifPeekStyle()
         } else {
             SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL
@@ -703,9 +940,9 @@ class NotificationsPlugin : BaseIslandPlugin() {
         render()
     }
 
-    private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean): StackIcon {
-        val icon = if (concealed() && hidesChatPictures()) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
-        return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }) { size ->
+    private fun stackIconFor(alert: ActiveNotificationAlert, current: Boolean, highlight: Boolean = false): StackIcon {
+        val icon = if ((concealed() && hidesChatPictures()) || (hub() && !settings.isIslandNotifHubPreferChatPictures())) alert.appIcon ?: alert.icon else alert.chatIcon ?: alert.appIcon ?: alert.icon
+        return StackIcon(alert.key, current = current, onSelect = { select(alert.key) }, highlight = highlight) { size ->
             IslandBitmap(icon, size, circle = true, fallbackRes = R.drawable.rounded_notifications_unread_24)
         }
     }
@@ -772,6 +1009,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
     companion object {
         const val ITEM_KEY = "notifications"
         private const val MAX_QUEUE = 20
+        private const val HUB_MAX_QUEUE = 200
+        private const val AUTO_CELL_ICONS = 4
         private const val COPIED_MS = 1_500L
         private const val REPLY_REPOST_WINDOW_MS = 10_000L
 

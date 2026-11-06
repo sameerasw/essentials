@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.utils.AppIconUtil
 import android.content.ComponentName
 import android.content.Context
 import android.graphics.Bitmap
@@ -150,7 +151,7 @@ class MediaSessionSource(
         }
 
         fun appIcon(context: Context, packageName: String): Bitmap? = try {
-            AppUtil.drawableToBitmap(context.packageManager.getApplicationIcon(packageName))
+            AppUtil.drawableToBitmap(AppIconUtil.islandAppIcon(context, packageName))
         } catch (_: Exception) {
             null
         }

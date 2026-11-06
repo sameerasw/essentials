@@ -1,0 +1,4 @@
+HSPLcom/sameerasw/essentials/island/ui/**;->**(**)**
+HSPLcom/sameerasw/essentials/island/service/**;->**(**)**
+Lcom/sameerasw/essentials/island/ui/**;
+Lcom/sameerasw/essentials/island/service/**;

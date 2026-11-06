@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.utils.chronometer
 
+import com.sameerasw.essentials.utils.AppIconUtil
 import android.os.SystemClock
 import android.os.Build
 import android.app.Notification
@@ -143,7 +144,7 @@ object ChronometerRepository {
             null
         }
         val appIcon = previous?.appIcon ?: try {
-            AppUtil.drawableToBitmap(context.packageManager.getApplicationIcon(sbn.packageName))
+            AppUtil.drawableToBitmap(AppIconUtil.islandAppIcon(context, sbn.packageName))
         } catch (_: Exception) {
             null
         }

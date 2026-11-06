@@ -128,7 +128,7 @@ class QsTileActionRouter : BroadcastReceiver() {
     private fun fallbackLaunch(context: Context) {
         try {
             val launchIntent =
-                Intent(context, MainActivity::class.java).apply {
+                com.sameerasw.essentials.utils.AppIconUtil.mainIntent(context).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             context.startActivity(launchIntent)

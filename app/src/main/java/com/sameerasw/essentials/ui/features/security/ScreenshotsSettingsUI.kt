@@ -37,6 +37,7 @@ import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -52,6 +53,7 @@ fun ScreenshotsSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val showAfterSharing = DeviceUtils.isGoogleDevice() || viewModel.isEnableUnsupportedFeatures.value
     var requestingPermissionsFor by remember { mutableStateOf<List<String>?>(null) }
 
     fun missingPermissions(needsNotifications: Boolean): List<String> =
@@ -78,54 +80,56 @@ fun ScreenshotsSettingsUI(
                 .fillMaxWidth()
                 .padding(16.dp),
     ) {
-        SectionTitle(R.string.screenshots_section_after_sharing)
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp,
-        ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_share_24,
-                title = stringResource(R.string.feat_screenshot_share_cleanup_title),
-                description = stringResource(R.string.feat_screenshot_share_cleanup_desc),
-                isChecked = viewModel.isScreenshotShareCleanupEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    val missing = missingPermissions(needsNotifications = false)
-                    if (checked && missing.isNotEmpty()) {
-                        requestingPermissionsFor = missing
-                    } else {
-                        viewModel.setScreenshotShareCleanupEnabled(checked)
-                    }
-                },
-                modifier = Modifier.highlight(highlightSetting == "screenshot_share_cleanup_enabled"),
-            )
-
-            AnimatedVisibility(
-                visible = viewModel.isScreenshotShareCleanupEnabled.value,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
+        if (showAfterSharing) {
+            SectionTitle(R.string.screenshots_section_after_sharing)
+            RoundedCardContainer(
+                spacing = 2.dp,
+                cornerRadius = 24.dp,
             ) {
-                PickerRow(
-                    title = R.string.screenshot_share_cleanup_delay_title,
-                    highlighted = highlightSetting == "screenshot_share_cleanup_delay",
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_share_24,
+                    title = stringResource(R.string.feat_screenshot_share_cleanup_title),
+                    description = stringResource(R.string.feat_screenshot_share_cleanup_desc),
+                    isChecked = viewModel.isScreenshotShareCleanupEnabled.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        val missing = missingPermissions(needsNotifications = false)
+                        if (checked && missing.isNotEmpty()) {
+                            requestingPermissionsFor = missing
+                        } else {
+                            viewModel.setScreenshotShareCleanupEnabled(checked)
+                        }
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "screenshot_share_cleanup_enabled"),
+                )
+
+                AnimatedVisibility(
+                    visible = viewModel.isScreenshotShareCleanupEnabled.value,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically(),
                 ) {
-                    SegmentedPicker(
-                        items = SHARE_DELAY_MINUTES,
-                        selectedItem = viewModel.screenshotShareCleanupDelayMinutes.intValue,
-                        onItemSelected = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            viewModel.setScreenshotShareCleanupDelayMinutes(it)
-                        },
-                        labelProvider = { minutes ->
-                            when (minutes) {
-                                0 -> context.getString(R.string.screenshot_delay_immediately)
-                                60 -> context.getString(R.string.screenshot_delay_1_hour)
-                                else -> context.getString(R.string.screenshot_delay_1_day)
-                            }
-                        },
+                    PickerRow(
                         title = R.string.screenshot_share_cleanup_delay_title,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                        highlighted = highlightSetting == "screenshot_share_cleanup_delay",
+                    ) {
+                        SegmentedPicker(
+                            items = SHARE_DELAY_MINUTES,
+                            selectedItem = viewModel.screenshotShareCleanupDelayMinutes.intValue,
+                            onItemSelected = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setScreenshotShareCleanupDelayMinutes(it)
+                            },
+                            labelProvider = { minutes ->
+                                when (minutes) {
+                                    0 -> context.getString(R.string.screenshot_delay_immediately)
+                                    60 -> context.getString(R.string.screenshot_delay_1_hour)
+                                    else -> context.getString(R.string.screenshot_delay_1_day)
+                                }
+                            },
+                            title = R.string.screenshot_share_cleanup_delay_title,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             }
         }

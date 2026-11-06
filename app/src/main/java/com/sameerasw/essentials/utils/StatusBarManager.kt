@@ -44,7 +44,7 @@ object StatusBarManager {
         requesterId: String,
         flags: Set<String>,
     ) {
-        disableRequests[requesterId] = flags
+        synchronized(lock) { disableRequests[requesterId] = flags }
         update(context)
     }
 
@@ -57,10 +57,8 @@ object StatusBarManager {
         context: Context,
         requesterId: String,
     ) {
-        if (disableRequests.containsKey(requesterId)) {
-            disableRequests.remove(requesterId)
-            update(context)
-        }
+        val removed = synchronized(lock) { disableRequests.remove(requesterId) != null }
+        if (removed) update(context)
     }
 
     private var lastAppliedCommand: String? = null

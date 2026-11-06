@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.devices
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
@@ -48,6 +50,8 @@ class DevicesPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_DUO_BATTERY_LOW_COLOR,
         SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR_ENABLED,
         SettingsRepository.KEY_DUO_BATTERY_CRITICAL_COLOR,
+        SettingsRepository.KEY_DUO_BATTERY_LOW_LEVEL,
+        SettingsRepository.KEY_DUO_BATTERY_CRITICAL_LEVEL,
     )
 
     private class BatteryDevice(val name: String, val iconRes: Int, val level: Int)
@@ -183,7 +187,7 @@ class DevicesPlugin : BaseIslandPlugin() {
             order.firstNotNullOfOrNull { address ->
                 val device = bonded[address] ?: return@firstNotNullOfOrNull null
                 val level = batteryOf(device).takeIf { it >= 0 } ?: return@firstNotNullOfOrNull null
-                if (onlyLow && level > SettingsRepository.ISLAND_BATTERY_LOW_LEVEL) return@firstNotNullOfOrNull null
+                if (onlyLow && level > settings.getDuoBatteryLowLevel()) return@firstNotNullOfOrNull null
                 val name = nameOf(device)
                 BatteryDevice(name, iconFor(device, name), level)
             }
@@ -280,10 +284,10 @@ class DevicesPlugin : BaseIslandPlugin() {
                 outlineAccent = color ?: idleColor(),
                 compact = listOf(
                     CompactCell("devices.battery.level") { DeviceBattery(d.level, iconStyle, showLevel, color ?: idleColor()) },
-                    CompactCell("devices.battery.icon") { IslandIcon(d.iconRes, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
+                    CompactCell("devices.battery.icon") { IslandIcon(d.iconRes, size = 18.dp, tint = islandAccent()) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(d.iconRes, tint = MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(d.iconRes, tint = islandAccent()) },
                     start = d.name,
                     end = "${d.level}%",
                 ),
@@ -297,10 +301,10 @@ class DevicesPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.DEVICES,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("devices.icon") { IslandIcon(e.iconRes, size = 18.dp, tint = tint ?: MaterialTheme.colorScheme.primary) },
+                    CompactCell("devices.icon") { IslandIcon(e.iconRes, size = 18.dp, tint = tint ?: islandAccent()) },
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(e.iconRes, tint = tint ?: MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(e.iconRes, tint = tint ?: islandAccent()) },
                     start = e.name,
                     end = context.getString(if (e.connected) R.string.island_devices_connected else R.string.island_devices_disconnected),
                     endSlot = if (battery >= 0) {
@@ -331,9 +335,9 @@ class DevicesPlugin : BaseIslandPlugin() {
             fallback
         }
         val raw = when {
-            level in 0..SettingsRepository.ISLAND_BATTERY_CRITICAL_LEVEL && settings.isDuoBatteryCriticalColorEnabled() ->
+            level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
                 parse(settings.getDuoBatteryCriticalColor(), android.graphics.Color.rgb(244, 67, 54))
-            level in 0..SettingsRepository.ISLAND_BATTERY_LOW_LEVEL && settings.isDuoBatteryLowColorEnabled() ->
+            level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->
                 parse(settings.getDuoBatteryLowColor(), android.graphics.Color.rgb(255, 235, 59))
             else -> return null
         }
@@ -362,8 +366,8 @@ class DevicesPlugin : BaseIslandPlugin() {
 @Composable
 private fun DeviceBattery(level: Int, iconStyle: Boolean, showLevel: Boolean, color: Color?) {
     if (iconStyle) {
-        BatteryGlyph(level, color ?: MaterialTheme.colorScheme.primary, showLevel = showLevel)
+        BatteryGlyph(level, color ?: islandAccent(), showLevel = showLevel)
     } else {
-        BatteryRing(level, color ?: MaterialTheme.colorScheme.primary, showLevel = showLevel)
+        BatteryRing(level, color ?: islandAccent(), showLevel = showLevel)
     }
 }

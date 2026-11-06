@@ -104,11 +104,6 @@ fun HelpAndGuidesContent() {
                 description = stringResource(R.string.instruction_section_maps_desc),
             ),
             InstructionSection(
-                title = stringResource(R.string.instruction_section_silent_title),
-                iconRes = R.drawable.rounded_volume_off_24,
-                description = stringResource(R.string.instruction_section_silent_desc),
-            ),
-            InstructionSection(
                 title = stringResource(R.string.instruction_section_freeze_title),
                 iconRes = R.drawable.rounded_mode_cool_24,
                 description = stringResource(R.string.instruction_section_freeze_desc),
@@ -117,11 +112,6 @@ fun HelpAndGuidesContent() {
                 title = stringResource(R.string.instruction_section_security_title),
                 iconRes = R.drawable.rounded_security_24,
                 description = stringResource(R.string.instruction_section_security_desc),
-            ),
-            InstructionSection(
-                title = stringResource(R.string.instruction_section_statusbar_title),
-                iconRes = R.drawable.rounded_interests_24,
-                description = stringResource(R.string.instruction_section_statusbar_desc),
             ),
             InstructionSection(
                 title = stringResource(R.string.instruction_section_battery_saver_title),
@@ -169,24 +159,9 @@ fun HelpAndGuidesContent() {
                 description = stringResource(R.string.instruction_section_diy_desc),
             ),
             InstructionSection(
-                title = stringResource(R.string.instruction_section_searchbar_title),
-                iconRes = R.drawable.rounded_search_24,
-                description = stringResource(R.string.instruction_section_searchbar_desc),
-            ),
-            InstructionSection(
-                title = stringResource(R.string.instruction_section_callvibes_title),
-                iconRes = R.drawable.rounded_mobile_vibrate_24,
-                description = stringResource(R.string.instruction_section_callvibes_desc),
-            ),
-            InstructionSection(
                 title = stringResource(R.string.instruction_section_backup_title),
                 iconRes = R.drawable.rounded_save_24,
                 description = stringResource(R.string.instruction_section_backup_desc),
-            ),
-            InstructionSection(
-                title = stringResource(R.string.instruction_section_pocketmode_title),
-                iconRes = R.drawable.rounded_mobile_off_24,
-                description = stringResource(R.string.instruction_section_pocketmode_desc),
             ),
             InstructionSection(
                 title = stringResource(R.string.instruction_section_about_title),

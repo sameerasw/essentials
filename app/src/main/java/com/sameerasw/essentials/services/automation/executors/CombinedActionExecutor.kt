@@ -589,7 +589,7 @@ object CombinedActionExecutor {
 
                 is Action.CircleToSearch -> {
                     com.sameerasw.essentials.utils.OmniTriggerUtil
-                        .trigger(context)
+                        .trigger(context, useShizuku = action.method == Action.CircleToSearchMethod.SHIZUKU)
                 }
 
                 is Action.SplitScreen -> SplitScreenUtil.toggle(context)

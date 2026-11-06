@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.remote
 
+import com.sameerasw.essentials.island.ui.motionTween
+
 import android.os.Build
 import android.graphics.Outline
 import android.graphics.PixelFormat
@@ -77,7 +79,7 @@ fun RemoteExpanded(
     val paused = LocalRemotePaused.current
     val dragging by remember { derivedStateOf { collapse() > 0.02f || paused() } }
     val showLive = revealed && !dragging && session.hasSurface
-    val fade by animateFloatAsState(if (showLive) 1f else 0f, if (showLive) tween(160) else snap(), label = "remoteFade")
+    val fade by animateFloatAsState(if (showLive) 1f else 0f, if (showLive) motionTween(160) else snap(), label = "remoteFade")
     val cornerPx = with(density) { scope.spec.expandedCorner.toPx() }
     val current = remember { intArrayOf(0, 0) }
     val corner = remember { floatArrayOf(0f) }

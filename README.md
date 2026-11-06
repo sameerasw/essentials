@@ -17,11 +17,12 @@ Essential tools, mods and workarounds for Pixels and other Androids
 <strong>Featuring Essentials</strong>
 </h3>
 <p align="center">
-  <a href="https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79"><img align="top"  width="18%" alt="Frame 6" src="https://github.com/user-attachments/assets/8bda579e-3ab6-4255-955e-7755598511f2" /></a>
-  <a href="https://youtu.be/iY3FBMTA15A?si=L2XX4sZQn3iKf2EZ&t=753"><img align="top"  width="18%" alt="Frame 7" src="https://github.com/user-attachments/assets/abab16b1-3750-4c0e-8a15-4928cb9253d4" /></a>
-  <a href="https://youtu.be/mDQ8o4JlXjM?si=kZsIxv37m7K1Gij2&t=780"><img align="top"  width="18%" alt="CleanShot-Helium-(1) HowToMen - YouTube-20260720-8  33 41@2x" src="https://github.com/user-attachments/assets/cac074da-8b15-44d3-a66c-3ac67316606d" /></a>
-  <a href="https://youtu.be/HE0s76z4Afs"><img align="top"  width="18%" alt="Frame 7" src="https://github.com/user-attachments/assets/02643ad6-e221-4fcc-bd40-e0c100af3d69" /></a>
-  <a href="https://www.androidauthority.com/good-lock-for-pixel-essentials-app-hands-on-3670994/"><img align="top"  width="18%" alt="Frame 7" src="https://github.com/user-attachments/assets/5469b309-6929-4775-93c5-7ee2f0d57ba1" /></a>
+  <a href="https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79"><img align="top"  width="15%" alt="Frame 6" src="https://github.com/user-attachments/assets/8bda579e-3ab6-4255-955e-7755598511f2" /></a>
+  <a href="https://youtu.be/iY3FBMTA15A?si=L2XX4sZQn3iKf2EZ&t=753"><img align="top"  width="15%" alt="Frame 7" src="https://github.com/user-attachments/assets/abab16b1-3750-4c0e-8a15-4928cb9253d4" /></a>
+  <a href="https://youtu.be/mDQ8o4JlXjM?si=kZsIxv37m7K1Gij2&t=780"><img align="top"  width="15%" alt="CleanShot-Helium-(1) HowToMen - YouTube-20260720-8  33 41@2x" src="https://github.com/user-attachments/assets/cac074da-8b15-44d3-a66c-3ac67316606d" /></a>
+  <a href="https://youtu.be/HE0s76z4Afs"><img align="top"  width="15%" alt="Frame 7" src="https://github.com/user-attachments/assets/02643ad6-e221-4fcc-bd40-e0c100af3d69" /></a>
+  <a href="https://youtu.be/acw8om6CIew?si=HSEtZjmxsnG6Vkpo&t=254"><img align="top"  width="15%" src="https://github.com/user-attachments/assets/09d5e357-fd3b-4485-b027-ed52b3ae1171" /></a>
+  <a href="https://www.androidauthority.com/good-lock-for-pixel-essentials-app-hands-on-3670994/"><img align="top"  width="15%" alt="Frame 7" src="https://github.com/user-attachments/assets/5469b309-6929-4775-93c5-7ee2f0d57ba1" /></a>
 </p>
 
 

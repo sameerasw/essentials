@@ -241,7 +241,7 @@ class DIYViewModel(
                     "ToggleMediaVolume" -> Action.ToggleMediaVolume
                     "LikeCurrentSong" -> Action.LikeCurrentSong
                     "OpenNowPlayingApp" -> Action.OpenNowPlayingApp
-                    "CircleToSearch" -> Action.CircleToSearch
+                    "CircleToSearch" -> Action.CircleToSearch()
                     "EssentialSearch" -> Action.EssentialSearch
                     "PinApp" -> Action.PinApp
                     "SplitScreen" -> Action.SplitScreen

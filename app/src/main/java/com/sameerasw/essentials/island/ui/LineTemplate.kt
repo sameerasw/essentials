@@ -25,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
@@ -197,10 +199,10 @@ private fun CondensedLine(line: LineContent, spec: IslandLayoutSpec, startInset:
 private fun LeadingSlot(leading: LineLeading?, spec: IslandLayoutSpec) {
     var last by remember { mutableStateOf(leading) }
     if (leading != null) last = leading
-    val width by animateDpAsState(last?.width ?: 0.dp, IslandMotion.expressiveDefaultSpatial(), label = "lineLeadingWidth")
+    val width by animateDpAsState(last?.width ?: 0.dp, IslandMotion.smoothSpatial(), label = "lineLeadingWidth")
     AnimatedVisibility(
         visible = leading != null,
-        enter = expandHorizontally(IslandMotion.expressiveDefaultSpatial()) +
+        enter = expandHorizontally(IslandMotion.smoothSpatial()) +
             scaleIn(IslandMotion.expressiveFastSpatial(), initialScale = 0.6f) +
             fadeIn(IslandMotion.expressiveDefaultEffects()),
         exit = shrinkHorizontally(IslandMotion.expressiveFastEffects()) +
@@ -233,15 +235,32 @@ private fun flexFont(weight: Int) = Font(
 
 val IslandFontFamily = FontFamily(flexFont(400), flexFont(500), flexFont(600), flexFont(700))
 
+val LocalIslandTextColor = compositionLocalOf<Color?> { null }
+
+@Composable
+fun islandTextColor(alpha: Float = 1f): Color = (LocalIslandTextColor.current ?: Color.White).let { it.copy(alpha = it.alpha * alpha) }
+
+fun pastelOf(color: Color): Color {
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(color.toArgb(), hsv)
+    hsv[1] = minOf(hsv[1], 0.4f)
+    hsv[2] = 1f
+    return Color(android.graphics.Color.HSVToColor(hsv))
+}
+
 object IslandTextStyles {
-    val line = TextStyle(color = Color.White, fontSize = 13.sp, fontFamily = IslandFontFamily, fontWeight = FontWeight.Medium)
-    val compact = TextStyle(
-        color = Color.White,
-        fontSize = 14.sp,
-        fontFamily = IslandFontFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontFeatureSettings = "tnum",
-    )
-    val title = TextStyle(color = Color.White, fontSize = 15.sp, fontFamily = IslandFontFamily, fontWeight = FontWeight.SemiBold)
-    val body = TextStyle(color = Color.White.copy(alpha = 0.72f), fontSize = 13.sp, fontFamily = IslandFontFamily)
+    val line: TextStyle
+        @Composable get() = TextStyle(color = islandTextColor(), fontSize = 13.sp, fontFamily = IslandFontFamily, fontWeight = FontWeight.Medium)
+    val compact: TextStyle
+        @Composable get() = TextStyle(
+            color = islandTextColor(),
+            fontSize = 14.sp,
+            fontFamily = IslandFontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontFeatureSettings = "tnum",
+        )
+    val title: TextStyle
+        @Composable get() = TextStyle(color = islandTextColor(), fontSize = 15.sp, fontFamily = IslandFontFamily, fontWeight = FontWeight.SemiBold)
+    val body: TextStyle
+        @Composable get() = TextStyle(color = islandTextColor(0.72f), fontSize = 13.sp, fontFamily = IslandFontFamily)
 }

@@ -22,6 +22,18 @@ import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 
 object PermissionUtils {
+    fun requestPermissionsSafely(
+        activity: android.app.Activity,
+        permissions: Array<String>,
+        requestCode: Int,
+    ) {
+        try {
+            androidx.core.app.ActivityCompat.requestPermissions(activity, permissions, requestCode)
+        } catch (e: IllegalStateException) {
+            android.util.Log.w("PermissionUtils", "Permission request unavailable", e)
+        }
+    }
+
     /**
      * Executes the is accessibility service enabled operation.
      *
@@ -149,6 +161,27 @@ object PermissionUtils {
         } catch (e: Exception) {
             false
         }
+
+    const val LOCAL_NETWORK_PERMISSION = "android.permission.ACCESS_LOCAL_NETWORK"
+
+    fun hasLocalNetworkPermission(context: Context): Boolean =
+        Build.VERSION.SDK_INT < 37 ||
+            androidx.core.content.ContextCompat.checkSelfPermission(context, LOCAL_NETWORK_PERMISSION) ==
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+
+    fun requestLocalNetwork(
+        context: Context,
+        activity: android.app.Activity? = null,
+    ) {
+        val target = activity ?: generateSequence(context) { (it as? android.content.ContextWrapper)?.baseContext }
+            .filterIsInstance<android.app.Activity>()
+            .firstOrNull() ?: return
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            .edit().putBoolean("local_network_requested", true).apply()
+        androidx.core.app.ActivityCompat.requestPermissions(target, arrayOf(LOCAL_NETWORK_PERMISSION), LOCAL_NETWORK_REQUEST_CODE)
+    }
+
+    private const val LOCAL_NETWORK_REQUEST_CODE = 137
 
     fun hasBubblePermission(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false

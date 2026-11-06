@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.call
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -311,5 +313,5 @@ private fun ringingSlot(ringing: Boolean): (@Composable () -> Unit)? = if (ringi
 
 @Composable
 private fun RingingIcon() {
-    IslandIcon(R.drawable.rounded_call_24, tint = MaterialTheme.colorScheme.primary, size = 18.dp)
+    IslandIcon(R.drawable.rounded_call_24, tint = islandAccent(), size = 18.dp)
 }

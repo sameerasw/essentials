@@ -34,13 +34,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class MediaPlugin : BaseIslandPlugin() {
-    override val id = "media"
+    override val id = ID
 
     override val settingKeys = setOf(
         SettingsRepository.KEY_ISLAND_SHOW_MEDIA,
         SettingsRepository.KEY_ISLAND_MEDIA_EXCLUDED_APPS,
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS,
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE,
+        SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR,
     )
 
     private val ART_RETRY_DELAYS_MS = longArrayOf(1500L, 3000L)
@@ -141,13 +142,18 @@ class MediaPlugin : BaseIslandPlugin() {
             controllers.any { it.sessionToken == current.sessionToken } &&
             current.packageName !in excluded &&
             current.playbackState?.state == PlaybackState.STATE_PAUSED
+        val transient = current != null && track != null &&
+            controllers.any { it.sessionToken == current.sessionToken } &&
+            current.packageName !in excluded &&
+            current.playbackState?.state.let { it == PlaybackState.STATE_BUFFERING || it == PlaybackState.STATE_CONNECTING || it == PlaybackState.STATE_SKIPPING_TO_NEXT || it == PlaybackState.STATE_SKIPPING_TO_PREVIOUS || it == PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM }
+        if (transient) return
         if (paused) {
             playing = false
             render()
             c.mainHandler.removeCallbacks(pausedGrace)
             val keep = settings.isIslandMediaKeepWhenPausedEnabled()
-            if (!keep || !settings.isIslandCatchUpInfinite()) {
-                c.mainHandler.postDelayed(pausedGrace, if (keep) settings.getIslandCatchUpTimeoutMs() else PAUSED_GRACE_MS)
+            if (!keep || !settings.isIslandCatchUpStoredInfinite()) {
+                c.mainHandler.postDelayed(pausedGrace, if (keep) settings.getIslandCatchUpStoredMs() else PAUSED_GRACE_MS)
             }
         } else {
             c.mainHandler.removeCallbacks(pausedGrace)
@@ -156,6 +162,9 @@ class MediaPlugin : BaseIslandPlugin() {
             render()
         }
     }
+
+    private fun artAccent(t: Track): Color? =
+        if (settings.isIslandMediaUseArtColorEnabled()) t.accent?.let { Color(it) } else null
 
     private fun canShowLike(controller: MediaController) =
         settings.isIslandMediaShowLikeEnabled() && controller.ratingType != 0
@@ -171,7 +180,7 @@ class MediaPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
-        val accent = t.accent?.let { Color(it) } ?: Color.White
+        val artAccent = artAccent(t)
         val isPlaying = playing
         val isLiked = liked
         val canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS)
@@ -191,14 +200,14 @@ class MediaPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.MEDIA,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("media.art") { MediaArtCue(t.artwork, accent, 22.dp) },
+                    CompactCell("media.art") { MediaArtCue(t.artwork, mediaAccent(artAccent), 22.dp) },
                     CompactCell("media.eq") {
                         val slide by IslandSlideFeedback.state.collectAsState()
                         val track = slide as? SlideFeedback.Track
                         if (track != null) {
-                            TrackSkipPill(track.next, track.armed, accent)
+                            TrackSkipPill(track.next, track.armed, mediaAccent(artAccent))
                         } else {
-                            EqualizerBars(isPlaying, accent)
+                            EqualizerBars(isPlaying, mediaAccent(artAccent))
                         }
                     },
                 ),
@@ -206,12 +215,12 @@ class MediaPlugin : BaseIslandPlugin() {
                     icon = { IslandBitmap(t.artwork, 24.dp, circle = true) },
                     start = t.artist,
                     end = t.title,
-                    endSlot = { EqualizerBars(isPlaying, accent) },
+                    endSlot = { EqualizerBars(isPlaying, mediaAccent(artAccent)) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, accent, isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
+                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(artAccent), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
                 },
-                accent = accent,
+                accent = artAccent,
                 onOpen = { openPlayer() },
                 sourcePackage = t.packageName,
             ),
@@ -249,7 +258,7 @@ class MediaPlugin : BaseIslandPlugin() {
             title = t.title,
             artist = t.artist,
             artwork = t.artwork,
-            accent = t.accent?.let { Color(it) } ?: Color.White,
+            accent = artAccent(t),
             playing = controller.playbackState?.state == PlaybackState.STATE_PLAYING,
             liked = MediaSessionSource.isLiked(controller),
             actions = actions,
@@ -297,6 +306,7 @@ class MediaPlugin : BaseIslandPlugin() {
     }
 
     companion object {
+        const val ID = "media"
         const val ITEM_KEY = "media"
         private const val PAUSED_GRACE_MS = 3000L
     }

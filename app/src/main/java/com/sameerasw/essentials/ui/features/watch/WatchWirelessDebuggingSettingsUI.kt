@@ -12,6 +12,7 @@ package com.sameerasw.essentials.ui.features.watch
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,11 +40,13 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.google.android.gms.wearable.Wearable
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @Composable
@@ -104,6 +108,22 @@ fun WatchWirelessDebuggingSettingsUI(
         }
     }
 
+    LifecycleResumeEffect(Unit) {
+        viewModel.check(context)
+        onPauseOrDispose { }
+    }
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= 37 &&
+            !PermissionUtils.hasLocalNetworkPermission(context) &&
+            !prefs.getBoolean("local_network_requested", false)
+        ) {
+            PermissionUtils.requestLocalNetwork(context)
+        }
+    }
+
+    val needsLocalNetwork = Build.VERSION.SDK_INT >= 37 && !viewModel.isLocalNetworkGranted.value
+
     val isSsidAvailable = watchSsid.isNotBlank()
     val isIpAvailable = watchIp.isNotBlank()
     val isPortAvailable = watchPort > 0
@@ -115,6 +135,20 @@ fun WatchWirelessDebuggingSettingsUI(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        if (needsLocalNetwork) {
+            RoundedCardContainer {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_lan_24,
+                    title = stringResource(R.string.perm_local_network_title),
+                    description = stringResource(R.string.perm_local_network_desc),
+                    showToggle = false,
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        PermissionUtils.requestLocalNetwork(context)
+                    },
+                )
+            }
+        }
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_adb_24,

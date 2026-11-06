@@ -87,7 +87,7 @@ class FlashlightIntensityActivity : ComponentActivity() {
         if (componentName != null && componentName.className != "com.sameerasw.essentials.services.tiles.FlashlightTileService") {
             // Redirect to MainActivity for other tiles
             val mainIntent =
-                Intent(this, com.sameerasw.essentials.MainActivity::class.java).apply {
+                com.sameerasw.essentials.utils.AppIconUtil.mainIntent(this).apply {
                     action = intent.action
                     putExtra("android.intent.extra.COMPONENT_NAME", componentName)
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP

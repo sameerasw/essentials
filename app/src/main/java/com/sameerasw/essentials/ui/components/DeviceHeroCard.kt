@@ -14,7 +14,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,16 +41,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -63,7 +58,6 @@ import coil.request.ImageRequest
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.Shapes
-import com.sameerasw.essentials.utils.DeviceImageMapper
 import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
@@ -74,7 +68,6 @@ fun DeviceHeroCard(
     deviceInfo: DeviceInfo,
     contentAlpha: () -> Float = { 1f },
     contentOffset: () -> Dp = { 0.dp },
-    overscrollOffset: Float = 0f,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -120,55 +113,6 @@ fun DeviceHeroCard(
                 .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val androidLogoRes = DeviceImageMapper.getAndroidLogo(deviceInfo)
-        val density = androidx.compose.ui.platform.LocalDensity.current
-        val extraSize = with(density) { (overscrollOffset).toDp() }
-
-        if (androidLogoRes != 0) {
-            Icon(
-                painter = painterResource(id = androidLogoRes),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier =
-                    Modifier
-                        .graphicsLayer {
-                            alpha = contentAlpha()
-                            translationY = contentOffset().toPx()
-                            scaleX = 1f + (overscrollOffset / 1000f)
-                            scaleY = 1f + (overscrollOffset / 1000f)
-                        }.size(200.dp + extraSize)
-                        .padding(top = 12.dp, bottom = 32.dp),
-            )
-        }
-
-        // User-set Device Name
-        Text(
-            text = deviceInfo.deviceName,
-            modifier =
-                Modifier
-                    .graphicsLayer {
-                        alpha = contentAlpha()
-                        translationY = contentOffset().toPx()
-                    }.basicMarquee(),
-            style =
-                MaterialTheme.typography.headlineLarge.copy(
-                    fontFamily =
-                        FontFamily(
-                            Font(
-                                R.font.google_sans_flex,
-                                variationSettings =
-                                    FontVariation.Settings(
-                                        FontVariation.width(150f),
-                                        FontVariation.weight(FontWeight.Normal.weight),
-                                        FontVariation.Setting("ROND", 100f),
-                                    ),
-                            ),
-                        ),
-                ),
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-        )
-
         // Manufacturer Model
         Text(
             text = "${deviceInfo.manufacturer.replaceFirstChar { it.uppercase() }} ${deviceInfo.model} (${deviceInfo.hardware})",

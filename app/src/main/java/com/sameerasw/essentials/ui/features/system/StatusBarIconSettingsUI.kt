@@ -54,6 +54,7 @@ import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.NetworkTypePicker
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -78,10 +79,15 @@ fun StatusBarIconSettingsUI(
 
     var showPermissionSheet by remember { mutableStateOf(false) }
     var showAdvancedPermissionSheet by remember { mutableStateOf(false) }
+    var showHideStatusBarInfo by remember { mutableStateOf(false) }
 
     // Refresh permission state when composable is shown
     LaunchedEffect(Unit) {
         viewModel.check(context)
+    }
+
+    if (showHideStatusBarInfo) {
+        HideStatusBarInfoBottomSheet(onDismissRequest = { showHideStatusBarInfo = false })
     }
 
     // Permission sheet for Smart Data
@@ -98,7 +104,7 @@ fun StatusBarIconSettingsUI(
                         dependentFeatures = listOf(R.string.smart_data_title),
                         actionLabel = R.string.permission_grant_action,
                         action = {
-                            ActivityCompat.requestPermissions(
+                            com.sameerasw.essentials.utils.PermissionUtils.requestPermissionsSafely(
                                 context as ComponentActivity,
                                 arrayOf(Manifest.permission.READ_PHONE_STATE),
                                 1001,
@@ -649,6 +655,35 @@ fun StatusBarIconSettingsUI(
                     }
                 },
                 modifier = Modifier.highlight(highlightSetting == "hide_notifications"),
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.stb_hide_entire_status_bar_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        RoundedCardContainer(
+            modifier = Modifier,
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_visibility_off_24,
+                title = stringResource(R.string.island_hide_status_bar_title),
+                onInfoClick = { showHideStatusBarInfo = true },
+                isChecked = mainViewModel.isIslandHideStatusBarInsets.value && isAdvancedEnabled,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    if (checked && !isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    } else {
+                        mainViewModel.setIslandHideStatusBarInsets(checked, context)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_hide_status_bar_insets"),
             )
         }
 

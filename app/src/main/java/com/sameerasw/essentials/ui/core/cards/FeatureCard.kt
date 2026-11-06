@@ -86,10 +86,20 @@ fun FeatureCard(
     iconPainter: androidx.compose.ui.graphics.painter.Painter? = null,
     hasBadge: Boolean = false,
     containerColor: androidx.compose.ui.graphics.Color? = null,
+    isSelected: Boolean = false,
     iconSize: androidx.compose.ui.unit.Dp = 24.dp,
     hasIconBackground: Boolean = true,
     iconTint: androidx.compose.ui.graphics.Color? = null,
 ) {
+    val selectedContainer by androidx.compose.animation.animateColorAsState(
+        targetValue =
+            if (isSelected) {
+                MaterialTheme.colorScheme.secondaryContainer
+            } else {
+                containerColor ?: MaterialTheme.colorScheme.surfaceBright
+            },
+        label = "feature_card_selected",
+    )
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
     var translationSheetKey by remember { mutableStateOf<String?>(null) }
@@ -336,7 +346,7 @@ fun FeatureCard(
         },
         colors =
             androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = containerColor ?: MaterialTheme.colorScheme.surfaceBright,
+                containerColor = selectedContainer,
             ),
         contentPadding =
             androidx.compose.foundation.layout.PaddingValues(

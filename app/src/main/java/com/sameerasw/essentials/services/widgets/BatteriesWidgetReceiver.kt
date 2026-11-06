@@ -83,9 +83,11 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
                     val isEnabled = repository.isBluetoothDevicesEnabled()
                     val bluetoothDevices =
                         if (isEnabled && hasPerm) {
-                            com.sameerasw.essentials.utils.BluetoothBatteryUtils.getPairedDevicesBattery(
-                                context,
-                            )
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                com.sameerasw.essentials.utils.BluetoothBatteryUtils.getPairedDevicesBattery(
+                                    context,
+                                )
+                            }
                         } else {
                             emptyList()
                         }

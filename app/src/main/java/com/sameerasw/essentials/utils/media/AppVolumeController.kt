@@ -34,6 +34,7 @@ object AppVolumeController {
     private const val AUDIO_SERVICE = "android.media.IAudioService"
     private const val DISPATCHER = "android.media.IPlaybackConfigDispatcher"
     private const val PLAYER_STATE_STARTED = 2
+    private const val PER_USER_RANGE = 100000
 
     private val handler = Handler(Looper.getMainLooper())
     private val appliedVolumes = mutableMapOf<Int, Float>()
@@ -151,7 +152,12 @@ object AppVolumeController {
     private fun packageOf(config: AudioPlaybackConfiguration): String? {
         val uid = invoke(config, "getClientUid") as? Int ?: return null
         if (uid < Process.FIRST_APPLICATION_UID) return null
-        val packages = appContext?.packageManager?.getPackagesForUid(uid) ?: return null
+        if (uid / PER_USER_RANGE != Process.myUid() / PER_USER_RANGE) return null
+        val packages = try {
+            appContext?.packageManager?.getPackagesForUid(uid)
+        } catch (e: Exception) {
+            null
+        } ?: return null
         return packages.firstOrNull { it in levels } ?: packages.firstOrNull()
     }
 

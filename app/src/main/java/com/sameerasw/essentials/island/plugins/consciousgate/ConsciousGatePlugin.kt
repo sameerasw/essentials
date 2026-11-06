@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.consciousgate
 
+import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.content.Context
 import android.os.PowerManager
@@ -68,7 +69,7 @@ class ConsciousGatePlugin : BaseIslandPlugin() {
         if (cachedPkg != session.packageName || cachedIcon == null) {
             cachedPkg = session.packageName
             cachedIcon = try {
-                AppUtil.drawableToBitmap(context.packageManager.getApplicationIcon(session.packageName))
+                AppUtil.drawableToBitmap(AppIconUtil.islandAppIcon(context, session.packageName))
             } catch (_: Exception) {
                 null
             }

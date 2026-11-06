@@ -153,7 +153,7 @@ object SimCarrierUtil {
             withTimeoutOrNull(5000L) {
                 deferredResult.await()
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to start instrumentation for ${cls.name}", e)
             null
         }

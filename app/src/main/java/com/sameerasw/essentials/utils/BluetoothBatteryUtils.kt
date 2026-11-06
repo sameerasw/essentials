@@ -39,7 +39,7 @@ object BluetoothBatteryUtils {
         private fun loadDump(): Map<String, Map<Int, String>> {
             if (!ShellUtils.isAvailable(context) || !ShellUtils.hasPermission(context)) return emptyMap()
             val text =
-                ShellUtils.runCommandWithOutput(context, "dumpsys bluetooth_manager", notifyOnError = false)
+                ShellUtils.runCommandWithOutput(context, "dumpsys bluetooth_manager | grep -E 'Device:|Custom Metadata:|^ +[0-9]+ '", notifyOnError = false)
                     ?: return emptyMap()
             val result = HashMap<String, MutableMap<Int, String>>()
             var current: String? = null

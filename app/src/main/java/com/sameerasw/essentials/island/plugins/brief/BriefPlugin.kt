@@ -1,5 +1,13 @@
 package com.sameerasw.essentials.island.plugins.brief
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
+import com.sameerasw.essentials.island.ui.motionSpring
+
+import com.sameerasw.essentials.island.ui.motionTween
+
+import com.sameerasw.essentials.island.IslandTimeFormat
+import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import com.sameerasw.essentials.island.plugins.alarm.NextAlarm
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.remote.RemoteBriefCardRow
@@ -27,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import com.sameerasw.essentials.island.plugins.media.IslandMediaState
 import com.sameerasw.essentials.island.plugins.media.MediaExpanded
 import com.sameerasw.essentials.island.plugins.media.MediaSnapshot
+import com.sameerasw.essentials.island.plugins.media.mediaAccent
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
 import com.sameerasw.essentials.island.ui.components.accentGlow
 import com.sameerasw.essentials.island.ui.components.cameraClearance
@@ -109,6 +118,7 @@ import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.BatteryGlyph
 import com.sameerasw.essentials.island.ui.components.BatteryRing
 import com.sameerasw.essentials.island.ui.components.CameraRow
@@ -216,7 +226,7 @@ private fun BriefExpanded(
                 val forward = targetState != BriefPage.Overview
                 (slideInHorizontally { if (forward) it / 3 else -it / 3 } + fadeIn()) togetherWith
                     (slideOutHorizontally { if (forward) -it / 3 else it / 3 } + fadeOut()) using
-                    SizeTransform(clip = false) { _, _ -> spring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING) }
+                    SizeTransform(clip = false) { _, _ -> motionSpring(stiffness = IslandMotion.STIFFNESS, dampingRatio = IslandMotion.DAMPING) }
             },
             label = "brief",
         ) { target ->
@@ -260,7 +270,7 @@ private fun BriefExpanded(
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
-                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward)
+                            MediaExpanded(m.title, m.artist, m.artwork, mediaAccent(m.accent), m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward)
                         }
                     }
                 }
@@ -285,12 +295,12 @@ private fun BriefBackground(
             is BriefPage.Event -> 0f
             is BriefPage.Remote -> 0f
         },
-        tween(400),
+        motionTween(400),
         label = "briefArt",
     )
     val event = (page as? BriefPage.Event)?.event
-    val glowColor = event?.calendarColor?.let { Color(soften(it)) } ?: MaterialTheme.colorScheme.primary
-    val glowAlpha by animateFloatAsState(if (event != null) 1f else 0f, tween(400), label = "briefGlow")
+    val glowColor = event?.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
+    val glowAlpha by animateFloatAsState(if (event != null) 1f else 0f, motionTween(400), label = "briefGlow")
     Box(modifier) {
         if (artAlpha > 0f) {
             scope.ArtworkBackdrop(artwork, Modifier.matchParentSize().graphicsLayer { alpha = artAlpha })
@@ -372,8 +382,8 @@ private fun BriefEventDetail(event: UpcomingCalendarEvent, showGlow: Boolean, sc
                 scope.collapse()
             },
             scope = scope,
-            emoji = remember(event.calendarId) {
-                SettingsRepository(context).getIslandCalendarEmojis()[event.calendarId]
+            icon = remember(event.calendarId) {
+                SettingsRepository(context).getIslandCalendarIcons()[event.calendarId]
             },
             drawBackground = false,
         )
@@ -412,7 +422,7 @@ private fun BriefOverview(
     val context = LocalContext.current
     val spec = scope.spec
     val sidePadding = spec.expandedPadding * 0.6f + spec.expandedCorner * 0.25f
-    val accent = MaterialTheme.colorScheme.primary
+    val accent = islandAccent()
     val cardsByPackage by RemoteBriefCards.cards.collectAsState()
     val remoteCards = remember(cardsByPackage) { cardsByPackage.values.flatten() }
 
@@ -438,8 +448,8 @@ private fun BriefOverview(
         }
     }
 
-    val timePattern = if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm"
-    val time = SimpleDateFormat(timePattern, Locale.getDefault()).format(Date(now))
+    val timeSettings = remember { SettingsRepository(context) }
+    val time = IslandTimeFormat.format(context, timeSettings, now)
     val date = SimpleDateFormat(DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(now))
 
     val artwork = remember(media?.artwork) { media?.artwork?.asImageBitmap() }
@@ -584,7 +594,7 @@ private fun BriefEventRow(event: UpcomingCalendarEvent, now: Long, accent: Color
         Column(Modifier.weight(1f)) {
             Text(
                 text = event.title,
-                style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp),
+                style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -628,22 +638,23 @@ private fun BriefPlayer(media: MediaSnapshot, artwork: ImageBitmap?, onClick: ()
         }
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            MarqueeText(text = media.title, style = IslandTextStyles.body.copy(color = Color.White, fontSize = 15.sp))
+            MarqueeText(text = media.title, style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp))
             MarqueeText(text = media.artist, style = IslandTextStyles.body)
         }
         media.actions.like?.let {
             BriefPlayerButton(
                 icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                tint = if (media.liked) media.accent else Color.White,
+                tint = if (media.liked) mediaAccent(media.accent) else Color.White,
             ) {
                 IslandHaptics.button(context)
                 it()
             }
         }
+        val playContainer = LocalIslandIconColor.current ?: mediaAccent(media.accent)
         BriefPlayerButton(
             icon = if (media.playing) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24,
-            tint = if (media.accent.luminance() > 0.5f) Color.Black else Color.White,
-            container = media.accent,
+            tint = if (playContainer.luminance() > 0.5f) Color.Black else Color.White,
+            container = playContainer,
             width = 64.dp,
             iconSize = 26.dp,
         ) {
@@ -676,12 +687,15 @@ private fun BriefPlayerButton(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        IslandIcon(icon, tint = tint, size = iconSize)
+        CompositionLocalProvider(LocalIslandIconColor provides if (container != null) null else LocalIslandIconColor.current) {
+            IslandIcon(icon, tint = tint, size = iconSize)
+        }
     }
 }
 
 private fun briefWhen(context: Context, event: UpcomingCalendarEvent, now: Long): String {
-    val timeFormat = DateFormat.getTimeFormat(context)
+    val timeSettings = SettingsRepository(context)
+    val timeText = { millis: Long -> IslandTimeFormat.format(context, timeSettings, millis) }
     val start = event.startTimeMillis
     val tomorrow = !isSameDay(start, now) && start > now
     if (event.allDay) {
@@ -689,7 +703,7 @@ private fun briefWhen(context: Context, event: UpcomingCalendarEvent, now: Long)
         return if (tomorrow) context.getString(R.string.island_brief_tomorrow, all) else all
     }
     if (start <= now) {
-        return context.getString(R.string.island_brief_now_until, timeFormat.format(Date(event.endTimeMillis)))
+        return context.getString(R.string.island_brief_now_until, timeText(event.endTimeMillis))
     }
     val minutes = ((start - now + 59_999L) / 60_000L).toInt()
     val hours = minutes / 60
@@ -702,8 +716,8 @@ private fun briefWhen(context: Context, event: UpcomingCalendarEvent, now: Long)
             context.getString(R.string.island_brief_in_hours_minutes, hours, rest)
         }
         minutes < 12 * 60 -> context.getString(R.string.island_brief_in_hours, if (rest >= 30) hours + 1 else hours)
-        tomorrow -> context.getString(R.string.island_brief_tomorrow, timeFormat.format(Date(start)))
-        else -> context.getString(R.string.island_brief_today, timeFormat.format(Date(start)))
+        tomorrow -> context.getString(R.string.island_brief_tomorrow, timeText(start))
+        else -> context.getString(R.string.island_brief_today, timeText(start))
     }
 }
 

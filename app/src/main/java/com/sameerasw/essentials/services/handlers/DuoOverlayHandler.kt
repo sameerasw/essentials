@@ -58,6 +58,7 @@ import com.sameerasw.essentials.domain.model.ActiveNotificationAlert
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.ProgressNotificationData
 import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.utils.NetworkUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DuoOverlayView
 import com.sameerasw.essentials.utils.FlashlightUtil
@@ -477,36 +478,10 @@ class DuoOverlayHandler(
             var level = -1
             var isWifi = false
 
-            val activeNetwork = connectivityManager?.activeNetwork
-            val capabilities = activeNetwork?.let { connectivityManager?.getNetworkCapabilities(it) }
-            if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+            val wifiCapabilities = underlyingWifiCapabilities()
+            if (wifiCapabilities != null) {
                 isWifi = true
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    val transportInfo = capabilities.transportInfo
-                    if (transportInfo is WifiInfo) {
-                        val rssi = transportInfo.rssi
-                        if (rssi > -127) {
-                            level = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && wifiManager != null) {
-                                wifiManager?.calculateSignalLevel(rssi)?.coerceIn(0, 4) ?: 0
-                            } else {
-                                @Suppress("DEPRECATION")
-                                WifiManager.calculateSignalLevel(rssi, 5).coerceIn(0, 4)
-                            }
-                        }
-                    }
-                }
-                if (level == -1 && wifiManager != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    @Suppress("DEPRECATION")
-                    val info = wifiManager?.connectionInfo
-                    if (info != null && info.rssi > -127) {
-                        level = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            wifiManager?.calculateSignalLevel(info.rssi)?.coerceIn(0, 4) ?: 0
-                        } else {
-                            @Suppress("DEPRECATION")
-                            WifiManager.calculateSignalLevel(info.rssi, 5).coerceIn(0, 4)
-                        }
-                    }
-                }
+                level = wifiLevelOf(wifiCapabilities)
             }
 
             if (level == -1) {
@@ -522,9 +497,31 @@ class DuoOverlayHandler(
             }
 
             overlayView?.isWifi = isWifi
-            if (level >= 0) {
-                overlayView?.signalLevel = level
+            overlayView?.signalLevel = level.coerceAtLeast(0)
+        }
+    }
+
+    private fun underlyingWifiCapabilities(): NetworkCapabilities? = NetworkUtil.underlyingWifi(connectivityManager)
+
+    private fun wifiLevelOf(capabilities: NetworkCapabilities): Int {
+        var rssi = Int.MIN_VALUE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            (capabilities.transportInfo as? WifiInfo)?.let { rssi = it.rssi }
+        }
+        if (rssi <= -127) {
+            @Suppress("DEPRECATION")
+            rssi = try {
+                wifiManager?.connectionInfo?.rssi ?: Int.MIN_VALUE
+            } catch (_: Exception) {
+                Int.MIN_VALUE
             }
+        }
+        if (rssi <= -127) return -1
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && wifiManager != null) {
+            wifiManager?.calculateSignalLevel(rssi)?.coerceIn(0, 4) ?: 0
+        } else {
+            @Suppress("DEPRECATION")
+            WifiManager.calculateSignalLevel(rssi, 5).coerceIn(0, 4)
         }
     }
 
@@ -828,7 +825,7 @@ class DuoOverlayHandler(
             lastKnownDisplayProfile = settingsRepository.getDisplayProfileId()
             settingsRepository.markDisplayProfileSeen()
 
-            if (settingsRepository.isDuoAutoDetectEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (settingsRepository.isDuoAutoDetectEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 @Suppress("DEPRECATION")
                 val cutout = wm.defaultDisplay.cutout
                 if (cutout != null && cutout.boundingRects.isNotEmpty()) {

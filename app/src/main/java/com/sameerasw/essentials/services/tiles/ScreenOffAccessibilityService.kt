@@ -22,9 +22,13 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
 import android.media.session.MediaSessionManager
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
+import android.os.SystemClock
 import android.os.Vibrator
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
@@ -32,6 +36,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.InputEventListenerService
+import rikka.shizuku.Shizuku
 import com.sameerasw.essentials.services.LiveUpdateSnoozer
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
@@ -54,7 +59,10 @@ import com.sameerasw.essentials.services.handlers.LockscreenShortcutsHandler
 import com.sameerasw.essentials.services.handlers.StatusGlanceHandler
 import com.sameerasw.essentials.services.handlers.VolumeStepsHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
+import com.sameerasw.essentials.utils.CameraSession
 import com.sameerasw.essentials.utils.FreezeManager
+import com.sameerasw.essentials.utils.PowerButtonGestures
+import com.sameerasw.essentials.utils.VolumePanelDetector
 import com.sameerasw.essentials.utils.media.AppVolumeController
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
@@ -102,9 +110,78 @@ class ScreenOffAccessibilityService :
     private val keyguardManager by lazy { getSystemService(KEYGUARD_SERVICE) as KeyguardManager }
 
     private var isScreenOn = true
+    private var isA11yConnected = false
     private var isLightSensorRegistered = false
     private var isProximityRegisteredForPocket = false
     private var isProximityRegistered = false
+    private var isCameraCallbackRegistered = false
+
+    private val remapReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                if (!::buttonRemapHandler.isInitialized) return
+                when (intent?.action) {
+                    InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> buttonRemapHandler.handleExternalVolumeLongPress(intent)
+                    InputEventListenerService.ACTION_POWER_GESTURE -> buttonRemapHandler.handlePowerGesture(intent)
+                }
+            }
+        }
+
+    @Volatile private var cameraSessions: List<CameraSession> = emptyList()
+    private val cameraIdToLens = mutableMapOf<String, Int>()
+
+    private val cameraAvailabilityCallback =
+        object : CameraManager.AvailabilityCallback() {
+            override fun onCameraUnavailable(cameraId: String) {
+                val facing =
+                    try {
+                        val cameraManager = getSystemService(CameraManager::class.java)
+                        cameraManager?.getCameraCharacteristics(cameraId)?.get(CameraCharacteristics.LENS_FACING)
+                    } catch (_: Exception) {
+                        null
+                    }
+                if (facing != null) {
+                    cameraIdToLens[cameraId] = facing
+                    val session = CameraSession(lens = facing, openedAt = SystemClock.elapsedRealtime())
+                    cameraSessions = (cameraSessions + session).takeLast(3)
+                }
+            }
+
+            override fun onCameraAvailable(cameraId: String) {
+                val facing = cameraIdToLens[cameraId] ?: return
+                val now = SystemClock.elapsedRealtime()
+                val index = cameraSessions.indexOfLast { it.lens == facing && it.closedAt == null }
+                if (index != -1) {
+                    val updated = cameraSessions.toMutableList()
+                    updated[index] = updated[index].copy(closedAt = now)
+                    cameraSessions = updated.toList()
+                }
+            }
+        }
+
+    private fun updateCameraLensTracking() {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val shouldTrack = prefs.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, false)
+        val cameraManager = getSystemService(CameraManager::class.java) ?: return
+        if (shouldTrack && !isCameraCallbackRegistered) {
+            try {
+                cameraManager.registerAvailabilityCallback(cameraAvailabilityCallback, uiHandler)
+                isCameraCallbackRegistered = true
+            } catch (_: Exception) {
+            }
+        } else if (!shouldTrack && isCameraCallbackRegistered) {
+            try {
+                cameraManager.unregisterAvailabilityCallback(cameraAvailabilityCallback)
+            } catch (_: Exception) {
+            }
+            isCameraCallbackRegistered = false
+            cameraSessions = emptyList()
+            cameraIdToLens.clear()
+        }
+    }
 
     private fun updatePocketModeExcludedAppsSet() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -234,7 +311,8 @@ class ScreenOffAccessibilityService :
             } else if (key == "circle_to_search_gesture_enabled" ||
                 key == "circle_to_search_gesture_height" ||
                 key == "circle_to_search_gesture_width" ||
-                key == "circle_to_search_preview_enabled"
+                key == "circle_to_search_preview_enabled" ||
+                key == SettingsRepository.KEY_CIRCLE_TO_SEARCH_HIDE_ON_SHADE
             ) {
                 updateOmniOverlay()
             } else if (key == "smart_wifi_enabled" ||
@@ -262,14 +340,17 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_AOD_WALLPAPER_VIGNETTE ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_BLACK_THRESHOLD ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE_VERSION ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_COMPAT ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_USE_ALBUM_ART ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_KEEP_ON_MEDIA ||
+                key == SettingsRepository.KEY_AOD_WALLPAPER_SHARE_LOCK ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_MEDIA ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_APP_ICON ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_EXTENDED_TEXT_SCALE ||
                 key == SettingsRepository.KEY_AOD_WALLPAPER_MEDIA_EXCLUDED_APPS
             ) {
-                if (key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE) {
+                if (key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE || key == SettingsRepository.KEY_AOD_WALLPAPER_CUSTOM_IMAGE_VERSION) {
                     aodWallpaperOverlayHandler.invalidateWallpaperCache()
                 }
                 aodWallpaperOverlayHandler.updateState()
@@ -311,6 +392,14 @@ class ScreenOffAccessibilityService :
                 key == SettingsRepository.KEY_APP_VOLUME_LEVELS
             ) {
                 AppVolumeController.updateState(this)
+            } else if (key == "button_remap_enabled" ||
+                key == "button_remap_use_shizuku" ||
+                key == SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_OFF ||
+                key == SettingsRepository.KEY_BUTTON_REMAP_POWER_HOLD_CHOICE_ON ||
+                key == SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP
+            ) {
+                updateCameraLensTracking()
+                updateInputEventListener()
             }
         }
 
@@ -322,7 +411,13 @@ class ScreenOffAccessibilityService :
         flashlightHandler = FlashlightHandler(this, serviceScope)
         notificationLightingHandler = NotificationLightingHandler(this)
         volumeStepsHandler = VolumeStepsHandler(this)
-        buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler, volumeStepsHandler)
+        buttonRemapHandler =
+            ButtonRemapHandler(
+                this,
+                flashlightHandler,
+                volumeStepsHandler,
+                cameraSessions = { cameraSessions },
+            )
         appFlowHandler = AppFlowHandler(this, this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
@@ -380,7 +475,7 @@ class ScreenOffAccessibilityService :
                             lockscreenShortcutsHandler.onScreenOn()
                             islandOverlayHandler.updateState()
                             freezeHandler.removeCallbacks(freezeRunnable)
-                            stopInputEventListener()
+                            updateInputEventListener()
                             updateOmniOverlay()
                             updatePocketModeSensors()
                         }
@@ -392,10 +487,11 @@ class ScreenOffAccessibilityService :
                             statusGlanceHandler.setShadeExpanded(false)
                             islandOverlayHandler.setShadeExpanded(false)
                             duoOverlayHandler.setShadeExpanded(false)
+                            shadeExpandedNow = false
                             appFlowHandler.clearAuthenticated()
                             appFlowHandler.clearConsciousGate()
                             scheduleFreeze()
-                            startInputEventListenerIfEnabled()
+                            updateInputEventListener()
                             ambientGlanceHandler.checkAndShowOnScreenOff()
                             aodWallpaperOverlayHandler.onScreenOff()
                             duoOverlayHandler.onScreenOff()
@@ -409,6 +505,9 @@ class ScreenOffAccessibilityService :
                         }
 
                         Intent.ACTION_USER_PRESENT -> {
+                            lastUnlockAt = android.os.SystemClock.elapsedRealtime()
+                            windowHandler.removeCallbacks(shadeRecheckRunnable)
+                            windowHandler.postDelayed(shadeRecheckRunnable, UNLOCK_SHADE_GRACE_MS + 100)
                             faceUnlockBrightnessHandler.onUserPresent()
                             aodWallpaperOverlayHandler.onUserPresent()
                             statusGlanceHandler.onUserPresent()
@@ -420,10 +519,6 @@ class ScreenOffAccessibilityService :
                                 pocketModeHandler.onScreenOff() // cancel pending timer + remove overlay
                             }
                             updateOmniOverlay()
-                        }
-
-                        InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> {
-                            buttonRemapHandler.handleExternalVolumeLongPress(intent)
                         }
 
                         "SHOW_AMBIENT_GLANCE",
@@ -462,7 +557,6 @@ class ScreenOffAccessibilityService :
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_USER_PRESENT)
-                addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
                 addAction("SHOW_AMBIENT_GLANCE")
                 addAction("HIDE_AMBIENT_GLANCE_TEMPORARILY")
                 addAction("FORCE_TURN_OFF_AOD")
@@ -475,6 +569,14 @@ class ScreenOffAccessibilityService :
                 addAction(FlashlightActionReceiver.ACTION_DECREASE)
             }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
+        registerReceiver(
+            remapReceiver,
+            IntentFilter().apply {
+                addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
+                addAction(InputEventListenerService.ACTION_POWER_GESTURE)
+            },
+            RECEIVER_NOT_EXPORTED,
+        )
 
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .registerOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -484,6 +586,8 @@ class ScreenOffAccessibilityService :
 
         updatePocketModeExcludedAppsSet()
         updatePocketModeSensors()
+        updateInputEventListener()
+        updateCameraLensTracking()
     }
 
     private fun scheduleFreeze() {
@@ -510,6 +614,7 @@ class ScreenOffAccessibilityService :
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        isA11yConnected = true
         serviceInfo =
             serviceInfo.apply {
                 flags = flags or
@@ -520,6 +625,21 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        Shizuku.addBinderReceivedListenerSticky(shizukuBinderListener)
+        restartInputEventListenerIfScreenOff()
+    }
+
+    private val shizukuBinderListener =
+        Shizuku.OnBinderReceivedListener { restartInputEventListenerIfScreenOff() }
+
+    private fun restartInputEventListenerIfScreenOff() {
+        val interactive =
+            try {
+                (getSystemService(POWER_SERVICE) as android.os.PowerManager).isInteractive
+            } catch (_: Exception) {
+                true
+            }
+        if (!interactive) startInputEventListenerIfEnabled() else updateInputEventListener()
     }
 
     private fun updateOmniOverlay() {
@@ -538,13 +658,19 @@ class ScreenOffAccessibilityService :
                 240f
             }
         val isPreview = prefs.getBoolean("circle_to_search_preview_enabled", false)
-        val shouldShow = isGestureEnabled && isScreenOn && !keyguardManager.isKeyguardLocked
+        val hiddenByShade = shadeExpandedNow && prefs.getBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_HIDE_ON_SHADE, false)
+        val shouldShow = isGestureEnabled && isScreenOn && !keyguardManager.isKeyguardLocked && !hiddenByShade
         omniGestureOverlayHandler.updateOverlay(shouldShow, height, width, isPreview)
     }
 
     override fun onDestroy() {
+        Shizuku.removeBinderReceivedListener(shizukuBinderListener)
         try {
             unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
+        try {
+            unregisterReceiver(remapReceiver)
         } catch (_: Exception) {
         }
         LiveUpdateSnoozer.release()
@@ -581,10 +707,21 @@ class ScreenOffAccessibilityService :
             }
             isLightSensorRegistered = false
         }
+        if (isCameraCallbackRegistered) {
+            try {
+                getSystemService(CameraManager::class.java)?.unregisterAvailabilityCallback(cameraAvailabilityCallback)
+            } catch (_: Exception) {
+            }
+            isCameraCallbackRegistered = false
+            cameraSessions = emptyList()
+            cameraIdToLens.clear()
+        }
+        windowHandler.removeCallbacksAndMessages(null)
+        windowThread.quitSafely()
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
-        instance = null
+        if (instance === this) instance = null
         super.onDestroy()
     }
 
@@ -606,11 +743,9 @@ class ScreenOffAccessibilityService :
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED
         ) {
-            checkFullscreenState()
-            checkStatusBarExpansion()
-            freezeHandler.removeCallbacks(shadeRecheckRunnable)
-            freezeHandler.postDelayed(shadeRecheckRunnable, 300)
-            checkVolumeDialogState()
+            requestWindowScan()
+            windowHandler.removeCallbacks(shadeRecheckRunnable)
+            windowHandler.postDelayed(shadeRecheckRunnable, 300)
             faceUnlockBrightnessHandler.onWindowsChanged()
             lockscreenShortcutsHandler.onWindowsChanged()
             appVolumeOverlayHandler.onWindowsChanged()
@@ -649,76 +784,90 @@ class ScreenOffAccessibilityService :
         }
     }
 
-    private fun checkVolumeDialogState() {
-        try {
-            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-            if (!prefs.getBoolean("button_remap_pause_on_volume_dialog", true)) {
-                buttonRemapHandler.isVolumeDialogVisible = false
-                return
-            }
-            val currentWindows = windows
-            val isVisible = currentWindows?.any { window ->
-                window.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM &&
-                    window.title?.contains("Volume", ignoreCase = true) == true
-            } ?: false
-            buttonRemapHandler.isVolumeDialogVisible = isVisible
+    private val windowThread = HandlerThread("essentials-windows").apply { start() }
+    private val windowHandler = Handler(windowThread.looper)
+    private val uiHandler = Handler(Looper.getMainLooper())
+    private val windowScanQueued = AtomicBoolean(false)
+    private val shadeRecheckRunnable = Runnable { requestWindowScan() }
+
+    @Volatile
+    private var lastUnlockAt = 0L
+    private var shadeExpandedNow = false
+
+    // Window queries are binder calls, so they run on their own thread, once per burst of events, and only the results hop to main
+    private fun requestWindowScan() {
+        if (windowScanQueued.compareAndSet(false, true)) windowHandler.post(windowScanRunnable)
+    }
+
+    private val windowScanRunnable = Runnable {
+        windowScanQueued.set(false)
+        val snapshot = try {
+            windows
         } catch (_: Exception) {
-            buttonRemapHandler.isVolumeDialogVisible = false
+            null
+        }
+        val fullscreen = fullscreenOf(snapshot)
+        val shadeExpanded = try {
+            isScreenOn && !keyguardManager.isKeyguardLocked &&
+                android.os.SystemClock.elapsedRealtime() - lastUnlockAt > UNLOCK_SHADE_GRACE_MS &&
+                isShadeWindowVisible(snapshot)
+        } catch (_: Exception) {
+            false
+        }
+        val volumeDialogVisible = try {
+            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            prefs.getBoolean("button_remap_pause_on_volume_dialog", true) &&
+                snapshot?.any(VolumePanelDetector::isVolumePanel) == true
+        } catch (_: Exception) {
+            false
+        }
+        uiHandler.post {
+            fullscreen?.let {
+                duoOverlayHandler.setFullscreen(it)
+                statusGlanceHandler.setFullscreen(it)
+                islandOverlayHandler.setFullscreen(it)
+            }
+            statusGlanceHandler.setShadeExpanded(shadeExpanded)
+            islandOverlayHandler.setShadeExpanded(shadeExpanded)
+            duoOverlayHandler.setShadeExpanded(shadeExpanded)
+            if (shadeExpandedNow != shadeExpanded) {
+                shadeExpandedNow = shadeExpanded
+                updateOmniOverlay()
+            }
+            buttonRemapHandler.isVolumeDialogVisible = volumeDialogVisible
+            appVolumeOverlayHandler.onWindowsChanged()
         }
     }
 
-    private val shadeRecheckRunnable = Runnable { checkStatusBarExpansion() }
-
-    private fun checkStatusBarExpansion() {
-        val expanded =
-            try {
-                isScreenOn && !keyguardManager.isKeyguardLocked && isShadeWindowVisible()
-            } catch (_: Exception) {
-                false
-            }
-        statusGlanceHandler.setShadeExpanded(expanded)
-        islandOverlayHandler.setShadeExpanded(expanded)
-        duoOverlayHandler.setShadeExpanded(expanded)
-    }
-
-    private fun isShadeWindowVisible(): Boolean {
-        val currentWindows = windows
+    private fun isShadeWindowVisible(currentWindows: List<android.view.accessibility.AccessibilityWindowInfo>?): Boolean {
         if (currentWindows.isNullOrEmpty()) return false
         val screenHeight = resources.displayMetrics.heightPixels
         val bounds = android.graphics.Rect()
         return currentWindows.any { window ->
             if (window.type != android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM) return@any false
             val title = window.title?.toString().orEmpty()
-            if (title.contains("Volume", ignoreCase = true)) return@any false
-            if (SHADE_WINDOW_TITLES.any { title.contains(it, ignoreCase = true) }) return@any true
+            if (VolumePanelDetector.isVolumePanel(window)) return@any false
+            val titled = SHADE_WINDOW_TITLES.any { title.contains(it, ignoreCase = true) }
             window.getBoundsInScreen(bounds)
-            bounds.height() >= screenHeight * 0.4f
+            bounds.height() >= screenHeight * if (titled) 0.2f else 0.4f
         }
     }
 
-    private fun checkFullscreenState() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                val currentWindows = windows
-                if (!currentWindows.isNullOrEmpty()) {
-                    val hasStatusBar = currentWindows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM }
-                    val appWindow = currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
-                        ?: currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION }
-
-                    if (appWindow != null) {
-                        val outBounds = android.graphics.Rect()
-                        appWindow.getBoundsInScreen(outBounds)
-                        val displayMetrics = resources.displayMetrics
-                        val isCoveringFullDisplay = outBounds.width() >= displayMetrics.widthPixels &&
-                            outBounds.height() >= displayMetrics.heightPixels
-
-                        val isFullscreen = isCoveringFullDisplay && !hasStatusBar
-                        duoOverlayHandler.setFullscreen(isFullscreen)
-                        statusGlanceHandler.setFullscreen(isFullscreen)
-                        islandOverlayHandler.setFullscreen(isFullscreen)
-                    }
-                }
-            } catch (_: Exception) {}
+    private fun fullscreenOf(currentWindows: List<android.view.accessibility.AccessibilityWindowInfo>?): Boolean? {
+        if (currentWindows.isNullOrEmpty()) return null
+        return try {
+            val hasStatusBar = currentWindows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_SYSTEM }
+            val appWindow = currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION && it.isFocused }
+                ?: currentWindows.firstOrNull { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_APPLICATION }
+                ?: return null
+            val outBounds = android.graphics.Rect()
+            appWindow.getBoundsInScreen(outBounds)
+            val displayMetrics = resources.displayMetrics
+            val isCoveringFullDisplay = outBounds.width() >= displayMetrics.widthPixels &&
+                outBounds.height() >= displayMetrics.heightPixels
+            isCoveringFullDisplay && !hasStatusBar
+        } catch (_: Exception) {
+            null
         }
     }
 
@@ -946,7 +1095,11 @@ class ScreenOffAccessibilityService :
         flags: Int,
         startId: Int,
     ): Int {
-        val action = intent?.action ?: return super.onStartCommand(intent, flags, startId)
+        val action = intent?.action
+        if (action == null) {
+            if (!isA11yConnected) stopSelf(startId)
+            return START_NOT_STICKY
+        }
 
         when (action) {
             "LOCK_SCREEN" -> {
@@ -1007,17 +1160,34 @@ class ScreenOffAccessibilityService :
                     intent,
                 )
         }
-        return super.onStartCommand(intent, flags, startId)
+        if (!isA11yConnected) stopSelf(startId)
+        return START_NOT_STICKY
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        isA11yConnected = false
+        stopSelf()
+        return super.onUnbind(intent)
     }
 
     private var isInputEventListenerRequested = false
+
+    private fun updateInputEventListener() {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("button_remap_enabled", false)
+        val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
+        val needed =
+            isEnabled &&
+                ((useShizuku && !isScreenOn) || PowerButtonGestures.isListenerNeeded(SettingsRepository(this)))
+        if (needed) startInputEventListenerIfEnabled() else stopInputEventListener()
+    }
 
     private fun startInputEventListenerIfEnabled() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isEnabled = prefs.getBoolean("button_remap_enabled", false)
         val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
 
-        if (isEnabled && useShizuku) {
+        if (isEnabled && (useShizuku || PowerButtonGestures.isListenerNeeded(SettingsRepository(this)))) {
             try {
                 val intent = Intent(this, InputEventListenerService::class.java)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -1061,6 +1231,7 @@ class ScreenOffAccessibilityService :
 
     companion object {
         private val SHADE_WINDOW_TITLES = listOf("NotificationShade", "Notification shade", "Quick settings", "QuickSettings")
+        private const val UNLOCK_SHADE_GRACE_MS = 1500L
 
         var instance: ScreenOffAccessibilityService? = null
 

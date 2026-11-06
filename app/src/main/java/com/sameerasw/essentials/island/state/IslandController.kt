@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.state
 
 import com.sameerasw.essentials.island.model.SideBubble
+import com.sameerasw.essentials.island.ui.inlineBubbleCell
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandStage
@@ -37,6 +38,9 @@ class IslandController(
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
     var balanceCompact: Boolean = true
+    var chipsEnabled: Boolean = false
+    var secondaryBubbleEnabled: Boolean = true
+    var secondaryBubbleOverlap: Boolean = false
     private var feedbackActive = false
 
     fun setFeedbackActive(active: Boolean) {
@@ -62,6 +66,7 @@ class IslandController(
     private var stickyFocus = false
 
     private var hiddenPackage: String? = null
+    private var hiddenSources: Set<String>? = null
     private var launcherOnlySources: Set<String> = emptySet()
     private var launcherOnlyProviders: Set<String> = emptySet()
     private var onLauncher = true
@@ -71,9 +76,10 @@ class IslandController(
         recompute()
     }
 
-    fun setHiddenPackage(packageName: String?) {
-        if (hiddenPackage == packageName) return
+    fun setHiddenPackage(packageName: String?, onlySources: Set<String>? = null) {
+        if (hiddenPackage == packageName && hiddenSources == onlySources) return
         hiddenPackage = packageName
+        hiddenSources = onlySources
         recompute()
     }
 
@@ -122,6 +128,8 @@ class IslandController(
                 true
             } ?: false
             IslandStage.Compact -> {
+                val tapped = itemKey?.let { current.items[it] }
+                if (tapped?.expanded == null && tapped?.interactions?.onTap?.invoke() == true) return true
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
                     ?: fallbackTapKey?.invoke()?.let { current.items[it] }?.takeIf { it.expanded != null }
@@ -257,14 +265,22 @@ class IslandController(
     private fun allItems(): Map<String, IslandItem> =
         itemsBySource
             .flatMap { (source, items) ->
-                when {
+                val visible = when {
                     onLauncher -> items
                     source in launcherOnlySources -> items.filter { it.bypassLauncherOnly }
                     else -> items.filter { it.bypassLauncherOnly || it.key.substringBefore(':') !in launcherOnlyProviders }
                 }
+                val hideHere = hiddenPackage != null && hiddenSources?.contains(source) != false
+                if (hideHere) visible.filter { it.sourcePackage != hiddenPackage } else visible
             }
-            .filter { hiddenPackage == null || it.sourcePackage != hiddenPackage }
+            .map(::inlineBubbleIfDisabled)
             .associateBy { it.key }
+
+    private fun inlineBubbleIfDisabled(item: IslandItem): IslandItem {
+        val bubble = item.sideBubble
+        if (secondaryBubbleEnabled || bubble == null || bubble.whenOccupiedOnly) return item
+        return item.withInlineBubble(inlineBubbleCell(bubble, secondaryBubbleOverlap))
+    }
 
     private fun recompute() {
         val items = if (suppressed) emptyMap() else allItems()
@@ -275,7 +291,7 @@ class IslandController(
         if (peekKey != null && items[peekKey]?.line == null) cancelPeek()
 
         val bubbleOwner = items.values
-            .filter { it.sideBubble != null }
+            .filter { secondaryBubbleEnabled && it.sideBubble != null }
             .sortedBy { it.sideBubble!!.priority }
             .firstOrNull { candidate ->
                 !candidate.sideBubble!!.whenOccupiedOnly || items.values.any {
@@ -296,11 +312,12 @@ class IslandController(
                     item.compact.filter { it.soloOnly }.map { it.key },
                     item.needsCompanyAtCenter,
                     item.companionOnly,
+                    chipsEnabled && item.chip,
                 )
             },
             anchorProvider(),
             maxCells = maxCells,
-            leftExtra = if (bubbleOwner != null) 1 else 0,
+            leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
         )
         val focusedKey = expandedKey ?: peekKey

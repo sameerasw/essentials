@@ -295,7 +295,7 @@ object FreezeManager {
     ): Boolean =
         try {
             val state = context.packageManager.getApplicationEnabledSetting(packageName)
-            val isSuspended = context.packageManager.isPackageSuspended(packageName)
+            val isSuspended = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && context.packageManager.isPackageSuspended(packageName)
             state == COMPONENT_ENABLED_STATE_DISABLED_USER || state == COMPONENT_ENABLED_STATE_DISABLED || isSuspended
         } catch (e: Exception) {
             false

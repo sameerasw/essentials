@@ -21,6 +21,7 @@ import com.sameerasw.essentials.domain.model.NavigationNotificationData
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandLayoutSpec
 import com.sameerasw.essentials.island.ui.IslandTextStyles
+import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
 import com.sameerasw.essentials.island.ui.components.ConnectedItem
@@ -53,7 +54,7 @@ fun NavigationExpanded(
                 Spacer(Modifier.height(8.dp))
                 Text(
                     text = data.instruction,
-                    style = IslandTextStyles.title.copy(color = Color.White, fontSize = 20.sp, lineHeight = 25.sp),
+                    style = IslandTextStyles.title.copy(color = islandTextColor(), fontSize = 20.sp, lineHeight = 25.sp),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
@@ -63,7 +64,7 @@ fun NavigationExpanded(
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = data.eta,
-                    style = IslandTextStyles.body.copy(color = Color.White.copy(alpha = 0.7f)),
+                    style = IslandTextStyles.body.copy(color = islandTextColor(0.7f)),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),

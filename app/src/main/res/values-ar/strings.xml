@@ -518,7 +518,7 @@
     <string name="feat_link_actions_title">إجراءات الروابط</string>
     <string name="feat_link_actions_desc">التعامل مع الروابط عبر تطبيقات متعددة</string>
     <string name="feat_flashlight_title">المصباح اليدوي</string>
-    <string name="feat_flashlight_desc">تحسين سلوك المصباح اليدوي</string>
+    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
     <string name="label_restore_mode">وضع الاستعادة</string>
     <string name="feat_snooze_notifications_title">تأجيل إشعارات النظام</string>
     <string name="feat_snooze_notifications_desc">تأجيل الإشعارات الدائمة</string>
@@ -747,6 +747,8 @@
     <string name="tab_apps">التطبيقات</string>
     <string name="tab_freeze_subtitle">التطبيقات المعطلة</string>
     <string name="tab_diy_subtitle">افعلها بنفسك</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">البحث عن التطبيقات وإدارتها</string>
     <string name="feat_app_updates_title">تحديثات التطبيقات</string>
     <string name="tab_app_updates_title">تحديثات التطبيقات</string>
@@ -853,10 +855,10 @@
     <string name="about_desc_essentials_on_display">تعرض ميزة Essentials On Display تراكب Now Playing على شاشة القفل عند تشغيل الموسيقى وتغيرات التشغيل.\n\nإذا كان جهازك لا يدعم التراكبات فوق AOD، يمكنك اختيار شاشة التوقف Ambience المضافة في إعدادات أندرويد كبديل أثناء الشحن.</string>
     <string name="about_desc_notification_lighting">تضيف إضاءة الإشعارات تأثير إضاءة حواف جميل عند استلام الإشعارات.\n\nيمكنك تخصيص نمط الحركة والألوان والسلوك. تعمل حتى عند إيقاف تشغيل الشاشة (حسب الشركة المصنعة) أو فوق تطبيقك الحالي. اختر التطبيقات أو أولوية الإشعارات أو السلوك الذي يجب تشغيله من عناصر التحكم المتاحة. إذا كانت الشركة المصنعة لا تدعم التراكبات فوق AOD، فاستخدم خيار العرض المحيطي أدناه.</string>
     <string name="about_desc_screen_off_widget">أوقف تشغيل الشاشة بسهولة بنقرة واحدة على أداة شفافة قابلة لتغيير الحجم لا تضيف أيقونات أو أي فوضى إلى شاشتك الرئيسية.</string>
-    <string name="about_desc_statusbar_icons">تحكم كامل في أيقونات شريط الحالة.\n\nأخفِ أيقونات محددة مثل الواي فاي أو البلوتوث أو بيانات الجوال للحفاظ على شريط حالة نظيف. يمكنك أيضاً تخصيص تنسيق الساعة ومؤشر البطارية ببعض عناصر التحكم الذكية. هذه هي قائمة عناصر تحكم AOSP المتاحة، لذا قد لا يحترم نظام جهازك جميع عناصر التحكم.</string>
+    <string name="about_desc_statusbar_icons">Take full control over your status bar.\n\nHide individual icons like WiFi, Bluetooth, or cellular data, hide all system or notification icons at once, or only hide system icons while the device is locked. Smart visibility can hide mobile data automatically when WiFi is connected or in certain modes.\n\nYou can also show seconds in the clock, change its position or hide it, show the battery percentage, hide the camera and microphone chips, or hide the entire status bar. Some advanced flags need Shizuku or Root.\n\nThese are AOSP controls, so your device OS might not respect all of them.</string>
     <string name="about_desc_caffeinate">يمنع الكافيين إيقاف تشغيل شاشتك تلقائياً.\n\nأبقِ شاشتك مستيقظة لمدة محددة أو إلى أجل غير مسمى. مفيد عند قراءة مقالات طويلة أو متابعة وصفة.</string>
     <string name="about_desc_maps_power_saving">استخدم وضع توفير الطاقة في خرائط جوجل مع خلفية سوداء داكنة تعرض فوق شاشة القفل على أجهزة أندرويد المدعومة. ابدأ جلسة تنقل، أطفئ الشاشة ثم أعد تشغيلها.</string>
-    <string name="about_desc_flashlight_pulse">نبض المصباح عند استلام إشعار.\n\nمع الأجهزة التي تدعم تخفيت المصباح عبر الأجهزة، ستكون النبضة متحركة بسلاسة.</string>
+    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nOn devices with hardware support for flashlight dimming, the pulse is smoothly animated.</string>
     <string name="about_desc_snooze_notifications">أجّل الإشعارات النظامية الدائمة المزعجة التي لا يمكن تعديلها افتراضياً.\n\nيرجى الانتظار حتى يصل الإشعار ثم ادخل إلى هذه الميزة حيث ستُدرج قناته. حددها لتأجيلها في المرة القادمة.\n\nيمكن الوصول إلى أي إشعار مؤجل من سجل الإشعارات في أندرويد.</string>
     <string name="about_desc_quick_settings_tiles">أضف بلاطات مخصصة إلى لوحة الإعدادات السريعة.\n\nاضغط مطولاً على أي منها لمعرفة ما تفعله.</string>
     <string name="about_desc_button_remap">أعد تعيين أزرار جهازك لتنفيذ إجراءات واختصارات مختلفة.\n\nخصص ما يحدث عند الضغط مطولاً على أزرار الصوت مع شروط معينة.\n\nقد تكون بعض السلوكيات مثل إيقاف تشغيل الشاشة أو التحكم في المصباح معتمدة على الشركة المصنعة وقد لا تعمل على جميع الأجهزة كما هو متوقع. يمكن حل بعض السيناريوهات باستخدام أذونات Shizuku لكنها قد لا تعطي نفس التجربة بسبب طرق التنفيذ.</string>
@@ -901,7 +903,7 @@
     <string name="about_desc_bubbles">تفعيل أو تعطيل فقاعات الإشعارات العائمة.\n\nالتبديل السريع لإعداد فقاعات المحادثات على مستوى النظام.</string>
     <string name="about_desc_sensitive_content">إخفاء المحتوى الحساس على شاشة القفل.\n\nالتبديل بين إظهار أو إخفاء محتوى الإشعارات عند قفل جهازك.</string>
     <string name="about_desc_tap_to_wake">تبديل وظيفة النقر للاستيقاظ.\n\nتفعيل أو تعطيل القدرة على إيقاظ شاشتك بنقرة.</string>
-    <string name="about_desc_aod">تبديل Always On Display.\n\nتفعيل أو تعطيل الشاشة الدائمة لعرض المعلومات في لمحة سريعة.</string>
+    <string name="about_desc_aod">Control the Always On Display from one place. Turn it on or off, and quickly check the time, notifications and other info at a glance while the screen is off.\n\nYou can also force it to turn off when there are no notifications, and show your wallpaper behind the clock using an overlay.\n\nWriting secure settings permission is required to toggle it, and accessibility is needed for the force turn off option.</string>
     <string name="about_desc_notification_glance">تحكم تلقائي في Always On Display بناءً على إشعاراتك. عند وصول رسالة أو تنبيه من تطبيق محدد، سيبقى AOD مفعلاً حتى ترفض الإشعار، مما يضمن عدم تفويت أي معلومات مهمة دون إهدار البطارية عند عدم وجود تنبيهات.</string>
     <string name="about_desc_mono_audio">دمج القنوات الصوتية في قناة أحادية.\n\nمفيد عند استخدام سماعة أذن واحدة أو لأغراض إمكانية الوصول.</string>
     <string name="about_desc_flashlight_tile">تبديل المصباح اليدوي.\n\nالضغط المطول يفتح عناصر التحكم لضبط الشدة والتي قد تحتاج إلى دعم من الأجهزة قد تفتقده بعض الأجهزة.</string>
@@ -1303,14 +1305,10 @@
     <string name="instruction_section_shizuku_desc">Shizuku أداة قوية تسمح للتطبيقات باستخدام واجهات برمجة تطبيقات النظام مباشرة مع أذونات ADB أو الجذر. وهي مطلوبة لميزات مثل وضع الخرائط المصغر وتجميد التطبيقات. وسيساعدك في منح بعض الأذونات مثل WRITE_SECURE_SETTINGS.\n\nلكن إصدار متجر Play من Shizuku قد يكون قديماً وربما يكون غير قابل للاستخدام على إصدارات أندرويد الحديثة، لذا في هذه الحالة، يرجى الحصول على أحدث إصدار من GitHub أو نسخة محدثة منه.</string>
     <string name="instruction_section_maps_title">وضع توفير الطاقة للخرائط</string>
     <string name="instruction_section_maps_desc">تعمل هذه الميزة تلقائياً على تفعيل وضع توفير الطاقة في خرائط جوجل على أجهزة أندرويد المدعومة. اكتشف أحد أعضاء المجتمع أنه لا يزال قابلاً للاستخدام بتشغيل نشاط minMode للخرائط بصلاحيات الجذر.\n\nثم قمت بأتمتته باستخدام Tasker ليتم تفعيله تلقائياً عند إيقاف تشغيل الشاشة أثناء جلسة تنقل، وتمكنت من تحقيق الأمر نفسه باستخدام أذونات Shizuku وقت التشغيل فقط.\n\nالغرض منه هو التراكب على تجربة التنقل، لذا قد ترى رسالة عرضية حول عدم دعم الوضع الأفقي. هذا أمر لا يمكن للتطبيق تجنبه ويمكنك تجاهله.</string>
-    <string name="instruction_section_silent_title">وضع الصوت الصامت</string>
-    <string name="instruction_section_silent_desc">ربما لاحظت أن الوضع الصامت يفعل أيضاً وضع عدم الإزعاج.\n\nيرجع ذلك إلى كيفية تنفيذ أندرويد له، فحتى لو استخدمنا نفس واجهة برمجة التطبيقات للتبديل إلى وضع الاهتزاز، فإنه لسبب ما يفعل وضع عدم الإزعاج مع الوضع الصامت وهذا لا يمكن تجنبه حالياً. :(</string>
     <string name="instruction_section_freeze_title">ما هو التجميد؟</string>
     <string name="instruction_section_freeze_desc">أوقف التطبيقات وابتعد عن مشتتاتها مع توفير القليل من الطاقة بمنع التطبيقات من العمل في الخلفية. مناسب للتطبيقات نادرة الاستخدام.\n\nغير موصى به لأي خدمات تواصل لأنها لن تنبهك في حالات الطوارئ إلا إذا قمت بإلغاء تجميدها.\n\nيُنصح بشدة بعدم تجميد تطبيقات النظام لأنها قد تؤدي إلى عدم استقرار النظام. تابع بحذر، لقد تم تحذيرك.\n\nمستوحى من Hail &lt;3</string>
     <string name="instruction_section_security_title">هل قفل التطبيقات وحماية الشاشة المقفلة آمنان فعلاً؟</string>
     <string name="instruction_section_security_desc">بالتأكيد لا.\n\nلا يمكن لأي تطبيق تابع لجهة خارجية أن يتدخل بنسبة 100% في تفاعلات الجهاز العادية، وحتى قفل التطبيقات هو مجرد تراكب فوق التطبيقات المحددة لمنع التفاعل معها. توجد حلول بديلة وهي ليست مضمونة.\n\nالشيء نفسه ينطبق على ميزة حماية الشاشة المقفلة التي تكتشف شخصاً يحاول التفاعل مع بلاطات الشبكة التي لا يزال بإمكان أي شخص الوصول إليها على أجهزة Pixel لسبب ما. لذا إذا بذلوا جهداً كافياً فقد يتمكنون من تغييرها، خاصة إذا كان لديك بلاطة وضع الطائرة في الإعدادات السريعة، فلا يمكن لهذا التطبيق منع التفاعل معها.\n\nصُنعت هذه الميزات كتجارب للاستخدام الخفيف ولن يُوصى بها أبداً كحلول أمان وخصوصية قوية.\n\nبدائل آمنة:\n- قفل التطبيقات: المساحة الخاصة والمجلد الآمن على Pixel وSamsung\n- منع الوصول إلى شبكات الجوال: تأكد من تفعيل الحماية من السرقة وإعدادات إيقاف تشغيل "العثور على جهازي". يمكنك أيضاً الاطلاع على Graphene OS.</string>
-    <string name="instruction_section_statusbar_title">أيقونات شريط الحالة</string>
-    <string name="instruction_section_statusbar_desc">قد تلاحظ أنه حتى بعد إعادة تعيين أيقونات شريط الحالة، تبقى بعض الأيقونات مثل تدوير الجهاز وأيقونات سماعات الرأس السلكية ظاهرة. يرجع ذلك إلى كيفية تنفيذ القائمة السوداء لشريط الحالة في أندرويد وكيف قامت الشركة المصنعة بتخصيصها.\nقد تحتاج إلى تعديلات إضافية.\n\nأيضاً قد لا تعمل جميع خيارات رؤية الأيقونات لأنها تعتمد على تنفيذ الشركة المصنعة وتوفرها.</string>
     <string name="instruction_section_lighting_title">إضاءة الإشعارات لا تعمل</string>
     <string name="instruction_section_lighting_desc">يعتمد ذلك على الشركة المصنعة. بعضها مثل OneUI لا يبدو أنه يسمح بالتراكبات فوق AOD مما يمنع ظهور تأثيرات الإضاءة. في هذه الحالة، جرب العرض المحيطي كحل بديل.</string>
     <string name="instruction_section_button_title">إعادة تعيين الزر لا تعمل أثناء إيقاف تشغيل الشاشة</string>
@@ -1325,14 +1323,8 @@
     <string name="instruction_section_freezetags_desc">نظم وجمّد التطبيقات في الخلفية على دفعات باستخدام وسوم التطبيقات المخصصة.\n\n• وسوم مخصصة: أنشئ وسوماً مخصصة بألوان مخصصة (مثل التواصل الاجتماعي، الألعاب، العمل).\n• قواعد الهدف: عيّن حماية "عدم التجميد التلقائي أبداً" للتطبيقات الحرجة لتبقى نشطة.\n• تكامل الأتمتة: تفعيل إجراءات تجميد أو إلغاء تجميد الوسم تلقائياً بناءً على زنادات الجهاز أو النوافذ الزمنية أو تشغيل التطبيقات.</string>
     <string name="instruction_section_diy_title">أتمتة DIY</string>
     <string name="instruction_section_diy_desc">ابنِ روتينات مخصصة قوية تناسب استخدامك اليومي.\n\n• أتمتة الزناد: قواعد مدفوعة بالأحداث تشغل إجراءات محددة عند حدوث حدث (مثل عند فصل الشاحن، تفعيل اهتزاز).\n• أتمتة الحالة: قواعد مدفوعة بالشروط تشغل إجراءات الدخول عند الدخول في حالة (مثل الشحن أو النافذة الزمنية) وإجراءات الخروج عند مغادرتها.\n• أتمتة التطبيقات: تطبيق ملفات التعريف تلقائياً أو تجميد/إلغاء تجميد الوسوم عند تشغيل التطبيقات المحددة أو الخروج منها.</string>
-    <string name="instruction_section_searchbar_title">تخصيص شريط بحث Pixel</string>
-    <string name="instruction_section_searchbar_desc">خصص أداة شريط البحث في الشاشة الرئيسية Glance.\n\n• استجابة الأداة: تعتمد أدوات Glance على تحديثات البث النظامية وقد لا تتحدث فوراً في جميع بيئات المشغلين.\n• إعدادات محرك البحث: تستخدم إجراءات النقر موفر البحث النظامي الافتراضي المكون على جهازك، والذي قد يختلف أو يكون مقيداً حسب منطقتك وإعداد الشركة المصنعة.</string>
-    <string name="instruction_section_callvibes_title">اهتزازات المكالمات واللمس</string>
-    <string name="instruction_section_callvibes_desc">أضف استجابة لمسية أثناء أحداث المكالمات الهاتفية.\n\n• تم الرد على المكالمة: يوفر اهتزازاً لمسياً خفيفاً فور قيام المتلقي بالرد.\n• انتهاء المكالمة: يوفر استجابة عند انتهاء المكالمة.\n• الأذونات: يتطلب أذونات مستمع الإشعارات وحالة الهاتف لمراقبة حالات المكالمات.</string>
     <string name="instruction_section_backup_title">النسخ الاحتياطي والاستعادة</string>
     <string name="instruction_section_backup_desc">حافظ على إعداداتك المخصصة وانقلها بين الأجهزة.\n\n• تصدير الإعدادات: أنشئ نسخة احتياطية JSON من أتمتة DIY ووسوم التطبيقات وتكوينات البلاطات والتفضيلات المخصصة.\n• استيراد الإعدادات: استعد ملف الإعدادات المحفوظ بسهولة دون إعادة تكوين الإعدادات الفردية.</string>
-    <string name="instruction_section_pocketmode_title">وضع الجيب</string>
-    <string name="instruction_section_pocketmode_desc">يمنع التفاعلات اللمسية العرضية عندما يكون جهازك في جيب أو حقيبة أو موجهاً للأسفل.\n\n• مستشعرات القرب والضوء: يستخدم مستشعرات القرب والضوء المحيطي لاكتشاف الأماكن المغلقة.\n• حجب اللمس: يعطل إدخال اللمس مؤقتاً عند الإخفاء لمنع الاتصالات العرضية وتشغيل التطبيقات.</string>
 
     <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">تم نسخ تقرير الخطأ إلى الحافظة</string>
@@ -1651,7 +1643,7 @@
     <string name="label_animator_duration_scale">مقياس مدة المحرك</string>
     <string name="label_transition_animation_scale">مقياس حركة الانتقال</string>
     <string name="label_window_animation_scale">مقياس حركة النافذة</string>
-    <string name="about_desc_text_animations">اضبط مقياس الخط والوزن وسرعات الحركة على مستوى النظام. لاحظ أن بعض الإعدادات قد تتطلب أذونات متقدمة أو إعادة تشغيل الجهاز لتطبيقات معينة لتنعكس التغييرات.\n\nقد يكون إذن shizuku أو الجذر الإضافي ضرورياً لتعديلات المقياس</string>
+    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
     <string name="about_desc_screen_refresh_rate">تعيين معدل تحديث مخصص للشاشة باستخدام Shizuku. الوضع الثابت يثبت كلاً من معدل التحديث الأدنى والأقصى على قيمة واحدة، بينما يتيح لك وضع النطاق تحديد قيمتين منفصلتين للحد الأدنى والأقصى. إعادة التعيين تزيل التجاوز المخصص وتعيد الجهاز إلى سلوك التحديث الذي يديره النظام.</string>
     <string name="refresh_rate_section_mode">الوضع</string>
     <string name="refresh_rate_section_values">معدل التحديث</string>
@@ -1877,7 +1869,7 @@
     <string name="standby_apps_loading">جارٍ تحميل تطبيقات الاستعداد…</string>
 
     <!-- Other Customizations -->
-    <string name="about_desc_other_customizations">إعدادات متقدمة إضافية من الإعدادات الآمنة والعامة لأندرويد، بما في ذلك تفضيل تكوين GPU والتعطيلات الوظيفية المختلفة. يمكنك ضبط سلوك الجهاز بشكل دقيق وتخصيص تجربتك.</string>
+    <string name="about_desc_other_customizations">Extra display and system UI tweaks in one place.\n\nHide the gesture bar (optionally keeping it on the launcher), change the Circle to Search gesture, make the navigation bar transparent, disable the rotation suggestion button, allow overlays over system Settings, and prefer GPU for screen composing, which resets on reboot.\n\nSome options need Shizuku or accessibility permission, and results may vary by device and OS version.</string>
     <string name="section_graphics">الرسومات</string>
     <string name="feat_prefer_gpu_composing_title">تفضيل تكوين GPU</string>
     <string name="feat_prefer_gpu_composing_desc">تفضيل تراكيب GPU لرسومات النظام</string>
@@ -2079,6 +2071,7 @@
     <string name="setting_location_reached_full_screen_alarm_desc">شغل نغمة رنين المنبه وعرض تنبيه في ملء الشاشة عند الوصول</string>
     <string name="feat_aod_wallpaper_title">إظهار الخلفية في AOD</string>
     <string name="feat_aod_wallpaper_use_album_art">استخدم غلاف الألبوم</string>
+    <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
     <string name="feat_status_glance_title">نظرة للحالة</string>
     <string name="feat_status_glance_desc">نظرة سريعة على التراكب</string>
     <string name="about_desc_status_glance">تظهر نظرة الحالة شريحة محيطة مدفوعة بالأولوية بجانب فتحة ثقب الكاميرا الأمامية. تعرض بشكل ديناميكي المصباح النشط، وأحداث التقويم القادمة، والوسائط التي تشغل حاليا، والوقت الحالي.</string>
@@ -2190,4 +2183,43 @@
     <string name="perm_bubbles_instructions">تم تعيين جميع المحادثات في إعدادات إشعارات التطبيق، أو المنح عبر Shizuku / Root.</string>
     <string name="crash_logs_title">سجلات الأعطال</string>
     <string name="crash_logs_desc">عرض وشارك تقارير الحوادث الأخيرة</string>
+    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
+    <string name="label_shake_for_help">Shake for help</string>
+    <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
+    <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
+    <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
+    <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
+    <string name="about_desc_link_actions">Choose how links open instead of being stuck with one app.\n\nWhen you open a link, Essentials lets you pick between multiple apps to handle it, with the option to open it in a bubble, copy it, share it or shorten it and create a QR code.</string>
+    <string name="about_desc_daily_wallpaper">Keep your wallpaper fresh with a daily curated wallpaper, or set a live wallpaper.\n\nPick your wallpaper, review and queue tomorrow\'s wallpaper before it is applied, and manage your live wallpaper from one place.</string>
+    <string name="about_desc_watch">Integrations between your phone and your Wear OS watch.\n\nInstall the Essentials companion on your watch to sync notifications and calls, lock your phone from the watch, customize the watchface and complications, sync sound mode and location status, install an eSIM and turn on wireless debugging remotely.</string>
+    <string name="about_desc_network_download_rate_limit">Limit the system-wide download speed.\n\nUseful to stop large downloads and updates from using all of your bandwidth. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
+    <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
+    <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
+    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
+    <string name="about_desc_watch_esim_install">Install an eSIM on your Pixel Watch even in regions where it is not officially supported.\n\nExperimental. It relies on a hidden screen in the Pixel Watch app that may change, and installation success cannot be confirmed here.</string>
+    <string name="about_desc_sync_sound_mode">Automatically keeps your watch sound mode in sync with your phone.\n\nWhen you switch your phone between sound, vibrate and silent, your watch follows.</string>
+    <string name="about_desc_sync_location_reached">Sends your Are we there yet status to your watch.\n\nThe status is shown in the device tile so you can see how close you are to your destination right from your wrist.</string>
+    <string name="about_desc_lock_from_watch">Lock your phone remotely from your watch.\n\nHandy if you left your phone somewhere and want to secure it right away.</string>
+    <string name="about_desc_watch_controls">Customize the controls shown on your watch.\n\nChoose which actions are available so the watch shows only what you need.</string>
+    <string name="about_desc_watchface">Customize the Essentials watchface on your Wear OS watch.\n\nChange its look and settings from your phone.</string>
+    <string name="about_desc_complications">Customize the complication widgets shown on your watchface.\n\nChoose which info appears and where, such as flashlight status or other glance items.</string>
+    <string name="about_desc_notification_sync">Sync notifications between your phone and your watch.\n\nThis is only used for the launcher and is not a full notification mirror.</string>
+    <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
+    <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
+    <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
+    <string name="island_chips_title">Island chips</string>
+    <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
+    <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
+    <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
+    <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
+    <string name="island_themed_app_icons_title">Use themed app icons</string>
+    <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
+    <string name="diy_cts_method_title">Trigger method</string>
+    <string name="diy_cts_method_accessibility">Accessibility</string>
+    <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
 </resources>

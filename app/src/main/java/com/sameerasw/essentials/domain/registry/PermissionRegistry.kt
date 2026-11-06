@@ -141,6 +141,7 @@ fun initPermissionRegistry() {
 
     // Post notifications permission
     PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_caffeinate_title)
+    PermissionRegistry.register("LOCAL_NETWORK", R.string.feat_watch_wireless_debugging_title)
     PermissionRegistry.register("SENSITIVE_NOTIFICATIONS", R.string.island_otp_section)
     PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_battery_notification_title)
 

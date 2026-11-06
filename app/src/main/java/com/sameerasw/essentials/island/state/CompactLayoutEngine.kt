@@ -9,6 +9,7 @@ data class CompactEntry(
     val soloCellKeys: List<String> = emptyList(),
     val needsCompany: Boolean = false,
     val companionOnly: Boolean = false,
+    val keepTogether: Boolean = false,
 )
 
 // `before` / `after` are camera-relative and ordered inner (next to camera) → outer.
@@ -24,6 +25,9 @@ data class CompactArrangement(
 
 object CompactLayoutEngine {
     const val MAX_CELLS = 4
+
+    // A bubble this wide is worth moving pinned cells across the camera for
+    private const val WIDE_BUBBLE_CELLS = 2
 
     fun arrange(
         entries: List<CompactEntry>,
@@ -98,16 +102,30 @@ object CompactLayoutEngine {
                 val movedGap = kotlin.math.abs((left - size) - (right + size))
                 if (movedGap > gap || (movedGap == gap && left <= right)) break
                 before.removeAll(entry.cellKeys.toSet())
-                after += if (size == 2) entry.cellKeys.reversed() else entry.cellKeys
+                after.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
+            }
+        }
+
+        if (balance && leftExtra >= WIDE_BUBBLE_CELLS) {
+            for (entry in pinned.filter { e -> e.cellKeys.all { it in before } }.sortedByDescending { it.priority }) {
+                val size = entry.cellKeys.size
+                val left = before.size + leftExtra
+                val right = after.size
+                val gap = kotlin.math.abs(left - right)
+                val movedGap = kotlin.math.abs((left - size) - (right + size))
+                if (movedGap >= gap) break
+                before.removeAll(entry.cellKeys.toSet())
+                after.addAll(0, if (size == 2) entry.cellKeys.reversed() else entry.cellKeys)
             }
         }
 
         val solo = selected.singleOrNull()
         if (solo != null && solo.soloCellKeys.isNotEmpty() && solo.cellKeys.size == 1) {
+            if (solo.keepTogether) return CompactArrangement(emptyList(), solo.soloCellKeys + solo.cellKeys, visible)
             return CompactArrangement(solo.soloCellKeys, solo.cellKeys, visible)
         }
 
-        if (before.isEmpty() && selected.size == 1 && after.size == 2) {
+        if (before.isEmpty() && selected.size == 1 && after.size == 2 && selected.first().cellKeys.size == 2) {
             val item = selected.first()
             return CompactArrangement(listOf(item.cellKeys[0]), listOf(item.cellKeys[1]), visible)
         }

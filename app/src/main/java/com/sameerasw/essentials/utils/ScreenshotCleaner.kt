@@ -29,7 +29,13 @@ object ScreenshotCleaner {
     const val TAG_AUTO_CLEAN = "screenshot_cleanup_auto"
 
     private val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-    private val SCREENSHOTS_PATH = "${Environment.DIRECTORY_PICTURES}/${Environment.DIRECTORY_SCREENSHOTS}/"
+
+    // Pixel and AOSP save to Pictures/Screenshots, most other OEMs to DCIM/Screenshots
+    private val SCREENSHOT_PATHS =
+        arrayOf(
+            "${Environment.DIRECTORY_PICTURES}/${Environment.DIRECTORY_SCREENSHOTS}/",
+            "${Environment.DIRECTORY_DCIM}/${Environment.DIRECTORY_SCREENSHOTS}/",
+        )
 
     fun findScreenshotAddedBetween(
         context: Context,
@@ -40,8 +46,8 @@ object ScreenshotCleaner {
             .query(
                 collection,
                 arrayOf(MediaStore.MediaColumns._ID),
-                "${MediaStore.MediaColumns.RELATIVE_PATH} = ? AND ${MediaStore.MediaColumns.DATE_ADDED} BETWEEN ? AND ?",
-                arrayOf(SCREENSHOTS_PATH, fromSeconds.toString(), toSeconds.toString()),
+                "${MediaStore.MediaColumns.RELATIVE_PATH} IN (?, ?) AND ${MediaStore.MediaColumns.DATE_ADDED} BETWEEN ? AND ?",
+                arrayOf(*SCREENSHOT_PATHS, fromSeconds.toString(), toSeconds.toString()),
                 "${MediaStore.MediaColumns.DATE_ADDED} DESC",
             )?.use { cursor -> if (cursor.moveToFirst()) cursor.getLong(0) else null }
 
@@ -54,8 +60,8 @@ object ScreenshotCleaner {
             .query(
                 collection,
                 arrayOf(MediaStore.MediaColumns._ID),
-                "${MediaStore.MediaColumns.RELATIVE_PATH} = ? AND ${MediaStore.MediaColumns._ID} > ? AND ${MediaStore.MediaColumns.DATE_ADDED} >= ?",
-                arrayOf(SCREENSHOTS_PATH, lastSeenId.toString(), sinceSeconds.toString()),
+                "${MediaStore.MediaColumns.RELATIVE_PATH} IN (?, ?) AND ${MediaStore.MediaColumns._ID} > ? AND ${MediaStore.MediaColumns.DATE_ADDED} >= ?",
+                arrayOf(*SCREENSHOT_PATHS, lastSeenId.toString(), sinceSeconds.toString()),
                 "${MediaStore.MediaColumns._ID} ASC",
             )?.use { cursor ->
                 buildList { while (cursor.moveToNext()) add(cursor.getLong(0)) }
@@ -66,8 +72,8 @@ object ScreenshotCleaner {
             .query(
                 collection,
                 arrayOf(MediaStore.MediaColumns._ID),
-                "${MediaStore.MediaColumns.RELATIVE_PATH} = ?",
-                arrayOf(SCREENSHOTS_PATH),
+                "${MediaStore.MediaColumns.RELATIVE_PATH} IN (?, ?)",
+                arrayOf(*SCREENSHOT_PATHS),
                 "${MediaStore.MediaColumns._ID} DESC",
             )?.use { cursor -> if (cursor.moveToFirst()) cursor.getLong(0) else 0L } ?: 0L
 

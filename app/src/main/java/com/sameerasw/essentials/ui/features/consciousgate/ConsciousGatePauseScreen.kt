@@ -47,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -242,6 +243,7 @@ internal fun HoldToContinueButton(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     progressColor: Color = MaterialTheme.colorScheme.secondary,
     contentColor: Color? = null,
+    shape: Shape = RoundedCornerShape(24.dp),
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -275,7 +277,7 @@ internal fun HoldToContinueButton(
             modifier
                 .offset { IntOffset(wiggleOffsetX.value.roundToInt(), 0) }
                 .height(58.dp)
-                .clip(RoundedCornerShape(24.dp))
+                .clip(shape)
                 .background(containerColor)
                 .pointerInput(isWaitTimeFinished) {
                     detectTapGestures(

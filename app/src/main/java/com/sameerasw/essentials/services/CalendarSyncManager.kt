@@ -102,7 +102,13 @@ object CalendarSyncManager {
         }
     }
 
+    private val syncExecutor = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "calendar-sync") }
+
     private fun syncEvents(context: Context) {
+        syncExecutor.execute { syncEventsBlocking(context) }
+    }
+
+    private fun syncEventsBlocking(context: Context) {
         if (!isSyncEnabled) {
             Log.d(TAG, "Sync disabled, skipping")
             return

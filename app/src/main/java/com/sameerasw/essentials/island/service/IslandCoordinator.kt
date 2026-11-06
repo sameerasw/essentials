@@ -2,7 +2,6 @@ package com.sameerasw.essentials.island.service
 
 import android.provider.Settings
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
-import com.sameerasw.essentials.island.plugins.batteryalerts.BatteryAlertsPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
 import com.sameerasw.essentials.island.plugins.call.CallPlugin
@@ -158,7 +157,6 @@ class IslandCoordinator(
         HotspotPlugin(),
         DevicesPlugin(),
         BriefPlugin(),
-        BatteryAlertsPlugin(),
     )
 
     private var scope: CoroutineScope? = null
@@ -345,7 +343,11 @@ class IslandCoordinator(
     }
 
     private fun applyOwnerAppHiding() {
-        controller.setHiddenPackage(foregroundPackage.takeIf { settings.isIslandHideInOwnerAppEnabled() })
+        when {
+            settings.isIslandHideInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage)
+            settings.isIslandHideMediaInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage, setOf(MediaPlugin.ID))
+            else -> controller.setHiddenPackage(null)
+        }
     }
 
     fun updateConsciousGateState() {
@@ -505,7 +507,7 @@ class IslandCoordinator(
         mainHandler.post {
             if (!running) return@post
             mainHandler.removeCallbacks(endQueuePreview)
-            val minimal = settings.isIslandLineStageEnabled() && settings.isIslandNotifCompactHeadsUpEnabled() &&
+            val minimal = settings.isIslandLineStageEnabled() &&
                 settings.getIslandNotifPeekStyle() == SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_MINIMAL
             val layout = when {
                 !minimal -> QueuePreviewLayout.Peek
@@ -635,7 +637,7 @@ class IslandCoordinator(
                 stop()
             }
             pendingStop = task
-            mainHandler.postDelayed(task, IslandMotion.COLLAPSE_MS + HIDE_SETTLE_MS)
+            mainHandler.postDelayed(task, IslandMotion.HIDE_BUBBLE_MS + IslandMotion.SQUASH_MS + HIDE_SETTLE_MS)
             return
         }
         mainHandler.removeCallbacks(endReveal)
@@ -672,6 +674,9 @@ class IslandCoordinator(
         val scale = if (flatExpanded) 1f else settings.getIslandExpandedScale().coerceIn(1f, 1.3f)
         val lineWidth = minOf(settings.getIslandMaxWidth(), available)
         val expandedWidth = minOf(settings.getIslandExpandedWidth(), available / scale)
+        val iconCustomMode = settings.getString(SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE, null) == SettingsRepository.ISLAND_ICON_COLOR_CUSTOM
+        val iconMaterialYou = settings.getBoolean(SettingsRepository.KEY_ISLAND_ICON_MATERIAL_YOU, true)
+        IslandMotion.speed = settings.getIslandAnimationSpeed().coerceIn(0.5f, 1.5f)
         spec.value = IslandLayoutSpec(
             cameraDiameter = (geo.diameter / density).dp,
             cameraGap = (geo.gap / density).dp,
@@ -711,12 +716,26 @@ class IslandCoordinator(
                 else -> QueueStyle.Stack
             },
             queueInline = settings.isIslandNotifQueueInlineEnabled(),
+            iconColorCustom = if (iconCustomMode && !iconMaterialYou) {
+                runCatching {
+                    Color(AndroidColor.parseColor(settings.getString(SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM, null) ?: "#FFFFFF"))
+                }.getOrDefault(Color.White)
+            } else {
+                null
+            },
+            iconDynamic = !iconCustomMode,
+            themedText = settings.getBoolean(SettingsRepository.KEY_ISLAND_THEMED_TEXT, false),
+            chips = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false),
+            iconMaterialYou = iconMaterialYou,
         )
         windowHost.maxWidthPx = (maxOf(lineWidth, expandedWidth * scale) * density).toInt()
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
         controller.maxCells = settings.getIslandMaxItems() * 2
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
+        controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
+        controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
+        controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
@@ -783,7 +802,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR,
             SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, SettingsRepository.KEY_ISLAND_HIDE_ICONS -> syncStatusBar()
             SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
-            SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP -> applyOwnerAppHiding()
+            SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP, SettingsRepository.KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values, SettingsRepository.KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY -> applyLauncherOnly()
             SettingsRepository.KEY_ISLAND_HIDE_ON_SHADE -> applySuppression()
             SettingsRepository.KEY_ISLAND_PREVIEW_RING -> if (running) applyPreviewRing()
@@ -796,7 +815,7 @@ class IslandCoordinator(
     }
 
     private companion object {
-        const val REVEAL_DELAY_MS = 120L
+        const val REVEAL_DELAY_MS = 160L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
         const val PREVIEW_SOURCE = "preview"
@@ -819,6 +838,11 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_MAX_WIDTH,
             SettingsRepository.KEY_ISLAND_CUTOUT_GAP,
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
+            SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE,
+            SettingsRepository.KEY_ISLAND_ICON_COLOR_CUSTOM,
+            SettingsRepository.KEY_ISLAND_ICON_MATERIAL_YOU,
+            SettingsRepository.KEY_ISLAND_THEMED_TEXT,
+            SettingsRepository.KEY_ISLAND_CHIPS,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_ENABLED,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_COLOR,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_DYNAMIC,
@@ -837,6 +861,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
             SettingsRepository.KEY_ISLAND_EXPANDED_SCALE,
             SettingsRepository.KEY_ISLAND_FONT_SCALE,
+            SettingsRepository.KEY_ISLAND_ANIMATION_SPEED,
             SettingsRepository.KEY_ISLAND_CAMERA_POSITION,
             SettingsRepository.KEY_ISLAND_ORIENTATION_PROFILES,
             SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
@@ -844,6 +869,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_LANDSCAPE_TOP_SPACING,
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
+            SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
         )
     }

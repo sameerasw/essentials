@@ -77,6 +77,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LockscreenShortcutsHandler(
     private val service: AccessibilityService,
@@ -91,6 +92,8 @@ class LockscreenShortcutsHandler(
 
     private val overlays = mutableMapOf<LockscreenShortcutSide, ShortcutOverlay>()
     private var actionJob: Job? = null
+    private var scanJob: Job? = null
+    private var scanQueued = false
 
     private class ShortcutOverlay(
         val view: View,
@@ -150,8 +153,24 @@ class LockscreenShortcutsHandler(
             return
         }
 
+        if (scanJob?.isActive == true) {
+            scanQueued = true
+            return
+        }
         val screen = screenSize()
-        val result = LockscreenShortcutDetector.scan(service, screen.x, screen.y)
+        scanJob =
+            scope.launch {
+                val result = withContext(Dispatchers.Default) { LockscreenShortcutDetector.scan(service, screen.x, screen.y) }
+                applyScan(result)
+                if (scanQueued) {
+                    scanQueued = false
+                    updateState()
+                }
+            }
+    }
+
+    private fun applyScan(result: LockscreenShortcutDetector.Result) {
+        if (keyguardManager?.isKeyguardLocked != true || powerManager?.isInteractive != true) return
         if (result.isLockscreenVisible) {
             val state = if (result.hasSystemShortcuts) SystemShortcutsState.PRESENT else SystemShortcutsState.NONE
             if (state != settings.getLockscreenSystemShortcutsState()) {

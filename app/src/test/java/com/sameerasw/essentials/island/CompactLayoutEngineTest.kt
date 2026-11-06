@@ -71,8 +71,8 @@ class CompactLayoutEngineTest {
         assertEquals("flash.icon notif.icon | media.eq media.art", withBubble(listOf(catchUp, flash, media), balance = false))
 
     @Test fun bubbleBalanceMovesLowestPriorityRight() =
-        assertEquals("notif.icon | media.eq media.art flash.icon", withBubble(listOf(catchUp, flash, media), balance = true))
+        assertEquals("notif.icon | flash.icon media.eq media.art", withBubble(listOf(catchUp, flash, media), balance = true))
 
     @Test fun balanceLeavesPinnedOnLeft() =
-        assertEquals("time | media.eq media.art flash.icon", withBubble(listOf(time, flash, media), balance = true))
+        assertEquals("time | flash.icon media.eq media.art", withBubble(listOf(time, flash, media), balance = true))
 }

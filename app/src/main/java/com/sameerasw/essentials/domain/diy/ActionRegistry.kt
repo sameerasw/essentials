@@ -83,7 +83,7 @@ object ActionRegistry {
                 add(Action.CustomSettings())
                 add(Action.Wait())
                 add(Action.SendNotification())
-                add(Action.CircleToSearch)
+                add(Action.CircleToSearch())
                 add(Action.TurnOffBackGesture)
                 add(Action.TurnOnBackGesture)
                 // TakeScreenshot only available on screen-on context (null means no filter = include always)

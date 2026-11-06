@@ -96,7 +96,7 @@ fun FrozenAppsSearchResultCard(
         if (onNavigateToFreezeTab != null) {
             onNavigateToFreezeTab()
         } else {
-            val intent = Intent(context, MainActivity::class.java).apply {
+            val intent = com.sameerasw.essentials.utils.AppIconUtil.mainIntent(context).apply {
                 putExtra("target_tab", DIYTabs.FREEZE.name)
                 flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }

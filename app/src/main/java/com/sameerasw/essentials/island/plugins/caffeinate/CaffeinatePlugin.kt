@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.plugins.caffeinate
 
+import com.sameerasw.essentials.island.ui.components.islandAccent
+
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -132,11 +134,11 @@ class CaffeinatePlugin : BaseIslandPlugin() {
                 priority = IslandPriority.CAFFEINATE,
                 placement = CompactPlacement.Dynamic,
                 compact = listOfNotNull(
-                    CompactCell("caffeinate.icon") { IslandIcon(R.drawable.rounded_coffee_24, size = 18.dp, tint = MaterialTheme.colorScheme.primary) },
+                    CompactCell("caffeinate.icon") { IslandIcon(R.drawable.rounded_coffee_24, size = 18.dp, tint = islandAccent()) },
                     if (showTime) CompactCell("caffeinate.time") { RollingText(value) } else null,
                 ),
                 line = LineContent(
-                    icon = { IslandIcon(R.drawable.rounded_coffee_24, tint = MaterialTheme.colorScheme.primary) },
+                    icon = { IslandIcon(R.drawable.rounded_coffee_24, tint = islandAccent()) },
                     start = title,
                     end = value,
                 ),
@@ -151,7 +153,7 @@ class CaffeinatePlugin : BaseIslandPlugin() {
     private fun open() {
         try {
             context.startActivity(
-                Intent(context, MainActivity::class.java)
+                com.sameerasw.essentials.utils.AppIconUtil.mainIntent(context)
                     .putExtra("feature", "Caffeinate")
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             )
@@ -171,7 +173,7 @@ class CaffeinatePlugin : BaseIslandPlugin() {
     ) {
         val spec = scope.spec
         val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
-        val accent = MaterialTheme.colorScheme.primary
+        val accent = islandAccent()
         Box(propagateMinConstraints = true) {
             Column(Modifier.fillMaxWidth().padding(spec.expandedOutset)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
