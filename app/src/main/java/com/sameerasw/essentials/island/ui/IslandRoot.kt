@@ -385,7 +385,7 @@ private fun IslandRootContent(
             outgoing = leaving
             launch {
                 launch { outgoingMotion.animateTo(if (growing) 1f else -1f, IslandMotion.collapseFloat()) }
-                outgoingAlpha.animateTo(0f, motionTween(durationMillis = 90))
+                outgoingAlpha.animateTo(0f, motionTween(durationMillis = if (key.stage == IslandStage.Hidden) 320 else 90))
                 if (outgoing == leaving) outgoing = null
             }
         }
@@ -492,7 +492,7 @@ private fun IslandRootContent(
             catchUpAnim.animateTo(
                 0f,
                 when (stage) {
-                    IslandStage.Hidden -> IslandMotion.hideBubble()
+                    IslandStage.Hidden -> IslandMotion.squash()
                     IslandStage.Line, IslandStage.Expanded -> IslandMotion.sizeFloat()
                     else -> IslandMotion.hideBubble()
                 },
@@ -512,19 +512,19 @@ private fun IslandRootContent(
             }
         }
     }
-    // Hiding runs in order: secondary bubbles fold back first, then the main pill closes into the camera.
     LaunchedEffect(stage == IslandStage.Hidden) {
         if (inspection) return@LaunchedEffect
         if (stage != IslandStage.Hidden) {
-            squash.animateTo(0f, IslandMotion.smoothSpatial())
+            squash.animateTo(0f, IslandMotion.sizeFloat())
             return@LaunchedEffect
         }
-        withTimeoutOrNull(IslandMotion.HIDE_BUBBLE_MS + 120L) {
+        squash.animateTo(1f, IslandMotion.squash())
+        withTimeoutOrNull(IslandMotion.HIDE_BUBBLE_MS.toLong()) {
             snapshotFlow { catchUpAnim.value }.first { it <= 0.02f }
         }
-        squash.animateTo(1f, IslandMotion.squash())
         visible = false
     }
+    fun hideLift(): Float = if (spec.landscape) squash.value.coerceIn(0f, 1f) * (surfaceTopPx + compactHeightPx * 1.5f) else 0f
 
     val bubbleSizePx = with(density) { spec.compactHeight.roundToPx() }
     val compactSlack = remember { mutableIntStateOf(0) }
@@ -574,7 +574,7 @@ private fun IslandRootContent(
     val liveSurfaceHeight = remember { mutableIntStateOf(0) }
     val liveSurfaceWidth = remember { mutableIntStateOf(0) }
     fun visibleWidth(): Int =
-        if (collapse.value > 0f && liveSurfaceWidth.intValue > 0) liveSurfaceWidth.intValue else surfaceSize.width
+        if ((collapse.value > 0f || squash.value > 0f) && liveSurfaceWidth.intValue > 0) liveSurfaceWidth.intValue else surfaceSize.width
     fun surfaceShiftFor(width: Int): Int = spec.growDirection * (width - cameraSlotPx) / 2
     fun surfaceLeft(width: Int): Int = windowWidth / 2 - width / 2 + surfaceShiftFor(width) +
         lineShift.value.roundToInt() + catchShiftPx().roundToInt()
@@ -586,9 +586,14 @@ private fun IslandRootContent(
         if (stage == IslandStage.Compact) bubbleAnchorWidth[0] = width
         val anchorW = if (bubbleTucking && bubbleAnchorWidth[0] > 0 && collapse.value <= 0f) bubbleAnchorWidth[0] else width
         val endX = bubbleX(anchorW)
+        val cameraX = if (spec.growDirection <= 0) {
+            windowWidth / 2 - sideWidthLive() + bubbleSizePx / 2
+        } else {
+            windowWidth / 2 - bubbleSizePx / 2
+        }
         val startX = when {
             bubbleTucking && bubbleAbsorbing -> endX
-            bubbleTucking -> windowWidth / 2 - sideWidthLive() / 2
+            bubbleTucking || stage == IslandStage.Hidden -> cameraX
             spec.growDirection > 0 -> surfaceLeft(width) + width - sideWidthLive()
             else -> surfaceLeft(width)
         }
@@ -828,7 +833,7 @@ private fun IslandRootContent(
                         val right = maxOf(bubbleStart + sideWidthLive(), surfaceStart + w)
                         val body = measurable.measure(Constraints.fixed((right - left).coerceAtLeast(0), compactHeightPx.roundToInt()))
                         layout(constraints.maxWidth, constraints.maxHeight) {
-                            body.place(left, surfaceTopPx - (surfaceTopPx * bond).roundToInt())
+                            body.place(left, surfaceTopPx - (surfaceTopPx * bond + hideLift()).roundToInt())
                         }
                     }
                     .graphicsLayer { alpha = bond }
@@ -860,7 +865,9 @@ private fun IslandRootContent(
         if (bubbleData != null && catchUpAnim.value > 0.001f) {
             val dragX = remember { Animatable(0f) }
             val bubbleBond = remember(bubbleOnlyLayout) {
-                LiquidBond("sideBubble", presence = { if (bubbleOnlyLayout || bubbleTucking) catchUpAnim.value.coerceIn(0f, 1f) else 1f })
+                LiquidBond("sideBubble", presence = {
+                    if (bubbleOnlyLayout || bubbleTucking || currentState.stage == IslandStage.Hidden) catchUpAnim.value.coerceIn(0f, 1f) else 1f
+                })
             }
             val bubbleLiquid = rememberLiquidBody(LiquidSpec.Droplet, bubbleBond, liquidField)
             val towardCamera = if (spec.growDirection > 0) -1f else 1f
@@ -907,9 +914,9 @@ private fun IslandRootContent(
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {
-                                IntOffset((windowWidth / 2 - sideWidthLive() / 2 + dragX.value).roundToInt(), surfaceTopPx)
+                                IntOffset((windowWidth / 2 - sideWidthLive() / 2 + dragX.value).roundToInt(), surfaceTopPx - hideLift().roundToInt())
                             } else {
-                                IntOffset(liveBubbleX(visibleWidth()) + dragX.value.roundToInt(), surfaceTopPx - (surfaceTopPx * bond).roundToInt())
+                                IntOffset(liveBubbleX(visibleWidth()) + dragX.value.roundToInt(), surfaceTopPx - (surfaceTopPx * bond + hideLift()).roundToInt())
                             }
                         }
                         .liquid(bubbleLiquid)
@@ -925,6 +932,9 @@ private fun IslandRootContent(
                             val appearScale = if (fades && !absorbing) 0.6f + 0.4f * appear else 1f
                             scaleX = appearScale
                             scaleY = appearScale
+                            val bubbleW = sideWidthLive().coerceAtLeast(1).toFloat()
+                            val gatherX = (bubbleSizePx / 2f / bubbleW).coerceIn(0f, 1f)
+                            transformOrigin = TransformOrigin(if (spec.growDirection <= 0) 1f - gatherX else gatherX, 0.5f)
                         }
                         .pointerInput(Unit) {
                             detectTapGestures {
@@ -983,7 +993,7 @@ private fun IslandRootContent(
                         p.place(dx, 0)
                     }
                 }
-                .offset { IntOffset(0, (-edgeShift.floatValue - surfaceTopPx * bond).roundToInt()) }
+                .offset { IntOffset(0, (-edgeShift.floatValue - surfaceTopPx * bond - hideLift()).roundToInt()) }
                 .compactJelly(jelly, jellyRangePx)
                 .liquid(surfaceLiquid, TransformOrigin(0.5f, 0f))
                 .drawBehind {

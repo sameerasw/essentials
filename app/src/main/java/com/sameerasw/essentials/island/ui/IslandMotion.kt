@@ -50,7 +50,7 @@ object IslandMotion {
 
     private const val SQUASH_MS_BASE = 560
     val SQUASH_MS get() = scaled(SQUASH_MS_BASE)
-    fun squash(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 200f)
+    fun squash(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 380f)
 
     fun release(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 380f)
 
