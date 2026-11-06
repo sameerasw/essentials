@@ -218,11 +218,12 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, mediaAccent(artAccent)) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(artAccent), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward)
+                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName)
                 },
                 accent = artAccent,
                 onOpen = { openPlayer() },
                 sourcePackage = t.packageName,
+                hideExpandedQueue = true,
             ),
         )
     }
@@ -267,6 +268,8 @@ class MediaPlugin : BaseIslandPlugin() {
             },
             canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS),
             canSkipForward = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_NEXT),
+            packageName = t.packageName,
+            playerAccent = t.accent?.let { Color(it) },
         )
     }
 

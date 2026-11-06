@@ -157,6 +157,7 @@ class IslandItem(
     val sideBubble: SideBubble? = null,
     val companionOnly: Boolean = false,
     val bypassLauncherOnly: Boolean = false,
+    val hideExpandedQueue: Boolean = false,
     
     val stack: List<StackIcon> = emptyList(),
     val queued: List<StackIcon>? = null,
@@ -189,6 +190,7 @@ class IslandItem(
         sideBubble = null,
         companionOnly = companionOnly,
         bypassLauncherOnly = bypassLauncherOnly,
+        hideExpandedQueue = hideExpandedQueue,
         stack = stack,
         queued = queued,
         priorityGroup = priorityGroup,

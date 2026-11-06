@@ -608,6 +608,7 @@ private fun IslandRootContent(
     }
     val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
     val queuedIcons = when {
+        stage == IslandStage.Expanded && focusedItem?.hideExpandedQueue == true -> emptyList()
         foreignStack.isNotEmpty() -> fullStack
         else -> focusedItem?.queued ?: fullStack.filterNot { it.current }
     }

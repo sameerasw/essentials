@@ -270,7 +270,7 @@ private fun BriefExpanded(
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
-                            MediaExpanded(m.title, m.artist, m.artwork, mediaAccent(m.accent), m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward)
+                            MediaExpanded(m.title, m.artist, m.artwork, mediaAccent(m.playerAccent ?: m.accent), m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward, packageName = m.packageName)
                         }
                     }
                 }
