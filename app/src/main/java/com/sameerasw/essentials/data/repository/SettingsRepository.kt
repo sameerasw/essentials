@@ -718,6 +718,7 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
+        const val KEY_ISLAND_MEDIA_PLAYER_STYLE = "island_media_player_style"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
         const val KEY_ISLAND_NOTIF_PEEK_STYLE = "island_notif_peek_style"
@@ -747,6 +748,7 @@ class SettingsRepository(
         const val ISLAND_NOTIF_HUB_ORDER_PRIORITY = "priority"
         const val ISLAND_NOTIF_HUB_ORDER_RECENT = "recent"
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
+        const val KEY_ISLAND_TAP_TO_OPEN_EXPANDED = "island_tap_to_open_expanded"
         const val KEY_ISLAND_OTP_ENABLED = "island_otp_enabled"
         const val KEY_ISLAND_OTP_TAP_TO_COPY = "island_otp_tap_to_copy"
         const val KEY_ISLAND_OTP_DISMISS_AFTER_COPY = "island_otp_dismiss_after_copy"
@@ -4457,6 +4459,10 @@ class SettingsRepository(
 
     fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
 
+    fun getIslandMediaPlayerStyle(): String = getString(KEY_ISLAND_MEDIA_PLAYER_STYLE, null) ?: "default"
+
+    fun setIslandMediaPlayerStyle(style: String) = putString(KEY_ISLAND_MEDIA_PLAYER_STYLE, style)
+
     fun isIslandMediaShowLikeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, true)
     fun setIslandMediaShowLikeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_SHOW_LIKE, enabled)
 
@@ -4557,8 +4563,9 @@ class SettingsRepository(
     fun updateIslandNotifFilterAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_ISLAND_NOTIF_FILTER_APPS_LIST, packageName, enabled)
 
-    fun isIslandNotifTapToOpenEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false)
-    fun setIslandNotifTapToOpenEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, enabled)
+    fun isIslandTapToOpenExpandedEnabled(): Boolean =
+        getBoolean(KEY_ISLAND_TAP_TO_OPEN_EXPANDED, getBoolean(KEY_ISLAND_NOTIF_TAP_TO_OPEN, false))
+    fun setIslandTapToOpenExpandedEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TAP_TO_OPEN_EXPANDED, enabled)
 
     fun isIslandOtpEnabled(): Boolean = getBoolean(KEY_ISLAND_OTP_ENABLED, false)
     fun setIslandOtpEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_OTP_ENABLED, enabled)

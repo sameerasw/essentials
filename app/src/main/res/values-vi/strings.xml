@@ -1800,10 +1800,10 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_hide_in_owner_app_title">Ẩn thông báo lỗi bên trong ứng dụng</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_hide_on_shade_title">Ẩn khi thanh trạng thái được mở rộng</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Bỏ qua khi chạm bên ngoài</string>
     <string name="island_notif_keep_progress_title">Giữ lại thông báo tiến độ</string>
     <string name="island_notif_queue_title">Hàng đợi thông báo</string>
-    <string name="island_notif_tap_to_open_title">Chạm để mở thông báo</string>
     <string name="island_catch_up_title">Bắt kịp</string>
     <string name="island_catch_up_desc">Giữ thông báo cuối cùng trên island lâu hơn</string>
     <string name="island_catch_up_timeout_title">Thời gian bắt kịp</string>
@@ -2043,7 +2043,6 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="duo_tap_for_brief_title">Chạm để xem tóm tắt</string>
     <string name="island_notif_hub_title">Trung tâm thông báo</string>
     <string name="island_notif_hub_desc">Thay thế các biểu tượng thông báo trên thanh trạng thái bằng hình ảnh từ island</string>
-    <string name="island_notif_tap_to_open_desc">Chạm vào thông báo được mở rộng để mở ứng dụng</string>
     <string name="island_notif_follow_dnd_title">Theo trạng thái của chế độ Không làm phiền</string>
     <string name="island_notif_follow_dnd_desc">Ẩn các thông báo mà chế độ Không làm phiền đã tắt</string>
     <string name="island_notif_skip_silent_title">Bỏ qua thông báo im lặng</string>
@@ -2064,4 +2063,5 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="island_hide_icon_notifications">Số biểu tượng thông báo</string>
     <string name="island_notif_show_title">Hiện thông báo</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
 </resources>

@@ -14,6 +14,7 @@ import android.media.AudioPlaybackConfiguration
 import android.os.Binder
 import android.os.Build
 import android.os.Handler
+import android.os.SystemClock
 import android.os.IBinder
 import android.os.Looper
 import android.os.Parcel
@@ -39,6 +40,8 @@ object AppVolumeController {
     private val handler = Handler(Looper.getMainLooper())
     private val appliedVolumes = mutableMapOf<Int, Float>()
     private var configs: List<AudioPlaybackConfiguration> = emptyList()
+    private val lastPlayed = java.util.concurrent.ConcurrentHashMap<String, Long>()
+    private const val RECENT_WINDOW_MS = 10_000L
     private var levels: Map<String, Float> = emptyMap()
     private var enabled = false
     private var appContext: Context? = null
@@ -127,7 +130,17 @@ object AppVolumeController {
     private fun onConfigs(updated: List<AudioPlaybackConfiguration>) {
         configs = updated
         apply(force = true)
-        _playingPackages.value = updated.filter { invoke(it, "getPlayerState") == PLAYER_STATE_STARTED }.mapNotNull { packageOf(it) }.distinct()
+        val playing = updated.filter { invoke(it, "getPlayerState") == PLAYER_STATE_STARTED }.mapNotNull { packageOf(it) }.distinct()
+        val now = SystemClock.elapsedRealtime()
+        (_playingPackages.value + playing).forEach { lastPlayed[it] = now }
+        _playingPackages.value = playing
+    }
+
+    fun recentPackages(windowMs: Long = RECENT_WINDOW_MS): List<String> {
+        val playing = _playingPackages.value
+        val now = SystemClock.elapsedRealtime()
+        val recent = lastPlayed.filter { (pkg, at) -> pkg !in playing && now - at <= windowMs }.entries.sortedByDescending { it.value }.map { it.key }
+        return playing + recent
     }
 
     private fun apply(force: Boolean = false) {

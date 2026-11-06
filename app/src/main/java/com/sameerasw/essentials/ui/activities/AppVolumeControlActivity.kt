@@ -121,15 +121,16 @@ private fun NowPlayingSheet(onDismiss: () -> Unit) {
     val settings = remember { SettingsRepository(context) }
     val playing by AppVolumeController.playingPackages.collectAsState()
     val levels = remember { mutableStateMapOf<String, Float>().apply { putAll(settings.getAppVolumeLevels()) } }
+    val openedWith = remember { AppVolumeController.recentPackages() }
     val rows =
         remember {
             mutableStateListOf<PlayerRow>().apply {
-                AppVolumeController.playingPackages.value.forEach { add(PlayerRow(it, isInitial = true)) }
+                openedWith.forEach { add(PlayerRow(it, isInitial = true)) }
             }
         }
 
     LaunchedEffect(playing) {
-        rows.forEach { it.isPresent = it.packageName in playing }
+        rows.forEach { it.isPresent = it.packageName in playing || it.packageName in openedWith }
         playing.forEach { packageName ->
             if (rows.none { it.packageName == packageName && it.isPresent }) rows.add(PlayerRow(packageName))
         }

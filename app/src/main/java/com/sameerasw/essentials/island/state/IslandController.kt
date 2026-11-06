@@ -151,13 +151,16 @@ class IslandController(
     }
 
     var fallbackTapKey: (() -> String?)? = null
+    var opensOnExpandedTap: (IslandItem) -> Boolean = { false }
 
     fun onTap(itemKey: String?): Boolean {
         val current = _state.value
         return when (current.stage) {
             IslandStage.Hidden -> false
             IslandStage.Expanded -> {
-                current.focused?.interactions?.onExpandedTap?.invoke()
+                val focused = current.focused
+                val handled = focused?.interactions?.onExpandedTap?.invoke() == true
+                if (!handled && focused != null && opensOnExpandedTap(focused)) focused.onOpen?.invoke()
                 collapse()
                 true
             }

@@ -1723,13 +1723,13 @@
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Скрывать при действиях снаружи</string>
     <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
     <string name="duo_battery_percentage_only_colored_desc">Отображать процентное содержание только при зарядке, в режиме экономии заряда батареи или при низком уровне заряда батареи</string>
     <string name="duo_rotate_album_art_title">Поворачивать обложку альбома</string>
     <string name="duo_hide_when_screen_off_only_idle_title">Скрываться на AOD только во время простоя</string>
     <string name="duo_combine_with_island">Сочетать с островом</string>
-    <string name="island_notif_tap_to_open_title">Тапнуть что бы открыть уведомление</string>
     <string name="feat_prefer_gpu_composing_title">Предпочитаете графический процессор для создания экрана</string>
     <string name="feat_prefer_gpu_composing_desc">Отключите аппаратные оверлеи, чтобы принудительно скомпоновать экран на графическом процессоре. Сбрасывается при перезагрузке устройства.</string>
     <string name="perm_storage_title">Доступ ко всем файлам</string>
@@ -2020,4 +2020,5 @@
     <string name="tile_haptics">Вибрация</string>
     <string name="app_overcast">Погода</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
 </resources>

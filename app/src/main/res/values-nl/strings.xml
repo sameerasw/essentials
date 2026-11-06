@@ -1689,6 +1689,7 @@
     <string name="island_line_peek_desc">Toon kort updates op het eiland, en klap daarna weer in</string>
     <string name="island_hide_in_owner_app_title">Verberg complicaties in de app</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Klap in bij activiteit buiten het eiland</string>
     <string name="duo_enable_title">Duo Inschakelen</string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
@@ -1729,5 +1730,6 @@
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
 </resources>

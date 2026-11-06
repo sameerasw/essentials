@@ -815,6 +815,17 @@ fun IslandBehaviorSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_open_in_new_24,
+                title = stringResource(R.string.island_tap_to_open_expanded_title),
+                isChecked = viewModel.isIslandTapToOpenExpanded.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandTapToOpenExpanded(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_tap_to_open_expanded"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_touch_app_24,
                 title = stringResource(R.string.island_dismiss_on_outside_title),
                 isChecked = viewModel.isIslandDismissOnOutside.value,
@@ -1094,17 +1105,6 @@ fun IslandNotificationSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.island_notif_tap_to_open_title),
-                description = stringResource(R.string.island_notif_tap_to_open_desc),
-                isChecked = viewModel.isIslandNotifTapToOpen.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandNotifTapToOpen(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_tap_to_open"),
-            )
         }
 
         RoundedCardContainer(
