@@ -24,7 +24,10 @@ object IslandMotion {
 
     private const val EXPAND_MS_BASE = 460
     val EXPAND_MS get() = scaled(EXPAND_MS_BASE)
-    val size: FiniteAnimationSpec<IntSize> get() = motionSpring(0.84f, 380f, IntSize(1, 1))
+    private const val SIZE_DAMPING = 0.84f
+    private const val SIZE_STIFFNESS = 380f
+    val size: FiniteAnimationSpec<IntSize> get() = motionSpring(SIZE_DAMPING, SIZE_STIFFNESS, IntSize(1, 1))
+    fun <T> sizeFloat(): FiniteAnimationSpec<T> = motionSpring(SIZE_DAMPING, SIZE_STIFFNESS)
     const val COMPACT_DAMPING = 0.78f
     const val COMPACT_STIFFNESS = 230f
     private const val COMPACT_MS_BASE = 380

@@ -266,6 +266,23 @@ private fun IslandRootContent(
     }
 
     var surfaceSize by remember { mutableStateOf(IntSize.Zero) }
+    val growFrom = remember { IntArray(2) }
+    val growTarget = remember { IntArray(2) }
+    val growFlags = remember { BooleanArray(2) }
+    val growProgress = remember { mutableFloatStateOf(1f) }
+    val growKey = remember { arrayOfNulls<ContentKey>(1) }
+    if (growKey[0] != key) {
+        growKey[0] = key
+        growFrom[0] = surfaceSize.width
+        growFrom[1] = surfaceSize.height
+        growFlags[0] = false
+        growFlags[1] = false
+    }
+    fun growGate(start: Float, span: Float): Float =
+        if (!growFlags[1]) 1f else ((growProgress.floatValue - start) / span).coerceIn(0f, 1f)
+    fun leaveGate(end: Float): Float =
+        if (!growFlags[1]) 1f else (1f - growProgress.floatValue / end).coerceIn(0f, 1f)
+    fun pillGate(): Float = if (currentState.stage == IslandStage.Expanded) growGate(0.5f, 0.5f) else 1f
     val backdropSlot = remember { IslandBackdropSlot() }
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
@@ -367,13 +384,13 @@ private fun IslandRootContent(
             outgoing = leaving
             launch {
                 launch { outgoingMotion.animateTo(if (growing) 1f else -1f, IslandMotion.collapseFloat()) }
-                outgoingAlpha.animateTo(0f, motionTween(durationMillis = 140))
+                outgoingAlpha.animateTo(0f, motionTween(durationMillis = 90))
                 if (outgoing == leaving) outgoing = null
             }
         }
         lastKey = key
         launch { contentMotion.animateTo(0f, if (growing) IslandMotion.contentSpring() else IslandMotion.collapseFloat()) }
-        contentAlpha.animateTo(1f, motionTween(durationMillis = if (growing) 180 else 160, delayMillis = if (growing) 0 else 60))
+        contentAlpha.animateTo(1f, motionTween(durationMillis = if (growing) 200 else 160, delayMillis = if (handOver) 60 else 0))
     }
     val outsetPx = with(density) { spec.expandedOutset.toPx() }
     val cameraSlotPx = with(density) { spec.cameraSlotWidth.roundToPx() }
@@ -454,6 +471,7 @@ private fun IslandRootContent(
     }
     val surfaceLiquid = rememberLiquidBody(bond = surfaceBond, field = liquidField)
     var bubbleTucking by remember { mutableStateOf(false) }
+    var bubbleAbsorbing by remember { mutableStateOf(false) }
     val bubbleAnchorWidth = remember { IntArray(1) }
     if (stage == IslandStage.Line || stage == IslandStage.Expanded) bubbleTucking = true
     LaunchedEffect(catchUpShown) {
@@ -468,8 +486,16 @@ private fun IslandRootContent(
             }
             catchUpAnim.animateTo(1f, IslandMotion.smoothSpatial())
             bubbleTucking = false
+            bubbleAbsorbing = false
         } else {
-            catchUpAnim.animateTo(0f, if (stage == IslandStage.Hidden) IslandMotion.hideBubble() else IslandMotion.smoothSpatial())
+            catchUpAnim.animateTo(
+                0f,
+                when (stage) {
+                    IslandStage.Hidden -> IslandMotion.hideBubble()
+                    IslandStage.Line, IslandStage.Expanded -> IslandMotion.sizeFloat()
+                    else -> IslandMotion.smoothSpatial()
+                },
+            )
         }
     }
     // Hiding runs in order: secondary bubbles fold back first, then the main pill closes into the camera.
@@ -626,7 +652,8 @@ private fun IslandRootContent(
             return@LaunchedEffect
         }
         when (stage) {
-            IslandStage.Expanded -> queueBelow.animateTo(1f, IslandMotion.float())
+            IslandStage.Expanded ->
+                if (pillReveal.value > 0.5f) queueBelow.animateTo(1f, IslandMotion.float()) else queueBelow.snapTo(1f)
             IslandStage.Line -> queueBelow.animateTo(0f, IslandMotion.float())
             else -> Unit
         }
@@ -678,7 +705,7 @@ private fun IslandRootContent(
     }
     val pillBond = remember {
         LiquidBond("pill", presence = {
-            queuePresence.value * ((queueBelow.value - 0.3f) / 0.7f).coerceIn(0f, 1f) * (1f - collapse.value).coerceIn(0f, 1f)
+            queuePresence.value * ((queueBelow.value - 0.3f) / 0.7f).coerceIn(0f, 1f) * (1f - collapse.value).coerceIn(0f, 1f) * pillGate()
         })
     }
 
@@ -714,12 +741,13 @@ private fun IslandRootContent(
                             val k = t()
                             val cx = sideX + (belowX - sideX) * k
                             val cy = sideY + (belowY - sideY) * k
-                            val tuck = if (slides) (1f - pillReveal.value) * (p.height + pillGapPx) else 0f
+                            val reveal = if (slides) minOf(pillReveal.value, pillGate()) else 1f
+                            val tuck = if (slides) (1f - reveal) * (p.height + pillGapPx) else 0f
                             p.placeWithLayer((cx - p.width / 2f).roundToInt(), (cy - p.height / 2f - tuck).roundToInt()) {
                                 val s = fromScale + (toScale - fromScale) * k
                                 scaleX = s
                                 scaleY = s
-                                alpha = alphaOf(k) * (1f - collapse.value).coerceIn(0f, 1f)
+                                alpha = alphaOf(k) * (1f - collapse.value).coerceIn(0f, 1f) * (if (slides) pillGate() else 1f)
                             }
                         }
                     }
@@ -831,14 +859,23 @@ private fun IslandRootContent(
                             val fades = bubbleOnlyLayout || stage == IslandStage.Hidden || bubbleTucking
                             val appear = if (fades) catchUpAnim.value.coerceIn(0f, 1f) else 1f
                             alpha = (1f - (abs(dragX.value) / maxDrag).coerceIn(0f, 0.8f)) * appear
-                            val appearScale = if (fades) 0.6f + 0.4f * appear else 1f
+                            val appearScale = when {
+                                bubbleTucking && bubbleAbsorbing -> 1f + 0.2f * (1f - appear)
+                                fades -> 0.6f + 0.4f * appear
+                                else -> 1f
+                            }
                             scaleX = appearScale
                             scaleY = appearScale
                         }
                         .pointerInput(Unit) {
                             detectTapGestures {
                                 IslandHaptics.tap(context)
+                                bubbleAbsorbing = true
                                 bubbleData.onOpen()
+                                scope.launch {
+                                    delay(IslandMotion.COLLAPSE_MS.toLong())
+                                    if (!bubbleTucking) bubbleAbsorbing = false
+                                }
                             }
                         }
                         .pointerInput(Unit) {
@@ -956,6 +993,19 @@ private fun IslandRootContent(
                     val range = (expandedHeight[0] - minSurfaceHeight).toFloat()
                     val p = if (range > 0f) ((h - minSurfaceHeight) / range).coerceIn(0f, 1f) else 0f
                     edgeShift.floatValue = outsetPx * p
+                    val dw = growTarget[0] - growFrom[0]
+                    val dh = growTarget[1] - growFrom[1]
+                    if (!growFlags[0] && growFrom[0] > 0 && (abs(dw) > 2 || abs(dh) > 2)) {
+                        val pw = if (abs(dw) > 2) ((w - growFrom[0]).toFloat() / dw).coerceIn(0f, 1f) else 1f
+                        val ph = if (abs(dh) > 2) ((h - growFrom[1]).toFloat() / dh).coerceIn(0f, 1f) else 1f
+                        val prog = minOf(pw, ph)
+                        if (prog >= 0.98f) growFlags[0] = true
+                        growFlags[1] = !growFlags[0]
+                        growProgress.floatValue = if (growFlags[0]) 1f else prog
+                    } else {
+                        growFlags[1] = false
+                        growProgress.floatValue = 1f
+                    }
                     val childX = when {
                         spec.growDirection > 0 -> 0
                         spec.growDirection < 0 -> w - child.width
@@ -989,6 +1039,13 @@ private fun IslandRootContent(
                         }
                     },
                 )
+                .layout { measurable, constraints ->
+                    val p = measurable.measure(constraints)
+                    val floorW = if (stage == IslandStage.Compact) maxOf(minSurfaceWidth, collapseEnd.width) else minSurfaceWidth
+                    growTarget[0] = p.width.coerceAtLeast(floorW)
+                    growTarget[1] = p.height.coerceAtLeast(minSurfaceHeight)
+                    layout(p.width, p.height) { p.place(0, 0) }
+                }
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
@@ -1203,7 +1260,7 @@ private fun IslandRootContent(
                             layout(0, 0) { p.place(0, 0) }
                         }
                         .graphicsLayer {
-                            alpha = contentAlpha.value * (1f - collapse.value * 1.6f).coerceIn(0f, 1f)
+                            alpha = contentAlpha.value * growGate(0.3f, 0.5f) * (1f - collapse.value * 1.6f).coerceIn(0f, 1f)
                         },
                 ) { backdrop() }
             }
@@ -1250,7 +1307,7 @@ private fun IslandRootContent(
                             if (key.stage == IslandStage.Compact) compactSize = it
                         }
                         .graphicsLayer {
-                            alpha = (if (pending) 0f else contentAlpha.value) *
+                            alpha = (if (pending) 0f else contentAlpha.value) * growGate(0.3f, 0.5f) *
                                 (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
                                 if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
                             translationX = dismissOffset.value + wiggle.value
@@ -1280,7 +1337,7 @@ private fun IslandRootContent(
                         }
                         .graphicsLayer {
                             val m = if (pending) contentMotion.value else outgoingMotion.value
-                            alpha = if (pending) contentAlpha.value else outgoingAlpha.value
+                            alpha = if (pending) contentAlpha.value else minOf(outgoingAlpha.value, leaveGate(0.35f))
                             val scale = 1f + contentScaleFor(layerKey.stage, spec.bondEdge) * m
                             scaleX = scale
                             scaleY = scale
