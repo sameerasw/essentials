@@ -31,7 +31,7 @@
     <string name="setting_use_usage_access_title">Sử dụng quyền truy cập</string>
     <string name="setting_use_usage_access_desc">Thay vì các tính năng hỗ trợ tiếp cận (Đóng băng ứng dụng, Khóa ứng dụng, Chế độ ánh sáng ban đêm động)</string>
     <!-- Button Remap -->
-    <string name="button_remap_enable_title">Bật bản đồ lại nút</string>
+    <string name="button_remap_enable_title">Bật gán lại chức năng nút</string>
     <string name="button_remap_use_shizuku_title">Sử dụng Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Hoạt động khi tắt màn hình (Được khuyến nghị)</string>
     <string name="shizuku_not_running_toast">Shizuku không chạy</string>
@@ -420,7 +420,7 @@
     <string name="feat_snooze_notifications_desc">Tạm ẩn thông báo liên tục</string>
     <string name="feat_qs_tiles_title">Ô cài đặt nhanh</string>
     <string name="feat_qs_tiles_desc">Xem tất cả</string>
-    <string name="feat_button_remap_title">Ánh xạ lại nút</string>
+    <string name="feat_button_remap_title">Gán lại chức năng nút</string>
     <string name="feat_button_remap_desc">Ánh xạ lại các hành động của nút phần cứng</string>
     <string name="feat_dynamic_night_light_title">Đèn ngủ năng động</string>
     <string name="feat_dynamic_night_light_desc">Chuyển đổi ánh sáng ban đêm dựa trên ứng dụng</string>
@@ -619,6 +619,8 @@
     <string name="tab_apps">Ứng dụng</string>
     <string name="tab_freeze_subtitle">Ứng dụng bị vô hiệu hóa</string>
     <string name="tab_diy_subtitle">Tự làm</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Tìm và quản lý ứng dụng</string>
     <string name="feat_app_updates_title">Cập nhật ứng dụng</string>
     <string name="tab_app_updates_title">Cập nhật ứng dụng</string>
@@ -651,7 +653,7 @@
     <string name="btn_enable_keyboard">Bật trong cài đặt</string>
     <string name="btn_select_keyboard">Chuyển sang thiết yếu</string>
     <string name="label_enabled">Đã bật</string>
-    <string name="label_disabled">Tàn tật</string>
+    <string name="label_disabled">Tắt</string>
     <string name="tile_adaptive_brightness">Độ sáng thích ứng</string>
     <string name="tile_maps_power_saving">Tiết kiệm năng lượng của bản đồ</string>
     <string name="action_search">Tìm kiếm</string>
@@ -1466,7 +1468,7 @@ Sử dụng các phím tắt tùy chỉnh để đảm bảo các cài đặt đ
     <string name="feat_power_battery_title">Năng lượng và pin</string>
     <string name="feat_power_battery_desc">Cấu hình các chính sách tiết kiệm năng lượng</string>
     <string name="feat_flashlight_title">Đèn pin</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">Điều khiển độ sáng, độ mờ và an toàn</string>
     <string name="feat_sync_sound_mode_title">Đồng bộ chế độ âm thanh</string>
     <string name="feat_sync_sound_mode_desc">Tự động đồng bộ với đồng hồ</string>
     <string name="feat_watch_controls_title">Tùy chỉnh</string>
@@ -1618,7 +1620,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="feat_sim_names_title">Tên SIM</string>
     <string name="feat_sim_names_desc">Đổi tên hiển thị của nhà mạng cho các thẻ SIM đang hoạt động</string>
     <string name="setting_location_reached_full_screen_alarm_title">Báo thức toàn màn hình</string>
-    <string name="setting_location_reached_full_screen_alarm_desc">Phát nhạc chuông báo thức và hiển thị thông báo toàn màn hình khi có cuộc gọi đến</string>
+    <string name="setting_location_reached_full_screen_alarm_desc">Phát nhạc chuông báo thức và hiển thị thông báo toàn màn hình khi đến nơi</string>
     <string name="label_ripple_animation">Hoạt ảnh gợn sóng</string>
     <string name="label_motion_blur">Hiệu ứng mờ chuyển động</string>
     <string name="setting_app_icon_title">Biểu tượng ứng dụng</string>
@@ -1796,6 +1798,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_line_peek_title">Xem trước dòng</string>
     <string name="island_line_peek_desc">Hiển thị nhanh các cập nhật trên khắp island, sau đó quay lại chế độ thu gọn</string>
     <string name="island_hide_in_owner_app_title">Ẩn thông báo lỗi bên trong ứng dụng</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_hide_on_shade_title">Ẩn khi thanh trạng thái được mở rộng</string>
     <string name="island_dismiss_on_outside_title">Bỏ qua khi chạm bên ngoài</string>
     <string name="island_notif_keep_progress_title">Giữ lại thông báo tiến độ</string>
@@ -2028,7 +2031,36 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Use themed app icons</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_combine_with_duo">Kết hợp với Duo</string>
+    <string name="island_desc">Island động</string>
+    <string name="duo_combine_with_island">Kết hợp với Island</string>
+    <string name="disable_interactions_in_full_screen_title">Vô hiệu hóa tương tác ở chế độ toàn màn hình</string>
+    <string name="duo_tap_for_brief_title">Chạm để xem tóm tắt</string>
+    <string name="island_notif_hub_title">Trung tâm thông báo</string>
+    <string name="island_notif_hub_desc">Thay thế các biểu tượng thông báo trên thanh trạng thái bằng hình ảnh từ island</string>
+    <string name="island_notif_tap_to_open_desc">Chạm vào thông báo được mở rộng để mở ứng dụng</string>
+    <string name="island_notif_follow_dnd_title">Theo trạng thái của chế độ Không làm phiền</string>
+    <string name="island_notif_follow_dnd_desc">Ẩn các thông báo mà chế độ Không làm phiền đã tắt</string>
+    <string name="island_notif_skip_silent_title">Bỏ qua thông báo im lặng</string>
+    <string name="island_notif_skip_silent_desc">Bỏ qua các thông báo không có âm thanh</string>
+    <string name="island_notif_filter_apps_title">Lọc ứng dụng</string>
+    <string name="island_notif_filter_apps_desc">Chỉ hiển thị thông báo từ các ứng dụng bạn chọn</string>
+    <string name="island_notif_queue_desc">Hiển thị thông báo theo từng đợt</string>
+    <string name="island_notif_queue_inline_title">Xếp hàng bên trong Island</string>
+    <string name="island_notif_queue_inline_desc">Hiển thị hàng đợi bên trong Island</string>
+    <string name="island_otp_enabled_title">Phát hiện mã OTP</string>
+    <string name="island_otp_tap_to_copy_title">Nhấn để sao chép</string>
+    <string name="island_otp_dismiss_after_copy_title">Xóa thông báo sau khi sao chép</string>
+    <string name="island_otp_timeout_title">Hiển thị mã cho</string>
+    <string name="island_otp_bypass_filter_title">Hiển thị mã từ bất kỳ ứng dụng nào</string>
+    <string name="island_notif_hub_include_silent">Bao gồm các thông báo im lặng</string>
+    <string name="island_notif_hub_group_apps">Nhóm từng ứng dụng</string>
+    <string name="island_notif_hub_chat_pictures">Ưu tiên ảnh trò chuyện hơn</string>
+    <string name="island_hide_icon_notifications">Số biểu tượng thông báo</string>
+    <string name="island_notif_show_title">Hiện thông báo</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

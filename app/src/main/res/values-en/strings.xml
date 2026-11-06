@@ -624,6 +624,8 @@
     <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Find and manage apps</string>
     <string name="feat_app_updates_title">App Updates</string>
     <string name="tab_app_updates_title">App Updates</string>
@@ -1494,7 +1496,10 @@
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Use themed app icons</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
 </resources>

@@ -9,6 +9,13 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.ui.navigation.AppRoutes
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.ui.graphics.Color
+import com.sameerasw.essentials.utils.DeviceImageMapper
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -209,317 +216,10 @@ class YourAndroidViewModel : ViewModel() {
     }
 }
 
-class YourAndroidActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+class YourAndroidActivity : android.app.Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        val isDarkMode =
-            (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        window.setBackgroundDrawableResource(if (isDarkMode) android.R.color.black else R.color.app_window_background)
-
-        setContent {
-            val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
-                androidx.lifecycle.viewmodel.compose
-                    .viewModel()
-            val isPitchBlackThemeEnabled by mainViewModel.isPitchBlackThemeEnabled
-            val isBlurEnabled by mainViewModel.isBlurEnabled
-
-            val viewModel: YourAndroidViewModel =
-                androidx.lifecycle.viewmodel.compose
-                    .viewModel()
-            val updatesViewModel: AppUpdatesViewModel =
-                androidx.lifecycle.viewmodel.compose
-                    .viewModel()
-            val gitHubAuthViewModel: GitHubAuthViewModel =
-                androidx.lifecycle.viewmodel.compose
-                    .viewModel()
-
-            val context = androidx.compose.ui.platform.LocalContext.current
-            val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
-            var showGitHubAuthSheet by remember { mutableStateOf(false) }
-            var showAddRepoSheet by remember { mutableStateOf(false) }
-            var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }
-            var showFabProfileMenu by remember { mutableStateOf(false) }
-
-            val gitHubToken by mainViewModel.gitHubToken
-            val gitHubUser by gitHubAuthViewModel.currentUser
-
-            LaunchedEffect(Unit) {
-                gitHubAuthViewModel.loadCachedUser(context)
-                updatesViewModel.loadTrackedRepos(context)
-            }
-
-            LaunchedEffect(gitHubToken) {
-                if (gitHubToken != null && gitHubUser == null) {
-                    gitHubAuthViewModel.loadUser(gitHubToken!!, context)
-                }
-            }
-
-            val backupAppListLauncher =
-                androidx.activity.compose.rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.CreateDocument("application/json"),
-                ) { uri ->
-                    uri?.let {
-                        viewModel.exportAppList(context, it)
-                    }
-                }
-
-            val exportLauncher =
-                androidx.activity.compose.rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.CreateDocument("application/json"),
-                ) { uri ->
-                    uri?.let {
-                        contentResolver.openOutputStream(it)?.use { outputStream ->
-                            updatesViewModel.exportTrackedRepos(context, outputStream)
-                            Toast
-                                .makeText(
-                                    context,
-                                    getString(R.string.msg_export_success),
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                    }
-                }
-
-            val importLauncher =
-                androidx.activity.compose.rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.OpenDocument(),
-                ) { uri ->
-                    uri?.let {
-                        contentResolver.openInputStream(it)?.use { inputStream ->
-                            if (updatesViewModel.importTrackedRepos(context, inputStream)) {
-                                updatesViewModel.loadTrackedRepos(context)
-                                Toast
-                                    .makeText(
-                                        context,
-                                        getString(R.string.msg_import_success),
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            } else {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        getString(R.string.msg_import_failed),
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            }
-                        }
-                    }
-                }
-
-            remember {
-                object : com.sameerasw.essentials.domain.model.Feature(
-                    id = "Your Android",
-                    title = R.string.tab_your_android,
-                    iconRes = R.drawable.rounded_android_24,
-                    category = R.string.cat_system,
-                    description = R.string.about_desc_your_android,
-                    aboutDescription = R.string.about_desc_your_android,
-                    showToggle = false,
-                    hasMoreSettings = false,
-                ) {
-                    override fun isEnabled(viewModel: com.sameerasw.essentials.viewmodels.MainViewModel) = true
-
-                    override fun onToggle(
-                        viewModel: com.sameerasw.essentials.viewmodels.MainViewModel,
-                        context: android.content.Context,
-                        enabled: Boolean,
-                    ) {
-                    }
-                }
-            }
-
-            LaunchedEffect(Unit) {
-                mainViewModel.check(context)
-            }
-
-            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
-                val statusBarHeightPx =
-                    with(LocalDensity.current) {
-                        WindowInsets.statusBars
-                            .asPaddingValues()
-                            .calculateTopPadding()
-                            .toPx()
-                    }
-
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                            .progressiveBlur(
-                                blurRadius = if (isBlurEnabled) 40f else 0f,
-                                height = statusBarHeightPx * 1.15f,
-                                direction = BlurDirection.TOP,
-                            ),
-                ) {
-                    YourAndroidContent(
-                        deviceInfo = deviceInfo,
-                        updatesViewModel = updatesViewModel,
-                        hasRunStartupAnimation = viewModel.hasRunStartupAnimation,
-                        onAnimationRun = { viewModel.hasRunStartupAnimation = true },
-                        exportLauncher = exportLauncher,
-                        importLauncher = importLauncher,
-                        backupAppListLauncher = backupAppListLauncher,
-                        viewModel = viewModel,
-                        onAddRepoClick = { showAddRepoSheet = true },
-                        onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
-                        modifier = Modifier.fillMaxSize(),
-                    )
-
-                    val localView = LocalView.current
-                    EssentialsFloatingToolbar(
-                        title = stringResource(R.string.tab_your_android),
-                        onBackClick = {
-                            finish()
-                        },
-                        floatingActionButton = {
-                            Box {
-                                FloatingActionButton(
-                                    onClick = {
-                                        HapticUtil.performVirtualKeyHaptic(localView)
-                                        if (gitHubUser != null) {
-                                            showFabProfileMenu = true
-                                        } else {
-                                            showGitHubAuthSheet = true
-                                        }
-                                    },
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    shape = MaterialTheme.shapes.large,
-                                    elevation =
-                                        FloatingActionButtonDefaults.elevation(
-                                            0.dp,
-                                            0.dp,
-                                            0.dp,
-                                            0.dp,
-                                        ),
-                                ) {
-                                    if (gitHubUser != null) {
-                                        AsyncImage(
-                                            model = gitHubUser!!.avatarUrl,
-                                            contentDescription = stringResource(R.string.action_profile),
-                                            contentScale = ContentScale.Crop,
-                                            modifier =
-                                                Modifier
-                                                    .size(24.dp)
-                                                    .clip(CircleShape),
-                                            placeholder = painterResource(id = R.drawable.brand_github),
-                                            error = painterResource(id = R.drawable.brand_github),
-                                        )
-                                    } else {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.brand_github),
-                                            contentDescription = stringResource(R.string.action_sign_in_github),
-                                        )
-                                    }
-                                }
-
-                                if (gitHubUser != null) {
-                                    SegmentedDropdownMenu(
-                                        expanded = showFabProfileMenu,
-                                        onDismissRequest = { showFabProfileMenu = false },
-                                    ) {
-                                        SegmentedDropdownMenuItem(
-                                            text = {
-                                                Text(
-                                                    gitHubUser!!.name ?: gitHubUser!!.login,
-                                                )
-                                            },
-                                            onClick = { showFabProfileMenu = false },
-                                            leadingIcon = {
-                                                Icon(
-                                                    painter = painterResource(id = R.drawable.brand_github),
-                                                    contentDescription = null,
-                                                )
-                                            },
-                                        )
-                                        SegmentedDropdownMenuItem(
-                                            text = { Text(stringResource(R.string.action_sign_out)) },
-                                            onClick = {
-                                                gitHubAuthViewModel.signOut(context)
-                                                showFabProfileMenu = false
-                                            },
-                                            leadingIcon = {
-                                                Icon(
-                                                    painter = painterResource(id = R.drawable.rounded_logout_24),
-                                                    contentDescription = null,
-                                                )
-                                            },
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                        modifier =
-                            Modifier
-                                .align(Alignment.BottomCenter)
-                                .zIndex(1f),
-                    )
-
-                    if (showGitHubAuthSheet) {
-                        GitHubAuthSheet(
-                            viewModel = gitHubAuthViewModel,
-                            onDismissRequest = { showGitHubAuthSheet = false },
-                        )
-                    }
-
-                    if (showAddRepoSheet) {
-                        AddRepoBottomSheet(
-                            viewModel = updatesViewModel,
-                            onDismissRequest = {
-                                showAddRepoSheet = false
-                                updatesViewModel.clearSearch()
-                            },
-                            onTrackClick = {
-                                showAddRepoSheet = false
-                                updatesViewModel.clearSearch()
-                            },
-                        )
-                    }
-
-                    if (repoToShowReleaseNotesFullName != null) {
-                        val trackedRepos by updatesViewModel.trackedRepos
-                        val repo =
-                            trackedRepos.find { it.fullName == repoToShowReleaseNotesFullName }
-                        if (repo != null) {
-                            val isNotesLoading = repo.latestReleaseBody.isNullOrBlank()
-                            UpdateBottomSheet(
-                                updateInfo =
-                                    com.sameerasw.essentials.domain.model.UpdateInfo(
-                                        versionName = repo.latestTagName,
-                                        releaseNotes = repo.latestReleaseBody ?: "",
-                                        downloadUrl = repo.downloadUrl ?: "",
-                                        releaseUrl = repo.latestReleaseUrl ?: "",
-                                        isUpdateAvailable = repo.isUpdateAvailable,
-                                    ),
-                                isChecking = isNotesLoading,
-                                onDismissRequest = { repoToShowReleaseNotesFullName = null },
-                            )
-                        } else {
-                            repoToShowReleaseNotesFullName = null
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun finish() {
-        super.finish()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(
-                OVERRIDE_TRANSITION_CLOSE,
-                R.anim.anim_stay,
-                R.anim.anim_slide_out_top,
-            )
-        } else {
-            @Suppress("DEPRECATION")
-            overridePendingTransition(R.anim.anim_stay, R.anim.anim_slide_out_top)
-        }
+        AppRoutes.redirectToMain(this)
     }
 }
 
@@ -539,61 +239,10 @@ fun YourAndroidContent(
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val scrollState = rememberScrollState()
-    val overscrollOffset =
-        remember {
-            androidx.compose.animation.core
-                .Animatable(0f)
-        }
-    val scope = rememberCoroutineScope()
     val view = LocalView.current
-
-    val nestedScrollConnection =
-        remember {
-            object : androidx.compose.ui.input.nestedscroll.NestedScrollConnection {
-                override fun onPreScroll(
-                    available: androidx.compose.ui.geometry.Offset,
-                    source: androidx.compose.ui.input.nestedscroll.NestedScrollSource,
-                ): androidx.compose.ui.geometry.Offset {
-                    if (available.y < 0 && overscrollOffset.value > 0) {
-                        val toConsume =
-                            if (overscrollOffset.value + available.y >= 0) available.y else -overscrollOffset.value
-                        scope.launch {
-                            overscrollOffset.snapTo(overscrollOffset.value + toConsume)
-                        }
-                        return androidx.compose.ui.geometry
-                            .Offset(0f, toConsume)
-                    }
-                    return androidx.compose.ui.geometry.Offset.Zero
-                }
-
-                override fun onPostScroll(
-                    consumed: androidx.compose.ui.geometry.Offset,
-                    available: androidx.compose.ui.geometry.Offset,
-                    source: androidx.compose.ui.input.nestedscroll.NestedScrollSource,
-                ): androidx.compose.ui.geometry.Offset {
-                    if (available.y > 0 && scrollState.value == 0) {
-                        val prevValue = overscrollOffset.value
-                        if (prevValue >= 350f) return androidx.compose.ui.geometry.Offset.Zero
-
-                        val newValue = (prevValue + available.y * 0.5f).coerceAtMost(350f)
-                        scope.launch {
-                            overscrollOffset.snapTo(newValue)
-                        }
-
-                        // Haptic feedback when stretched significantly
-                        if (prevValue < 300f && newValue >= 300f) {
-                            HapticUtil.performUIHaptic(view)
-                        }
-
-                        return androidx.compose.ui.geometry
-                            .Offset(0f, available.y)
-                    }
-                    return super.onPostScroll(consumed, available, source)
-                }
-            }
-        }
-
     var isStartupAnimationRunning by remember { mutableStateOf(hasRunStartupAnimation) }
+    val headerState = rememberPullTitleHeaderState(minHeight = 320.dp, maxHeight = 480.dp)
+    val androidLogoRes = remember(deviceInfo) { DeviceImageMapper.getAndroidLogo(deviceInfo) }
 
     LaunchedEffect(hasRunStartupAnimation) {
         if (!hasRunStartupAnimation) {
@@ -636,24 +285,8 @@ fun YourAndroidContent(
                     blurRadius = if (isBlurEnabled) 40f else 0f,
                     height = with(LocalDensity.current) { 150.dp.toPx() },
                     direction = BlurDirection.BOTTOM,
-                ).nestedScroll(nestedScrollConnection)
-                .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            val event = awaitPointerEvent()
-                            if (event.type == androidx.compose.ui.input.pointer.PointerEventType.Release && overscrollOffset.value > 0) {
-                                scope.launch {
-                                    overscrollOffset.animateTo(
-                                        0f,
-                                        androidx.compose.animation.core.spring(
-                                            stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow,
-                                        ),
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
+                )
+                .nestedScroll(headerState.nestedScrollConnection)
                 .scrollMotionBlur(scrollState, enabled = mainViewModel.isMotionBlurEnabled.value)
                 .verticalScroll(scrollState)
                 .padding(
@@ -668,11 +301,36 @@ fun YourAndroidContent(
                 ),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        PullTitleHeader(
+            title = deviceInfo.deviceName,
+            state = headerState,
+            expandableContent =
+                if (androidLogoRes != 0) {
+                    {
+                        Icon(
+                            painter = painterResource(id = androidLogoRes),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .aspectRatio(1f)
+                                    .padding(vertical = 12.dp)
+                                    .graphicsLayer {
+                                        alpha = contentAlphaState.value
+                                        translationY = contentOffsetState.value.toPx()
+                                    },
+                        )
+                    }
+                } else {
+                    null
+                },
+        )
+
         DeviceHeroCard(
             deviceInfo = deviceInfo,
             contentAlpha = { contentAlphaState.value },
             contentOffset = { contentOffsetState.value },
-            overscrollOffset = overscrollOffset.value,
         )
 
         // Apps Section

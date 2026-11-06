@@ -822,6 +822,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_time_tap_opens_clock_title,
+                            R.string.island_show_time_title,
+                            "island_show_time_battery",
+                        ),
+                        SearchSetting(
                             R.string.island_show_battery_title,
                             R.string.island_battery_style_title,
                             "island_show_battery",
@@ -888,6 +893,11 @@ object FeatureRegistry {
                             "island_notif_hub",
                         ),
                         SearchSetting(
+                            R.string.island_notif_themed_bubble_title,
+                            R.string.island_notif_hub_title,
+                            "island_notif_hub",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
@@ -915,7 +925,7 @@ object FeatureRegistry {
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
                     context: Context,
-                ) = viewModel.isAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
+                ) = viewModel.isAccessibilityEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,
@@ -1805,6 +1815,18 @@ object FeatureRegistry {
                             R.string.search_remap_flashlight_desc,
                             "flashlight_toggle",
                             R.array.keywords_flashlight,
+                        ),
+                        SearchSetting(
+                            R.string.search_remap_power_camera_flip_title,
+                            R.string.search_remap_power_camera_flip_desc,
+                            "power_camera_flip",
+                            R.array.keywords_power_camera_flip,
+                        ),
+                        SearchSetting(
+                            R.string.search_remap_power_hold_title,
+                            R.string.search_remap_power_hold_desc,
+                            "power_hold",
+                            R.array.keywords_power_hold,
                         ),
                         SearchSetting(
                             R.string.search_flashlight_pocket_title,

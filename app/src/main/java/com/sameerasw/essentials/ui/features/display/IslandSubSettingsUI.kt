@@ -42,6 +42,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import kotlin.math.ceil
+import androidx.compose.ui.platform.LocalConfiguration
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -243,6 +245,13 @@ fun IslandPlacementSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_camera_size"),
             )
 
+            val configuration = LocalConfiguration.current
+            val maxIslandWidth =
+                remember(configuration.screenWidthDp, configuration.screenHeightDp) {
+                    (ceil(maxOf(configuration.screenWidthDp, configuration.screenHeightDp) / 10f) * 10f)
+                        .coerceAtLeast(500f)
+                }
+
             ConfigSliderItem(
                 title = stringResource(R.string.island_max_width_title),
                 value = viewModel.islandMaxWidth.floatValue,
@@ -250,7 +259,7 @@ fun IslandPlacementSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setIslandMaxWidth(it)
                 },
-                valueRange = 150f..500f,
+                valueRange = 150f..maxIslandWidth,
                 increment = 10f,
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.1f dp".format(it) },
@@ -265,7 +274,7 @@ fun IslandPlacementSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setIslandExpandedWidth(it)
                 },
-                valueRange = 200f..500f,
+                valueRange = 200f..maxIslandWidth,
                 increment = 10f,
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.1f dp".format(it) },
@@ -827,6 +836,18 @@ fun IslandBehaviorSettingsUI(
                     viewModel.setIslandHideInOwnerApp(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_hide_in_owner_app"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_note_24,
+                title = stringResource(R.string.island_hide_media_in_owner_app_title),
+                isChecked = viewModel.isIslandHideInOwnerApp.value || viewModel.isIslandHideMediaInOwnerApp.value,
+                enabled = !viewModel.isIslandHideInOwnerApp.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandHideMediaInOwnerApp(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_hide_media_in_owner_app"),
             )
 
             IconToggleItem(

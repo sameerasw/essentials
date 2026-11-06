@@ -620,6 +620,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tab_apps">Aplicaciones</string>
     <string name="tab_freeze_subtitle">Aplicaciones desactivadas</string>
     <string name="tab_diy_subtitle">Hazlo tú mismo</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Buscar y administrar aplicaciones</string>
     <string name="feat_app_updates_title">Actualizaciones de aplicaciones</string>
     <string name="tab_app_updates_title">Actualizaciones de aplicaciones</string>
@@ -1466,7 +1468,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="feat_notification_snoozing_title">Posponer notificaciones</string>
     <string name="feat_notification_snoozing_desc">Reprogramar notificaciones</string>
     <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
-    <string name="feat_power_battery_title">Poder y batería</string>
+    <string name="feat_power_battery_title">Energía y batería</string>
     <string name="feat_power_battery_desc">Configura las politicas del ahorro de batería</string>
     <string name="feat_pixel_searchbar_title">Reemplazar barra de búsqueda</string>
     <string name="feat_pixel_searchbar_desc">Remplace la barra de búsqueda predeterminada de Pixel Launcher</string>
@@ -1536,7 +1538,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="setting_app_icon_desc">Personaliza el icono que se muestra en la pantalla de inicio</string>
     <string name="app_icon_default">Predeterminado</string>
     <string name="app_icon_legacy">Heredado</string>
-    <string name="app_icon_black">Dinamico</string>
+    <string name="app_icon_black">Dinámico</string>
     <string name="watch_notif_sync_choose_apps">Selecciona las apps</string>
     <string name="watch_notif_sync_choose_apps_desc">Solo las apps seleccionadas se sincronizarán con el reloj</string>
     <string name="watch_watchface_title">Esfera de reloj </string>
@@ -1597,7 +1599,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="settings_translated_texts_desc">%d editado(s) pendiente - presiona para enviar o descartar</string>
     <string name="label_online_help_media">Ayuda para medios en linea</string>
     <string name="feat_aod_wallpaper_use_album_art">Usar la portada del album</string>
-    <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
+    <string name="feat_aod_wallpaper_share_lock">Compartir con el fondo de pantalla de la pantalla de bloqueo</string>
     <string name="feat_aod_wallpaper_title">Mostrar fondo de pantalla en AOD</string>
     <string name="icon_network_speed">Velocidad de internet</string>
     <string name="feat_transparent_navigation_bar_desc">Hace que la barra de navegacion sea transparente</string>
@@ -1613,11 +1615,11 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="perm_bubbles_title">Burbujas Flotantes</string>
     <string name="duo_auto_detect_title">Detectar Cámara automaticamente</string>
     <string name="duo_auto_detect_desc">Automaticamente localiza la cámara frontal</string>
-    <string name="duo_camera_offset_x_title">Posicion horizontal</string>
-    <string name="duo_camera_offset_y_title">Posicuon vertical</string>
+    <string name="duo_camera_offset_x_title">Posición horizontal</string>
+    <string name="duo_camera_offset_y_title">Posición vertical</string>
     <string name="duo_camera_size_title">Tamaño de la cámara</string>
     <string name="duo_ring_radius_title">Radio del anillo</string>
-    <string name="duo_show_battery_title">Bateria</string>
+    <string name="duo_show_battery_title">Batería</string>
     <string name="duo_show_battery_percentage_title">Porcentaje de Bateria</string>
     <string name="cat_networks">Conexiones</string>
     <string name="duo_battery_low_color_title">Bateria baja (&lt;20%)</string>
@@ -1659,7 +1661,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="duo_enable_desc">El que no se dobla, pero hace cosas geniales</string>
     <string name="duo_enable_title">Habilitar Duo</string>
     <string name="duo_rotate_album_art_title">Girar caratula del album</string>
-    <string name="feat_status_glance_title">Vistaso del estado</string>
+    <string name="feat_status_glance_title">Vistazo del estado</string>
     <string name="feat_status_glance_desc">En una superposicion para el estado</string>
     <string name="status_glance_enable_title">Habilitar Vistaso del estado</string>
     <string name="status_glance_enable_desc">Muestra un vistaso del estado</string>
@@ -1689,6 +1691,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_camera_position_right">Derecha</string>
     <string name="island_camera_position_center">Centrar</string>
     <string name="island_hide_in_owner_app_title">Ocultar la notificación dentro de la app activa</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="about_desc_conscious_gate">Agrega una breve pantalla de puerta de atención plena antes de abrir las aplicaciones que has elegido usar con más intencionalidad, como las redes sociales.
 
 El botón Continuar permanece deshabilitado durante unos segundos para que tengas un momento para decidir, y la pausa puede reaparecer opcionalmente si sigues usando la aplicación más allá de un tiempo determinado</string>
@@ -1889,12 +1892,13 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
     <string name="island_chips_title">Island chips</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
-    <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
+    <string name="feat_aod_wallpaper_compat_title">Modo de compatibilidad</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
-    <string name="island_themed_app_icons_title">Use themed app icons</string>
+    <string name="island_themed_app_icons_title">Usar iconos de aplicaciones tematizados </string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -1922,6 +1926,17 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_media_keep_when_paused_title">Mantener en espera cuando se pausa</string>
     <string name="island_media_show_previous_title">Botón de canción anterior</string>
     <string name="island_media_show_like_title">Botón de \"me gusta\"</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_hide_in_fullscreen_title">Ocultar en pantalla completa</string>
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
+    <string name="island_battery_icon_conditional_title">Icono para algunas condiciones</string>
+    <string name="feat_aod_wallpaper_keep_on_media">Mostrar cuando los medios se estan reproduciendo</string>
+    <string name="feat_hilight_desc">Ilumina los LEDs traseros para notificaciones y progreso en vivo</string>
+    <string name="feat_hilight_notifications_title">Efectos de notificaciones</string>
+    <string name="hilight_notifications_desc">Reproduce el efecto propio de cada aplicación cuando las notificaciones llegan</string>
+    <string name="hilight_progress_title">Progreso en vivo</string>
+    <string name="island_animation_speed_title">Velocidad de animación</string>
+    <string name="island_section_icon_color">Color de iconos</string>
+    <string name="app_colors_custom">Personalizado </string>
+    <string name="island_themed_text_title">Color de texto tematizado </string>
 </resources>

@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials.ui.activities
 
+import com.sameerasw.essentials.ui.navigation.ProvideBottomBar
+import com.sameerasw.essentials.ui.navigation.BottomBarSpec
+import com.sameerasw.essentials.ui.navigation.AppRoutes
+import com.sameerasw.essentials.ui.navigation.AppRoute
 import android.Manifest
 import android.app.Activity
 import android.appwidget.AppWidgetHost
@@ -20,7 +24,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -97,189 +100,179 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
-class PixelSearchbarSettingsActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            val viewModel: MainViewModel = viewModel()
-            val context = LocalContext.current
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun PixelSearchbarSettingsScreen(onBack: () -> Unit) {
+    val viewModel: MainViewModel = viewModel()
+    val context = LocalContext.current
 
-            remember(context) { viewModel.check(context) }
+    remember(context) { viewModel.check(context) }
 
-            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
-            var showHelpSheet by remember { mutableStateOf(false) }
+    val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+    var showHelpSheet by remember { mutableStateOf(false) }
 
-            val pixelSearchbarFeature =
-                remember {
-                    object : Feature(
-                        id = "Pixel Searchbar",
-                        title = R.string.pixel_searchbar_settings_title,
-                        iconRes = R.drawable.rounded_search_24,
-                        category = R.string.cat_display,
-                        description = R.string.feat_pixel_searchbar_desc,
-                        aboutDescription = R.string.about_desc_pixel_searchbar,
-                        permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
-                        showToggle = true,
-                        hasMoreSettings = true,
-                    ) {
-                        override fun isEnabled(viewModel: MainViewModel) = viewModel.isPixelSearchbarEnabled.value
+    val pixelSearchbarFeature =
+        remember {
+            object : Feature(
+                id = "Pixel Searchbar",
+                title = R.string.pixel_searchbar_settings_title,
+                iconRes = R.drawable.rounded_search_24,
+                category = R.string.cat_display,
+                description = R.string.feat_pixel_searchbar_desc,
+                aboutDescription = R.string.about_desc_pixel_searchbar,
+                permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+                showToggle = true,
+                hasMoreSettings = true,
+            ) {
+                override fun isEnabled(viewModel: MainViewModel) = viewModel.isPixelSearchbarEnabled.value
 
-                        override fun onToggle(
-                            viewModel: MainViewModel,
-                            context: Context,
-                            enabled: Boolean,
-                        ) {
-                            viewModel.setPixelSearchbarEnabled(enabled, context)
-                        }
-                    }
-                }
-
-            val isBlurEnabled by viewModel.isBlurEnabled
-
-            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
-                Scaffold(
-                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                ) { _ ->
-                    val density = LocalDensity.current
-                    val statusBarHeightPx =
-                        with(density) {
-                            WindowInsets.statusBars
-                                .asPaddingValues()
-                                .calculateTopPadding()
-                                .toPx()
-                        }
-
-                    val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
-                    val scrollState = rememberScrollState()
-                    val view = LocalView.current
-                    val minHeaderHeight = 200.dp
-                    val maxHeaderHeight = 400.dp
-                    var headerHeight by remember { mutableStateOf(minHeaderHeight) }
-
-                    val nestedScrollConnection =
-                        remember {
-                            object : NestedScrollConnection {
-                                override fun onPreScroll(
-                                    available: Offset,
-                                    source: NestedScrollSource,
-                                ): Offset {
-                                    val delta = available.y
-                                    if (delta < 0 && headerHeight > minHeaderHeight) {
-                                        val oldHeight = headerHeight
-                                        headerHeight =
-                                            with(density) {
-                                                (oldHeight.toPx() + delta).toDp()
-                                            }.coerceAtLeast(minHeaderHeight)
-                                        val consumed = oldHeight - headerHeight
-                                        return Offset(0f, with(density) { -consumed.toPx() })
-                                    }
-                                    return Offset.Zero
-                                }
-
-                                override fun onPostScroll(
-                                    consumed: Offset,
-                                    available: Offset,
-                                    source: NestedScrollSource,
-                                ): Offset {
-                                    val delta = available.y
-                                    if (delta > 0) {
-                                        val oldHeight = headerHeight
-                                        headerHeight =
-                                            with(density) {
-                                                (oldHeight.toPx() + delta).toDp()
-                                            }.coerceAtMost(maxHeaderHeight)
-
-                                        if (headerHeight == maxHeaderHeight && oldHeight < maxHeaderHeight) {
-                                            HapticUtil.performLightHaptic(view)
-                                        }
-
-                                        val produced = headerHeight - oldHeight
-                                        return Offset(0f, with(density) { produced.toPx() })
-                                    }
-                                    return Offset.Zero
-                                }
-                            }
-                        }
-
-                    Box(
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .progressiveBlur(
-                                    blurRadius = if (isBlurEnabled) 40f else 0f,
-                                    height = statusBarHeightPx * 1.15f,
-                                    direction = BlurDirection.TOP,
-                                ),
-                    ) {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxSize()
-                                    .progressiveBlur(
-                                        blurRadius = if (isBlurEnabled) 40f else 0f,
-                                        height = with(density) { 150.dp.toPx() },
-                                        direction = BlurDirection.BOTTOM,
-                                    )
-                                    .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
-                                    .nestedScroll(nestedScrollConnection)
-                                    .verticalScroll(scrollState),
-                        ) {
-                            Spacer(
-                                modifier =
-                                    Modifier.height(
-                                        WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
-                                    ),
-                            )
-
-                            LottieFeatureAnimation(
-                                resId = R.raw.searchbar_motion,
-                                height = headerHeight,
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                            )
-
-                            PixelSearchbarSettingsUI(
-                                viewModel = viewModel,
-                                modifier = Modifier.padding(top = 4.dp),
-                            )
-
-                            Spacer(
-                                modifier =
-                                    Modifier.height(
-                                        WindowInsets.navigationBars
-                                            .asPaddingValues()
-                                            .calculateBottomPadding() + 150.dp,
-                                    ),
-                            )
-                        }
-
-                        EssentialsFloatingToolbar(
-                            title = stringResource(R.string.pixel_searchbar_settings_title),
-                            onBackClick = { finish() },
-                            modifier =
-                                Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .zIndex(1f),
-                            onHelpClick = {
-                                showHelpSheet = true
-                            },
-                        )
-
-                        if (showHelpSheet) {
-                            FeatureHelpBottomSheet(
-                                onDismissRequest = { showHelpSheet = false },
-                                feature = pixelSearchbarFeature,
-                                viewModel = viewModel,
-                            )
-                        }
-
-                        ShakeForHelp(feature = pixelSearchbarFeature, viewModel = viewModel)
-                    }
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {
+                    viewModel.setPixelSearchbarEnabled(enabled, context)
                 }
             }
         }
+
+    val isBlurEnabled by viewModel.isBlurEnabled
+
+    EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
+        Scaffold(
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        ) { _ ->
+            val density = LocalDensity.current
+            val statusBarHeightPx =
+                with(density) {
+                    WindowInsets.statusBars
+                        .asPaddingValues()
+                        .calculateTopPadding()
+                        .toPx()
+                }
+
+            val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
+            val scrollState = rememberScrollState()
+            val view = LocalView.current
+            val minHeaderHeight = 200.dp
+            val maxHeaderHeight = 400.dp
+            var headerHeight by remember { mutableStateOf(minHeaderHeight) }
+
+            val nestedScrollConnection =
+                remember {
+                    object : NestedScrollConnection {
+                        override fun onPreScroll(
+                            available: Offset,
+                            source: NestedScrollSource,
+                        ): Offset {
+                            val delta = available.y
+                            if (delta < 0 && headerHeight > minHeaderHeight) {
+                                val oldHeight = headerHeight
+                                headerHeight =
+                                    with(density) {
+                                        (oldHeight.toPx() + delta).toDp()
+                                    }.coerceAtLeast(minHeaderHeight)
+                                val consumed = oldHeight - headerHeight
+                                return Offset(0f, with(density) { -consumed.toPx() })
+                            }
+                            return Offset.Zero
+                        }
+
+                        override fun onPostScroll(
+                            consumed: Offset,
+                            available: Offset,
+                            source: NestedScrollSource,
+                        ): Offset {
+                            val delta = available.y
+                            if (delta > 0) {
+                                val oldHeight = headerHeight
+                                headerHeight =
+                                    with(density) {
+                                        (oldHeight.toPx() + delta).toDp()
+                                    }.coerceAtMost(maxHeaderHeight)
+
+                                if (headerHeight == maxHeaderHeight && oldHeight < maxHeaderHeight) {
+                                    HapticUtil.performLightHaptic(view)
+                                }
+
+                                val produced = headerHeight - oldHeight
+                                return Offset(0f, with(density) { produced.toPx() })
+                            }
+                            return Offset.Zero
+                        }
+                    }
+                }
+
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
+            ) {
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
+                            .nestedScroll(nestedScrollConnection)
+                            .verticalScroll(scrollState),
+                ) {
+                    Spacer(
+                        modifier =
+                            Modifier.height(
+                                WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                            ),
+                    )
+
+                    LottieFeatureAnimation(
+                        resId = R.raw.searchbar_motion,
+                        height = headerHeight,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+
+                    PixelSearchbarSettingsUI(
+                        viewModel = viewModel,
+                        modifier = Modifier.padding(top = 4.dp),
+                    )
+
+                    Spacer(
+                        modifier =
+                            Modifier.height(
+                                WindowInsets.navigationBars
+                                    .asPaddingValues()
+                                    .calculateBottomPadding() + 150.dp,
+                            ),
+                    )
+                }
+
+                ProvideBottomBar(
+                    route = AppRoute.PixelSearchbarSettings,
+                    spec =
+                        BottomBarSpec(
+                            title = stringResource(R.string.pixel_searchbar_settings_title),
+                            onBack = onBack,
+                            onHelpClick = { showHelpSheet = true },
+                        ),
+                )
+
+                if (showHelpSheet) {
+                    FeatureHelpBottomSheet(
+                        onDismissRequest = { showHelpSheet = false },
+                        feature = pixelSearchbarFeature,
+                        viewModel = viewModel,
+                    )
+                }
+
+                ShakeForHelp(feature = pixelSearchbarFeature, viewModel = viewModel)
+            }
+        }
+    }
+}
+
+class PixelSearchbarSettingsActivity : android.app.Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AppRoutes.redirectToMain(this)
     }
 }
 

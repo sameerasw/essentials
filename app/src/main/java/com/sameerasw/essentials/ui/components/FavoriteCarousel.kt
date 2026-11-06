@@ -9,6 +9,10 @@
 
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -114,139 +118,192 @@ fun FavoriteCarousel(
                     .height(110.dp),
         ) { index ->
             val feature = pinnedFeatures[index]
-            val view = LocalView.current
-            val resolvedTitle = stringResource(id = feature.title)
-            var showMenu by remember { mutableStateOf(false) }
+            FavoriteTile(
+                feature = feature,
+                clipModifier = Modifier.maskClip(MaterialTheme.shapes.large),
+                onFeatureClick = onFeatureClick,
+                onFeatureLongClick = onFeatureLongClick,
+                onReorderClick = onReorderClick,
+            )
+        }
+    }
+}
 
-            val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
-            androidx.compose.runtime.DisposableEffect(showMenu) {
-                if (showMenu) {
-                    menuState.activeId = feature.id
-                } else {
-                    if (menuState.activeId == feature.id) {
-                        menuState.activeId = null
-                    }
-                }
-                onDispose {
-                    if (menuState.activeId == feature.id) {
-                        menuState.activeId = null
-                    }
-                }
+@Composable
+fun FavoriteGrid(
+    pinnedKeys: List<String>,
+    onFeatureClick: (Feature) -> Unit,
+    onFeatureLongClick: (Feature) -> Unit,
+    onReorderClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+) {
+    val pinnedFeatures =
+        remember(pinnedKeys) {
+            val featuresMap = FeatureRegistry.ALL_FEATURES.associateBy { it.id }
+            pinnedKeys.mapNotNull { featuresMap[it] }
+        }
+
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(140.dp),
+        modifier = modifier,
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        items(pinnedFeatures, key = { it.id }) { feature ->
+            Box(modifier = Modifier.height(110.dp)) {
+                FavoriteTile(
+                    feature = feature,
+                    clipModifier = Modifier.clip(MaterialTheme.shapes.large),
+                    onFeatureClick = onFeatureClick,
+                    onFeatureLongClick = onFeatureLongClick,
+                    onReorderClick = onReorderClick,
+                )
             }
+        }
+    }
+}
 
-            val isBlurred = menuState.activeId != null && menuState.activeId != feature.id
-            val blurRadius by animateDpAsState(
-                targetValue = if (isBlurred) 10.dp else 0.dp,
-                animationSpec = tween(durationMillis = 500),
-                label = "blur",
-            )
-            val alpha by animateFloatAsState(
-                targetValue = if (isBlurred) 0.5f else 1f,
-                animationSpec = tween(durationMillis = 500),
-                label = "alpha",
-            )
+@Composable
+private fun FavoriteTile(
+    feature: Feature,
+    clipModifier: Modifier,
+    onFeatureClick: (Feature) -> Unit,
+    onFeatureLongClick: (Feature) -> Unit,
+    onReorderClick: () -> Unit,
+) {
+    val view = LocalView.current
+    val resolvedTitle = stringResource(id = feature.title)
+    var showMenu by remember { mutableStateOf(false) }
 
-            val isDarkTheme = isSystemInDarkTheme()
-            val iconColor =
-                if (isDarkTheme) {
-                    ColorUtil.getPastelColorFor(resolvedTitle)
-                } else {
-                    ColorUtil.getVibrantColorFor(resolvedTitle)
-                }
+    val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
+    androidx.compose.runtime.DisposableEffect(showMenu) {
+        if (showMenu) {
+            menuState.activeId = feature.id
+        } else {
+            if (menuState.activeId == feature.id) {
+                menuState.activeId = null
+            }
+        }
+        onDispose {
+            if (menuState.activeId == feature.id) {
+                menuState.activeId = null
+            }
+        }
+    }
 
+    val isBlurred = menuState.activeId != null && menuState.activeId != feature.id
+    val blurRadius by animateDpAsState(
+        targetValue = if (isBlurred) 10.dp else 0.dp,
+        animationSpec = tween(durationMillis = 500),
+        label = "blur",
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (isBlurred) 0.5f else 1f,
+        animationSpec = tween(durationMillis = 500),
+        label = "alpha",
+    )
+
+    val isDarkTheme = isSystemInDarkTheme()
+    val iconColor =
+        if (isDarkTheme) {
+            ColorUtil.getPastelColorFor(resolvedTitle)
+        } else {
+            ColorUtil.getVibrantColorFor(resolvedTitle)
+        }
+
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .alpha(alpha)
+                .then(clipModifier)
+                .background(MaterialTheme.colorScheme.surfaceBright)
+                .pointerInput(feature) {
+                    detectTapGestures(
+                        onLongPress = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            showMenu = true
+                        },
+                        onTap = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onFeatureClick(feature)
+                        },
+                    )
+                },
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .blur(blurRadius)
+                    .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
             Box(
                 modifier =
                     Modifier
-                        .fillMaxSize()
-                        .alpha(alpha)
-                        .maskClip(MaterialTheme.shapes.large)
-                        .background(MaterialTheme.colorScheme.surfaceBright)
-                        .pointerInput(feature) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    showMenu = true
-                                },
-                                onTap = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    onFeatureClick(feature)
-                                },
-                            )
-                        },
+                        .size(40.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = CircleShape,
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
-                Column(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .blur(blurRadius)
-                            .padding(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(40.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.surfaceBright,
-                                    shape = CircleShape,
-                                ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            painter = painterResource(id = feature.iconRes),
-                            contentDescription = resolvedTitle,
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor,
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = resolvedTitle,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .basicMarquee(),
-                    )
-                }
-
-                SegmentedDropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false },
-                ) {
-                    SegmentedDropdownMenuItem(
-                        text = { Text(stringResource(R.string.action_reorder)) },
-                        onClick = {
-                            showMenu = false
-                            onReorderClick()
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.rounded_drag_handle_24),
-                                contentDescription = null,
-                            )
-                        },
-                    )
-
-                    SegmentedDropdownMenuItem(
-                        text = { Text(stringResource(R.string.action_unpin)) },
-                        onClick = {
-                            showMenu = false
-                            onFeatureLongClick(feature)
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.rounded_bookmark_remove_24),
-                                contentDescription = null,
-                            )
-                        },
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = feature.iconRes),
+                    contentDescription = resolvedTitle,
+                    modifier = Modifier.size(24.dp),
+                    tint = iconColor,
+                )
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = resolvedTitle,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .basicMarquee(),
+            )
+        }
+
+        SegmentedDropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false },
+        ) {
+            SegmentedDropdownMenuItem(
+                text = { Text(stringResource(R.string.action_reorder)) },
+                onClick = {
+                    showMenu = false
+                    onReorderClick()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_drag_handle_24),
+                        contentDescription = null,
+                    )
+                },
+            )
+
+            SegmentedDropdownMenuItem(
+                text = { Text(stringResource(R.string.action_unpin)) },
+                onClick = {
+                    showMenu = false
+                    onFeatureLongClick(feature)
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_bookmark_remove_24),
+                        contentDescription = null,
+                    )
+                },
+            )
         }
     }
 }

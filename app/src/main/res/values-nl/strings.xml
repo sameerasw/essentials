@@ -619,6 +619,8 @@
     <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Uitgeschakelde apps</string>
     <string name="tab_diy_subtitle">Doe-het-zelf</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Vind en beheer apps</string>
     <string name="feat_app_updates_title">Appupdates</string>
     <string name="tab_app_updates_title">Appupdates</string>
@@ -1686,6 +1688,7 @@
     <string name="island_line_peek_title">Één regel weergave</string>
     <string name="island_line_peek_desc">Toon kort updates op het eiland, en klap daarna weer in</string>
     <string name="island_hide_in_owner_app_title">Verberg complicaties in de app</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_dismiss_on_outside_title">Klap in bij activiteit buiten het eiland</string>
     <string name="duo_enable_title">Duo Inschakelen</string>
     <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
@@ -1721,7 +1724,9 @@
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Use themed app icons</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

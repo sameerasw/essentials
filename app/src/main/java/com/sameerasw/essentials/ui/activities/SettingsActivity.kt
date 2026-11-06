@@ -9,6 +9,11 @@
 
 package com.sameerasw.essentials
 
+import com.sameerasw.essentials.ui.navigation.AppRoutes
+import com.sameerasw.essentials.BuildConfig
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.sameerasw.essentials.ui.components.rememberPullTitleHeaderState
+import com.sameerasw.essentials.ui.components.PullTitleHeader
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.activities.WallpaperStagingActivity
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
@@ -145,157 +150,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
-class SettingsActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModels()
-
-    private val shizukuPermissionResultListener =
-        Shizuku.OnRequestPermissionResultListener { _, grantResult ->
-            if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                viewModel.check(this)
-            }
-        }
-
-    @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+class SettingsActivity : android.app.Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        val isDarkMode =
-            (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        window.setBackgroundDrawableResource(if (isDarkMode) android.R.color.black else R.color.app_window_background)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.isNavigationBarContrastEnforced = false
-        }
-        // Register Shizuku permission listener
-        Shizuku.addRequestPermissionResultListener(shizukuPermissionResultListener)
-        setContent {
-            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
-            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
-                val context = LocalContext.current
-                LocalView.current
-
-                var showBugReportSheet by remember { mutableStateOf(false) }
-
-                LaunchedEffect(Unit) {
-                    viewModel.check(context)
-                }
-
-                if (showBugReportSheet) {
-                    BugReportBottomSheet(
-                        viewModel = viewModel,
-                        onDismissRequest = { showBugReportSheet = false },
-                    )
-                }
-
-                val statusBarHeightPx =
-                    with(LocalDensity.current) {
-                        WindowInsets.statusBars
-                            .asPaddingValues()
-                            .calculateTopPadding()
-                            .toPx()
-                    }
-                val statusBarHeight =
-                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-
-                val isBlurEnabled by viewModel.isBlurEnabled
-                val isRippleEnabled by viewModel.isRippleEnabled
-                var iconRippleTrigger by remember { mutableStateOf(0) }
-                var iconRippleOrigin by remember { mutableStateOf(Offset.Zero) }
-
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                            .liquidRipple(
-                                trigger = iconRippleTrigger,
-                                origin = iconRippleOrigin,
-                                enabled = isRippleEnabled,
-                                durationMillis = 2800,
-                                amplitudeDp = 34f,
-                                frequency = 12f,
-                                decay = 4.5f,
-                                speedDp = 1400f,
-                            )
-                            .progressiveBlur(
-                                blurRadius = if (isBlurEnabled) 40f else 0f,
-                                height = statusBarHeightPx * 1.15f,
-                                direction = BlurDirection.TOP,
-                            ),
-                ) {
-                    val contentPadding =
-                        PaddingValues(
-                            top = statusBarHeight,
-                            bottom = 150.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                        )
-
-                    val expandPermissions = intent.getBooleanExtra("expand_permissions", false)
-
-                    SettingsContent(
-                        viewModel = viewModel,
-                        contentPadding = contentPadding,
-                        expandPermissionsInitial = expandPermissions,
-                        onAppIconSelectedWithPosition = { _, pos ->
-                            iconRippleOrigin = pos
-                            iconRippleTrigger++
-                        },
-                        onAvatarLongClickWithPosition = { pos ->
-                            iconRippleOrigin = pos
-                            iconRippleTrigger++
-                        },
-                        onRippleToggleEnabledWithPosition = { pos ->
-                            iconRippleOrigin = pos
-                            iconRippleTrigger++
-                        },
-                        modifier =
-                            Modifier
-                                .progressiveBlur(
-                                    blurRadius = if (isBlurEnabled) 40f else 0f,
-                                    height = with(LocalDensity.current) { 150.dp.toPx() },
-                                    direction = BlurDirection.BOTTOM,
-                                ),
-                    )
-
-                    EssentialsFloatingToolbar(
-                        title = stringResource(R.string.label_settings),
-                        onBackClick = { finish() },
-                        modifier =
-                            Modifier
-                                .align(Alignment.BottomCenter)
-                                .zIndex(1f),
-                        fabAction = { showBugReportSheet = true },
-                        fabIconRes = R.drawable.rounded_bug_report_24,
-                        fabContentDescription = stringResource(R.string.action_report_bug),
-                    )
-                }
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.check(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Shizuku.removeRequestPermissionResultListener(shizukuPermissionResultListener)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray,
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode in 1001..1007) {
-            viewModel.check(this)
-        }
+        AppRoutes.redirectToMain(this)
     }
 }
 
@@ -597,6 +455,8 @@ fun SettingsContent(
     val sentryMode by viewModel.sentryReportMode
     val isMotionBlurEnabled by viewModel.isMotionBlurEnabled
     val scrollState = rememberScrollState()
+    val appVersion = remember { "v${BuildConfig.VERSION_NAME}" }
+    val headerState = rememberPullTitleHeaderState()
     var permissionsSectionY by remember { mutableStateOf<Float?>(null) }
 
     LaunchedEffect(expandPermissionsInitial, permissionsSectionY) {
@@ -609,6 +469,7 @@ fun SettingsContent(
         modifier =
             modifier
                 .fillMaxSize()
+                .nestedScroll(headerState.nestedScrollConnection)
                 .scrollMotionBlur(scrollState, enabled = isMotionBlurEnabled)
                 .verticalScroll(scrollState)
                 .padding(contentPadding),
@@ -616,6 +477,12 @@ fun SettingsContent(
         horizontalAlignment = Alignment.Start,
     ) {
         val view = LocalView.current
+
+        PullTitleHeader(
+            title = stringResource(R.string.label_settings),
+            caption = appVersion,
+            state = headerState,
+        )
 
         // Help & Guides
         RoundedCardContainer {
@@ -738,7 +605,7 @@ fun SettingsContent(
             )
 
             val defaultTab by viewModel.defaultTab
-            val availableTabs = remember { DIYTabs.entries }
+            val availableTabs = remember { DIYTabs.entries.filter { it != DIYTabs.SETTINGS } }
             DefaultTabPicker(
                 selectedTab = defaultTab,
                 onTabSelected = { viewModel.setDefaultTab(it, context) },

@@ -246,6 +246,19 @@
     <string name="button_remap_add_action">Add action</string>
     <string name="button_remap_no_actions">No actions. The button works normally.</string>
     <string name="button_remap_sequence_hint">Actions run in order from top to bottom. Drag to reorder.</string>
+    <string name="button_remap_section_button">Button</string>
+    <string name="button_remap_power">Power</string>
+    <string name="button_remap_double_press">Double press</string>
+    <string name="button_remap_press_and_hold">Press and hold</string>
+    <string name="button_remap_default_suffix">%1$s (default)</string>
+    <string name="button_remap_power_assistant">Digital assistant</string>
+    <string name="button_remap_power_menu">Power menu</string>
+    <string name="button_remap_power_actions">Custom actions</string>
+    <string name="button_remap_power_no_actions">No actions. This gesture does nothing.</string>
+    <string name="button_remap_power_hint">Double press always uses Android\'s camera gesture. Digital assistant uses Android\'s own gesture while both screen states keep it.</string>
+    <string name="button_remap_power_hold_handled_hint">Essentials runs this gesture, so turn on \"%1$s\". Holding no longer opens the power menu unless you pick it.</string>
+    <string name="button_remap_power_camera_flip_title">Flip camera with double press</string>
+    <string name="button_remap_power_camera_flip_desc">Double press opens the camera. While a camera app is open, double press switches between the front and back cameras. Needs \"%1$s\". May not work in every camera app.</string>
     <string name="diy_action_open_activity">Open Activity</string>
     <string name="activity_icon_title">Shortcut icon</string>
     <string name="activity_icon_source_activity">Activity</string>
@@ -296,6 +309,16 @@
     <string name="hilight_pattern_flash">Flash</string>
     <string name="hilight_pattern_sweep">Sweep</string>
     <string name="hilight_pattern_rainbow">Rainbow</string>
+    <string name="hilight_pattern_pulse">Pulse</string>
+    <string name="hilight_pattern_ripple">Ripple</string>
+    <string name="hilight_pattern_sparkle">Sparkle</string>
+    <string name="hilight_pattern_battery">Battery level</string>
+    <string name="hilight_repeats_title">Repeat</string>
+    <string name="hilight_repeats_value">%1$d×</string>
+    <string name="hilight_brightness_title">Brightness</string>
+    <string name="hilight_brightness_value">%1$d%%</string>
+    <string name="hilight_app_effect_summary_repeats">%1$s · %2$d×</string>
+    <string name="hilight_auto_color_title">Match app color</string>
     <string name="hilight_progress_title">Live progress</string>
     <string name="feat_hilight_notifications_title">Notification effects</string>
     <string name="feat_hilight_progress_desc">Show download and live update progress on the LEDs</string>
@@ -1058,6 +1081,10 @@
     <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
     <string name="search_remap_flashlight_title">Flashlight toggle</string>
     <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
+    <string name="search_remap_power_camera_flip_title">Flip camera with double press</string>
+    <string name="search_remap_power_camera_flip_desc">Double press the power button to switch between front and back cameras</string>
+    <string name="search_remap_power_hold_title">Power button press and hold</string>
+    <string name="search_remap_power_hold_desc">Digital assistant, power menu or custom actions</string>
     <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
     <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
     <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
@@ -1139,6 +1166,8 @@
     <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
+    <string name="diy_header_caption">Automate essentials</string>
+    <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="tab_apps_subtitle">Find and manage apps</string>
     <string name="feat_app_updates_title">App Updates</string>
     <string name="tab_app_updates_title">App Updates</string>
@@ -1442,6 +1471,45 @@
     <string name="diy_state_screen_on">Screen On</string>
     <string name="diy_state_battery_level">Battery level</string>
     <string name="diy_battery_level_range">%1$d%% – %2$d%%</string>
+    <string name="diy_metric_battery_level">Battery level</string>
+    <string name="diy_metric_percent">%1$d%%</string>
+    <string name="diy_metric_now">Now: %1$s</string>
+    <string name="diy_metric_operator">Condition</string>
+    <string name="diy_metric_op_gt">Above</string>
+    <string name="diy_metric_op_gte">At least</string>
+    <string name="diy_metric_op_lt">Below</string>
+    <string name="diy_metric_op_lte">At most</string>
+    <string name="diy_metric_op_eq">Equals</string>
+    <string name="diy_metric_op_neq">Not equal</string>
+    <string name="diy_metric_op_between">Between</string>
+    <string name="diy_metric_op_outside">Outside</string>
+    <string name="diy_metric_op_rises_above">Rises above</string>
+    <string name="diy_metric_op_falls_below">Falls below</string>
+    <string name="diy_metric_op_reaches">Reaches</string>
+    <string name="diy_metric_op_enters_range">Enters range</string>
+    <string name="diy_metric_op_leaves_range">Leaves range</string>
+    <string name="diy_metric_op_changes_by">Changes by</string>
+    <string name="diy_metric_op_increases_by">Increases by</string>
+    <string name="diy_metric_op_decreases_by">Decreases by</string>
+    <string name="diy_metric_summary_gt">%1$s above %2$s</string>
+    <string name="diy_metric_summary_gte">%1$s at least %2$s</string>
+    <string name="diy_metric_summary_lt">%1$s below %2$s</string>
+    <string name="diy_metric_summary_lte">%1$s at most %2$s</string>
+    <string name="diy_metric_summary_eq">%1$s equals %2$s</string>
+    <string name="diy_metric_summary_neq">%1$s not equal to %2$s</string>
+    <string name="diy_metric_summary_between">%1$s between %2$s and %3$s</string>
+    <string name="diy_metric_summary_outside">%1$s outside %2$s and %3$s</string>
+    <string name="diy_metric_summary_rises_above">%1$s rises above %2$s</string>
+    <string name="diy_metric_summary_falls_below">%1$s falls below %2$s</string>
+    <string name="diy_metric_summary_changes_by">%1$s changes by %2$s</string>
+    <string name="diy_metric_summary_increases_by">%1$s increases by %2$s</string>
+    <string name="diy_metric_summary_decreases_by">%1$s decreases by %2$s</string>
+    <string name="diy_metric_advanced">Advanced</string>
+    <string name="diy_metric_hold">Stay true for</string>
+    <string name="diy_metric_hold_off">Off</string>
+    <string name="diy_metric_seconds">%1$d s</string>
+    <string name="diy_metric_cooldown">Wait before firing again</string>
+    <string name="diy_metric_hysteresis">Margin before resetting</string>
     <string name="diy_state_power_saving">Power Saving</string>
 
     <string name="diy_action_haptic">Vibrate</string>
@@ -1542,8 +1610,6 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
-    <string name="island_calendar_emoji_hint">Emoji (leave empty for default)</string>
-    <string name="island_calendar_emoji_invalid">Enter a single emoji</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="action_enable">Enable</string>
@@ -1678,6 +1744,20 @@
         <item>torch</item>
         <item>pulse</item>
         <item>notification</item>
+    </string-array>
+    <string-array name="keywords_power_camera_flip">
+        <item>power</item>
+        <item>camera</item>
+        <item>flip</item>
+        <item>selfie</item>
+        <item>double</item>
+    </string-array>
+    <string-array name="keywords_power_hold">
+        <item>power</item>
+        <item>hold</item>
+        <item>long press</item>
+        <item>assistant</item>
+        <item>power menu</item>
     </string-array>
     <string-array name="keywords_pocket_detection">
         <item>pocket</item>
@@ -3118,6 +3198,7 @@
     <string name="status_glance_calendar_select_calendars_title">Calendars to show</string>
     <string name="status_glance_calendar_no_calendars">No calendars found on device</string>
     <string name="status_glance_calendar_event_in_time">in %1$s</string>
+    <string name="status_glance_calendar_event_now">Now</string>
     <string name="status_glance_section_gestures">Gestures</string>
     <string name="status_glance_action_tap_title">Single tap</string>
     <string name="status_glance_action_tap_media_desc">Play / Pause when media is playing</string>
@@ -3197,6 +3278,7 @@
     <string name="island_font_scale_title">Font size</string>
     <string name="island_animation_speed_title">Animation speed</string>
     <string name="island_hide_in_owner_app_title">Hide complication inside the app</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_hide_on_shade_title">Hide when status bar is expanded</string>
     <string name="island_hide_status_bar_title">Hide status bar</string>
     <string name="island_hide_status_bar_info">Hide the entire status bar by using exceeded paddings. This will remove it from the lock screen as well and will hide everything including live updates and the screen recorder.</string>
@@ -3232,6 +3314,8 @@
     <string name="island_pulse_shadow_opacity_title">Opacity</string>
     <string name="island_pulse_shadow_duration_title">Pulse duration</string>
     <string name="island_show_glow_desc">App based color glow</string>
+    <string name="island_notif_themed_bubble_title">App icon color bubbles</string>
+    <string name="island_notif_themed_bubble_needs_themed_icons">Turn on Use themed app icons in Visuals</string>
     <string name="island_expanded_width_title">Expanded width</string>
     <string name="island_cutout_gap_title">Camera gap</string>
     <string name="island_expanded_width_desc">Width when long pressed to expand</string>
@@ -3530,6 +3614,7 @@
     <!-- Overcast Separation What's New -->
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
     <string name="island_media_show_like_title">Show like track button</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <!-- Widget stack -->
     <string name="widget_stack_label">Widget stack</string>
     <string name="widget_stack_description">Stack several widgets in one place and switch between them</string>
@@ -3601,12 +3686,29 @@
     <string name="island_chips_title">Island chips</string>
     <string name="island_time_chip_title">Show in chip</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
+    <string name="island_calendar_show_ongoing_title">Show ongoing events</string>
+    <string name="icon_category_general">General</string>
+    <string name="icon_category_celebrations">Celebrations</string>
+    <string name="icon_category_people">People</string>
+    <string name="icon_category_work">Work</string>
+    <string name="icon_category_education">Education &amp; tech</string>
+    <string name="icon_category_health">Health &amp; care</string>
+    <string name="icon_category_sports">Sports</string>
+    <string name="icon_category_motorsport">Motorsport</string>
+    <string name="icon_category_food">Food &amp; drink</string>
+    <string name="icon_category_shopping">Shopping &amp; money</string>
+    <string name="icon_category_home">Home &amp; places</string>
+    <string name="icon_category_civic">Faith &amp; civic</string>
+    <string name="icon_category_entertainment">Entertainment</string>
+    <string name="icon_category_travel">Travel</string>
+    <string name="icon_category_nature">Nature &amp; weather</string>
     <string name="feat_aod_wallpaper_compat_title">Compatibility mode</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Use themed app icons</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>

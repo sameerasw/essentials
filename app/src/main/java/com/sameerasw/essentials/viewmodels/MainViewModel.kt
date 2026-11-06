@@ -68,6 +68,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
+import com.sameerasw.essentials.domain.model.PowerChoice
 import com.sameerasw.essentials.domain.model.RemapSlot
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
@@ -87,6 +88,7 @@ import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.DuoBatteryLevels
 import com.sameerasw.essentials.utils.PermissionGrantUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.PowerButtonGestures
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ScreenshotCleaner
@@ -141,6 +143,8 @@ class MainViewModel : ViewModel() {
     val isButtonRemapPauseOnVolumeDialog = mutableStateOf(true)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
     val remapActions = mutableStateMapOf<RemapSlot, List<Action>>()
+    val powerChoices = mutableStateMapOf<RemapSlot, PowerChoice>()
+    val isPowerCameraFlipEnabled = mutableStateOf(false)
     val isHilightNotificationsEnabled = mutableStateOf(false)
     val isHilightOnlyWhenScreenOff = mutableStateOf(true)
     val isHilightSkipDnd = mutableStateOf(true)
@@ -231,6 +235,7 @@ class MainViewModel : ViewModel() {
     val islandFontScale = mutableFloatStateOf(1f)
     val islandAnimationSpeed = mutableFloatStateOf(1f)
     val isIslandHideInOwnerApp = mutableStateOf(false)
+    val isIslandHideMediaInOwnerApp = mutableStateOf(false)
     val isIslandHideOnShade = mutableStateOf(false)
     val isIslandKeepOnLandscape = mutableStateOf(false)
     val isIslandKeepInFullscreen = mutableStateOf(false)
@@ -280,6 +285,7 @@ class MainViewModel : ViewModel() {
     val isIslandMediaPeekSongChange = mutableStateOf(true)
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
+    val isIslandMediaUseArtColor = mutableStateOf(true)
     val isIslandMediaShowLike = mutableStateOf(true)
     val islandNotifPeekStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL)
     val isIslandNotifKeepProgress = mutableStateOf(true)
@@ -303,6 +309,7 @@ class MainViewModel : ViewModel() {
     val isIslandOtpEnabled = mutableStateOf(false)
     val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
+    val isIslandNotifThemedBubble = mutableStateOf(false)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
     val isIslandBorderOutlineDynamic = mutableStateOf(false)
@@ -348,7 +355,7 @@ class MainViewModel : ViewModel() {
     val statusGlanceCalendarShowAllDay = mutableStateOf(false)
     val statusGlanceSelectedCalendarIds = mutableStateOf<Set<String>>(emptySet())
     val statusGlanceAvailableCalendars = mutableStateListOf<CalendarAccount>()
-    val islandCalendarEmojis = mutableStateOf<Map<Long, String>>(emptyMap())
+    val islandCalendarIcons = mutableStateOf<Map<Long, String>>(emptyMap())
     val isStatusGlanceShowMedia = mutableStateOf(true)
     val isStatusGlanceShowTime = mutableStateOf(true)
     val isStatusGlanceBackgroundPill = mutableStateOf(false)
@@ -964,6 +971,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_ISLAND_MEDIA_SHOW_PREVIOUS ->
                         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
+
+                    SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR ->
+                        isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
 
                     SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE ->
                         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
@@ -2409,7 +2419,12 @@ class MainViewModel : ViewModel() {
 
         RemapSlot.ALL.forEach { slot ->
             remapActions[slot] = settingsRepository.getRemapActions(slot.prefKey)
+            if (slot.choicePrefKey != null) {
+                powerChoices[slot] = settingsRepository.getPowerChoice(slot)
+            }
         }
+        isPowerCameraFlipEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, false)
 
         isHilightNotificationsEnabled.value = settingsRepository.isHilightNotificationsEnabled()
         isHilightOnlyWhenScreenOff.value = settingsRepository.isHilightOnlyWhenScreenOff()
@@ -2512,6 +2527,7 @@ class MainViewModel : ViewModel() {
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
         islandAnimationSpeed.floatValue = settingsRepository.getIslandAnimationSpeed()
         isIslandHideInOwnerApp.value = settingsRepository.isIslandHideInOwnerAppEnabled()
+        isIslandHideMediaInOwnerApp.value = settingsRepository.isIslandHideMediaInOwnerAppEnabled()
         isIslandHideOnShade.value = settingsRepository.isIslandHideOnShadeEnabled()
         isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
         isIslandKeepInFullscreen.value = settingsRepository.isIslandKeepInFullscreenEnabled()
@@ -2574,6 +2590,7 @@ class MainViewModel : ViewModel() {
         isIslandMediaPeekSongChange.value = settingsRepository.isIslandMediaPeekSongChangeEnabled()
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
+        isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
         islandNotifPeekStyle.value = settingsRepository.getIslandNotifPeekStyle()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
@@ -2597,6 +2614,7 @@ class MainViewModel : ViewModel() {
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
+        isIslandNotifThemedBubble.value = settingsRepository.isIslandNotifThemedBubbleEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
         isIslandBorderOutlineDynamic.value = settingsRepository.isIslandBorderOutlineDynamicEnabled()
@@ -5260,6 +5278,18 @@ class MainViewModel : ViewModel() {
     ) {
         isButtonRemapEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_ENABLED, enabled)
+        if (!enabled) {
+            PowerButtonGestures.restoreDefaults(context, settingsRepository)
+        } else {
+            val hasNonDefaultChoice =
+                RemapSlot.ALL.any { slot ->
+                    slot.choicePrefKey != null &&
+                        (powerChoices[slot] ?: slot.defaultChoice) != slot.defaultChoice
+                }
+            if (hasNonDefaultChoice || isPowerCameraFlipEnabled.value) {
+                PowerButtonGestures.sync(context, settingsRepository)
+            }
+        }
     }
 
     // Pause remap while the system volume dialog is visible
@@ -5304,6 +5334,21 @@ class MainViewModel : ViewModel() {
     ) {
         remapActions[slot] = actions
         settingsRepository.setRemapActions(slot.prefKey, actions)
+    }
+
+    fun setPowerChoice(
+        slot: RemapSlot,
+        choice: PowerChoice,
+        context: Context,
+    ) {
+        powerChoices[slot] = choice
+        settingsRepository.setPowerChoice(slot, choice)
+        PowerButtonGestures.sync(context, settingsRepository)
+    }
+
+    fun setPowerCameraFlipEnabled(enabled: Boolean) {
+        isPowerCameraFlipEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_POWER_CAMERA_FLIP, enabled)
     }
 
     fun setVolumeStepsEnabled(enabled: Boolean) {
@@ -5847,13 +5892,13 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandShowNetworkEnabled(enabled)
     }
 
-    fun loadIslandCalendarEmojis() {
-        islandCalendarEmojis.value = settingsRepository.getIslandCalendarEmojis()
+    fun loadIslandCalendarIcons() {
+        islandCalendarIcons.value = settingsRepository.getIslandCalendarIcons()
     }
 
-    fun setIslandCalendarEmoji(calendarId: Long, emoji: String?) {
-        settingsRepository.setIslandCalendarEmoji(calendarId, emoji)
-        islandCalendarEmojis.value = settingsRepository.getIslandCalendarEmojis()
+    fun setIslandCalendarIcon(calendarId: Long, icon: String?) {
+        settingsRepository.setIslandCalendarIcon(calendarId, icon)
+        islandCalendarIcons.value = settingsRepository.getIslandCalendarIcons()
     }
 
     fun setIslandShowTimers(enabled: Boolean) {
@@ -5917,6 +5962,11 @@ class MainViewModel : ViewModel() {
     fun setIslandDismissOnOutside(enabled: Boolean) {
         isIslandDismissOnOutside.value = enabled
         settingsRepository.setIslandDismissOnOutsideEnabled(enabled)
+    }
+
+    fun setIslandHideMediaInOwnerApp(enabled: Boolean) {
+        isIslandHideMediaInOwnerApp.value = enabled
+        settingsRepository.setIslandHideMediaInOwnerAppEnabled(enabled)
     }
 
     fun setIslandHideInOwnerApp(enabled: Boolean) {
@@ -6063,6 +6113,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandMediaShowPreviousEnabled(enabled)
     }
 
+    fun setIslandMediaUseArtColor(enabled: Boolean) {
+        isIslandMediaUseArtColor.value = enabled
+        settingsRepository.setIslandMediaUseArtColorEnabled(enabled)
+    }
+
     fun setIslandMediaShowLike(enabled: Boolean) {
         isIslandMediaShowLike.value = enabled
         settingsRepository.setIslandMediaShowLikeEnabled(enabled)
@@ -6199,6 +6254,11 @@ class MainViewModel : ViewModel() {
     fun setIslandShowGlow(enabled: Boolean) {
         isIslandShowGlow.value = enabled
         settingsRepository.setIslandShowGlowEnabled(enabled)
+    }
+
+    fun setIslandNotifThemedBubble(enabled: Boolean) {
+        isIslandNotifThemedBubble.value = enabled
+        settingsRepository.setIslandNotifThemedBubbleEnabled(enabled)
     }
 
     fun setIslandBorderOutline(enabled: Boolean) {
@@ -6556,7 +6616,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun toggleStatusGlanceCalendarSelection(calendarId: Long) {
-        val currentIds = statusGlanceSelectedCalendarIds.value.toMutableSet()
+        val currentIds = statusGlanceSelectedCalendarIds.value.ifEmpty {
+            statusGlanceAvailableCalendars.map { it.id.toString() }.toSet()
+        }.toMutableSet()
         val idString = calendarId.toString()
         if (currentIds.contains(idString)) {
             currentIds.remove(idString)
