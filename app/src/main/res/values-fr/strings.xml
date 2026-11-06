@@ -47,8 +47,8 @@
     <string name="button_remap_section_long_press">Réattribuer l\'appui long</string>
     <string name="screen_off">Écran éteint</string>
     <string name="screen_on">Écran allumé</string>
-    <string name="volume_up">Volume Haut</string>
-    <string name="volume_down">Volume Bas</string>
+    <string name="volume_up">Volume +</string>
+    <string name="volume_down">Volume -</string>
     <string name="action_toggle_flashlight">Allumer/éteindre la lampe-torche</string>
     <string name="action_media_play_pause">Jouer/mettre en pause le média</string>
     <string name="action_media_next">Prochain média</string>
@@ -1460,7 +1460,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="feat_power_battery_title">Alimentation et batterie</string>
     <string name="feat_power_battery_desc">Configurer les règles d\'économie d\'énergie</string>
     <string name="feat_flashlight_title">Lampe de poche</string>
-    <string name="feat_flashlight_desc">Brightness, fading and safety controls</string>
+    <string name="feat_flashlight_desc">Luminosité et contrôle de sécurité</string>
     <string name="feat_notification_snoozing_title">Mise en veille des notifications</string>
     <string name="feat_notification_snoozing_desc">Reprogrammer les notifications</string>
     <string name="feat_pixel_searchbar_title">Remplacer la barre de recherche</string>
