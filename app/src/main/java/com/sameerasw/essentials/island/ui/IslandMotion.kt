@@ -43,9 +43,10 @@ object IslandMotion {
     fun <T> collapseFloat(): FiniteAnimationSpec<T> = motionSpring(Spring.DampingRatioNoBouncy, 380f)
     fun collapseProgress(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 300f)
 
-    private const val HIDE_BUBBLE_MS_BASE = 320
+    private const val HIDE_BUBBLE_MS_BASE = 460
     val HIDE_BUBBLE_MS get() = scaled(HIDE_BUBBLE_MS_BASE)
-    fun hideBubble(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 500f)
+    fun hideBubble(): FiniteAnimationSpec<Float> = motionSpring(Spring.DampingRatioNoBouncy, 220f)
+    fun <T> showBubble(): FiniteAnimationSpec<T> = motionSpring(Spring.DampingRatioNoBouncy, 160f)
 
     private const val SQUASH_MS_BASE = 560
     val SQUASH_MS get() = scaled(SQUASH_MS_BASE)

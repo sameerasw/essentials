@@ -69,6 +69,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.model.StackIcon
 import com.sameerasw.essentials.island.model.QueueOverflow
+import kotlin.math.roundToInt
 
 private const val BUBBLE_MAX_MINIS = 3
 private const val PILL_MAX_ICONS = 5
@@ -281,9 +282,11 @@ fun IslandStackOverlap(
     bond: LiquidBond? = null,
     maxIcons: Int = OVERLAP_MAX,
     overflow: QueueOverflow = QueueOverflow.Number,
+    spread: () -> Float = { 1f },
+    gatherToEnd: Boolean = true,
 ) {
     val shown = queueVisible(icons, maxIcons, overflow)
-    val width by animateDpAsState(stackOverlapWidth(icons.size, size, maxIcons, overflow), IslandMotion.expressiveDefaultSpatial(), label = "overlapWidth")
+    val width by animateDpAsState(stackOverlapWidth(icons.size, size, maxIcons, overflow), IslandMotion.expressiveSlowSpatial(), label = "overlapWidth")
     val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
     val field = remember { LiquidField() }
     field.reach = with(LocalDensity.current) { size.toPx() } * 0.3f
@@ -309,7 +312,7 @@ fun IslandStackOverlap(
                     }
                     val spawn = remember { if (entry.visibility.currentState) target else step * (index - 1).coerceAtLeast(0) }
                     val x = remember { Animatable(spawn, Dp.VectorConverter) }
-                    LaunchedEffect(target) { x.animateTo(target, IslandMotion.expressiveDefaultSpatial()) }
+                    LaunchedEffect(target) { x.animateTo(target, IslandMotion.expressiveSlowSpatial()) }
                     val presence = animateFloatAsState(if (present) 1f else 0f, IslandMotion.expressiveFastEffects(), label = "overlapPresence")
                     val entryBond = remember { LiquidBond("overlap_${entry.icon.key}", presence = { presence.value }) }
                     val entryLiquid = rememberLiquidBody(LiquidSpec.Droplet, entryBond)
@@ -318,7 +321,12 @@ fun IslandStackOverlap(
                         enter = QueueEnter,
                         exit = QueueExit,
                         modifier = Modifier
-                            .offset { IntOffset(x.value.roundToPx(), if (isDot) ((size - boxSize) / 2).roundToPx() else 0) }
+                            .offset {
+                                val s = spread().coerceIn(0f, 1f)
+                                val anchor = if (gatherToEnd) (width - boxSize).toPx() else 0f
+                                val px = anchor + (x.value.toPx() - anchor) * s
+                                IntOffset(px.roundToInt(), if (isDot) ((size - boxSize) / 2).roundToPx() else 0)
+                            }
                             .liquid(entryLiquid),
                     ) {
                         val ringColor = islandAccent()
@@ -463,6 +471,8 @@ fun IslandSideBubble(
     outlineThickness: Dp = 1.dp,
     maxIcons: Int = OVERLAP_MAX,
     overflow: QueueOverflow = QueueOverflow.Number,
+    spread: () -> Float = { 1f },
+    gatherToEnd: Boolean = true,
 ) {
     Box(modifier.height(size)) {
         AnimatedContent(
@@ -486,7 +496,16 @@ fun IslandSideBubble(
                         contentAlignment = Alignment.Center,
                     ) { content(size * 0.72f) }
                 } else if (style == QueueStyle.Overlap) {
-                    IslandStackOverlap(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness, maxIcons = maxIcons, overflow = overflow)
+                    IslandStackOverlap(
+                        bubble.icons,
+                        size,
+                        outlineColor = outlineColor,
+                        outlineThickness = outlineThickness,
+                        maxIcons = maxIcons,
+                        overflow = overflow,
+                        spread = spread,
+                        gatherToEnd = gatherToEnd,
+                    )
                 } else {
                     IslandStackBubble(bubble.icons, size, outlineColor = outlineColor, outlineThickness = outlineThickness)
                 }

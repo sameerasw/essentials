@@ -485,7 +485,7 @@ private fun IslandRootContent(
                 snapshotFlow { surfaceSize.width to compactSize.width }
                     .first { (live, target) -> target > 0 && abs(live - target) <= 6 }
             }
-            catchUpAnim.animateTo(1f, IslandMotion.smoothSpatial())
+            catchUpAnim.animateTo(1f, IslandMotion.showBubble())
             bubbleTucking = false
             bubbleAbsorbing = false
         } else {
@@ -494,7 +494,7 @@ private fun IslandRootContent(
                 when (stage) {
                     IslandStage.Hidden -> IslandMotion.hideBubble()
                     IslandStage.Line, IslandStage.Expanded -> IslandMotion.sizeFloat()
-                    else -> IslandMotion.smoothSpatial()
+                    else -> IslandMotion.hideBubble()
                 },
             )
         }
@@ -559,7 +559,7 @@ private fun IslandRootContent(
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
     val sideWidthAnim = remember { Animatable(sideWidthPx.toFloat()) }
     LaunchedEffect(sideWidthPx) {
-        if (inspection) sideWidthAnim.snapTo(sideWidthPx.toFloat()) else sideWidthAnim.animateTo(sideWidthPx.toFloat(), IslandMotion.smoothSpatial())
+        if (inspection) sideWidthAnim.snapTo(sideWidthPx.toFloat()) else sideWidthAnim.animateTo(sideWidthPx.toFloat(), IslandMotion.showBubble())
     }
     fun sideWidthLive(): Int = sideWidthAnim.value.roundToInt()
     val bubbleGapPx = with(density) { spec.cameraGap.roundToPx() }
@@ -890,6 +890,8 @@ private fun IslandRootContent(
                     outlineThickness = spec.outlineThickness,
                     maxIcons = bubbleMaxIcons,
                     overflow = lastCatchUp?.overflow ?: com.sameerasw.essentials.island.model.QueueOverflow.Number,
+                    spread = { catchUpAnim.value },
+                    gatherToEnd = spec.growDirection <= 0,
                     modifier = Modifier
                         .offset {
                             if (bubbleOnlyLayout) {
