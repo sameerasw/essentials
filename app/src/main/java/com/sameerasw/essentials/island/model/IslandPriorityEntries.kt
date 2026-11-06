@@ -6,6 +6,7 @@ object IslandPriorityEntries {
     val all = listOf(
         Entry("battery", setOf("battery"), IslandPriority.BATTERY_ALERT),
         Entry("notifications", setOf("notifications"), IslandPriority.NOTIFICATION),
+        Entry("progress", setOf("progress"), IslandPriority.PROGRESS),
         Entry("flashlight", setOf("flashlight"), IslandPriority.FLASHLIGHT),
         Entry("navigation", setOf("navigation"), IslandPriority.NAVIGATION),
         Entry("timer", setOf("timer"), IslandPriority.TIMER),

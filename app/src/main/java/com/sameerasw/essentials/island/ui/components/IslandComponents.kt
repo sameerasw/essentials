@@ -69,6 +69,7 @@ fun IslandBitmap(
     modifier: Modifier = Modifier,
     circle: Boolean = false,
     fallbackRes: Int? = null,
+    tint: Color? = null,
 ) {
     val shape = when {
         LocalIslandBitmapFlat.current -> RectangleShape
@@ -92,7 +93,7 @@ fun IslandBitmap(
                     bitmap = remember(bmp) { bmp.asImageBitmap() },
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    colorFilter = when (themedMode) {
+                    colorFilter = if (tint != null) ColorFilter.tint(tint, BlendMode.SrcIn) else when (themedMode) {
                         AppIconUtil.ThemedMode.MONO -> ColorFilter.tint(iconColor, BlendMode.SrcIn)
                         AppIconUtil.ThemedMode.DUO -> duotoneFilter(iconColor)
                         null -> null

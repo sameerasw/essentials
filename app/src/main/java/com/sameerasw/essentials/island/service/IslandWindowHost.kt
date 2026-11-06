@@ -189,7 +189,11 @@ class IslandWindowHost(
     private fun applyDrawSize(lp: WindowManager.LayoutParams) {
         val geo = geometry ?: return
         val reach = maxWidthPx + 32 * density
-        val width = if (geo.anchor == CameraAnchor.Center) reach.roundToInt().coerceAtMost(geo.screenWidth) else (reach * 2).roundToInt()
+        val width = if (geo.anchor == CameraAnchor.Center) {
+            (2 * maxOf(geo.centerX, geo.screenWidth - geo.centerX)).roundToInt()
+        } else {
+            (reach * 2).roundToInt()
+        }
         lp.width = width
         lp.height = if (geo.screenWidth > geo.screenHeight) geo.screenHeight else (geo.screenHeight * 0.6f).roundToInt()
         lp.x = (geo.centerX - width / 2f).roundToInt()

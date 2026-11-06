@@ -116,9 +116,7 @@ class SideBubble(
 
 object SideBubblePriority {
     const val NOTIFICATION = 0
-    const val PROGRESS = 10
 }
-
 object IslandChips {
     val items = setOf(
         "media", "calendar", "timer", "alarm", "caffeinate", "flashlight", "sound_mode", "devices", "travel", "navigation", "call",
@@ -162,8 +160,12 @@ class IslandItem(
     val priorityGroup: String? = null,
     // Rendered inside a colored chip when Island chips is enabled.
     val chip: Boolean = key in IslandChips.items,
+    // Kept right of the camera, at the outer end of the compact island.
+    val compactEndSide: Boolean = false,
 ) {
     var userPriority: Int? = null
+
+    var inBubble: Boolean = false
 
     fun withInlineBubble(cell: CompactCell) = IslandItem(
         key = key,
@@ -191,7 +193,11 @@ class IslandItem(
         queued = queued,
         priorityGroup = priorityGroup,
         chip = chip,
-    ).also { it.userPriority = userPriority }
+        compactEndSide = compactEndSide,
+    ).also {
+        it.userPriority = userPriority
+        it.inBubble = inBubble
+    }
 
     val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority
 

@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Constraints
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.state.IslandUiState
@@ -114,8 +115,11 @@ fun CompactTemplate(
     onSlack: (Int) -> Unit = {},
     onBaseWidth: (Int) -> Unit = {},
     onNeedLeft: (Int) -> Unit = {},
+    onUnitWidth: (itemKey: String, unitKey: String, cells: Float) -> Unit = { _, _, _ -> },
 ) {
     val iconColor = LocalIslandIconColor.current
+    val cellUnitPx = with(LocalDensity.current) { (spec.cellSize + spec.cellSpacing).toPx() }
+    val spacingPx = with(LocalDensity.current) { spec.cellSpacing.toPx() }
     val primary = MaterialTheme.colorScheme.primary
     val cells = buildMap {
         state.items.values.forEach { item -> item.compact.forEach { put(it.key, item.key to it) } }
@@ -208,7 +212,8 @@ fun CompactTemplate(
         ) { k ->
             val unit = k?.let { known[it] }
             if (unit != null) {
-                val tap = Modifier.pointerInput(unit.itemKey) {
+                val measure = Modifier.onSizeChanged { onUnitWidth(unit.itemKey, unit.key, (it.width + spacingPx) / cellUnitPx) }
+                val tap = measure.pointerInput(unit.itemKey) {
                     detectTapGestures(
                         onTap = { onCellTap(unit.itemKey) },
                         onLongPress = { onCellLongPress(unit.itemKey) },
@@ -312,7 +317,7 @@ fun CompactTemplate(
         val needRight = content(right) + rightInset + edge
         val t = if (hasCells) sideBubble().coerceIn(0f, 1f) else 0f
         val mirrored = maxOf(needLeft, needRight)
-        val extent = if (spec.balanceCompact) bubbleExtent().coerceAtLeast(0) else 0
+        val extent = if (spec.balanceCompact) bubbleExtent() else 0
         val balancedLeft = if (spec.balanceCompact) maxOf(needLeft, needRight - extent) else needLeft
         val balancedRight = if (spec.balanceCompact) balancedLeft + extent else needRight
         onSlack(if (spec.balanceCompact) extent else needRight - needLeft)

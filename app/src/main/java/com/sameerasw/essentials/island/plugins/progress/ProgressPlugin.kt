@@ -41,9 +41,6 @@ import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.ExpandedContent
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
-import com.sameerasw.essentials.island.model.PluginRequest
-import com.sameerasw.essentials.island.model.SideBubble
-import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.launchPackage
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
@@ -125,14 +122,6 @@ class ProgressPlugin : BaseIslandPlugin() {
                 },
                 onOpen = { open(d) },
                 sourcePackage = d.packageName,
-                sideBubble = SideBubble(
-                    priority = SideBubblePriority.PROGRESS,
-                    whenOccupiedOnly = true,
-                    onOpen = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)) },
-                    content = { bubbleSize ->
-                        ProgressRing(progress, indeterminate, image, islandAccent(), bubbleSize)
-                    },
-                ),
             ),
         )
     }
