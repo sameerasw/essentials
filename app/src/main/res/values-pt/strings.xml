@@ -1637,6 +1637,7 @@
     <string name="island_battery_percentage_title">Mostrar porcentagem </string>
     <string name="island_battery_percentage_conditional_title">Apenas para as condições abaixo</string>
     <string name="island_launcher_only_title">Só aparece no iniciador</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_media_peek_song_change_title">Prévia ao mudar de música</string>
     <string name="island_media_keep_when_paused_title">Manter em modo de recuperação quando pausado</string>
     <string name="island_media_show_previous_title">mostrar botão para voltar a música anterior</string>

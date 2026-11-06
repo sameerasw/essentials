@@ -47,6 +47,7 @@ object RemoteItemMapper {
         val interactions = payload.interactions
         return IslandItem(
             key = handler.namespaced(rawKey),
+            updateKey = payload.hashCode().toString(),
             priority = priority,
             priorityOverride = override,
             placement = if (payload.placement == IslandPlacement.PINNED) CompactPlacement.Pinned else CompactPlacement.Dynamic,

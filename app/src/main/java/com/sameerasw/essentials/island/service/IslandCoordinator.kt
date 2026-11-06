@@ -344,6 +344,10 @@ class IslandCoordinator(
         controller.setLauncherState(onLauncher, sources, ProviderTrustStore(settings).launcherOnly())
     }
 
+    private fun applyUpdateOnly() {
+        controller.setUpdateOnly(emptySet(), ProviderTrustStore(settings).showOnUpdate(), settings.getIslandPeekDurationMs())
+    }
+
     private fun applyOwnerAppHiding() {
         when {
             settings.isIslandHideInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage)
@@ -438,6 +442,7 @@ class IslandCoordinator(
         revealing = true
         controller.setSuppressed(true)
         applyLauncherOnly()
+        applyUpdateOnly()
         val newScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         scope = newScope
         applyConfig()
@@ -814,6 +819,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
             SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP, SettingsRepository.KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values, SettingsRepository.KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY -> applyLauncherOnly()
+            SettingsRepository.KEY_ISLAND_PROVIDERS_ON_UPDATE, SettingsRepository.KEY_ISLAND_PEEK_DURATION_MS -> applyUpdateOnly()
             SettingsRepository.KEY_ISLAND_HIDE_ON_SHADE -> applySuppression()
             SettingsRepository.KEY_ISLAND_PREVIEW_RING -> if (running) applyPreviewRing()
             SettingsRepository.KEY_ISLAND_PREVIEW_STAGE -> applyPreviewStage()

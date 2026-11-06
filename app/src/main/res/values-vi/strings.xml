@@ -1874,6 +1874,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_sound_mode_keep_icon_title">Tiếp tục hiển thị biểu tượng</string>
     <string name="island_alarm_window_title">Hiển thị báo thức trong vòng</string>
     <string name="island_launcher_only_title">Chỉ hiển thị trên màn hình chính</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">Ẩn khi ứng dụng đang mở</string>
     <string name="island_preview_ring_title">Hiển thị gợi ý căn chỉnh</string>
     <string name="island_preview_stage_title">Giai đoạn xem trước</string>
