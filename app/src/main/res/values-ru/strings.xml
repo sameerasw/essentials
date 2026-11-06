@@ -2016,4 +2016,6 @@
     <string name="about_desc_haptics">Переключите вибрацию системы и сенсорную обратную связь вместе. Требуется разрешение на изменение настроек системы. </string>
     <string name="tile_haptics">Вибрация</string>
     <string name="app_overcast">Погода</string>
+    <string name="button_remap_power">Включение</string>
+    <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
 </resources>
