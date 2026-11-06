@@ -1798,6 +1798,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_line_peek_title">Xem trước dòng</string>
     <string name="island_line_peek_desc">Hiển thị nhanh các cập nhật trên khắp island, sau đó quay lại chế độ thu gọn</string>
     <string name="island_hide_in_owner_app_title">Ẩn thông báo lỗi bên trong ứng dụng</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_hide_on_shade_title">Ẩn khi thanh trạng thái được mở rộng</string>
     <string name="island_dismiss_on_outside_title">Bỏ qua khi chạm bên ngoài</string>
     <string name="island_notif_keep_progress_title">Giữ lại thông báo tiến độ</string>
@@ -1873,6 +1874,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_sound_mode_keep_icon_title">Tiếp tục hiển thị biểu tượng</string>
     <string name="island_alarm_window_title">Hiển thị báo thức trong vòng</string>
     <string name="island_launcher_only_title">Chỉ hiển thị trên màn hình chính</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">Ẩn khi ứng dụng đang mở</string>
     <string name="island_preview_ring_title">Hiển thị gợi ý căn chỉnh</string>
     <string name="island_preview_stage_title">Giai đoạn xem trước</string>
@@ -1919,8 +1921,6 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>
     <string name="island_border_outline_thickness_title">Độ dày đường viền</string>
     <string name="island_notif_conceal_locked_title">Ẩn nội dung thông báo</string>
-    <string name="island_pulse_shadow_size_title">Kích thước phát sáng</string>
-    <string name="island_pulse_shadow_y_shift_title">Dịch chuyển theo chiều dọc</string>
     <string name="island_pulse_shadow_spread_title">Ánh sáng lan tỏa</string>
     <string name="island_pulse_shadow_duration_title">Thời lượng xung</string>
     <string name="duo_enable_title">Bật Duo</string>
@@ -2032,6 +2032,7 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Use themed app icons</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -2062,4 +2063,5 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="island_notif_hub_chat_pictures">Ưu tiên ảnh trò chuyện hơn</string>
     <string name="island_hide_icon_notifications">Số biểu tượng thông báo</string>
     <string name="island_notif_show_title">Hiện thông báo</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

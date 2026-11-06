@@ -1853,6 +1853,7 @@
     <string name="island_line_peek_title">ラインピーク</string>
     <string name="island_line_peek_desc">Island全体の更新情報を短時間表示し、コンパクト表示に戻ります</string>
     <string name="island_hide_in_owner_app_title">アプリ内でコンプリケーションを非表示</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_dismiss_on_outside_title">アプリ外アクティビティ時に非表示</string>
     <string name="island_notif_conceal_locked_title">通知の内容を非表示</string>
     <string name="island_notif_keep_progress_title">進捗通知は維持する</string>
@@ -1865,6 +1866,7 @@
     <string name="island_battery_percentage_conditional_title">以下の条件のみ</string>
     <string name="island_battery_idle_color_title">アイドル時の色</string>
     <string name="island_launcher_only_title">ランチャーにいるときのみ表示</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">アプリを開いたときに非表示になります</string>
     <string name="island_timers_show_screen_recorder_title">画面録画を表示</string>
     <string name="island_media_peek_song_change_title">曲が変わった時ピーク表示</string>
@@ -1929,6 +1931,7 @@
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">テーマ付きアプリのアイコンを使用</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -1982,4 +1985,5 @@
     <string name="perm_files_media_desc">Pixel Searchの検索結果に写真、動画、音声、ドキュメントを検索して表示するには、Essentialsがファイルとメディアにアクセスするための権限が必要です。</string>
     <string name="perm_contacts_desc">Pixel Searchの検索結果に連絡先を表示するには、Essentialsが連絡先を読み取る権限を必要とします。</string>
     <string name="perm_sensitive_notifications_instructions">Shizukuまたはroot権限で付与するか、ADB経由でコマンドを実行してください。</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

@@ -66,18 +66,58 @@ class IslandController(
     private var stickyFocus = false
 
     private var hiddenPackage: String? = null
+    private var hiddenSources: Set<String>? = null
     private var launcherOnlySources: Set<String> = emptySet()
     private var launcherOnlyProviders: Set<String> = emptySet()
     private var onLauncher = true
+    private var updateOnlySources: Set<String> = emptySet()
+    private var updateOnlyProviders: Set<String> = emptySet()
+    private var updateRevealMs: Long = 0L
+    private val seenUpdates = mutableMapOf<String, String?>()
+    private val revealTimers = mutableMapOf<String, Cancellable>()
 
     fun setItems(sourceId: String, items: List<IslandItem>) {
+        val previous = itemsBySource[sourceId].orEmpty()
         itemsBySource[sourceId] = items
+        val updated = trackUpdates(sourceId, previous, items)
+        recompute()
+        updated.firstOrNull()?.let { peek(it, updateRevealMs) }
+    }
+
+    fun setUpdateOnly(sources: Set<String>, providers: Set<String>, revealMs: Long) {
+        if (updateOnlySources == sources && updateOnlyProviders == providers && updateRevealMs == revealMs) return
+        updateOnlySources = sources
+        updateOnlyProviders = providers
+        updateRevealMs = revealMs
         recompute()
     }
 
-    fun setHiddenPackage(packageName: String?) {
-        if (hiddenPackage == packageName) return
+    private fun isUpdateOnly(sourceId: String, item: IslandItem): Boolean =
+        sourceId in updateOnlySources || item.key.substringBefore(':') in updateOnlyProviders
+
+    private fun trackUpdates(sourceId: String, previous: List<IslandItem>, items: List<IslandItem>): List<String> {
+        val currentKeys = items.mapTo(mutableSetOf()) { it.key }
+        previous.filter { it.key !in currentKeys }.forEach {
+            seenUpdates.remove(it.key)
+            revealTimers.remove(it.key)?.cancel()
+        }
+        return items.filter { isUpdateOnly(sourceId, it) }.mapNotNull { item ->
+            val signature = item.updateKey ?: item.contentId
+            if (item.key in seenUpdates && seenUpdates[item.key] == signature) return@mapNotNull null
+            seenUpdates[item.key] = signature
+            revealTimers.remove(item.key)?.cancel()
+            revealTimers[item.key] = scheduler.schedule(updateRevealMs) {
+                revealTimers.remove(item.key)
+                recompute()
+            }
+            item.key
+        }
+    }
+
+    fun setHiddenPackage(packageName: String?, onlySources: Set<String>? = null) {
+        if (hiddenPackage == packageName && hiddenSources == onlySources) return
         hiddenPackage = packageName
+        hiddenSources = onlySources
         recompute()
     }
 
@@ -126,6 +166,8 @@ class IslandController(
                 true
             } ?: false
             IslandStage.Compact -> {
+                val tapped = itemKey?.let { current.items[it] }
+                if (tapped?.expanded == null && tapped?.interactions?.onTap?.invoke() == true) return true
                 val target = itemKey?.let { current.items[it] }?.takeIf { it.expanded != null }
                     ?: defaultTapTarget(current)
                     ?: fallbackTapKey?.invoke()?.let { current.items[it] }?.takeIf { it.expanded != null }
@@ -261,13 +303,14 @@ class IslandController(
     private fun allItems(): Map<String, IslandItem> =
         itemsBySource
             .flatMap { (source, items) ->
-                when {
+                val visible = when {
                     onLauncher -> items
                     source in launcherOnlySources -> items.filter { it.bypassLauncherOnly }
                     else -> items.filter { it.bypassLauncherOnly || it.key.substringBefore(':') !in launcherOnlyProviders }
-                }
+                }.filter { !isUpdateOnly(source, it) || it.key in revealTimers }
+                val hideHere = hiddenPackage != null && hiddenSources?.contains(source) != false
+                if (hideHere) visible.filter { it.sourcePackage != hiddenPackage } else visible
             }
-            .filter { hiddenPackage == null || it.sourcePackage != hiddenPackage }
             .map(::inlineBubbleIfDisabled)
             .associateBy { it.key }
 

@@ -822,6 +822,11 @@ object FeatureRegistry {
                             "island_show_time_battery",
                         ),
                         SearchSetting(
+                            R.string.island_time_tap_opens_clock_title,
+                            R.string.island_show_time_title,
+                            "island_show_time_battery",
+                        ),
+                        SearchSetting(
                             R.string.island_show_battery_title,
                             R.string.island_battery_style_title,
                             "island_show_battery",
@@ -858,6 +863,11 @@ object FeatureRegistry {
                             "island_show_alarm",
                         ),
                         SearchSetting(
+                            R.string.island_alarm_show_remaining_title,
+                            R.string.island_show_alarm_title,
+                            "island_show_alarm",
+                        ),
+                        SearchSetting(
                             R.string.island_show_sound_mode_title,
                             R.string.island_sound_mode_vibrate,
                             "island_show_sound_mode",
@@ -888,6 +898,11 @@ object FeatureRegistry {
                             "island_notif_hub",
                         ),
                         SearchSetting(
+                            R.string.island_notif_themed_bubble_title,
+                            R.string.island_notif_hub_title,
+                            "island_notif_hub",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
@@ -907,6 +922,11 @@ object FeatureRegistry {
                             R.string.duo_show_media_title,
                             "island_media_show_like",
                         ),
+                        SearchSetting(
+                            R.string.island_show_on_update_title,
+                            R.string.island_providers_title,
+                            "island_provider_show_on_update",
+                        ),
                     ),
                 parentFeatureId = "Display",
             ) {
@@ -915,7 +935,7 @@ object FeatureRegistry {
                 override fun isToggleEnabled(
                     viewModel: MainViewModel,
                     context: Context,
-                ) = viewModel.isAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
+                ) = viewModel.isAccessibilityEnabled.value
 
                 override fun onToggle(
                     viewModel: MainViewModel,

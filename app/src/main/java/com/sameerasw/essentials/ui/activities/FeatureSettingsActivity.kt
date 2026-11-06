@@ -381,6 +381,7 @@ fun FeatureSettingsScreen(
                                 !isWriteSecureSettingsEnabled
                         "Smart pixels" -> !isAccessibilityEnabled
                         "Duo", "Status glance" -> !isAccessibilityEnabled
+                        "Island" -> !isAccessibilityEnabled
                         "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                         "Snooze system notifications" -> !isNotificationListenerEnabled
                         "Screen locked security" ->
@@ -834,6 +835,7 @@ fun FeatureSettingsScreen(
                                                             !isWriteSecureSettingsEnabled
                                                     "Smart pixels" -> !isAccessibilityEnabled
                                                     "Duo", "Status glance" -> !isAccessibilityEnabled
+                                                    "Island" -> !isAccessibilityEnabled
                                                     "AOD wallpaper" -> !isAccessibilityEnabled || !viewModel.isStoragePermissionGranted.value
                                                     "Snooze system notifications" -> !isNotificationListenerEnabled
                                                     "Screen locked security" ->

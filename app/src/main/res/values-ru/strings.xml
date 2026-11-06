@@ -1722,6 +1722,7 @@
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_dismiss_on_outside_title">Скрывать при действиях снаружи</string>
     <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
     <string name="duo_battery_percentage_only_colored_desc">Отображать процентное содержание только при зарядке, в режиме экономии заряда батареи или при низком уровне заряда батареи</string>
@@ -1772,6 +1773,7 @@
     <string name="conscious_gate_select_apps_title">Выбрать приложения</string>
     <string name="status_glance_calendar_timeframe_title">Показывать предстоящие события в</string>
     <string name="island_launcher_only_title">Показывать только в лаунчере </string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="status_glance_calendar_show_all_day_title">Показывать события на весь день </string>
     <string name="conscious_gate_delay_title">Длительность паузы</string>
     <string name="conscious_gate_reappear_desc">Снова показывать экран паузы при непрерывном использовании приложения</string>
@@ -1902,6 +1904,7 @@
     <string name="feat_circle_to_search_gesture_hide_on_shade">Отключить расширение статусной панели </string>
     <string name="island_themed_app_icons_title">Тематические иконки</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -2016,4 +2019,5 @@
     <string name="about_desc_haptics">Переключите вибрацию системы и сенсорную обратную связь вместе. Требуется разрешение на изменение настроек системы. </string>
     <string name="tile_haptics">Вибрация</string>
     <string name="app_overcast">Погода</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
 </resources>

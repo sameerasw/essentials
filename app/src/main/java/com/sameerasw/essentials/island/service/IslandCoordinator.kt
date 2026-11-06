@@ -342,8 +342,16 @@ class IslandCoordinator(
         controller.setLauncherState(onLauncher, sources, ProviderTrustStore(settings).launcherOnly())
     }
 
+    private fun applyUpdateOnly() {
+        controller.setUpdateOnly(emptySet(), ProviderTrustStore(settings).showOnUpdate(), settings.getIslandPeekDurationMs())
+    }
+
     private fun applyOwnerAppHiding() {
-        controller.setHiddenPackage(foregroundPackage.takeIf { settings.isIslandHideInOwnerAppEnabled() })
+        when {
+            settings.isIslandHideInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage)
+            settings.isIslandHideMediaInOwnerAppEnabled() -> controller.setHiddenPackage(foregroundPackage, setOf(MediaPlugin.ID))
+            else -> controller.setHiddenPackage(null)
+        }
     }
 
     fun updateConsciousGateState() {
@@ -424,6 +432,7 @@ class IslandCoordinator(
         revealing = true
         controller.setSuppressed(true)
         applyLauncherOnly()
+        applyUpdateOnly()
         val newScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         scope = newScope
         applyConfig()
@@ -703,9 +712,10 @@ class IslandCoordinator(
             outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
             outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
             pulseShadow = settings.isIslandPulseShadowEnabled(),
-            pulseSize = settings.getIslandPulseShadowSize().coerceIn(0.2f, 1f),
-            pulseYShift = settings.getIslandPulseShadowYShift().coerceIn(0f, 1f),
-            pulseSpread = settings.getIslandPulseShadowSpread().coerceIn(1f, 4f),
+            pulseBlur = settings.getIslandPulseShadowBlur().coerceIn(0f, 48f).dp,
+            pulseSpread = settings.getIslandPulseShadowSpread().coerceIn(0f, 24f).dp,
+            pulseOffsetY = settings.getIslandPulseShadowOffsetY().coerceIn(-8f, 16f).dp,
+            pulseOpacity = settings.getIslandPulseShadowOpacity().coerceIn(0.1f, 1f),
             pulseDurationMs = settings.getIslandPulseShadowDurationMs().coerceIn(300f, 4000f).toInt(),
             queueStyle = when (settings.getIslandNotifQueueStyle()) {
                 SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP -> QueueStyle.Overlap
@@ -731,7 +741,6 @@ class IslandCoordinator(
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
-        controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
@@ -798,8 +807,9 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR,
             SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, SettingsRepository.KEY_ISLAND_HIDE_ICONS -> syncStatusBar()
             SettingsRepository.KEY_ISLAND_HIDE_WHEN_SCREEN_OFF, SettingsRepository.KEY_ISLAND_SHOW_WHEN -> applySuppression()
-            SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP -> applyOwnerAppHiding()
+            SettingsRepository.KEY_ISLAND_HIDE_IN_OWNER_APP, SettingsRepository.KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP -> applyOwnerAppHiding()
             in LAUNCHER_ONLY_KEYS.values, SettingsRepository.KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY -> applyLauncherOnly()
+            SettingsRepository.KEY_ISLAND_PROVIDERS_ON_UPDATE, SettingsRepository.KEY_ISLAND_PEEK_DURATION_MS -> applyUpdateOnly()
             SettingsRepository.KEY_ISLAND_HIDE_ON_SHADE -> applySuppression()
             SettingsRepository.KEY_ISLAND_PREVIEW_RING -> if (running) applyPreviewRing()
             SettingsRepository.KEY_ISLAND_PREVIEW_STAGE -> applyPreviewStage()
@@ -825,6 +835,7 @@ class IslandCoordinator(
             "alarm" to SettingsRepository.KEY_ISLAND_ALARM_LAUNCHER_ONLY,
         )
         val CONFIG_KEYS = setOf(
+            SettingsRepository.KEY_ISLAND_NOTIF_THEMED_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_INLINE,
             SettingsRepository.KEY_ISLAND_USE_AUTO_DETECT,
@@ -845,9 +856,10 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_THICKNESS,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED,
             SettingsRepository.KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION,
-            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SIZE,
-            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_Y_SHIFT,
-            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SPREAD,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_BLUR,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_SPREAD_DP,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_OFFSET_Y,
+            SettingsRepository.KEY_ISLAND_PULSE_SHADOW_OPACITY,
             SettingsRepository.KEY_ISLAND_PULSE_SHADOW_DURATION_MS,
             SettingsRepository.KEY_ISLAND_EXPANDED_ROUNDNESS,
             SettingsRepository.KEY_ISLAND_EXPANDED_PADDING,
