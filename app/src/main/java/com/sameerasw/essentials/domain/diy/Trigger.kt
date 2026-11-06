@@ -206,9 +206,22 @@ sealed interface Trigger {
         override val icon: Int = R.drawable.rounded_directions_car_24
     }
 
+    @Keep
+    data class SystemMetric(
+        @SerializedName("metric") val metric: Metric = Metric.BATTERY_LEVEL,
+        @SerializedName("comparison") val comparison: Comparison = Comparison(),
+        @SerializedName("cooldownSeconds") val cooldownSeconds: Int = DEFAULT_VALUE_COOLDOWN_SECONDS,
+    ) : Trigger {
+        override val title: Int get() = metric.title
+        override val icon: Int get() = metric.icon
+        override val isConfigurable: Boolean get() = true
+    }
+
     companion object {
         const val DEFAULT_LOCATION_RADIUS_METERS = 200
         const val MIN_LOCATION_RADIUS_METERS = 100
         const val MAX_LOCATION_RADIUS_METERS = 5000
+        const val DEFAULT_VALUE_COOLDOWN_SECONDS = 60
+        const val MIN_VALUE_COOLDOWN_SECONDS = 5
     }
 }

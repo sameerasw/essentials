@@ -62,6 +62,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.domain.diy.systemMetricText
 import com.sameerasw.essentials.domain.diy.State as DIYState
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -301,9 +302,10 @@ fun AutomationItem(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                     )
-                                    automationSummary(automation)?.let { summary ->
+                                    val summary = automationSummary(automation)
+                                    summary?.let {
                                         Text(
-                                            text = summary,
+                                            text = it,
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
                                             maxLines = 2,
@@ -455,6 +457,7 @@ private fun automationSummary(automation: Automation): String? {
                         trigger.appName.ifBlank { null },
                         trigger.textContains.ifBlank { null }?.let { "\"$it\"" },
                     ).joinToString(" · ").ifBlank { null }
+                is Trigger.SystemMetric -> systemMetricText(context, trigger.metric, trigger.comparison)
                 else -> null
             }
 
@@ -463,6 +466,7 @@ private fun automationSummary(automation: Automation): String? {
                 is DIYState.TimePeriod ->
                     "${time(state.startHour, state.startMinute)} – ${time(state.endHour, state.endMinute)} · ${days(state.days)}"
                 is DIYState.BatteryLevel -> "${state.minLevel}% – ${state.maxLevel}%"
+                is DIYState.SystemMetric -> systemMetricText(context, state.metric, state.comparison)
                 is DIYState.CalendarEvent ->
                     if (state.calendarIds.isEmpty()) {
                         allCalendars
