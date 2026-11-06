@@ -8,6 +8,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -29,6 +31,8 @@ fun IslandNotificationHubOptionsBottomSheet(
     onDismissRequest: () -> Unit,
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
+    val themedAppIcons = remember { SettingsRepository(context).getBoolean(SettingsRepository.KEY_ISLAND_THEMED_APP_ICONS, false) }
 
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
@@ -90,9 +94,21 @@ fun IslandNotificationHubOptionsBottomSheet(
                     iconRes = R.drawable.rounded_person_24,
                     title = stringResource(R.string.island_notif_hub_chat_pictures),
                     isChecked = viewModel.isIslandNotifHubPreferChatPictures.value,
+                    enabled = !(viewModel.isIslandNotifThemedBubble.value && themedAppIcons),
                     onCheckedChange = {
                         HapticUtil.performVirtualKeyHaptic(view)
                         viewModel.setIslandNotifHubPreferChatPictures(it)
+                    },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_invert_colors_24,
+                    title = stringResource(R.string.island_notif_themed_bubble_title),
+                    description = if (themedAppIcons) null else stringResource(R.string.island_notif_themed_bubble_needs_themed_icons),
+                    isChecked = viewModel.isIslandNotifThemedBubble.value && themedAppIcons,
+                    enabled = themedAppIcons,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNotifThemedBubble(it)
                     },
                 )
                 ConfigSliderItem(
