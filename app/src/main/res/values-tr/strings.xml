@@ -2054,4 +2054,5 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="notification_lighting_ripple_repeat_count_title">Tekrar sayısı</string>
     <string name="notification_lighting_ripple_wave_size_title">Dalga boyutu</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
 </resources>

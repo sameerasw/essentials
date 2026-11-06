@@ -1874,6 +1874,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_sound_mode_keep_icon_title">Tiếp tục hiển thị biểu tượng</string>
     <string name="island_alarm_window_title">Hiển thị báo thức trong vòng</string>
     <string name="island_launcher_only_title">Chỉ hiển thị trên màn hình chính</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">Ẩn khi ứng dụng đang mở</string>
     <string name="island_preview_ring_title">Hiển thị gợi ý căn chỉnh</string>
     <string name="island_preview_stage_title">Giai đoạn xem trước</string>
@@ -1920,8 +1921,6 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>
     <string name="island_border_outline_thickness_title">Độ dày đường viền</string>
     <string name="island_notif_conceal_locked_title">Ẩn nội dung thông báo</string>
-    <string name="island_pulse_shadow_size_title">Kích thước phát sáng</string>
-    <string name="island_pulse_shadow_y_shift_title">Dịch chuyển theo chiều dọc</string>
     <string name="island_pulse_shadow_spread_title">Ánh sáng lan tỏa</string>
     <string name="island_pulse_shadow_duration_title">Thời lượng xung</string>
     <string name="duo_enable_title">Bật Duo</string>

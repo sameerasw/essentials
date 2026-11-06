@@ -16,13 +16,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.AppPermission
 
 object AutomationFailureNotifier {
     private const val CHANNEL_ID = "automations"
+
+    private fun createChannelIfNeeded(
+        context: Context,
+        manager: NotificationManager,
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL_ID,
+                    context.getString(R.string.automation_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT,
+                ),
+            )
+        }
+    }
 
     fun missingPermissions(
         context: Context,
@@ -54,15 +68,7 @@ object AutomationFailureNotifier {
     ) {
         if (!PermissionUtils.isPostNotificationsEnabled(context)) return
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            manager.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    context.getString(R.string.automation_channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT,
-                ),
-            )
-        }
+        createChannelIfNeeded(context, manager)
 
         val actionName = context.getString(action.title)
         val openApp =

@@ -583,6 +583,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
+        const val KEY_ISLAND_NOTIF_THEMED_BUBBLE = "island_notif_themed_bubble"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
         const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
         const val KEY_ISLAND_EXPANDED_PADDING = "island_expanded_padding"
@@ -671,6 +672,7 @@ class SettingsRepository(
         const val KEY_ISLAND_PROVIDERS_HIDDEN = "island_providers_hidden"
         const val KEY_ISLAND_PROVIDERS_LAUNCHER_ONLY = "island_providers_launcher_only"
         const val KEY_ISLAND_PROVIDERS_HIDE_LOCKED = "island_providers_hide_locked"
+        const val KEY_ISLAND_PROVIDERS_ON_UPDATE = "island_providers_on_update"
 
         private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
         const val KEY_ISLAND_CALENDAR_ICONS = "island_calendar_icons"
@@ -693,6 +695,7 @@ class SettingsRepository(
         const val KEY_ISLAND_ALARM_LAUNCHER_ONLY = "island_alarm_launcher_only"
         const val KEY_ISLAND_ALARM_WINDOW_HOURS = "island_alarm_window_hours"
         const val KEY_ISLAND_ALARM_HIDE_TIME = "island_alarm_hide_time"
+        const val KEY_ISLAND_ALARM_SHOW_REMAINING = "island_alarm_show_remaining"
         const val KEY_ISLAND_SHOW_TRAVEL = "island_show_travel"
         const val KEY_ISLAND_SHOW_CAFFEINATE = "island_show_caffeinate"
         const val KEY_ISLAND_CAFFEINATE_SHOW_TIME = "island_caffeinate_show_time"
@@ -758,9 +761,10 @@ class SettingsRepository(
         const val KEY_ISLAND_BORDER_OUTLINE_THICKNESS = "island_border_outline_thickness"
         const val KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED = "island_border_outline_hide_expanded"
         const val KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION = "island_pulse_shadow_on_notification"
-        const val KEY_ISLAND_PULSE_SHADOW_SIZE = "island_pulse_shadow_size"
-        const val KEY_ISLAND_PULSE_SHADOW_Y_SHIFT = "island_pulse_shadow_y_shift"
-        const val KEY_ISLAND_PULSE_SHADOW_SPREAD = "island_pulse_shadow_spread"
+        const val KEY_ISLAND_PULSE_SHADOW_BLUR = "island_pulse_shadow_blur"
+        const val KEY_ISLAND_PULSE_SHADOW_SPREAD_DP = "island_pulse_shadow_spread_dp"
+        const val KEY_ISLAND_PULSE_SHADOW_OFFSET_Y = "island_pulse_shadow_offset_y"
+        const val KEY_ISLAND_PULSE_SHADOW_OPACITY = "island_pulse_shadow_opacity"
         const val KEY_ISLAND_PULSE_SHADOW_DURATION_MS = "island_pulse_shadow_duration_ms"
         const val ISLAND_BORDER_OUTLINE_DEFAULT_COLOR = "#202020"
 
@@ -4135,20 +4139,29 @@ class SettingsRepository(
     fun isIslandPulseShadowEnabled(): Boolean = getBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, false)
     fun setIslandPulseShadowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, enabled)
 
-    fun getIslandPulseShadowSize(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SIZE, 0.5f)
-    fun setIslandPulseShadowSize(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SIZE, value)
+    fun getIslandPulseShadowBlur(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_BLUR, 20f)
+    fun setIslandPulseShadowBlur(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_BLUR, value)
 
-    fun getIslandPulseShadowYShift(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_Y_SHIFT, 0.35f)
-    fun setIslandPulseShadowYShift(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_Y_SHIFT, value)
+    fun getIslandPulseShadowSpread(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD_DP, 6f)
+    fun setIslandPulseShadowSpread(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD_DP, value)
 
-    fun getIslandPulseShadowSpread(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD, 2f)
-    fun setIslandPulseShadowSpread(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_SPREAD, value)
+    fun getIslandPulseShadowOffsetY(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_OFFSET_Y, 1f)
+    fun setIslandPulseShadowOffsetY(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_OFFSET_Y, value)
+
+    fun getIslandPulseShadowOpacity(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_OPACITY, 0.35f)
+    fun setIslandPulseShadowOpacity(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_OPACITY, value)
 
     fun getIslandPulseShadowDurationMs(): Float = getFloat(KEY_ISLAND_PULSE_SHADOW_DURATION_MS, 1450f)
     fun setIslandPulseShadowDurationMs(value: Float) = putFloat(KEY_ISLAND_PULSE_SHADOW_DURATION_MS, value)
 
     fun isIslandShowGlowEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_GLOW, true)
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
+
+    fun isIslandNotifThemedBubbleEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_THEMED_BUBBLE, false)
+    fun setIslandNotifThemedBubbleEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_THEMED_BUBBLE, enabled)
+
+    fun isIslandNotifThemedBubbleActive(): Boolean =
+        isIslandNotifThemedBubbleEnabled() && getBoolean(KEY_ISLAND_THEMED_APP_ICONS, false)
 
     fun getIslandExpandedWidth(): Float = getFloat(KEY_ISLAND_EXPANDED_WIDTH, 360f)
     fun setIslandExpandedWidth(value: Float) = putFloat(KEY_ISLAND_EXPANDED_WIDTH, value)
@@ -4306,6 +4319,9 @@ class SettingsRepository(
     fun getIslandAlarmWindowHours(): Int = getInt(KEY_ISLAND_ALARM_WINDOW_HOURS, 12)
     fun setIslandAlarmWindowHours(hours: Int) = putInt(KEY_ISLAND_ALARM_WINDOW_HOURS, hours)
 
+    fun isIslandAlarmShowRemainingEnabled(): Boolean = getBoolean(KEY_ISLAND_ALARM_SHOW_REMAINING, false)
+    fun setIslandAlarmShowRemainingEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALARM_SHOW_REMAINING, enabled)
+
     fun isIslandShowTravelEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TRAVEL, true)
     fun setIslandShowTravelEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TRAVEL, enabled)
 
@@ -4427,6 +4443,18 @@ class SettingsRepository(
 
     fun getIslandPeekDurationMs(): Long = getLong(KEY_ISLAND_PEEK_DURATION_MS, 3500L)
     fun setIslandPeekDurationMs(value: Long) = putLong(KEY_ISLAND_PEEK_DURATION_MS, value)
+
+    fun getIslandProvidersShowOnUpdate(): Set<String> =
+        getString(KEY_ISLAND_PROVIDERS_ON_UPDATE)
+            ?.let { runCatching { gson.fromJson<List<String>>(it, object : TypeToken<List<String>>() {}.type) }.getOrNull() }
+            .orEmpty()
+            .toSet()
+
+    fun setIslandProviderShowOnUpdate(packageName: String, on: Boolean) {
+        val current = getIslandProvidersShowOnUpdate()
+        val next = if (on) current + packageName else current - packageName
+        putString(KEY_ISLAND_PROVIDERS_ON_UPDATE, next.takeIf { it.isNotEmpty() }?.let(gson::toJson))
+    }
 
     fun isIslandMediaPeekSongChangeEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE, true)
     fun setIslandMediaPeekSongChangeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_PEEK_SONG_CHANGE, enabled)

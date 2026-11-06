@@ -74,4 +74,13 @@ sealed interface State {
         override val title: Int get() = R.string.diy_state_calendar_event
         override val icon: Int get() = R.drawable.rounded_calendar_today_24
     }
+
+    @Keep
+    data class SystemMetric(
+        @SerializedName("metric") val metric: Metric = Metric.BATTERY_LEVEL,
+        @SerializedName("comparison") val comparison: Comparison = Comparison(),
+    ) : State {
+        override val title: Int get() = metric.title
+        override val icon: Int get() = metric.icon
+    }
 }

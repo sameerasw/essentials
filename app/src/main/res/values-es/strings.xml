@@ -1751,6 +1751,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>
     <string name="diy_volume_channel_alarm">Alarmas</string>
     <string name="island_launcher_only_title">Solo mostrar en el launcher</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_alarm_window_title">Mostrar alarmas dentro</string>
     <string name="island_battery_only_low_title">Solo mostrar si esta baja</string>
     <string name="island_battery_percentage_title">Mostrar porcentaje</string>
@@ -1810,8 +1811,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_border_outline_hide_expanded_title">Ocultar al Expandir</string>
     <string name="island_border_outline_hide_expanded_desc">Solo delinear la isla compacta y de vista previa</string>
     <string name="island_border_outline_desc">Muestra una línea alrededor de la isla</string>
-    <string name="island_pulse_shadow_size_title">Tamaño del Brillo</string>
-    <string name="island_pulse_shadow_y_shift_title">Desplazamiento vertical</string>
     <string name="island_pulse_shadow_spread_title">Ondas de Brillo</string>
     <string name="island_pulse_shadow_duration_title">Duración de la Animación</string>
     <string name="island_max_items_title">Número máximo de elementos a mostrar</string>

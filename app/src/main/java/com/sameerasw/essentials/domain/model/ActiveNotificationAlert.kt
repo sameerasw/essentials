@@ -32,5 +32,7 @@ data class ActiveNotificationAlert(
     val ongoing: Boolean = false,
     val isConversation: Boolean = false,
     val hubOnly: Boolean = false,
+    val themedIcon: Bitmap? = null,
+    val smallIcon: Bitmap? = null,
 )
 
