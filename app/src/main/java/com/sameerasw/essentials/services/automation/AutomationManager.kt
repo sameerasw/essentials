@@ -123,7 +123,7 @@ object AutomationManager {
             when (automation.type) {
                 Automation.Type.TRIGGER -> {
                     when (automation.trigger) {
-                        is Trigger.ChargerConnected, is Trigger.ChargerDisconnected, is Trigger.PowerSavingOn, is Trigger.PowerSavingOff -> {
+                        is Trigger.ChargerConnected, is Trigger.ChargerDisconnected, is Trigger.PowerSavingOn, is Trigger.PowerSavingOff, is Trigger.SystemMetric -> {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }
@@ -169,7 +169,7 @@ object AutomationManager {
 
                 Automation.Type.STATE -> {
                     when (automation.state) {
-                        is DIYState.Charging, is DIYState.PowerSaving, is DIYState.BatteryLevel -> {
+                        is DIYState.Charging, is DIYState.PowerSaving, is DIYState.BatteryLevel, is DIYState.SystemMetric -> {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }
@@ -213,7 +213,9 @@ object AutomationManager {
             startService(context)
         } else {
             stopService(context)
+            activeModules.values.forEach { it.updateAutomations(emptyList()) }
             stopAllModules()
+            PowerModule.closeOrphanedOpenStates(context)
             return
         }
 
@@ -227,7 +229,11 @@ object AutomationManager {
                 }
             module.updateAutomations(powerAutomations)
         } else {
-            activeModules.remove(PowerModule.ID)?.stop(context)
+            activeModules.remove(PowerModule.ID)?.let {
+                it.updateAutomations(emptyList())
+                it.stop(context)
+            }
+            PowerModule.closeOrphanedOpenStates(context)
         }
 
         // Display Module
