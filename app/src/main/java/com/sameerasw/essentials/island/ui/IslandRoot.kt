@@ -1328,20 +1328,6 @@ private fun IslandRootContent(
                 spec.growDirection < 0 -> Alignment.TopEnd
                 else -> Alignment.TopCenter
             }
-            val backdrop = backdropSlot.content
-            if (key.stage == IslandStage.Expanded && backdrop != null) {
-                Box(
-                    Modifier
-                        .layout { measurable, _ ->
-                            val p = measurable.measure(Constraints.fixed(surfaceSize.width.coerceAtLeast(0), surfaceSize.height.coerceAtLeast(0)))
-                            layout(0, 0) { p.place(0, 0) }
-                        }
-                        .graphicsLayer {
-                            alpha = contentAlpha.value * growGate(0.3f, 0.5f) * (1f - collapse.value * 1.6f).coerceIn(0f, 1f)
-                        },
-                ) { backdrop() }
-            }
-            Box(contentAlignment = layerAlign) {
             val queuedNext = item?.queue?.next
             if (showDismissReveal && queuedNext != null) {
                 Box(
@@ -1367,6 +1353,26 @@ private fun IslandRootContent(
                     modifier = Modifier.matchParentSize(),
                 )
             }
+            val backdrop = backdropSlot.content
+            if (key.stage == IslandStage.Expanded && backdrop != null) {
+                Box(
+                    Modifier
+                        .layout { measurable, _ ->
+                            val p = measurable.measure(Constraints.fixed(surfaceSize.width.coerceAtLeast(0), surfaceSize.height.coerceAtLeast(0)))
+                            layout(0, 0) { p.place(0, 0) }
+                        }
+                        .graphicsLayer {
+                            alpha = contentAlpha.value * growGate(0.3f, 0.5f) * (1f - collapse.value * 1.6f).coerceIn(0f, 1f) *
+                                if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
+                            translationX = dismissOffset.value + wiggle.value
+                            val sliding = dismissOffset.value != 0f
+                            shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
+                            clip = sliding
+                        }
+                        .drawBehind { if (dismissOffset.value != 0f) drawRect(Color.Black) },
+                ) { backdrop() }
+            }
+            Box(contentAlignment = layerAlign) {
             // Keyed, so the leaving layer keeps its composition (a Line marquee doesn't restart when it becomes outgoing).
             for (layerKey in listOfNotNull(shownOutgoing, key)) key(layerKey) {
                 val current = layerKey == key
@@ -1399,7 +1405,7 @@ private fun IslandRootContent(
                             shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
                             clip = sliding
                         }
-                        .drawBehind { if (dismissOffset.value != 0f) drawRect(Color.Black) }
+                        .drawBehind { if (dismissOffset.value != 0f && backdrop == null) drawRect(Color.Black) }
                 } else {
                     Modifier
                         .layout { measurable, _ ->
