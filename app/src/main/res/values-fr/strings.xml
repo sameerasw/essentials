@@ -1343,7 +1343,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="feat_aod_force_turn_off_desc">Forcer la désactivation du mode Always-On quand il n\'y a aucune notification. Cela requiert la permission d\'accessibilité.</string>
     <string name="feat_auto_accessibility_title">Accessibilité Auto</string>
     <string name="feat_auto_accessibility_desc">Accorde automatiquement la permission d\'accessibilité au lancement de l\'appli si elle est manquante en utilisant la permission WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">Aide et Guides</string>
+    <string name="label_help_guide">Aide et guide</string>
     <string name="tab_your_android">Votre Android</string>
     <string name="label_device_storage">Stockage</string>
     <string name="label_device_ram">Mémoire (RAM)</string>
