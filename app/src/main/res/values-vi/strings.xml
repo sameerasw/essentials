@@ -2021,11 +2021,11 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="screenshot_auto_clean_note">Mỗi ảnh chụp màn hình mới đều đi kèm một thông báo kín đáo để bạn chọn giữ lại. Những ảnh chụp màn hình được gắn dấu sao sẽ luôn được lưu giữ.</string>
     <string name="screenshots_cleaned_count_title">Ảnh chụp màn hình đã được làm sạch</string>
     <string name="screenshots_storage_saved_title">Đã lưu vào bộ nhớ</string>
-    <string name="about_desc_duo">Cái này không gấp được
+    <string name="about_desc_duo">Cái này không gập được
 
-Một giao diện hiển thị trạng thái kiểu iPhone Duo, hiển thị trạng thái pin, mạng, phương tiện và nhiều hơn nữa trong một giao diện người dùng nhỏ gọn, tối giản, lý tưởng nhất là xung quanh camera, với nhiều mục để hiển thị và cử chỉ để tương tác.
+Một chỉ báo trạng thái kiểu iPhone Duo giúp hiển thị pin, mạng, trạng thái phát nội dung đa phương tiện và nhiều thông tin khác trong giao diện nhỏ gọn, tối giản, lý tưởng nhất là quanh camera, với nhiều mục hiển thị và thao tác bằng cử chỉ.
 
-Đối với các thiết bị có thể gập lại, hãy đảm bảo tắt tùy chọn \'Tự động phát hiện camera\' nếu nó không đáng tin cậy và tự căn chỉnh Duo với vị trí camera bên trong và bên ngoài, sau đó Essentials sẽ ghi nhớ bố cục của bạn.</string>
+Đối với các thiết bị gập, hãy tắt tùy chọn “Tự động phát hiện camera” nếu tính năng này không đáng tin cậy, rồi căn chỉnh Duo thủ công với vị trí camera bên trong và bên ngoài. Sau đó, Essentials sẽ ghi nhớ bố cục của bạn.</string>
     <string name="label_shake_for_help">Lắc để trợ giúp</string>
     <string name="about_desc_island">Dynamic island dành cho Android của bạn, bao quanh phần khoét hình camera.
 
@@ -2070,7 +2070,9 @@ Cài đặt ứng dụng đồng hành Essentials trên đồng hồ để đồ
     <string name="about_desc_mobile_data_always_on">Keeps mobile data active even while connected to Wi-Fi.\n\nThis lets your phone switch to mobile data instantly when the Wi-Fi connection gets weak or drops, at the cost of some extra battery use.</string>
     <string name="about_desc_wireless_display_certification">Shows the hidden wireless display certification options in Android\'s developer settings.\n\nThese options expose extra Wi-Fi display (Miracast) settings for testing and troubleshooting casting.</string>
     <string name="about_desc_sim_names">Rename the carrier display name shown for your active SIM cards.\n\nUseful to tell SIMs apart or to replace a carrier name you do not like. Requires advanced permissions such as Shizuku or root.</string>
-    <string name="about_desc_watch_wireless_debugging">Turn on wireless debugging on your watch remotely from your phone.\n\nThis saves you from digging through the watch\'s developer options when you want to connect over ADB.</string>
+    <string name="about_desc_watch_wireless_debugging">Bật tính năng gỡ lỗi không dây trên đồng hồ từ xa bằng điện thoại.
+
+Nhờ vậy, bạn không cần phải tìm trong tùy chọn nhà phát triển của đồng hồ mỗi khi muốn kết nối qua ADB.</string>
     <string name="about_desc_watch_esim_install">Cài đặt eSIM trên Pixel Watch của bạn, ngay cả ở những khu vực thiết bị này chưa được hỗ trợ chính thức.
 
 Đây là tính năng thử nghiệm. Tính năng này dựa vào một màn hình ẩn trong ứng dụng Pixel Watch, màn hình này có thể thay đổi, và không thể xác nhận việc cài đặt có thành công hay không.</string>
