@@ -161,8 +161,8 @@ fun IslandRoot(
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val focused = state.items[state.focusedKey]
-    val dynamicAccent = (focused?.outlineAccent ?: focused?.accent)
-        ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.let { it.outlineAccent ?: it.accent } }
+    val dynamicAccent = focused?.accent
+        ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
     val iconBase = if (targetSpec.iconMaterialYou) primary else Color.White
     val iconTarget = if (targetSpec.iconDynamic) {
         dynamicAccent ?: iconBase
