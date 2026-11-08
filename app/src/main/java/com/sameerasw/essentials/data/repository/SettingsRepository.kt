@@ -214,6 +214,9 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_SLOT_5 = "quick_ball_slot_5"
         const val KEY_QUICK_BALL_SLOT_COUNT = "quick_ball_slot_count"
         const val KEY_QUICK_BALL_CONNECTOR_STYLE = "quick_ball_connector_style"
+        const val KEY_QUICK_BALL_COLOR_MODE = "quick_ball_color_mode"
+        const val KEY_QUICK_BALL_CUSTOM_COLOR = "quick_ball_custom_color"
+        const val KEY_QUICK_BALL_BALL_STYLE = "quick_ball_ball_style"
         const val KEY_QUICK_BALL_MENU_RADIUS = "quick_ball_menu_radius"
         const val KEY_QUICK_BALL_MENU_SIZE = "quick_ball_menu_size"
         const val KEY_QUICK_BALL_STICK_TO_EDGE = "quick_ball_stick_to_edge"
@@ -4846,9 +4849,34 @@ class SettingsRepository(
 
     fun setQuickBallGesturesEnabled(value: Boolean) = putBoolean(KEY_QUICK_BALL_GESTURES_ENABLED, value)
 
-    fun getQuickBallSlotCount(): Int = getInt(KEY_QUICK_BALL_SLOT_COUNT, 5).coerceIn(3, 9)
+    fun getQuickBallSlotCount(): Int = getInt(KEY_QUICK_BALL_SLOT_COUNT, 5).coerceIn(1, 9)
 
-    fun setQuickBallSlotCount(count: Int) = putInt(KEY_QUICK_BALL_SLOT_COUNT, count.coerceIn(3, 9))
+    fun setQuickBallSlotCount(count: Int) = putInt(KEY_QUICK_BALL_SLOT_COUNT, count.coerceIn(1, 9))
+
+    fun deleteQuickBallSlot(slotIndex: Int) {
+        val currentCount = getQuickBallSlotCount()
+        if (currentCount <= 1 || slotIndex !in 1..currentCount) return
+        val editor = prefs.edit()
+        for (k in slotIndex until currentCount) {
+            val nextAction = getQuickBallSlotAction(k + 1)
+            editor.putString("quick_ball_slot_$k", ActionGsonAdapter.toJson(nextAction))
+        }
+        editor.remove("quick_ball_slot_$currentCount")
+        editor.putInt(KEY_QUICK_BALL_SLOT_COUNT, currentCount - 1)
+        editor.apply()
+    }
+
+    fun getQuickBallColorMode(): String = prefs.getString(KEY_QUICK_BALL_COLOR_MODE, "DYNAMIC") ?: "DYNAMIC"
+
+    fun setQuickBallColorMode(mode: String) = putString(KEY_QUICK_BALL_COLOR_MODE, mode)
+
+    fun getQuickBallCustomColor(): String = prefs.getString(KEY_QUICK_BALL_CUSTOM_COLOR, "#00E676") ?: "#00E676"
+
+    fun setQuickBallCustomColor(hex: String) = putString(KEY_QUICK_BALL_CUSTOM_COLOR, hex)
+
+    fun getQuickBallBallStyle(): String = prefs.getString(KEY_QUICK_BALL_BALL_STYLE, "CLASSIC") ?: "CLASSIC"
+
+    fun setQuickBallBallStyle(style: String) = putString(KEY_QUICK_BALL_BALL_STYLE, style)
 
     fun getQuickBallGestureAction(gestureName: String): Action? {
         val key = "quick_ball_gesture_$gestureName"

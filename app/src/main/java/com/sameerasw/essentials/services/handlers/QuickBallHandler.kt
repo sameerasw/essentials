@@ -31,6 +31,7 @@ import android.view.animation.PathInterpolator
 import androidx.core.content.getSystemService
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.ui.activities.LockscreenActionActivity
@@ -184,13 +185,20 @@ class QuickBallHandler(
     }
 
     private fun showBall() {
+        if (isStashed) {
+            if (pillView == null && settings.isQuickBallStickToEdge()) {
+                showPill()
+            }
+            return
+        }
         if (fabView == null) {
             createFabWindow()
             isStashed = false
             if (settings.isQuickBallStickToEdge()) {
                 stashFab(animated = false)
+            } else {
+                resetInactivityTimer()
             }
-            resetInactivityTimer()
         }
     }
 
@@ -275,8 +283,7 @@ class QuickBallHandler(
                         unstashFab()
                     }
                     if (settings.isQuickBallHaptic()) {
-                        fabView?.let { HapticUtil.performUIHaptic(it) }
-                            ?: HapticUtil.performHapticForService(service, com.sameerasw.essentials.domain.HapticFeedbackType.CLICK)
+                        IslandHaptics.openClick(service)
                     }
                     expandMenu()
                 }
@@ -310,7 +317,9 @@ class QuickBallHandler(
         params.width = fabSizePx
         params.height = fabSizePx
         fab.updateAppearance()
-        updateViewLayoutSafe(fab, params)
+        if (!isStashed && !isStashing) {
+            updateViewLayoutSafe(fab, params)
+        }
     }
 
     private fun snapToEdge() {
@@ -326,6 +335,9 @@ class QuickBallHandler(
         val duration = (distance.toFloat() / screenWidth * 320f).coerceIn(160f, 300f).toLong()
 
         animateFabX(targetX, duration) {
+            if (settings.isQuickBallHaptic()) {
+                IslandHaptics.thresholdReached(service)
+            }
             resetInactivityTimer()
         }
     }
@@ -347,24 +359,30 @@ class QuickBallHandler(
 
         if (isStashed) return
         val (screenWidth, _) = getScreenDimensions()
-        val targetX = if (isOnRight) screenWidth else -fabSizePx
+        val targetX = if (isOnRight) screenWidth + 100 else -fabSizePx - 100
 
         fabAnimator?.cancel()
         val idleAlpha = settings.getQuickBallIdleAlpha()
 
         if (animated) {
             isStashing = true
-            animateFabX(targetX, 240L, alpha = idleAlpha) {
+            animateFabX(targetX, 240L, alpha = 0f) {
                 isStashing = false
                 isStashed = true
+                view.visibility = View.GONE
+                view.alpha = 0f
+                params.x = targetX
+                updateViewLayoutSafe(view, params)
                 showPill()
             }
         } else {
-            view.alpha = idleAlpha
+            view.visibility = View.GONE
+            view.alpha = 0f
             fabX = targetX
             params.x = targetX
             updateViewLayoutSafe(view, params)
             isStashed = true
+            isStashing = false
             showPill()
         }
     }
@@ -393,6 +411,8 @@ class QuickBallHandler(
         isStashing = false
         removePillWindow()
         fabAnimator?.cancel()
+        view.visibility = View.VISIBLE
+        view.alpha = 1.0f
 
         if (animated) {
             params.x = if (isOnRight) screenWidth - fabSizePx else 0
@@ -474,8 +494,7 @@ class QuickBallHandler(
             listener = object : GestureListener {
                 override fun onSingleTap() {
                     if (settings.isQuickBallHaptic()) {
-                        pillView?.let { HapticUtil.performUIHaptic(it) }
-                            ?: HapticUtil.performHapticForService(service, com.sameerasw.essentials.domain.HapticFeedbackType.CLICK)
+                        IslandHaptics.openClick(service)
                     }
                     removePillWindow()
                     unstashFab(animated = false)
@@ -527,7 +546,7 @@ class QuickBallHandler(
     private fun executeGestureAction(gestureName: String) {
         if (!settings.isQuickBallGesturesEnabled()) return
         if (settings.isQuickBallHaptic()) {
-            HapticUtil.performHapticForService(service, com.sameerasw.essentials.domain.HapticFeedbackType.CLICK)
+            IslandHaptics.commit(service)
         }
         val action = settings.getQuickBallGestureAction(gestureName) ?: return
         executeAction(action)
@@ -541,6 +560,9 @@ class QuickBallHandler(
         isExpanded = true
         fabView?.setExpanded(true)
         stopInactivityTimer()
+        if (settings.isQuickBallHaptic()) {
+            IslandHaptics.openClick(service)
+        }
 
         val (screenWidth, _) = getScreenDimensions()
         val actualFabX = getEdgeX(screenWidth)
@@ -597,6 +619,9 @@ class QuickBallHandler(
     }
 
     private fun executeAction(action: Action) {
+        if (settings.isQuickBallHaptic()) {
+            IslandHaptics.commit(service)
+        }
         val isLocked = keyguardManager?.isKeyguardLocked == true
         if (isLocked && opensUi(action)) {
             LockscreenActionActivity.start(service, action)
@@ -698,6 +723,12 @@ class QuickBallHandler(
         val (screenWidth, screenHeight) = getScreenDimensions()
         val savedYRatio = settings.getQuickBallPositionY()
         fabY = (screenHeight * savedYRatio).roundToInt().coerceIn(topBoundary, screenHeight - fabSizePx - bottomBoundary)
+
+        if (isStashed || isStashing) {
+            updatePillAppearance()
+            return
+        }
+
         fabX = getEdgeX(screenWidth)
 
         fabParams?.let { params ->

@@ -23,13 +23,9 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.ui.graphics.toArgb
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.hypot
 import kotlin.math.roundToInt
@@ -75,30 +71,51 @@ class FloatTouchView @JvmOverloads constructor(
     }
 
     fun updateAppearance() {
-        val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val scheme =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            } else {
-                if (isDark) darkColorScheme() else lightColorScheme()
-            }
+        val colors = QuickBallTheme.resolveColors(context, settings)
+        val style = QuickBallBallStyle.fromName(settings.getQuickBallBallStyle())
 
-        val ballBg = scheme.surfaceContainerHighest.toArgb()
-        val iconColor = scheme.primary.toArgb()
-        val borderColor = scheme.outlineVariant.toArgb()
-
-        background =
-            GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                setColor(ballBg)
-                setStroke((1.5f * density).roundToInt(), borderColor)
+        val bgDrawable = GradientDrawable()
+        when (style) {
+            QuickBallBallStyle.CLASSIC -> {
+                bgDrawable.shape = GradientDrawable.OVAL
+                bgDrawable.setColor(colors.surfaceColor)
+                bgDrawable.setStroke((1.5f * density).roundToInt(), colors.borderColor)
+                imageView.setColorFilter(colors.accentColor)
             }
+            QuickBallBallStyle.OUTLINE -> {
+                bgDrawable.shape = GradientDrawable.OVAL
+                val glassBg = (colors.surfaceColor and 0x00FFFFFF) or (0x28 shl 24)
+                bgDrawable.setColor(glassBg)
+                bgDrawable.setStroke((2.5f * density).roundToInt(), colors.accentColor)
+                imageView.setColorFilter(colors.accentColor)
+            }
+            QuickBallBallStyle.SQUIRCLE -> {
+                bgDrawable.shape = GradientDrawable.RECTANGLE
+                bgDrawable.cornerRadius = 14f * density
+                bgDrawable.setColor(colors.surfaceColor)
+                bgDrawable.setStroke((1.5f * density).roundToInt(), colors.borderColor)
+                imageView.setColorFilter(colors.accentColor)
+            }
+            QuickBallBallStyle.NEON -> {
+                bgDrawable.shape = GradientDrawable.OVAL
+                bgDrawable.setColor(colors.surfaceColor)
+                bgDrawable.setStroke((3.0f * density).roundToInt(), colors.accentColor)
+                imageView.setColorFilter(colors.accentColor)
+            }
+            QuickBallBallStyle.MINIMAL -> {
+                bgDrawable.shape = GradientDrawable.OVAL
+                bgDrawable.setColor(colors.accentColor)
+                bgDrawable.setStroke(0, 0)
+                val iconTint = if (Color.luminance(colors.accentColor) > 0.5f) Color.BLACK else Color.WHITE
+                imageView.setColorFilter(iconTint)
+            }
+        }
+
+        background = bgDrawable
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             foreground = RippleDrawable(ColorStateList.valueOf(Color.argb(50, 255, 255, 255)), null, background)
         }
-
-        imageView.setColorFilter(iconColor)
 
         val ballSizeDp = settings.getQuickBallSize()
         val iconSizePx = ((ballSizeDp - 18f).coerceAtLeast(20f) * density).roundToInt()
@@ -137,7 +154,7 @@ class FloatTouchView @JvmOverloads constructor(
         if (isExpanded) {
             if (event.action == MotionEvent.ACTION_UP) {
                 if (settings.isQuickBallHaptic()) {
-                    HapticUtil.performUIHaptic(this)
+                    IslandHaptics.openClick(context)
                 }
                 listener?.onSingleTap()
             }
@@ -154,6 +171,9 @@ class FloatTouchView @JvmOverloads constructor(
     private fun handleDragTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                if (settings.isQuickBallHaptic()) {
+                    IslandHaptics.touchDown(context)
+                }
                 listener?.onTouchDown()
                 startX = event.rawX
                 startY = event.rawY
@@ -168,7 +188,7 @@ class FloatTouchView @JvmOverloads constructor(
                 if (!isDragging && hypot(dx, dy) > touchSlop) {
                     isDragging = true
                     if (settings.isQuickBallHaptic()) {
-                        HapticUtil.performGestureThresholdHaptic(this)
+                        IslandHaptics.thresholdReached(context)
                     }
                 }
 
@@ -182,9 +202,6 @@ class FloatTouchView @JvmOverloads constructor(
                 if (isDragging) {
                     listener?.onDragEnd()
                 } else {
-                    if (settings.isQuickBallHaptic()) {
-                        HapticUtil.performUIHaptic(this)
-                    }
                     listener?.onSingleTap()
                 }
                 isDragging = false

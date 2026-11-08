@@ -3785,6 +3785,22 @@
     <string name="quick_ball_vibration_title">Haptic Feedback</string>
     <string name="quick_ball_vibration_desc">Tactile haptic feedback when tapping buttons and executing gestures</string>
 
+    <!-- Quick Ball Customization & Theming -->
+    <string name="quick_ball_color_section">Colors &amp; Styling</string>
+    <string name="quick_ball_color_mode_title">Color Theme</string>
+    <string name="quick_ball_color_mode_desc">Choose dynamic wallpaper accent or custom colors</string>
+    <string name="quick_ball_color_mode_dynamic">Dynamic (Wallpaper Accent)</string>
+    <string name="quick_ball_color_mode_custom">Custom Accent</string>
+    <string name="quick_ball_custom_color_title">Custom Accent Color</string>
+    <string name="quick_ball_style_title">Ball Style</string>
+    <string name="quick_ball_style_desc">Visual appearance and shape of the floating ball</string>
+    <string name="quick_ball_style_classic">Classic FAB</string>
+    <string name="quick_ball_style_outline">Glass Outline</string>
+    <string name="quick_ball_style_squircle">Expressive Squircle</string>
+    <string name="quick_ball_style_neon">Neon Rim</string>
+    <string name="quick_ball_style_minimal">Minimal Dot</string>
+    <string name="quick_ball_delete_slot">Delete shortcut slot %1$d</string>
+
     <!-- Navigation & Power Actions -->
     <string name="diy_action_back">Back</string>
     <string name="diy_action_home">Home</string>

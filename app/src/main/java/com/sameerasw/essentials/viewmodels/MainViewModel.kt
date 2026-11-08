@@ -175,6 +175,9 @@ class MainViewModel : ViewModel() {
     val isQuickBallHaptic = mutableStateOf(true)
     val quickBallSlotCount = mutableIntStateOf(5)
     val quickBallConnectorStyle = mutableStateOf("DOTTED")
+    val quickBallColorMode = mutableStateOf("DYNAMIC")
+    val quickBallCustomColor = mutableStateOf("#00E676")
+    val quickBallBallStyle = mutableStateOf("CLASSIC")
     val quickBallMenuRadius = mutableFloatStateOf(90f)
     val quickBallMenuSize = mutableFloatStateOf(48f)
     val isQuickBallStickToEdge = mutableStateOf(true)
@@ -860,6 +863,15 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_QUICK_BALL_CONNECTOR_STYLE ->
                         quickBallConnectorStyle.value = settingsRepository.getQuickBallConnectorStyle()
+
+                    SettingsRepository.KEY_QUICK_BALL_COLOR_MODE ->
+                        quickBallColorMode.value = settingsRepository.getQuickBallColorMode()
+
+                    SettingsRepository.KEY_QUICK_BALL_CUSTOM_COLOR ->
+                        quickBallCustomColor.value = settingsRepository.getQuickBallCustomColor()
+
+                    SettingsRepository.KEY_QUICK_BALL_BALL_STYLE ->
+                        quickBallBallStyle.value = settingsRepository.getQuickBallBallStyle()
 
                     SettingsRepository.KEY_QUICK_BALL_MENU_RADIUS ->
                         quickBallMenuRadius.floatValue = settingsRepository.getQuickBallMenuRadius()
@@ -2598,6 +2610,9 @@ class MainViewModel : ViewModel() {
         quickBallSwipeUpAction.value = settingsRepository.getQuickBallGestureAction("SWIPE_UP")
         quickBallSwipeDownAction.value = settingsRepository.getQuickBallGestureAction("SWIPE_DOWN")
         isQuickBallHaptic.value = settingsRepository.isQuickBallHaptic()
+        quickBallColorMode.value = settingsRepository.getQuickBallColorMode()
+        quickBallCustomColor.value = settingsRepository.getQuickBallCustomColor()
+        quickBallBallStyle.value = settingsRepository.getQuickBallBallStyle()
         quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
         quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
         quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
@@ -5654,9 +5669,42 @@ class MainViewModel : ViewModel() {
     }
 
     fun setQuickBallSlotCount(count: Int) {
-        val clamped = count.coerceIn(3, 9)
+        val clamped = count.coerceIn(1, 9)
         quickBallSlotCount.intValue = clamped
         settingsRepository.setQuickBallSlotCount(clamped)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun deleteQuickBallSlot(slotIndex: Int) {
+        settingsRepository.deleteQuickBallSlot(slotIndex)
+        quickBallSlotCount.intValue = settingsRepository.getQuickBallSlotCount()
+        quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
+        quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
+        quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
+        quickBallSlot4Action.value = settingsRepository.getQuickBallSlotAction(4)
+        quickBallSlot5Action.value = settingsRepository.getQuickBallSlotAction(5)
+        quickBallSlot6Action.value = settingsRepository.getQuickBallSlotAction(6)
+        quickBallSlot7Action.value = settingsRepository.getQuickBallSlotAction(7)
+        quickBallSlot8Action.value = settingsRepository.getQuickBallSlotAction(8)
+        quickBallSlot9Action.value = settingsRepository.getQuickBallSlotAction(9)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallColorMode(mode: String) {
+        quickBallColorMode.value = mode
+        settingsRepository.setQuickBallColorMode(mode)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallCustomColor(hex: String) {
+        quickBallCustomColor.value = hex
+        settingsRepository.setQuickBallCustomColor(hex)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallBallStyle(style: String) {
+        quickBallBallStyle.value = style
+        settingsRepository.setQuickBallBallStyle(style)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 

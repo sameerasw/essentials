@@ -26,13 +26,9 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.ui.graphics.toArgb
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.hypot
 import kotlin.math.roundToInt
@@ -86,18 +82,12 @@ class FloatPanelView(
 
     private val isOnRight = fabCenterX > (screenWidth / 2)
 
-    private val isDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    private val scheme =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        } else {
-            if (isDark) darkColorScheme() else lightColorScheme()
-        }
+    private val colors = QuickBallTheme.resolveColors(context, settings)
 
     private val connectors =
         ConnectorRenderer(
             style = MenuConnectorStyle.fromName(settings.getQuickBallConnectorStyle()),
-            color = scheme.primary.toArgb(),
+            color = colors.accentColor,
             strokeWidth = 2.2f * density,
         )
     private val connectorStart = halfFab + (ConnectorRenderer.INSET_DP * density)
@@ -151,9 +141,9 @@ class FloatPanelView(
     }
 
     private fun createChildViews() {
-        val buttonBg = scheme.surfaceContainerHighest.toArgb()
-        val iconColor = scheme.primary.toArgb()
-        val borderColor = scheme.outlineVariant.toArgb()
+        val buttonBg = colors.surfaceColor
+        val iconColor = colors.accentColor
+        val borderColor = colors.borderColor
 
         actions.forEachIndexed { index, action ->
             val itemView =
@@ -194,7 +184,7 @@ class FloatPanelView(
                     setOnClickListener {
                         if (!isCollapsing) {
                             if (settings.isQuickBallHaptic()) {
-                                HapticUtil.performUIHaptic(it)
+                                IslandHaptics.commit(context)
                             }
                             onActionClicked(action)
                         }
