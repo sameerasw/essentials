@@ -1732,4 +1732,5 @@
     <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
 </resources>

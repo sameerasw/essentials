@@ -37,6 +37,7 @@ class IslandController(
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
+    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int) -> Boolean)? = null
     var balanceCompact: Boolean = true
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
@@ -360,6 +361,10 @@ class IslandController(
             maxCells = maxCells,
             leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
+            fits = compactFits?.let { fits ->
+                val extra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0
+                { before, after -> fits(before, after, extra) }
+            },
         )
         val focusedKey = expandedKey ?: peekKey
         val stage = when {
