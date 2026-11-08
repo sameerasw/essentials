@@ -173,11 +173,33 @@ class MainViewModel : ViewModel() {
     val quickBallIdleAlpha = mutableFloatStateOf(0.4f)
     val isQuickBallAutoHide = mutableStateOf(true)
     val isQuickBallHaptic = mutableStateOf(true)
+    val quickBallSlotCount = mutableIntStateOf(5)
+    val quickBallConnectorStyle = mutableStateOf("DOTTED")
+    val quickBallMenuRadius = mutableFloatStateOf(90f)
+    val quickBallMenuSize = mutableFloatStateOf(48f)
+    val isQuickBallStickToEdge = mutableStateOf(true)
+    val isQuickBallLockPosition = mutableStateOf(false)
+    val isQuickBallHideLandscape = mutableStateOf(false)
+    val isQuickBallShowLockscreen = mutableStateOf(false)
+    val quickBallAutoHideApps = mutableStateOf<Set<String>>(emptySet())
+    val quickBallPillHeight = mutableFloatStateOf(48f)
+    val quickBallPillThickness = mutableFloatStateOf(3f)
+    val quickBallPillTouchWidth = mutableFloatStateOf(24f)
+    val isQuickBallGesturesEnabled = mutableStateOf(true)
+    val quickBallDoubleTapAction = mutableStateOf<Action?>(Action.LockScreen)
+    val quickBallTripleTapAction = mutableStateOf<Action?>(Action.TakeScreenshot)
+    val quickBallLongPressAction = mutableStateOf<Action?>(Action.PowerDialog)
+    val quickBallSwipeUpAction = mutableStateOf<Action?>(Action.RecentApps)
+    val quickBallSwipeDownAction = mutableStateOf<Action?>(Action.OpenNotifications)
     val quickBallSlot1Action = mutableStateOf<Action>(Action.Back)
     val quickBallSlot2Action = mutableStateOf<Action>(Action.Home)
     val quickBallSlot3Action = mutableStateOf<Action>(Action.RecentApps)
     val quickBallSlot4Action = mutableStateOf<Action>(Action.TakeScreenshot)
-    val quickBallSlot5Action = mutableStateOf<Action>(Action.ScreenOff())
+    val quickBallSlot5Action = mutableStateOf<Action>(Action.LockScreen)
+    val quickBallSlot6Action = mutableStateOf<Action>(Action.OpenNotifications)
+    val quickBallSlot7Action = mutableStateOf<Action>(Action.OpenQuickSettings)
+    val quickBallSlot8Action = mutableStateOf<Action>(Action.ToggleFlashlight)
+    val quickBallSlot9Action = mutableStateOf<Action>(Action.HapticVibration)
 
     val isDuoEnabled = mutableStateOf(false)
     val isDuoIslandCombined = mutableStateOf(false)
@@ -818,8 +840,44 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_QUICK_BALL_IDLE_ALPHA ->
                         quickBallIdleAlpha.floatValue = settingsRepository.getQuickBallIdleAlpha()
 
-                    SettingsRepository.KEY_QUICK_BALL_AUTO_HIDE ->
-                        isQuickBallAutoHide.value = settingsRepository.isQuickBallAutoHide()
+                    SettingsRepository.KEY_QUICK_BALL_AUTO_HIDE,
+                    SettingsRepository.KEY_QUICK_BALL_STICK_TO_EDGE -> {
+                        isQuickBallAutoHide.value = settingsRepository.isQuickBallStickToEdge()
+                        isQuickBallStickToEdge.value = settingsRepository.isQuickBallStickToEdge()
+                    }
+
+                    SettingsRepository.KEY_QUICK_BALL_LOCK_POSITION ->
+                        isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
+
+                    SettingsRepository.KEY_QUICK_BALL_HIDE_LANDSCAPE ->
+                        isQuickBallHideLandscape.value = settingsRepository.isQuickBallHideLandscape()
+
+                    SettingsRepository.KEY_QUICK_BALL_SHOW_LOCKSCREEN ->
+                        isQuickBallShowLockscreen.value = settingsRepository.isQuickBallShowLockscreen()
+
+                    SettingsRepository.KEY_QUICK_BALL_SLOT_COUNT ->
+                        quickBallSlotCount.intValue = settingsRepository.getQuickBallSlotCount()
+
+                    SettingsRepository.KEY_QUICK_BALL_CONNECTOR_STYLE ->
+                        quickBallConnectorStyle.value = settingsRepository.getQuickBallConnectorStyle()
+
+                    SettingsRepository.KEY_QUICK_BALL_MENU_RADIUS ->
+                        quickBallMenuRadius.floatValue = settingsRepository.getQuickBallMenuRadius()
+
+                    SettingsRepository.KEY_QUICK_BALL_MENU_SIZE ->
+                        quickBallMenuSize.floatValue = settingsRepository.getQuickBallMenuSize()
+
+                    SettingsRepository.KEY_QUICK_BALL_PILL_HEIGHT ->
+                        quickBallPillHeight.floatValue = settingsRepository.getQuickBallPillHeight()
+
+                    SettingsRepository.KEY_QUICK_BALL_PILL_THICKNESS ->
+                        quickBallPillThickness.floatValue = settingsRepository.getQuickBallPillThickness()
+
+                    SettingsRepository.KEY_QUICK_BALL_PILL_TOUCH_WIDTH ->
+                        quickBallPillTouchWidth.floatValue = settingsRepository.getQuickBallPillTouchWidth()
+
+                    SettingsRepository.KEY_QUICK_BALL_GESTURES_ENABLED ->
+                        isQuickBallGesturesEnabled.value = settingsRepository.isQuickBallGesturesEnabled()
 
                     SettingsRepository.KEY_QUICK_BALL_HAPTIC ->
                         isQuickBallHaptic.value = settingsRepository.isQuickBallHaptic()
@@ -2520,13 +2578,35 @@ class MainViewModel : ViewModel() {
         isQuickBallEnabled.value = settingsRepository.isQuickBallEnabled()
         quickBallSize.floatValue = settingsRepository.getQuickBallSize()
         quickBallIdleAlpha.floatValue = settingsRepository.getQuickBallIdleAlpha()
-        isQuickBallAutoHide.value = settingsRepository.isQuickBallAutoHide()
+        isQuickBallAutoHide.value = settingsRepository.isQuickBallStickToEdge()
+        isQuickBallStickToEdge.value = settingsRepository.isQuickBallStickToEdge()
+        isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
+        isQuickBallHideLandscape.value = settingsRepository.isQuickBallHideLandscape()
+        isQuickBallShowLockscreen.value = settingsRepository.isQuickBallShowLockscreen()
+        quickBallAutoHideApps.value = settingsRepository.getQuickBallAutoHideApps()
+        quickBallSlotCount.intValue = settingsRepository.getQuickBallSlotCount()
+        quickBallConnectorStyle.value = settingsRepository.getQuickBallConnectorStyle()
+        quickBallMenuRadius.floatValue = settingsRepository.getQuickBallMenuRadius()
+        quickBallMenuSize.floatValue = settingsRepository.getQuickBallMenuSize()
+        quickBallPillHeight.floatValue = settingsRepository.getQuickBallPillHeight()
+        quickBallPillThickness.floatValue = settingsRepository.getQuickBallPillThickness()
+        quickBallPillTouchWidth.floatValue = settingsRepository.getQuickBallPillTouchWidth()
+        isQuickBallGesturesEnabled.value = settingsRepository.isQuickBallGesturesEnabled()
+        quickBallDoubleTapAction.value = settingsRepository.getQuickBallGestureAction("DOUBLE_TAP")
+        quickBallTripleTapAction.value = settingsRepository.getQuickBallGestureAction("TRIPLE_TAP")
+        quickBallLongPressAction.value = settingsRepository.getQuickBallGestureAction("LONG_PRESS")
+        quickBallSwipeUpAction.value = settingsRepository.getQuickBallGestureAction("SWIPE_UP")
+        quickBallSwipeDownAction.value = settingsRepository.getQuickBallGestureAction("SWIPE_DOWN")
         isQuickBallHaptic.value = settingsRepository.isQuickBallHaptic()
         quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
         quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
         quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
         quickBallSlot4Action.value = settingsRepository.getQuickBallSlotAction(4)
         quickBallSlot5Action.value = settingsRepository.getQuickBallSlotAction(5)
+        quickBallSlot6Action.value = settingsRepository.getQuickBallSlotAction(6)
+        quickBallSlot7Action.value = settingsRepository.getQuickBallSlotAction(7)
+        quickBallSlot8Action.value = settingsRepository.getQuickBallSlotAction(8)
+        quickBallSlot9Action.value = settingsRepository.getQuickBallSlotAction(9)
         isDuoEnabled.value = settingsRepository.isDuoEnabled()
         isDuoAutoDetect.value = settingsRepository.isDuoAutoDetectEnabled()
         duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
@@ -5542,9 +5622,95 @@ class MainViewModel : ViewModel() {
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 
-    fun setQuickBallAutoHide(autoHide: Boolean) {
-        isQuickBallAutoHide.value = autoHide
-        settingsRepository.setQuickBallAutoHide(autoHide)
+    fun setQuickBallStickToEdge(stick: Boolean) {
+        isQuickBallStickToEdge.value = stick
+        isQuickBallAutoHide.value = stick
+        settingsRepository.setQuickBallStickToEdge(stick)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallLockPosition(locked: Boolean) {
+        isQuickBallLockPosition.value = locked
+        settingsRepository.setQuickBallLockPosition(locked)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallHideLandscape(hide: Boolean) {
+        isQuickBallHideLandscape.value = hide
+        settingsRepository.setQuickBallHideLandscape(hide)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallShowLockscreen(show: Boolean) {
+        isQuickBallShowLockscreen.value = show
+        settingsRepository.setQuickBallShowLockscreen(show)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallAutoHideApps(apps: Set<String>) {
+        quickBallAutoHideApps.value = apps
+        settingsRepository.setQuickBallAutoHideApps(apps)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallSlotCount(count: Int) {
+        val clamped = count.coerceIn(3, 9)
+        quickBallSlotCount.intValue = clamped
+        settingsRepository.setQuickBallSlotCount(clamped)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallConnectorStyle(style: String) {
+        quickBallConnectorStyle.value = style
+        settingsRepository.setQuickBallConnectorStyle(style)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallMenuRadius(radius: Float) {
+        quickBallMenuRadius.floatValue = radius
+        settingsRepository.setQuickBallMenuRadius(radius)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallMenuSize(size: Float) {
+        quickBallMenuSize.floatValue = size
+        settingsRepository.setQuickBallMenuSize(size)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallPillHeight(height: Float) {
+        quickBallPillHeight.floatValue = height
+        settingsRepository.setQuickBallPillHeight(height)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallPillThickness(thickness: Float) {
+        quickBallPillThickness.floatValue = thickness
+        settingsRepository.setQuickBallPillThickness(thickness)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallPillTouchWidth(width: Float) {
+        quickBallPillTouchWidth.floatValue = width
+        settingsRepository.setQuickBallPillTouchWidth(width)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallGesturesEnabled(enabled: Boolean) {
+        isQuickBallGesturesEnabled.value = enabled
+        settingsRepository.setQuickBallGesturesEnabled(enabled)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallGestureAction(gestureName: String, action: Action?) {
+        when (gestureName) {
+            "DOUBLE_TAP" -> quickBallDoubleTapAction.value = action
+            "TRIPLE_TAP" -> quickBallTripleTapAction.value = action
+            "LONG_PRESS" -> quickBallLongPressAction.value = action
+            "SWIPE_UP" -> quickBallSwipeUpAction.value = action
+            "SWIPE_DOWN" -> quickBallSwipeDownAction.value = action
+        }
+        settingsRepository.setQuickBallGestureAction(gestureName, action)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 
@@ -5560,6 +5726,10 @@ class MainViewModel : ViewModel() {
             3 -> quickBallSlot3Action.value = action
             4 -> quickBallSlot4Action.value = action
             5 -> quickBallSlot5Action.value = action
+            6 -> quickBallSlot6Action.value = action
+            7 -> quickBallSlot7Action.value = action
+            8 -> quickBallSlot8Action.value = action
+            9 -> quickBallSlot9Action.value = action
         }
         settingsRepository.setQuickBallSlotAction(slot, action)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()

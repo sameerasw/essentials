@@ -74,6 +74,18 @@ sealed interface Action {
     }
 
     @Keep
+    data object PowerDialog : Action {
+        override val title: Int = R.string.diy_action_power_dialog
+        override val icon: Int = R.drawable.rounded_power_settings_new_24
+    }
+
+    @Keep
+    data object LockScreen : Action {
+        override val title: Int = R.string.diy_action_lock_screen
+        override val icon: Int = R.drawable.rounded_lock_24
+    }
+
+    @Keep
     data class Hilight(
         @SerializedName("pattern") val pattern: HilightPattern = HilightPattern.GLOW,
         @SerializedName("color") val color: Int = HilightEffect.DEFAULT_COLOR,

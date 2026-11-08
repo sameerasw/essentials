@@ -212,6 +212,19 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_SLOT_3 = "quick_ball_slot_3"
         const val KEY_QUICK_BALL_SLOT_4 = "quick_ball_slot_4"
         const val KEY_QUICK_BALL_SLOT_5 = "quick_ball_slot_5"
+        const val KEY_QUICK_BALL_SLOT_COUNT = "quick_ball_slot_count"
+        const val KEY_QUICK_BALL_CONNECTOR_STYLE = "quick_ball_connector_style"
+        const val KEY_QUICK_BALL_MENU_RADIUS = "quick_ball_menu_radius"
+        const val KEY_QUICK_BALL_MENU_SIZE = "quick_ball_menu_size"
+        const val KEY_QUICK_BALL_STICK_TO_EDGE = "quick_ball_stick_to_edge"
+        const val KEY_QUICK_BALL_LOCK_POSITION = "quick_ball_lock_position"
+        const val KEY_QUICK_BALL_HIDE_LANDSCAPE = "quick_ball_hide_landscape"
+        const val KEY_QUICK_BALL_SHOW_LOCKSCREEN = "quick_ball_show_lockscreen"
+        const val KEY_QUICK_BALL_AUTO_HIDE_APPS = "quick_ball_auto_hide_apps"
+        const val KEY_QUICK_BALL_PILL_HEIGHT = "quick_ball_pill_height"
+        const val KEY_QUICK_BALL_PILL_THICKNESS = "quick_ball_pill_thickness"
+        const val KEY_QUICK_BALL_PILL_TOUCH_WIDTH = "quick_ball_pill_touch_width"
+        const val KEY_QUICK_BALL_GESTURES_ENABLED = "quick_ball_gestures_enabled"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
         const val KEY_MAPS_POWER_SAVING_ENABLED = "maps_power_saving_enabled"
         const val KEY_MAPS_DISCOVERED_CHANNELS = "maps_discovered_channels"
@@ -4781,9 +4794,83 @@ class SettingsRepository(
 
     fun setQuickBallIdleAlpha(alpha: Float) = putFloat(KEY_QUICK_BALL_IDLE_ALPHA, alpha)
 
-    fun isQuickBallAutoHide(): Boolean = getBoolean(KEY_QUICK_BALL_AUTO_HIDE, true)
+    fun isQuickBallAutoHide(): Boolean = isQuickBallStickToEdge()
 
-    fun setQuickBallAutoHide(autoHide: Boolean) = putBoolean(KEY_QUICK_BALL_AUTO_HIDE, autoHide)
+    fun setQuickBallAutoHide(autoHide: Boolean) = setQuickBallStickToEdge(autoHide)
+
+    fun isQuickBallStickToEdge(): Boolean = getBoolean(KEY_QUICK_BALL_STICK_TO_EDGE, true)
+
+    fun setQuickBallStickToEdge(value: Boolean) = putBoolean(KEY_QUICK_BALL_STICK_TO_EDGE, value)
+
+    fun isQuickBallLockPosition(): Boolean = getBoolean(KEY_QUICK_BALL_LOCK_POSITION, false)
+
+    fun setQuickBallLockPosition(value: Boolean) = putBoolean(KEY_QUICK_BALL_LOCK_POSITION, value)
+
+    fun isQuickBallHideLandscape(): Boolean = getBoolean(KEY_QUICK_BALL_HIDE_LANDSCAPE, false)
+
+    fun setQuickBallHideLandscape(value: Boolean) = putBoolean(KEY_QUICK_BALL_HIDE_LANDSCAPE, value)
+
+    fun isQuickBallShowLockscreen(): Boolean = getBoolean(KEY_QUICK_BALL_SHOW_LOCKSCREEN, false)
+
+    fun setQuickBallShowLockscreen(value: Boolean) = putBoolean(KEY_QUICK_BALL_SHOW_LOCKSCREEN, value)
+
+    fun getQuickBallAutoHideApps(): Set<String> = prefs.getStringSet(KEY_QUICK_BALL_AUTO_HIDE_APPS, emptySet()) ?: emptySet()
+
+    fun setQuickBallAutoHideApps(apps: Set<String>) = prefs.edit().putStringSet(KEY_QUICK_BALL_AUTO_HIDE_APPS, apps).apply()
+
+    fun getQuickBallConnectorStyle(): String = prefs.getString(KEY_QUICK_BALL_CONNECTOR_STYLE, "DOTTED") ?: "DOTTED"
+
+    fun setQuickBallConnectorStyle(style: String) = putString(KEY_QUICK_BALL_CONNECTOR_STYLE, style)
+
+    fun getQuickBallMenuRadius(): Float = getFloat(KEY_QUICK_BALL_MENU_RADIUS, 90f)
+
+    fun setQuickBallMenuRadius(radius: Float) = putFloat(KEY_QUICK_BALL_MENU_RADIUS, radius)
+
+    fun getQuickBallMenuSize(): Float = getFloat(KEY_QUICK_BALL_MENU_SIZE, 48f)
+
+    fun setQuickBallMenuSize(size: Float) = putFloat(KEY_QUICK_BALL_MENU_SIZE, size)
+
+    fun getQuickBallPillHeight(): Float = getFloat(KEY_QUICK_BALL_PILL_HEIGHT, 48f)
+
+    fun setQuickBallPillHeight(height: Float) = putFloat(KEY_QUICK_BALL_PILL_HEIGHT, height)
+
+    fun getQuickBallPillThickness(): Float = getFloat(KEY_QUICK_BALL_PILL_THICKNESS, 3f)
+
+    fun setQuickBallPillThickness(thickness: Float) = putFloat(KEY_QUICK_BALL_PILL_THICKNESS, thickness)
+
+    fun getQuickBallPillTouchWidth(): Float = getFloat(KEY_QUICK_BALL_PILL_TOUCH_WIDTH, 24f)
+
+    fun setQuickBallPillTouchWidth(width: Float) = putFloat(KEY_QUICK_BALL_PILL_TOUCH_WIDTH, width)
+
+    fun isQuickBallGesturesEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_GESTURES_ENABLED, true)
+
+    fun setQuickBallGesturesEnabled(value: Boolean) = putBoolean(KEY_QUICK_BALL_GESTURES_ENABLED, value)
+
+    fun getQuickBallSlotCount(): Int = getInt(KEY_QUICK_BALL_SLOT_COUNT, 5).coerceIn(3, 9)
+
+    fun setQuickBallSlotCount(count: Int) = putInt(KEY_QUICK_BALL_SLOT_COUNT, count.coerceIn(3, 9))
+
+    fun getQuickBallGestureAction(gestureName: String): Action? {
+        val key = "quick_ball_gesture_$gestureName"
+        val defaultAction =
+            when (gestureName) {
+                "DOUBLE_TAP" -> Action.LockScreen
+                "TRIPLE_TAP" -> Action.TakeScreenshot
+                "LONG_PRESS" -> Action.PowerDialog
+                "SWIPE_UP" -> Action.RecentApps
+                "SWIPE_DOWN" -> Action.OpenNotifications
+                else -> null
+            }
+        val raw = prefs.getString(key, null) ?: return defaultAction
+        if (raw == "NONE") return null
+        return ActionGsonAdapter.fromJson(raw) ?: defaultAction
+    }
+
+    fun setQuickBallGestureAction(gestureName: String, action: Action?) {
+        val key = "quick_ball_gesture_$gestureName"
+        val value = if (action == null) "NONE" else ActionGsonAdapter.toJson(action)
+        prefs.edit().putString(key, value).apply()
+    }
 
     fun isQuickBallHaptic(): Boolean = getBoolean(KEY_QUICK_BALL_HAPTIC, true)
 
@@ -4798,22 +4885,18 @@ class SettingsRepository(
     fun setQuickBallPositionSide(side: Int) = putInt(KEY_QUICK_BALL_POSITION_SIDE, side)
 
     fun getQuickBallSlotAction(slot: Int): Action {
-        val key =
-            when (slot) {
-                1 -> KEY_QUICK_BALL_SLOT_1
-                2 -> KEY_QUICK_BALL_SLOT_2
-                3 -> KEY_QUICK_BALL_SLOT_3
-                4 -> KEY_QUICK_BALL_SLOT_4
-                5 -> KEY_QUICK_BALL_SLOT_5
-                else -> return Action.Back
-            }
+        val key = "quick_ball_slot_$slot"
         val defaultAction =
             when (slot) {
                 1 -> Action.Back
                 2 -> Action.Home
                 3 -> Action.RecentApps
                 4 -> Action.TakeScreenshot
-                5 -> Action.ScreenOff()
+                5 -> Action.LockScreen
+                6 -> Action.OpenNotifications
+                7 -> Action.OpenQuickSettings
+                8 -> Action.ToggleFlashlight
+                9 -> Action.HapticVibration
                 else -> Action.Back
             }
         val raw = prefs.getString(key, null) ?: return defaultAction
@@ -4821,15 +4904,7 @@ class SettingsRepository(
     }
 
     fun setQuickBallSlotAction(slot: Int, action: Action) {
-        val key =
-            when (slot) {
-                1 -> KEY_QUICK_BALL_SLOT_1
-                2 -> KEY_QUICK_BALL_SLOT_2
-                3 -> KEY_QUICK_BALL_SLOT_3
-                4 -> KEY_QUICK_BALL_SLOT_4
-                5 -> KEY_QUICK_BALL_SLOT_5
-                else -> return
-            }
+        val key = "quick_ball_slot_$slot"
         prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
     }
 }

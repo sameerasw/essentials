@@ -755,6 +755,9 @@ class ScreenOffAccessibilityService :
             faceUnlockBrightnessHandler.onWindowsChanged()
             lockscreenShortcutsHandler.onWindowsChanged()
             appVolumeOverlayHandler.onWindowsChanged()
+            if (::quickBallHandler.isInitialized) {
+                quickBallHandler.onWindowsChanged()
+            }
         }
     }
 
@@ -763,6 +766,9 @@ class ScreenOffAccessibilityService :
         screenshotShareCleanupHandler.onForegroundPackage(appFlowHandler.currentPackage)
         islandOverlayHandler.onForegroundPackage(detectedPackage)
         islandOverlayHandler.updateConsciousGateState()
+        if (::quickBallHandler.isInitialized) {
+            quickBallHandler.onForegroundPackage(detectedPackage)
+        }
     }
 
     private val isResolvingPackage = AtomicBoolean(false)
@@ -1006,6 +1012,9 @@ class ScreenOffAccessibilityService :
         ambientGlanceHandler.onConfigurationChanged()
         faceUnlockBrightnessHandler.onConfigurationChanged()
         lockscreenShortcutsHandler.onConfigurationChanged()
+        if (::quickBallHandler.isInitialized) {
+            quickBallHandler.onConfigurationChanged(newConfig)
+        }
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {

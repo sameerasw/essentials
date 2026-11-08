@@ -221,6 +221,22 @@ object CombinedActionExecutor {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
+                is Action.PowerDialog -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Action.LockScreen -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
 
                 is Action.Hilight -> HilightController.play(action.toEffect())
                 is Action.TurnOnFlashlight -> toggleFlashlight(context, true)

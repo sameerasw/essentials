@@ -94,6 +94,8 @@ object ActionRegistry {
                     add(Action.OpenNotifications)
                     add(Action.OpenQuickSettings)
                     add(Action.TakeScreenshot)
+                    add(Action.PowerDialog)
+                    add(Action.LockScreen)
                 }
             }
 

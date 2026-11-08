@@ -10,37 +10,32 @@
 package com.sameerasw.essentials.services.handlers
 
 import android.accessibilityservice.AccessibilityService
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
+import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.animation.DecelerateInterpolator
-import android.widget.FrameLayout
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.lifecycle.setViewTreeLifecycleOwner
-import androidx.lifecycle.setViewTreeViewModelStoreOwner
-import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import android.view.animation.PathInterpolator
+import androidx.core.content.getSystemService
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
-import com.sameerasw.essentials.island.service.OverlayLifecycleOwner
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
-import com.sameerasw.essentials.ui.features.system.quickball.QuickBallExpandedOverlay
-import com.sameerasw.essentials.ui.features.system.quickball.QuickBallFloatingBall
-import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.ui.features.system.quickball.FloatPanelView
+import com.sameerasw.essentials.ui.features.system.quickball.FloatTouchView
+import com.sameerasw.essentials.ui.features.system.quickball.GestureListener
+import com.sameerasw.essentials.ui.features.system.quickball.SideKickView
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,365 +50,606 @@ class QuickBallHandler(
 ) {
     companion object {
         private const val TAG = "QuickBallHandler"
-        private const val IDLE_TIMEOUT_MS = 3000L
+        private const val STASH_DELAY_MS = 2500L
+        private const val EDGE_PADDING_DP = 4f
     }
 
     private val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private val touchSlop = ViewConfiguration.get(service).scaledTouchSlop
+    private val keyguardManager by lazy { service.getSystemService<KeyguardManager>() }
+    private val settings = SettingsRepository(service)
+    private val handler = Handler(Looper.getMainLooper())
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    private val settingsRepository = SettingsRepository(service)
+    private val density get() = service.resources.displayMetrics.density
+    private val fabSizePx get() = (settings.getQuickBallSize() * density).roundToInt()
+    private val edgePaddingPx get() = (EDGE_PADDING_DP * density).roundToInt()
+    private val topBoundary get() = (80f * density).roundToInt()
+    private val bottomBoundary get() = (80f * density).roundToInt()
 
-    private var overlayRoot: FrameLayout? = null
-    private var composeView: ComposeView? = null
-    private var lifecycleOwner: OverlayLifecycleOwner? = null
+    // Views & LayoutParams
+    private var fabView: FloatTouchView? = null
+    private var fabParams: WindowManager.LayoutParams? = null
 
-    private var isOverlayAdded = false
-    private var isExpanded by mutableStateOf(false)
-    private var isIdle by mutableStateOf(false)
+    private var pillView: SideKickView? = null
+    private var pillParams: WindowManager.LayoutParams? = null
 
-    private var ballSizeDp by mutableStateOf(48f)
-    private var idleAlpha by mutableStateOf(0.4f)
-    private var isAutoHide by mutableStateOf(true)
-    private var isHapticEnabled by mutableStateOf(true)
-    private var isDockedLeft by mutableStateOf(false)
-    private var currentActions by mutableStateOf<List<Action>>(emptyList())
+    private var menuView: FloatPanelView? = null
+    private var menuParams: WindowManager.LayoutParams? = null
 
-    // Window Layout Params
-    private val windowParams =
-        WindowManager.LayoutParams().apply {
-            type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
-            format = PixelFormat.TRANSLUCENT
-            flags =
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            gravity = Gravity.TOP or Gravity.START
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            }
-        }
+    // Position State
+    private var isOnRight = true
+    private var fabX = 0
+    private var fabY = 0
 
-    // Touch and drag tracking
-    private var initialX = 0
-    private var initialY = 0
-    private var touchDownX = 0f
-    private var touchDownY = 0f
+    // Lifecycle & Movement State
+    private var isExpanded = false
     private var isDragging = false
+    private var isStashed = false
+    private var isStashing = false
+    private var fabAnimator: ValueAnimator? = null
+    private var lastForegroundPackage = ""
 
-    private val idleRunnable =
-        Runnable {
-            if (!isExpanded) {
-                isIdle = true
-            }
-        }
+    private val stashRunnable = Runnable { stashFab(animated = true) }
 
     fun init() {
         updateState()
     }
 
     fun updateState() {
-        val enabled = settingsRepository.isQuickBallEnabled()
-        if (!enabled) {
-            removeOverlay()
+        if (!settings.isQuickBallEnabled()) {
+            destroy()
             return
         }
 
-        ballSizeDp = settingsRepository.getQuickBallSize()
-        idleAlpha = settingsRepository.getQuickBallIdleAlpha()
-        isAutoHide = settingsRepository.isQuickBallAutoHide()
-        isHapticEnabled = settingsRepository.isQuickBallHaptic()
-        isDockedLeft = settingsRepository.getQuickBallPositionSide() == 1
-        currentActions =
-            listOf(
-                settingsRepository.getQuickBallSlotAction(1),
-                settingsRepository.getQuickBallSlotAction(2),
-                settingsRepository.getQuickBallSlotAction(3),
-                settingsRepository.getQuickBallSlotAction(4),
-                settingsRepository.getQuickBallSlotAction(5),
-            )
+        isOnRight = settings.getQuickBallPositionSide() == 0
 
-        if (!isOverlayAdded) {
-            showOverlay()
-        } else {
-            updateWindowDimensions()
-        }
+        refreshBallVisibility()
+        updateFabAppearance()
+        updatePillAppearance()
     }
 
     fun onScreenOff() {
-        mainHandler.post {
-            collapseMenu(animate = false)
-            isIdle = true
+        handler.post {
+            collapseMenu()
+            stashFab(animated = false)
         }
     }
 
-    private fun showOverlay() {
-        if (isOverlayAdded) return
+    fun onForegroundPackage(packageName: String) {
+        lastForegroundPackage = packageName
+        refreshBallVisibility()
+    }
 
-        val density = service.resources.displayMetrics.density
-        val ballSizePx = (ballSizeDp * density).roundToInt()
-        val metrics = getDisplayMetrics()
+    fun onConfigurationChanged(newConfig: Configuration) {
+        refreshBallVisibility()
+        recalculatePosition()
+    }
 
-        val savedSide = settingsRepository.getQuickBallPositionSide()
-        isDockedLeft = savedSide == 1
+    fun onWindowsChanged() {
+        refreshBallVisibility()
+    }
 
-        val initialYPos =
-            (metrics.heightPixels * settingsRepository.getQuickBallPositionY())
-                .roundToInt()
-                .coerceIn(100, (metrics.heightPixels - ballSizePx - 100).coerceAtLeast(100))
+    fun destroy() {
+        scope.cancel()
+        stopInactivityTimer()
+        removeMenuWindow()
+        removePillWindow()
+        removeFabWindow()
+        handler.removeCallbacksAndMessages(null)
+    }
 
-        windowParams.width = ballSizePx
-        windowParams.height = ballSizePx
-        windowParams.x = if (isDockedLeft) 0 else (metrics.widthPixels - ballSizePx)
-        windowParams.y = initialYPos
+    /* -------------------- Visibility Engine -------------------- */
 
-        val owner = OverlayLifecycleOwner().also { it.onCreate() }
-        lifecycleOwner = owner
+    private fun refreshBallVisibility() {
+        if (!settings.isQuickBallEnabled()) {
+            destroy()
+            return
+        }
 
-        val compose =
-            ComposeView(service).apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
-                setContent {
-                    EssentialsTheme {
-                        if (isExpanded) {
-                            val curX = (windowParams.x + (ballSizePx / 2)).toFloat()
-                            val curY = (windowParams.y + (ballSizePx / 2)).toFloat()
-                            QuickBallExpandedOverlay(
-                                ballCenterX = curX,
-                                ballCenterY = curY,
-                                isDockedLeft = isDockedLeft,
-                                actions = currentActions,
-                                onActionClick = { action ->
-                                    handleActionClick(action)
-                                },
-                                onDismissRequest = {
-                                    collapseMenu()
-                                },
-                            )
-                        } else {
-                            QuickBallFloatingBall(
-                                sizeDp = ballSizeDp,
-                                idleAlpha = idleAlpha,
-                                isIdle = isIdle,
-                                isAutoHide = isAutoHide,
-                                isDockedLeft = isDockedLeft,
-                            )
-                        }
+        val isLocked = keyguardManager?.isKeyguardLocked == true
+        if (isLocked) {
+            if (settings.isQuickBallShowLockscreen()) {
+                collapseMenu()
+                showBall()
+                stashFab(animated = false)
+            } else {
+                hideAll()
+            }
+            return
+        }
+
+        val isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (isLandscape && settings.isQuickBallHideLandscape()) {
+            hideAll()
+            return
+        }
+
+        val autoHideApps = settings.getQuickBallAutoHideApps()
+        if (autoHideApps.contains(lastForegroundPackage)) {
+            hideAll()
+            return
+        }
+
+        showBall()
+    }
+
+    private fun showBall() {
+        if (fabView == null) {
+            createFabWindow()
+            isStashed = false
+            if (settings.isQuickBallStickToEdge()) {
+                stashFab(animated = false)
+            }
+            resetInactivityTimer()
+        }
+    }
+
+    private fun hideAll() {
+        stopInactivityTimer()
+        removeMenuWindow()
+        removePillWindow()
+        removeFabWindow()
+    }
+
+    /* -------------------- FAB Window Management -------------------- */
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun createFabWindow() {
+        if (fabView != null) return
+
+        val (screenWidth, screenHeight) = getScreenDimensions()
+        val savedYRatio = settings.getQuickBallPositionY()
+        fabY = (screenHeight * savedYRatio).roundToInt().coerceIn(topBoundary, screenHeight - fabSizePx - bottomBoundary)
+        fabX = getEdgeX(screenWidth)
+
+        fabParams = createOverlayParams(fabSizePx, fabSizePx).apply {
+            x = fabX
+            y = fabY
+        }
+
+        var initialWindowX = 0
+        var initialWindowY = 0
+        var screenW = 0
+        var screenH = 0
+
+        fabView = FloatTouchView(service).apply {
+            setExpanded(isExpanded, animate = false)
+
+            listener = object : GestureListener {
+                override fun onTouchDown() {
+                    if (isStashing) return
+                    stopInactivityTimer()
+                    fabAnimator?.cancel()
+                    isStashed = false
+                    initialWindowX = fabX
+                    initialWindowY = fabY
+
+                    val (sw, sh) = getScreenDimensions()
+                    screenW = sw
+                    screenH = sh
+                }
+
+                override fun onTouchCancel() {
+                    isDragging = false
+                    resetInactivityTimer()
+                }
+
+                override fun onDragMove(dx: Float, dy: Float) {
+                    if (isStashing) return
+                    isDragging = true
+                    stopInactivityTimer()
+                    alpha = 1.0f
+
+                    fabX = (initialWindowX + dx).roundToInt().coerceIn(0, screenW - fabSizePx)
+                    fabY = (initialWindowY + dy).roundToInt().coerceIn(topBoundary, screenH - fabSizePx - bottomBoundary)
+
+                    fabParams?.x = fabX
+                    fabParams?.y = fabY
+                    updateViewLayoutSafe(this@apply, fabParams)
+                }
+
+                override fun onDragEnd() {
+                    isDragging = false
+                    if (!isStashing) {
+                        snapToEdge()
                     }
                 }
-            }
-        composeView = compose
 
-        val root =
-            FrameLayout(service).apply {
-                setViewTreeLifecycleOwner(owner)
-                setViewTreeSavedStateRegistryOwner(owner)
-                setViewTreeViewModelStoreOwner(owner)
-                addView(compose)
-                setOnTouchListener { v, event ->
-                    handleTouchEvent(event)
+                override fun onSingleTap() {
+                    isDragging = false
+                    if (isStashed || isStashing) {
+                        unstashFab()
+                    }
+                    if (settings.isQuickBallHaptic()) {
+                        HapticUtil.performHapticForService(service)
+                    }
+                    expandMenu()
                 }
+
+                override fun onDoubleTap() = executeGestureAction("DOUBLE_TAP")
+                override fun onTripleTap() = executeGestureAction("TRIPLE_TAP")
+                override fun onLongPress() = executeGestureAction("LONG_PRESS")
+                override fun onSwipeUp() = executeGestureAction("SWIPE_UP")
+                override fun onSwipeDown() = executeGestureAction("SWIPE_DOWN")
             }
-        overlayRoot = root
+        }
 
         try {
-            windowManager.addView(root, windowParams)
-            isOverlayAdded = true
-            resetIdleTimer()
+            windowManager.addView(fabView, fabParams)
+            resetInactivityTimer()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to add Quick Ball overlay", e)
+            Log.e(TAG, "Failed to add FAB window", e)
         }
     }
 
-    private fun handleTouchEvent(event: MotionEvent): Boolean {
-        if (isExpanded) {
-            // While expanded, Compose handles touches via fullscreen gestures
-            return false
+    private fun removeFabWindow() {
+        fabView?.let {
+            try {
+                windowManager.removeView(it)
+            } catch (_: Exception) {}
+            fabView = null
         }
-
-        when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
-                isDragging = false
-                initialX = windowParams.x
-                initialY = windowParams.y
-                touchDownX = event.rawX
-                touchDownY = event.rawY
-                isIdle = false
-                mainHandler.removeCallbacks(idleRunnable)
-                return true
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                val dx = event.rawX - touchDownX
-                val dy = event.rawY - touchDownY
-
-                if (!isDragging && (abs(dx) > touchSlop || abs(dy) > touchSlop)) {
-                    isDragging = true
-                }
-
-                if (isDragging) {
-                    val metrics = getDisplayMetrics()
-                    val density = service.resources.displayMetrics.density
-                    val ballSizePx = (ballSizeDp * density).roundToInt()
-
-                    windowParams.x = (initialX + dx.roundToInt()).coerceIn(0, metrics.widthPixels - ballSizePx)
-                    windowParams.y = (initialY + dy.roundToInt()).coerceIn(60, metrics.heightPixels - ballSizePx - 60)
-                    try {
-                        windowManager.updateViewLayout(overlayRoot, windowParams)
-                    } catch (_: Exception) {}
-                }
-                return true
-            }
-
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if (!isDragging) {
-                    // Tap detected: expand menu
-                    expandMenu()
-                } else {
-                    // Drag released: snap to nearest edge
-                    snapToEdge()
-                }
-                return true
-            }
-        }
-        return false
+        fabParams = null
     }
+
+    private fun updateFabAppearance() {
+        val fab = fabView ?: return
+        val params = fabParams ?: return
+
+        params.width = fabSizePx
+        params.height = fabSizePx
+        fab.updateAppearance()
+        updateViewLayoutSafe(fab, params)
+    }
+
+    private fun snapToEdge() {
+        val (screenWidth, screenHeight) = getScreenDimensions()
+        isOnRight = (fabX + fabSizePx / 2) > screenWidth / 2
+        settings.setQuickBallPositionSide(if (isOnRight) 0 else 1)
+
+        val targetYRatio = if (screenHeight > 0) fabY.toFloat() / screenHeight else 0.5f
+        settings.setQuickBallPositionY(targetYRatio)
+
+        val targetX = getEdgeX(screenWidth)
+        val distance = abs(targetX - fabX)
+        val duration = (distance.toFloat() / screenWidth * 320f).coerceIn(160f, 300f).toLong()
+
+        animateFabX(targetX, duration) {
+            resetInactivityTimer()
+        }
+    }
+
+    private fun stashFab(animated: Boolean = true) {
+        if (isExpanded) return
+        val view = fabView ?: return
+        val params = fabParams ?: return
+
+        if (!settings.isQuickBallStickToEdge()) {
+            val idleAlpha = settings.getQuickBallIdleAlpha()
+            if (animated) {
+                animateFabX(fabX, 220L, alpha = idleAlpha)
+            } else {
+                view.alpha = idleAlpha
+            }
+            return
+        }
+
+        if (isStashed) return
+        val (screenWidth, _) = getScreenDimensions()
+        val targetX = if (isOnRight) screenWidth else -fabSizePx
+
+        fabAnimator?.cancel()
+        val idleAlpha = settings.getQuickBallIdleAlpha()
+
+        if (animated) {
+            isStashing = true
+            animateFabX(targetX, 240L, alpha = idleAlpha) {
+                isStashing = false
+                isStashed = true
+                showPill()
+            }
+        } else {
+            view.alpha = idleAlpha
+            fabX = targetX
+            params.x = targetX
+            updateViewLayoutSafe(view, params)
+            isStashed = true
+            showPill()
+        }
+    }
+
+    private fun unstashFab(animated: Boolean = true, onFinished: (() -> Unit)? = null) {
+        if (!isStashed && !isStashing) {
+            onFinished?.invoke()
+            return
+        }
+        val view = fabView ?: return
+        val params = fabParams ?: return
+
+        val (screenWidth, _) = getScreenDimensions()
+        val targetX = getEdgeX(screenWidth)
+
+        isStashing = false
+        removePillWindow()
+        fabAnimator?.cancel()
+
+        if (animated) {
+            params.x = if (isOnRight) screenWidth - fabSizePx else 0
+            updateViewLayoutSafe(view, params)
+            fabX = params.x
+
+            animateFabX(targetX, 220L, alpha = 1.0f) {
+                isStashed = false
+                resetInactivityTimer()
+                onFinished?.invoke()
+            }
+        } else {
+            view.alpha = 1.0f
+            fabX = targetX
+            params.x = targetX
+            updateViewLayoutSafe(view, params)
+            isStashed = false
+            resetInactivityTimer()
+            onFinished?.invoke()
+        }
+    }
+
+    private fun animateFabX(
+        targetX: Int,
+        duration: Long,
+        alpha: Float? = null,
+        onEnd: (() -> Unit)? = null,
+    ) {
+        val view = fabView ?: return
+        val params = fabParams ?: return
+        val startAlpha = view.alpha
+
+        fabAnimator?.cancel()
+        val animator = ValueAnimator.ofInt(fabX, targetX).apply {
+            this.duration = duration
+            interpolator = PathInterpolator(0.4f, 0f, 0.2f, 1f)
+            addUpdateListener { anim ->
+                val currentX = anim.animatedValue as Int
+                fabX = currentX
+                params.x = currentX
+                updateViewLayoutSafe(view, params)
+
+                if (alpha != null) {
+                    val fraction = anim.animatedFraction
+                    view.alpha = startAlpha + (alpha - startAlpha) * fraction
+                }
+            }
+            var isCancelled = false
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationCancel(animation: Animator) {
+                    isCancelled = true
+                }
+                override fun onAnimationEnd(animation: Animator) {
+                    if (!isCancelled) {
+                        onEnd?.invoke()
+                    }
+                }
+            })
+        }
+        fabAnimator = animator
+        animator.start()
+    }
+
+    /* -------------------- Stashed Pill Window -------------------- */
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun showPill() {
+        if (pillView != null) return
+
+        val pillWidth = (settings.getQuickBallPillTouchWidth() * density).roundToInt()
+        val pillHeight = (settings.getQuickBallPillHeight() * density).roundToInt()
+        val (screenWidth, _) = getScreenDimensions()
+
+        val targetX = if (isOnRight) screenWidth - pillWidth else 0
+        val targetY = fabY + (fabSizePx - pillHeight) / 2
+
+        pillView = SideKickView(service).apply {
+            onRight = isOnRight
+            listener = object : GestureListener {
+                override fun onSingleTap() {
+                    if (settings.isQuickBallHaptic()) {
+                        HapticUtil.performHapticForService(service)
+                    }
+                    removePillWindow()
+                    unstashFab {
+                        expandMenu()
+                    }
+                }
+                override fun onDoubleTap() = executeGestureAction("DOUBLE_TAP")
+                override fun onTripleTap() = executeGestureAction("TRIPLE_TAP")
+                override fun onLongPress() = executeGestureAction("LONG_PRESS")
+                override fun onSwipeUp() = executeGestureAction("SWIPE_UP")
+                override fun onSwipeDown() = executeGestureAction("SWIPE_DOWN")
+            }
+        }
+
+        pillParams = createOverlayParams(pillWidth, pillHeight).apply {
+            x = targetX
+            y = targetY
+        }
+
+        try {
+            windowManager.addView(pillView, pillParams)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to add Pill window", e)
+        }
+    }
+
+    private fun removePillWindow() {
+        pillView?.let {
+            try {
+                windowManager.removeView(it)
+            } catch (_: Exception) {}
+            pillView = null
+        }
+        pillParams = null
+    }
+
+    private fun updatePillAppearance() {
+        val pill = pillView ?: return
+        val params = pillParams ?: return
+
+        val pillWidth = (settings.getQuickBallPillTouchWidth() * density).roundToInt()
+        val pillHeight = (settings.getQuickBallPillHeight() * density).roundToInt()
+        val (screenWidth, _) = getScreenDimensions()
+
+        params.width = pillWidth
+        params.height = pillHeight
+        params.x = if (isOnRight) screenWidth - pillWidth else 0
+        params.y = fabY + (fabSizePx - pillHeight) / 2
+
+        pill.update()
+        updateViewLayoutSafe(pill, params)
+    }
+
+    private fun executeGestureAction(gestureName: String) {
+        if (!settings.isQuickBallGesturesEnabled()) return
+        if (settings.isQuickBallHaptic()) {
+            HapticUtil.performHapticForService(service)
+        }
+        val action = settings.getQuickBallGestureAction(gestureName) ?: return
+        scope.launch {
+            CombinedActionExecutor.execute(service, action)
+        }
+        resetInactivityTimer()
+    }
+
+    /* -------------------- Expanded Radial Menu Window -------------------- */
 
     private fun expandMenu() {
         if (isExpanded) return
         isExpanded = true
-        isIdle = false
-        mainHandler.removeCallbacks(idleRunnable)
+        fabView?.setExpanded(true)
+        stopInactivityTimer()
 
-        if (isHapticEnabled) {
-            HapticUtil.performHapticForService(service)
+        val (screenWidth, _) = getScreenDimensions()
+        val actualFabX = getEdgeX(screenWidth)
+
+        val slotCount = settings.getQuickBallSlotCount()
+        val actionList = (1..slotCount).map { settings.getQuickBallSlotAction(it) }
+
+        menuView = FloatPanelView(
+            context = service,
+            fabX = actualFabX,
+            fabY = fabY,
+            fabSize = fabSizePx,
+            actions = actionList,
+            onDismiss = {
+                collapseMenu()
+            },
+            onDismissFinished = {
+                removeMenuWindow()
+                resetInactivityTimer()
+            },
+            onActionClicked = { action ->
+                if (settings.isQuickBallHaptic()) {
+                    HapticUtil.performHapticForService(service)
+                }
+                scope.launch {
+                    CombinedActionExecutor.execute(service, action)
+                }
+                collapseMenu()
+            },
+        )
+
+        menuParams = createOverlayParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+        ).apply {
+            x = 0
+            y = 0
         }
 
-        // Expand window to fullscreen so the radial buttons and tap-outside scrim work
-        val metrics = getDisplayMetrics()
-        windowParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        windowParams.height = WindowManager.LayoutParams.MATCH_PARENT
-        windowParams.x = 0
-        windowParams.y = 0
         try {
-            windowManager.updateViewLayout(overlayRoot, windowParams)
+            windowManager.addView(menuView, menuParams)
+            menuView?.animateExpand()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to expand window", e)
+            Log.e(TAG, "Failed to add menu overlay window", e)
         }
     }
 
-    private fun collapseMenu(animate: Boolean = true) {
-        if (!isExpanded && isOverlayAdded) return
+    private fun collapseMenu() {
+        if (!isExpanded) return
         isExpanded = false
+        fabView?.setExpanded(false)
 
-        if (isHapticEnabled && animate) {
-            HapticUtil.performHapticForService(service)
-        }
-
-        updateWindowDimensions()
-        resetIdleTimer()
+        menuView?.animateCollapse()
     }
 
-    private fun handleActionClick(action: Action) {
-        if (isHapticEnabled) {
-            HapticUtil.performHapticForService(service)
-        }
-        collapseMenu()
-        scope.launch {
-            CombinedActionExecutor.execute(service, action)
-        }
-    }
-
-    private fun snapToEdge() {
-        val metrics = getDisplayMetrics()
-        val density = service.resources.displayMetrics.density
-        val ballSizePx = (ballSizeDp * density).roundToInt()
-
-        val screenWidth = metrics.widthPixels
-        val currentX = windowParams.x
-        val snapToLeft = currentX < (screenWidth / 2)
-        isDockedLeft = snapToLeft
-        val targetX = if (snapToLeft) 0 else (screenWidth - ballSizePx)
-
-        val animator = ValueAnimator.ofInt(currentX, targetX).apply {
-            duration = 240L
-            interpolator = DecelerateInterpolator()
-            addUpdateListener { anim ->
-                windowParams.x = anim.animatedValue as Int
-                try {
-                    windowManager.updateViewLayout(overlayRoot, windowParams)
-                } catch (_: Exception) {}
-            }
-        }
-        animator.start()
-
-        // Persist position
-        settingsRepository.setQuickBallPositionSide(if (snapToLeft) 1 else 0)
-        val yRatio = (windowParams.y.toFloat() / metrics.heightPixels.toFloat()).coerceIn(0.1f, 0.9f)
-        settingsRepository.setQuickBallPositionY(yRatio)
-
-        resetIdleTimer()
-    }
-
-    private fun updateWindowDimensions() {
-        if (!isOverlayAdded || overlayRoot == null) return
-        val density = service.resources.displayMetrics.density
-        val ballSizePx = (ballSizeDp * density).roundToInt()
-        val metrics = getDisplayMetrics()
-
-        if (!isExpanded) {
-            windowParams.width = ballSizePx
-            windowParams.height = ballSizePx
-            windowParams.x = if (isDockedLeft) 0 else (metrics.widthPixels - ballSizePx)
-            val savedYRatio = settingsRepository.getQuickBallPositionY()
-            windowParams.y =
-                (metrics.heightPixels * savedYRatio)
-                    .roundToInt()
-                    .coerceIn(60, metrics.heightPixels - ballSizePx - 60)
-        } else {
-            windowParams.width = WindowManager.LayoutParams.MATCH_PARENT
-            windowParams.height = WindowManager.LayoutParams.MATCH_PARENT
-            windowParams.x = 0
-            windowParams.y = 0
-        }
-
-        try {
-            windowManager.updateViewLayout(overlayRoot, windowParams)
-        } catch (_: Exception) {}
-    }
-
-    private fun resetIdleTimer() {
-        mainHandler.removeCallbacks(idleRunnable)
-        mainHandler.postDelayed(idleRunnable, IDLE_TIMEOUT_MS)
-    }
-
-    private fun getDisplayMetrics(): DisplayMetrics {
-        val metrics = DisplayMetrics()
-        @Suppress("DEPRECATION")
-        windowManager.defaultDisplay.getRealMetrics(metrics)
-        return metrics
-    }
-
-    fun removeOverlay() {
-        mainHandler.removeCallbacks(idleRunnable)
-        if (isOverlayAdded && overlayRoot != null) {
+    private fun removeMenuWindow() {
+        menuView?.let {
             try {
-                windowManager.removeView(overlayRoot)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to remove Quick Ball overlay", e)
-            }
-            isOverlayAdded = false
-            overlayRoot = null
-            composeView = null
+                windowManager.removeView(it)
+            } catch (_: Exception) {}
+            menuView = null
         }
-        lifecycleOwner?.onDestroy()
-        lifecycleOwner = null
+        menuParams = null
     }
 
-    fun destroy() {
-        removeOverlay()
-        scope.cancel()
+    /* -------------------- Helpers & Calculations -------------------- */
+
+    private fun resetInactivityTimer() {
+        stopInactivityTimer()
+        if (settings.isQuickBallStickToEdge() && !isExpanded) {
+            handler.postDelayed(stashRunnable, STASH_DELAY_MS)
+        }
+    }
+
+    private fun stopInactivityTimer() {
+        handler.removeCallbacks(stashRunnable)
+    }
+
+    private fun recalculatePosition() {
+        val (screenWidth, screenHeight) = getScreenDimensions()
+        val savedYRatio = settings.getQuickBallPositionY()
+        fabY = (screenHeight * savedYRatio).roundToInt().coerceIn(topBoundary, screenHeight - fabSizePx - bottomBoundary)
+        fabX = getEdgeX(screenWidth)
+
+        fabParams?.let { params ->
+            params.x = fabX
+            params.y = fabY
+            fabView?.let { updateViewLayoutSafe(it, params) }
+        }
+    }
+
+    private fun getEdgeX(screenWidth: Int = getScreenDimensions().first): Int {
+        return if (isOnRight) screenWidth - fabSizePx - edgePaddingPx else edgePaddingPx
+    }
+
+    private fun getScreenDimensions(): Pair<Int, Int> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val bounds = windowManager.maximumWindowMetrics.bounds
+            bounds.width() to bounds.height()
+        } else {
+            val dm = service.resources.displayMetrics
+            dm.widthPixels to dm.heightPixels
+        }
+    }
+
+    private fun createOverlayParams(width: Int, height: Int): WindowManager.LayoutParams {
+        return WindowManager.LayoutParams().apply {
+            this.width = width
+            this.height = height
+            type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+            format = PixelFormat.TRANSLUCENT
+            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            gravity = Gravity.TOP or Gravity.START
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
+    }
+
+    private fun updateViewLayoutSafe(view: View, params: ViewGroup.LayoutParams?) {
+        try {
+            windowManager.updateViewLayout(view, params)
+        } catch (_: Exception) {}
     }
 }
