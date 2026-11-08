@@ -1394,7 +1394,7 @@ Réinitialiser permet d\'effacer les valeurs personnalisées et le système gér
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Tais toi !</string>
-    <string name="feat_shut_up_desc">Je sais ce que je fait</string>
+    <string name="feat_shut_up_desc">Je sais ce que je fais</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Sélectionner les applications</string>
     <string name="shut_up_select_apps_desc">Sélectionner les apps auxquelles appliquer Tais-toi !</string>
@@ -1686,7 +1686,7 @@ Note que en activant ça peut casser les widgets At a Glance du launcher (Comme 
     <string name="label_battery_section_specs">Spécifications</string>
     <string name="label_auto_reset_battery_stats_title">Réinitialisation automatique</string>
     <string name="label_auto_reset_battery_stats_desc">Réinitialise automatiquement les statistiques de la batterie quand l\'appareil est débranché au dessus de % c de charge.</string>
-    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas activer lorsqu\'en mode Ne pas déranger.</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Ne pas déclencher en mode Ne pas déranger.</string>
     <string name="hilight_notifications_desc">Allumer la LED avec un effet différent pour chaque application</string>
     <string name="hilight_only_screen_off_title">Activer seulement lorsque l\'écran est éteint.</string>
     <string name="hilight_cooldown_title">Délai </string>
@@ -1782,7 +1782,7 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_keep_on_landscape_title">Garder en mode portrait</string>
     <string name="island_animation_speed_title">Vitesse des animations</string>
     <string name="island_themed_text_title">Couleur de texte personnalisée</string>
-    <string name="island_media_use_art_color_title">Advertise album art color</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
@@ -1815,4 +1815,8 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="batteries_notification_title">Notification de batterie</string>
+    <string name="hilight_cooldown_desc">Attendre ce délai avant de s\'allumer à nouveau pour la même appli</string>
+    <string name="hilight_repeats_title">Répéter</string>
+    <string name="duo_action_horizontal_slide_brightness">Luminosité</string>
 </resources>
