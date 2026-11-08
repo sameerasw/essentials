@@ -1502,4 +1502,5 @@
     <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

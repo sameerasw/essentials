@@ -69,6 +69,7 @@ class StatusBarSectionsDebugHandler(
         if (sections != lastLogged) {
             lastLogged = sections
             sections.forEach { Log.d(TAG, "${it.name}: ${it.bounds} w=${it.bounds.width()} h=${it.bounds.height()}") }
+            StatusBarLayoutUtil.dumpTree(service).forEach { Log.d("$TAG-tree", it) }
         }
         ensureOverlay().setSections(sections)
     }

@@ -770,7 +770,7 @@ class IslandCoordinator(
         override fun run() {
             val stage = controller.state.value.stage
             if (stage == IslandStage.Compact || stage == IslandStage.Hidden) {
-                val edges = StatusBarLayoutUtil.edges(service)
+                val edges = StatusBarLayoutUtil.edges(service, settings.isIslandStatusBarIgnoreNotificationsEnabled())
                 if (edges != statusBarEdges || stage == IslandStage.Compact) {
                     statusBarEdges = edges
                     controller.relayout()
@@ -981,6 +981,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
+            SettingsRepository.KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS,
         )
         private const val STATUS_BAR_POLL_MS = 1000L
         private const val STATUS_BAR_MARGIN_DP = 10f

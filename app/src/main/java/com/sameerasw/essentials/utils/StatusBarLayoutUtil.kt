@@ -62,17 +62,65 @@ object StatusBarLayoutUtil {
         return ids.flatMap { id -> visibleBounds(root, id).map { Section(id, it) } }
     }
 
-    fun edges(service: AccessibilityService): Edges? {
+    fun edges(service: AccessibilityService, ignoreNotifications: Boolean = false): Edges? {
         val root = statusBarRoot(service) ?: return null
         val rootBounds = Rect().also { root.getBoundsInScreen(it) }
         val maxContainer = rootBounds.width() / 2
-        var start = START_IDS.flatMap { visibleBounds(root, it) } +
-            START_ICON_CONTAINERS.flatMap { childBounds(root, it) }
-        if (start.isEmpty()) start = START_FALLBACKS.flatMap { visibleBounds(root, it) }.filter { it.width() < maxContainer }
+        val start = startBounds(root, ignoreNotifications, maxContainer)
         var end = END_IDS.flatMap { visibleBounds(root, it) } +
             END_ICON_CONTAINERS.flatMap { childBounds(root, it) }
         if (end.isEmpty()) end = END_FALLBACKS.flatMap { visibleBounds(root, it) }.filter { it.width() < maxContainer }
         return Edges(start.maxOfOrNull { it.right }, end.minOfOrNull { it.left })
+    }
+
+    fun dumpTree(service: AccessibilityService): List<String> {
+        val root = statusBarRoot(service) ?: return emptyList()
+        val out = mutableListOf<String>()
+        fun walk(node: AccessibilityNodeInfo, depth: Int) {
+            val r = Rect().also { node.getBoundsInScreen(it) }
+            out += "  ".repeat(depth) + "${node.viewIdResourceName?.substringAfter(":id/") ?: "-"} " +
+                "${node.className?.toString()?.substringAfterLast('.')} $r vis=${node.isVisibleToUser} " +
+                "t=${node.text ?: ""} d=${node.contentDescription ?: ""}"
+            for (i in 0 until node.childCount) node.getChild(i)?.let { walk(it, depth + 1) }
+        }
+        walk(root, 0)
+        return out
+    }
+
+    private val NOTIFICATION_KEY = Regex("""^-?\d+\|.+\|.*""")
+    private val TIME_TEXT = Regex("""^\d{1,2}[:.]\d{2}.*""")
+
+    private fun startBounds(root: AccessibilityNodeInfo, ignoreNotifications: Boolean, maxContainer: Int): List<Rect> {
+        val clocks = visibleBounds(root, "clock")
+        val container = START_FALLBACKS.firstNotNullOfOrNull { id -> nodes(root, id).firstOrNull { it.isVisibleToUser } }
+        val clockText = mutableListOf<Rect>()
+        val others = mutableListOf<Rect>()
+        if (container != null) collectStart(container, clockText, others, ignoreNotifications)
+        if (ignoreNotifications) return clocks + clockText
+        val legacy = START_IDS.flatMap { visibleBounds(root, it) } + START_ICON_CONTAINERS.flatMap { childBounds(root, it) }
+        val found = clocks + clockText + others + legacy
+        if (found.isNotEmpty()) return found
+        return START_FALLBACKS.flatMap { visibleBounds(root, it) }.filter { it.width() < maxContainer }
+    }
+
+    private fun collectStart(node: AccessibilityNodeInfo, clock: MutableList<Rect>, others: MutableList<Rect>, ignoreNotifications: Boolean) {
+        val id = node.viewIdResourceName?.substringAfter(":id/")
+        val isNotification = id == "notification_icon_area" || id == "notificationIcons" ||
+            id?.startsWith("ongoing_") == true || (id != null && NOTIFICATION_KEY.matches(id))
+        if (isNotification) {
+            if (!ignoreNotifications) node.visibleRect()?.let { others += it }
+            return
+        }
+        val text = node.text?.toString()
+        if (text != null && TIME_TEXT.matches(text.trim())) {
+            node.visibleRect()?.let { clock += it }
+            return
+        }
+        if (node.childCount == 0) {
+            node.visibleRect()?.let { others += it }
+            return
+        }
+        for (i in 0 until node.childCount) node.getChild(i)?.let { collectStart(it, clock, others, ignoreNotifications) }
     }
 
     private fun nodes(root: AccessibilityNodeInfo, id: String): List<AccessibilityNodeInfo> =
