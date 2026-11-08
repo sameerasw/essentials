@@ -108,7 +108,7 @@ fun NotificationExpanded(
                     Text(
                         text = message,
                         style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp),
-                        maxLines = 7,
+                        maxLines = 20,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
                     )

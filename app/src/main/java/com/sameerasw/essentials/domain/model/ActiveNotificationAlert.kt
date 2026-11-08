@@ -35,5 +35,6 @@ data class ActiveNotificationAlert(
     val themedIcon: Bitmap? = null,
     val smallIcon: Bitmap? = null,
     val image: Bitmap? = null,
+    val expandedText: String? = null,
 )
 

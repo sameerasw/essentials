@@ -2236,6 +2236,18 @@ class NotificationListener : NotificationListenerService() {
 
         var text = textParts.joinToString("\n")
 
+        val bigText = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()?.trim()
+        val inboxText = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
+            ?.mapNotNull { it?.toString()?.trim()?.takeIf(String::isNotBlank) }
+            ?.joinToString("\n")
+        val fullBody = listOfNotNull(bigText, inboxText).filter { it.isNotBlank() }.maxByOrNull { it.length }
+        val expandedText = fullBody
+            ?.takeIf { full -> full.length > (body?.length ?: 0) && !full.equals(title, ignoreCase = true) }
+            ?.let { full ->
+                val head = rawTitleBig?.takeIf { it.isNotBlank() && !it.equals(title, ignoreCase = true) && !full.startsWith(it) }
+                listOfNotNull(head, full).joinToString("\n")
+            }
+
         val appName = try {
             val appInfo = packageManager.getApplicationInfo(sbn.packageName, 0)
             packageManager.getApplicationLabel(appInfo).toString()
@@ -2438,6 +2450,7 @@ class NotificationListener : NotificationListenerService() {
             themedIcon = if (themedBubble) AppIconUtil.monochromeAppIcon(this, sbn.packageName) else null,
             smallIcon = smallIconBitmap,
             image = contentImage(notif),
+            expandedText = expandedText,
         )
     }
 
