@@ -632,6 +632,8 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_PEEK_ALERTS = "island_battery_peek_alerts"
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
+        const val KEY_ISLAND_NOTIF_MAX_HEIGHT = "island_notif_max_height"
+        const val KEY_ISLAND_CALENDAR_MAX_HEIGHT = "island_calendar_max_height"
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_ANIMATION_SPEED = "island_animation_speed"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
@@ -4377,6 +4379,9 @@ class SettingsRepository(
     fun getIslandPreviewStage(): String =
         getString(KEY_ISLAND_PREVIEW_STAGE, ISLAND_PREVIEW_STAGE_AUTO) ?: ISLAND_PREVIEW_STAGE_AUTO
     fun setIslandPreviewStage(value: String) = putString(KEY_ISLAND_PREVIEW_STAGE, value)
+
+    fun getIslandNotifMaxHeight(): Float = getFloat(KEY_ISLAND_NOTIF_MAX_HEIGHT, 0f)
+    fun setIslandNotifMaxHeight(value: Float) = putFloat(KEY_ISLAND_NOTIF_MAX_HEIGHT, value)
 
     fun getIslandExpandedScale(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_SCALE, 1f)
     fun setIslandExpandedScale(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_SCALE, value)

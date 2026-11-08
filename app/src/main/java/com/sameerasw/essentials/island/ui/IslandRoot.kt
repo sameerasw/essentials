@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.animation.core.snap
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.graphics.luminance
@@ -122,6 +123,7 @@ interface IslandActions {
     fun onDismiss(): Boolean
     fun onOpenFocused()
     fun onInteraction()
+    fun onHold(held: Boolean) {}
     fun onTextInputChanged(active: Boolean)
     fun onAdvance(): Boolean
     val compactGestures: CompactGestures get() = CompactGestures.None
@@ -1123,6 +1125,7 @@ private fun IslandRootContent(
                 }
                 .animateContentSize(
                     animationSpec = when {
+                        IslandLiveResize.active -> snap()
                         stage == IslandStage.Expanded || stage == IslandStage.Line -> IslandMotion.size
                         stage == IslandStage.Compact && compactSettled -> IslandMotion.compactSize
                         else -> IslandMotion.collapseSize
@@ -1667,6 +1670,7 @@ private fun StageContent(
                 onOpen = a::onOpenFocused,
                 onTextInput = a::onTextInputChanged,
                 onKeepAlive = a::onInteraction,
+                onHold = a::onHold,
                 current = interactive,
             )
         }

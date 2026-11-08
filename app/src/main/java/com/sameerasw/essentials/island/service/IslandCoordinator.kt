@@ -223,6 +223,13 @@ class IslandCoordinator(
             plugins.forEach { it.onUserInteraction(focused) }
         }
 
+        override fun onHold(held: Boolean) {
+            mainHandler.removeCallbacks(holdTick)
+            controller.setUserHold(held)
+            onInteraction()
+            if (held) mainHandler.postDelayed(holdTick, HOLD_TICK_MS)
+        }
+
         override fun onTextInputChanged(active: Boolean) {
             textInputActive = active
             windowHost.setTextInput(active)
@@ -300,6 +307,14 @@ class IslandCoordinator(
     }
 
     private var autoExpandedAt = 0L
+
+    private val holdTick: Runnable = object : Runnable {
+        override fun run() {
+            val focused = controller.state.value.focusedKey
+            plugins.forEach { it.onUserInteraction(focused) }
+            mainHandler.postDelayed(this, HOLD_TICK_MS)
+        }
+    }
 
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
@@ -677,6 +692,8 @@ class IslandCoordinator(
         scope = null
         mainHandler.removeCallbacks(statusBarPoll)
         mainHandler.removeCallbacks(widthRelayout)
+        mainHandler.removeCallbacks(holdTick)
+        controller.setUserHold(false)
         CompactCellWidths.onChange = null
         controller.compactCellWidth = { 1f }
         controller.compactBubbleWidth = { it.toFloat() }
@@ -951,6 +968,7 @@ class IslandCoordinator(
         const val OUTSIDE_DISMISS_GRACE_MS = 2000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
+        const val HOLD_TICK_MS = 1000L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
         const val QUEUE_PREVIEW_SOURCE = "preview.queue"

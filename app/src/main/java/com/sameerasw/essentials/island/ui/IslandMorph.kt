@@ -122,3 +122,7 @@ fun Modifier.morphTag(tag: String): Modifier = composed {
             if (!info.morph.hides(info.layerKey, tag)) drawLayer(layer)
         }
 }
+
+object IslandLiveResize {
+    var active by mutableStateOf(false)
+}

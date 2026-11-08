@@ -78,6 +78,8 @@ interface IslandExpandedScope {
 
     // Call while the user is doing something
     fun keepAlive()
+
+    fun holdOpen(held: Boolean) {}
 }
 
 class ExpandedContent(val content: @Composable (IslandExpandedScope) -> Unit)

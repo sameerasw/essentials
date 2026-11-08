@@ -1,5 +1,23 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.components.resizableCard
+import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
+import com.sameerasw.essentials.island.ui.components.ResizeHandle
+import com.sameerasw.essentials.island.ui.IslandLiveResize
+import androidx.compose.ui.draw.clipToBounds
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.layout.layout
@@ -82,13 +100,17 @@ fun NotificationExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
+    val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_NOTIF_MAX_HEIGHT)
     Box(propagateMinConstraints = true) {
         Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
-            modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
+            modifier = Modifier
+                .fillMaxWidth()
+                .resizableCard(resize)
+                .padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
+            Column(Modifier.weight(1f, fill = false)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
@@ -103,6 +125,7 @@ fun NotificationExpanded(
                         }
                     },
                 )
+                Column(Modifier.weight(1f, fill = false).clipToBounds()) {
                 if (message.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
@@ -133,6 +156,7 @@ fun NotificationExpanded(
                             }
                             .clip(RoundedCornerShape(16.dp)),
                     )
+                }
                 }
             }
             Column {
@@ -166,7 +190,7 @@ fun NotificationExpanded(
                         },
                     )
                 }
-                Spacer(Modifier.height(spec.expandedBottomPadding))
+                ResizeHandle(resize, spec.expandedBottomPadding.coerceAtLeast(18.dp))
             }
         }
     }

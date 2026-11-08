@@ -263,6 +263,19 @@ class IslandController(
         recompute()
     }
 
+    private var userHold = false
+
+    fun setUserHold(held: Boolean) {
+        if (userHold == held) return
+        userHold = held
+        if (held) {
+            expandedTimer?.cancel()
+            expandedTimer = null
+        } else {
+            restartExpandedTimer()
+        }
+    }
+
     fun onUserInteraction() {
         if (expandedKey != null) restartExpandedTimer()
         peekKey?.let { key ->
@@ -292,7 +305,7 @@ class IslandController(
         expandedTimer = null
         val timeout = expandedTimeoutMs
         val key = expandedKey ?: return
-        if (timeout <= 0L || holdFocus || stickyFocus) return
+        if (timeout <= 0L || holdFocus || stickyFocus || userHold) return
         expandedTimer = scheduler.schedule(timeout) { if (expandedKey == key) collapse() }
     }
 
