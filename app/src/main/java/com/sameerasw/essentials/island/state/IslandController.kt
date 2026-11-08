@@ -55,6 +55,7 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
+    var onAutoExpand: (() -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
     private var collapsing = false
@@ -148,7 +149,10 @@ class IslandController(
     fun handle(request: PluginRequest) {
         when (request) {
             is PluginRequest.Peek -> peek(request.itemKey, request.durationMs, sticky = request.sticky)
-            is PluginRequest.Expand -> expand(request.itemKey, request.sticky)
+            is PluginRequest.Expand -> {
+                expand(request.itemKey, request.sticky)
+                if (expandedKey == request.itemKey) onAutoExpand?.invoke()
+            }
             is PluginRequest.Collapse -> if (expandedKey == request.itemKey || peekKey == request.itemKey) collapse()
         }
     }

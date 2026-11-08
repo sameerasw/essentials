@@ -299,14 +299,13 @@ class IslandCoordinator(
         }
     }
 
-    private var expandedShownAt = 0L
+    private var autoExpandedAt = 0L
 
-    // Anything the user touches outside the island collapses the expanded card, when enabled.
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
         if (textInputActive) return
         if (controller.state.value.stage != IslandStage.Expanded) return
-        if (SystemClock.uptimeMillis() - expandedShownAt < OUTSIDE_DISMISS_GRACE_MS) return
+        if (SystemClock.uptimeMillis() - autoExpandedAt < OUTSIDE_DISMISS_GRACE_MS) return
         mainHandler.post { controller.collapse() }
     }
 
@@ -379,7 +378,11 @@ class IslandCoordinator(
             if (pendingFullscreen == fullscreen) return@post
             pendingFullscreen = fullscreen
             mainHandler.removeCallbacks(applyFullscreen)
-            if (isFullscreenApp != fullscreen) mainHandler.postDelayed(applyFullscreen, SETTLE_MS)
+            when {
+                isFullscreenApp == fullscreen -> Unit
+                fullscreen -> applyFullscreen.run()
+                else -> mainHandler.postDelayed(applyFullscreen, SETTLE_MS)
+            }
         }
     }
 
@@ -395,7 +398,11 @@ class IslandCoordinator(
             if (pendingShadeExpanded == expanded) return@post
             pendingShadeExpanded = expanded
             mainHandler.removeCallbacks(applyShadeExpanded)
-            if (isShadeExpanded != expanded) mainHandler.postDelayed(applyShadeExpanded, SETTLE_MS)
+            when {
+                isShadeExpanded == expanded -> Unit
+                expanded -> applyShadeExpanded.run()
+                else -> mainHandler.postDelayed(applyShadeExpanded, SETTLE_MS)
+            }
         }
     }
 
@@ -507,12 +514,7 @@ class IslandCoordinator(
                 .distinctUntilChanged()
                 .collect { (stage, key) -> plugins.forEach { it.onFocusChanged(stage, key) } }
         }
-        newScope.launch {
-            controller.state
-                .map { Triple(it.stage, it.focusedKey, it.focused?.contentId) }
-                .distinctUntilChanged()
-                .collect { (stage) -> if (stage == IslandStage.Expanded) expandedShownAt = SystemClock.uptimeMillis() }
-        }
+        controller.onAutoExpand = { autoExpandedAt = SystemClock.uptimeMillis() }
         newScope.launch { IslandPreviewRequests.queue.collect { showQueuePreview() } }
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
         applyPreviewStage()
