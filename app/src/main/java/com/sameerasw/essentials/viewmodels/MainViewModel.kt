@@ -467,6 +467,9 @@ class MainViewModel : ViewModel() {
     val isWhatsNewVisible = mutableStateOf(false)
     val dnsPresets = mutableStateListOf<DnsPreset>()
     val addedQSTiles = mutableStateOf<Set<String>>(emptySet())
+
+    // Tiles from an imported config that are not in Quick Settings yet (class names)
+    val qsTilesPendingRestore = mutableStateOf<Set<String>>(emptySet())
     val isHideGestureBarEnabled = mutableStateOf(false)
     val isHideGestureBarOnLauncherEnabled = mutableStateOf(false)
     val isCircleToSearchGestureEnabled = mutableStateOf(false)
@@ -9679,27 +9682,47 @@ class MainViewModel : ViewModel() {
      * @param context [Context] Target context.
      * @param outputStream [java.io.OutputStream] Target output stream.
      */
+    /** Returns true when the Quick Settings tile layout (positions) made it into the export. */
     fun exportConfigs(
         context: Context,
         outputStream: java.io.OutputStream,
-    ) {
-        settingsRepository.exportConfigs(outputStream)
-    }
+    ): Boolean = settingsRepository.exportConfigs(outputStream)
 
     fun importConfigs(
         context: Context,
         inputStream: java.io.InputStream,
         keepPrefs: Boolean,
     ): Boolean {
+        val localAddedTiles = com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.locallyAddedTiles(context)
         val success = settingsRepository.importConfigs(inputStream, keepPrefs)
         if (success) {
+            com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.prepareAfterImport(context, localAddedTiles)
             settingsRepository.syncSystemSettingsWithSaved()
             com.sameerasw.essentials.domain.diy.DIYRepository
                 .reloadAutomations()
             refreshFreezePickedApps(context, silent = true)
             check(context)
+            restoreImportedQsTiles(context.applicationContext)
         }
         return success
+    }
+
+    // Import is the user's go-ahead: with Shizuku/root the tiles go straight back to their old spots,
+    // anything left is offered on the Quick Settings tiles screen through the system add-tile dialog.
+    private fun restoreImportedQsTiles(context: Context) {
+        if (qsTilesPendingRestore.value.isEmpty()) return
+        viewModelScope.launch {
+            val result = if (ShellUtils.hasPermission(context)) restoreQsTilesWithShell(context) else null
+            val left = qsTilesPendingRestore.value.size
+            val message = when {
+                result != null && result.restored.isNotEmpty() && left == 0 ->
+                    context.resources.getQuantityString(R.plurals.qs_tiles_restored_toast, result.restored.size, result.restored.size)
+                left > 0 ->
+                    context.resources.getQuantityString(R.plurals.qs_tiles_restore_pending_toast, left, left)
+                else -> null
+            }
+            message?.let { android.widget.Toast.makeText(context, it, android.widget.Toast.LENGTH_LONG).show() }
+        }
     }
 
     data class FreezeBackupData(
@@ -10366,6 +10389,32 @@ class MainViewModel : ViewModel() {
                 .toSet()
 
         addedQSTiles.value = fromSecureSettings + fromPrefs
+
+        if (tilesString.isNotBlank()) {
+            com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.rememberLayout(context, tilesString)
+        }
+        val presentClasses =
+            fromSecureSettings.mapNotNull { com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.customClass(it) }.toSet() + fromPrefs
+        qsTilesPendingRestore.value =
+            com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.reconcile(context, presentClasses)
+    }
+
+    /** Puts pending tiles back at their old positions through Shizuku/root. Returns how many were restored. */
+    suspend fun restoreQsTilesWithShell(context: Context): com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.ShellResult {
+        val result = com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.restoreWithShell(context)
+        updateAddedQSTiles(context)
+        return result
+    }
+
+    fun markQsTileRestored(context: Context, className: String) {
+        com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.markAdded(context, className)
+        addedQSTiles.value = addedQSTiles.value + className
+        qsTilesPendingRestore.value = qsTilesPendingRestore.value - className
+    }
+
+    fun dismissQsTileRestore(context: Context) {
+        com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.clearPending(context)
+        qsTilesPendingRestore.value = emptySet()
     }
 
     // Daily Wallpaper Support

@@ -1964,7 +1964,9 @@ class SettingsRepository(
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS ||
                         key == KEY_MAPS_DISCOVERED_CHANNELS ||
                         key == KEY_SHUT_UP_ORIGINAL_SETTINGS ||
-                        key == "battery_history_points"
+                        key == "battery_history_points" ||
+                        key == com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.KEY_RESTORE_LAYOUT ||
+                        key == com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.KEY_PENDING
                     ) {
                         return@forEach
                     }
@@ -2014,7 +2016,10 @@ class SettingsRepository(
      *
      * @param outputStream [java.io.OutputStream] Target output stream.
      */
-    fun exportConfigs(outputStream: java.io.OutputStream) {
+    /** Writes the config. Returns true when the current Quick Settings tile layout was read and included. */
+    fun exportConfigs(outputStream: java.io.OutputStream): Boolean {
+        // Read the tile layout now so the backup has the order as it is, not whatever was last seen
+        val layoutIncluded = com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.captureForExport(context)
         try {
             val json = getAllConfigsAsJsonString()
             outputStream.write(json.toByteArray())
@@ -2023,6 +2028,7 @@ class SettingsRepository(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        return layoutIncluded
     }
 
     /**

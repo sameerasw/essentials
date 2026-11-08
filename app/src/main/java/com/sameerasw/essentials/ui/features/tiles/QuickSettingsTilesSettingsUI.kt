@@ -236,6 +236,8 @@ fun QuickSettingsTilesSettingsUI(
             )
         }
 
+        com.sameerasw.essentials.ui.features.tiles.QsTileRestoreCard(viewModel = viewModel, tiles = allTiles)
+
         categorizedTiles.forEachIndexed { index, (categoryRes, tilesInSection) ->
             if (index > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
