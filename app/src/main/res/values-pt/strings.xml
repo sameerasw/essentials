@@ -1807,6 +1807,7 @@ adicionar algum app</string>
     <string name="island_keep_on_landscape_title">manter no modo paisagem</string>
     <string name="island_secondary_bubble_title">bolha segundaria</string>
     <string name="island_balance_compact_title">visual balanceado para um ilha compacto</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_material_you_title">use cores do material you</string>
@@ -1819,4 +1820,6 @@ adicionar algum app</string>
     <string name="island_hide_status_bar_title">esconder barra de status</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

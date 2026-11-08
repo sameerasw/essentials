@@ -30,10 +30,11 @@ fun ExpandedHost(
     onOpen: () -> Unit,
     onTextInput: (Boolean) -> Unit = {},
     onKeepAlive: () -> Unit = {},
+    onHold: (Boolean) -> Unit = {},
     current: Boolean = true,
 ) {
     val content = item.expanded ?: return
-    val scope = remember(item, spec, onCollapse, onDismiss, onOpen, onTextInput, onKeepAlive, current) {
+    val scope = remember(item, spec, onCollapse, onDismiss, onOpen, onTextInput, onKeepAlive, onHold, current) {
         object : IslandExpandedScope {
             override val spec: IslandLayoutSpec = spec
             override val accent: Color = item.accent ?: Color.White
@@ -43,6 +44,7 @@ fun ExpandedHost(
             override fun openApp() = onOpen()
             override fun setTextInput(active: Boolean) = onTextInput(active)
             override fun keepAlive() = onKeepAlive()
+            override fun holdOpen(held: Boolean) = onHold(held)
         }
     }
     

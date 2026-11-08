@@ -767,7 +767,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 NotificationExpanded(
                     alert = alert,
                     sender = sender,
-                    message = message,
+                    message = alert.expandedText ?: message,
                     showGlow = showGlow,
                     onAction = { runAction(alert, it) },
                     onReply = { action, text -> sendReply(alert, action, text) },

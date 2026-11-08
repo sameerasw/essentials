@@ -71,7 +71,7 @@ fun LineTemplate(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val icon: @Composable () -> Unit = {
-            Box(Modifier.squareFit(spec.cellSize), contentAlignment = Alignment.Center) { line.icon() }
+            Box(Modifier.squareFit(spec.cellSize).morphTag(IslandMorph.ICON), contentAlignment = Alignment.Center) { line.icon() }
         }
         val endSlot: @Composable () -> Unit = {
             line.endSlot?.let { slot -> Box(Modifier.squareFit(spec.cellSize), contentAlignment = Alignment.Center) { slot() } }
@@ -84,7 +84,7 @@ fun LineTemplate(
             ) {
                 leadingSlot()
                 if (line.showLeftIcon) icon()
-                LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f))
+                LineText(line.start, TextAlign.Start, FontWeight.SemiBold, Modifier.weight(1f).morphTag(IslandMorph.TITLE))
             }
             Spacer(Modifier.width(spec.cameraSlotWidth))
             Row(
@@ -92,7 +92,7 @@ fun LineTemplate(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spec.cellSpacing),
             ) {
-                LineText(line.end, TextAlign.End, FontWeight.Normal, Modifier.weight(1f))
+                LineText(line.end, TextAlign.End, FontWeight.Normal, Modifier.weight(1f).morphTag(IslandMorph.END))
                 endSlot()
             }
         } else {
@@ -108,7 +108,7 @@ fun LineTemplate(
                     text = mergedLineText(line),
                     style = IslandTextStyles.line,
                     textAlign = TextAlign.Start,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).morphTag(IslandMorph.TITLE),
                 )
                 endSlot()
             }
@@ -138,10 +138,10 @@ private fun CondensedLine(line: LineContent, spec: IslandLayoutSpec, startInset:
     }
     val natural = with(LocalDensity.current) { (naturalPx + 1).toDp() }
     val icon: @Composable () -> Unit = {
-        Box(Modifier.squareFit(spec.cellSize), contentAlignment = Alignment.Center) { line.icon() }
+        Box(Modifier.squareFit(spec.cellSize).morphTag(IslandMorph.ICON), contentAlignment = Alignment.Center) { line.icon() }
     }
     val title: @Composable (Dp) -> Unit = { width ->
-        MarqueeText(text = line.start, style = style, textAlign = TextAlign.Start, modifier = Modifier.width(width))
+        MarqueeText(text = line.start, style = style, textAlign = TextAlign.Start, modifier = Modifier.width(width).morphTag(IslandMorph.TITLE))
     }
     val leadingSlot: @Composable () -> Unit = { LeadingSlot(leading, spec) }
     val leadingWidth = leading?.let { it.width + spec.cellSpacing } ?: 0.dp

@@ -1,5 +1,9 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import androidx.compose.ui.draw.clipToBounds
+import com.sameerasw.essentials.island.ui.components.resizableCard
+import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
+import com.sameerasw.essentials.island.ui.components.ResizeHandle
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -71,6 +75,7 @@ fun CalendarExpanded(
             "${timeText(event.startTimeMillis)} – ${timeText(event.endTimeMillis)}"
         else -> timeText(event.startTimeMillis)
     }
+    val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_CALENDAR_MAX_HEIGHT)
     val detailStyle = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp)
 
     Box(propagateMinConstraints = true) {
@@ -78,24 +83,24 @@ fun CalendarExpanded(
             Box(Modifier.matchParentSize().accentGlow(calendarColor, showGlow, scope.cameraClearance))
         }
         Column(
-            modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
+            modifier = Modifier.fillMaxWidth().resizableCard(resize).padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
+            Column(Modifier.weight(1f, fill = false)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = event.title,
                     start = {
                         Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) {
                             CalendarGlyph(icon, size = 20.dp, tint = calendarColor)
                         }
-                        MarqueeText(text = event.title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = { RollingText(countdown) },
                 )
                 Spacer(Modifier.height(4.dp))
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
+                    modifier = Modifier.weight(1f, fill = false).clipToBounds().fillMaxWidth().padding(horizontal = sidePadding),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Text("$timeRange · $relative", style = detailStyle, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -107,7 +112,7 @@ fun CalendarExpanded(
                         }
                     }
                     event.description?.let {
-                        Text(it, style = IslandTextStyles.body, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                        Text(it, style = IslandTextStyles.body, maxLines = 12, overflow = TextOverflow.Ellipsis)
                     }
                 }
             }
@@ -119,7 +124,7 @@ fun CalendarExpanded(
                     container = Color.White.copy(alpha = 0.2f),
                     items = listOf(ConnectedItem(onView) { ConnectedTextLabel(stringResource(R.string.island_calendar_view_event)) }),
                 )
-                Spacer(Modifier.height(spec.expandedBottomPadding))
+                ResizeHandle(resize, spec.expandedBottomPadding.coerceAtLeast(18.dp))
             }
         }
     }

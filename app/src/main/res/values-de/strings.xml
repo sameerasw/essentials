@@ -1911,6 +1911,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="haptic_mode_stronger">Stärker</string>
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Im Vollbildmodus behalten</string>
     <string name="island_battery_style_title">Akkustil</string>
     <string name="island_battery_only_low_title">Nur bei niedrigem Akkustand anzeigen</string>
@@ -2067,4 +2068,6 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_brief_two_line_header_title">Zweizeiliger Header</string>
     <string name="duo_slide_mirror_direction_title">Richtungen spiegeln</string>
     <string name="island_combine_with_duo">Kombinieren mit Duo</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

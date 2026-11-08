@@ -1,5 +1,8 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.animation.core.snap
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.animation.core.spring
@@ -120,6 +123,7 @@ interface IslandActions {
     fun onDismiss(): Boolean
     fun onOpenFocused()
     fun onInteraction()
+    fun onHold(held: Boolean) {}
     fun onTextInputChanged(active: Boolean)
     fun onAdvance(): Boolean
     val compactGestures: CompactGestures get() = CompactGestures.None
@@ -297,6 +301,8 @@ private fun IslandRootContent(
     var outgoing by remember { mutableStateOf<ContentKey?>(null) }
     val outgoingAlpha = remember { Animatable(0f) }
     val outgoingMotion = remember { Animatable(0f) }
+    val morph = remember { IslandMorph() }
+    val morphOrigin = remember { FloatArray(2) }
     val contentShiftPx = with(density) { 10.dp.toPx() }
     val collapse = remember { Animatable(0f) }
     // Hidden: the width shrinks to a circle first, then the circle shrinks to nothing, so it never turns oval.
@@ -373,6 +379,25 @@ private fun IslandRootContent(
         val thrownAway = dismissCommitted
         dismissCommitted = false
         val handOver = leaving != key && leaving.stage != IslandStage.Hidden && !thrownAway
+        morph.end()
+        val morphing = handOver && leaving.itemKey != null && leaving.itemKey == key.itemKey &&
+            setOf(leaving.stage, key.stage) == setOf(IslandStage.Line, IslandStage.Expanded)
+        if (morphing) {
+            outgoingAlpha.snapTo(contentAlpha.value)
+            outgoingMotion.snapTo(0f)
+            contentMotion.snapTo(0f)
+            contentAlpha.snapTo(0f)
+            outgoing = leaving
+            morph.begin(leaving, key)
+            morph.progress.snapTo(0f)
+            lastKey = key
+            launch { outgoingAlpha.animateTo(0f, motionTween(durationMillis = 140)) }
+            launch { contentAlpha.animateTo(1f, motionTween(durationMillis = 220, delayMillis = 80)) }
+            morph.progress.animateTo(1f, IslandMotion.contentSpring())
+            morph.end()
+            if (outgoing == leaving) outgoing = null
+            return@LaunchedEffect
+        }
         // Snap before lastKey is published: until then the pending frame override below keeps drawing the handover.
         if (handOver) {
             outgoingAlpha.snapTo(contentAlpha.value)
@@ -602,13 +627,14 @@ private fun IslandRootContent(
     val focusedItem = state.focused
     
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
-        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() }?.stack.orEmpty()
+        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() && !it.expandedQueueOnly }?.stack.orEmpty()
     } else {
         emptyList()
     }
     val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
     val queuedIcons = when {
         stage == IslandStage.Expanded && focusedItem?.hideExpandedQueue == true -> emptyList()
+        stage != IslandStage.Expanded && focusedItem?.expandedQueueOnly == true -> emptyList()
         foreignStack.isNotEmpty() -> fullStack
         else -> focusedItem?.queued ?: fullStack.filterNot { it.current }
     }
@@ -816,6 +842,7 @@ private fun IslandRootContent(
                     outlineColor = outlineFor(1f),
                     outlineThickness = spec.outlineThickness,
                     bond = pillBond,
+                    accent = focusedItem?.queueAccent,
                     onInteraction = actions::onInteraction,
                     modifier = Modifier
                         .queueSlot(0.5f, 1f, slides = true) { k -> ((k - 0.3f) / 0.7f).coerceIn(0f, 1f) }
@@ -1100,6 +1127,7 @@ private fun IslandRootContent(
                 }
                 .animateContentSize(
                     animationSpec = when {
+                        IslandLiveResize.active -> snap()
                         stage == IslandStage.Expanded || stage == IslandStage.Line -> IslandMotion.size
                         stage == IslandStage.Compact && compactSettled -> IslandMotion.compactSize
                         else -> IslandMotion.collapseSize
@@ -1435,6 +1463,7 @@ private fun IslandRootContent(
                         LocalIslandCollapse provides { if (current) collapse.value else 0f },
                         LocalLineInset provides if (current) lineInsets else (0.dp to 0.dp),
                         LocalLineLeading provides inlineQueue.takeIf { current && inlineLineQueue },
+                        LocalIslandMorph provides remember(layerKey) { IslandMorphLayer(morph, layerKey) },
                     ) {
                         StageContent(
                             layerKey.stage, layerItem, state, spec, actions, interactive = current,
@@ -1449,6 +1478,16 @@ private fun IslandRootContent(
                     }
                 }
             }
+            Spacer(
+                Modifier
+                    .matchParentSize()
+                    .onGloballyPositioned {
+                        val origin = it.boundsInRoot().topLeft
+                        morphOrigin[0] = origin.x
+                        morphOrigin[1] = origin.y
+                    }
+                    .drawBehind { if (morph.running) morph.draw(this, Offset(morphOrigin[0], morphOrigin[1])) },
+            )
             SwipeIntentChip(
                 intent = swipeIntent.takeIf { key.stage == IslandStage.Expanded },
                 modifier = Modifier
@@ -1633,6 +1672,7 @@ private fun StageContent(
                 onOpen = a::onOpenFocused,
                 onTextInput = a::onTextInputChanged,
                 onKeepAlive = a::onInteraction,
+                onHold = a::onHold,
                 current = interactive,
             )
         }

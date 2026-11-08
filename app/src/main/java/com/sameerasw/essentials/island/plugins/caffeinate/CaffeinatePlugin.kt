@@ -179,9 +179,9 @@ class CaffeinatePlugin : BaseIslandPlugin() {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = title,
                     start = {
                         IslandIcon(R.drawable.rounded_coffee_24, size = 20.dp, tint = accent)
-                        MarqueeText(text = title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = { if (value.isNotEmpty()) RollingText(value) },
                 )

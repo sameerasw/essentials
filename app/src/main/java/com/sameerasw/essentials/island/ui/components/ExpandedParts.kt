@@ -23,6 +23,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -49,56 +50,71 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.IslandHaptics
+import com.sameerasw.essentials.island.ui.IslandMorph
+import com.sameerasw.essentials.island.ui.morphTag
+import androidx.compose.ui.unit.sp
 
-// The top row of every expanded view: content split around the camera, same height as the compact pill.
 @Composable
 fun IslandExpandedScope.CameraRow(
     modifier: Modifier = Modifier,
     horizontalPadding: Dp = spec.expandedPadding,
+    title: String? = null,
+    titlePadding: Dp = spec.expandedPadding + spec.expandedCorner * 0.35f,
     start: @Composable RowScope.() -> Unit,
     end: @Composable RowScope.() -> Unit = {},
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(spec.compactHeight)
-            .padding(horizontal = horizontalPadding),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        val startRow: @Composable RowScope.() -> Unit = {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                content = start,
-            )
-        }
-        val endRow: @Composable RowScope.() -> Unit = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                content = end,
-            )
-        }
-        when {
-            spec.growDirection > 0 -> {
-                Spacer(Modifier.width(spec.cameraSlotWidth))
-                startRow()
-                endRow()
+    Column(modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(spec.compactHeight)
+                .padding(horizontal = horizontalPadding),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val startRow: @Composable RowScope.() -> Unit = {
+                Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                    Row(
+                        modifier = Modifier.morphTag(IslandMorph.ICON),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        content = start,
+                    )
+                }
             }
-            spec.growDirection < 0 -> {
-                startRow()
-                endRow()
-                Spacer(Modifier.width(spec.cameraSlotWidth))
+            val endRow: @Composable RowScope.(Modifier) -> Unit = { outer ->
+                Box(outer, contentAlignment = Alignment.CenterEnd) {
+                    Row(
+                        modifier = Modifier.morphTag(IslandMorph.END),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                        content = end,
+                    )
+                }
             }
-            else -> {
-                startRow()
-                Spacer(Modifier.width(spec.cameraSlotWidth))
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                    content = end,
+            when {
+                spec.growDirection > 0 -> {
+                    Spacer(Modifier.width(spec.cameraSlotWidth))
+                    startRow()
+                    endRow(Modifier)
+                }
+                spec.growDirection < 0 -> {
+                    startRow()
+                    endRow(Modifier)
+                    Spacer(Modifier.width(spec.cameraSlotWidth))
+                }
+                else -> {
+                    startRow()
+                    Spacer(Modifier.width(spec.cameraSlotWidth))
+                    endRow(Modifier.weight(1f))
+                }
+            }
+        }
+        if (!title.isNullOrBlank()) {
+            Box(Modifier.fillMaxWidth().padding(horizontal = titlePadding)) {
+                MarqueeText(
+                    text = title,
+                    style = IslandTextStyles.title.copy(fontSize = 17.sp),
+                    modifier = Modifier.morphTag(IslandMorph.TITLE),
                 )
             }
         }

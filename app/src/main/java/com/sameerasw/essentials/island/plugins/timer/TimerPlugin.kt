@@ -170,13 +170,10 @@ class TimerPlugin : BaseIslandPlugin() {
                             Spacer(Modifier.height(spec.expandedTopPadding))
                             scope.CameraRow(
                                 horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                                title = if (more > 0) "$label  +$more" else label,
+                                titlePadding = side,
                                 start = {
                                     Box(Modifier.padding(horizontal = 4.dp)) { IslandIcon(icon, size = 20.dp, tint = islandAccent()) }
-                                    MarqueeText(
-                                        text = if (more > 0) "$label  +$more" else label,
-                                        style = IslandTextStyles.title,
-                                        modifier = Modifier.weight(1f),
-                                    )
                                 },
                                 end = { entry.appName?.let { MarqueeText(it, IslandTextStyles.body, Modifier.weight(1f, fill = false)) } },
                             )

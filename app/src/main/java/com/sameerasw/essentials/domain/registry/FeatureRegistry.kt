@@ -990,6 +990,11 @@ object FeatureRegistry {
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
                         ),
+                        SearchSetting(
+                            R.string.island_statusbar_aware_width_title,
+                            R.string.island_section_visuals,
+                            "island_statusbar_aware_width",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true

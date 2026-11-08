@@ -102,6 +102,7 @@ class ScreenOffAccessibilityService :
     private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
+    private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -306,7 +307,9 @@ class ScreenOffAccessibilityService :
 
     private val preferenceChangeListener =
         android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == SettingsRepository.KEY_ISLAND_HIDE_LIVE_UPDATES) {
+            if (key == SettingsRepository.KEY_DEBUG_UI_MARGIN_OVERLAY) {
+                statusBarSectionsDebugHandler.start()
+            } else if (key == SettingsRepository.KEY_ISLAND_HIDE_LIVE_UPDATES) {
                 LiveUpdateSnoozer.onSettingChanged()
             } else if (key == "circle_to_search_gesture_enabled" ||
                 key == "circle_to_search_gesture_height" ||
@@ -437,6 +440,7 @@ class ScreenOffAccessibilityService :
         }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
+        statusBarSectionsDebugHandler = com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler(this)
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
@@ -625,6 +629,7 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        statusBarSectionsDebugHandler.start()
         Shizuku.addBinderReceivedListenerSticky(shizukuBinderListener)
         restartInputEventListenerIfScreenOff()
     }
@@ -691,6 +696,7 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.destroy()
         lockscreenShortcutsHandler.onDestroy()
         appVolumeOverlayHandler.onDestroy()
+        statusBarSectionsDebugHandler.destroy()
         statusBarIconHandler.unregister()
         screenshotAutoCleanHandler.unregister()
         stopInputEventListener()
@@ -749,6 +755,7 @@ class ScreenOffAccessibilityService :
             faceUnlockBrightnessHandler.onWindowsChanged()
             lockscreenShortcutsHandler.onWindowsChanged()
             appVolumeOverlayHandler.onWindowsChanged()
+            statusBarSectionsDebugHandler.onWindowsChanged()
         }
     }
 

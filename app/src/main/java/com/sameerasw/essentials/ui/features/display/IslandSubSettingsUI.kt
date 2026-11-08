@@ -486,6 +486,30 @@ fun IslandVisualsSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_arrows_outward_24,
+                title = stringResource(R.string.island_statusbar_aware_width_title),
+                isChecked = viewModel.isIslandStatusBarAwareWidth.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandStatusBarAwareWidth(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
+            )
+
+            if (viewModel.isIslandStatusBarAwareWidth.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = stringResource(R.string.island_statusbar_ignore_notifications_title),
+                    isChecked = viewModel.isIslandStatusBarIgnoreNotifications.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandStatusBarIgnoreNotifications(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_statusbar_ignore_notifications"),
+                )
+            }
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
                 title = stringResource(R.string.island_show_glow_title),
                 isChecked = viewModel.isIslandShowGlow.value,

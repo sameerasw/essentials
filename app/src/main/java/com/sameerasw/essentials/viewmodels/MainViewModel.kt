@@ -242,6 +242,9 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandStatusBarAwareWidth = mutableStateOf(true)
+    val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
+    val isDebugUiMarginOverlay = mutableStateOf(false)
     val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
@@ -777,7 +780,7 @@ class MainViewModel : ViewModel() {
             ) {
                 if (key == null) return
 
-                when (key) {
+                when (key.substringBefore('@')) {
                     SettingsRepository.KEY_EDGE_LIGHTING_ENABLED ->
                         isNotificationLightingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -2538,6 +2541,9 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
+        isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
+        isDebugUiMarginOverlay.value = settingsRepository.isDebugUiMarginOverlayEnabled()
         isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
@@ -5527,6 +5533,22 @@ class MainViewModel : ViewModel() {
         islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
         islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
         islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
+        isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
+        islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
+        islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
+        islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
+        islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
+        islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
+        islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
+        islandFontScale.floatValue = settingsRepository.getIslandFontScale()
+        islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
+        islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
+        islandMaxItems.value = settingsRepository.getIslandMaxItems()
+        isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
+        isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
     }
 
     fun setIslandOrientationProfiles(enabled: Boolean) {
@@ -6002,6 +6024,21 @@ class MainViewModel : ViewModel() {
     fun setIslandBalanceCompact(enabled: Boolean) {
         isIslandBalanceCompact.value = enabled
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
+    }
+
+    fun setDebugUiMarginOverlay(enabled: Boolean) {
+        isDebugUiMarginOverlay.value = enabled
+        settingsRepository.setDebugUiMarginOverlayEnabled(enabled)
+    }
+
+    fun setIslandStatusBarIgnoreNotifications(enabled: Boolean) {
+        isIslandStatusBarIgnoreNotifications.value = enabled
+        settingsRepository.setIslandStatusBarIgnoreNotificationsEnabled(enabled)
+    }
+
+    fun setIslandStatusBarAwareWidth(enabled: Boolean) {
+        isIslandStatusBarAwareWidth.value = enabled
+        settingsRepository.setIslandStatusBarAwareWidthEnabled(enabled)
     }
 
     fun setIslandBondEdge(enabled: Boolean) {

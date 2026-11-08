@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.animation.animateColorAsState
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.model.SideBubble
@@ -49,7 +50,7 @@ import androidx.compose.runtime.getValue
 import com.sameerasw.essentials.island.ui.components.LocalIslandBitmapFlat
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.PaddingValues
@@ -373,9 +374,14 @@ fun IslandStackPill(
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
+    accent: Color? = null,
     onInteraction: () -> Unit = {},
 ) {
-    val ring = islandAccent()
+    val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
+    val container by animateColorAsState(
+        if (accent != null) androidx.compose.ui.graphics.lerp(Color.Black, accent, 0.22f) else Color.Black,
+        label = "stackContainer",
+    )
     val liquid = rememberLiquidBody(bond = bond)
     val itemWidth = iconSize + 8.dp
     val spacing = 2.dp
@@ -413,21 +419,19 @@ fun IslandStackPill(
         }
     }
     val visibleSlots = icons.size.coerceAtMost(PILL_MAX_ICONS)
-    val carouselWidth by animateDpAsState((itemWidth + spacing) * visibleSlots + 12.dp, IslandMotion.expressiveDefaultSpatial(), label = "pillWidth")
+    val carouselWidth by animateDpAsState(itemWidth * visibleSlots + spacing * (visibleSlots - 1).coerceAtLeast(0) + 12.dp, IslandMotion.expressiveDefaultSpatial(), label = "pillWidth")
     Box(
         modifier = modifier
             .liquid(liquid)
             .clip(CircleShape)
-            .background(Color.Black)
+            .background(container)
             .islandOutline(outlineColor, outlineThickness, CircleShape)
             .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
     ) {
-        HorizontalMultiBrowseCarousel(
+        HorizontalUncontainedCarousel(
             state = carouselState,
-            preferredItemWidth = itemWidth,
-            minSmallItemWidth = 10.dp,
-            maxSmallItemWidth = itemWidth,
+            itemWidth = itemWidth,
             itemSpacing = spacing,
             contentPadding = PaddingValues(horizontal = 6.dp),
             modifier = Modifier
@@ -452,7 +456,10 @@ fun IslandStackPill(
                     ),
                 contentAlignment = Alignment.Center,
             ) {
-                CompositionLocalProvider(LocalIslandBitmapFlat provides true) {
+                CompositionLocalProvider(
+                    LocalIslandBitmapFlat provides true,
+                    LocalIslandIconColor provides if (accent != null) ring else LocalIslandIconColor.current,
+                ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { icon.content(itemWidth) }
                 }
             }
