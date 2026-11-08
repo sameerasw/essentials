@@ -161,9 +161,9 @@ class AlarmPlugin : BaseIslandPlugin() {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = title,
                     start = {
                         IslandIcon(R.drawable.rounded_alarm_24, size = 20.dp, tint = islandAccent())
-                        MarqueeText(text = title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = { Text(time, style = IslandTextStyles.title) },
                 )

@@ -85,11 +85,11 @@ fun CalendarExpanded(
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = event.title,
                     start = {
                         Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) {
                             CalendarGlyph(icon, size = 20.dp, tint = calendarColor)
                         }
-                        MarqueeText(text = event.title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = { RollingText(countdown) },
                 )

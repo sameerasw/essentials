@@ -86,9 +86,9 @@ fun NotificationExpanded(
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = sender,
                     start = {
                         IslandBitmap(alert.chatIcon ?: alert.appIcon ?: alert.icon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                        MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = {
                         val appIcon = alert.appIcon
