@@ -39,6 +39,7 @@ import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SystemShortcutsState
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
+import com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -856,6 +857,19 @@ class SettingsRepository(
 
         const val KEY_SHUT_UP_SELECTED_APPS = "shut_up_selected_apps"
         const val KEY_SHUT_UP_ORIGINAL_SETTINGS = "shut_up_original_settings"
+
+        // Quick Settings tile layout backup (see QsTileLayoutRestorer)
+        // Last layout seen on this device, exported with the config
+        const val KEY_QS_TILES_LAYOUT_SNAPSHOT = "qs_tiles_layout_snapshot"
+
+        // Layout from an imported config, used only to place tiles back where they were
+        const val KEY_QS_TILES_RESTORE_LAYOUT = "qs_tiles_restore_layout"
+
+        // Class names of tiles from an imported config that are not in Quick Settings yet
+        const val KEY_QS_TILES_PENDING_RESTORE = "qs_tiles_pending_restore"
+
+        // Suffix of the per-tile "<class name>_is_added" flags written by the tile services
+        const val QS_TILE_ADDED_SUFFIX = "_is_added"
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
         const val KEY_SHUT_UP_RESTORE_DELAY = "shut_up_restore_delay"
         const val KEY_SHUT_UP_RESTORE_MODE = "shut_up_restore_mode"
@@ -1159,6 +1173,45 @@ class SettingsRepository(
      * @param key [String] Preference key name to remove.
      */
     fun remove(key: String) = prefs.edit().remove(key).apply()
+
+    // Quick Settings tile layout backup
+
+    fun getQsTilesLayoutSnapshot(): String? = prefs.getString(KEY_QS_TILES_LAYOUT_SNAPSHOT, null)
+
+    fun setQsTilesLayoutSnapshot(layout: String) = putString(KEY_QS_TILES_LAYOUT_SNAPSHOT, layout)
+
+    fun getQsTilesRestoreLayout(): String? = prefs.getString(KEY_QS_TILES_RESTORE_LAYOUT, null)
+
+    fun setQsTilesRestoreLayout(layout: String?) =
+        if (layout == null) remove(KEY_QS_TILES_RESTORE_LAYOUT) else putString(KEY_QS_TILES_RESTORE_LAYOUT, layout)
+
+    fun getQsTilesPendingRestore(): Set<String> = prefs.getStringSet(KEY_QS_TILES_PENDING_RESTORE, null).orEmpty().toSet()
+
+    fun setQsTilesPendingRestore(classNames: Set<String>) =
+        if (classNames.isEmpty()) {
+            remove(KEY_QS_TILES_PENDING_RESTORE)
+        } else {
+            prefs.edit().putStringSet(KEY_QS_TILES_PENDING_RESTORE, classNames.toSet()).apply()
+        }
+
+    /** Class names of tiles whose "added" flag is set. */
+    fun getAddedQsTiles(): Set<String> =
+        prefs.all
+            .filter { (key, value) -> key.endsWith(QS_TILE_ADDED_SUFFIX) && value == true }
+            .keys
+            .map { it.removeSuffix(QS_TILE_ADDED_SUFFIX) }
+            .toSet()
+
+    fun setQsTileAdded(className: String, added: Boolean) = putBoolean("$className$QS_TILE_ADDED_SUFFIX", added)
+
+    /** Sets every stored "added" flag to whether its tile is in [added]. */
+    fun resetQsTileAddedFlags(added: Set<String>) {
+        val editor = prefs.edit()
+        prefs.all.keys
+            .filter { it.endsWith(QS_TILE_ADDED_SUFFIX) }
+            .forEach { editor.putBoolean(it, it.removeSuffix(QS_TILE_ADDED_SUFFIX) in added) }
+        editor.apply()
+    }
 
     // Specific Getters with logic from ViewModel
 
@@ -1965,8 +2018,8 @@ class SettingsRepository(
                         key == KEY_MAPS_DISCOVERED_CHANNELS ||
                         key == KEY_SHUT_UP_ORIGINAL_SETTINGS ||
                         key == "battery_history_points" ||
-                        key == com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.KEY_RESTORE_LAYOUT ||
-                        key == com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.KEY_PENDING
+                        key == KEY_QS_TILES_RESTORE_LAYOUT ||
+                        key == KEY_QS_TILES_PENDING_RESTORE
                     ) {
                         return@forEach
                     }
@@ -2015,11 +2068,11 @@ class SettingsRepository(
      * Executes the export configs operation.
      *
      * @param outputStream [java.io.OutputStream] Target output stream.
+     * @return True when the current Quick Settings tile layout was read and included.
      */
-    /** Writes the config. Returns true when the current Quick Settings tile layout was read and included. */
     fun exportConfigs(outputStream: java.io.OutputStream): Boolean {
         // Read the tile layout now so the backup has the order as it is, not whatever was last seen
-        val layoutIncluded = com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer.captureForExport(context)
+        val layoutIncluded = QsTileLayoutRestorer.captureForExport(context)
         try {
             val json = getAllConfigsAsJsonString()
             outputStream.write(json.toByteArray())

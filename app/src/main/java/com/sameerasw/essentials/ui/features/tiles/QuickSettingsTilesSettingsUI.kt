@@ -93,6 +93,7 @@ import com.sameerasw.essentials.translation.TranslatableText
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.features.tiles.QsTileRestoreCard
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.utils.DeviceUtils
@@ -236,7 +237,7 @@ fun QuickSettingsTilesSettingsUI(
             )
         }
 
-        com.sameerasw.essentials.ui.features.tiles.QsTileRestoreCard(viewModel = viewModel, tiles = allTiles)
+        QsTileRestoreCard(viewModel = viewModel, tiles = allTiles)
 
         categorizedTiles.forEachIndexed { index, (categoryRes, tilesInSection) ->
             if (index > 0) {

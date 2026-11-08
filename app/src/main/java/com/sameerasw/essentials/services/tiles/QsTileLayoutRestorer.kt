@@ -12,7 +12,7 @@ package com.sameerasw.essentials.services.tiles
 import android.content.Context
 import android.provider.Settings
 import android.util.Log
-import androidx.core.content.edit
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.ShellUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,18 +26,6 @@ import kotlinx.coroutines.withContext
  */
 object QsTileLayoutRestorer {
     const val SETTING = "sysui_qs_tiles"
-
-    // Last layout seen on this device, exported with the config.
-    const val KEY_LAYOUT_SNAPSHOT = "qs_tiles_layout_snapshot"
-
-    // Layout from an imported config, used only to place tiles back where they were.
-    const val KEY_RESTORE_LAYOUT = "qs_tiles_restore_layout"
-
-    // Class names of tiles from an imported config that are not in Quick Settings yet.
-    const val KEY_PENDING = "qs_tiles_pending_restore"
-
-    const val ADDED_SUFFIX = "_is_added"
-    private const val PREFS = "essentials_prefs"
     private const val OWN_PACKAGE_PREFIX = "com.sameerasw.essentials"
     private const val TAG = "QsTileRestore"
 
@@ -46,7 +34,7 @@ object QsTileLayoutRestorer {
         val remaining: Set<String>,
     )
 
-    private fun prefs(context: Context) = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+    private fun settings(context: Context) = SettingsRepository(context)
 
     /** Class name of a `custom(pkg/cls)` tile spec, or null for system tiles. */
     fun customClass(spec: String): String? {
@@ -123,7 +111,7 @@ object QsTileLayoutRestorer {
     /** Keeps the exported copy of the layout up to date. Only called with a layout that was actually read. */
     fun rememberLayout(context: Context, layout: String) {
         if (parse(layout).isEmpty()) return
-        prefs(context).edit { putString(KEY_LAYOUT_SNAPSHOT, layout) }
+        settings(context).setQsTilesLayoutSnapshot(layout)
     }
 
     /** Reads the live layout (through Shizuku/root when needed) into the exported copy. False when it couldn't be read. */
@@ -136,12 +124,9 @@ object QsTileLayoutRestorer {
         return true
     }
 
-    fun pending(context: Context): Set<String> = prefs(context).getStringSet(KEY_PENDING, null).orEmpty()
+    fun pending(context: Context): Set<String> = settings(context).getQsTilesPendingRestore()
 
-    fun locallyAddedTiles(context: Context): Set<String> =
-        prefs(context).all
-            .filter { (k, v) -> k.endsWith(ADDED_SUFFIX) && v == true }
-            .keys.map { it.removeSuffix(ADDED_SUFFIX) }.toSet()
+    fun locallyAddedTiles(context: Context): Set<String> = settings(context).getAddedQsTiles()
 
     /**
      * Run right after an import. [localAdded] are the tiles flagged as added on this device before the import.
@@ -149,20 +134,16 @@ object QsTileLayoutRestorer {
      * so imported flags no longer make missing tiles look added.
      */
     fun prepareAfterImport(context: Context, localAdded: Set<String>) {
-        val p = prefs(context)
-        val importedLayout = p.getString(KEY_LAYOUT_SNAPSHOT, null)
+        val settings = settings(context)
+        val importedLayout = settings.getQsTilesLayoutSnapshot()
         val fromLayout = parse(importedLayout).mapNotNull(::customClass).toSet()
-        val fromFlags = locallyAddedTiles(context)
+        val fromFlags = settings.getAddedQsTiles()
         val present = parse(readLayout(context)).mapNotNull(::customClass).toSet()
         val pending = tilesToRestore(fromLayout, fromFlags).filter(::isOwnTile).toSet() - localAdded - present
         Log.i(TAG, "import: savedLayout=${importedLayout != null} ownInSaved=${fromLayout.filter(::isOwnTile).size} flagged=${fromFlags.size} present=${present.size} pending=${pending.size}")
-        p.edit {
-            p.all.keys.filter { it.endsWith(ADDED_SUFFIX) }.forEach { k ->
-                putBoolean(k, k.removeSuffix(ADDED_SUFFIX) in localAdded || k.removeSuffix(ADDED_SUFFIX) in present)
-            }
-            if (importedLayout != null) putString(KEY_RESTORE_LAYOUT, importedLayout) else remove(KEY_RESTORE_LAYOUT)
-            if (pending.isEmpty()) remove(KEY_PENDING) else putStringSet(KEY_PENDING, pending)
-        }
+        settings.resetQsTileAddedFlags(localAdded + present)
+        settings.setQsTilesRestoreLayout(importedLayout)
+        settings.setQsTilesPendingRestore(pending)
     }
 
     /** Drops pending tiles that are now in Quick Settings (however they got there). Returns what is still pending. */
@@ -170,21 +151,23 @@ object QsTileLayoutRestorer {
         val pending = pending(context)
         if (pending.isEmpty()) return pending
         val left = pending - presentClasses
-        if (left != pending) savePending(context, left)
+        if (left != pending) settings(context).setQsTilesPendingRestore(left)
         return left
     }
 
     fun markAdded(context: Context, className: String) {
-        prefs(context).edit { putBoolean("$className$ADDED_SUFFIX", true) }
-        savePending(context, pending(context) - className)
+        val settings = settings(context)
+        settings.setQsTileAdded(className, true)
+        settings.setQsTilesPendingRestore(settings.getQsTilesPendingRestore() - className)
     }
 
     fun clearPending(context: Context) {
-        savePending(context, emptySet())
-        prefs(context).edit { remove(KEY_RESTORE_LAYOUT) }
+        val settings = settings(context)
+        settings.setQsTilesPendingRestore(emptySet())
+        settings.setQsTilesRestoreLayout(null)
     }
 
-    fun hasRestoreLayout(context: Context) = parse(prefs(context).getString(KEY_RESTORE_LAYOUT, null)).isNotEmpty()
+    fun hasRestoreLayout(context: Context) = parse(settings(context).getQsTilesRestoreLayout()).isNotEmpty()
 
     private fun shellGet(context: Context): List<String> =
         parse(ShellUtils.runCommandWithOutput(context, "settings get secure $SETTING", notifyOnError = false))
@@ -229,7 +212,7 @@ object QsTileLayoutRestorer {
      */
     suspend fun repositionWithShell(context: Context, classes: Set<String>): Boolean = withContext(Dispatchers.IO) {
         if (classes.isEmpty() || !ShellUtils.hasPermission(context)) return@withContext false
-        val saved = parse(prefs(context).getString(KEY_RESTORE_LAYOUT, null))
+        val saved = parse(settings(context).getQsTilesRestoreLayout())
         val current = shellGet(context)
         Log.i(TAG, "reposition: classes=${classes.size} saved=${saved.size} current=${current.size}")
         if (saved.isEmpty() || current.isEmpty()) return@withContext false
@@ -237,16 +220,6 @@ object QsTileLayoutRestorer {
         val merged = merge(stripped, saved, classes, context.packageName)
         if (merged == current) return@withContext true
         shellPut(context, merged)
-    }
-
-    private fun savePending(context: Context, pending: Set<String>) {
-        prefs(context).edit {
-            if (pending.isEmpty()) {
-                remove(KEY_PENDING)
-            } else {
-                putStringSet(KEY_PENDING, pending)
-            }
-        }
     }
 
     /**
@@ -263,7 +236,7 @@ object QsTileLayoutRestorer {
             Log.w(TAG, "restore: could not read current layout, not writing")
             return@withContext ShellResult(emptySet(), pending)
         }
-        val saved = parse(prefs(context).getString(KEY_RESTORE_LAYOUT, null))
+        val saved = parse(settings(context).getQsTilesRestoreLayout())
         val merged = merge(current, saved, pending, context.packageName)
         if (merged != current) shellPut(context, merged)
         val now = parse(readLayout(context)).mapNotNull(::customClass).toSet()

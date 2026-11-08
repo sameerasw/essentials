@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +44,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.registry.QSTileInfo
 import com.sameerasw.essentials.services.tiles.QsTileLayoutRestorer
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
@@ -56,6 +58,7 @@ fun QsTileRestoreCard(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val pending by viewModel.qsTilesPendingRestore
     val pendingTiles = tiles.filter { it.serviceClass.name in pending }
     if (pendingTiles.isEmpty()) return
@@ -94,12 +97,19 @@ fun QsTileRestoreCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
-                TextButton(onClick = { viewModel.dismissQsTileRestore(context) }, enabled = !busy) {
+                TextButton(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.dismissQsTileRestore(context)
+                    },
+                    enabled = !busy,
+                ) {
                     Text(stringResource(R.string.qs_tiles_restore_dismiss))
                 }
                 Button(
                     enabled = !busy,
                     onClick = {
+                        HapticUtil.performUIHaptic(view)
                         busy = true
                         scope.launch {
                             try {
