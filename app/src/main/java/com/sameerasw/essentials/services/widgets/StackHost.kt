@@ -20,6 +20,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.media.session.PlaybackState
+import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
@@ -35,6 +37,13 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
+import com.sameerasw.essentials.island.plugins.media.MediaSessionSource
+import com.sameerasw.essentials.utils.CalendarEventUtil
+import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.battery.BatteryInfoUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -52,6 +61,7 @@ object StackHost {
     val revealedStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
     private const val REVEAL_MILLIS = 4000L
+    private const val CALENDAR_SOON_MS = 30 * 60 * 1000L
     private val hideRunnables = mutableMapOf<Int, Runnable>()
 
     val positions = ConcurrentHashMap<Int, Int>()
@@ -66,6 +76,11 @@ object StackHost {
     private var overlayContainer: FrameLayout? = null
     private val timers = mutableMapOf<Int, Runnable>()
     private val pendingRenders = mutableMapOf<Int, Runnable>()
+    private val heldStacks = mutableSetOf<Int>()
+    private val manualStacks = mutableSetOf<Int>()
+    private var media: MediaSessionSource? = null
+    private var calendarSoon = false
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     private class CapturingHostView(
         context: Context,
@@ -104,10 +119,19 @@ object StackHost {
                 when (intent.action) {
                     Intent.ACTION_SCREEN_OFF -> {
                         cancelAllTimers()
+                        handler.removeCallbacks(calendarRecheck)
+                        manualStacks.clear()
                         repository.savePositions(positions)
                     }
 
-                    Intent.ACTION_SCREEN_ON -> repository.getAll().forEach { scheduleTimer(it.stackWidgetId) }
+                    Intent.ACTION_SCREEN_ON -> {
+                        repository.getAll().forEach { scheduleTimer(it.stackWidgetId) }
+                        refreshCalendarThenPick()
+                    }
+
+                    Intent.ACTION_POWER_CONNECTED,
+                    Intent.ACTION_POWER_DISCONNECTED,
+                    -> smartPickAll()
                 }
             }
         }
@@ -147,6 +171,8 @@ object StackHost {
         handler.post {
             if (host == null) start(app)
             reveal(stackWidgetId)
+            manualStacks.add(stackWidgetId)
+            heldStacks.remove(stackWidgetId)
             advance(stackWidgetId, delta)
             positions[stackWidgetId]?.let { pos ->
                 repository.savePositions(mapOf(stackWidgetId to pos))
@@ -198,6 +224,8 @@ object StackHost {
             IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
+                addAction(Intent.ACTION_POWER_CONNECTED)
+                addAction(Intent.ACTION_POWER_DISCONNECTED)
             },
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
@@ -208,6 +236,11 @@ object StackHost {
         WorkManager.getInstance(appContext).cancelUniqueWork(KEEP_ALIVE_WORK)
         handler.removeCallbacksAndMessages(null)
         timers.clear()
+        heldStacks.clear()
+        manualStacks.clear()
+        media?.stop()
+        media = null
+        calendarSoon = false
         pendingRenders.clear()
         hideRunnables.clear()
         revealedStacks.clear()
@@ -268,7 +301,20 @@ object StackHost {
             StackWidgetProvider.render(appContext, stack.stackWidgetId)
             scheduleTimer(stack.stackWidgetId)
         }
-        (timers.keys - stacks.map { it.stackWidgetId }.toSet()).forEach { cancelTimer(it) }
+        val stackIds = stacks.map { it.stackWidgetId }.toSet()
+        (timers.keys - stackIds).forEach { cancelTimer(it) }
+        heldStacks.removeAll { it !in stackIds }
+        manualStacks.removeAll { it !in stackIds }
+
+        if (stacks.any { it.smart } && PermissionUtils.hasNotificationListenerPermission(appContext)) {
+            if (media == null) {
+                media = MediaSessionSource(appContext, handler) { smartPickAll() }.also { it.start() }
+            }
+        } else {
+            media?.stop()
+            media = null
+        }
+        refreshCalendarThenPick()
     }
 
     private fun removeOrphanedWidgets() {
@@ -341,6 +387,7 @@ object StackHost {
 
     private fun scheduleTimer(stackWidgetId: Int) {
         cancelTimer(stackWidgetId)
+        if (stackWidgetId in heldStacks) return
         val stack = repository.get(stackWidgetId) ?: return
         if (stack.intervalSeconds <= 0 || stack.hostedWidgetIds.size < 2) return
         val power = appContext.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -350,6 +397,77 @@ object StackHost {
         timers[stackWidgetId] = tick
         handler.postDelayed(tick, stack.intervalSeconds * 1000L)
     }
+
+    private fun smartPick(stackWidgetId: Int) {
+        val stack = repository.get(stackWidgetId) ?: return
+        if (!stack.smart || stack.hostedWidgetIds.size < 2 || stackWidgetId in manualStacks) {
+            if (heldStacks.remove(stackWidgetId)) {
+                scheduleTimer(stackWidgetId)
+            }
+            return
+        }
+
+        val awm = AppWidgetManager.getInstance(appContext)
+        val hostedComponents = stack.hostedWidgetIds.map { awm.getAppWidgetInfo(it)?.provider?.flattenToString() }
+        val index =
+            StackSmartPick.pick(
+                hostedComponents = hostedComponents,
+                playingPackage = playingPackage(),
+                calendarPackages = if (calendarSoon) calendarPackages() else emptySet(),
+                charging = (BatteryInfoUtil.getBatteryIntent(appContext)?.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) ?: 0) > 0,
+            )
+        if (index == null) {
+            if (heldStacks.remove(stackWidgetId)) {
+                scheduleTimer(stackWidgetId)
+            }
+        } else {
+            heldStacks.add(stackWidgetId)
+            val current = positions[stackWidgetId] ?: 0
+            if (index != current) {
+                positions[stackWidgetId] = index
+                StackWidgetProvider.render(appContext, stackWidgetId)
+            }
+            scheduleTimer(stackWidgetId)
+        }
+    }
+
+    private fun calendarPackages(): Set<String> =
+        appContext.packageManager
+            .queryIntentActivities(
+                Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR),
+                0,
+            ).mapNotNull { it.activityInfo?.packageName }
+            .toSet()
+
+    private val calendarRecheck = Runnable { refreshCalendarThenPick() }
+
+    private fun refreshCalendarThenPick() {
+        handler.removeCallbacks(calendarRecheck)
+        if (repository.getAll().none { it.smart }) {
+            calendarSoon = false
+            smartPickAll()
+            return
+        }
+        scope.launch {
+            val now = System.currentTimeMillis()
+            val start = CalendarEventUtil.queryNextUpcomingEvent(appContext, "24h", emptySet())?.startTimeMillis
+            val soon = start != null && start - now <= CALENDAR_SOON_MS
+            handler.post {
+                calendarSoon = soon
+                smartPickAll()
+                if (start != null) {
+                    val at = if (soon) start else start - CALENDAR_SOON_MS
+                    handler.postDelayed(calendarRecheck, (at - System.currentTimeMillis()).coerceAtLeast(0) + 1000L)
+                }
+            }
+        }
+    }
+
+    private fun smartPickAll() {
+        repository.getAll().forEach { smartPick(it.stackWidgetId) }
+    }
+
+    private fun playingPackage(): String? = media?.all?.firstOrNull { it.playbackState?.state == PlaybackState.STATE_PLAYING }?.packageName
 
     private fun cancelTimer(stackWidgetId: Int) {
         timers.remove(stackWidgetId)?.let { handler.removeCallbacks(it) }
