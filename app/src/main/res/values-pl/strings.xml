@@ -177,7 +177,7 @@
     <string name="flashlight_pulse_title">Pulsująca latarka</string>
     <string name="flashlight_pulse_facedown_title">Tylko twarzą w dół</string>
     <string name="flashlight_pulse_same_as_lighting_title">Te same aplikacje, co oświetlenie powiadomień</string>
-    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_max_brightness">Maksymalna jasność</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Styl</string>
     <string name="notification_lighting_stroke_adjustment_section">Regulacja skoku</string>
@@ -427,8 +427,8 @@
     <string name="feat_screen_locked_security_title">Ekran blokady</string>
     <string name="feat_app_lock_title">Blokada aplikacji</string>
     <string name="feat_app_lock_desc">Zablokuj aplikacje za pomocą danych biometrycznych</string>
-    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
-    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_title">Opóźnienie automatycznego blokowania</string>
+    <string name="app_lock_auto_lock_delay_desc">Po opuszczeniu aplikacji</string>
     <string name="app_lock_auto_lock_delay_none">None</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
@@ -1392,7 +1392,7 @@ Jeśli Twoje urządzenie nie obsługuje nakładek w trybie AOD, możesz wybrać 
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Zamknij się!</string>
+    <string name="feat_shut_up_title">Shut-Up! </string>
     <string name="feat_shut_up_desc">Wiem co robię </string>
     <string name="shut_up_description">Shut-Up! omija ograniczenia aplikacji i sprawdza opcje programistyczne, ułatwienia dostępu i debugowanie, dynamicznie je ukrywając podczas uruchamiania wrażliwych aplikacji.
 
@@ -1563,7 +1563,7 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="label_battery_capacity_health">Pojemność rzeczywista</string>
     <string name="label_device_battery">Bateria</string>
     <string name="feat_sim_names_title">Nazwy kart SIM</string>
-    <string name="feat_sim_names_desc">Zarządzaj nazwami operatów dla aktywnych kart SIM</string>
+    <string name="feat_sim_names_desc">Zarządzaj nazwami operatorów dla aktywnych kart SIM</string>
     <string name="duo_desc">To się nie składa</string>
     <string name="island_title">Wyspa</string>
     <string name="island_desc">Dynamiczna wyspa</string>
@@ -1636,20 +1636,20 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="watchface_show_glow_title">Pokaż światło</string>
     <string name="watchface_show_glow_desc">Dynamiczny gradient na górze akcentu nadchodzące wydarzenia i podróże</string>
     <string name="tile_lockdown_mode">Zamykanie</string>
-    <string name="feat_face_unlock_brightness_title">Iluminacja twarzy</string>
-    <string name="feat_face_unlock_brightness_desc">Uderz jasność w ciemnym oświetleniu</string>
-    <string name="feat_screenshots_title">Sprzątanie zrzutów ekranu</string>
-    <string name="feat_screenshots_desc">Posprzątaj wysłane i stare zrzuty ekranu</string>
+    <string name="feat_face_unlock_brightness_title">Oświetlenie twarzy</string>
+    <string name="feat_face_unlock_brightness_desc">Zwiększenie jasności przy słabym oświetleniu</string>
+    <string name="feat_screenshots_title">Czyszczenie zrzutów ekranów </string>
+    <string name="feat_screenshots_desc">Wyczyść udostępnione i stare zrzuty ekranu</string>
     <string name="shut_up_restore_delay_desc">Czas oczekiwania przed przywracaniem ustawień po wyjściu z aplikacji Zamknij się!</string>
     <string name="overlay_mode_skip">Pomiń</string>
-    <string name="feat_screenshot_share_cleanup_title">Usuń wysłane zrzuty ekranu</string>
-    <string name="feat_screenshot_share_cleanup_desc">Wyrzuć zrzuty ekranu do kosza po wysyłaniu ich</string>
-    <string name="screenshot_auto_clean_title">Auto-czyszczenie zrzutów ekranu</string>
-    <string name="screenshots_cleaned_count_title">Czyszczono zrzutów ekranu</string>
-    <string name="screenshots_storage_saved_title">Oszczędzono pamięci</string>
+    <string name="feat_screenshot_share_cleanup_title">Usuń udostępnione zrzuty ekranu</string>
+    <string name="feat_screenshot_share_cleanup_desc">Usuń zrzuty ekranu po udostępnieniu</string>
+    <string name="screenshot_auto_clean_title">Automatyczne czyszczenie zrzutów ekranu</string>
+    <string name="screenshots_cleaned_count_title">Usunięte Zrzuty ekranu</string>
+    <string name="screenshots_storage_saved_title">Zachowane zrzuty ekranu</string>
     <string name="freeze_tag_color_coded_title">Kolorowo kodowany tag</string>
     <string name="freeze_tag_color_coded_desc">Pokaż kolory tagów w siatce aplikacji</string>
-    <string name="island_media_use_art_color_title">Advertise album art color</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
@@ -1676,4 +1676,22 @@ Aby ustawienie zadziałało, może być konieczne wielokrotne zastosowanie.</str
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="screenshot_share_cleanup_delay_title">Usuń po udostępnieniu</string>
+    <string name="screenshot_delay_immediately">Natychmiast</string>
+    <string name="screenshot_delay_1_hour">1 godzina</string>
+    <string name="screenshot_delay_1_day">1 dzień</string>
+    <string name="screenshot_auto_clean_note">Każdy nowy zrzut ekranu otrzymuje ciche powiadomienie o konieczności jego zachowania. Zrzuty oznaczone gwiazdką są zawsze zachowywane.</string>
+    <string name="screenshot_auto_clean_days_title">Usuń nowe zrzuty ekranu po</string>
+    <string name="face_unlock_ambient_threshold_title">Próg jasności otoczenia</string>
+    <string name="face_unlock_auto_illuminate_title">Automatyczne podświetlenie po wybudzeniu</string>
+    <string name="screen_locked_disable_notification_interactions_title">Wyłącz interakcje powiadomień</string>
+    <string name="screen_locked_disable_notification_interactions_desc">Zablokuj pasek powiadomień i Szybkie ustawienia, aby nie były rozwijalne podczas blokady</string>
+    <string name="screen_locked_keep_qs_on_extended_unlock_title">Zachowaj QS na rozszerzonym odblokowaniu</string>
+    <string name="label_apply_after_reboot">Zastosuj po restarcie </string>
+    <string name="label_location_mode">Tryb GPS/Lokalizacji</string>
+    <string name="desc_location_mode">Ogranicz żądania dotyczące lokalizacji, gdy włączony jest tryb oszczędzania baterii.</string>
+    <string name="desc_soundtrigger_mode">Ogranicz wykrywanie słów-kluczy przez asystenta (np. „Hej Google”).</string>
+    <string name="label_soundtrigger_mode">Tryb wywalania dźwiękiem </string>
+    <string name="label_disable_vibration">Wyłącz wibracje</string>
+    <string name="desc_disable_vibration">Wyłącz globalnie wrażenia dotykowe i wibracje.</string>
 </resources>
