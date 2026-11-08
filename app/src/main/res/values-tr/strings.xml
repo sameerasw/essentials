@@ -2036,6 +2036,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_live_updates_title">Live updates</string>
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
+    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
     <string name="island_notif_keep_progress_desc">İndirmeleri ve diğer devam eden işlemleri göster</string>
     <string name="island_otp_enabled_title">Doğrulama kodlarını algıla</string>
     <string name="island_otp_tap_to_copy_title">Dokunarak kopyala</string>

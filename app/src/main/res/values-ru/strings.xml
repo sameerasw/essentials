@@ -1716,6 +1716,7 @@
     <string name="island_live_updates_title">Live updates</string>
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
+    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
     <string name="island_catch_up_title">Удержание</string>
     <string name="island_catch_up_desc">Держать последнее уведомление в острове дольше</string>
     <string name="island_catch_up_timeout_title">Время удержания </string>

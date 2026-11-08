@@ -49,6 +49,7 @@ class IslandController(
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
     var secondaryBubbleOverlap: Boolean = false
+    var secondaryBubbleMax: Int = 0
     private var feedbackActive = false
 
     fun setFeedbackActive(active: Boolean) {
@@ -422,7 +423,7 @@ class IslandController(
         if (progress.isEmpty()) return null
         val notifications = owner?.sideBubble?.takeIf { it.priority != SideBubblePriority.PROGRESS }
         val icons = progress.flatMap { it.icons } + notifications?.icons.orEmpty()
-        val cap = overlapSlots(icons, notifications?.maxIcons?.takeIf { it > 0 } ?: OVERLAP_MAX)
+        val cap = overlapSlots(icons, secondaryBubbleMax.takeIf { it > 0 } ?: OVERLAP_MAX)
         val shown = icons.size.coerceIn(1, cap)
         val overflow = if (icons.size > cap && notifications?.overflow != QueueOverflow.None) 0.3f else 0f
         val wide = icons.take(shown).sumOf { (it.widthFactor - 1f).coerceAtLeast(0f).toDouble() }.toFloat()
@@ -432,7 +433,7 @@ class IslandController(
             onOpen = notifications?.onOpen ?: progress.first().onOpen,
             icons = icons,
             onDismiss = notifications?.onDismiss,
-            maxIcons = notifications?.maxIcons,
+            maxIcons = secondaryBubbleMax,
             overflow = notifications?.overflow ?: QueueOverflow.Number,
             cells = cells,
         )
