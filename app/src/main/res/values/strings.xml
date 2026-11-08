@@ -3716,4 +3716,5 @@
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

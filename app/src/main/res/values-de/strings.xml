@@ -2069,4 +2069,5 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="duo_slide_mirror_direction_title">Richtungen spiegeln</string>
     <string name="island_combine_with_duo">Kombinieren mit Duo</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

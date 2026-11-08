@@ -1796,4 +1796,5 @@
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>
