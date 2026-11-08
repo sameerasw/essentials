@@ -63,4 +63,10 @@ class QsTileLayoutRestorerTest {
         assertEquals(setOf(caffeinate), QsTileLayoutRestorer.tilesToRestore(setOf(caffeinate), setOf(caffeinate, sound)))
         assertEquals(setOf(caffeinate, sound), QsTileLayoutRestorer.tilesToRestore(emptySet(), setOf(caffeinate, sound)))
     }
+
+    @Test
+    fun alreadyAdded_trustsLiveLayoutOverStaleFlags() {
+        assertEquals(setOf(caffeinate), QsTileLayoutRestorer.alreadyAdded(setOf(caffeinate), setOf(caffeinate, sound)))
+        assertEquals(setOf(caffeinate, sound), QsTileLayoutRestorer.alreadyAdded(null, setOf(caffeinate, sound)))
+    }
 }

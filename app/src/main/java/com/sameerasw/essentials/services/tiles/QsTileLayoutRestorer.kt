@@ -96,6 +96,8 @@ object QsTileLayoutRestorer {
     fun tilesToRestore(fromLayout: Set<String>, fromFlags: Set<String>): Set<String> =
         fromLayout.ifEmpty { fromFlags }
 
+    fun alreadyAdded(live: Set<String>?, localFlags: Set<String>): Set<String> = live ?: localFlags
+
     private fun isOwnTile(className: String) =
         className.startsWith(OWN_PACKAGE_PREFIX) && QsTileRegistry.getTileByClassName(className) != null
 
@@ -138,10 +140,11 @@ object QsTileLayoutRestorer {
         val importedLayout = settings.getQsTilesLayoutSnapshot()
         val fromLayout = parse(importedLayout).mapNotNull(::customClass).toSet()
         val fromFlags = settings.getAddedQsTiles()
-        val present = parse(readLayout(context)).mapNotNull(::customClass).toSet()
-        val pending = tilesToRestore(fromLayout, fromFlags).filter(::isOwnTile).toSet() - localAdded - present
-        Log.i(TAG, "import: savedLayout=${importedLayout != null} ownInSaved=${fromLayout.filter(::isOwnTile).size} flagged=${fromFlags.size} present=${present.size} pending=${pending.size}")
-        settings.resetQsTileAddedFlags(localAdded + present)
+        val live = readLayout(context)?.let { layout -> parse(layout).mapNotNull(::customClass).toSet() }
+        val present = alreadyAdded(live, localAdded)
+        val pending = tilesToRestore(fromLayout, fromFlags).filter(::isOwnTile).toSet() - present
+        Log.i(TAG, "import: savedLayout=${importedLayout != null} ownInSaved=${fromLayout.filter(::isOwnTile).size} flagged=${fromFlags.size} liveRead=${live != null} present=${present.size} pending=${pending.size}")
+        settings.resetQsTileAddedFlags(present)
         settings.setQsTilesRestoreLayout(importedLayout)
         settings.setQsTilesPendingRestore(pending)
     }

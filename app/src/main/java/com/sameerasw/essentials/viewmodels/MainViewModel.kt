@@ -10387,8 +10387,8 @@ class MainViewModel : ViewModel() {
         if (tilesString.isNotBlank()) {
             QsTileLayoutRestorer.rememberLayout(context, tilesString)
         }
-        val presentClasses =
-            fromSecureSettings.mapNotNull { QsTileLayoutRestorer.customClass(it) }.toSet() + fromPrefs
+        val live = tilesString.takeIf { it.isNotBlank() }?.let { fromSecureSettings.mapNotNull(QsTileLayoutRestorer::customClass).toSet() }
+        val presentClasses = QsTileLayoutRestorer.alreadyAdded(live, fromPrefs)
         qsTilesPendingRestore.value =
             QsTileLayoutRestorer.reconcile(context, presentClasses)
     }
