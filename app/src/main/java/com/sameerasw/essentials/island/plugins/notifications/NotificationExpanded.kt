@@ -61,6 +61,18 @@ import com.sameerasw.essentials.island.ui.components.cameraClearance
 import androidx.compose.foundation.layout.Arrangement
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.ripple
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.lerp
+import com.sameerasw.essentials.island.ui.IslandMotion
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -82,8 +94,6 @@ import com.sameerasw.essentials.island.model.IslandExpandedScope
 import com.sameerasw.essentials.island.ui.IslandTextStyles
 import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
-import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
-import com.sameerasw.essentials.island.ui.components.ConnectedItem
 import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.accentGlow
@@ -166,40 +176,23 @@ fun NotificationExpanded(
                 }
             }
             Column {
-                val replying = replyAction
-                if (replying != null) {
+                if (alert.actions.isNotEmpty()) {
                     Spacer(Modifier.height(14.dp))
-                    ReplyField(
-                        modifier = Modifier.padding(horizontal = sidePadding),
+                    ActionBar(
+                        actions = alert.actions,
+                        replyAction = replyAction,
                         accent = glowColor,
-                        onSend = { text ->
+                        scope = scope,
+                        modifier = Modifier.padding(horizontal = sidePadding),
+                        onAction = { action -> if (action.isQuickReply) replyAction = action else onAction(action) },
+                        onSend = { action, text ->
                             scope.setTextInput(false)
                             replyAction = null
-                            onReply(replying, text)
+                            onReply(action, text)
                         },
                         onCancel = {
                             scope.setTextInput(false)
                             replyAction = null
-                        },
-                        scope = scope,
-                    )
-                } else if (alert.actions.isNotEmpty()) {
-                    Spacer(Modifier.height(14.dp))
-                    ConnectedButtonRow(
-                        height = 36.dp,
-                        modifier = Modifier.padding(horizontal = sidePadding),
-                        container = Color.White.copy(alpha = 0.2f),
-                        items = alert.actions.map { action ->
-                            ConnectedItem({ if (action.isQuickReply) replyAction = action else onAction(action) }) {
-                                if (action.isQuickReply) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        ConnectedTextLabel(action.title)
-                                        Icon(painterResource(R.drawable.rounded_reply_24), contentDescription = null, tint = islandTextColor(), modifier = Modifier.padding(end = 8.dp).size(16.dp))
-                                    }
-                                } else {
-                                    ConnectedTextLabel(action.title)
-                                }
-                            }
                         },
                     )
                 }
@@ -209,14 +202,88 @@ fun NotificationExpanded(
     }
 }
 
-// Inline reply
 @Composable
-private fun ReplyField(
-    modifier: Modifier,
+private fun ActionBar(
+    actions: List<NotificationActionItem>,
+    replyAction: NotificationActionItem?,
     accent: Color,
+    scope: IslandExpandedScope,
+    modifier: Modifier,
+    onAction: (NotificationActionItem) -> Unit,
+    onSend: (NotificationActionItem, String) -> Unit,
+    onCancel: () -> Unit,
+) {
+    val context = LocalContext.current
+    var morphKey by remember { mutableStateOf<String?>(null) }
+    if (replyAction != null) morphKey = replyAction.actionKey
+    val animated by animateFloatAsState(if (replyAction != null) 1f else 0f, IslandMotion.float(), label = "replyMorph")
+    val progress = animated.coerceIn(0f, 1f)
+    val height = lerp(ACTION_HEIGHT, REPLY_HEIGHT, progress)
+    val outer = height / 2
+    Row(
+        modifier.fillMaxWidth().height(height),
+        horizontalArrangement = Arrangement.spacedBy(4.dp * (1f - progress)),
+    ) {
+        actions.forEachIndexed { index, action ->
+            val morphing = action.actionKey == morphKey && action.isQuickReply
+            if (!morphing && progress >= 0.999f) return@forEachIndexed
+            val start = if (index == 0 || actions.size == 1) outer else 4.dp
+            val end = if (index == actions.lastIndex || actions.size == 1) outer else 4.dp
+            val shape = if (morphing) {
+                RoundedCornerShape(lerp(start, outer, progress), lerp(end, outer, progress), lerp(end, outer, progress), lerp(start, outer, progress))
+            } else {
+                RoundedCornerShape(start, end, end, start)
+            }
+            Box(
+                modifier = Modifier
+                    .weight(if (morphing) 1f + progress * 40f else (1f - progress).coerceAtLeast(0.001f))
+                    .height(height)
+                    .graphicsLayer { if (!morphing) alpha = 1f - progress }
+                    .clip(shape)
+                    .background(Color.White.copy(alpha = if (morphing) 0.2f - 0.06f * progress else 0.2f))
+                    .clickable(
+                        enabled = replyAction == null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = ripple(color = Color.White),
+                    ) {
+                        IslandHaptics.button(context)
+                        onAction(action)
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                AnimatedContent(
+                    targetState = morphing && replyAction != null,
+                    transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+                    contentAlignment = Alignment.Center,
+                    label = "replyContent",
+                ) { input ->
+                    if (input) {
+                        ReplyInput(
+                            accent = accent,
+                            scope = scope,
+                            onSend = { text -> onSend(action, text) },
+                            onCancel = onCancel,
+                        )
+                    } else if (action.isQuickReply) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            ConnectedTextLabel(action.title)
+                            Icon(painterResource(R.drawable.rounded_reply_24), contentDescription = null, tint = islandTextColor(), modifier = Modifier.padding(end = 8.dp).size(18.dp))
+                        }
+                    } else {
+                        ConnectedTextLabel(action.title)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ReplyInput(
+    accent: Color,
+    scope: IslandExpandedScope,
     onSend: (String) -> Unit,
     onCancel: () -> Unit,
-    scope: IslandExpandedScope,
 ) {
     var text by remember { mutableStateOf("") }
     val focus = remember { FocusRequester() }
@@ -239,13 +306,16 @@ private fun ReplyField(
         text = ""
         onSend(value)
     }
+    fun cancel() {
+        IslandHaptics.button(context)
+        keyboard?.hide()
+        onCancel()
+    }
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .height(44.dp)
-            .clip(RoundedCornerShape(22.dp))
-            .background(Color.White.copy(alpha = 0.14f))
-            .padding(start = 16.dp, end = 4.dp),
+            .height(REPLY_HEIGHT)
+            .padding(start = 18.dp, end = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
@@ -276,15 +346,33 @@ private fun ReplyField(
                     },
             )
         }
+        val empty = text.isBlank()
+        val buttonColor by animateColorAsState(if (empty) Color.White.copy(alpha = 0.12f) else accent, label = "replyButton")
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .size(REPLY_HEIGHT - 12.dp)
                 .clip(CircleShape)
-                .background(if (text.isBlank()) Color.White.copy(alpha = 0.12f) else accent)
-                .clickable(enabled = text.isNotBlank()) { send() },
+                .background(buttonColor)
+                .clickable { if (empty) cancel() else send() },
             contentAlignment = Alignment.Center,
         ) {
-            IslandIcon(R.drawable.rounded_send_24, tint = if (text.isBlank()) Color.White.copy(alpha = 0.5f) else Color.Black, size = 18.dp)
+            AnimatedContent(
+                targetState = empty,
+                transitionSpec = {
+                    (fadeIn(IslandMotion.contentIn()) + scaleIn(IslandMotion.contentIn(), initialScale = 0.6f))
+                        .togetherWith(fadeOut(IslandMotion.contentOut()) + scaleOut(IslandMotion.contentOut(), targetScale = 0.6f))
+                },
+                label = "replyButtonIcon",
+            ) { isEmpty ->
+                if (isEmpty) {
+                    IslandIcon(R.drawable.rounded_close_24, tint = Color.White.copy(alpha = 0.8f), size = 20.dp)
+                } else {
+                    IslandIcon(R.drawable.rounded_send_24, tint = Color.Black, size = 20.dp)
+                }
+            }
         }
     }
 }
+
+private val ACTION_HEIGHT = 44.dp
+private val REPLY_HEIGHT = 52.dp
