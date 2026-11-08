@@ -831,7 +831,8 @@ class IslandCoordinator(
         val spacing = geo.gap.toInt()
         val inset = (geo.compactHeight * 0.15f).toInt()
         fun need(keys: List<String>, extra: Int): Int =
-            if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + extra * cell + spacing * (keys.size + extra) + inset
+            if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
+                if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
         val (leftRoom, rightRoom) = sideRooms()
         val needLeft = need(before, leftExtra)
         val needRight = need(after, 0)

@@ -13,6 +13,9 @@ object CompactCellWidths {
     }
 
     fun get(cellKey: String): Int? = widths[cellKey]
+
+    @Volatile
+    var bubbleExtent: Int = 0
 }
 
 object CompactSideLimits {
