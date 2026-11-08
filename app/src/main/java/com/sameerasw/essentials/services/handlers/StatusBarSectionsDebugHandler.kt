@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.StatusBarLayoutUtil
 import com.sameerasw.essentials.utils.StatusBarLayoutUtil.Section
 
@@ -20,7 +21,6 @@ class StatusBarSectionsDebugHandler(
     private val service: AccessibilityService,
 ) {
     companion object {
-        const val ENABLED = false
         private const val TAG = "StatusBarSections"
         private const val POLL_MS = 1000L
     }
@@ -38,15 +38,22 @@ class StatusBarSectionsDebugHandler(
             }
         }
 
+    private val enabled: Boolean
+        get() = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            .getBoolean(SettingsRepository.KEY_DEBUG_UI_MARGIN_OVERLAY, false)
+
     fun start() {
-        if (!ENABLED) return
+        if (!enabled) {
+            destroy()
+            return
+        }
         StatusBarLayoutUtil.ensureFlags(service)
         handler.removeCallbacks(pollRunnable)
         handler.post(pollRunnable)
     }
 
     fun onWindowsChanged() {
-        if (!ENABLED) return
+        if (!enabled) return
         handler.removeCallbacks(pollRunnable)
         handler.post(pollRunnable)
     }

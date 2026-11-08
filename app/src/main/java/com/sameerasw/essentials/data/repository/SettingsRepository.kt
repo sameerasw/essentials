@@ -644,6 +644,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
+        const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
         const val KEY_ISLAND_SECONDARY_BUBBLE = "island_secondary_bubble"
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
         const val KEY_ISLAND_ALWAYS_GESTURES = "island_always_gestures"
@@ -4414,6 +4415,10 @@ class SettingsRepository(
     fun isIslandStatusBarAwareWidthEnabled(): Boolean = getBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, true)
 
     fun setIslandStatusBarAwareWidthEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, enabled)
+
+    fun isDebugUiMarginOverlayEnabled(): Boolean = getBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY, false)
+
+    fun setDebugUiMarginOverlayEnabled(enabled: Boolean) = putBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY, enabled)
 
     fun isIslandSecondaryBubbleEnabled(): Boolean = getBoolean(KEY_ISLAND_SECONDARY_BUBBLE, true)
 

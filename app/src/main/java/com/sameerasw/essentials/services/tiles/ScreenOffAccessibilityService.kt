@@ -307,7 +307,9 @@ class ScreenOffAccessibilityService :
 
     private val preferenceChangeListener =
         android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == SettingsRepository.KEY_ISLAND_HIDE_LIVE_UPDATES) {
+            if (key == SettingsRepository.KEY_DEBUG_UI_MARGIN_OVERLAY) {
+                statusBarSectionsDebugHandler.start()
+            } else if (key == SettingsRepository.KEY_ISLAND_HIDE_LIVE_UPDATES) {
                 LiveUpdateSnoozer.onSettingChanged()
             } else if (key == "circle_to_search_gesture_enabled" ||
                 key == "circle_to_search_gesture_height" ||

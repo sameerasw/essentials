@@ -1788,4 +1788,5 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
 </resources>
