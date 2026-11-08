@@ -243,6 +243,7 @@ class MainViewModel : ViewModel() {
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
     val isIslandStatusBarAwareWidth = mutableStateOf(true)
+    val isDebugUiMarginOverlay = mutableStateOf(false)
     val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
@@ -2540,6 +2541,7 @@ class MainViewModel : ViewModel() {
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
+        isDebugUiMarginOverlay.value = settingsRepository.isDebugUiMarginOverlayEnabled()
         isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
@@ -6004,6 +6006,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBalanceCompact(enabled: Boolean) {
         isIslandBalanceCompact.value = enabled
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
+    }
+
+    fun setDebugUiMarginOverlay(enabled: Boolean) {
+        isDebugUiMarginOverlay.value = enabled
+        settingsRepository.setDebugUiMarginOverlayEnabled(enabled)
     }
 
     fun setIslandStatusBarAwareWidth(enabled: Boolean) {

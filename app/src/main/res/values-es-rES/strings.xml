@@ -1752,4 +1752,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
 </resources>

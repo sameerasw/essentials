@@ -2065,4 +2065,5 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="island_notif_show_title">Hiện thông báo</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
     <string name="island_media_player_style_title">Player style</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
 </resources>

@@ -2068,4 +2068,5 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_brief_two_line_header_title">Zweizeiliger Header</string>
     <string name="duo_slide_mirror_direction_title">Richtungen spiegeln</string>
     <string name="island_combine_with_duo">Kombinieren mit Duo</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
 </resources>
