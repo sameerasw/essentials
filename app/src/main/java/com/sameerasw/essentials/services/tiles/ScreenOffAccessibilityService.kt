@@ -102,6 +102,7 @@ class ScreenOffAccessibilityService :
     private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
+    private lateinit var statusBarSectionsDebugHandler: com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -437,6 +438,7 @@ class ScreenOffAccessibilityService :
         }
         duoOverlayHandler.openBrief = { islandOverlayHandler.openBrief() }
         statusGlanceHandler = StatusGlanceHandler(this)
+        statusBarSectionsDebugHandler = com.sameerasw.essentials.services.handlers.StatusBarSectionsDebugHandler(this)
         lockscreenShortcutsHandler = LockscreenShortcutsHandler(this, flashlightHandler)
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
@@ -625,6 +627,7 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        statusBarSectionsDebugHandler.start()
         Shizuku.addBinderReceivedListenerSticky(shizukuBinderListener)
         restartInputEventListenerIfScreenOff()
     }
@@ -691,6 +694,7 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.destroy()
         lockscreenShortcutsHandler.onDestroy()
         appVolumeOverlayHandler.onDestroy()
+        statusBarSectionsDebugHandler.destroy()
         statusBarIconHandler.unregister()
         screenshotAutoCleanHandler.unregister()
         stopInputEventListener()
@@ -749,6 +753,7 @@ class ScreenOffAccessibilityService :
             faceUnlockBrightnessHandler.onWindowsChanged()
             lockscreenShortcutsHandler.onWindowsChanged()
             appVolumeOverlayHandler.onWindowsChanged()
+            statusBarSectionsDebugHandler.onWindowsChanged()
         }
     }
 

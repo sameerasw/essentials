@@ -35,6 +35,23 @@ object CompactLayoutEngine {
         maxCells: Int = MAX_CELLS,
         leftExtra: Int = 0,
         balance: Boolean = false,
+        fits: ((before: List<String>, after: List<String>) -> Boolean)? = null,
+    ): CompactArrangement {
+        var pool = entries
+        while (true) {
+            val result = arrangeOnce(pool, anchor, maxCells, leftExtra, balance)
+            if (fits == null || result.visibleItems.size <= 1 || fits(result.before, result.after)) return result
+            val drop = pool.filter { it.itemKey in result.visibleItems }.maxByOrNull { it.priority } ?: return result
+            pool = pool - drop
+        }
+    }
+
+    private fun arrangeOnce(
+        entries: List<CompactEntry>,
+        anchor: CameraAnchor,
+        maxCells: Int,
+        leftExtra: Int,
+        balance: Boolean,
     ): CompactArrangement {
         val base = entries.filterNot { it.companionOnly }
         val companions = entries.filter { it.companionOnly }

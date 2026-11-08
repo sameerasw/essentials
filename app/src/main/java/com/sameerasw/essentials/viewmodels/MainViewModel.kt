@@ -242,6 +242,7 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandStatusBarAwareWidth = mutableStateOf(true)
     val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
@@ -2538,6 +2539,7 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
@@ -6002,6 +6004,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBalanceCompact(enabled: Boolean) {
         isIslandBalanceCompact.value = enabled
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
+    }
+
+    fun setIslandStatusBarAwareWidth(enabled: Boolean) {
+        isIslandStatusBarAwareWidth.value = enabled
+        settingsRepository.setIslandStatusBarAwareWidthEnabled(enabled)
     }
 
     fun setIslandBondEdge(enabled: Boolean) {

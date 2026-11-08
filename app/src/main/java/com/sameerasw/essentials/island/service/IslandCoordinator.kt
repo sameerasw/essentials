@@ -63,6 +63,9 @@ import com.sameerasw.essentials.island.plugins.media.MediaPlugin
 import com.sameerasw.essentials.island.plugins.notifications.NotificationsPlugin
 import com.sameerasw.essentials.island.plugins.timebattery.TimeBatteryPlugin
 import com.sameerasw.essentials.island.state.CameraAnchor
+import com.sameerasw.essentials.island.state.CompactCellWidths
+import com.sameerasw.essentials.island.state.CompactSideLimits
+import com.sameerasw.essentials.utils.StatusBarLayoutUtil
 import com.sameerasw.essentials.island.state.CameraGeometry
 import com.sameerasw.essentials.island.state.Cancellable
 import com.sameerasw.essentials.island.state.DelayScheduler
@@ -669,6 +672,8 @@ class IslandCoordinator(
         }
         scope?.cancel()
         scope = null
+        mainHandler.removeCallbacks(statusBarPoll)
+        CompactSideLimits.set(Int.MAX_VALUE, Int.MAX_VALUE)
         windowHost.detach()
         reportVisibility(false)
         IslandStatusBarHider.restore(service)
@@ -749,12 +754,92 @@ class IslandCoordinator(
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
         controller.maxCells = settings.getIslandMaxItems() * 2
+        compactMaxWidthPx = (lineWidth * density).toInt()
+        applyStatusBarAwareWidth()
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
+    }
+
+    private var statusBarEdges: StatusBarLayoutUtil.Edges? = null
+
+    private val statusBarPoll = object : Runnable {
+        override fun run() {
+            val stage = controller.state.value.stage
+            if (stage == IslandStage.Compact || stage == IslandStage.Hidden) {
+                val edges = StatusBarLayoutUtil.edges(service)
+                if (edges != statusBarEdges || stage == IslandStage.Compact) {
+                    statusBarEdges = edges
+                    controller.relayout()
+                    publishSideLimits()
+                }
+            }
+            mainHandler.postDelayed(this, STATUS_BAR_POLL_MS)
+        }
+    }
+
+    private fun applyStatusBarAwareWidth() {
+        mainHandler.removeCallbacks(statusBarPoll)
+        controller.compactFits = ::fitsCompactWidth
+        if (!settings.isIslandStatusBarAwareWidthEnabled()) {
+            statusBarEdges = null
+            publishSideLimits()
+            return
+        }
+        publishSideLimits()
+        StatusBarLayoutUtil.ensureFlags(service)
+        mainHandler.post(statusBarPoll)
+    }
+
+    private var compactMaxWidthPx = Int.MAX_VALUE
+
+    private fun sideRooms(): Pair<Int, Int> {
+        val geo = geometry ?: return Int.MAX_VALUE to Int.MAX_VALUE
+        val slot = geo.cameraSlotWidth.toInt()
+        val maxSide = if (compactMaxWidthPx == Int.MAX_VALUE) Int.MAX_VALUE else when (geo.anchor) {
+            CameraAnchor.Center -> (compactMaxWidthPx - slot) / 2
+            else -> compactMaxWidthPx - slot
+        }.coerceAtLeast(0)
+        var left = maxSide
+        var right = maxSide
+        statusBarEdges?.let { edges ->
+            val margin = (STATUS_BAR_MARGIN_DP * service.resources.displayMetrics.density).toInt()
+            val half = geo.cameraSlotWidth / 2f
+            edges.startContentEnd?.let { left = minOf(left, ((geo.centerX - half).toInt() - it - margin).coerceAtLeast(0)) }
+            edges.endContentStart?.let { right = minOf(right, (it - (geo.centerX + half).toInt() - margin).coerceAtLeast(0)) }
+        }
+        return left to right
+    }
+
+    private fun publishSideLimits() {
+        val (left, right) = sideRooms()
+        val mirrored = geometry?.anchor == CameraAnchor.Center && controller.state.value.sideBubble == null
+        if (mirrored) {
+            val both = minOf(left, right)
+            CompactSideLimits.set(both, both)
+        } else {
+            CompactSideLimits.set(left, right)
+        }
+    }
+
+    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int): Boolean {
+        val geo = geometry ?: return true
+        val cell = geo.diameter.toInt()
+        val spacing = geo.gap.toInt()
+        val inset = (geo.compactHeight * 0.15f).toInt()
+        fun need(keys: List<String>, extra: Int): Int =
+            if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + extra * cell + spacing * (keys.size + extra) + inset
+        val (leftRoom, rightRoom) = sideRooms()
+        val needLeft = need(before, leftExtra)
+        val needRight = need(after, 0)
+        if (needLeft > leftRoom || needRight > rightRoom) return false
+        if (geo.anchor == CameraAnchor.Center && leftExtra == 0) {
+            return maxOf(needLeft, needRight) <= minOf(leftRoom, rightRoom)
+        }
+        return true
     }
 
     private var lastContentSuppressed = false
@@ -891,7 +976,10 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
+            SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
         )
+        private const val STATUS_BAR_POLL_MS = 1000L
+        private const val STATUS_BAR_MARGIN_DP = 10f
     }
 }
 

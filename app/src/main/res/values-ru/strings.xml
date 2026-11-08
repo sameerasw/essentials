@@ -1867,6 +1867,7 @@
     <string name="keep_in_full_screen_title">Держать в полном экране</string>
     <string name="disable_interactions_in_full_screen_title">Отключить взаимодействия в полном экране</string>
     <string name="island_balance_compact_title">Визуальная балансировка компактного острова</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_secondary_bubble_title">Вторичный пузырь</string>
     <string name="island_max_items_title">Максимальное количество отображаемых предметов</string>
     <string name="duo_action_horizontal_slide_brightness">Яркость</string>
