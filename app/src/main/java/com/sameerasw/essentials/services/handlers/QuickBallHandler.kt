@@ -32,6 +32,8 @@ import androidx.core.content.getSystemService
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import com.sameerasw.essentials.ui.activities.LockscreenActionActivity
 import com.sameerasw.essentials.ui.features.system.quickball.FloatPanelView
 import com.sameerasw.essentials.ui.features.system.quickball.FloatTouchView
 import com.sameerasw.essentials.ui.features.system.quickball.GestureListener
@@ -96,6 +98,11 @@ class QuickBallHandler(
     }
 
     fun updateState() {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            handler.post { updateState() }
+            return
+        }
+
         if (!settings.isQuickBallEnabled()) {
             destroy()
             return
@@ -149,9 +156,12 @@ class QuickBallHandler(
         val isLocked = keyguardManager?.isKeyguardLocked == true
         if (isLocked) {
             if (settings.isQuickBallShowLockscreen()) {
-                collapseMenu()
-                showBall()
-                stashFab(animated = false)
+                if (!isExpanded) {
+                    showBall()
+                    if (settings.isQuickBallStickToEdge() && !isStashed && !isStashing) {
+                        stashFab(animated = false)
+                    }
+                }
             } else {
                 hideAll()
             }
@@ -257,11 +267,16 @@ class QuickBallHandler(
 
                 override fun onSingleTap() {
                     isDragging = false
+                    if (isExpanded) {
+                        collapseMenu()
+                        return
+                    }
                     if (isStashed || isStashing) {
                         unstashFab()
                     }
                     if (settings.isQuickBallHaptic()) {
-                        HapticUtil.performHapticForService(service)
+                        fabView?.let { HapticUtil.performUIHaptic(it) }
+                            ?: HapticUtil.performHapticForService(service, com.sameerasw.essentials.domain.HapticFeedbackType.CLICK)
                     }
                     expandMenu()
                 }
@@ -274,12 +289,8 @@ class QuickBallHandler(
             }
         }
 
-        try {
-            windowManager.addView(fabView, fabParams)
-            resetInactivityTimer()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to add FAB window", e)
-        }
+        addViewSafe(fabView ?: return, fabParams ?: return)
+        resetInactivityTimer()
     }
 
     private fun removeFabWindow() {
@@ -363,8 +374,18 @@ class QuickBallHandler(
             onFinished?.invoke()
             return
         }
-        val view = fabView ?: return
-        val params = fabParams ?: return
+        if (fabView == null) {
+            createFabWindow()
+            isStashed = false
+        }
+        val view = fabView ?: run {
+            onFinished?.invoke()
+            return
+        }
+        val params = fabParams ?: run {
+            onFinished?.invoke()
+            return
+        }
 
         val (screenWidth, _) = getScreenDimensions()
         val targetX = getEdgeX(screenWidth)
@@ -453,12 +474,12 @@ class QuickBallHandler(
             listener = object : GestureListener {
                 override fun onSingleTap() {
                     if (settings.isQuickBallHaptic()) {
-                        HapticUtil.performHapticForService(service)
+                        pillView?.let { HapticUtil.performUIHaptic(it) }
+                            ?: HapticUtil.performHapticForService(service, com.sameerasw.essentials.domain.HapticFeedbackType.CLICK)
                     }
                     removePillWindow()
-                    unstashFab {
-                        expandMenu()
-                    }
+                    unstashFab(animated = false)
+                    expandMenu()
                 }
                 override fun onDoubleTap() = executeGestureAction("DOUBLE_TAP")
                 override fun onTripleTap() = executeGestureAction("TRIPLE_TAP")
@@ -473,11 +494,7 @@ class QuickBallHandler(
             y = targetY
         }
 
-        try {
-            windowManager.addView(pillView, pillParams)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to add Pill window", e)
-        }
+        addViewSafe(pillView ?: return, pillParams ?: return)
     }
 
     private fun removePillWindow() {
@@ -510,12 +527,10 @@ class QuickBallHandler(
     private fun executeGestureAction(gestureName: String) {
         if (!settings.isQuickBallGesturesEnabled()) return
         if (settings.isQuickBallHaptic()) {
-            HapticUtil.performHapticForService(service)
+            HapticUtil.performHapticForService(service, com.sameerasw.essentials.domain.HapticFeedbackType.CLICK)
         }
         val action = settings.getQuickBallGestureAction(gestureName) ?: return
-        scope.launch {
-            CombinedActionExecutor.execute(service, action)
-        }
+        executeAction(action)
         resetInactivityTimer()
     }
 
@@ -544,16 +559,15 @@ class QuickBallHandler(
             },
             onDismissFinished = {
                 removeMenuWindow()
-                resetInactivityTimer()
+                if (keyguardManager?.isKeyguardLocked == true) {
+                    stashFab(animated = false)
+                } else {
+                    resetInactivityTimer()
+                }
             },
             onActionClicked = { action ->
-                if (settings.isQuickBallHaptic()) {
-                    HapticUtil.performHapticForService(service)
-                }
-                scope.launch {
-                    CombinedActionExecutor.execute(service, action)
-                }
                 collapseMenu()
+                executeAction(action)
             },
         )
 
@@ -565,12 +579,8 @@ class QuickBallHandler(
             y = 0
         }
 
-        try {
-            windowManager.addView(menuView, menuParams)
-            menuView?.animateExpand()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to add menu overlay window", e)
-        }
+        addViewSafe(menuView ?: return, menuParams ?: return)
+        menuView?.animateExpand()
     }
 
     private fun collapseMenu() {
@@ -578,8 +588,88 @@ class QuickBallHandler(
         isExpanded = false
         fabView?.setExpanded(false)
 
+        menuParams?.let { params ->
+            params.flags = params.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            updateViewLayoutSafe(menuView ?: return@let, params)
+        }
+
         menuView?.animateCollapse()
     }
+
+    private fun executeAction(action: Action) {
+        val isLocked = keyguardManager?.isKeyguardLocked == true
+        if (isLocked && opensUi(action)) {
+            LockscreenActionActivity.start(service, action)
+            return
+        }
+
+        when (action) {
+            is Action.ToggleFlashlight -> {
+                val fh = (service as? ScreenOffAccessibilityService)?.flashlightHandler
+                if (fh != null) {
+                    fh.toggleFlashlight()
+                } else {
+                    scope.launch { CombinedActionExecutor.execute(service, action) }
+                }
+            }
+            is Action.TurnOnFlashlight -> {
+                val fh = (service as? ScreenOffAccessibilityService)?.flashlightHandler
+                if (fh != null) {
+                    if (!fh.isTorchOn) fh.toggleFlashlight()
+                } else {
+                    scope.launch { CombinedActionExecutor.execute(service, action) }
+                }
+            }
+            is Action.TurnOffFlashlight -> {
+                val fh = (service as? ScreenOffAccessibilityService)?.flashlightHandler
+                if (fh != null) {
+                    if (fh.isTorchOn) fh.toggleFlashlight()
+                } else {
+                    scope.launch { CombinedActionExecutor.execute(service, action) }
+                }
+            }
+            is Action.Back -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
+            }
+            is Action.Home -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME)
+            }
+            is Action.RecentApps -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS)
+            }
+            is Action.OpenNotifications -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+            }
+            is Action.OpenQuickSettings -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
+            }
+            is Action.PowerDialog -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
+            }
+            is Action.LockScreen -> {
+                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
+            }
+            is Action.TakeScreenshot -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
+                }
+            }
+            else -> {
+                scope.launch {
+                    CombinedActionExecutor.execute(service, action)
+                }
+            }
+        }
+    }
+
+    private fun opensUi(action: Action): Boolean =
+        action is Action.OpenApp ||
+            action is Action.OpenActivity ||
+            action is Action.AIAssistant ||
+            action is Action.EssentialSearch ||
+            action is Action.OpenNowPlayingApp ||
+            action is Action.OpenVideoCamera ||
+            action is Action.OpenQrScanner
 
     private fun removeMenuWindow() {
         menuView?.let {
@@ -639,11 +729,32 @@ class QuickBallHandler(
             format = PixelFormat.TRANSLUCENT
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
             gravity = Gravity.TOP or Gravity.START
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
+        }
+    }
+
+    private fun addViewSafe(view: View, params: WindowManager.LayoutParams) {
+        try {
+            windowManager.addView(view, params)
+        } catch (e: WindowManager.BadTokenException) {
+            Log.w(TAG, "BadTokenException for overlay type ${params.type}, attempting fallback", e)
+            if (params.type == WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY &&
+                android.provider.Settings.canDrawOverlays(service)) {
+                params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                try {
+                    windowManager.addView(view, params)
+                } catch (e2: Exception) {
+                    Log.e(TAG, "Fallback to TYPE_APPLICATION_OVERLAY failed", e2)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to add window", e)
         }
     }
 

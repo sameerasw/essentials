@@ -182,57 +182,57 @@ object CombinedActionExecutor {
                     HapticUtil.performCustomHaptic(context, 0.6f)
                 }
                 is Action.Back -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Action.Home -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Action.RecentApps -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_RECENTS)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_RECENTS)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Action.OpenNotifications -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Action.OpenQuickSettings -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Action.PowerDialog -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Action.LockScreen -> {
-                    val serviceInst = ScreenOffAccessibilityService.instance
-                    if (serviceInst != null) {
-                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
+                    val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                    if (a11y != null) {
+                        a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
                     } else {
                         Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
                     }
@@ -485,9 +485,9 @@ object CombinedActionExecutor {
 
                 is Action.TakeScreenshot -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        val serviceInst = ScreenOffAccessibilityService.instance
-                        if (serviceInst != null) {
-                            serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
+                        val a11y = (context as? android.accessibilityservice.AccessibilityService) ?: ScreenOffAccessibilityService.instance
+                        if (a11y != null) {
+                            a11y.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
                         } else {
                             Toast
                                 .makeText(

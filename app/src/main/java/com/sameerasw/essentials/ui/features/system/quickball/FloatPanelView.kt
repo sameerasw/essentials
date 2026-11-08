@@ -33,6 +33,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
+import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 
@@ -192,6 +193,9 @@ class FloatPanelView(
 
                     setOnClickListener {
                         if (!isCollapsing) {
+                            if (settings.isQuickBallHaptic()) {
+                                HapticUtil.performUIHaptic(it)
+                            }
                             onActionClicked(action)
                         }
                     }
@@ -365,6 +369,14 @@ class FloatPanelView(
     fun animateCollapse() {
         if (isCollapsing) return
         isCollapsing = true
+
+        if (itemViews.isEmpty()) {
+            if (!hasDismissed) {
+                hasDismissed = true
+                onDismissFinished()
+            }
+            return
+        }
 
         val lastIndex = itemViews.size - 1
         itemViews.forEachIndexed { index, itemView ->

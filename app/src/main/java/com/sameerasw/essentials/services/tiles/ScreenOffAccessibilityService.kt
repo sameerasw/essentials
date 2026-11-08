@@ -451,7 +451,6 @@ class ScreenOffAccessibilityService :
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
-        quickBallHandler.init()
         AppVolumeController.updateState(this)
         setupReceivers()
     }
@@ -630,6 +629,9 @@ class ScreenOffAccessibilityService :
         duoOverlayHandler.restart()
         statusGlanceHandler.restart()
         islandOverlayHandler.restart()
+        if (::quickBallHandler.isInitialized) {
+            quickBallHandler.updateState()
+        }
         Shizuku.addBinderReceivedListenerSticky(shizukuBinderListener)
         restartInputEventListenerIfScreenOff()
     }

@@ -30,6 +30,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 
@@ -133,7 +134,15 @@ class FloatTouchView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (isExpanded) return super.onTouchEvent(event)
+        if (isExpanded) {
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (settings.isQuickBallHaptic()) {
+                    HapticUtil.performUIHaptic(this)
+                }
+                listener?.onSingleTap()
+            }
+            return true
+        }
 
         return if (settings.isQuickBallLockPosition()) {
             gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
@@ -158,6 +167,9 @@ class FloatTouchView @JvmOverloads constructor(
 
                 if (!isDragging && hypot(dx, dy) > touchSlop) {
                     isDragging = true
+                    if (settings.isQuickBallHaptic()) {
+                        HapticUtil.performGestureThresholdHaptic(this)
+                    }
                 }
 
                 if (isDragging) {
@@ -170,6 +182,9 @@ class FloatTouchView @JvmOverloads constructor(
                 if (isDragging) {
                     listener?.onDragEnd()
                 } else {
+                    if (settings.isQuickBallHaptic()) {
+                        HapticUtil.performUIHaptic(this)
+                    }
                     listener?.onSingleTap()
                 }
                 isDragging = false

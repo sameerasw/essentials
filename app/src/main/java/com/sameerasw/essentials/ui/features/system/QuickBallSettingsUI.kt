@@ -12,6 +12,7 @@ package com.sameerasw.essentials.ui.features.system
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -48,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -79,6 +83,7 @@ fun QuickBallSettingsUI(
 
     // Dialog & Picker States
     var activePickingSlot by remember { mutableIntStateOf(0) }
+    var slotPendingAppSelection by remember { mutableIntStateOf(0) }
     var activePickingGesture by remember { mutableStateOf<String?>(null) }
     var showConnectorSheet by remember { mutableStateOf(false) }
     var showAppSelectionSheet by remember { mutableStateOf(false) }
@@ -123,12 +128,30 @@ fun QuickBallSettingsUI(
             currentAction = currentSlotAction,
             onActionSelected = { selectedAction ->
                 if (selectedAction != null) {
-                    viewModel.setQuickBallSlotAction(activePickingSlot, selectedAction)
+                    if (selectedAction is Action.OpenApp && selectedAction.packageName.isBlank()) {
+                        slotPendingAppSelection = activePickingSlot
+                    } else {
+                        viewModel.setQuickBallSlotAction(activePickingSlot, selectedAction)
+                    }
                 }
                 activePickingSlot = 0
             },
             onPickerClosed = {
                 activePickingSlot = 0
+            },
+        )
+    }
+
+    if (slotPendingAppSelection in 1..9) {
+        SingleAppSelectionSheet(
+            includeSelf = true,
+            onDismissRequest = { slotPendingAppSelection = 0 },
+            onAppSelected = { app ->
+                viewModel.setQuickBallSlotAction(
+                    slotPendingAppSelection,
+                    Action.OpenApp(packageName = app.packageName),
+                )
+                slotPendingAppSelection = 0
             },
         )
     }
@@ -573,6 +596,27 @@ private fun QuickBallSlotRow(
     action: Action,
     onClick: () -> Unit,
 ) {
+    val context = LocalContext.current
+    var appLabel by remember(action) { mutableStateOf<String?>(null) }
+    var appIconDrawable by remember(action) { mutableStateOf<android.graphics.drawable.Drawable?>(null) }
+
+    LaunchedEffect(action) {
+        if (action is Action.OpenApp && action.packageName.isNotBlank()) {
+            try {
+                val pm = context.packageManager
+                val info = pm.getApplicationInfo(action.packageName, 0)
+                appLabel = pm.getApplicationLabel(info).toString()
+                appIconDrawable = pm.getApplicationIcon(info)
+            } catch (_: Exception) {
+                appLabel = null
+                appIconDrawable = null
+            }
+        } else {
+            appLabel = null
+            appIconDrawable = null
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -589,17 +633,40 @@ private fun QuickBallSlotRow(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = stringResource(action.title),
+                text = if (appLabel != null) {
+                    "${stringResource(action.title)} ($appLabel)"
+                } else {
+                    stringResource(action.title)
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Icon(
-            painter = painterResource(id = action.icon),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp),
-        )
+        val iconDrawable = appIconDrawable
+        if (iconDrawable != null) {
+            Image(
+                bitmap = remember(iconDrawable) {
+                    val bmp = android.graphics.Bitmap.createBitmap(
+                        iconDrawable.intrinsicWidth.coerceAtLeast(1),
+                        iconDrawable.intrinsicHeight.coerceAtLeast(1),
+                        android.graphics.Bitmap.Config.ARGB_8888,
+                    )
+                    val canvas = android.graphics.Canvas(bmp)
+                    iconDrawable.setBounds(0, 0, canvas.width, canvas.height)
+                    iconDrawable.draw(canvas)
+                    bmp.asImageBitmap()
+                },
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+            )
+        } else {
+            Icon(
+                painter = painterResource(id = action.icon),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp),
+            )
+        }
     }
 }
 
