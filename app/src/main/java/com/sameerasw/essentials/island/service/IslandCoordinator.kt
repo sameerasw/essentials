@@ -103,6 +103,7 @@ import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.ui.components.IslandIcon
+import kotlin.math.roundToInt
 
 class IslandCoordinator(
     private val service: AccessibilityService,
@@ -673,6 +674,10 @@ class IslandCoordinator(
         scope?.cancel()
         scope = null
         mainHandler.removeCallbacks(statusBarPoll)
+        mainHandler.removeCallbacks(widthRelayout)
+        CompactCellWidths.onChange = null
+        controller.compactCellWidth = { 1f }
+        controller.compactBubbleWidth = { it.toFloat() }
         CompactSideLimits.set(Int.MAX_VALUE, Int.MAX_VALUE)
         windowHost.detach()
         reportVisibility(false)
@@ -784,6 +789,14 @@ class IslandCoordinator(
     private fun applyStatusBarAwareWidth() {
         mainHandler.removeCallbacks(statusBarPoll)
         controller.compactFits = ::fitsCompactWidth
+        controller.compactCellWidth = ::compactCellUnits
+        controller.compactBubbleWidth = { cells ->
+            maxOf(cells.toFloat(), ((CompactCellWidths.bubbleExtent / compactCellUnitPx().coerceAtLeast(1f)) * 4f).roundToInt() / 4f)
+        }
+        CompactCellWidths.onChange = {
+            mainHandler.removeCallbacks(widthRelayout)
+            mainHandler.post(widthRelayout)
+        }
         if (!settings.isIslandStatusBarAwareWidthEnabled()) {
             statusBarEdges = null
             publishSideLimits()
@@ -823,6 +836,17 @@ class IslandCoordinator(
         } else {
             CompactSideLimits.set(left, right)
         }
+    }
+
+    private val widthRelayout = Runnable { controller.relayout() }
+
+    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.gap } ?: 0f
+
+    private fun compactCellUnits(key: String): Float {
+        val px = CompactCellWidths.get(key) ?: return 1f
+        if (px == 0) return 0f
+        val unit = compactCellUnitPx().takeIf { it > 0f } ?: return 1f
+        return (((px + (geometry?.gap ?: 0f)) / unit) * 4f).roundToInt() / 4f
     }
 
     private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {

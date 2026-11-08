@@ -38,6 +38,8 @@ class IslandController(
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
     var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean) -> Int?)? = null
+    var compactCellWidth: (String) -> Float = { 1f }
+    var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
@@ -361,6 +363,9 @@ class IslandController(
             maxCells = maxCells,
             leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
+            cellWidth = compactCellWidth,
+            leftExtraWidth = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
+            previous = _state.value.arrangement,
             fits = compactFits?.let { fits ->
                 val extra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0
                 val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
