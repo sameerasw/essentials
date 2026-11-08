@@ -62,6 +62,49 @@ object StatusBarLayoutUtil {
         return ids.flatMap { id -> visibleBounds(root, id).map { Section(id, it) } }
     }
 
+    private val VOLUME_IDS = listOf(
+        "volume_dialog_background",
+        "volume_ringer_drawer",
+        "ringer_buttons_background",
+        "volume_dialog_main_slider_container",
+        "volume_dialog_bottom_section_container",
+        "volume_dialog_rows",
+        "volume_row_slider",
+    )
+
+    fun volumePanelSections(service: AccessibilityService): List<Section> {
+        val windows = runCatching { service.windows }.getOrNull() ?: return emptyList()
+        for (window in windows) {
+            val root = window.root ?: continue
+            if (root.packageName?.toString() != SYSTEMUI) continue
+            if (nodes(root, "volume_dialog").none { it.isVisibleToUser }) continue
+            return VOLUME_IDS.flatMap { id -> visibleBounds(root, id).map { Section(id, it) } }
+        }
+        return emptyList()
+    }
+
+    fun navigationBarSections(service: AccessibilityService): List<Section> {
+        val wm = service.getSystemService(android.view.WindowManager::class.java) ?: return emptyList()
+        val metrics = wm.currentWindowMetrics
+        val bounds = metrics.bounds
+        val insets = metrics.windowInsets
+        val gestural = runCatching {
+            android.provider.Settings.Secure.getInt(service.contentResolver, "navigation_mode")
+        }.getOrDefault(0) == 2
+        val result = mutableListOf<Section>()
+        val nav = insets.getInsets(android.view.WindowInsets.Type.navigationBars())
+        if (nav.bottom > 0) {
+            result += Section(if (gestural) "gesture_bar" else "navigation_bar", Rect(bounds.left, bounds.bottom - nav.bottom, bounds.right, bounds.bottom))
+        }
+        if (nav.left > 0) result += Section("navigation_bar", Rect(bounds.left, bounds.top, bounds.left + nav.left, bounds.bottom))
+        if (nav.right > 0) result += Section("navigation_bar", Rect(bounds.right - nav.right, bounds.top, bounds.right, bounds.bottom))
+        val gestures = insets.getInsets(android.view.WindowInsets.Type.mandatorySystemGestures())
+        if (gestural && gestures.bottom > nav.bottom) {
+            result += Section("gesture_area", Rect(bounds.left, bounds.bottom - gestures.bottom, bounds.right, bounds.bottom))
+        }
+        return result
+    }
+
     fun edges(service: AccessibilityService, ignoreNotifications: Boolean = false): Edges? {
         val root = statusBarRoot(service) ?: return null
         val rootBounds = Rect().also { root.getBoundsInScreen(it) }
