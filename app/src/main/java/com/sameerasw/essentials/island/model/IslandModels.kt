@@ -78,6 +78,8 @@ interface IslandExpandedScope {
 
     // Call while the user is doing something
     fun keepAlive()
+
+    fun holdOpen(held: Boolean) {}
 }
 
 class ExpandedContent(val content: @Composable (IslandExpandedScope) -> Unit)
@@ -157,7 +159,10 @@ class IslandItem(
     val sideBubble: SideBubble? = null,
     val companionOnly: Boolean = false,
     val bypassLauncherOnly: Boolean = false,
-    
+    val hideExpandedQueue: Boolean = false,
+    val expandedQueueOnly: Boolean = false,
+    val queueAccent: Color? = null,
+
     val stack: List<StackIcon> = emptyList(),
     val queued: List<StackIcon>? = null,
     val priorityGroup: String? = null,
@@ -189,6 +194,9 @@ class IslandItem(
         sideBubble = null,
         companionOnly = companionOnly,
         bypassLauncherOnly = bypassLauncherOnly,
+        hideExpandedQueue = hideExpandedQueue,
+        expandedQueueOnly = expandedQueueOnly,
+        queueAccent = queueAccent,
         stack = stack,
         queued = queued,
         priorityGroup = priorityGroup,

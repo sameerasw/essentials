@@ -805,6 +805,21 @@ fun IslandSettingsUI(
             context = context,
             headerContent = {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Column(
+                        modifier = Modifier.highlight(highlightSetting == "island_media_player_style"),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.island_media_player_style_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 8.dp),
+                        )
+                        com.sameerasw.essentials.ui.features.display.sheets.MediaPlayerStylePicker(
+                            selected = viewModel.islandMediaPlayerStyle.value,
+                            onSelect = viewModel::setIslandMediaPlayerStyle,
+                        )
+                    }
                     RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
                         if (viewModel.isIslandLineStageEnabled.value) {
                             IconToggleItem(

@@ -1838,6 +1838,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_line_peek_desc">Kurz Aktualisierungen auf der gesamten Insel anzeigen, dann zur Kompaktansicht zurückkehren</string>
     <string name="island_hide_in_owner_app_title">Komplikation innerhalb der App ausblenden</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
     <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
@@ -1910,6 +1911,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="haptic_mode_stronger">Stärker</string>
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Im Vollbildmodus behalten</string>
     <string name="island_battery_style_title">Akkustil</string>
     <string name="island_battery_only_low_title">Nur bei niedrigem Akkustand anzeigen</string>
@@ -1950,6 +1952,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_timers_filter_apps_title">App-Filter</string>
     <string name="island_media_show_like_title">\"Gefällt mir\" Button  anzeigen</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_media_show_previous_title">\"Vorherige Titel\" Button anzeigen </string>
     <string name="island_media_keep_when_paused_title">Wiedergabefortsetzung beibehalten</string>
     <string name="island_caffeinate_show_time_title">Zeit anzeigen</string>
@@ -2045,8 +2048,6 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_battery_peek_alerts_title">Vorschaubenachrichtigungen einblenden </string>
     <string name="duo_battery_low_level_title">Niedriger Akkustand</string>
     <string name="duo_battery_critical_level_title">Kritischer Akkustand </string>
-    <string name="island_notif_tap_to_open_title">Tippen um Benachrichtigungen zu öffnen</string>
-    <string name="island_notif_tap_to_open_desc">Tippe auf eine erweiterte Benachrichtigung um die jeweilige App zu öffnen</string>
     <string name="island_notif_hub_title">Benachrichtigungszentrale</string>
     <string name="island_notif_hub_desc">Statusleistenbenachrichtigungen durch Island ersetzen</string>
     <string name="island_notif_hub_order_priority">Priorität</string>
@@ -2067,4 +2068,6 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_brief_two_line_header_title">Zweizeiliger Header</string>
     <string name="duo_slide_mirror_direction_title">Richtungen spiegeln</string>
     <string name="island_combine_with_duo">Kombinieren mit Duo</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

@@ -2024,8 +2024,6 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_call_show_peek">Göz at</string>
     <string name="island_call_sticky_title">Otomatik olarak daraltma</string>
     <string name="island_notif_show_title">Bildirimleri göster</string>
-    <string name="island_notif_tap_to_open_title">Dokunarak bildirimleri açın</string>
-    <string name="island_notif_tap_to_open_desc">Genişletilmiş bir bildirime dokunarak uygulamasını açın</string>
     <string name="island_notif_hub_title">Bildirim Merkezi</string>
     <string name="island_notif_hub_desc">Durum çubuğu bildirim ikonlarını ada içine taşı</string>
     <string name="island_notif_filter_apps_title">Uygulamaları filtrele</string>
@@ -2047,6 +2045,7 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="island_media_show_previous_title">Önceki parça düğmesini göster</string>
     <string name="island_media_show_like_title">\"Beğen\" düğmesini göster</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="notification_lighting_ripple_sparkle_title">Işıltı</string>
     <string name="notification_lighting_ripple_sparkle_count_title">Işıltı sayısı</string>
     <string name="notification_lighting_ripple_sparkle_size_title">Işıltı boyutu</string>
@@ -2055,4 +2054,8 @@ Bazı seçenekler Shizuku veya erişilebilirlik izni gerektirir ve sonuçlar cih
     <string name="notification_lighting_ripple_wave_size_title">Dalga boyutu</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

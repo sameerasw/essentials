@@ -1759,6 +1759,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_section_notifications">Notificaciones</string>
     <string name="island_hide_on_shade_title">Ocultar cuando Barra de Estado se desliza</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Ocultar al tocar fuera de la notificación</string>
     <string name="island_show_when_title">Mostrar al</string>
     <string name="island_show_when_unlocked">Desbloquear</string>
@@ -1825,6 +1826,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_navigation_peek_after_expand_title">Línea compacta después expandir</string>
     <string name="island_secondary_bubble_title">Burbuja secundaria</string>
     <string name="island_balance_compact_title">Isla compacta visualmente equilibrada</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Mantenlo en pantalla completa</string>
     <string name="feat_volume_steps_title">Escalones de volumen</string>
     <string name="feat_volume_steps_desc">Cambia el volumen del medio más rápido con cada pulsación de tecla</string>
@@ -1928,6 +1930,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_media_show_previous_title">Botón de canción anterior</string>
     <string name="island_media_show_like_title">Botón de \"me gusta\"</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_in_fullscreen_title">Ocultar en pantalla completa</string>
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
     <string name="island_battery_icon_conditional_title">Icono para algunas condiciones</string>
@@ -1940,4 +1943,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_section_icon_color">Color de iconos</string>
     <string name="app_colors_custom">Personalizado </string>
     <string name="island_themed_text_title">Color de texto tematizado </string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

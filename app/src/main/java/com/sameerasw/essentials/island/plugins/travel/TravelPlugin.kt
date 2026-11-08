@@ -141,9 +141,9 @@ class TravelPlugin : BaseIslandPlugin() {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = trip.name,
                     start = {
                         IslandIcon(trip.iconRes, size = 20.dp, tint = accent)
-                        MarqueeText(text = trip.name, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = { RollingText(trip.distance) },
                 )

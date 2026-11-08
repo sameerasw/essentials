@@ -59,7 +59,6 @@ class NotificationsPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_NOTIF_FOLLOW_DND,
         SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS,
         SettingsRepository.KEY_ISLAND_NOTIF_FILTER_APPS_LIST,
-        SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN,
         SettingsRepository.KEY_ISLAND_SHOW_NOTIFICATIONS,
         SettingsRepository.KEY_ISLAND_NOTIF_HUB,
         SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
@@ -741,7 +740,6 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (code != null) return otpItemFor(alert, code)
         val (sender, message) = senderAndMessage(context, alert)
         val showGlow = settings.isIslandShowGlowEnabled()
-        val tapToOpen = settings.isIslandNotifTapToOpenEnabled()
         val icon = alert.chatIcon ?: alert.appIcon ?: alert.icon
         val accent = alert.appColor?.let { Color(soften(it)) }
         return IslandItem(
@@ -769,12 +767,11 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 NotificationExpanded(
                     alert = alert,
                     sender = sender,
-                    message = message,
+                    message = alert.expandedText ?: message,
                     showGlow = showGlow,
                     onAction = { runAction(alert, it) },
                     onReply = { action, text -> sendReply(alert, action, text) },
                     scope = scope,
-                    tapToOpen = tapToOpen,
                 )
             },
             accent = accent,

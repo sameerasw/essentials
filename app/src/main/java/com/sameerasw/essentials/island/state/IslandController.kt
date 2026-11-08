@@ -37,6 +37,9 @@ class IslandController(
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
+    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean) -> Int?)? = null
+    var compactCellWidth: (String) -> Float = { 1f }
+    var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
@@ -52,6 +55,7 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
+    var onAutoExpand: (() -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
     private var collapsing = false
@@ -145,19 +149,25 @@ class IslandController(
     fun handle(request: PluginRequest) {
         when (request) {
             is PluginRequest.Peek -> peek(request.itemKey, request.durationMs, sticky = request.sticky)
-            is PluginRequest.Expand -> expand(request.itemKey, request.sticky)
+            is PluginRequest.Expand -> {
+                expand(request.itemKey, request.sticky)
+                if (expandedKey == request.itemKey) onAutoExpand?.invoke()
+            }
             is PluginRequest.Collapse -> if (expandedKey == request.itemKey || peekKey == request.itemKey) collapse()
         }
     }
 
     var fallbackTapKey: (() -> String?)? = null
+    var opensOnExpandedTap: (IslandItem) -> Boolean = { false }
 
     fun onTap(itemKey: String?): Boolean {
         val current = _state.value
         return when (current.stage) {
             IslandStage.Hidden -> false
             IslandStage.Expanded -> {
-                current.focused?.interactions?.onExpandedTap?.invoke()
+                val focused = current.focused
+                val handled = focused?.interactions?.onExpandedTap?.invoke() == true
+                if (!handled && focused != null && opensOnExpandedTap(focused)) focused.onOpen?.invoke()
                 collapse()
                 true
             }
@@ -253,6 +263,19 @@ class IslandController(
         recompute()
     }
 
+    private var userHold = false
+
+    fun setUserHold(held: Boolean) {
+        if (userHold == held) return
+        userHold = held
+        if (held) {
+            expandedTimer?.cancel()
+            expandedTimer = null
+        } else {
+            restartExpandedTimer()
+        }
+    }
+
     fun onUserInteraction() {
         if (expandedKey != null) restartExpandedTimer()
         peekKey?.let { key ->
@@ -282,7 +305,7 @@ class IslandController(
         expandedTimer = null
         val timeout = expandedTimeoutMs
         val key = expandedKey ?: return
-        if (timeout <= 0L || holdFocus || stickyFocus) return
+        if (timeout <= 0L || holdFocus || stickyFocus || userHold) return
         expandedTimer = scheduler.schedule(timeout) { if (expandedKey == key) collapse() }
     }
 
@@ -357,6 +380,17 @@ class IslandController(
             maxCells = maxCells,
             leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
+            cellWidth = compactCellWidth,
+            leftExtraWidth = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
+            previous = _state.value.arrangement,
+            fits = compactFits?.let { fits ->
+                val extra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0
+                val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
+                val wrapped: (List<String>, List<String>) -> Int? = { before, after ->
+                    fits(before, after, extra, (before + after).any { it !in shown })
+                }
+                wrapped
+            },
         )
         val focusedKey = expandedKey ?: peekKey
         val stage = when {

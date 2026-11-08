@@ -242,6 +242,9 @@ class MainViewModel : ViewModel() {
     val isIslandDisableInteractionsInFullscreen = mutableStateOf(false)
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
+    val isIslandStatusBarAwareWidth = mutableStateOf(true)
+    val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
+    val isDebugUiMarginOverlay = mutableStateOf(false)
     val isIslandSecondaryBubble = mutableStateOf(true)
     val islandMaxItems = mutableStateOf(2)
     val isIslandAlwaysGestures = mutableStateOf(false)
@@ -286,6 +289,7 @@ class MainViewModel : ViewModel() {
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
     val isIslandMediaUseArtColor = mutableStateOf(true)
+    val islandMediaPlayerStyle = mutableStateOf("default")
     val isIslandMediaShowLike = mutableStateOf(true)
     val islandNotifPeekStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL)
     val isIslandNotifKeepProgress = mutableStateOf(true)
@@ -303,7 +307,7 @@ class MainViewModel : ViewModel() {
     val isIslandNotifHubPreferChatPictures = mutableStateOf(true)
     val islandNotifHubOrder = mutableStateOf(SettingsRepository.ISLAND_NOTIF_HUB_ORDER_DYNAMIC)
     val islandNotifHubOverflow = mutableStateOf(com.sameerasw.essentials.island.model.QueueOverflow.Number)
-    val isIslandNotifTapToOpen = mutableStateOf(false)
+    val isIslandTapToOpenExpanded = mutableStateOf(false)
     val isIslandCatchUpEnabled = mutableStateOf(true)
     val islandCatchUpTimeoutMs = mutableLongStateOf(10000L)
     val isIslandOtpEnabled = mutableStateOf(false)
@@ -776,7 +780,7 @@ class MainViewModel : ViewModel() {
             ) {
                 if (key == null) return
 
-                when (key) {
+                when (key.substringBefore('@')) {
                     SettingsRepository.KEY_EDGE_LIGHTING_ENABLED ->
                         isNotificationLightingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -975,6 +979,9 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR ->
                         isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
 
+                    SettingsRepository.KEY_ISLAND_MEDIA_PLAYER_STYLE ->
+                        islandMediaPlayerStyle.value = settingsRepository.getIslandMediaPlayerStyle()
+
                     SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE ->
                         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
 
@@ -1022,8 +1029,8 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS ->
                         islandNotifHubIcons.intValue = settingsRepository.getIslandNotifHubIcons()
 
-                    SettingsRepository.KEY_ISLAND_NOTIF_TAP_TO_OPEN ->
-                        isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
+                    SettingsRepository.KEY_ISLAND_TAP_TO_OPEN_EXPANDED ->
+                        isIslandTapToOpenExpanded.value = settingsRepository.isIslandTapToOpenExpandedEnabled()
 
                     SettingsRepository.KEY_ISLAND_SHOW_NAVIGATION ->
                         isIslandShowNavigation.value = settingsRepository.isIslandShowNavigationEnabled()
@@ -2534,6 +2541,9 @@ class MainViewModel : ViewModel() {
         isIslandDisableInteractionsInFullscreen.value = settingsRepository.isIslandDisableInteractionsInFullscreenEnabled()
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
+        isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
+        isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
+        isDebugUiMarginOverlay.value = settingsRepository.isDebugUiMarginOverlayEnabled()
         isIslandSecondaryBubble.value = settingsRepository.isIslandSecondaryBubbleEnabled()
         islandMaxItems.value = settingsRepository.getIslandMaxItems()
         isIslandAlwaysGestures.value = settingsRepository.isIslandAlwaysGesturesEnabled()
@@ -2591,6 +2601,7 @@ class MainViewModel : ViewModel() {
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
         isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
+        islandMediaPlayerStyle.value = settingsRepository.getIslandMediaPlayerStyle()
         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
         islandNotifPeekStyle.value = settingsRepository.getIslandNotifPeekStyle()
         isIslandNotifKeepProgress.value = settingsRepository.isIslandNotifKeepProgressEnabled()
@@ -2608,7 +2619,7 @@ class MainViewModel : ViewModel() {
         isIslandNotifHubGroupByApps.value = settingsRepository.isIslandNotifHubGroupByApps()
         isIslandNotifHubPreferChatPictures.value = settingsRepository.isIslandNotifHubPreferChatPictures()
         islandNotifHubOverflow.value = settingsRepository.getIslandNotifHubOverflow()
-        isIslandNotifTapToOpen.value = settingsRepository.isIslandNotifTapToOpenEnabled()
+        isIslandTapToOpenExpanded.value = settingsRepository.isIslandTapToOpenExpandedEnabled()
         isIslandCatchUpEnabled.value = settingsRepository.isIslandCatchUpEnabled()
         islandCatchUpTimeoutMs.longValue = settingsRepository.getIslandCatchUpStoredMs()
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
@@ -5522,6 +5533,22 @@ class MainViewModel : ViewModel() {
         islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
         islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
         islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
+        isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
+        islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
+        islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
+        islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
+        islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
+        islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
+        islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
+        islandFontScale.floatValue = settingsRepository.getIslandFontScale()
+        islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
+        islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
+        islandMaxItems.value = settingsRepository.getIslandMaxItems()
+        isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
+        isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
     }
 
     fun setIslandOrientationProfiles(enabled: Boolean) {
@@ -5999,6 +6026,21 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandBalanceCompactEnabled(enabled)
     }
 
+    fun setDebugUiMarginOverlay(enabled: Boolean) {
+        isDebugUiMarginOverlay.value = enabled
+        settingsRepository.setDebugUiMarginOverlayEnabled(enabled)
+    }
+
+    fun setIslandStatusBarIgnoreNotifications(enabled: Boolean) {
+        isIslandStatusBarIgnoreNotifications.value = enabled
+        settingsRepository.setIslandStatusBarIgnoreNotificationsEnabled(enabled)
+    }
+
+    fun setIslandStatusBarAwareWidth(enabled: Boolean) {
+        isIslandStatusBarAwareWidth.value = enabled
+        settingsRepository.setIslandStatusBarAwareWidthEnabled(enabled)
+    }
+
     fun setIslandBondEdge(enabled: Boolean) {
         isIslandBondEdge.value = enabled
         settingsRepository.setIslandBondEdgeEnabled(enabled)
@@ -6113,6 +6155,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandMediaShowPreviousEnabled(enabled)
     }
 
+    fun setIslandMediaPlayerStyle(style: String) {
+        islandMediaPlayerStyle.value = style
+        settingsRepository.setIslandMediaPlayerStyle(style)
+    }
+
     fun setIslandMediaUseArtColor(enabled: Boolean) {
         isIslandMediaUseArtColor.value = enabled
         settingsRepository.setIslandMediaUseArtColorEnabled(enabled)
@@ -6212,9 +6259,9 @@ class MainViewModel : ViewModel() {
         settingsRepository.updateIslandNotifFilterAppSelection(packageName, enabled)
     }
 
-    fun setIslandNotifTapToOpen(enabled: Boolean) {
-        isIslandNotifTapToOpen.value = enabled
-        settingsRepository.setIslandNotifTapToOpenEnabled(enabled)
+    fun setIslandTapToOpenExpanded(enabled: Boolean) {
+        isIslandTapToOpenExpanded.value = enabled
+        settingsRepository.setIslandTapToOpenExpandedEnabled(enabled)
     }
 
     fun setIslandNotifKeepProgress(enabled: Boolean) {

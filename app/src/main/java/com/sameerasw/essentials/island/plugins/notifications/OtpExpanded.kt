@@ -69,9 +69,9 @@ fun OtpExpanded(
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = sender,
                     start = {
                         IslandBitmap(alert.appIcon ?: alert.icon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                        MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = {
                         Text(stringResource(R.string.island_otp_label), style = IslandTextStyles.body, maxLines = 1)

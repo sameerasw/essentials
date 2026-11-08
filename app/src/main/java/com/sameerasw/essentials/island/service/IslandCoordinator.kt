@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.island.service
 
 import android.provider.Settings
+import android.os.SystemClock
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
 import com.sameerasw.essentials.island.plugins.timer.TimerPlugin
 import com.sameerasw.essentials.island.remote.ProviderTrustStore
@@ -63,6 +64,9 @@ import com.sameerasw.essentials.island.plugins.media.MediaPlugin
 import com.sameerasw.essentials.island.plugins.notifications.NotificationsPlugin
 import com.sameerasw.essentials.island.plugins.timebattery.TimeBatteryPlugin
 import com.sameerasw.essentials.island.state.CameraAnchor
+import com.sameerasw.essentials.island.state.CompactCellWidths
+import com.sameerasw.essentials.island.state.CompactSideLimits
+import com.sameerasw.essentials.utils.StatusBarLayoutUtil
 import com.sameerasw.essentials.island.state.CameraGeometry
 import com.sameerasw.essentials.island.state.Cancellable
 import com.sameerasw.essentials.island.state.DelayScheduler
@@ -100,6 +104,7 @@ import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.ui.components.IslandIcon
+import kotlin.math.roundToInt
 
 class IslandCoordinator(
     private val service: AccessibilityService,
@@ -220,6 +225,13 @@ class IslandCoordinator(
             plugins.forEach { it.onUserInteraction(focused) }
         }
 
+        override fun onHold(held: Boolean) {
+            mainHandler.removeCallbacks(holdTick)
+            controller.setUserHold(held)
+            onInteraction()
+            if (held) mainHandler.postDelayed(holdTick, HOLD_TICK_MS)
+        }
+
         override fun onTextInputChanged(active: Boolean) {
             textInputActive = active
             windowHost.setTextInput(active)
@@ -258,6 +270,7 @@ class IslandCoordinator(
             },
         )
         controller.fallbackTapKey = { BriefPlugin.ITEM_KEY.takeIf { settings.isIslandBriefEnabled() } }
+        controller.opensOnExpandedTap = { it.key != BriefPlugin.ITEM_KEY && settings.isIslandTapToOpenExpandedEnabled() }
         controller.onStageChanged = { stage ->
             if (stage != IslandStage.Expanded) windowHost.setTextInput(false)
             windowHost.onStageChanged(stage)
@@ -295,11 +308,21 @@ class IslandCoordinator(
         }
     }
 
-    // Anything the user touches outside the island collapses the expanded card, when enabled.
+    private var autoExpandedAt = 0L
+
+    private val holdTick: Runnable = object : Runnable {
+        override fun run() {
+            val focused = controller.state.value.focusedKey
+            plugins.forEach { it.onUserInteraction(focused) }
+            mainHandler.postDelayed(this, HOLD_TICK_MS)
+        }
+    }
+
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
         if (textInputActive) return
         if (controller.state.value.stage != IslandStage.Expanded) return
+        if (SystemClock.uptimeMillis() - autoExpandedAt < OUTSIDE_DISMISS_GRACE_MS) return
         mainHandler.post { controller.collapse() }
     }
 
@@ -372,7 +395,11 @@ class IslandCoordinator(
             if (pendingFullscreen == fullscreen) return@post
             pendingFullscreen = fullscreen
             mainHandler.removeCallbacks(applyFullscreen)
-            if (isFullscreenApp != fullscreen) mainHandler.postDelayed(applyFullscreen, SETTLE_MS)
+            when {
+                isFullscreenApp == fullscreen -> Unit
+                fullscreen -> applyFullscreen.run()
+                else -> mainHandler.postDelayed(applyFullscreen, SETTLE_MS)
+            }
         }
     }
 
@@ -388,7 +415,11 @@ class IslandCoordinator(
             if (pendingShadeExpanded == expanded) return@post
             pendingShadeExpanded = expanded
             mainHandler.removeCallbacks(applyShadeExpanded)
-            if (isShadeExpanded != expanded) mainHandler.postDelayed(applyShadeExpanded, SETTLE_MS)
+            when {
+                isShadeExpanded == expanded -> Unit
+                expanded -> applyShadeExpanded.run()
+                else -> mainHandler.postDelayed(applyShadeExpanded, SETTLE_MS)
+            }
         }
     }
 
@@ -508,6 +539,7 @@ class IslandCoordinator(
                 .distinctUntilChanged()
                 .collect { (stage, key) -> plugins.forEach { it.onFocusChanged(stage, key) } }
         }
+        controller.onAutoExpand = { autoExpandedAt = SystemClock.uptimeMillis() }
         newScope.launch { IslandPreviewRequests.queue.collect { showQueuePreview() } }
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
         applyPreviewStage()
@@ -668,6 +700,14 @@ class IslandCoordinator(
         }
         scope?.cancel()
         scope = null
+        mainHandler.removeCallbacks(statusBarPoll)
+        mainHandler.removeCallbacks(widthRelayout)
+        mainHandler.removeCallbacks(holdTick)
+        controller.setUserHold(false)
+        CompactCellWidths.onChange = null
+        controller.compactCellWidth = { 1f }
+        controller.compactBubbleWidth = { it.toFloat() }
+        CompactSideLimits.set(Int.MAX_VALUE, Int.MAX_VALUE)
         windowHost.detach()
         reportVisibility(false)
         IslandStatusBarHider.restore(service)
@@ -748,12 +788,115 @@ class IslandCoordinator(
         windowHost.updateGeometry(geo)
         controller.lineStageEnabled = settings.isIslandLineStageEnabled()
         controller.maxCells = settings.getIslandMaxItems() * 2
+        compactMaxWidthPx = (lineWidth * density).toInt()
+        applyStatusBarAwareWidth()
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
+    }
+
+    private var statusBarEdges: StatusBarLayoutUtil.Edges? = null
+
+    private val statusBarPoll = object : Runnable {
+        override fun run() {
+            val stage = controller.state.value.stage
+            if (stage == IslandStage.Compact || stage == IslandStage.Hidden) {
+                val edges = StatusBarLayoutUtil.edges(service, settings.isIslandStatusBarIgnoreNotificationsEnabled())
+                if (edges != statusBarEdges || stage == IslandStage.Compact) {
+                    statusBarEdges = edges
+                    controller.relayout()
+                    publishSideLimits()
+                }
+            }
+            mainHandler.postDelayed(this, STATUS_BAR_POLL_MS)
+        }
+    }
+
+    private fun applyStatusBarAwareWidth() {
+        mainHandler.removeCallbacks(statusBarPoll)
+        controller.compactFits = ::fitsCompactWidth
+        controller.compactCellWidth = ::compactCellUnits
+        controller.compactBubbleWidth = { cells ->
+            maxOf(cells.toFloat(), ((CompactCellWidths.bubbleExtent / compactCellUnitPx().coerceAtLeast(1f)) * 4f).roundToInt() / 4f)
+        }
+        CompactCellWidths.onChange = {
+            mainHandler.removeCallbacks(widthRelayout)
+            mainHandler.post(widthRelayout)
+        }
+        if (!settings.isIslandStatusBarAwareWidthEnabled()) {
+            statusBarEdges = null
+            publishSideLimits()
+            return
+        }
+        publishSideLimits()
+        StatusBarLayoutUtil.ensureFlags(service)
+        mainHandler.post(statusBarPoll)
+    }
+
+    private var compactMaxWidthPx = Int.MAX_VALUE
+
+    private fun sideRooms(): Pair<Int, Int> {
+        val geo = geometry ?: return Int.MAX_VALUE to Int.MAX_VALUE
+        val slot = geo.cameraSlotWidth.toInt()
+        val maxSide = if (compactMaxWidthPx == Int.MAX_VALUE) Int.MAX_VALUE else when (geo.anchor) {
+            CameraAnchor.Center -> (compactMaxWidthPx - slot) / 2
+            else -> compactMaxWidthPx - slot
+        }.coerceAtLeast(0)
+        var left = maxSide
+        var right = maxSide
+        statusBarEdges?.let { edges ->
+            val margin = (STATUS_BAR_MARGIN_DP * service.resources.displayMetrics.density).toInt()
+            val half = geo.cameraSlotWidth / 2f
+            edges.startContentEnd?.let { left = minOf(left, ((geo.centerX - half).toInt() - it - margin).coerceAtLeast(0)) }
+            edges.endContentStart?.let { right = minOf(right, (it - (geo.centerX + half).toInt() - margin).coerceAtLeast(0)) }
+        }
+        return left to right
+    }
+
+    private fun publishSideLimits() {
+        val (left, right) = sideRooms()
+        val mirrored = geometry?.anchor == CameraAnchor.Center && controller.state.value.sideBubble == null
+        if (mirrored) {
+            val both = minOf(left, right)
+            CompactSideLimits.set(both, both)
+        } else {
+            CompactSideLimits.set(left, right)
+        }
+    }
+
+    private val widthRelayout = Runnable { controller.relayout() }
+
+    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.gap } ?: 0f
+
+    private fun compactCellUnits(key: String): Float {
+        val px = CompactCellWidths.get(key) ?: return 1f
+        if (px == 0) return 0f
+        val unit = compactCellUnitPx().takeIf { it > 0f } ?: return 1f
+        return (((px + (geometry?.gap ?: 0f)) / unit) * 4f).roundToInt() / 4f
+    }
+
+    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
+        val geo = geometry ?: return 0
+        val density = service.resources.displayMetrics.density
+        val cell = geo.diameter.toInt()
+        val spacing = geo.gap.toInt()
+        val inset = (geo.compactHeight * 0.15f).toInt()
+        fun need(keys: List<String>, extra: Int): Int =
+            if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
+                if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
+        val slack = if (growing) (GROW_SLACK_DP * density).toInt() else 0
+        val (leftRoom, rightRoom) = sideRooms()
+        val left = if (leftRoom == Int.MAX_VALUE) leftRoom else leftRoom - slack
+        val right = if (rightRoom == Int.MAX_VALUE) rightRoom else rightRoom - slack
+        val needLeft = need(before, leftExtra)
+        val needRight = need(after, 0)
+        if (needLeft > left || needRight > right) return null
+        val mirrored = geo.anchor == CameraAnchor.Center && leftExtra == 0
+        if (mirrored && maxOf(needLeft, needRight) > minOf(left, right)) return null
+        return maxOf(needLeft, needRight)
     }
 
     private var lastContentSuppressed = false
@@ -832,8 +975,10 @@ class IslandCoordinator(
 
     private companion object {
         const val REVEAL_DELAY_MS = 160L
+        const val OUTSIDE_DISMISS_GRACE_MS = 2000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
+        const val HOLD_TICK_MS = 1000L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
         const val QUEUE_PREVIEW_SOURCE = "preview.queue"
@@ -889,7 +1034,12 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
+            SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
+            SettingsRepository.KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS,
         )
+        private const val STATUS_BAR_POLL_MS = 1000L
+        private const val STATUS_BAR_MARGIN_DP = 10f
+        private const val GROW_SLACK_DP = 12f
     }
 }
 

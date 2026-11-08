@@ -1671,11 +1671,13 @@
     <string name="island_line_peek_desc">短暂在灵动岛显示更新，然后恢复紧凑状态</string>
     <string name="island_secondary_bubble_title">次级气泡（消息环）</string>
     <string name="island_balance_compact_title">视觉上居中对齐</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_show_when_title">在什么时候显示</string>
     <string name="island_show_when_unlocked">解锁时</string>
     <string name="island_hide_in_owner_app_title">打开应用时隐藏</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="keep_in_full_screen_title">保持全屏</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">点击外部区域时关闭</string>
     <string name="status_glance_enable_title">启用状态快照</string>
     <string name="status_glance_enable_desc">显示状态快照</string>
@@ -1787,10 +1789,12 @@
     <string name="tile_lockdown_mode">鎖定</string>
     <string name="feat_screenshots_title">螢幕截圖清理</string>
     <string name="feat_screenshots_desc">將分享過和舊的截圖清掉</string>
-    <string name="island_notif_tap_to_open_title">点击打开应用</string>
     <string name="island_notif_filter_apps_title">筛选应用</string>
     <string name="island_notif_skip_silent_title">跳过静音通知</string>
     <string name="island_notif_follow_dnd_title">跟随勿扰模式</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

@@ -990,6 +990,11 @@ object FeatureRegistry {
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
                         ),
+                        SearchSetting(
+                            R.string.island_statusbar_aware_width_title,
+                            R.string.island_section_visuals,
+                            "island_statusbar_aware_width",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -1054,6 +1059,11 @@ object FeatureRegistry {
                             R.string.island_section_behavior,
                             "island_balance_compact",
                         ),
+                        SearchSetting(
+                            R.string.island_tap_to_open_expanded_title,
+                            R.string.island_section_behavior,
+                            "island_tap_to_open_expanded",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -1109,11 +1119,6 @@ object FeatureRegistry {
                             R.string.island_notif_queue_inline_title,
                             R.string.island_notif_queue_inline_desc,
                             "island_notif_queue_inline",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_tap_to_open_title,
-                            R.string.island_notif_tap_to_open_desc,
-                            "island_notif_tap_to_open",
                         ),
                         SearchSetting(
                             R.string.island_catch_up_title,
