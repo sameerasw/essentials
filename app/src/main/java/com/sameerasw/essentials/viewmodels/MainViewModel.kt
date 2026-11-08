@@ -9707,22 +9707,15 @@ class MainViewModel : ViewModel() {
         return success
     }
 
-    // Import is the user's go-ahead: with Shizuku/root the tiles go straight back to their old spots,
-    // anything left is offered on the Quick Settings tiles screen through the system add-tile dialog.
+    // Never touches the layout on import: the restore card on the Quick Settings tiles screen asks first.
     private fun restoreImportedQsTiles(context: Context) {
-        if (qsTilesPendingRestore.value.isEmpty()) return
-        viewModelScope.launch {
-            val result = if (ShellUtils.hasPermission(context)) restoreQsTilesWithShell(context) else null
-            val left = qsTilesPendingRestore.value.size
-            val message = when {
-                result != null && result.restored.isNotEmpty() && left == 0 ->
-                    context.resources.getQuantityString(R.plurals.qs_tiles_restored_toast, result.restored.size, result.restored.size)
-                left > 0 ->
-                    context.resources.getQuantityString(R.plurals.qs_tiles_restore_pending_toast, left, left)
-                else -> null
-            }
-            message?.let { android.widget.Toast.makeText(context, it, android.widget.Toast.LENGTH_LONG).show() }
-        }
+        val left = qsTilesPendingRestore.value.size
+        if (left == 0) return
+        android.widget.Toast.makeText(
+            context,
+            context.resources.getQuantityString(R.plurals.qs_tiles_restore_pending_toast, left, left),
+            android.widget.Toast.LENGTH_LONG,
+        ).show()
     }
 
     data class FreezeBackupData(
