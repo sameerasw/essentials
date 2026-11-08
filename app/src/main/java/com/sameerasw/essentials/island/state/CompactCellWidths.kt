@@ -8,6 +8,8 @@ object CompactCellWidths {
 
     fun record(cellKeys: List<String>, unitWidth: Int) {
         if (cellKeys.isEmpty() || unitWidth <= 0) return
+        val previous = widths[cellKeys[0]]
+        if (previous != null && kotlin.math.abs(previous - unitWidth) <= JITTER_PX) return
         widths[cellKeys[0]] = unitWidth
         cellKeys.drop(1).forEach { widths[it] = 0 }
     }
@@ -16,6 +18,8 @@ object CompactCellWidths {
 
     @Volatile
     var bubbleExtent: Int = 0
+
+    private const val JITTER_PX = 4
 }
 
 object CompactSideLimits {
