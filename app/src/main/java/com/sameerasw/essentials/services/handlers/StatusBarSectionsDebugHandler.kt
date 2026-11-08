@@ -65,7 +65,9 @@ class StatusBarSectionsDebugHandler(
     }
 
     private fun refresh() {
-        val sections = StatusBarLayoutUtil.sections(service)
+        val sections = StatusBarLayoutUtil.sections(service) +
+            StatusBarLayoutUtil.volumePanelSections(service) +
+            StatusBarLayoutUtil.navigationBarSections(service)
         if (sections != lastLogged) {
             lastLogged = sections
             sections.forEach { Log.d(TAG, "${it.name}: ${it.bounds} w=${it.bounds.width()} h=${it.bounds.height()}") }
@@ -90,6 +92,7 @@ class StatusBarSectionsDebugHandler(
             ).apply {
                 gravity = Gravity.TOP or Gravity.START
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                fitInsetsTypes = 0
             }
         windowManager.addView(view, params)
         overlay = view
@@ -126,7 +129,9 @@ class StatusBarSectionsDebugHandler(
                 rect.set(s.bounds)
                 rect.offset(-loc[0].toFloat(), -loc[1].toFloat())
                 canvas.drawRoundRect(rect, radius, radius, stroke)
-                canvas.drawText("${s.name} ${s.bounds.width()}", rect.left + 2 * density, rect.bottom + label.textSize, label)
+                val text = "${s.name} ${s.bounds.width()}x${s.bounds.height()}"
+                val y = if (rect.bottom + label.textSize > height) rect.top - 2 * density else rect.bottom + label.textSize
+                canvas.drawText(text, rect.left + 2 * density, y, label)
             }
         }
     }
