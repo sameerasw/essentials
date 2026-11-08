@@ -29,6 +29,7 @@ class StatusBarSectionsDebugHandler(
     private val handler = Handler(Looper.getMainLooper())
     private var overlay: SectionsView? = null
     private var lastLogged: List<Section> = emptyList()
+    private var lastNames: Set<String> = emptySet()
 
     private val pollRunnable =
         object : Runnable {
@@ -65,13 +66,20 @@ class StatusBarSectionsDebugHandler(
     }
 
     private fun refresh() {
-        val sections = StatusBarLayoutUtil.sections(service) +
+        val bar = StatusBarLayoutUtil.sections(service)
+        val sections = bar +
             StatusBarLayoutUtil.volumePanelSections(service) +
+            StatusBarLayoutUtil.systemUiComponentSections(service) +
             StatusBarLayoutUtil.navigationBarSections(service)
-        if (sections != lastLogged) {
-            lastLogged = sections
-            sections.forEach { Log.d(TAG, "${it.name}: ${it.bounds} w=${it.bounds.width()} h=${it.bounds.height()}") }
+        if (bar != lastLogged) {
+            lastLogged = bar
+            bar.forEach { Log.d(TAG, "${it.name}: ${it.bounds} w=${it.bounds.width()} h=${it.bounds.height()}") }
             StatusBarLayoutUtil.dumpTree(service).forEach { Log.d("$TAG-tree", it) }
+        }
+        val shadeNames = sections.map { it.name }.toSet()
+        if (shadeNames != lastNames) {
+            lastNames = shadeNames
+            StatusBarLayoutUtil.shadeTree(service).forEach { Log.d("$TAG-shade", it) }
         }
         ensureOverlay().setSections(sections)
     }
