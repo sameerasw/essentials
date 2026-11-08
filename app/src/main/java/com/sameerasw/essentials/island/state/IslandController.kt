@@ -37,6 +37,9 @@ class IslandController(
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
+    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean) -> Int?)? = null
+    var compactCellWidth: (String) -> Float = { 1f }
+    var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
@@ -52,6 +55,7 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
+    var onAutoExpand: (() -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
     private var collapsing = false
@@ -70,10 +74,48 @@ class IslandController(
     private var launcherOnlySources: Set<String> = emptySet()
     private var launcherOnlyProviders: Set<String> = emptySet()
     private var onLauncher = true
+    private var updateOnlySources: Set<String> = emptySet()
+    private var updateOnlyProviders: Set<String> = emptySet()
+    private var updateRevealMs: Long = 0L
+    private val seenUpdates = mutableMapOf<String, String?>()
+    private val revealTimers = mutableMapOf<String, Cancellable>()
 
     fun setItems(sourceId: String, items: List<IslandItem>) {
+        val previous = itemsBySource[sourceId].orEmpty()
         itemsBySource[sourceId] = items
+        val updated = trackUpdates(sourceId, previous, items)
         recompute()
+        updated.firstOrNull()?.let { peek(it, updateRevealMs) }
+    }
+
+    fun setUpdateOnly(sources: Set<String>, providers: Set<String>, revealMs: Long) {
+        if (updateOnlySources == sources && updateOnlyProviders == providers && updateRevealMs == revealMs) return
+        updateOnlySources = sources
+        updateOnlyProviders = providers
+        updateRevealMs = revealMs
+        recompute()
+    }
+
+    private fun isUpdateOnly(sourceId: String, item: IslandItem): Boolean =
+        sourceId in updateOnlySources || item.key.substringBefore(':') in updateOnlyProviders
+
+    private fun trackUpdates(sourceId: String, previous: List<IslandItem>, items: List<IslandItem>): List<String> {
+        val currentKeys = items.mapTo(mutableSetOf()) { it.key }
+        previous.filter { it.key !in currentKeys }.forEach {
+            seenUpdates.remove(it.key)
+            revealTimers.remove(it.key)?.cancel()
+        }
+        return items.filter { isUpdateOnly(sourceId, it) }.mapNotNull { item ->
+            val signature = item.updateKey ?: item.contentId
+            if (item.key in seenUpdates && seenUpdates[item.key] == signature) return@mapNotNull null
+            seenUpdates[item.key] = signature
+            revealTimers.remove(item.key)?.cancel()
+            revealTimers[item.key] = scheduler.schedule(updateRevealMs) {
+                revealTimers.remove(item.key)
+                recompute()
+            }
+            item.key
+        }
     }
 
     fun setHiddenPackage(packageName: String?, onlySources: Set<String>? = null) {
@@ -107,19 +149,25 @@ class IslandController(
     fun handle(request: PluginRequest) {
         when (request) {
             is PluginRequest.Peek -> peek(request.itemKey, request.durationMs, sticky = request.sticky)
-            is PluginRequest.Expand -> expand(request.itemKey, request.sticky)
+            is PluginRequest.Expand -> {
+                expand(request.itemKey, request.sticky)
+                if (expandedKey == request.itemKey) onAutoExpand?.invoke()
+            }
             is PluginRequest.Collapse -> if (expandedKey == request.itemKey || peekKey == request.itemKey) collapse()
         }
     }
 
     var fallbackTapKey: (() -> String?)? = null
+    var opensOnExpandedTap: (IslandItem) -> Boolean = { false }
 
     fun onTap(itemKey: String?): Boolean {
         val current = _state.value
         return when (current.stage) {
             IslandStage.Hidden -> false
             IslandStage.Expanded -> {
-                current.focused?.interactions?.onExpandedTap?.invoke()
+                val focused = current.focused
+                val handled = focused?.interactions?.onExpandedTap?.invoke() == true
+                if (!handled && focused != null && opensOnExpandedTap(focused)) focused.onOpen?.invoke()
                 collapse()
                 true
             }
@@ -215,6 +263,19 @@ class IslandController(
         recompute()
     }
 
+    private var userHold = false
+
+    fun setUserHold(held: Boolean) {
+        if (userHold == held) return
+        userHold = held
+        if (held) {
+            expandedTimer?.cancel()
+            expandedTimer = null
+        } else {
+            restartExpandedTimer()
+        }
+    }
+
     fun onUserInteraction() {
         if (expandedKey != null) restartExpandedTimer()
         peekKey?.let { key ->
@@ -244,7 +305,7 @@ class IslandController(
         expandedTimer = null
         val timeout = expandedTimeoutMs
         val key = expandedKey ?: return
-        if (timeout <= 0L || holdFocus || stickyFocus) return
+        if (timeout <= 0L || holdFocus || stickyFocus || userHold) return
         expandedTimer = scheduler.schedule(timeout) { if (expandedKey == key) collapse() }
     }
 
@@ -269,7 +330,7 @@ class IslandController(
                     onLauncher -> items
                     source in launcherOnlySources -> items.filter { it.bypassLauncherOnly }
                     else -> items.filter { it.bypassLauncherOnly || it.key.substringBefore(':') !in launcherOnlyProviders }
-                }
+                }.filter { !isUpdateOnly(source, it) || it.key in revealTimers }
                 val hideHere = hiddenPackage != null && hiddenSources?.contains(source) != false
                 if (hideHere) visible.filter { it.sourcePackage != hiddenPackage } else visible
             }
@@ -319,6 +380,17 @@ class IslandController(
             maxCells = maxCells,
             leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
+            cellWidth = compactCellWidth,
+            leftExtraWidth = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
+            previous = _state.value.arrangement,
+            fits = compactFits?.let { fits ->
+                val extra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0
+                val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
+                val wrapped: (List<String>, List<String>) -> Int? = { before, after ->
+                    fits(before, after, extra, (before + after).any { it !in shown })
+                }
+                wrapped
+            },
         )
         val focusedKey = expandedKey ?: peekKey
         val stage = when {

@@ -1800,10 +1800,10 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_hide_in_owner_app_title">Ẩn thông báo lỗi bên trong ứng dụng</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_hide_on_shade_title">Ẩn khi thanh trạng thái được mở rộng</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Bỏ qua khi chạm bên ngoài</string>
     <string name="island_notif_keep_progress_title">Giữ lại thông báo tiến độ</string>
     <string name="island_notif_queue_title">Hàng đợi thông báo</string>
-    <string name="island_notif_tap_to_open_title">Chạm để mở thông báo</string>
     <string name="island_catch_up_title">Bắt kịp</string>
     <string name="island_catch_up_desc">Giữ thông báo cuối cùng trên island lâu hơn</string>
     <string name="island_catch_up_timeout_title">Thời gian bắt kịp</string>
@@ -1874,6 +1874,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_sound_mode_keep_icon_title">Tiếp tục hiển thị biểu tượng</string>
     <string name="island_alarm_window_title">Hiển thị báo thức trong vòng</string>
     <string name="island_launcher_only_title">Chỉ hiển thị trên màn hình chính</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">Ẩn khi ứng dụng đang mở</string>
     <string name="island_preview_ring_title">Hiển thị gợi ý căn chỉnh</string>
     <string name="island_preview_stage_title">Giai đoạn xem trước</string>
@@ -1920,8 +1921,6 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="island_border_outline_hide_expanded_desc">Chỉ cần phác thảo đường viền nhỏ gọn và nhìn thoáng qua island</string>
     <string name="island_border_outline_thickness_title">Độ dày đường viền</string>
     <string name="island_notif_conceal_locked_title">Ẩn nội dung thông báo</string>
-    <string name="island_pulse_shadow_size_title">Kích thước phát sáng</string>
-    <string name="island_pulse_shadow_y_shift_title">Dịch chuyển theo chiều dọc</string>
     <string name="island_pulse_shadow_spread_title">Ánh sáng lan tỏa</string>
     <string name="island_pulse_shadow_duration_title">Thời lượng xung</string>
     <string name="duo_enable_title">Bật Duo</string>
@@ -1945,6 +1944,7 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_always_gestures_desc">Giữ cho vùng thao tác cử chỉ vẫn khả dụng ngay cả khi island đang ẩn đi </string>
     <string name="island_keep_on_landscape_title">Giữ ở chế độ ngang</string>
     <string name="island_balance_compact_title">Cân bằng trực quan island thu gọn</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_secondary_bubble_title">Bong bóng phụ</string>
     <string name="keep_in_full_screen_title">Giữ ở chế độ toàn màn hình</string>
     <string name="island_max_items_title">Số lượng tối đa để xem</string>
@@ -2044,7 +2044,6 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="duo_tap_for_brief_title">Chạm để xem tóm tắt</string>
     <string name="island_notif_hub_title">Trung tâm thông báo</string>
     <string name="island_notif_hub_desc">Thay thế các biểu tượng thông báo trên thanh trạng thái bằng hình ảnh từ island</string>
-    <string name="island_notif_tap_to_open_desc">Chạm vào thông báo được mở rộng để mở ứng dụng</string>
     <string name="island_notif_follow_dnd_title">Theo trạng thái của chế độ Không làm phiền</string>
     <string name="island_notif_follow_dnd_desc">Ẩn các thông báo mà chế độ Không làm phiền đã tắt</string>
     <string name="island_notif_skip_silent_title">Bỏ qua thông báo im lặng</string>
@@ -2065,4 +2064,7 @@ Các tiện ích trong chồng (stack) sẽ tự động chuyển đổi theo b�
     <string name="island_hide_icon_notifications">Số biểu tượng thông báo</string>
     <string name="island_notif_show_title">Hiện thông báo</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

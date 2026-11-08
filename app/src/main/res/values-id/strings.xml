@@ -173,5 +173,11 @@ Anda dapat menyesuaikan gaya animasi, warna, dan perilakunya. Fitur ini berfungs
     <string name="diy_header_caption">Automate essentials</string>
     <string name="freeze_header_caption">%1$d/%2$d apps</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

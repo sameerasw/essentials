@@ -82,6 +82,7 @@ object DIYRepository {
     private var appContext: Context? = null
 
     fun init(context: Context) {
+        DIYRuntimeStore.init(context)
         appContext = context.applicationContext
         if (prefs != null) return
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

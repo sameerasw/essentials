@@ -863,6 +863,11 @@ object FeatureRegistry {
                             "island_show_alarm",
                         ),
                         SearchSetting(
+                            R.string.island_alarm_show_remaining_title,
+                            R.string.island_show_alarm_title,
+                            "island_show_alarm",
+                        ),
+                        SearchSetting(
                             R.string.island_show_sound_mode_title,
                             R.string.island_sound_mode_vibrate,
                             "island_show_sound_mode",
@@ -893,6 +898,11 @@ object FeatureRegistry {
                             "island_notif_hub",
                         ),
                         SearchSetting(
+                            R.string.island_notif_themed_bubble_title,
+                            R.string.island_notif_hub_title,
+                            "island_notif_hub",
+                        ),
+                        SearchSetting(
                             R.string.island_show_calls_title,
                             R.string.island_call_incoming,
                             "island_show_calls",
@@ -911,6 +921,11 @@ object FeatureRegistry {
                             R.string.island_media_show_like_title,
                             R.string.duo_show_media_title,
                             "island_media_show_like",
+                        ),
+                        SearchSetting(
+                            R.string.island_show_on_update_title,
+                            R.string.island_providers_title,
+                            "island_provider_show_on_update",
                         ),
                     ),
                 parentFeatureId = "Display",
@@ -974,6 +989,11 @@ object FeatureRegistry {
                             R.string.island_expanded_scale_title,
                             R.string.island_expanded_scale_desc,
                             "island_expanded_scale",
+                        ),
+                        SearchSetting(
+                            R.string.island_statusbar_aware_width_title,
+                            R.string.island_section_visuals,
+                            "island_statusbar_aware_width",
                         ),
                     ),
             ) {
@@ -1039,6 +1059,11 @@ object FeatureRegistry {
                             R.string.island_section_behavior,
                             "island_balance_compact",
                         ),
+                        SearchSetting(
+                            R.string.island_tap_to_open_expanded_title,
+                            R.string.island_section_behavior,
+                            "island_tap_to_open_expanded",
+                        ),
                     ),
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = true
@@ -1094,11 +1119,6 @@ object FeatureRegistry {
                             R.string.island_notif_queue_inline_title,
                             R.string.island_notif_queue_inline_desc,
                             "island_notif_queue_inline",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_tap_to_open_title,
-                            R.string.island_notif_tap_to_open_desc,
-                            "island_notif_tap_to_open",
                         ),
                         SearchSetting(
                             R.string.island_catch_up_title,

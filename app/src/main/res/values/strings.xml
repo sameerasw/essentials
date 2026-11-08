@@ -652,6 +652,7 @@
     <string name="bt_icon_custom">Custom</string>
     <string name="bt_device_icons_title">Order and icons</string>
     <string name="island_alarm_hide_time_title">Hide time</string>
+    <string name="island_alarm_show_remaining_title">Show time remaining</string>
     <string name="battery_separate_channels_title">Separate battery channels</string>
     <string name="bt_order_separator">Entries below are hidden</string>
     <string name="battery_separate_channels_desc">Separate LR channels</string>
@@ -1471,6 +1472,45 @@
     <string name="diy_state_screen_on">Screen On</string>
     <string name="diy_state_battery_level">Battery level</string>
     <string name="diy_battery_level_range">%1$d%% – %2$d%%</string>
+    <string name="diy_metric_battery_level">Battery level</string>
+    <string name="diy_metric_percent">%1$d%%</string>
+    <string name="diy_metric_now">Now: %1$s</string>
+    <string name="diy_metric_operator">Condition</string>
+    <string name="diy_metric_op_gt">Above</string>
+    <string name="diy_metric_op_gte">At least</string>
+    <string name="diy_metric_op_lt">Below</string>
+    <string name="diy_metric_op_lte">At most</string>
+    <string name="diy_metric_op_eq">Equals</string>
+    <string name="diy_metric_op_neq">Not equal</string>
+    <string name="diy_metric_op_between">Between</string>
+    <string name="diy_metric_op_outside">Outside</string>
+    <string name="diy_metric_op_rises_above">Rises above</string>
+    <string name="diy_metric_op_falls_below">Falls below</string>
+    <string name="diy_metric_op_reaches">Reaches</string>
+    <string name="diy_metric_op_enters_range">Enters range</string>
+    <string name="diy_metric_op_leaves_range">Leaves range</string>
+    <string name="diy_metric_op_changes_by">Changes by</string>
+    <string name="diy_metric_op_increases_by">Increases by</string>
+    <string name="diy_metric_op_decreases_by">Decreases by</string>
+    <string name="diy_metric_summary_gt">%1$s above %2$s</string>
+    <string name="diy_metric_summary_gte">%1$s at least %2$s</string>
+    <string name="diy_metric_summary_lt">%1$s below %2$s</string>
+    <string name="diy_metric_summary_lte">%1$s at most %2$s</string>
+    <string name="diy_metric_summary_eq">%1$s equals %2$s</string>
+    <string name="diy_metric_summary_neq">%1$s not equal to %2$s</string>
+    <string name="diy_metric_summary_between">%1$s between %2$s and %3$s</string>
+    <string name="diy_metric_summary_outside">%1$s outside %2$s and %3$s</string>
+    <string name="diy_metric_summary_rises_above">%1$s rises above %2$s</string>
+    <string name="diy_metric_summary_falls_below">%1$s falls below %2$s</string>
+    <string name="diy_metric_summary_changes_by">%1$s changes by %2$s</string>
+    <string name="diy_metric_summary_increases_by">%1$s increases by %2$s</string>
+    <string name="diy_metric_summary_decreases_by">%1$s decreases by %2$s</string>
+    <string name="diy_metric_advanced">Advanced</string>
+    <string name="diy_metric_hold">Stay true for</string>
+    <string name="diy_metric_hold_off">Off</string>
+    <string name="diy_metric_seconds">%1$d s</string>
+    <string name="diy_metric_cooldown">Wait before firing again</string>
+    <string name="diy_metric_hysteresis">Margin before resetting</string>
     <string name="diy_state_power_saving">Power Saving</string>
 
     <string name="diy_action_haptic">Vibrate</string>
@@ -3209,6 +3249,7 @@
     <string name="island_hide_in_fullscreen_title">Hide in full screen</string>
     <string name="island_secondary_bubble_title">Secondary bubble</string>
     <string name="island_balance_compact_title">Visually balance compact island</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_max_items_title">Max items to show</string>
     <string name="island_always_gestures_title">Always available gestures</string>
     <string name="island_always_gestures_desc">Keep the gesture area available even while island is hidden</string>
@@ -3262,6 +3303,7 @@
     <string name="island_hide_status_bar_info_static">This is not a dynamic setting, so the status bar will not become visible automatically. Applying it needs to be forced.</string>
     <string name="stb_hide_entire_status_bar_title">Hide the entire status bar</string>
     <string name="island_hide_live_updates_title">Remove live updates while island is visible</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Dismiss on outside activity</string>
     <string name="island_like_while_playing_title">Like music while playing</string>
     <string name="island_gesture_visuals_hint">Turn on Time &amp; battery to see volume, brightness and sound mode changes on the island.</string>
@@ -3285,11 +3327,14 @@
     <string name="island_border_outline_hide_expanded_desc">Only outline the compact and peek island</string>
     <string name="island_pulse_shadow_title">Show pulse shadow on notification</string>
     <string name="island_pulse_shadow_desc">Briefly glows behind the island in the app color</string>
-    <string name="island_pulse_shadow_size_title">Glow size</string>
-    <string name="island_pulse_shadow_y_shift_title">Vertical shift</string>
-    <string name="island_pulse_shadow_spread_title">Glow spread</string>
+    <string name="island_pulse_shadow_blur_title">Blur</string>
+    <string name="island_pulse_shadow_offset_y_title">Vertical offset</string>
+    <string name="island_pulse_shadow_spread_title">Spread</string>
+    <string name="island_pulse_shadow_opacity_title">Opacity</string>
     <string name="island_pulse_shadow_duration_title">Pulse duration</string>
     <string name="island_show_glow_desc">App based color glow</string>
+    <string name="island_notif_themed_bubble_title">App icon color bubbles</string>
+    <string name="island_notif_themed_bubble_needs_themed_icons">Turn on Use themed app icons in Visuals</string>
     <string name="island_expanded_width_title">Expanded width</string>
     <string name="island_cutout_gap_title">Camera gap</string>
     <string name="island_expanded_width_desc">Width when long pressed to expand</string>
@@ -3424,6 +3469,7 @@
     <string name="duo_tap_for_brief_title">Tap for Brief</string>
     <string name="island_hide_when_locked_title">Hide when locked</string>
     <string name="island_launcher_only_title">Only show on launcher</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_launcher_only_desc">Hide while an app is open</string>
     <string name="island_alarm_window_title">Show alarms within</string>
     <string name="island_alarm_window_hours">%1$d hours</string>
@@ -3449,7 +3495,6 @@
     <string name="island_line_peek_title">Line peek</string>
     <string name="island_line_peek_desc">Briefly show updates across the island, then return to compact</string>
     <string name="island_action_hide">Hide</string>
-    <string name="island_notif_tap_to_open_title">Tap to open notifications</string>
     <string name="island_notif_queue_title">Notification queue</string>
     <string name="island_notification_options_title">Notification options</string>
     <string name="feat_face_unlock_brightness_title">Face illumination</string>
@@ -3556,7 +3601,6 @@
     <string name="island_notif_queue_inline_title">Queue inside the island</string>
     <string name="island_notif_queue_inline_desc">Show the queue inside the island</string>
     <string name="island_notif_queue_style_search_desc">Stack or overlapping queue icons</string>
-    <string name="island_notif_tap_to_open_desc">Tap an expanded notification to open its app</string>
     <string name="island_media_peek_song_change_title">Peek song change</string>
     <string name="island_media_keep_when_paused_title">Keep in catchup when paused</string>
     <string name="island_media_show_previous_title">Show previous track button</string>
@@ -3589,6 +3633,7 @@
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
     <string name="island_media_show_like_title">Show like track button</string>
     <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <!-- Widget stack -->
     <string name="widget_stack_label">Widget stack</string>
     <string name="widget_stack_description">Stack several widgets in one place and switch between them</string>
@@ -3686,4 +3731,6 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
+import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
@@ -45,7 +46,9 @@ class SignalPlugin : BaseIslandPlugin() {
     private val connectivity by lazy { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
     private val telephony by lazy { context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager }
     private var telephonyCallback: Any? = null
+    private var displayInfoCallback: Any? = null
     private var level = 0
+    private var overrideType = 0
     private var airplane = false
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -92,46 +95,82 @@ class SignalPlugin : BaseIslandPlugin() {
     private fun registerTelephony() {
         val manager = telephony ?: return
         val c = ctx ?: return
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val callback = object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                val signalCb = object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
                     override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
                         level = signalStrength.level.coerceIn(0, 4)
                         render()
                     }
                 }
-                manager.registerTelephonyCallback(context.mainExecutor, callback)
-                telephonyCallback = callback
-            } else {
-                @Suppress("DEPRECATION")
-                val listener = object : PhoneStateListener() {
-                    @Deprecated("Deprecated in Java")
-                    override fun onSignalStrengthsChanged(signalStrength: SignalStrength?) {
-                        level = signalStrength?.level?.coerceIn(0, 4) ?: 0
+                manager.registerTelephonyCallback(context.mainExecutor, signalCb)
+                telephonyCallback = signalCb
+            } catch (_: Exception) {
+            }
+            try {
+                val displayCb = object : TelephonyCallback(), TelephonyCallback.DisplayInfoListener {
+                    override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+                        overrideType = telephonyDisplayInfo.overrideNetworkType
+                        render()
+                    }
+                }
+                manager.registerTelephonyCallback(context.mainExecutor, displayCb)
+                displayInfoCallback = displayCb
+            } catch (_: Exception) {
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val listener = object : PhoneStateListener() {
+                @Deprecated("Deprecated in Java")
+                override fun onSignalStrengthsChanged(signalStrength: SignalStrength?) {
+                    level = signalStrength?.level?.coerceIn(0, 4) ?: 0
+                    c.mainHandler.post { render() }
+                }
+
+                @Deprecated("Deprecated in Java")
+                override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        overrideType = telephonyDisplayInfo.overrideNetworkType
                         c.mainHandler.post { render() }
                     }
                 }
-                @Suppress("DEPRECATION")
-                manager.listen(listener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
-                telephonyCallback = listener
             }
-        } catch (_: Exception) {
+            try {
+                @Suppress("DEPRECATION")
+                val events = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    PhoneStateListener.LISTEN_SIGNAL_STRENGTHS or PhoneStateListener.LISTEN_DISPLAY_INFO_CHANGED
+                } else {
+                    PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
+                }
+                @Suppress("DEPRECATION")
+                manager.listen(listener, events)
+                telephonyCallback = listener
+            } catch (_: Exception) {
+                try {
+                    @Suppress("DEPRECATION")
+                    manager.listen(listener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
+                    telephonyCallback = listener
+                } catch (_: Exception) {
+                }
+            }
         }
     }
 
     private fun unregisterTelephony() {
         val manager = telephony
-        val callback = telephonyCallback ?: return
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                (callback as? TelephonyCallback)?.let { manager?.unregisterTelephonyCallback(it) }
+                (telephonyCallback as? TelephonyCallback)?.let { manager?.unregisterTelephonyCallback(it) }
+                (displayInfoCallback as? TelephonyCallback)?.let { manager?.unregisterTelephonyCallback(it) }
             } else {
                 @Suppress("DEPRECATION")
-                (callback as? PhoneStateListener)?.let { manager?.listen(it, PhoneStateListener.LISTEN_NONE) }
+                (telephonyCallback as? PhoneStateListener)?.let { manager?.listen(it, PhoneStateListener.LISTEN_NONE) }
             }
         } catch (_: Exception) {
         }
         telephonyCallback = null
+        displayInfoCallback = null
+        overrideType = 0
     }
 
     private fun readAirplane(): Boolean =
@@ -151,28 +190,41 @@ class SignalPlugin : BaseIslandPlugin() {
         TelephonyManager.NETWORK_TYPE_UNKNOWN
     }
 
-    private fun modeLabel(type: Int): String? = when (type) {
-        TelephonyManager.NETWORK_TYPE_NR -> "5G"
-        TelephonyManager.NETWORK_TYPE_LTE -> "4G"
-        TelephonyManager.NETWORK_TYPE_HSPAP,
-        TelephonyManager.NETWORK_TYPE_HSDPA,
-        TelephonyManager.NETWORK_TYPE_HSUPA,
-        TelephonyManager.NETWORK_TYPE_HSPA,
-        TelephonyManager.NETWORK_TYPE_UMTS,
-        TelephonyManager.NETWORK_TYPE_TD_SCDMA,
-        TelephonyManager.NETWORK_TYPE_EVDO_0,
-        TelephonyManager.NETWORK_TYPE_EVDO_A,
-        TelephonyManager.NETWORK_TYPE_EVDO_B,
-        TelephonyManager.NETWORK_TYPE_EHRPD,
-        -> "3G"
-        TelephonyManager.NETWORK_TYPE_EDGE -> "E"
-        TelephonyManager.NETWORK_TYPE_GPRS,
-        TelephonyManager.NETWORK_TYPE_GSM,
-        TelephonyManager.NETWORK_TYPE_CDMA,
-        TelephonyManager.NETWORK_TYPE_1xRTT,
-        TelephonyManager.NETWORK_TYPE_IDEN,
-        -> "2G"
-        else -> null
+    private fun is5gOverride(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+        @Suppress("DEPRECATION")
+        val isNsa = overrideType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA ||
+            overrideType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA_MMWAVE
+        val isNrAdvanced = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            overrideType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED
+        return isNsa || isNrAdvanced
+    }
+
+    private fun modeLabel(type: Int): String? {
+        if (is5gOverride()) return "5G"
+        return when (type) {
+            TelephonyManager.NETWORK_TYPE_NR -> "5G"
+            TelephonyManager.NETWORK_TYPE_LTE -> "4G"
+            TelephonyManager.NETWORK_TYPE_HSPAP,
+            TelephonyManager.NETWORK_TYPE_HSDPA,
+            TelephonyManager.NETWORK_TYPE_HSUPA,
+            TelephonyManager.NETWORK_TYPE_HSPA,
+            TelephonyManager.NETWORK_TYPE_UMTS,
+            TelephonyManager.NETWORK_TYPE_TD_SCDMA,
+            TelephonyManager.NETWORK_TYPE_EVDO_0,
+            TelephonyManager.NETWORK_TYPE_EVDO_A,
+            TelephonyManager.NETWORK_TYPE_EVDO_B,
+            TelephonyManager.NETWORK_TYPE_EHRPD,
+            -> "3G"
+            TelephonyManager.NETWORK_TYPE_EDGE -> "E"
+            TelephonyManager.NETWORK_TYPE_GPRS,
+            TelephonyManager.NETWORK_TYPE_GSM,
+            TelephonyManager.NETWORK_TYPE_CDMA,
+            TelephonyManager.NETWORK_TYPE_1xRTT,
+            TelephonyManager.NETWORK_TYPE_IDEN,
+            -> "2G"
+            else -> null
+        }
     }
 
     private fun category(label: String?): NetworkType = when (label) {
