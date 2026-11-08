@@ -61,6 +61,7 @@ import com.sameerasw.essentials.utils.BatteryRingDrawer
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.sameerasw.essentials.utils.BluetoothDeviceIcons
 import com.sameerasw.essentials.utils.BluetoothDeviceOrder
+import com.sameerasw.essentials.utils.battery.BatteryInfoUtil
 import com.sameerasw.essentials.utils.battery.ChargeLimitUtil
 
 class BatteriesWidget : GlanceAppWidget() {
@@ -112,7 +113,7 @@ class BatteriesWidget : GlanceAppWidget() {
         val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
         val phoneLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
         val phoneCharging =
-            batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING
+            (BatteryInfoUtil.getBatteryIntent(context)?.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) ?: 0) > 0
         items += Item(BluetoothDeviceOrder.PHONE, phoneLevel, R.drawable.rounded_mobile_24, statusIcon(phoneLevel, phoneCharging, ChargeLimitUtil.isShielded(context, phoneLevel, phoneCharging)))
 
         val macEnabled = prefs[booleanPreferencesKey(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)] ?: false
