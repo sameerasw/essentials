@@ -49,7 +49,7 @@ import androidx.compose.runtime.getValue
 import com.sameerasw.essentials.island.ui.components.LocalIslandBitmapFlat
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.PaddingValues
@@ -413,7 +413,7 @@ fun IslandStackPill(
         }
     }
     val visibleSlots = icons.size.coerceAtMost(PILL_MAX_ICONS)
-    val carouselWidth by animateDpAsState((itemWidth + spacing) * visibleSlots + 12.dp, IslandMotion.expressiveDefaultSpatial(), label = "pillWidth")
+    val carouselWidth by animateDpAsState(itemWidth * visibleSlots + spacing * (visibleSlots - 1).coerceAtLeast(0) + 12.dp, IslandMotion.expressiveDefaultSpatial(), label = "pillWidth")
     Box(
         modifier = modifier
             .liquid(liquid)
@@ -423,11 +423,9 @@ fun IslandStackPill(
             .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
     ) {
-        HorizontalMultiBrowseCarousel(
+        HorizontalUncontainedCarousel(
             state = carouselState,
-            preferredItemWidth = itemWidth,
-            minSmallItemWidth = 10.dp,
-            maxSmallItemWidth = itemWidth,
+            itemWidth = itemWidth,
             itemSpacing = spacing,
             contentPadding = PaddingValues(horizontal = 6.dp),
             modifier = Modifier

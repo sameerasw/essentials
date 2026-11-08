@@ -627,13 +627,14 @@ private fun IslandRootContent(
     val focusedItem = state.focused
     
     val foreignStack = if (focusedItem != null && focusedItem.stack.isEmpty()) {
-        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() }?.stack.orEmpty()
+        state.items.values.firstOrNull { it.key != focusedItem.key && it.stack.isNotEmpty() && !it.expandedQueueOnly }?.stack.orEmpty()
     } else {
         emptyList()
     }
     val fullStack = focusedItem?.stack?.takeIf { it.isNotEmpty() } ?: foreignStack.map { StackIcon(it.key, current = false, onSelect = it.onSelect, content = it.content) }
     val queuedIcons = when {
         stage == IslandStage.Expanded && focusedItem?.hideExpandedQueue == true -> emptyList()
+        stage != IslandStage.Expanded && focusedItem?.expandedQueueOnly == true -> emptyList()
         foreignStack.isNotEmpty() -> fullStack
         else -> focusedItem?.queued ?: fullStack.filterNot { it.current }
     }

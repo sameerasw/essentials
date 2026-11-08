@@ -1,5 +1,14 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.island.model.StackIcon
+import com.sameerasw.essentials.island.model.IslandStage
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Box
+import android.media.session.MediaSession
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaMetadata
@@ -63,6 +72,9 @@ class MediaPlugin : BaseIslandPlugin() {
     private var liked = false
 
     private var lastController: MediaController? = null
+    private var selectedToken: MediaSession.Token? = null
+    private var sessions: List<MediaController> = emptyList()
+    private val appIcons = HashMap<String, Bitmap?>()
     private var lastTrack: Track? = null
     private val pausedGrace = Runnable {
         active = null
@@ -98,15 +110,19 @@ class MediaPlugin : BaseIslandPlugin() {
         }
         val excluded = settings.loadIslandMediaExcludedApps().filter { it.isEnabled }.map { it.packageName }.toSet()
         val controllers = source?.all.orEmpty()
-        val playingController = controllers.firstOrNull {
-            it.playbackState?.state == PlaybackState.STATE_PLAYING && it.packageName !in excluded
-        }
+        val ordered = controllers
+            .filter { it.packageName !in excluded && hasMedia(it) }
+            .sortedByDescending { it.playbackState?.state == PlaybackState.STATE_PLAYING }
+        sessions = ordered
+        val selected = selectedToken?.let { token -> ordered.firstOrNull { it.sessionToken == token } }
+        if (selected == null) selectedToken = null
+        val playingController = selected ?: ordered.firstOrNull { it.playbackState?.state == PlaybackState.STATE_PLAYING }
 
         if (playingController != null) {
             c.mainHandler.removeCallbacks(pausedGrace)
             active = playingController
             lastController = playingController
-            playing = true
+            playing = playingController.playbackState?.state == PlaybackState.STATE_PLAYING
             liked = MediaSessionSource.isLiked(playingController)
             val metadata = playingController.metadata
             val title = metadata?.getString(MediaMetadata.METADATA_KEY_TITLE).orEmpty()
@@ -164,6 +180,39 @@ class MediaPlugin : BaseIslandPlugin() {
         }
     }
 
+    override fun onFocusChanged(stage: IslandStage, focusedKey: String?) {
+        if (stage == IslandStage.Expanded && focusedKey == ITEM_KEY) return
+        if (selectedToken == null) return
+        selectedToken = null
+        evaluate()
+    }
+
+    private fun hasMedia(controller: MediaController): Boolean {
+        val metadata = controller.metadata ?: return false
+        return !metadata.getString(MediaMetadata.METADATA_KEY_TITLE).isNullOrBlank() ||
+            !metadata.getString(MediaMetadata.METADATA_KEY_ARTIST).isNullOrBlank()
+    }
+
+    private fun sessionStack(current: MediaController): List<StackIcon> {
+        if (sessions.size < 2) return emptyList()
+        return sessions.map { controller ->
+            val pkg = controller.packageName
+            val icon = appIcons.getOrPut(pkg) { MediaSessionSource.appIcon(context, pkg) }
+            val sessionPlaying = controller.playbackState?.state == PlaybackState.STATE_PLAYING
+            val token = controller.sessionToken
+            StackIcon(
+                key = "media:$pkg:${System.identityHashCode(token)}",
+                current = token == current.sessionToken,
+                onSelect = {
+                    if (selectedToken != token) {
+                        selectedToken = token
+                        evaluate()
+                    }
+                },
+            ) { size -> MediaSessionIcon(icon, sessionPlaying, size) }
+        }
+    }
+
     private fun artAccent(t: Track): Color? =
         if (settings.isIslandMediaUseArtColorEnabled()) t.accent?.let { Color(it) } else null
 
@@ -187,6 +236,7 @@ class MediaPlugin : BaseIslandPlugin() {
         val isLiked = liked
         val canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS)
         val canSkipForward = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_NEXT)
+        val stack = sessionStack(controller)
         val actions = MediaActions(
             playPause = { togglePlay() },
             next = { active?.transportControls?.skipToNext() },
@@ -225,7 +275,9 @@ class MediaPlugin : BaseIslandPlugin() {
                 accent = artAccent,
                 onOpen = { openPlayer() },
                 sourcePackage = t.packageName,
-                hideExpandedQueue = true,
+                hideExpandedQueue = stack.isEmpty(),
+                expandedQueueOnly = true,
+                stack = stack,
             ),
         )
     }
@@ -315,5 +367,13 @@ class MediaPlugin : BaseIslandPlugin() {
         const val ID = "media"
         const val ITEM_KEY = "media"
         private const val PAUSED_GRACE_MS = 3000L
+    }
+}
+
+@Composable
+private fun MediaSessionIcon(icon: Bitmap?, playing: Boolean, size: Dp) {
+    Box(Modifier.size(size), contentAlignment = Alignment.Center) {
+        IslandBitmap(icon, size * 0.72f)
+        if (playing) EqualizerBars(true, Color.White, size = size * 0.4f)
     }
 }

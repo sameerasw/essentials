@@ -160,7 +160,8 @@ class IslandItem(
     val companionOnly: Boolean = false,
     val bypassLauncherOnly: Boolean = false,
     val hideExpandedQueue: Boolean = false,
-    
+    val expandedQueueOnly: Boolean = false,
+
     val stack: List<StackIcon> = emptyList(),
     val queued: List<StackIcon>? = null,
     val priorityGroup: String? = null,
@@ -193,6 +194,7 @@ class IslandItem(
         companionOnly = companionOnly,
         bypassLauncherOnly = bypassLauncherOnly,
         hideExpandedQueue = hideExpandedQueue,
+        expandedQueueOnly = expandedQueueOnly,
         stack = stack,
         queued = queued,
         priorityGroup = priorityGroup,
