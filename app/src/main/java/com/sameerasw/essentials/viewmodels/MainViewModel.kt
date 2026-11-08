@@ -780,7 +780,7 @@ class MainViewModel : ViewModel() {
             ) {
                 if (key == null) return
 
-                when (key) {
+                when (key.substringBefore('@')) {
                     SettingsRepository.KEY_EDGE_LIGHTING_ENABLED ->
                         isNotificationLightingEnabled.value =
                             settingsRepository.getBoolean(key)
@@ -5533,6 +5533,22 @@ class MainViewModel : ViewModel() {
         islandCameraOffsetY.floatValue = settingsRepository.getIslandCameraOffsetY()
         islandCameraSize.floatValue = settingsRepository.getIslandCameraSize()
         islandCameraPosition.value = settingsRepository.getIslandCameraPosition()
+        isIslandAutoDetect.value = settingsRepository.isIslandAutoDetectEnabled()
+        islandMaxWidth.floatValue = settingsRepository.getIslandMaxWidth()
+        islandCutoutGap.floatValue = settingsRepository.getIslandCutoutGap()
+        islandExpandedWidth.floatValue = settingsRepository.getIslandExpandedWidth()
+        islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
+        islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
+        islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
+        islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
+        islandFontScale.floatValue = settingsRepository.getIslandFontScale()
+        islandLandscapeTopSpacing.floatValue = settingsRepository.getIslandLandscapeTopSpacing()
+        islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
+        islandMaxItems.value = settingsRepository.getIslandMaxItems()
+        isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
+        isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
+        isIslandKeepOnLandscape.value = settingsRepository.isIslandKeepOnLandscapeEnabled()
     }
 
     fun setIslandOrientationProfiles(enabled: Boolean) {

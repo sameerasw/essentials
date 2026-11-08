@@ -103,6 +103,7 @@ import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.ui.components.IslandIcon
+import kotlin.math.roundToInt
 
 class IslandCoordinator(
     private val service: AccessibilityService,
@@ -222,6 +223,13 @@ class IslandCoordinator(
             plugins.forEach { it.onUserInteraction(focused) }
         }
 
+        override fun onHold(held: Boolean) {
+            mainHandler.removeCallbacks(holdTick)
+            controller.setUserHold(held)
+            onInteraction()
+            if (held) mainHandler.postDelayed(holdTick, HOLD_TICK_MS)
+        }
+
         override fun onTextInputChanged(active: Boolean) {
             textInputActive = active
             windowHost.setTextInput(active)
@@ -298,14 +306,21 @@ class IslandCoordinator(
         }
     }
 
-    private var expandedShownAt = 0L
+    private var autoExpandedAt = 0L
 
-    // Anything the user touches outside the island collapses the expanded card, when enabled.
+    private val holdTick: Runnable = object : Runnable {
+        override fun run() {
+            val focused = controller.state.value.focusedKey
+            plugins.forEach { it.onUserInteraction(focused) }
+            mainHandler.postDelayed(this, HOLD_TICK_MS)
+        }
+    }
+
     private fun onOutsideTouch() {
         if (!running || !settings.isIslandDismissOnOutsideEnabled()) return
         if (textInputActive) return
         if (controller.state.value.stage != IslandStage.Expanded) return
-        if (SystemClock.uptimeMillis() - expandedShownAt < OUTSIDE_DISMISS_GRACE_MS) return
+        if (SystemClock.uptimeMillis() - autoExpandedAt < OUTSIDE_DISMISS_GRACE_MS) return
         mainHandler.post { controller.collapse() }
     }
 
@@ -378,7 +393,11 @@ class IslandCoordinator(
             if (pendingFullscreen == fullscreen) return@post
             pendingFullscreen = fullscreen
             mainHandler.removeCallbacks(applyFullscreen)
-            if (isFullscreenApp != fullscreen) mainHandler.postDelayed(applyFullscreen, SETTLE_MS)
+            when {
+                isFullscreenApp == fullscreen -> Unit
+                fullscreen -> applyFullscreen.run()
+                else -> mainHandler.postDelayed(applyFullscreen, SETTLE_MS)
+            }
         }
     }
 
@@ -394,7 +413,11 @@ class IslandCoordinator(
             if (pendingShadeExpanded == expanded) return@post
             pendingShadeExpanded = expanded
             mainHandler.removeCallbacks(applyShadeExpanded)
-            if (isShadeExpanded != expanded) mainHandler.postDelayed(applyShadeExpanded, SETTLE_MS)
+            when {
+                isShadeExpanded == expanded -> Unit
+                expanded -> applyShadeExpanded.run()
+                else -> mainHandler.postDelayed(applyShadeExpanded, SETTLE_MS)
+            }
         }
     }
 
@@ -506,12 +529,7 @@ class IslandCoordinator(
                 .distinctUntilChanged()
                 .collect { (stage, key) -> plugins.forEach { it.onFocusChanged(stage, key) } }
         }
-        newScope.launch {
-            controller.state
-                .map { Triple(it.stage, it.focusedKey, it.focused?.contentId) }
-                .distinctUntilChanged()
-                .collect { (stage) -> if (stage == IslandStage.Expanded) expandedShownAt = SystemClock.uptimeMillis() }
-        }
+        controller.onAutoExpand = { autoExpandedAt = SystemClock.uptimeMillis() }
         newScope.launch { IslandPreviewRequests.queue.collect { showQueuePreview() } }
         if (settings.isIslandSuppressSystemHeadsUpEnabled()) settings.applyHeadsUpSuppression(true)
         applyPreviewStage()
@@ -673,6 +691,12 @@ class IslandCoordinator(
         scope?.cancel()
         scope = null
         mainHandler.removeCallbacks(statusBarPoll)
+        mainHandler.removeCallbacks(widthRelayout)
+        mainHandler.removeCallbacks(holdTick)
+        controller.setUserHold(false)
+        CompactCellWidths.onChange = null
+        controller.compactCellWidth = { 1f }
+        controller.compactBubbleWidth = { it.toFloat() }
         CompactSideLimits.set(Int.MAX_VALUE, Int.MAX_VALUE)
         windowHost.detach()
         reportVisibility(false)
@@ -759,6 +783,8 @@ class IslandCoordinator(
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
+        controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
+        controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
@@ -784,6 +810,14 @@ class IslandCoordinator(
     private fun applyStatusBarAwareWidth() {
         mainHandler.removeCallbacks(statusBarPoll)
         controller.compactFits = ::fitsCompactWidth
+        controller.compactCellWidth = ::compactCellUnits
+        controller.compactBubbleWidth = { cells ->
+            maxOf(cells.toFloat(), ((CompactCellWidths.bubbleExtent / compactCellUnitPx().coerceAtLeast(1f)) * 4f).roundToInt() / 4f)
+        }
+        CompactCellWidths.onChange = {
+            mainHandler.removeCallbacks(widthRelayout)
+            mainHandler.post(widthRelayout)
+        }
         if (!settings.isIslandStatusBarAwareWidthEnabled()) {
             statusBarEdges = null
             publishSideLimits()
@@ -823,6 +857,17 @@ class IslandCoordinator(
         } else {
             CompactSideLimits.set(left, right)
         }
+    }
+
+    private val widthRelayout = Runnable { controller.relayout() }
+
+    private fun compactCellUnitPx(): Float = geometry?.let { it.diameter + it.gap } ?: 0f
+
+    private fun compactCellUnits(key: String): Float {
+        val px = CompactCellWidths.get(key) ?: return 1f
+        if (px == 0) return 0f
+        val unit = compactCellUnitPx().takeIf { it > 0f } ?: return 1f
+        return (((px + (geometry?.gap ?: 0f)) / unit) * 4f).roundToInt() / 4f
     }
 
     private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
@@ -925,6 +970,7 @@ class IslandCoordinator(
         const val OUTSIDE_DISMISS_GRACE_MS = 2000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
+        const val HOLD_TICK_MS = 1000L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
         const val QUEUE_PREVIEW_SOURCE = "preview.queue"
@@ -979,6 +1025,8 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
+            SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
+            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
             SettingsRepository.KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS,

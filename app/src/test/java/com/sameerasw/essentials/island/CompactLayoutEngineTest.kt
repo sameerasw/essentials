@@ -75,4 +75,24 @@ class CompactLayoutEngineTest {
 
     @Test fun balanceLeavesPinnedOnLeft() =
         assertEquals("time | flash.icon media.eq media.art", withBubble(listOf(time, flash, media), balance = true))
+
+    private fun weighted(entries: List<CompactEntry>, widths: Map<String, Float>, leftExtra: Int = 0, bubble: Float = leftExtra.toFloat()): String {
+        val a = CompactLayoutEngine.arrange(
+            entries, CameraAnchor.Center, maxCells = 8, leftExtra = leftExtra, balance = true,
+            cellWidth = { widths[it] ?: 1f }, leftExtraWidth = bubble,
+        )
+        return (a.before.reversed() + "|" + a.after).joinToString(" ")
+    }
+
+    @Test fun wideTimeSendsSingleCellItemsRight() =
+        assertEquals("time | battery notif.icon flash.icon", weighted(listOf(time, battery, catchUp, flash), mapOf("time" to 3f)))
+
+    @Test fun equalWidthsMatchCellCount() =
+        assertEquals("flash.icon time | battery notif.icon", weighted(listOf(time, battery, catchUp, flash), emptyMap()))
+
+    @Test fun wideBubbleSendsEverythingRight() =
+        assertEquals("| flash.icon media.eq media.art notif.icon", weighted(listOf(catchUp, flash, media), emptyMap(), leftExtra = 1, bubble = 3f))
+
+    @Test fun wideNotificationBalancesAgainstMedia() =
+        assertEquals("notif.icon | media.eq media.art flash.icon", weighted(listOf(catchUp, flash, media), mapOf("notif.icon" to 3f)))
 }

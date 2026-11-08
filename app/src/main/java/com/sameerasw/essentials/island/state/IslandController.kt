@@ -1,6 +1,11 @@
 package com.sameerasw.essentials.island.state
 
 import com.sameerasw.essentials.island.model.SideBubble
+import com.sameerasw.essentials.island.model.SideBubblePriority
+import com.sameerasw.essentials.island.model.QueueOverflow
+import com.sameerasw.essentials.island.ui.OVERLAP_MAX
+import com.sameerasw.essentials.island.ui.overlapSlots
+import kotlin.math.ceil
 import com.sameerasw.essentials.island.ui.inlineBubbleCell
 import com.sameerasw.essentials.island.model.CompactPlacement
 import com.sameerasw.essentials.island.model.IslandItem
@@ -38,10 +43,13 @@ class IslandController(
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
     var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean) -> Int?)? = null
+    var compactCellWidth: (String) -> Float = { 1f }
+    var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
     var chipsEnabled: Boolean = false
     var secondaryBubbleEnabled: Boolean = true
     var secondaryBubbleOverlap: Boolean = false
+    var secondaryBubbleMax: Int = 0
     private var feedbackActive = false
 
     fun setFeedbackActive(active: Boolean) {
@@ -53,6 +61,7 @@ class IslandController(
     var expandedTimeoutMs: Long = 0L
     var holdFocus: Boolean = false
     var onStageChanged: ((IslandStage) -> Unit)? = null
+    var onAutoExpand: (() -> Unit)? = null
 
     var collapseAnimator: ((commit: () -> Unit) -> Unit)? = null
     private var collapsing = false
@@ -146,7 +155,10 @@ class IslandController(
     fun handle(request: PluginRequest) {
         when (request) {
             is PluginRequest.Peek -> peek(request.itemKey, request.durationMs, sticky = request.sticky)
-            is PluginRequest.Expand -> expand(request.itemKey, request.sticky)
+            is PluginRequest.Expand -> {
+                expand(request.itemKey, request.sticky)
+                if (expandedKey == request.itemKey) onAutoExpand?.invoke()
+            }
             is PluginRequest.Collapse -> if (expandedKey == request.itemKey || peekKey == request.itemKey) collapse()
         }
     }
@@ -257,6 +269,19 @@ class IslandController(
         recompute()
     }
 
+    private var userHold = false
+
+    fun setUserHold(held: Boolean) {
+        if (userHold == held) return
+        userHold = held
+        if (held) {
+            expandedTimer?.cancel()
+            expandedTimer = null
+        } else {
+            restartExpandedTimer()
+        }
+    }
+
     fun onUserInteraction() {
         if (expandedKey != null) restartExpandedTimer()
         peekKey?.let { key ->
@@ -286,7 +311,7 @@ class IslandController(
         expandedTimer = null
         val timeout = expandedTimeoutMs
         val key = expandedKey ?: return
-        if (timeout <= 0L || holdFocus || stickyFocus) return
+        if (timeout <= 0L || holdFocus || stickyFocus || userHold) return
         expandedTimer = scheduler.schedule(timeout) { if (expandedKey == key) collapse() }
     }
 
@@ -343,7 +368,8 @@ class IslandController(
                         it.sideBubble?.whenOccupiedOnly != true
                 }
             }
-        val usesBubbleOnly = bubbleOwner?.sideBubble?.whenOccupiedOnly == true
+        val merged = if (secondaryBubbleOverlap) mergedBubble(items, bubbleOwner) else null
+        val usesBubbleOnly = merged == null && bubbleOwner?.sideBubble?.whenOccupiedOnly == true
         val arrangement = CompactLayoutEngine.arrange(
             items.values.filter { it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) }.map { item ->
                 CompactEntry(
@@ -359,10 +385,13 @@ class IslandController(
             },
             anchorProvider(),
             maxCells = maxCells,
-            leftExtra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0,
+            leftExtra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0,
             balance = balanceCompact,
+            cellWidth = compactCellWidth,
+            leftExtraWidth = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
+            previous = _state.value.arrangement,
             fits = compactFits?.let { fits ->
-                val extra = bubbleOwner?.sideBubble?.cells?.coerceAtLeast(1) ?: 0
+                val extra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0
                 val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
                 val wrapped: (List<String>, List<String>) -> Int? = { before, after ->
                     fits(before, after, extra, (before + after).any { it !in shown })
@@ -376,11 +405,41 @@ class IslandController(
             items.isEmpty() -> IslandStage.Hidden
             expandedKey != null -> IslandStage.Expanded
             peekKey != null -> IslandStage.Line
-            arrangement.visibleItems.isEmpty() && bubbleOwner == null -> IslandStage.Hidden
+            arrangement.visibleItems.isEmpty() && bubbleOwner == null && merged == null -> IslandStage.Hidden
             else -> IslandStage.Compact
         }
         val previous = _state.value.stage
-        _state.value = IslandUiState(stage, items, arrangement, focusedKey, bubbleOwner?.sideBubble, bubbleOwner?.key)
+        val bubble = merged ?: bubbleOwner?.sideBubble
+        val bubbleKey = if (merged != null) MERGED_BUBBLE_KEY else bubbleOwner?.key
+        _state.value = IslandUiState(stage, items, arrangement, focusedKey, bubble, bubbleKey)
         if (previous != stage) onStageChanged?.invoke(stage)
+    }
+
+    private fun mergedBubble(items: Map<String, IslandItem>, owner: IslandItem?): SideBubble? {
+        if (!secondaryBubbleEnabled) return null
+        val progress = items.values
+            .mapNotNull { it.sideBubble }
+            .filter { it.priority == SideBubblePriority.PROGRESS && !it.whenOccupiedOnly && it.icons.isNotEmpty() }
+        if (progress.isEmpty()) return null
+        val notifications = owner?.sideBubble?.takeIf { it.priority != SideBubblePriority.PROGRESS }
+        val icons = progress.flatMap { it.icons } + notifications?.icons.orEmpty()
+        val cap = overlapSlots(icons, secondaryBubbleMax.takeIf { it > 0 } ?: OVERLAP_MAX)
+        val shown = icons.size.coerceIn(1, cap)
+        val overflow = if (icons.size > cap && notifications?.overflow != QueueOverflow.None) 0.3f else 0f
+        val wide = icons.take(shown).sumOf { (it.widthFactor - 1f).coerceAtLeast(0f).toDouble() }.toFloat()
+        val cells = maxOf(ceil(1f + 0.55f * (shown - 1) + overflow + wide).toInt(), notifications?.cells ?: 1)
+        return SideBubble(
+            priority = SideBubblePriority.PROGRESS,
+            onOpen = notifications?.onOpen ?: progress.first().onOpen,
+            icons = icons,
+            onDismiss = notifications?.onDismiss,
+            maxIcons = secondaryBubbleMax,
+            overflow = notifications?.overflow ?: QueueOverflow.Number,
+            cells = cells,
+        )
+    }
+
+    companion object {
+        const val MERGED_BUBBLE_KEY = "bubbles.merged"
     }
 }

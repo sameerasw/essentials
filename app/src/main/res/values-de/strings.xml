@@ -1841,6 +1841,10 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Bei externer Aktivität ausblenden</string>
     <string name="island_notif_keep_progress_title">Fortschrittsbenachrichtigungen beibehalten</string>
+    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_count_title">Live updates count</string>
+    <string name="island_live_updates_expanded_title">Expanded live update</string>
+    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
     <string name="island_notif_queue_title">Benachrichtigungswarteschlange</string>
     <string name="island_catch_up_timeout_title">Nachholdauer</string>
     <string name="island_show_calls_title">Anrufe</string>

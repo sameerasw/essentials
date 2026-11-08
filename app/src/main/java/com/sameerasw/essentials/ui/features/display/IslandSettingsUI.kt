@@ -83,6 +83,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryB
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNavigationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandLiveUpdatesOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandCaffeinateOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandSignalOptionsBottomSheet
@@ -117,6 +118,7 @@ fun IslandSettingsUI(
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
+    var showLiveUpdatesOptionsSheet by remember { mutableStateOf(false) }
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeOptionsSheet by remember { mutableStateOf(false) }
     var showBatteryOptionsSheet by remember { mutableStateOf(false) }
@@ -258,6 +260,18 @@ fun IslandSettingsUI(
                         },
                         onSettingsClick = { showCallOptionsSheet = true },
                         modifier = Modifier.highlight(highlightSetting == "island_show_calls"),
+                    )
+                    "live_updates" -> IconToggleItem(
+                        dragHandle = handle,
+                        iconRes = R.drawable.rounded_downloading_24,
+                        title = stringResource(R.string.island_live_updates_title),
+                        isChecked = viewModel.isIslandNotifKeepProgress.value,
+                        onCheckedChange = { checked ->
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setIslandNotifKeepProgress(checked)
+                        },
+                        onSettingsClick = { showLiveUpdatesOptionsSheet = true },
+                        modifier = Modifier.highlight(highlightSetting == "island_notif_keep_progress"),
                     )
                     "notifications" -> IconToggleItem(
                         dragHandle = handle,
@@ -849,6 +863,10 @@ fun IslandSettingsUI(
             onDismissRequest = { showBriefOptionsSheet = false },
             highlightSetting = highlightSetting,
         )
+    }
+
+    if (showLiveUpdatesOptionsSheet) {
+        IslandLiveUpdatesOptionsBottomSheet(onDismissRequest = { showLiveUpdatesOptionsSheet = false })
     }
 
     if (showSoundModeOptionsSheet) {

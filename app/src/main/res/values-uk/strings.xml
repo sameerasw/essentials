@@ -1552,4 +1552,5 @@
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="settings_translate_mode_desc">Тривале натискання будь-якого тексту для перекладу та внеску в спільноту</string>
 </resources>

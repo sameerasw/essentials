@@ -632,6 +632,8 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_PEEK_ALERTS = "island_battery_peek_alerts"
         const val KEY_ISLAND_DEVICES_BATTERY_ONLY_LOW = "island_devices_battery_only_low"
         const val KEY_ISLAND_EXPANDED_SCALE = "island_expanded_scale"
+        const val KEY_ISLAND_NOTIF_MAX_HEIGHT = "island_notif_max_height"
+        const val KEY_ISLAND_CALENDAR_MAX_HEIGHT = "island_calendar_max_height"
         const val KEY_ISLAND_FONT_SCALE = "island_font_scale"
         const val KEY_ISLAND_ANIMATION_SPEED = "island_animation_speed"
         const val KEY_ISLAND_HIDE_IN_OWNER_APP = "island_hide_in_owner_app"
@@ -730,6 +732,8 @@ class SettingsRepository(
         const val ISLAND_NOTIF_PEEK_STYLE_MINIMAL = "minimal"
         const val ISLAND_NOTIF_PEEK_STYLE_EXPANDED = "expanded"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
+        const val KEY_ISLAND_LIVE_UPDATES_COUNT = "island_live_updates_count"
+        const val KEY_ISLAND_LIVE_UPDATES_EXPANDED = "island_live_updates_expanded"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_NOTIF_QUEUE_STYLE = "island_notif_queue_style"
         const val ISLAND_NOTIF_QUEUE_STYLE_STACK = "stack"
@@ -3877,12 +3881,8 @@ class SettingsRepository(
     }
 
     private fun setCameraPlacementFloat(baseKey: String, value: Float, useOrientation: Boolean) {
-        if (useOrientation) {
-            putFloat(orientationKey(baseKey), value)
-        } else {
-            putFloat("$baseKey@${getDisplayProfileId()}", value)
-            putFloat(baseKey, value)
-        }
+        if (useOrientation) putFloat(orientationKey(baseKey), value)
+        else putFloat("$baseKey@${getDisplayProfileId()}", value)
     }
 
     private fun getCameraPlacementString(baseKey: String, default: String, useOrientation: Boolean): String {
@@ -3896,11 +3896,25 @@ class SettingsRepository(
 
     private fun setCameraPlacementString(baseKey: String, value: String, useOrientation: Boolean) {
         if (useOrientation) putString(orientationKey(baseKey), value)
-        else {
-            putString("$baseKey@${getDisplayProfileId()}", value)
-            putString(baseKey, value)
-        }
+        else putString("$baseKey@${getDisplayProfileId()}", value)
     }
+
+    private fun displayKey(baseKey: String): String = "$baseKey@${getDisplayProfileId()}"
+
+    private fun getDisplayFloat(baseKey: String, default: Float): Float =
+        displayKey(baseKey).let { if (contains(it)) getFloat(it, default) else getFloat(baseKey, default) }
+
+    private fun putDisplayFloat(baseKey: String, value: Float) = putFloat(displayKey(baseKey), value)
+
+    private fun getDisplayInt(baseKey: String, default: Int): Int =
+        displayKey(baseKey).let { if (contains(it)) getInt(it, default) else getInt(baseKey, default) }
+
+    private fun putDisplayInt(baseKey: String, value: Int) = putInt(displayKey(baseKey), value)
+
+    private fun getDisplayBoolean(baseKey: String, default: Boolean): Boolean =
+        displayKey(baseKey).let { if (contains(it)) getBoolean(it, default) else getBoolean(baseKey, default) }
+
+    private fun putDisplayBoolean(baseKey: String, value: Boolean) = putBoolean(displayKey(baseKey), value)
 
     private fun getCameraHidden(baseKey: String, default: Boolean): Boolean =
         getBoolean("$baseKey@${getDisplayProfileId()}", getBoolean(baseKey, default))
@@ -4078,8 +4092,8 @@ class SettingsRepository(
         if (isIslandSuppressSystemHeadsUpEnabled()) applyHeadsUpSuppression(enabled)
     }
 
-    fun isIslandAutoDetectEnabled(): Boolean = getBoolean(KEY_ISLAND_USE_AUTO_DETECT, true)
-    fun setIslandAutoDetectEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_USE_AUTO_DETECT, enabled)
+    fun isIslandAutoDetectEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_USE_AUTO_DETECT, true)
+    fun setIslandAutoDetectEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_USE_AUTO_DETECT, enabled)
 
     fun getIslandCameraOffsetX(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, 50f, isIslandOrientationProfilesEnabled())
     fun setIslandCameraOffsetX(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_OFFSET_X, value, isIslandOrientationProfilesEnabled())
@@ -4090,11 +4104,11 @@ class SettingsRepository(
     fun getIslandCameraSize(): Float = getCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, 1.0f, isIslandOrientationProfilesEnabled())
     fun setIslandCameraSize(value: Float) = setCameraPlacementFloat(KEY_ISLAND_CAMERA_SIZE, value, isIslandOrientationProfilesEnabled())
 
-    fun getIslandMaxWidth(): Float = getFloat(KEY_ISLAND_MAX_WIDTH, 360f)
-    fun setIslandMaxWidth(value: Float) = putFloat(KEY_ISLAND_MAX_WIDTH, value)
+    fun getIslandMaxWidth(): Float = getDisplayFloat(KEY_ISLAND_MAX_WIDTH, 360f)
+    fun setIslandMaxWidth(value: Float) = putDisplayFloat(KEY_ISLAND_MAX_WIDTH, value)
 
-    fun getIslandCutoutGap(): Float = getFloat(KEY_ISLAND_CUTOUT_GAP, 6f)
-    fun setIslandCutoutGap(value: Float) = putFloat(KEY_ISLAND_CUTOUT_GAP, value)
+    fun getIslandCutoutGap(): Float = getDisplayFloat(KEY_ISLAND_CUTOUT_GAP, 6f)
+    fun setIslandCutoutGap(value: Float) = putDisplayFloat(KEY_ISLAND_CUTOUT_GAP, value)
 
     fun isIslandSuppressSystemHeadsUpEnabled(): Boolean = getBoolean(KEY_ISLAND_SUPPRESS_SYSTEM_HEADS_UP, false)
     fun setIslandSuppressSystemHeadsUpEnabled(enabled: Boolean) {
@@ -4126,8 +4140,8 @@ class SettingsRepository(
     fun isIslandBorderOutlineHiddenWhenExpanded(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, false)
     fun setIslandBorderOutlineHiddenWhenExpanded(hidden: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, hidden)
 
-    fun getIslandBorderOutlineThickness(): Float = getFloat(KEY_ISLAND_BORDER_OUTLINE_THICKNESS, 1f)
-    fun setIslandBorderOutlineThickness(value: Float) = putFloat(KEY_ISLAND_BORDER_OUTLINE_THICKNESS, value)
+    fun getIslandBorderOutlineThickness(): Float = getDisplayFloat(KEY_ISLAND_BORDER_OUTLINE_THICKNESS, 1f)
+    fun setIslandBorderOutlineThickness(value: Float) = putDisplayFloat(KEY_ISLAND_BORDER_OUTLINE_THICKNESS, value)
 
     fun isIslandPulseShadowEnabled(): Boolean = getBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, false)
     fun setIslandPulseShadowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION, enabled)
@@ -4156,19 +4170,19 @@ class SettingsRepository(
     fun isIslandNotifThemedBubbleActive(): Boolean =
         isIslandNotifThemedBubbleEnabled() && getBoolean(KEY_ISLAND_THEMED_APP_ICONS, false)
 
-    fun getIslandExpandedWidth(): Float = getFloat(KEY_ISLAND_EXPANDED_WIDTH, 360f)
-    fun setIslandExpandedWidth(value: Float) = putFloat(KEY_ISLAND_EXPANDED_WIDTH, value)
+    fun getIslandExpandedWidth(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_WIDTH, 360f)
+    fun setIslandExpandedWidth(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_WIDTH, value)
 
-    fun getIslandExpandedRoundness(): Float = getFloat(KEY_ISLAND_EXPANDED_ROUNDNESS, 24f)
-    fun setIslandExpandedRoundness(value: Float) = putFloat(KEY_ISLAND_EXPANDED_ROUNDNESS, value)
+    fun getIslandExpandedRoundness(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_ROUNDNESS, 24f)
+    fun setIslandExpandedRoundness(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_ROUNDNESS, value)
 
-    fun getIslandExpandedPadding(): Float = getFloat(KEY_ISLAND_EXPANDED_PADDING, 16f)
-    fun setIslandExpandedPadding(value: Float) = putFloat(KEY_ISLAND_EXPANDED_PADDING, value)
+    fun getIslandExpandedPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_PADDING, 16f)
+    fun setIslandExpandedPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_PADDING, value)
 
-    fun getIslandExpandedTopPadding(): Float = getFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, 0f)
-    fun setIslandExpandedTopPadding(value: Float) = putFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, value)
-    fun getIslandExpandedBottomPadding(): Float = getFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, 12f)
-    fun setIslandExpandedBottomPadding(value: Float) = putFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, value)
+    fun getIslandExpandedTopPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, 0f)
+    fun setIslandExpandedTopPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, value)
+    fun getIslandExpandedBottomPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, 12f)
+    fun setIslandExpandedBottomPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, value)
 
     fun getIslandExpandedTimeoutMs(): Long = getLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, 0L)
     fun setIslandExpandedTimeoutMs(value: Long) = putLong(KEY_ISLAND_EXPANDED_TIMEOUT_MS, value)
@@ -4368,8 +4382,11 @@ class SettingsRepository(
         getString(KEY_ISLAND_PREVIEW_STAGE, ISLAND_PREVIEW_STAGE_AUTO) ?: ISLAND_PREVIEW_STAGE_AUTO
     fun setIslandPreviewStage(value: String) = putString(KEY_ISLAND_PREVIEW_STAGE, value)
 
-    fun getIslandExpandedScale(): Float = getFloat(KEY_ISLAND_EXPANDED_SCALE, 1f)
-    fun setIslandExpandedScale(value: Float) = putFloat(KEY_ISLAND_EXPANDED_SCALE, value)
+    fun getIslandNotifMaxHeight(): Float = getFloat(KEY_ISLAND_NOTIF_MAX_HEIGHT, 0f)
+    fun setIslandNotifMaxHeight(value: Float) = putFloat(KEY_ISLAND_NOTIF_MAX_HEIGHT, value)
+
+    fun getIslandExpandedScale(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_SCALE, 1f)
+    fun setIslandExpandedScale(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_SCALE, value)
 
     fun isIslandHideLiveUpdatesEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, false)
     fun setIslandHideLiveUpdatesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_LIVE_UPDATES, enabled)
@@ -4385,9 +4402,9 @@ class SettingsRepository(
 
     fun setIslandHideMediaInOwnerAppEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_HIDE_MEDIA_IN_OWNER_APP, enabled)
 
-    fun isIslandKeepOnLandscapeEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
+    fun isIslandKeepOnLandscapeEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, false)
 
-    fun setIslandKeepOnLandscapeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, enabled)
+    fun setIslandKeepOnLandscapeEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_KEEP_ON_LANDSCAPE, enabled)
 
     fun isIslandKeepInFullscreenEnabled(): Boolean = getBoolean(KEY_ISLAND_KEEP_IN_FULLSCREEN, false)
 
@@ -4401,21 +4418,21 @@ class SettingsRepository(
 
     fun setIslandAlwaysGesturesEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_ALWAYS_GESTURES, enabled)
 
-    fun getIslandMaxItems(): Int = getInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
+    fun getIslandMaxItems(): Int = getDisplayInt(KEY_ISLAND_MAX_ITEMS, 2).coerceIn(1, 4)
 
-    fun setIslandMaxItems(value: Int) = putInt(KEY_ISLAND_MAX_ITEMS, value)
+    fun setIslandMaxItems(value: Int) = putDisplayInt(KEY_ISLAND_MAX_ITEMS, value)
 
-    fun isIslandBondEdgeEnabled(): Boolean = getBoolean(KEY_ISLAND_BOND_EDGE, false)
+    fun isIslandBondEdgeEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_BOND_EDGE, false)
 
-    fun setIslandBondEdgeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BOND_EDGE, enabled)
+    fun setIslandBondEdgeEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_BOND_EDGE, enabled)
 
     fun isIslandBalanceCompactEnabled(): Boolean = getBoolean(KEY_ISLAND_BALANCE_COMPACT, true)
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
 
-    fun isIslandStatusBarAwareWidthEnabled(): Boolean = getBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, true)
+    fun isIslandStatusBarAwareWidthEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, true)
 
-    fun setIslandStatusBarAwareWidthEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, enabled)
+    fun setIslandStatusBarAwareWidthEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, enabled)
 
     fun isIslandStatusBarIgnoreNotificationsEnabled(): Boolean = getBoolean(KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS, true)
 
@@ -4429,9 +4446,9 @@ class SettingsRepository(
 
     fun setIslandSecondaryBubbleEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SECONDARY_BUBBLE, enabled)
 
-    fun getIslandLandscapeTopSpacing(): Float = getFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, 0f)
+    fun getIslandLandscapeTopSpacing(): Float = getDisplayFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, 0f)
 
-    fun setIslandLandscapeTopSpacing(value: Float) = putFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, value)
+    fun setIslandLandscapeTopSpacing(value: Float) = putDisplayFloat(KEY_ISLAND_LANDSCAPE_TOP_SPACING, value)
 
     fun isIslandHideOnShadeEnabled(): Boolean = getBoolean(KEY_ISLAND_HIDE_ON_SHADE, false)
 
@@ -4440,8 +4457,8 @@ class SettingsRepository(
     fun getIslandAnimationSpeed(): Float = getFloat(KEY_ISLAND_ANIMATION_SPEED, 1f)
     fun setIslandAnimationSpeed(value: Float) = putFloat(KEY_ISLAND_ANIMATION_SPEED, value)
 
-    fun getIslandFontScale(): Float = getFloat(KEY_ISLAND_FONT_SCALE, 1f)
-    fun setIslandFontScale(value: Float) = putFloat(KEY_ISLAND_FONT_SCALE, value)
+    fun getIslandFontScale(): Float = getDisplayFloat(KEY_ISLAND_FONT_SCALE, 1f)
+    fun setIslandFontScale(value: Float) = putDisplayFloat(KEY_ISLAND_FONT_SCALE, value)
 
     fun isIslandLineStageEnabled(): Boolean = getBoolean(KEY_ISLAND_LINE_STAGE_ENABLED, false)
     fun setIslandLineStageEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_LINE_STAGE_ENABLED, enabled)
@@ -4602,6 +4619,12 @@ class SettingsRepository(
 
     fun isIslandNotifKeepProgressEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, true)
     fun setIslandNotifKeepProgressEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, enabled)
+
+    fun getIslandLiveUpdatesCount(): Int = getInt(KEY_ISLAND_LIVE_UPDATES_COUNT, 3).coerceIn(1, 3)
+    fun setIslandLiveUpdatesCount(count: Int) = putInt(KEY_ISLAND_LIVE_UPDATES_COUNT, count.coerceIn(1, 3))
+
+    fun isIslandLiveUpdatesExpandedEnabled(): Boolean = getBoolean(KEY_ISLAND_LIVE_UPDATES_EXPANDED, false)
+    fun setIslandLiveUpdatesExpandedEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_LIVE_UPDATES_EXPANDED, enabled)
 
     fun applyHeadsUpSuppression(suppress: Boolean = isIslandEnabled() && isIslandSuppressSystemHeadsUpEnabled()) {
         val targetValue = if (suppress) 0 else 1

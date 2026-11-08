@@ -1713,6 +1713,10 @@
     <string name="status_glance_hide_in_quick_settings_title">Скрыть в быстрых настройках</string>
     <string name="island_notif_queue_title">Очередь уведомлений</string>
     <string name="island_notif_keep_progress_title">Сохраняйте уведомления о ходе выполнения</string>
+    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_count_title">Live updates count</string>
+    <string name="island_live_updates_expanded_title">Expanded live update</string>
+    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
     <string name="island_catch_up_title">Удержание</string>
     <string name="island_catch_up_desc">Держать последнее уведомление в острове дольше</string>
     <string name="island_catch_up_timeout_title">Время удержания </string>
@@ -2024,4 +2028,61 @@
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="app_volume_apps_section">Приложения </string>
+    <string name="label_battery_charging_policy">Политика зарядки</string>
+    <string name="label_battery_avg_remaining">Примерно до полной разрядки</string>
+    <string name="label_thermal_skin">Температура кожи </string>
+    <string name="label_auto_reset_battery_stats_title">Автоматический сброс </string>
+    <string name="label_auto_reset_battery_stats_desc">Автоматически сбрасывайте статистику батареи, когда устройство отключено от сети более % c заряда.</string>
+    <string name="island_time_format_24h">24 часа</string>
+    <string name="island_time_format_12h">12 часов</string>
+    <string name="island_time_format_title">Формат времени </string>
+    <string name="island_time_leading_zero_title">Показывать 0 перед числом</string>
+    <string name="island_time_show_seconds_title">Показать секунды </string>
+    <string name="island_launcher_only_desc">Скрывать пока приложение открыто </string>
+    <string name="island_network_activity_title">Показывать сетевую активность </string>
+    <string name="island_show_signal_title">Показать мобильный сигнал </string>
+    <string name="island_signal_wifi_title">Показать сигнал Wi-Fi </string>
+    <string name="island_signal_low_only_title">Показать, когда низкий сигнал </string>
+    <string name="island_signal_show_mode_title">Показать режим сети</string>
+    <string name="island_timers_show_screen_recorder_title">Показать запись экрана</string>
+    <string name="island_timers_filter_apps_title">Фильтр для приложений </string>
+    <string name="island_media_keep_when_paused_title">Держать пока медиа на паузе</string>
+    <string name="island_media_show_previous_title">Показать кнопку для возврата на прошлый трек</string>
+    <string name="island_media_show_like_title">Показать кнопку \"Нравится\"</string>
+    <string name="island_calendar_priority_title">Приоритет при закрытии </string>
+    <string name="island_calendar_show_ongoing_title">Покажите текущие события </string>
+    <string name="island_caffeinate_show_time_title">Показывать время</string>
+    <string name="island_sound_mode_keep_icon_title">Продолжайть показывать иконку</string>
+    <string name="island_battery_peek_alerts_title">Показывать оповещения о просмотре </string>
+    <string name="island_battery_icon_conditional_title">Иконки только для нижеуказанных условий </string>
+    <string name="duo_battery_low_color_title">Низкий заряд</string>
+    <string name="island_navigation_peek_after_expand_desc">Когда выключено остров возвращается в компактный режим</string>
+    <string name="island_secondary_style_title">Стиль вторичных предметов </string>
+    <string name="island_pulse_shadow_spread_title">Распространение </string>
+    <string name="island_pulse_shadow_duration_title">Продолжительность пульсации</string>
+    <string name="about_desc_safe_volume">Европейские правила требуют, чтобы смартфоны предупреждали при превышении определённых уровней объёма (85 дБ). Это предупреждение должно отображаться один раз после каждой перезагрузки или после 20 часов непрерывного воспроизведения музыки. Используйте этот переключатель, чтобы отключить его навсегда. </string>
+    <string name="about_desc_volume_steps">Устанавливает, на сколько шагов объем мультимедиа перемещается каждый раз, когда вы нажимаете клавишу громкости. Держать ключ продолжает шагать, пока не отпустите. Звонки, звонки, будильники и приложения для камеры сохраняют нормальное поведение громкости.
+
+Если карта кнопки имеет длинное нажатие для клавиши громкости, удерживание этой клавиши запускает действие вместо изменения громкости, а короткое нажатие все равно перемещает громкость на размер шага. Пока показывает панель громкости, карта кнопки по умолчанию приостанавливается, поэтому удерживая ключ, затем изменяет громкость. Отключите \"Отключён, пока открывается диалог громкости\" в карте кнопки, если вы хотите, чтобы действие всегда выигрывало. </string>
+    <string name="about_desc_widget_stack">Поместите несколько виджетов из любого приложения в одно место на главном экране.
+
+Стек переключается на следующий виджет на таймере, или вы можете переключиться со стрелками под ним. Виджеты, которые показывают список прокрутки, такие как календарная повестка дня, не могут быть показаны в стеке. </string>
+    <string name="about_desc_pixel_searchbar">Замените панель поиска Pixel Launcher по умолчанию на главном экране. Вы можете настроить контент, чтобы показывать либо ничего (пусто), либо текущую дату.
+
+Обратите внимание, что включение этого может сломать виджеты Pixel Launcher At a Glance (такие как спортивные и финансовые виджеты).
+
+И настройка, возможно, придётся применять несколько раз, чтобы она вступила в силу. </string>
+    <string name="about_desc_power_battery">Тонкая настройка внутренней политики Android Battery Saver. Настройте поведение, такое как ограничение яркости, дроссирование местоположения, переключатель вибрации, отсрочки фоновой синхронизации и состояния датчика при включении экономии батареи. </string>
+    <string name="about_desc_data_sim">Переключите мобильные данные на следующую активную SIM-карту. Требуется разрешение состояния телефона Red и либо Shizuku, либо корень; выбранная SIM-карта также включена для мобильных данных. </string>
+    <string name="tile_data_sim">SIM-карта данных </string>
+    <string name="tile_lockdown_mode_about_desc">Заблокируйте свой телефон или локдаун, если включён режим блокировки.
+
+Режим блокировки отключает слабые методы разблокировки, такие как лицо / отпечаток пальца, и требует надёжного шаблона или контакта для разблокировки телефона.
+
+Требуется разрешение администратора устройства при использовании блокировки. </string>
+    <string name="tile_lock">Заблокировать</string>
+    <string name="about_desc_screenshots">Держит вашу галерею свободной от одноразовых скриншотов. Общие скриншоты можно уничтожить сразу после обмена или немного позже, и каждый новый скриншот можно автоматически удалять через несколько дней, если вы не сохраните его из уведомления или не начнёте его в \"Фото\". Отправленные скриншоты можно восстановить из файлов или фотографий в течение 30 дней. </string>
+    <string name="button_remap_power">Включение</string>
+    <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
 </resources>

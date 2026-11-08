@@ -70,6 +70,8 @@ import java.io.FileOutputStream
 class NotificationListener : NotificationListenerService() {
     interface ProgressNotificationListener {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
+
+        fun onProgressNotificationsUpdated(all: List<ProgressNotificationData>) {}
     }
 
     interface NavigationNotificationListener {
@@ -82,7 +84,9 @@ class NotificationListener : NotificationListenerService() {
     }
 
     companion object {
+        private const val MAX_CONTENT_IMAGE_PX = 1080
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
+        const val FAKE_LIVE_UPDATE_TAG = "fake_live_update"
         private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
         private val OTP_SKIPPED_CATEGORIES = setOf(
             Notification.CATEGORY_CALL,
@@ -172,13 +176,20 @@ class NotificationListener : NotificationListenerService() {
             }
         }
 
-        fun notifyProgressListeners(data: ProgressNotificationData?) {
+        fun notifyProgressListeners(all: List<ProgressNotificationData>) {
             val listenersCopy = synchronized(progressListeners) { progressListeners.toList() }
-            listenersCopy.forEach { it.onProgressNotificationUpdated(data) }
+            val latest = all.firstOrNull()
+            listenersCopy.forEach {
+                it.onProgressNotificationUpdated(latest)
+                it.onProgressNotificationsUpdated(all)
+            }
         }
 
         fun getLatestProgressNotification(): ProgressNotificationData? =
             instance?.extractLatestProgressNotification()
+
+        fun getProgressNotifications(): List<ProgressNotificationData> =
+            instance?.extractProgressNotifications().orEmpty()
 
         fun getCachedBitmap(hash: Long): Bitmap? = if (latestArtHash == hash) latestArtBitmap else null
 
@@ -1065,6 +1076,7 @@ class NotificationListener : NotificationListenerService() {
         // Skip our own app's notifications early to avoid flooding logs and redundant processing
         if (sbn.packageName == packageName) {
             if (hasReadableExtras(sbn)) LiveUpdateSnoozer.onPosted(this, sbn)
+            if (isFakeLiveUpdate(sbn)) scheduleProgressRefresh()
             return
         }
         if (!hasReadableExtras(sbn)) return
@@ -1504,6 +1516,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         if (LiveUpdateSnoozer.isSnoozedByUs(sbn.key)) return
+        if (isFakeLiveUpdate(sbn)) scheduleProgressRefresh()
         NotificationRepostFilter.forget(sbn.key)
         HilightProgressTracker.onRemoved(sbn.key)
         CallStateRepository.onCallNotificationRemoved(sbn.key)
@@ -1914,6 +1927,7 @@ class NotificationListener : NotificationListenerService() {
             postTime = postTime,
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
             } catch (_: Exception) {
@@ -1951,15 +1965,15 @@ class NotificationListener : NotificationListenerService() {
                             null
                         }
                     progressHandler.post { notifyNavigationListeners(navigation) }
-                    val data =
+                    val all =
                         try {
-                            extractLatestProgressNotification()
+                            extractProgressNotifications()
                         } catch (e: Exception) {
                             Log.e("NotificationListener", "Failed to extract progress notification", e)
                             return@execute
                         }
-                    HilightProgressTracker.onProgress(applicationContext, data)
-                    progressHandler.post { notifyProgressListeners(data) }
+                    HilightProgressTracker.onProgress(applicationContext, all.firstOrNull())
+                    progressHandler.post { notifyProgressListeners(all) }
                 }
             } catch (_: java.util.concurrent.RejectedExecutionException) {
             }
@@ -1989,14 +2003,18 @@ class NotificationListener : NotificationListenerService() {
 
     fun refreshProgressNow() = scheduleProgressRefresh()
 
-    fun extractLatestProgressNotification(): ProgressNotificationData? {
-        val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
-        val progressNotifs = active.mapNotNull { sbn ->
-            if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
+    private fun isFakeLiveUpdate(sbn: StatusBarNotification): Boolean =
+        com.sameerasw.essentials.BuildConfig.DEBUG && sbn.packageName == packageName && sbn.tag == FAKE_LIVE_UPDATE_TAG
+
+    fun extractLatestProgressNotification(): ProgressNotificationData? = extractProgressNotifications().firstOrNull()
+
+    fun extractProgressNotifications(): List<ProgressNotificationData> {
+        val active = (safeActiveNotifications() ?: return emptyList()).toList() + LiveUpdateSnoozer.snoozedNotifications()
+        return active.mapNotNull { sbn ->
+            if ((sbn.packageName == packageName && !isFakeLiveUpdate(sbn)) || isMediaNotification(sbn)) return@mapNotNull null
             if (islandShowsNavigation && sbn.isOngoing && isNavigationNotification(sbn)) return@mapNotNull null
             extractProgressNotification(sbn)
-        }
-        return progressNotifs.maxByOrNull { it.postTime }
+        }.distinctBy { it.key }.sortedByDescending { it.postTime }
     }
 
     private val islandShowsNavigation: Boolean
@@ -2235,6 +2253,18 @@ class NotificationListener : NotificationListenerService() {
 
         var text = textParts.joinToString("\n")
 
+        val bigText = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()?.trim()
+        val inboxText = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
+            ?.mapNotNull { it?.toString()?.trim()?.takeIf(String::isNotBlank) }
+            ?.joinToString("\n")
+        val fullBody = listOfNotNull(bigText, inboxText).filter { it.isNotBlank() }.maxByOrNull { it.length }
+        val expandedText = fullBody
+            ?.takeIf { full -> full.length > (body?.length ?: 0) && !full.equals(title, ignoreCase = true) }
+            ?.let { full ->
+                val head = rawTitleBig?.takeIf { it.isNotBlank() && !it.equals(title, ignoreCase = true) && !full.startsWith(it) }
+                listOfNotNull(head, full).joinToString("\n")
+            }
+
         val appName = try {
             val appInfo = packageManager.getApplicationInfo(sbn.packageName, 0)
             packageManager.getApplicationLabel(appInfo).toString()
@@ -2436,7 +2466,69 @@ class NotificationListener : NotificationListenerService() {
             chatIcon = chatIcon,
             themedIcon = if (themedBubble) AppIconUtil.monochromeAppIcon(this, sbn.packageName) else null,
             smallIcon = smallIconBitmap,
+            image = contentImage(notif),
+            expandedText = expandedText,
         )
+    }
+
+    private fun contentImage(notif: Notification): Bitmap? {
+        val extras = notif.extras ?: return null
+        val picture = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                extras.getParcelable(Notification.EXTRA_PICTURE, Bitmap::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                extras.getParcelable<Bitmap>(Notification.EXTRA_PICTURE)
+            }
+        }.getOrNull()
+        if (picture != null) return scaledImage(picture)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val icon = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    extras.getParcelable(Notification.EXTRA_PICTURE_ICON, Icon::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    extras.getParcelable<Icon>(Notification.EXTRA_PICTURE_ICON)
+                }
+            }.getOrNull()
+            icon?.let { runCatching { it.loadDrawable(this) }.getOrNull() }?.let { return scaledImage(AppUtil.drawableToBitmap(it)) }
+        }
+        @Suppress("DEPRECATION")
+        val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES) ?: return null
+        for (message in messages.reversed()) {
+            val bundle = message as? Bundle ?: continue
+            val type = bundle.getString("type") ?: continue
+            if (!type.startsWith("image/")) continue
+            val uri = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    bundle.getParcelable("uri", android.net.Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    bundle.getParcelable<android.net.Uri>("uri")
+                }
+            }.getOrNull() ?: continue
+            decodeUriImage(uri)?.let { return it }
+        }
+        return null
+    }
+
+    private fun decodeUriImage(uri: android.net.Uri): Bitmap? = runCatching {
+        val source = android.graphics.ImageDecoder.createSource(contentResolver, uri)
+        android.graphics.ImageDecoder.decodeBitmap(source) { decoder, info, _ ->
+            decoder.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
+            val longest = maxOf(info.size.width, info.size.height)
+            if (longest > MAX_CONTENT_IMAGE_PX) {
+                val ratio = MAX_CONTENT_IMAGE_PX.toFloat() / longest
+                decoder.setTargetSize((info.size.width * ratio).toInt().coerceAtLeast(1), (info.size.height * ratio).toInt().coerceAtLeast(1))
+            }
+        }
+    }.getOrNull()
+
+    private fun scaledImage(source: Bitmap): Bitmap {
+        val longest = maxOf(source.width, source.height)
+        if (longest <= MAX_CONTENT_IMAGE_PX) return source
+        val ratio = MAX_CONTENT_IMAGE_PX.toFloat() / longest
+        return Bitmap.createScaledBitmap(source, (source.width * ratio).toInt().coerceAtLeast(1), (source.height * ratio).toInt().coerceAtLeast(1), true)
     }
 
     private fun groupNameFrom(
