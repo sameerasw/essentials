@@ -40,7 +40,15 @@ class EssentialsApp : Application() {
     private val securityReceiver = SecurityReceiver()
     private val powerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            context.sendBroadcast(Intent(context, BatteriesWidgetReceiver::class.java).setAction(intent.action))
+            //
+            // Do not re-broadcast the original action. ACTION_POWER_CONNECTED/DISCONNECTED are
+            // protected broadcasts that only the system may send, so relaying them threw
+            // SecurityException and killed the process. The widget receiver only inspects
+            // intent.action, so deliver the intent to it directly instead.
+            //
+            runCatching {
+                BatteriesWidgetReceiver().onReceive(context, Intent(intent))
+            }
         }
     }
 

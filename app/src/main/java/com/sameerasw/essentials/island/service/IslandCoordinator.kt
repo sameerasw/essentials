@@ -440,6 +440,7 @@ class IslandCoordinator(
     }
 
     fun onDestroy() {
+        mainHandler.removeCallbacks(attachRetry)
         mainHandler.removeCallbacks(applyForegroundPackage)
         mainHandler.removeCallbacks(applyFullscreen)
         mainHandler.removeCallbacks(applyShadeExpanded)
@@ -449,6 +450,27 @@ class IslandCoordinator(
         } catch (_: Exception) {
         }
         stop()
+    }
+
+    private var attachRetries = 0
+    private val attachRetry = Runnable {
+        if (!running && settings.isIslandEnabled() && !isWindowSuppressed) start()
+    }
+
+    /**
+     * Re-attempts the overlay window a few times with a short backoff. A bad token at this point is
+     * usually transient, so retrying is preferable to leaving the island unrendered until some
+     * unrelated event happens to call updateState() again.
+     */
+    private fun scheduleAttachRetry() {
+        if (attachRetries >= MAX_ATTACH_RETRIES) {
+            attachRetries = 0
+            return
+        }
+        val delay = ATTACH_RETRY_BASE_MS * (attachRetries + 1)
+        attachRetries++
+        mainHandler.removeCallbacks(attachRetry)
+        mainHandler.postDelayed(attachRetry, delay)
     }
 
     private fun start() {
@@ -492,14 +514,21 @@ class IslandCoordinator(
                 }
             }
         }
-        // Fails until the accessibility service is connected; onServiceConnected calls updateState() again.
+        //
+        // The overlay token can be briefly invalid - right after the service connects, or while the
+        // system is settling a display change. That surfaced as a BadTokenException when the island
+        // started from idle (for example when plugging in added a battery item). Retry a few times
+        // before giving up, rather than waiting for some unrelated call to run updateState again.
+        //
         if (!attached) {
             running = false
             revealing = false
             newScope.cancel()
             scope = null
+            scheduleAttachRetry()
             return
         }
+        attachRetries = 0
         mainHandler.postDelayed(endReveal, REVEAL_DELAY_MS)
         val context = IslandPluginContext(
             service = service,
@@ -970,6 +999,9 @@ class IslandCoordinator(
         const val OUTSIDE_DISMISS_GRACE_MS = 2000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
+        // Window attach retries after a BadTokenException. Backoff is linear, so 60/120/180/240ms.
+        const val MAX_ATTACH_RETRIES = 4
+        const val ATTACH_RETRY_BASE_MS = 60L
         const val HOLD_TICK_MS = 1000L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
