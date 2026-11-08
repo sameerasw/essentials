@@ -1351,7 +1351,6 @@ private fun IslandRootContent(
                         )
                     }
                 }
-                .offset { IntOffset(-shake.value.roundToInt(), 0) }
                 // Finger-driven shrink sits inside the clip/background so the pill itself follows the drag.
                 .layout { measurable, constraints ->
                     val child = measurable.measure(constraints)
