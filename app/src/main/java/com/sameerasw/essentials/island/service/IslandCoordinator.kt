@@ -825,22 +825,25 @@ class IslandCoordinator(
         }
     }
 
-    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int): Boolean {
-        val geo = geometry ?: return true
+    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
+        val geo = geometry ?: return 0
+        val density = service.resources.displayMetrics.density
         val cell = geo.diameter.toInt()
         val spacing = geo.gap.toInt()
         val inset = (geo.compactHeight * 0.15f).toInt()
         fun need(keys: List<String>, extra: Int): Int =
             if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
                 if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
+        val slack = if (growing) (GROW_SLACK_DP * density).toInt() else 0
         val (leftRoom, rightRoom) = sideRooms()
+        val left = if (leftRoom == Int.MAX_VALUE) leftRoom else leftRoom - slack
+        val right = if (rightRoom == Int.MAX_VALUE) rightRoom else rightRoom - slack
         val needLeft = need(before, leftExtra)
         val needRight = need(after, 0)
-        if (needLeft > leftRoom || needRight > rightRoom) return false
-        if (geo.anchor == CameraAnchor.Center && leftExtra == 0) {
-            return maxOf(needLeft, needRight) <= minOf(leftRoom, rightRoom)
-        }
-        return true
+        if (needLeft > left || needRight > right) return null
+        val mirrored = geo.anchor == CameraAnchor.Center && leftExtra == 0
+        if (mirrored && maxOf(needLeft, needRight) > minOf(left, right)) return null
+        return maxOf(needLeft, needRight)
     }
 
     private var lastContentSuppressed = false
@@ -981,6 +984,7 @@ class IslandCoordinator(
         )
         private const val STATUS_BAR_POLL_MS = 1000L
         private const val STATUS_BAR_MARGIN_DP = 10f
+        private const val GROW_SLACK_DP = 12f
     }
 }
 

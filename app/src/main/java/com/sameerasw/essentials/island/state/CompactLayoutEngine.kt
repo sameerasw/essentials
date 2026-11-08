@@ -35,15 +35,46 @@ object CompactLayoutEngine {
         maxCells: Int = MAX_CELLS,
         leftExtra: Int = 0,
         balance: Boolean = false,
-        fits: ((before: List<String>, after: List<String>) -> Boolean)? = null,
+        fits: ((before: List<String>, after: List<String>) -> Int?)? = null,
     ): CompactArrangement {
         var pool = entries
         while (true) {
             val result = arrangeOnce(pool, anchor, maxCells, leftExtra, balance)
-            if (fits == null || result.visibleItems.size <= 1 || fits(result.before, result.after)) return result
-            val drop = pool.filter { it.itemKey in result.visibleItems }.maxByOrNull { it.priority } ?: return result
+            if (fits == null || fits(result.before, result.after) != null) return result
+            val selected = pool.filter { it.itemKey in result.visibleItems }
+            if (anchor == CameraAnchor.Center) bestSplit(selected, result, fits)?.let { return it }
+            if (result.visibleItems.size <= 1) return result
+            val drop = selected.maxByOrNull { it.priority } ?: return result
             pool = pool - drop
         }
+    }
+
+    private fun bestSplit(
+        selected: List<CompactEntry>,
+        base: CompactArrangement,
+        fits: (List<String>, List<String>) -> Int?,
+    ): CompactArrangement? {
+        val pinnedCells = selected.filter { it.pinned }.flatMap { it.cellKeys }.toSet()
+        val dynamic = selected.filterNot { it.pinned }.sortedBy { it.priority }
+        if (dynamic.isEmpty() || dynamic.size > 6) return null
+        val pinnedBefore = base.before.filter { it in pinnedCells }
+        val pinnedAfter = base.after.filter { it in pinnedCells }
+        var best: CompactArrangement? = null
+        var bestScore = Int.MAX_VALUE
+        for (mask in 0 until (1 shl dynamic.size)) {
+            val before = pinnedBefore.toMutableList()
+            val after = pinnedAfter.toMutableList()
+            dynamic.forEachIndexed { i, entry ->
+                val cells = if (entry.cellKeys.size == 2) entry.cellKeys.reversed() else entry.cellKeys
+                if ((mask shr i) and 1 == 1) before += cells else after += cells
+            }
+            val score = fits(before, after) ?: continue
+            if (score < bestScore) {
+                bestScore = score
+                best = CompactArrangement(before, after, base.visibleItems)
+            }
+        }
+        return best
     }
 
     private fun arrangeOnce(
