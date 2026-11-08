@@ -123,6 +123,7 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
                             prefs[KEY_SHOW] = isEnabled
                             prefs[KEY_DATA] = devicesJson
                             prefs[KEY_MAX] = maxDevices
+                            prefs[androidx.datastore.preferences.core.longPreferencesKey("widget_last_update_ts")] = System.currentTimeMillis()
                         }
                         glanceAppWidget.update(context, glanceId)
                     }
