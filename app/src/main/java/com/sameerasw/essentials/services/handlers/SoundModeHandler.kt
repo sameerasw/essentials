@@ -17,18 +17,20 @@ import com.sameerasw.essentials.utils.ShizukuUtils
 class SoundModeHandler(
     private val context: Context,
 ) {
+    private val audioManager get() = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val prefs get() = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+
+    fun isShizukuReady(): Boolean =
+        prefs.getBoolean("sound_mode_use_shizuku", true) && ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()
+
+    fun canChangeMode(): Boolean {
+        if (isShizukuReady()) return true
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return notificationManager.isNotificationPolicyAccessGranted
+    }
+
     fun cycleNextMode(): Int? {
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val useShizukuPref = prefs.getBoolean("sound_mode_use_shizuku", true)
-        val isShizukuReady = useShizukuPref && ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()
-
-        if (!isShizukuReady && !notificationManager.isNotificationPolicyAccessGranted) {
-            return null
-        }
+        if (!canChangeMode()) return null
 
         val defaultOrder = listOf("Sound", "Vibrate", "Silent")
         val orderString =
@@ -56,31 +58,28 @@ class SoundModeHandler(
                 else -> AudioManager.RINGER_MODE_NORMAL
             }
 
-        if (isShizukuReady) {
+        return setMode(nextRingerMode)
+    }
+
+    fun setMode(ringerMode: Int): Int? {
+        if (!canChangeMode()) return null
+        if (isShizukuReady()) {
             val shizukuArg =
-                when (nextRingerMode) {
-                    AudioManager.RINGER_MODE_NORMAL -> "NORMAL"
+                when (ringerMode) {
                     AudioManager.RINGER_MODE_VIBRATE -> "VIBRATE"
                     AudioManager.RINGER_MODE_SILENT -> "SILENT"
                     else -> "NORMAL"
                 }
             try {
                 ShizukuUtils.runCommand("cmd audio set-ringer-mode $shizukuArg")
-            } catch (e: Exception) {
-                // Fallback to standard AudioManager
-                try {
-                    audioManager.ringerMode = nextRingerMode
-                } catch (ex: Exception) {
-                }
-            }
-        } else {
-            try {
-                audioManager.ringerMode = nextRingerMode
-            } catch (e: Exception) {
-                // OEM-specific restrictions or race conditions
+                return ringerMode
+            } catch (_: Exception) {
             }
         }
-
-        return nextRingerMode
+        try {
+            audioManager.ringerMode = ringerMode
+        } catch (_: Exception) {
+        }
+        return ringerMode
     }
 }

@@ -50,9 +50,9 @@ fun ProgressExpanded(
             Spacer(Modifier.height(spec.expandedTopPadding))
             scope.CameraRow(
                 horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                title = title,
                 start = {
                     IslandBitmap(icon, spec.cellSize, fallbackRes = R.drawable.rounded_downloading_24)
-                    MarqueeText(text = title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                 },
                 end = {
                     if (!indeterminate) Text("${(progress * 100).toInt()}%", style = IslandTextStyles.body.copy(color = islandTextColor()))

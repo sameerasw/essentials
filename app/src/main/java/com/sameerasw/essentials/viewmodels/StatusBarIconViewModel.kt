@@ -403,24 +403,7 @@ class StatusBarIconViewModel : ViewModel() {
     private fun updateIconBlacklist(context: Context) {
         if (!isWriteSecureSettingsEnabled.value) return
 
-        val blacklistNames =
-            StatusBarIconRegistry.getBlacklistNames(getIconVisibilities()).toMutableSet()
-        when (clockPosition.value) {
-            1 -> {
-                blacklistNames.add("right_clock_position")
-                blacklistNames.add("middle_clock_position")
-            }
-
-            2 -> {
-                blacklistNames.add("left_clock_position")
-                blacklistNames.add("right_clock_position")
-            }
-
-            3 -> {
-                blacklistNames.add("left_clock_position")
-                blacklistNames.add("middle_clock_position")
-            }
-        }
+        val blacklistNames = StatusBarIconRegistry.getBlacklistNames(getIconVisibilities())
         updateIconBlacklistSetting(context, blacklistNames)
     }
 

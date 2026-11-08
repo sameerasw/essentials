@@ -42,6 +42,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import kotlin.math.ceil
+import androidx.compose.ui.platform.LocalConfiguration
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
@@ -243,6 +245,13 @@ fun IslandPlacementSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_camera_size"),
             )
 
+            val configuration = LocalConfiguration.current
+            val maxIslandWidth =
+                remember(configuration.screenWidthDp, configuration.screenHeightDp) {
+                    (ceil(maxOf(configuration.screenWidthDp, configuration.screenHeightDp) / 10f) * 10f)
+                        .coerceAtLeast(500f)
+                }
+
             ConfigSliderItem(
                 title = stringResource(R.string.island_max_width_title),
                 value = viewModel.islandMaxWidth.floatValue,
@@ -250,7 +259,7 @@ fun IslandPlacementSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setIslandMaxWidth(it)
                 },
-                valueRange = 150f..500f,
+                valueRange = 150f..maxIslandWidth,
                 increment = 10f,
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.1f dp".format(it) },
@@ -265,7 +274,7 @@ fun IslandPlacementSettingsUI(
                     HapticUtil.performUIHaptic(view)
                     viewModel.setIslandExpandedWidth(it)
                 },
-                valueRange = 200f..500f,
+                valueRange = 200f..maxIslandWidth,
                 increment = 10f,
                 iconRes = R.drawable.rounded_arrows_outward_24,
                 valueFormatter = { "%.1f dp".format(it) },
@@ -475,6 +484,30 @@ fun IslandVisualsSettingsUI(
                 onSettingsClick = { showBorderOutlineSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_border_outline_enabled"),
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_arrows_outward_24,
+                title = stringResource(R.string.island_statusbar_aware_width_title),
+                isChecked = viewModel.isIslandStatusBarAwareWidth.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandStatusBarAwareWidth(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
+            )
+
+            if (viewModel.isIslandStatusBarAwareWidth.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = stringResource(R.string.island_statusbar_ignore_notifications_title),
+                    isChecked = viewModel.isIslandStatusBarIgnoreNotifications.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandStatusBarIgnoreNotifications(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_statusbar_ignore_notifications"),
+                )
+            }
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
@@ -806,6 +839,17 @@ fun IslandBehaviorSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_open_in_new_24,
+                title = stringResource(R.string.island_tap_to_open_expanded_title),
+                isChecked = viewModel.isIslandTapToOpenExpanded.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandTapToOpenExpanded(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_tap_to_open_expanded"),
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_touch_app_24,
                 title = stringResource(R.string.island_dismiss_on_outside_title),
                 isChecked = viewModel.isIslandDismissOnOutside.value,
@@ -827,6 +871,18 @@ fun IslandBehaviorSettingsUI(
                     viewModel.setIslandHideInOwnerApp(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_hide_in_owner_app"),
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_music_note_24,
+                title = stringResource(R.string.island_hide_media_in_owner_app_title),
+                isChecked = viewModel.isIslandHideInOwnerApp.value || viewModel.isIslandHideMediaInOwnerApp.value,
+                enabled = !viewModel.isIslandHideInOwnerApp.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandHideMediaInOwnerApp(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_hide_media_in_owner_app"),
             )
 
             IconToggleItem(
@@ -1073,17 +1129,6 @@ fun IslandNotificationSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_show_notifications"),
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.island_notif_tap_to_open_title),
-                description = stringResource(R.string.island_notif_tap_to_open_desc),
-                isChecked = viewModel.isIslandNotifTapToOpen.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandNotifTapToOpen(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_tap_to_open"),
-            )
         }
 
         RoundedCardContainer(

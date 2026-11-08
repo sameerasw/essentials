@@ -18,6 +18,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color as AndroidColor
 import android.os.BatteryManager
+import android.provider.AlarmClock
 import android.os.PowerManager
 import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.model.CompactCell
 import com.sameerasw.essentials.island.model.CompactPlacement
+import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
@@ -51,6 +53,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_TIME_PERIOD,
         SettingsRepository.KEY_ISLAND_TIME_LEADING_ZERO,
         SettingsRepository.KEY_ISLAND_TIME_DAY_SUFFIX,
+        SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK,
         SettingsRepository.KEY_ISLAND_TIME_HIDE_LOCKED,
         SettingsRepository.KEY_ISLAND_TIME_CHIP,
         SettingsRepository.KEY_ISLAND_BATTERY_HIDE_LOCKED,
@@ -268,6 +271,11 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             placement = CompactPlacement.Pinned,
             needsCompanyAtCenter = settings.isIslandBatteryIconConditional(),
             chip = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_CHIP, false),
+            interactions = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK, true)) {
+                InteractionOverrides(onTap = { openClock(); true })
+            } else {
+                InteractionOverrides.Default
+            },
             compact = listOf(
                 CompactCell("time") {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -323,6 +331,13 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
                 System.currentTimeMillis() < peekUntil
             )
         publish(listOfNotNull(timeItem.takeIf { showTime }, batteryItem.takeIf { showBattery }))
+    }
+
+    private fun openClock() {
+        try {
+            context.startActivity(Intent(AlarmClock.ACTION_SHOW_ALARMS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (_: Exception) {
+        }
     }
 
     private fun idleColor(): Color? {

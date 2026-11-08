@@ -1,10 +1,13 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import androidx.compose.ui.draw.clipToBounds
+import com.sameerasw.essentials.island.ui.components.resizableCard
+import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
+import com.sameerasw.essentials.island.ui.components.ResizeHandle
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.island.IslandTimeFormat
-import com.sameerasw.essentials.island.ui.squareFit
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.cameraClearance
@@ -24,8 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.foundation.Canvas
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,7 +60,7 @@ fun CalendarExpanded(
     showGlow: Boolean,
     onView: () -> Unit,
     scope: IslandExpandedScope,
-    emoji: String? = null,
+    icon: String? = null,
     drawBackground: Boolean = true,
 ) {
     val spec = scope.spec
@@ -74,6 +75,7 @@ fun CalendarExpanded(
             "${timeText(event.startTimeMillis)} – ${timeText(event.endTimeMillis)}"
         else -> timeText(event.startTimeMillis)
     }
+    val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_CALENDAR_MAX_HEIGHT)
     val detailStyle = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp)
 
     Box(propagateMinConstraints = true) {
@@ -81,24 +83,24 @@ fun CalendarExpanded(
             Box(Modifier.matchParentSize().accentGlow(calendarColor, showGlow, scope.cameraClearance))
         }
         Column(
-            modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
+            modifier = Modifier.fillMaxWidth().resizableCard(resize).padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
+            Column(Modifier.weight(1f, fill = false)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = event.title,
                     start = {
                         Box(Modifier.size(spec.cellSize), contentAlignment = Alignment.Center) {
-                            CalendarGlyph(emoji, size = 20.dp, tint = calendarColor)
+                            CalendarGlyph(icon, size = 20.dp, tint = calendarColor)
                         }
-                        MarqueeText(text = event.title, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = { RollingText(countdown) },
                 )
                 Spacer(Modifier.height(4.dp))
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
+                    modifier = Modifier.weight(1f, fill = false).clipToBounds().fillMaxWidth().padding(horizontal = sidePadding),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Text("$timeRange · $relative", style = detailStyle, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -110,7 +112,7 @@ fun CalendarExpanded(
                         }
                     }
                     event.description?.let {
-                        Text(it, style = IslandTextStyles.body, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                        Text(it, style = IslandTextStyles.body, maxLines = 12, overflow = TextOverflow.Ellipsis)
                     }
                 }
             }
@@ -122,7 +124,7 @@ fun CalendarExpanded(
                     container = Color.White.copy(alpha = 0.2f),
                     items = listOf(ConnectedItem(onView) { ConnectedTextLabel(stringResource(R.string.island_calendar_view_event)) }),
                 )
-                Spacer(Modifier.height(spec.expandedBottomPadding))
+                ResizeHandle(resize, spec.expandedBottomPadding.coerceAtLeast(18.dp))
             }
         }
     }
@@ -137,26 +139,17 @@ private fun DetailRow(icon: Int, text: String) {
 }
 
 @Composable
-fun CalendarGlyph(emoji: String?, size: Dp, tint: Color) {
-    if (emoji.isNullOrBlank()) {
-        IslandIcon(R.drawable.rounded_calendar_today_24, tint = tint, size = size)
-    } else {
-        val paint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
-        val bounds = remember { android.graphics.Rect() }
-        Canvas(Modifier.squareFit(size)) {
-            paint.textSize = this.size.minDimension
-            paint.getTextBounds(emoji, 0, emoji.length, bounds)
-            val scale = this.size.minDimension * EMOJI_SCALE / maxOf(bounds.width(), bounds.height()).coerceAtLeast(1)
-            paint.textSize *= scale
-            paint.getTextBounds(emoji, 0, emoji.length, bounds)
-            drawContext.canvas.nativeCanvas.drawText(
-                emoji,
-                center.x - bounds.exactCenterX(),
-                center.y - bounds.exactCenterY(),
-                paint,
-            )
-        }
-    }
+fun CalendarGlyph(icon: String?, size: Dp, tint: Color) {
+    IslandIcon(rememberCalendarIconRes(icon), tint = tint, size = size)
 }
 
-private const val EMOJI_SCALE = 1.25f
+@Composable
+fun rememberCalendarIconRes(icon: String?): Int {
+    val context = LocalContext.current
+    return remember(icon) {
+        icon?.takeIf { it.isNotBlank() }
+            ?.let { context.resources.getIdentifier(it, "drawable", context.packageName) }
+            ?.takeIf { it != 0 }
+            ?: R.drawable.rounded_calendar_today_24
+    }
+}

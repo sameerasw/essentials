@@ -57,6 +57,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.HilightController
 import com.sameerasw.essentials.domain.model.HilightEffect
+import com.sameerasw.essentials.domain.model.HilightFrames
 import com.sameerasw.essentials.domain.model.HilightPattern
 import com.sameerasw.essentials.domain.model.HilightProgressColorMode
 import com.sameerasw.essentials.domain.model.HilightProgressFrames
@@ -68,6 +69,7 @@ import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.HilightEffectSheet
 import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.AppColorUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.hardware.HilightLights
@@ -214,6 +216,8 @@ fun HilightNotificationsSettingsUI(
                 editingPackage = null
             },
             canTry = isHilightDevice,
+            patterns = HilightPattern.entries - HilightPattern.BATTERY,
+            appPackage = packageName,
         )
     }
 }
@@ -429,6 +433,11 @@ private fun HilightAppItem(
                     .getOrNull()
             }
     }
+    val dotColor by produceState(effect.color, packageName, effect.autoColor) {
+        if (effect.autoColor) {
+            AppColorUtil.resolveColor(context, packageName) { value = HilightEffect.appColorOr(it, effect.color) }
+        }
+    }
 
     Row(
         modifier =
@@ -470,16 +479,24 @@ private fun HilightAppItem(
                             Modifier
                                 .size(10.dp)
                                 .clip(CircleShape)
-                                .background(Color(effect.color)),
+                                .background(Color(dotColor)),
                     )
                 }
                 Text(
                     text =
-                        stringResource(
-                            R.string.hilight_app_effect_summary,
-                            stringResource(effect.pattern.title),
-                            (effect.durationMs / 1000).toInt(),
-                        ),
+                        if (effect.repeats > 0 && HilightFrames.cycleMs(effect.pattern, HilightEffect.DEFAULT_LED_COUNT) != null) {
+                            stringResource(
+                                R.string.hilight_app_effect_summary_repeats,
+                                stringResource(effect.pattern.title),
+                                effect.repeats,
+                            )
+                        } else {
+                            stringResource(
+                                R.string.hilight_app_effect_summary,
+                                stringResource(effect.pattern.title),
+                                (effect.durationMs / 1000).toInt(),
+                            )
+                        },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

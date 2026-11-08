@@ -82,6 +82,7 @@ class NotificationListener : NotificationListenerService() {
     }
 
     companion object {
+        private const val MAX_CONTENT_IMAGE_PX = 1080
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
         private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
         private val OTP_SKIPPED_CATEGORIES = setOf(
@@ -1432,7 +1433,7 @@ class NotificationListener : NotificationListenerService() {
         val now = SystemClock.elapsedRealtime()
         val last = lastHilightTime[sbn.packageName]
         if (last != null && now - last < settings.getHilightCooldownSeconds() * 1000L) return
-        HilightController.play(effect) { lastHilightTime[sbn.packageName] = SystemClock.elapsedRealtime() }
+        HilightController.playForApp(this, sbn.packageName, effect) { lastHilightTime[sbn.packageName] = SystemClock.elapsedRealtime() }
     }
 
     private val lastHilightTime = ConcurrentHashMap<String, Long>()
@@ -2239,6 +2240,18 @@ class NotificationListener : NotificationListenerService() {
 
         var text = textParts.joinToString("\n")
 
+        val bigText = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()?.trim()
+        val inboxText = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
+            ?.mapNotNull { it?.toString()?.trim()?.takeIf(String::isNotBlank) }
+            ?.joinToString("\n")
+        val fullBody = listOfNotNull(bigText, inboxText).filter { it.isNotBlank() }.maxByOrNull { it.length }
+        val expandedText = fullBody
+            ?.takeIf { full -> full.length > (body?.length ?: 0) && !full.equals(title, ignoreCase = true) }
+            ?.let { full ->
+                val head = rawTitleBig?.takeIf { it.isNotBlank() && !it.equals(title, ignoreCase = true) && !full.startsWith(it) }
+                listOfNotNull(head, full).joinToString("\n")
+            }
+
         val appName = try {
             val appInfo = packageManager.getApplicationInfo(sbn.packageName, 0)
             packageManager.getApplicationLabel(appInfo).toString()
@@ -2290,6 +2303,8 @@ class NotificationListener : NotificationListenerService() {
             }
         }
 
+        val messageSender = senderName
+
         if (senderName.isNullOrBlank()) {
             val convTitle = extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)?.toString()
             if (!convTitle.isNullOrBlank() && !convTitle.equals("You", ignoreCase = true)) {
@@ -2324,11 +2339,29 @@ class NotificationListener : NotificationListenerService() {
         try {
             notif.getLargeIcon()?.loadDrawable(this)?.let { largeIconBitmap = AppUtil.drawableToBitmap(it) }
         } catch (_: Exception) {}
-        val isGroupConversation = notif.extras.getBoolean(Notification.EXTRA_IS_GROUP_CONVERSATION)
-        val shortcutIcon = if (conversationIcon == null && personAvatar == null && largeIconBitmap == null) conversationShortcutIcon(sbn) else null
-        val chatIcon = (if (isGroupConversation) conversationIcon else null) ?: personAvatar ?: largeIconBitmap ?: conversationIcon ?: shortcutIcon
+        val conversationTitle = extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)?.toString()?.trim()
+        val isGroupConversation =
+            notif.extras.getBoolean(Notification.EXTRA_IS_GROUP_CONVERSATION) ||
+                (!conversationTitle.isNullOrBlank() && !messageSender.isNullOrBlank() && !conversationTitle.equals(messageSender, ignoreCase = true))
+        val groupName =
+            if (isGroupConversation) groupNameFrom(conversationTitle, title, messageSender) else null
 
-        var bitmap: Bitmap? = personAvatar
+        val chatIcon =
+            if (groupName != null) {
+                conversationIcon ?: conversationShortcutIcon(sbn) ?: largeIconBitmap?.takeIf { large -> personAvatar?.let { !large.sameAs(it) } ?: true }
+            } else {
+                val shortcutIcon = if (conversationIcon == null && personAvatar == null && largeIconBitmap == null) conversationShortcutIcon(sbn) else null
+                personAvatar ?: largeIconBitmap ?: conversationIcon ?: shortcutIcon
+            }
+
+        if (groupName != null) {
+            senderName = groupName
+            if (!messageSender.isNullOrBlank() && text.isNotBlank() && '\n' !in text && !text.startsWith("$messageSender:", ignoreCase = true)) {
+                text = "$messageSender: $text"
+            }
+        }
+
+        var bitmap: Bitmap? = if (groupName != null) chatIcon else personAvatar
         if (bitmap == null) {
             try {
                 val largeIcon = notif.getLargeIcon()
@@ -2357,12 +2390,23 @@ class NotificationListener : NotificationListenerService() {
             bitmap = appIcon
         }
 
+        var smallIconBitmap: Bitmap? = null
+        try {
+            notif.smallIcon?.loadDrawable(this)?.let { smallIconBitmap = AppUtil.drawableToBitmap(it) }
+        } catch (_: Exception) {}
+
+        val themedBubble = SettingsRepository(this).isIslandNotifThemedBubbleActive()
+        val paletteSource = if (themedBubble) {
+            runCatching { AppUtil.drawableToBitmap(packageManager.getApplicationIcon(sbn.packageName)) }.getOrNull() ?: bitmap
+        } else {
+            bitmap
+        }
         var appColor: Int? = null
         if (notif.color != 0 && notif.color != android.graphics.Color.TRANSPARENT) {
             appColor = notif.color
-        } else if (bitmap != null) {
+        } else if (paletteSource != null) {
             try {
-                val palette = androidx.palette.graphics.Palette.from(bitmap).generate()
+                val palette = androidx.palette.graphics.Palette.from(paletteSource).generate()
                 val vibrant = palette.getVibrantColor(0)
                 val dominant = palette.getDominantColor(0)
                 if (vibrant != 0) {
@@ -2407,7 +2451,91 @@ class NotificationListener : NotificationListenerService() {
             appIcon = appIcon,
             actions = actionList,
             chatIcon = chatIcon,
+            themedIcon = if (themedBubble) AppIconUtil.monochromeAppIcon(this, sbn.packageName) else null,
+            smallIcon = smallIconBitmap,
+            image = contentImage(notif),
+            expandedText = expandedText,
         )
+    }
+
+    private fun contentImage(notif: Notification): Bitmap? {
+        val extras = notif.extras ?: return null
+        val picture = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                extras.getParcelable(Notification.EXTRA_PICTURE, Bitmap::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                extras.getParcelable<Bitmap>(Notification.EXTRA_PICTURE)
+            }
+        }.getOrNull()
+        if (picture != null) return scaledImage(picture)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val icon = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    extras.getParcelable(Notification.EXTRA_PICTURE_ICON, Icon::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    extras.getParcelable<Icon>(Notification.EXTRA_PICTURE_ICON)
+                }
+            }.getOrNull()
+            icon?.let { runCatching { it.loadDrawable(this) }.getOrNull() }?.let { return scaledImage(AppUtil.drawableToBitmap(it)) }
+        }
+        @Suppress("DEPRECATION")
+        val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES) ?: return null
+        for (message in messages.reversed()) {
+            val bundle = message as? Bundle ?: continue
+            val type = bundle.getString("type") ?: continue
+            if (!type.startsWith("image/")) continue
+            val uri = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    bundle.getParcelable("uri", android.net.Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    bundle.getParcelable<android.net.Uri>("uri")
+                }
+            }.getOrNull() ?: continue
+            decodeUriImage(uri)?.let { return it }
+        }
+        return null
+    }
+
+    private fun decodeUriImage(uri: android.net.Uri): Bitmap? = runCatching {
+        val source = android.graphics.ImageDecoder.createSource(contentResolver, uri)
+        android.graphics.ImageDecoder.decodeBitmap(source) { decoder, info, _ ->
+            decoder.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
+            val longest = maxOf(info.size.width, info.size.height)
+            if (longest > MAX_CONTENT_IMAGE_PX) {
+                val ratio = MAX_CONTENT_IMAGE_PX.toFloat() / longest
+                decoder.setTargetSize((info.size.width * ratio).toInt().coerceAtLeast(1), (info.size.height * ratio).toInt().coerceAtLeast(1))
+            }
+        }
+    }.getOrNull()
+
+    private fun scaledImage(source: Bitmap): Bitmap {
+        val longest = maxOf(source.width, source.height)
+        if (longest <= MAX_CONTENT_IMAGE_PX) return source
+        val ratio = MAX_CONTENT_IMAGE_PX.toFloat() / longest
+        return Bitmap.createScaledBitmap(source, (source.width * ratio).toInt().coerceAtLeast(1), (source.height * ratio).toInt().coerceAtLeast(1), true)
+    }
+
+    private fun groupNameFrom(
+        conversationTitle: String?,
+        title: String,
+        messageSender: String?,
+    ): String? {
+        val countSuffix = Regex("\\s*\\(\\d+[^)]*\\)\\s*$")
+        val fromConversation = conversationTitle?.replace(countSuffix, "")?.trim()
+        if (!fromConversation.isNullOrBlank()) return fromConversation
+        var fromTitle = title.replace(countSuffix, "").trim()
+        if (!messageSender.isNullOrBlank()) {
+            listOf(": ", " @ ", " • ").forEach { sep ->
+                if (fromTitle.endsWith("$sep$messageSender", ignoreCase = true)) {
+                    fromTitle = fromTitle.dropLast(sep.length + messageSender.length).trim()
+                }
+            }
+            if (fromTitle.equals(messageSender, ignoreCase = true)) return null
+        }
+        return fromTitle.ifBlank { null }
     }
 
     // Ranking.getConversationShortcutInfo is missing from Android 11 framework builds

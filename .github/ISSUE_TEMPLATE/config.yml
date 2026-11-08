@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/sameerasw/essentials/discussions
+    about: Ask questions or discuss loose ideas before opening a feature request.
+  - name: Contribution guidelines
+    url: https://github.com/sameerasw/essentials/blob/develop/CONTRIBUTING.md
+    about: New features need an approved issue before any code is written.

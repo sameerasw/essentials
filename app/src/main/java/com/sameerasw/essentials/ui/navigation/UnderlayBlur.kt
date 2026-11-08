@@ -32,6 +32,8 @@ internal val gestureBlurEasing =
         }
     }
 
+private val underlayGestureEasing = AppNavTransitions.releaseAware(gestureBlurEasing)
+
 internal val cornerEasing =
     Easing { t ->
         val x = (t / 0.8f).coerceAtMost(1f)
@@ -57,7 +59,7 @@ fun UnderlayBlur(
         }
     }
     val blurDp by transition.animateFloat(
-        transitionSpec = { tween(400, easing = gestureBlurEasing) },
+        transitionSpec = { tween(400, easing = underlayGestureEasing) },
         label = "underlay_blur",
     ) { state ->
         12f * underlayFactor(state)
@@ -86,7 +88,7 @@ fun UnderlayBlur(
         }
     }
     val dim by transition.animateFloat(
-        transitionSpec = { tween(400, easing = gestureBlurEasing) },
+        transitionSpec = { tween(400, easing = underlayGestureEasing) },
         label = "underlay_dim",
     ) { state ->
         0.25f * underlayFactor(state)

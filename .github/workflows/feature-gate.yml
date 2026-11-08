@@ -1,0 +1,131 @@
+name: Contribution Gate
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize, labeled, unlabeled]
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  gate:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const { owner, repo } = context.repo;
+            const GATE_LABEL = 'needs-approved-issue';
+            const SIZE_LABEL = 'too-large';
+            const MAX_LINES = 1000;
+            const MARKER = '<!-- contribution-gate -->';
+
+            const trusted = ['OWNER', 'MEMBER', 'COLLABORATOR'];
+            if (trusted.includes(pr.author_association) || pr.user.type === 'Bot') return;
+            if (pr.head.ref.startsWith('translations-')) return;
+
+            const body = pr.body || '';
+            const checked = (name) => new RegExp(`-\\s*\\[[xX]\\]\\s*${name}`).test(body);
+            const isFeature = checked('New feature') || pr.head.ref.startsWith('feature/');
+            const isExempt = !isFeature && (checked('Bug fix') || checked('Translations') || checked('Documentation'));
+            const labels = pr.labels.map((l) => l.name);
+
+            const setLabel = async (name, on) => {
+              if (on && !labels.includes(name)) {
+                await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: [name] });
+              } else if (!on && labels.includes(name)) {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number: pr.number, name });
+              }
+            };
+
+            const comment = async (text) => {
+              const existing = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: pr.number });
+              const mine = existing.find((c) => c.body && c.body.includes(MARKER));
+              const full = `${MARKER}\n${text}`;
+              if (mine) {
+                if (mine.body !== full) await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body: full });
+              } else {
+                await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body: full });
+              }
+            };
+
+            const problems = [];
+
+            if (!isExempt) {
+              const refs = [...body.matchAll(/(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi)].map((m) => Number(m[1]));
+              let approved = false;
+              for (const number of refs) {
+                try {
+                  const { data: issue } = await github.rest.issues.get({ owner, repo, issue_number: number });
+                  if (issue.pull_request) continue;
+                  const issueLabels = issue.labels.map((l) => (typeof l === 'string' ? l : l.name));
+                  const assigned = issue.assignees.some((a) => a.login === pr.user.login);
+                  if (issueLabels.includes('help wanted') || (issueLabels.includes('approved') && assigned)) {
+                    approved = true;
+                    break;
+                  }
+                } catch (e) {
+                  core.info(`Could not read issue #${number}: ${e.message}`);
+                }
+              }
+              if (!approved) {
+                problems.push(
+                  refs.length === 0
+                    ? 'This looks like a feature PR but it does not link an issue (`Closes #123`).'
+                    : 'The linked issue is not labeled `approved` and assigned to you (or labeled `help wanted`).'
+                );
+              }
+            }
+
+            const size = pr.additions + pr.deletions;
+            const tooLarge = size > MAX_LINES;
+            if (tooLarge) {
+              problems.push(`This PR changes ${size} lines, over the ~${MAX_LINES} line limit. Please split it into smaller PRs, or agree the size in the linked issue first.`);
+            }
+
+            await setLabel(GATE_LABEL, !isExempt && problems.some((p) => !p.startsWith('This PR changes')));
+            await setLabel(SIZE_LABEL, tooLarge);
+
+            if (problems.length === 0) {
+              await comment('Thanks! This PR meets the contribution requirements and is queued for review.');
+              return;
+            }
+
+            await comment([
+              'Thanks for the contribution! Before this can be reviewed:',
+              '',
+              ...problems.map((p) => `- ${p}`),
+              '',
+              'New features need an issue that is labeled `approved` and assigned to you before any code is written. ' +
+                'PRs labeled `needs-approved-issue` are closed automatically after 7 days. ' +
+                'See [CONTRIBUTING.md](https://github.com/' + owner + '/' + repo + '/blob/develop/CONTRIBUTING.md).',
+            ].join('\n'));
+            core.setFailed(problems.join(' '));
+
+  close-stale:
+    if: github.event_name != 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+            const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'open' });
+            for (const pr of prs) {
+              if (!pr.labels.some((l) => l.name === 'needs-approved-issue')) continue;
+              const events = await github.paginate(github.rest.issues.listEvents, { owner, repo, issue_number: pr.number });
+              const labeled = events.filter((e) => e.event === 'labeled' && e.label?.name === 'needs-approved-issue').pop();
+              if (!labeled || new Date(labeled.created_at).getTime() > cutoff) continue;
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: pr.number,
+                body: 'Closing because this feature PR has no approved issue. Feel free to open a feature request and reopen once it is approved and assigned to you.',
+              });
+              await github.rest.pulls.update({ owner, repo, pull_number: pr.number, state: 'closed' });
+            }

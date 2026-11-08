@@ -44,7 +44,6 @@ fun SignalBars(level: Int, color: Color, label: String?, modifier: Modifier = Mo
         fontSize = 7.sp,
         lineHeight = 7.sp,
         fontWeight = FontWeight.Bold,
-        color = color,
         platformStyle = PlatformTextStyle(includeFontPadding = false),
     )
     Canvas(modifier.size(width = 16.dp, height = 14.dp)) {
@@ -61,7 +60,7 @@ fun SignalBars(level: Int, color: Color, label: String?, modifier: Modifier = Mo
             )
         }
         if (label != null) {
-            drawText(measurer, label, topLeft = Offset(-size.width * LABEL_SHIFT_X, -size.height * LABEL_SHIFT_Y), style = labelStyle)
+            drawText(measurer.measure(label, labelStyle), color = color, topLeft = Offset(-size.width * LABEL_SHIFT_X, -size.height * LABEL_SHIFT_Y))
         }
     }
 }
