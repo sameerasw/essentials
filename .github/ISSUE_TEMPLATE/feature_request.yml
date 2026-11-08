@@ -1,13 +1,15 @@
 name: Feature Request
 description: Suggest a new feature for the Essentials Android app
 title: "[Feature]: "
-labels: ["enhancement"]
+labels: ["enhancement", "needs-triage"]
 assignees: ["sameerasw"]
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for your interest in improving Essentials! Please fill out the form below to suggest a new feature.
+
+        **Please don't start implementing this until the issue is labeled `approved` and assigned to you.** Pull requests for features without an approved issue will be closed. See [CONTRIBUTING.md](https://github.com/sameerasw/essentials/blob/develop/CONTRIBUTING.md).
   - type: textarea
     id: problem
     attributes:
@@ -29,6 +31,11 @@ body:
     attributes:
       label: Alternatives Considered
       description: Describe any alternative solutions or features you've considered.
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected Areas
+      description: Which existing parts of the app would this touch? (e.g. Dynamic Island, Duo, keyboard, accessibility service, a specific settings screen)
   - type: dropdown
     id: priority
     attributes:
@@ -46,7 +53,7 @@ body:
       label: Contribution
       description: Are you willing to contribute to this feature?
       options:
-        - label: I would be willing to implement this feature
+        - label: I would be willing to implement this feature once it is approved and assigned to me
   - type: textarea
     id: additional
     attributes:
