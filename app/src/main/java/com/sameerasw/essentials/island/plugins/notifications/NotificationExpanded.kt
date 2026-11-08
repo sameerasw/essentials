@@ -61,6 +61,11 @@ import com.sameerasw.essentials.island.ui.components.cameraClearance
 import androidx.compose.foundation.layout.Arrangement
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.findRootCoordinates
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -113,11 +118,25 @@ fun NotificationExpanded(
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
     val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_NOTIF_MAX_HEIGHT)
+    val density = LocalDensity.current
+    val imeInset = WindowInsets.ime.getBottom(density)
+    var cardTop by remember { mutableIntStateOf(0) }
+    var rootHeight by remember { mutableIntStateOf(0) }
+    val imeRoom = if (replyAction != null && imeInset > 0 && rootHeight > 0) {
+        (rootHeight - imeInset - cardTop - with(density) { IME_MARGIN.roundToPx() }).coerceAtLeast(0)
+    } else {
+        null
+    }
     Box(propagateMinConstraints = true) {
         Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    cardTop = coordinates.positionInRoot().y.toInt()
+                    rootHeight = coordinates.findRootCoordinates().size.height
+                }
+                .then(if (imeRoom != null) Modifier.heightIn(max = with(density) { imeRoom.toDp() }) else Modifier)
                 .resizableCard(resize)
                 .padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
@@ -375,4 +394,5 @@ private fun ReplyInput(
 }
 
 private val ACTION_HEIGHT = 44.dp
+private val IME_MARGIN = 12.dp
 private val REPLY_HEIGHT = 52.dp
