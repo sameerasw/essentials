@@ -61,6 +61,7 @@ object StackHost {
     val revealedStacks: MutableSet<Int> = ConcurrentHashMap.newKeySet()
 
     private const val REVEAL_MILLIS = 4000L
+    private const val CALENDAR_SOON_MS = 30 * 60 * 1000L
     private val hideRunnables = mutableMapOf<Int, Runnable>()
 
     val positions = ConcurrentHashMap<Int, Int>()
@@ -118,6 +119,7 @@ object StackHost {
                 when (intent.action) {
                     Intent.ACTION_SCREEN_OFF -> {
                         cancelAllTimers()
+                        handler.removeCallbacks(calendarRecheck)
                         manualStacks.clear()
                         repository.savePositions(positions)
                     }
@@ -437,17 +439,26 @@ object StackHost {
             ).mapNotNull { it.activityInfo?.packageName }
             .toSet()
 
+    private val calendarRecheck = Runnable { refreshCalendarThenPick() }
+
     private fun refreshCalendarThenPick() {
+        handler.removeCallbacks(calendarRecheck)
         if (repository.getAll().none { it.smart }) {
             calendarSoon = false
             smartPickAll()
             return
         }
         scope.launch {
-            val soon = CalendarEventUtil.queryNextUpcomingEvent(appContext, "30m", emptySet()) != null
+            val now = System.currentTimeMillis()
+            val start = CalendarEventUtil.queryNextUpcomingEvent(appContext, "24h", emptySet())?.startTimeMillis
+            val soon = start != null && start - now <= CALENDAR_SOON_MS
             handler.post {
                 calendarSoon = soon
                 smartPickAll()
+                if (start != null) {
+                    val at = if (soon) start else start - CALENDAR_SOON_MS
+                    handler.postDelayed(calendarRecheck, (at - System.currentTimeMillis()).coerceAtLeast(0) + 1000L)
+                }
             }
         }
     }
