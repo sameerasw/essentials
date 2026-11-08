@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import com.sameerasw.essentials.island.plugins.media.IslandMediaState
 import com.sameerasw.essentials.island.plugins.media.MediaExpanded
 import com.sameerasw.essentials.island.plugins.media.MediaSnapshot
+import com.sameerasw.essentials.island.plugins.media.mediaAccent
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
 import com.sameerasw.essentials.island.ui.components.accentGlow
 import com.sameerasw.essentials.island.ui.components.cameraClearance
@@ -269,7 +270,7 @@ private fun BriefExpanded(
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
-                            MediaExpanded(m.title, m.artist, m.artwork, m.accent, m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward)
+                            MediaExpanded(m.title, m.artist, m.artwork, mediaAccent(m.playerAccent ?: m.accent), m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward, packageName = m.packageName, style = m.style)
                         }
                     }
                 }
@@ -643,13 +644,13 @@ private fun BriefPlayer(media: MediaSnapshot, artwork: ImageBitmap?, onClick: ()
         media.actions.like?.let {
             BriefPlayerButton(
                 icon = if (media.liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                tint = if (media.liked) media.accent else Color.White,
+                tint = if (media.liked) mediaAccent(media.accent) else Color.White,
             ) {
                 IslandHaptics.button(context)
                 it()
             }
         }
-        val playContainer = LocalIslandIconColor.current ?: media.accent
+        val playContainer = LocalIslandIconColor.current ?: mediaAccent(media.accent)
         BriefPlayerButton(
             icon = if (media.playing) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24,
             tint = if (playContainer.luminance() > 0.5f) Color.Black else Color.White,

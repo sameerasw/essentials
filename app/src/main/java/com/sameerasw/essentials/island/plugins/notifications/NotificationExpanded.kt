@@ -1,5 +1,29 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.components.resizableCard
+import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
+import com.sameerasw.essentials.island.ui.components.ResizeHandle
+import com.sameerasw.essentials.island.ui.IslandLiveResize
+import androidx.compose.ui.draw.clipToBounds
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.IslandHaptics
@@ -71,35 +95,28 @@ fun NotificationExpanded(
     onAction: (NotificationActionItem) -> Unit,
     onReply: (NotificationActionItem, String) -> Unit,
     scope: IslandExpandedScope,
-    tapToOpen: Boolean = false,
 ) {
-    val context = LocalContext.current
     var replyAction by remember(alert.key) { mutableStateOf<NotificationActionItem?>(null) }
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
+    val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_NOTIF_MAX_HEIGHT)
     Box(propagateMinConstraints = true) {
         Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
-            modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
+            modifier = Modifier
+                .fillMaxWidth()
+                .resizableCard(resize)
+                .padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column(
-                modifier = if (tapToOpen) {
-                    Modifier.clickable(interactionSource = null, indication = null) {
-                        IslandHaptics.button(context)
-                        scope.openApp()
-                    }
-                } else {
-                    Modifier
-                },
-            ) {
+            Column(Modifier.weight(1f, fill = false)) {
                 Spacer(Modifier.height(spec.expandedTopPadding))
                 scope.CameraRow(
                     horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
+                    title = sender,
                     start = {
                         IslandBitmap(alert.chatIcon ?: alert.appIcon ?: alert.icon, spec.cellSize, fallbackRes = R.drawable.rounded_notifications_unread_24)
-                        MarqueeText(text = sender, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                     },
                     end = {
                         val appIcon = alert.appIcon
@@ -108,15 +125,42 @@ fun NotificationExpanded(
                         }
                     },
                 )
+                Column(Modifier.weight(1f, fill = false).clipToBounds()) {
                 if (message.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = message,
                         style = IslandTextStyles.body.copy(color = islandTextColor(), fontSize = 15.sp, lineHeight = 20.sp),
-                        maxLines = 7,
+                        maxLines = 20,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
                     )
+                }
+                alert.image?.let { picture ->
+                    val image = remember(picture) { picture.asImageBitmap() }
+                    val ratio = picture.width.toFloat() / picture.height.coerceAtLeast(1)
+                    val maxImageHeight = minOf((LocalConfiguration.current.screenHeightDp * 0.4f).dp, 200.dp)
+                    Spacer(Modifier.height(10.dp))
+                    Image(
+                        bitmap = image,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .padding(horizontal = sidePadding)
+                            .layout { measurable, constraints ->
+                                val full = constraints.maxWidth
+                                val natural = (full / ratio).toInt()
+                                val capped = minOf(natural, maxImageHeight.roundToPx())
+                                val width = minOf(full, (capped * ratio).toInt()).coerceAtLeast(1)
+                                val height = minOf(capped, constraints.maxHeight)
+                                if (height < 32.dp.roundToPx()) return@layout layout(full, 0) {}
+                                val placeable = measurable.measure(Constraints.fixed(width, height))
+                                layout(full, height) { placeable.place((full - width) / 2, 0) }
+                            }
+                            .clip(RoundedCornerShape(16.dp)),
+                    )
+                }
                 }
             }
             Column {
@@ -150,7 +194,7 @@ fun NotificationExpanded(
                         },
                     )
                 }
-                Spacer(Modifier.height(spec.expandedBottomPadding))
+                ResizeHandle(resize, spec.expandedBottomPadding.coerceAtLeast(18.dp))
             }
         }
     }

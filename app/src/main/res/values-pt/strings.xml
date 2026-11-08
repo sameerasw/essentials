@@ -1567,7 +1567,6 @@
     <string name="duo_show_media_title">Reprodução de mídia</string>
     <string name="duo_show_flashlight_title">lanterna </string>
     <string name="duo_action_swipe_down_title">deslizar para baixl</string>
-    <string name="island_notif_tap_to_open_title">toque para abrir a notificação</string>
     <string name="island_notif_queue_title">Fila de notificações</string>
     <string name="island_notif_keep_progress_title">manter processo de notificações</string>
     <string name="button_remap_pause_on_volume_dialog_title">Desativa remapeamento de tecla temporáriamente quando a caixa de diálogo do volume é aberta</string>
@@ -1637,6 +1636,7 @@
     <string name="island_battery_percentage_title">Mostrar porcentagem </string>
     <string name="island_battery_percentage_conditional_title">Apenas para as condições abaixo</string>
     <string name="island_launcher_only_title">Só aparece no iniciador</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_media_peek_song_change_title">Prévia ao mudar de música</string>
     <string name="island_media_keep_when_paused_title">Manter em modo de recuperação quando pausado</string>
     <string name="island_media_show_previous_title">mostrar botão para voltar a música anterior</string>
@@ -1708,9 +1708,11 @@
     <string name="island_show_when_unlocked">Desbloqueado</string>
     <string name="island_show_when_always">Sempre</string>
     <string name="island_hide_in_owner_app_title">Ocultar complicação dentro do aplicativo</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="island_hide_on_shade_title">Ocultar quando a barra de status estiver expandida</string>
     <string name="keep_in_full_screen_title">Manter em tela cheia</string>
     <string name="disable_interactions_in_full_screen_title">Desativar interações em tela cheia</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Dispensar atividades externas</string>
     <string name="status_glance_calendar_show_all_day_title">Mostrar todos os eventos do dia</string>
     <string name="island_calendar_priority_title">Prioridade ao fechar</string>
@@ -1794,6 +1796,7 @@ adicionar algum app</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Use themed app icons</string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -1804,6 +1807,7 @@ adicionar algum app</string>
     <string name="island_keep_on_landscape_title">manter no modo paisagem</string>
     <string name="island_secondary_bubble_title">bolha segundaria</string>
     <string name="island_balance_compact_title">visual balanceado para um ilha compacto</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="duo_auto_detect_title">detectar automaticamente a câmera </string>
     <string name="duo_auto_detect_desc">localizar automaticamente o corte da câmera frontal</string>
     <string name="duo_material_you_title">use cores do material you</string>
@@ -1814,4 +1818,8 @@ adicionar algum app</string>
     <string name="feat_transparent_navigation_bar_desc">Tornar o fundo da barra de navegação do sistema transparente</string>
     <string name="island_hide_in_fullscreen_title">esconder em tela cheia</string>
     <string name="island_hide_status_bar_title">esconder barra de status</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

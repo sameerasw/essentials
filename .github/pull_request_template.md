@@ -1,25 +1,29 @@
+<!--
+New features need an issue labeled `approved` and assigned to you before you open a PR.
+Feature PRs without one will be closed. See CONTRIBUTING.md.
+-->
+
+## Linked issue
+Closes #
+
 ## Description
-<!-- Describe what this PR changes and why. If it resolves an issue, link it here: e.g. Closes #123 -->
+<!-- What does this PR change and why? -->
 
 ## Type of change
 - [ ] Bug fix
 - [ ] New feature
-- [ ] UI / visual update
-- [ ] Performance improvement
-- [ ] Refactoring / cleanup
 - [ ] Translations
+- [ ] Documentation
 - [ ] Build / CI tooling
 
 ## UI changes
 <!-- Required if this PR changes or adds UI. Please attach screenshots or a screen recording. -->
 
 ## Checklist
-Before submitting, please make sure:
-- [ ] The base branch is set to `develop` (not `main`).
-- [ ] The app builds cleanly locally with `./gradlew assembleDebug`.
-- [ ] Unit tests pass with `./gradlew testDebugUnitTest`.
-- [ ] You tested the changes on a device or emulator (including Shizuku or Root if applicable).
-- [ ] New preferences use `SettingsRepository` for keys and getter/setter methods.
-- [ ] New user-facing settings are registered in `FeatureRegistry.kt` for search indexing.
-- [ ] New UI follows the design system in `ui/core/` (`RoundedCardContainer`, `IconToggleItem`, etc.).
-- [ ] Strings are added to `res/values/strings.xml` and drawables use rounded variants (`R.drawable.rounded_*`).
+- [ ] For new features: the linked issue is labeled `approved` and assigned to me.
+- [ ] This PR covers a single feature or fix and is under ~1,000 changed lines (or the size was agreed in the issue).
+- [ ] The base branch is `develop`.
+- [ ] `./gradlew assembleDebug` and `./gradlew testDebugUnitTest` pass.
+- [ ] I tested the changes on a device or emulator (including Shizuku or Root if applicable).
+- [ ] I understand every line of this change and can explain it in review, including any AI-assisted code.
+- [ ] The code follows the [Development Guide](https://github.com/sameerasw/essentials/blob/develop/docs/DEVELOPMENT_GUIDE.md).

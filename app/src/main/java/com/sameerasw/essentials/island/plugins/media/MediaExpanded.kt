@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.island.plugins.media
 
-import androidx.compose.ui.graphics.luminance
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
@@ -11,6 +10,7 @@ import android.os.SystemClock
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,6 +19,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +31,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import com.sameerasw.essentials.island.ui.components.EqualizerBars
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,7 +49,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
@@ -49,9 +57,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.IslandTextStyles
-import com.sameerasw.essentials.island.ui.components.ConnectedButtonRow
-import com.sameerasw.essentials.island.ui.components.ConnectedItem
-import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.components.IslandSeekBar
 import kotlinx.coroutines.delay
 import kotlin.math.abs
@@ -72,14 +77,27 @@ class MediaSnapshot(
     val title: String,
     val artist: String,
     val artwork: Bitmap?,
-    val accent: Color,
+    val accent: Color?,
     val playing: Boolean,
     val liked: Boolean,
     val actions: MediaActions,
     val open: () -> Unit,
     val canSkipBack: Boolean = true,
     val canSkipForward: Boolean = true,
+    val packageName: String? = null,
+    val playerAccent: Color? = null,
+    val style: MediaPlayerStyle = MediaPlayerStyle.Default,
 )
+
+enum class MediaPlayerStyle(val key: String) {
+    Default("default"),
+    ArtControls("art_controls"),
+    ;
+
+    companion object {
+        fun from(key: String?): MediaPlayerStyle = entries.firstOrNull { it.key == key } ?: Default
+    }
+}
 
 object IslandMediaState {
     val current = kotlinx.coroutines.flow.MutableStateFlow<MediaSnapshot?>(null)
@@ -99,6 +117,8 @@ fun MediaExpanded(
     canSkipBack: Boolean = false,
     canSkipForward: Boolean = false,
     drawBackground: Boolean = true,
+    packageName: String? = null,
+    style: MediaPlayerStyle = MediaPlayerStyle.Default,
 ) {
     val spec = scope.spec
     val context = LocalContext.current
@@ -135,11 +155,16 @@ fun MediaExpanded(
                 Box(
                     Modifier
                         .size(artSize)
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape((spec.expandedCorner - spec.expandedOutset - 12.dp).coerceAtLeast(6.dp)))
                         .background(Color.White.copy(alpha = 0.1f))
                         .clickable {
                             IslandHaptics.button(context)
-                            scope.openApp()
+                            val like = actions.like
+                            when {
+                                style == MediaPlayerStyle.ArtControls -> actions.playPause()
+                                like != null -> like()
+                                else -> scope.openApp()
+                            }
                         },
                 ) {
                     if (bitmap != null) {
@@ -154,7 +179,7 @@ fun MediaExpanded(
                 color = accent,
                 enabled = canSeek,
                 wavy = playing,
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = 2.dp),
                 onInteraction = scope::keepAlive,
                 onValueChangeFinished = { target ->
                     actions.seekTo(target)
@@ -163,63 +188,62 @@ fun MediaExpanded(
                 },
             )
         }
-        val playPauseContainer = LocalIslandIconColor.current ?: accent
-        val playPauseInk = if (playPauseContainer.luminance() > 0.5f) Color.Black else Color.White
-        val controls: @Composable (Dp) -> Unit = { rowHeight ->
-            ConnectedButtonRow(
-                height = rowHeight,
-                items = listOfNotNull(
-                    actions.like?.let {
-                        ConnectedItem(it) {
-                            IslandIcon(
-                                if (liked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                                tint = if (liked) accent else Color.White,
-                                size = 24.dp,
-                            )
-                        }
-                    },
-                    actions.previous?.let {
-                        ConnectedItem(it, enabled = canSkipBack) {
-                            IslandIcon(R.drawable.rounded_skip_previous_24, size = 24.dp)
-                        }
-                    },
-                    ConnectedItem(actions.playPause, container = playPauseContainer) {
-                        AnimatedContent(
-                            targetState = playing,
-                            transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
-                            label = "playPause",
-                        ) {
-                            IslandIcon(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, tint = playPauseInk, size = 26.dp)
-                        }
-                    },
-                    ConnectedItem(actions.next, enabled = canSkipForward) {
-                        IslandIcon(R.drawable.rounded_skip_next_24, size = 24.dp)
-                    },
-                ),
+        val buttonContainer = accent
+        val buttonInk = Color.Black
+        val artOnEnd = spec.growDirection > 0
+        val appIcon = remember(packageName) { packageName?.let { MediaSessionSource.appIcon(context, it)?.asImageBitmap() } }
+        val artBlock: @Composable () -> Unit = {
+            Box {
+                art(ART_SIZE)
+                when {
+                    style == MediaPlayerStyle.ArtControls -> ArtPlaybackMark(playing, accent, Modifier.align(Alignment.Center))
+                    actions.like != null -> LikeMark(liked, accent, Modifier.align(Alignment.Center))
+                }
+                if (appIcon != null) {
+                    Box(
+                        Modifier
+                            .align(if (artOnEnd) Alignment.BottomStart else Alignment.BottomEnd)
+                            .offset(x = if (artOnEnd) (-4).dp else 4.dp, y = 4.dp)
+                            .size(30.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black)
+                            .padding(3.dp)
+                            .clip(CircleShape),
+                    ) {
+                        Image(appIcon, null, contentScale = ContentScale.Crop, modifier = Modifier.matchParentSize())
+                    }
+                }
+            }
+        }
+        val titleText: @Composable () -> Unit = {
+            MarqueeText(
+                text = title,
+                style = IslandTextStyles.title.copy(fontSize = 18.sp),
+                modifier = Modifier.fillMaxWidth(),
             )
         }
-        if (spec.landscape) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(spec.expandedOutset)
-                    .padding(start = 16.dp, end = 16.dp, top = spec.expandedTopPadding + 12.dp, bottom = spec.expandedBottomPadding),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+        val details: @Composable ColumnScope.() -> Unit = {
+            if (style == MediaPlayerStyle.ArtControls) {
+                Box(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                 ) {
-                    art(72.dp)
-                    Column(Modifier.weight(1f)) {
-                        MarqueeText(
-                            text = title,
-                            style = IslandTextStyles.title.copy(fontSize = 16.sp),
-                            modifier = Modifier.fillMaxWidth(),
+                    actions.like?.let { like ->
+                        HeartButton(
+                            liked = liked,
+                            fill = accent,
+                            onClick = like,
+                            modifier = Modifier.align(if (spec.growDirection < 0) Alignment.TopStart else Alignment.TopEnd),
                         )
-                        Spacer(Modifier.height(2.dp))
+                    }
+                    Column(
+                        Modifier
+                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .padding(start = 4.dp, bottom = 6.dp),
+                    ) {
+                        titleText()
                         MarqueeText(
                             text = artist,
                             style = IslandTextStyles.body,
@@ -227,41 +251,214 @@ fun MediaExpanded(
                         )
                     }
                 }
-                Column(Modifier.weight(1f)) {
-                    seekBar()
-                    Spacer(Modifier.height(4.dp))
-                    controls(44.dp)
+            } else {
+                Row(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        titleText()
+                        MarqueeText(
+                            text = artist,
+                            style = IslandTextStyles.body,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    Spacer(Modifier.size(8.dp))
+                    PlayerButton(
+                        onClick = actions.playPause,
+                        container = buttonContainer,
+                        modifier = Modifier.size(width = 64.dp, height = 48.dp),
+                    ) {
+                        AnimatedContent(
+                            targetState = playing,
+                            transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+                            label = "playPause",
+                        ) {
+                            ButtonGlyph(if (it) R.drawable.rounded_pause_24 else R.drawable.rounded_play_arrow_24, buttonInk, 28.dp)
+                        }
+                    }
                 }
             }
-        } else {
+        }
+        val info: @Composable RowScope.() -> Unit = {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(spec.expandedOutset)
-                    .padding(start = 12.dp, end = 12.dp, bottom = spec.expandedBottomPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                Modifier
+                    .weight(1f)
+                    .height(ART_SIZE),
             ) {
-                Spacer(Modifier.height(spec.cameraDiameter + 28.dp + spec.expandedTopPadding))
-                art(88.dp)
-                Spacer(Modifier.height(12.dp))
-                MarqueeText(
-                    text = title,
-                    style = IslandTextStyles.title.copy(fontSize = 16.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-                )
-                Spacer(Modifier.height(4.dp))
-                MarqueeText(
-                    text = artist,
-                    style = IslandTextStyles.body,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-                )
-                Spacer(Modifier.height(4.dp))
-                seekBar()
-                Spacer(Modifier.height(4.dp))
-                controls(52.dp)
+                details()
+                Row(
+                    modifier = Modifier
+                        .height(32.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    actions.previous?.let { previous ->
+                        SkipButton(R.drawable.rounded_skip_previous_24, buttonContainer, canSkipBack, previous)
+                    }
+                    Box(Modifier.weight(1f)) { seekBar() }
+                    SkipButton(R.drawable.rounded_skip_next_24, buttonContainer, canSkipForward, actions.next)
+                }
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(spec.expandedOutset)
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            if (artOnEnd) {
+                info()
+                artBlock()
+            } else {
+                artBlock()
+                info()
             }
         }
     }
 }
+
+private val ART_SIZE = 136.dp
+private const val PLAYBACK_FLASH_MS = 900L
+private val ART_MARK_OUTLINE = Color.Black.copy(alpha = 0.35f)
+
+@Composable
+private fun PlayerButton(
+    onClick: () -> Unit,
+    container: Color,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    val context = LocalContext.current
+    Box(
+        modifier
+            .clip(CircleShape)
+            .background(container)
+            .clickable {
+                IslandHaptics.button(context)
+                onClick()
+            },
+        contentAlignment = Alignment.Center,
+    ) { content() }
+}
+
+@Composable
+private fun LikeMark(liked: Boolean, fill: Color, modifier: Modifier = Modifier) {
+    val scale by animateFloatAsState(if (liked) 1f else 0.9f, IslandMotion.expressiveFastSpatial(), label = "likeMark")
+    Box(
+        modifier
+            .size(52.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        AnimatedContent(
+            targetState = liked,
+            transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+            label = "likeMarkIcon",
+        ) {
+            ButtonGlyph(if (it) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24, if (it) fill else Color.White, 32.dp)
+        }
+    }
+}
+
+@Composable
+private fun ArtPlaybackMark(playing: Boolean, color: Color, modifier: Modifier = Modifier) {
+    var flash by remember { mutableStateOf<Boolean?>(null) }
+    var seen by remember { mutableStateOf(false) }
+    LaunchedEffect(playing) {
+        if (!seen) {
+            seen = true
+            return@LaunchedEffect
+        }
+        flash = playing
+        delay(PLAYBACK_FLASH_MS)
+        flash = null
+    }
+    Box(modifier.size(52.dp), contentAlignment = Alignment.Center) {
+        AnimatedContent(
+            targetState = flash,
+            transitionSpec = { (fadeIn(IslandMotion.contentIn()) + scaleIn(IslandMotion.expressiveFastSpatial(), initialScale = 0.7f)) togetherWith fadeOut(IslandMotion.contentOut()) },
+            label = "artPlayback",
+        ) { shown ->
+            when (shown) {
+                null -> EqualizerBars(playing, color, size = 30.dp, outline = ART_MARK_OUTLINE)
+                true -> OutlinedGlyph(R.drawable.rounded_play_arrow_24, color, 40.dp)
+                false -> OutlinedGlyph(R.drawable.rounded_pause_24, color, 40.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun OutlinedGlyph(icon: Int, tint: Color, size: Dp) {
+    Box(contentAlignment = Alignment.Center) {
+        listOf(-1, 1).forEach { dx ->
+            listOf(-1, 1).forEach { dy ->
+                Box(Modifier.offset(dx.dp, dy.dp)) { ButtonGlyph(icon, ART_MARK_OUTLINE, size) }
+            }
+        }
+        ButtonGlyph(icon, tint, size)
+    }
+}
+
+@Composable
+private fun HeartButton(liked: Boolean, fill: Color, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val scale by animateFloatAsState(if (liked) 1f else 0.9f, IslandMotion.expressiveFastSpatial(), label = "heartButton")
+    Box(
+        modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .clickable {
+                IslandHaptics.button(context)
+                onClick()
+            }
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        AnimatedContent(
+            targetState = liked,
+            transitionSpec = { fadeIn(IslandMotion.contentIn()) togetherWith fadeOut(IslandMotion.contentOut()) },
+            label = "heartButtonIcon",
+        ) {
+            ButtonGlyph(if (it) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24, if (it) fill else Color.White, 24.dp)
+        }
+    }
+}
+
+@Composable
+private fun ButtonGlyph(icon: Int, ink: Color, size: Dp) {
+    Icon(painterResource(icon), contentDescription = null, tint = ink, modifier = Modifier.size(size))
+}
+
+@Composable
+private fun SkipButton(icon: Int, tint: Color, enabled: Boolean, onClick: () -> Unit) {
+    val context = LocalContext.current
+    Box(
+        Modifier
+            .size(32.dp)
+            .clip(CircleShape)
+            .clickable(enabled = enabled) {
+                IslandHaptics.button(context)
+                onClick()
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        ButtonGlyph(icon, tint.copy(alpha = if (enabled) 1f else 0.38f), 20.dp)
+    }
+}
+
+@Composable
+fun mediaAccent(artAccent: Color?): Color = artAccent ?: LocalIslandIconColor.current ?: Color.White

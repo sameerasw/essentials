@@ -91,9 +91,9 @@ class ConsciousGatePlugin : BaseIslandPlugin() {
                 expanded = ExpandedContent { scope ->
                     Column(Modifier.padding(scope.spec.expandedOutset).padding(top = scope.spec.expandedTopPadding, bottom = scope.spec.expandedBottomPadding)) {
                         scope.CameraRow(
+                            title = label,
                             start = {
                                 IslandBitmap(icon, scope.spec.cellSize, circle = true)
-                                MarqueeText(text = label, style = IslandTextStyles.title, modifier = Modifier.weight(1f))
                             },
                         )
                         RollingText(

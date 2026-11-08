@@ -9,6 +9,7 @@ import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.utils.LinearBrightness
 import com.sameerasw.essentials.utils.media.MusicSessionUtil
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.services.handlers.SoundModeHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -115,7 +116,7 @@ class CompactGestureController(
         try {
             val order = listOf(AudioManager.RINGER_MODE_NORMAL, AudioManager.RINGER_MODE_VIBRATE, AudioManager.RINGER_MODE_SILENT)
             val index = order.indexOf(audioManager.ringerMode).coerceAtLeast(0)
-            audioManager.ringerMode = order[(index + if (forward) 1 else order.size - 1) % order.size]
+            SoundModeHandler(context).setMode(order[(index + if (forward) 1 else order.size - 1) % order.size])
         } catch (_: Exception) {
         }
     }

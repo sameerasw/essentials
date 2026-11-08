@@ -106,7 +106,7 @@ fun TrackSkipPill(next: Boolean, armed: Boolean, accent: Color) {
             .height(20.dp)
             .defaultMinSize(minWidth = 34.dp)
             .clip(RoundedCornerShape(50))
-            .background(lerpColor(Color.White.copy(alpha = 0.22f), accent, progress)),
+            .background(lerpColor(Color.White.copy(alpha = 0.22f), accent.copy(alpha = 0.3f), progress)),
         contentAlignment = Alignment.Center,
     ) {
         Row(
@@ -115,7 +115,7 @@ fun TrackSkipPill(next: Boolean, armed: Boolean, accent: Color) {
         ) {
             IslandIcon(
                 res = if (next) R.drawable.rounded_skip_next_24 else R.drawable.rounded_skip_previous_24,
-                tint = lerpColor(Color.White, Color.Black, progress),
+                tint = lerpColor(Color.White, accent, progress),
                 size = 16.dp,
             )
         }

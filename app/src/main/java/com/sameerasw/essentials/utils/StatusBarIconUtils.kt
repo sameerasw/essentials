@@ -60,12 +60,26 @@ fun updateIconBlacklistSetting(
         )
     if (!isEnabled) return
 
+    val position =
+        context
+            .getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            .getInt(com.sameerasw.essentials.viewmodels.StatusBarIconViewModel.PREF_CLOCK_POSITION, 0)
+    val names = blacklistNames + clockPositionBlacklist(position)
+
     writeSecureSetting(
         context,
         ICON_BLACKLIST_KEY,
-        blacklistNames.takeIf { it.isNotEmpty() }?.joinToString(","),
+        names.takeIf { it.isNotEmpty() }?.joinToString(","),
     )
 }
+
+private fun clockPositionBlacklist(position: Int): Set<String> =
+    when (position) {
+        1 -> setOf("right_clock_position", "middle_clock_position")
+        2 -> setOf("left_clock_position", "right_clock_position")
+        3 -> setOf("left_clock_position", "middle_clock_position")
+        else -> emptySet()
+    }
 
 /**
  * Save icon visibility to shared preferences

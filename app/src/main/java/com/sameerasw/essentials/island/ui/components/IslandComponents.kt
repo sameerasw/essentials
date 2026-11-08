@@ -53,14 +53,50 @@ import com.sameerasw.essentials.island.ui.IslandTextStyles
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Row
 import com.sameerasw.essentials.island.ui.IslandMotion
+import androidx.compose.foundation.background
 import kotlinx.coroutines.delay
 import kotlin.random.Random
+
+@Composable
+fun NotificationGlyph(
+    themedIcon: Bitmap?,
+    smallIcon: Bitmap?,
+    color: Color?,
+    size: Dp,
+    modifier: Modifier = Modifier,
+    fallbackRes: Int,
+) {
+    val background = color ?: MaterialTheme.colorScheme.primary
+    val glyph = lerp(background, if (background.luminance() > 0.179f) Color.Black else Color.White, 0.8f)
+    Box(
+        modifier
+            .sizeIn(maxWidth = size, maxHeight = size)
+            .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            .clip(CircleShape)
+            .background(background),
+        contentAlignment = Alignment.Center,
+    ) {
+        val icon = themedIcon ?: smallIcon
+        if (icon != null) {
+            Image(
+                bitmap = remember(icon) { icon.asImageBitmap() },
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(glyph),
+                modifier = Modifier.fillMaxSize(if (themedIcon != null) 1f else 0.6f),
+            )
+        } else {
+            Icon(painterResource(fallbackRes), null, tint = glyph, modifier = Modifier.fillMaxSize(0.6f))
+        }
+    }
+}
 
 @Composable
 fun IslandBitmap(
@@ -69,6 +105,7 @@ fun IslandBitmap(
     modifier: Modifier = Modifier,
     circle: Boolean = false,
     fallbackRes: Int? = null,
+    tint: Color? = null,
 ) {
     val shape = when {
         LocalIslandBitmapFlat.current -> RectangleShape
@@ -92,7 +129,7 @@ fun IslandBitmap(
                     bitmap = remember(bmp) { bmp.asImageBitmap() },
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    colorFilter = when (themedMode) {
+                    colorFilter = if (tint != null) ColorFilter.tint(tint, BlendMode.SrcIn) else when (themedMode) {
                         AppIconUtil.ThemedMode.MONO -> ColorFilter.tint(iconColor, BlendMode.SrcIn)
                         AppIconUtil.ThemedMode.DUO -> duotoneFilter(iconColor)
                         null -> null
@@ -151,6 +188,7 @@ fun EqualizerBars(
     color: Color,
     modifier: Modifier = Modifier,
     size: Dp = 18.dp,
+    outline: Color? = null,
 ) {
     val barColor = if (LocalIslandChipInk.current != null) Color.Black else color
     val levels = remember { mutableStateListOf(0.16f, 0.16f, 0.16f) }
@@ -172,6 +210,15 @@ fun EqualizerBars(
         val barWidth = this.size.width / 5f
         animated.forEachIndexed { i, level ->
             val h = this.size.height * level
+            if (outline != null) {
+                val pad = barWidth * 0.3f
+                drawRoundRect(
+                    color = outline,
+                    topLeft = Offset(barWidth * (i * 2f) - pad, (this.size.height - h) / 2f - pad),
+                    size = Size(barWidth + pad * 2f, h + pad * 2f),
+                    cornerRadius = CornerRadius(barWidth / 2f + pad),
+                )
+            }
             drawRoundRect(
                 color = barColor,
                 topLeft = Offset(barWidth * (i * 2f), (this.size.height - h) / 2f),

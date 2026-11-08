@@ -1691,6 +1691,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_camera_position_right">Derecha</string>
     <string name="island_camera_position_center">Centrar</string>
     <string name="island_hide_in_owner_app_title">Ocultar la notificación dentro de la app activa</string>
+    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
     <string name="about_desc_conscious_gate">Agrega una breve pantalla de puerta de atención plena antes de abrir las aplicaciones que has elegido usar con más intencionalidad, como las redes sociales.
 
 El botón Continuar permanece deshabilitado durante unos segundos para que tengas un momento para decidir, y la pausa puede reaparecer opcionalmente si sigues usando la aplicación más allá de un tiempo determinado</string>
@@ -1750,6 +1751,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>
     <string name="diy_volume_channel_alarm">Alarmas</string>
     <string name="island_launcher_only_title">Solo mostrar en el launcher</string>
+    <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="island_alarm_window_title">Mostrar alarmas dentro</string>
     <string name="island_battery_only_low_title">Solo mostrar si esta baja</string>
     <string name="island_battery_percentage_title">Mostrar porcentaje</string>
@@ -1757,6 +1759,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_section_notifications">Notificaciones</string>
     <string name="island_hide_on_shade_title">Ocultar cuando Barra de Estado se desliza</string>
+    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Ocultar al tocar fuera de la notificación</string>
     <string name="island_show_when_title">Mostrar al</string>
     <string name="island_show_when_unlocked">Desbloquear</string>
@@ -1809,8 +1812,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_border_outline_hide_expanded_title">Ocultar al Expandir</string>
     <string name="island_border_outline_hide_expanded_desc">Solo delinear la isla compacta y de vista previa</string>
     <string name="island_border_outline_desc">Muestra una línea alrededor de la isla</string>
-    <string name="island_pulse_shadow_size_title">Tamaño del Brillo</string>
-    <string name="island_pulse_shadow_y_shift_title">Desplazamiento vertical</string>
     <string name="island_pulse_shadow_spread_title">Ondas de Brillo</string>
     <string name="island_pulse_shadow_duration_title">Duración de la Animación</string>
     <string name="island_max_items_title">Número máximo de elementos a mostrar</string>
@@ -1825,6 +1826,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_navigation_peek_after_expand_title">Línea compacta después expandir</string>
     <string name="island_secondary_bubble_title">Burbuja secundaria</string>
     <string name="island_balance_compact_title">Isla compacta visualmente equilibrada</string>
+    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Mantenlo en pantalla completa</string>
     <string name="feat_volume_steps_title">Escalones de volumen</string>
     <string name="feat_volume_steps_desc">Cambia el volumen del medio más rápido con cada pulsación de tecla</string>
@@ -1899,6 +1901,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Usar iconos de aplicaciones tematizados </string>
     <string name="island_time_day_suffix_title">Show date suffix</string>
+    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -1926,6 +1929,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_media_keep_when_paused_title">Mantener en espera cuando se pausa</string>
     <string name="island_media_show_previous_title">Botón de canción anterior</string>
     <string name="island_media_show_like_title">Botón de \"me gusta\"</string>
+    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_in_fullscreen_title">Ocultar en pantalla completa</string>
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
     <string name="island_battery_icon_conditional_title">Icono para algunas condiciones</string>
@@ -1938,4 +1943,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_section_icon_color">Color de iconos</string>
     <string name="app_colors_custom">Personalizado </string>
     <string name="island_themed_text_title">Color de texto tematizado </string>
+    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
 </resources>

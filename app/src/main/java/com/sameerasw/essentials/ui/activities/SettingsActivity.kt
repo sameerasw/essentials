@@ -1469,6 +1469,13 @@ fun SettingsContent(
                     isChecked = viewModel.isAutoAccessibilityEnabled.value,
                     onCheckedChange = { viewModel.setAutoAccessibilityEnabled(it, context) },
                 )
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_border_top_24,
+                    title = stringResource(R.string.debug_ui_margin_overlay_title),
+                    isChecked = viewModel.isDebugUiMarginOverlay.value,
+                    onCheckedChange = { viewModel.setDebugUiMarginOverlay(it) },
+                )
             }
 
             val gitHubUser = viewModel.gitHubUser.value
