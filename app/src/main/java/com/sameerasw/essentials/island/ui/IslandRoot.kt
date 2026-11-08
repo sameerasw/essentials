@@ -161,12 +161,6 @@ fun IslandRoot(
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val focused = state.items[state.focusedKey]
-    //
-    // Only `accent` may drive island-wide icon tinting. `outlineAccent` is an edge/shadow hint and
-    // is excluded here on purpose: the battery sets it to its state colour on every render, and
-    // including it let a pinned item recolour unrelated icons (network/time went green while
-    // charging). Items that want to colour themselves do so per-cell via IslandItem.selfTint.
-    //
     val dynamicAccent = focused?.accent
         ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
     val iconBase = if (targetSpec.iconMaterialYou) primary else Color.White
