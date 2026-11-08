@@ -31,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.sameerasw.essentials.island.gestures.IslandSlideFeedback
 import com.sameerasw.essentials.island.gestures.SlideFeedback
+import com.sameerasw.essentials.island.ui.components.ArtworkBlur
 import com.sameerasw.essentials.island.ui.components.EqualizerBars
 import com.sameerasw.essentials.island.ui.components.MediaArtCue
 import com.sameerasw.essentials.island.ui.components.TrackSkipPill
@@ -52,6 +53,9 @@ class MediaPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE,
         SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR,
         SettingsRepository.KEY_ISLAND_MEDIA_PLAYER_STYLE,
+        SettingsRepository.KEY_ISLAND_MEDIA_BLUR_BACKGROUND,
+        SettingsRepository.KEY_ISLAND_MEDIA_BLUR_SOURCE_WIDTH,
+        SettingsRepository.KEY_ISLAND_MEDIA_BLUR_SATURATION,
     )
 
     private val ART_RETRY_DELAYS_MS = longArrayOf(1500L, 3000L)
@@ -232,6 +236,11 @@ class MediaPlugin : BaseIslandPlugin() {
         }
         val artAccent = artAccent(t)
         val playerStyle = MediaPlayerStyle.from(settings.getIslandMediaPlayerStyle())
+        val backdrop = if (settings.isIslandMediaBlurBackgroundEnabled()) {
+            ArtworkBlur(settings.getIslandMediaBlurSourceWidth(), settings.getIslandMediaBlurSaturation())
+        } else {
+            null
+        }
         val isPlaying = playing
         val isLiked = liked
         val canSkipBack = supportsAction(controller, PlaybackState.ACTION_SKIP_TO_PREVIOUS)
@@ -270,7 +279,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, mediaAccent(artAccent)) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName, style = playerStyle)
+                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName, style = playerStyle, backdrop = backdrop)
                 },
                 accent = artAccent,
                 onOpen = { openPlayer() },

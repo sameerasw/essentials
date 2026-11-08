@@ -723,6 +723,9 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
+        const val KEY_ISLAND_MEDIA_BLUR_BACKGROUND = "island_media_blur_background"
+        const val KEY_ISLAND_MEDIA_BLUR_SOURCE_WIDTH = "island_media_blur_source_width"
+        const val KEY_ISLAND_MEDIA_BLUR_SATURATION = "island_media_blur_saturation"
         const val KEY_ISLAND_MEDIA_PLAYER_STYLE = "island_media_player_style"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
@@ -4490,6 +4493,18 @@ class SettingsRepository(
     fun isIslandMediaUseArtColorEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, true)
 
     fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
+
+    fun isIslandMediaBlurBackgroundEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BLUR_BACKGROUND, true)
+
+    fun setIslandMediaBlurBackgroundEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BLUR_BACKGROUND, enabled)
+
+    fun getIslandMediaBlurSourceWidth(): Int = getInt(KEY_ISLAND_MEDIA_BLUR_SOURCE_WIDTH, 96)
+
+    fun setIslandMediaBlurSourceWidth(width: Int) = putInt(KEY_ISLAND_MEDIA_BLUR_SOURCE_WIDTH, width)
+
+    fun getIslandMediaBlurSaturation(): Float = getFloat(KEY_ISLAND_MEDIA_BLUR_SATURATION, 1.35f)
+
+    fun setIslandMediaBlurSaturation(saturation: Float) = putFloat(KEY_ISLAND_MEDIA_BLUR_SATURATION, saturation)
 
     fun getIslandMediaPlayerStyle(): String = getString(KEY_ISLAND_MEDIA_PLAYER_STYLE, null) ?: "default"
 

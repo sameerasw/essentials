@@ -3,8 +3,13 @@ package com.sameerasw.essentials.island.ui.components
 import com.sameerasw.essentials.island.ui.LocalIslandTextColor
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import android.graphics.Bitmap
+import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.graphics.FilterQuality
@@ -209,13 +214,36 @@ fun ConnectedTextLabel(text: String) {
     )
 }
 
+/**
+ * How the artwork backdrop is softened.
+ *
+ * @param sourceWidth Width the artwork is shrunk to before the GPU blur; lower keeps less detail.
+ * @param saturation Color saturation of the backdrop; 1 keeps the artwork's colors.
+ */
+data class ArtworkBlur(
+    val sourceWidth: Int = DEFAULT_SOURCE_WIDTH,
+    val saturation: Float = DEFAULT_SATURATION,
+) {
+    companion object {
+        const val DEFAULT_SOURCE_WIDTH = 96
+        const val DEFAULT_SATURATION = 1.35f
+        val SOURCE_WIDTH_RANGE = 8f..192f
+        val SATURATION_RANGE = 0f..2f
+    }
+}
+
 @Composable
-fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier = Modifier) {
+fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier = Modifier, blur: ArtworkBlur = ArtworkBlur()) {
     if (image == null) return
     val clearTop = cameraClearance
-    val soft by produceState<ImageBitmap?>(null, image) {
-        value = withContext(Dispatchers.Default) { runCatching { softened(image.asAndroidBitmap()) }.getOrNull()?.asImageBitmap() }
+    val gpuBlur = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val sourceWidth = if (gpuBlur) blur.sourceWidth else SOFT_SOURCE_WIDTH
+    val soft by produceState<ImageBitmap?>(null, image, sourceWidth) {
+        value = withContext(Dispatchers.Default) {
+            runCatching { softened(image.asAndroidBitmap(), sourceWidth) }.getOrNull()?.asImageBitmap()
+        }
     }
+    val saturation = remember(blur.saturation) { ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(blur.saturation) }) }
     Box(modifier) {
         soft?.let { blurred ->
             Image(
@@ -223,12 +251,14 @@ fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier 
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 filterQuality = FilterQuality.Medium,
+                colorFilter = saturation,
                 modifier = Modifier
                     .matchParentSize()
                     .graphicsLayer {
                         scaleX = 1.08f
                         scaleY = 1.08f
                     }
+                    .then(if (gpuBlur) Modifier.blur(BACKDROP_BLUR, BlurredEdgeTreatment.Rectangle) else Modifier)
                     .alpha(0.67f),
             )
         }
@@ -253,9 +283,11 @@ fun IslandExpandedScope.ArtworkBackdrop(image: ImageBitmap?, modifier: Modifier 
     }
 }
 
-private fun softened(source: Bitmap): Bitmap {
+private const val SOFT_SOURCE_WIDTH = 28
+private val BACKDROP_BLUR = 28.dp
+
+private fun softened(source: Bitmap, width: Int): Bitmap {
     val readable = if (source.config == Bitmap.Config.HARDWARE) source.copy(Bitmap.Config.ARGB_8888, false) else source
-    val width = 28
     val height = (width * readable.height / readable.width.toFloat()).roundToInt().coerceAtLeast(8)
     val mid = Bitmap.createScaledBitmap(readable, width * 2, height * 2, true)
     return Bitmap.createScaledBitmap(mid, width, height, true)

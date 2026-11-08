@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
+import com.sameerasw.essentials.island.ui.components.ArtworkBlur
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
 import android.os.SystemClock
@@ -119,6 +120,7 @@ fun MediaExpanded(
     drawBackground: Boolean = true,
     packageName: String? = null,
     style: MediaPlayerStyle = MediaPlayerStyle.Default,
+    backdrop: ArtworkBlur? = ArtworkBlur(),
 ) {
     val spec = scope.spec
     val context = LocalContext.current
@@ -143,8 +145,8 @@ fun MediaExpanded(
     val image = remember(artwork) { artwork?.asImageBitmap() }
 
     Box {
-        if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
-            scope.ArtworkBackdrop(image, Modifier.matchParentSize())
+        if (drawBackground && backdrop != null && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize(), backdrop) }) {
+            scope.ArtworkBackdrop(image, Modifier.matchParentSize(), backdrop)
         }
         val art: @Composable (Dp) -> Unit = { artSize ->
             AnimatedContent(

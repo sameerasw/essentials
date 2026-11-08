@@ -62,7 +62,9 @@ import androidx.compose.material3.Button
 import android.widget.Toast
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.island.ui.components.ArtworkBlur
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import kotlin.math.roundToInt
 import com.sameerasw.essentials.ui.core.cards.FeatureCard
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
@@ -845,6 +847,38 @@ fun IslandSettingsUI(
                             },
                             modifier = Modifier.highlight(highlightSetting == "island_media_use_art_color"),
                         )
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_blur_on_24,
+                            title = stringResource(R.string.island_media_blur_background_title),
+                            isChecked = viewModel.isIslandMediaBlurBackground.value,
+                            onCheckedChange = { checked ->
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.setIslandMediaBlurBackground(checked)
+                            },
+                            modifier = Modifier.highlight(highlightSetting == "island_media_blur_background"),
+                        )
+                        if (viewModel.isIslandMediaBlurBackground.value) {
+                            ConfigSliderItem(
+                                title = stringResource(R.string.island_media_blur_source_title),
+                                value = viewModel.islandMediaBlurSourceWidth.intValue.toFloat(),
+                                onValueChange = { viewModel.setIslandMediaBlurSourceWidth(it.roundToInt()) },
+                                valueRange = ArtworkBlur.SOURCE_WIDTH_RANGE,
+                                increment = 8f,
+                                valueFormatter = { "${it.roundToInt()} px" },
+                                iconRes = R.drawable.rounded_image_24,
+                                modifier = Modifier.highlight(highlightSetting == "island_media_blur_source"),
+                            )
+                            ConfigSliderItem(
+                                title = stringResource(R.string.island_media_blur_saturation_title),
+                                value = viewModel.islandMediaBlurSaturation.floatValue,
+                                onValueChange = { viewModel.setIslandMediaBlurSaturation(it) },
+                                valueRange = ArtworkBlur.SATURATION_RANGE,
+                                increment = 0.05f,
+                                valueFormatter = { "%.2f×".format(it) },
+                                iconRes = R.drawable.rounded_palette_24,
+                                modifier = Modifier.highlight(highlightSetting == "island_media_blur_saturation"),
+                            )
+                        }
                     }
                     Text(
                         text = stringResource(R.string.duo_media_skip_apps_title),
