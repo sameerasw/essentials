@@ -13,7 +13,8 @@ object StatusBarLayoutUtil {
     private val START_ICON_CONTAINERS = listOf("notificationIcons", "notification_icon_area_inner")
     private val END_IDS = listOf("battery")
     private val END_ICON_CONTAINERS = listOf("statusIcons")
-    private const val END_FALLBACK = "system_icons"
+    private val START_FALLBACKS = listOf("status_bar_start_side_except_heads_up", "status_bar_start_side_content", "status_bar_left_side")
+    private val END_FALLBACKS = listOf("system_icons", "status_bar_end_side_content")
 
     val DEBUG_IDS = listOf(
         "status_bar_start_side_content",
@@ -63,11 +64,14 @@ object StatusBarLayoutUtil {
 
     fun edges(service: AccessibilityService): Edges? {
         val root = statusBarRoot(service) ?: return null
-        val start = START_IDS.flatMap { visibleBounds(root, it) } +
+        val rootBounds = Rect().also { root.getBoundsInScreen(it) }
+        val maxContainer = rootBounds.width() / 2
+        var start = START_IDS.flatMap { visibleBounds(root, it) } +
             START_ICON_CONTAINERS.flatMap { childBounds(root, it) }
+        if (start.isEmpty()) start = START_FALLBACKS.flatMap { visibleBounds(root, it) }.filter { it.width() < maxContainer }
         var end = END_IDS.flatMap { visibleBounds(root, it) } +
             END_ICON_CONTAINERS.flatMap { childBounds(root, it) }
-        if (end.isEmpty()) end = visibleBounds(root, END_FALLBACK)
+        if (end.isEmpty()) end = END_FALLBACKS.flatMap { visibleBounds(root, it) }.filter { it.width() < maxContainer }
         return Edges(start.maxOfOrNull { it.right }, end.minOfOrNull { it.left })
     }
 

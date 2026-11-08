@@ -267,6 +267,9 @@ fun CompactTemplate(
         val limitLeft = CompactSideLimits.left.intValue
         val limitRight = CompactSideLimits.right.intValue
         val reserve = spacing + (spec.compactHeight.roundToPx() * OPTICAL_INSET_RATIO).toInt()
+        val bubbleNow = if (sideBubble() > 0f) bubbleExtent().coerceAtLeast(0) else 0
+        com.sameerasw.essentials.island.state.CompactCellWidths.bubbleExtent = bubbleNow
+        val bodyLimitLeft = if (limitLeft == Int.MAX_VALUE) limitLeft else (limitLeft - bubbleNow).coerceAtLeast(0)
         val measuredSlots = arrayOfNulls<Placeable>(measurables.size)
         fun measureBudgeted(order: List<Int>, limit: Int) {
             var budget = if (limit == Int.MAX_VALUE) Int.MAX_VALUE else (limit - reserve).coerceAtLeast(0)
@@ -283,7 +286,7 @@ fun CompactTemplate(
             spec.growDirection > 0 -> measureBudgeted(all, limitRight)
             spec.growDirection < 0 -> measureBudgeted(all.reversed(), limitLeft)
             else -> {
-                measureBudgeted((beforeCount - 1 downTo 0).toList(), limitLeft)
+                measureBudgeted((beforeCount - 1 downTo 0).toList(), bodyLimitLeft)
                 measureBudgeted((beforeCount until measurables.size).toList(), limitRight)
             }
         }
@@ -346,9 +349,9 @@ fun CompactTemplate(
         val balancedLeft = if (spec.balanceCompact) maxOf(needLeft, needRight - extent) else needLeft
         val balancedRight = if (spec.balanceCompact) balancedLeft + extent else needRight
         onSlack(if (spec.balanceCompact) extent else needRight - needLeft)
-        val leftSide = (mirrored + (balancedLeft - mirrored) * t).roundToInt().coerceAtMost(limitLeft)
+        val leftSide = (mirrored + (balancedLeft - mirrored) * t).roundToInt().coerceAtMost(bodyLimitLeft)
         val rightSide = (mirrored + (balancedRight - mirrored) * t).roundToInt().coerceAtMost(limitRight)
-        onBaseWidth(minOf(mirrored, limitLeft, limitRight) * 2 + cameraSlot)
+        onBaseWidth(minOf(mirrored, bodyLimitLeft, limitRight) * 2 + cameraSlot)
         onNeedLeft(needLeft)
         val width = leftSide + rightSide + cameraSlot
         layout(width, height) {
