@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui
 
+import androidx.compose.animation.animateColorAsState
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.model.SideBubble
@@ -373,9 +374,14 @@ fun IslandStackPill(
     outlineColor: Color? = null,
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
+    accent: Color? = null,
     onInteraction: () -> Unit = {},
 ) {
-    val ring = islandAccent()
+    val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
+    val container by animateColorAsState(
+        if (accent != null) androidx.compose.ui.graphics.lerp(Color.Black, accent, 0.22f) else Color.Black,
+        label = "stackContainer",
+    )
     val liquid = rememberLiquidBody(bond = bond)
     val itemWidth = iconSize + 8.dp
     val spacing = 2.dp
@@ -418,7 +424,7 @@ fun IslandStackPill(
         modifier = modifier
             .liquid(liquid)
             .clip(CircleShape)
-            .background(Color.Black)
+            .background(container)
             .islandOutline(outlineColor, outlineThickness, CircleShape)
             .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
@@ -450,7 +456,10 @@ fun IslandStackPill(
                     ),
                 contentAlignment = Alignment.Center,
             ) {
-                CompositionLocalProvider(LocalIslandBitmapFlat provides true) {
+                CompositionLocalProvider(
+                    LocalIslandBitmapFlat provides true,
+                    LocalIslandIconColor provides if (accent != null) ring else LocalIslandIconColor.current,
+                ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { icon.content(itemWidth) }
                 }
             }

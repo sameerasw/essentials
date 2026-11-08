@@ -277,6 +277,7 @@ class MediaPlugin : BaseIslandPlugin() {
                 sourcePackage = t.packageName,
                 hideExpandedQueue = stack.isEmpty(),
                 expandedQueueOnly = true,
+                queueAccent = t.accent?.let { Color(it) },
                 stack = stack,
             ),
         )
