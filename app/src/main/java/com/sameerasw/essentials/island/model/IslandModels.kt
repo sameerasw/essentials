@@ -100,6 +100,7 @@ class StackIcon(
     val current: Boolean = false,
     val onSelect: (() -> Unit)? = null,
     val highlight: Boolean = false,
+    val fill: Boolean = false,
     val content: @Composable (size: Dp) -> Unit,
 )
 

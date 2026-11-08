@@ -44,6 +44,7 @@ import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
+import com.sameerasw.essentials.island.model.StackIcon
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.launchPackage
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
@@ -54,14 +55,23 @@ import com.sameerasw.essentials.services.NotificationListener
 class ProgressPlugin : BaseIslandPlugin() {
     override val id = "progress"
 
-    override val settingKeys = setOf(SettingsRepository.KEY_ISLAND_NOTIF_KEEP_PROGRESS)
+    override val settingKeys = setOf(
+        SettingsRepository.KEY_ISLAND_NOTIF_KEEP_PROGRESS,
+        SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
+        SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
+    )
 
     private var data: ProgressNotificationData? = null
     private var icon: ImageBitmap? = null
+    private var all: List<ProgressNotificationData> = emptyList()
+    private val icons = HashMap<String, Pair<Any?, ImageBitmap?>>()
+    private var selectedKey: String? = null
 
     private val listener = object : NotificationListener.ProgressNotificationListener {
-        override fun onProgressNotificationUpdated(data: ProgressNotificationData?) {
-            ctx?.mainHandler?.post { update(data) }
+        override fun onProgressNotificationUpdated(data: ProgressNotificationData?) {}
+
+        override fun onProgressNotificationsUpdated(all: List<ProgressNotificationData>) {
+            ctx?.mainHandler?.post { update(all) }
         }
     }
 
@@ -73,18 +83,41 @@ class ProgressPlugin : BaseIslandPlugin() {
         NotificationListener.removeProgressNotificationListener(listener)
         data = null
         icon = null
+        all = emptyList()
+        icons.clear()
+        selectedKey = null
     }
 
     override fun refresh() {
         ctx ?: return
-        update(NotificationListener.getLatestProgressNotification())
+        update(NotificationListener.getProgressNotifications())
     }
 
-    private fun update(next: ProgressNotificationData?) {
+    private fun update(next: List<ProgressNotificationData>) {
         if (ctx == null) return
-        if (next?.icon !== data?.icon) icon = next?.icon?.asImageBitmap()
-        data = next
+        all = next
+        val keys = next.mapTo(HashSet()) { it.key }
+        icons.keys.retainAll(keys)
+        next.forEach { d ->
+            val cached = icons[d.key]
+            if (cached == null || cached.first !== d.icon) icons[d.key] = d.icon to d.icon?.asImageBitmap()
+        }
+        if (selectedKey !in keys) selectedKey = null
+        data = next.firstOrNull { it.key == selectedKey } ?: next.firstOrNull()
+        icon = data?.let { icons[it.key]?.second }
         render()
+    }
+
+    private fun bubblesMode(): Boolean =
+        settings.isIslandSecondaryBubbleEnabled() &&
+            settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
+
+    private fun select(key: String) {
+        selectedKey = key
+        data = all.firstOrNull { it.key == key } ?: return
+        icon = icons[key]?.second
+        render()
+        ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY))
     }
 
     private fun render() {
@@ -96,6 +129,7 @@ class ProgressPlugin : BaseIslandPlugin() {
         val image = icon
         val progress = d.progress / 100f
         val indeterminate = d.isIndeterminate
+        val bubbles = bubblesMode()
         publish(
             IslandItem(
                 key = ITEM_KEY,
@@ -125,14 +159,28 @@ class ProgressPlugin : BaseIslandPlugin() {
                 },
                 onOpen = { open(d) },
                 sourcePackage = d.packageName,
-                sideBubble = SideBubble(
-                    priority = SideBubblePriority.PROGRESS,
-                    whenOccupiedOnly = true,
-                    onOpen = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)) },
-                    content = { bubbleSize ->
-                        ProgressRing(progress, indeterminate, image, islandAccent(), bubbleSize)
-                    },
-                ),
+                compactVisible = !bubbles,
+                sideBubble = if (bubbles) {
+                    SideBubble(
+                        priority = SideBubblePriority.PROGRESS,
+                        onOpen = { select(d.key) },
+                        icons = all.map { entry ->
+                            val ringIcon = icons[entry.key]?.second
+                            StackIcon(entry.key, onSelect = { select(entry.key) }, fill = true) { size ->
+                                ProgressRing(entry.progress / 100f, entry.isIndeterminate, ringIcon, islandAccent(), size)
+                            }
+                        },
+                    )
+                } else {
+                    SideBubble(
+                        priority = SideBubblePriority.PROGRESS,
+                        whenOccupiedOnly = true,
+                        onOpen = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)) },
+                        content = { bubbleSize ->
+                            ProgressRing(progress, indeterminate, image, islandAccent(), bubbleSize)
+                        },
+                    )
+                },
             ),
         )
     }

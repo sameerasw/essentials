@@ -354,7 +354,7 @@ fun IslandStackOverlap(
                                 },
                             contentAlignment = Alignment.Center,
                         ) {
-                            val iconSize = boxSize * 0.72f
+                            val iconSize = if (entry.icon.fill) boxSize else boxSize * 0.72f
                             Box(Modifier.size(iconSize), contentAlignment = Alignment.Center) { entry.icon.content(iconSize) }
                         }
                     }
