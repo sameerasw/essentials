@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.model.QueueOverflow
 import com.sameerasw.essentials.island.ui.OVERLAP_MAX
+import com.sameerasw.essentials.island.ui.overlapSlots
 import kotlin.math.ceil
 import com.sameerasw.essentials.island.ui.inlineBubbleCell
 import com.sameerasw.essentials.island.model.CompactPlacement
@@ -421,10 +422,11 @@ class IslandController(
         if (progress.isEmpty()) return null
         val notifications = owner?.sideBubble?.takeIf { it.priority != SideBubblePriority.PROGRESS }
         val icons = progress.flatMap { it.icons } + notifications?.icons.orEmpty()
-        val cap = notifications?.maxIcons?.takeIf { it > 0 } ?: OVERLAP_MAX
+        val cap = overlapSlots(icons, notifications?.maxIcons?.takeIf { it > 0 } ?: OVERLAP_MAX)
         val shown = icons.size.coerceIn(1, cap)
         val overflow = if (icons.size > cap && notifications?.overflow != QueueOverflow.None) 0.3f else 0f
-        val cells = maxOf(ceil(1f + 0.55f * (shown - 1) + overflow).toInt(), notifications?.cells ?: 1)
+        val wide = icons.take(shown).sumOf { (it.widthFactor - 1f).coerceAtLeast(0f).toDouble() }.toFloat()
+        val cells = maxOf(ceil(1f + 0.55f * (shown - 1) + overflow + wide).toInt(), notifications?.cells ?: 1)
         return SideBubble(
             priority = SideBubblePriority.PROGRESS,
             onOpen = notifications?.onOpen ?: progress.first().onOpen,

@@ -3440,6 +3440,9 @@
     <string name="island_battery_state_saver">Battery saver</string>
     <string name="island_battery_charging">Charging</string>
     <string name="island_notif_keep_progress_title">Keep progress notifications</string>
+    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_count_title">Live updates count</string>
+    <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_progress_open">Open</string>
     <string name="island_travel_pause">Pause</string>
     <string name="island_travel_resume">Resume</string>

@@ -732,6 +732,8 @@ class SettingsRepository(
         const val ISLAND_NOTIF_PEEK_STYLE_MINIMAL = "minimal"
         const val ISLAND_NOTIF_PEEK_STYLE_EXPANDED = "expanded"
         const val KEY_ISLAND_NOTIF_KEEP_PROGRESS = "island_notif_keep_progress"
+        const val KEY_ISLAND_LIVE_UPDATES_COUNT = "island_live_updates_count"
+        const val KEY_ISLAND_LIVE_UPDATES_EXPANDED = "island_live_updates_expanded"
         const val KEY_ISLAND_NOTIF_QUEUE = "island_notif_queue"
         const val KEY_ISLAND_NOTIF_QUEUE_STYLE = "island_notif_queue_style"
         const val ISLAND_NOTIF_QUEUE_STYLE_STACK = "stack"
@@ -4617,6 +4619,12 @@ class SettingsRepository(
 
     fun isIslandNotifKeepProgressEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, true)
     fun setIslandNotifKeepProgressEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_KEEP_PROGRESS, enabled)
+
+    fun getIslandLiveUpdatesCount(): Int = getInt(KEY_ISLAND_LIVE_UPDATES_COUNT, 3).coerceIn(1, 3)
+    fun setIslandLiveUpdatesCount(count: Int) = putInt(KEY_ISLAND_LIVE_UPDATES_COUNT, count.coerceIn(1, 3))
+
+    fun isIslandLiveUpdatesExpandedEnabled(): Boolean = getBoolean(KEY_ISLAND_LIVE_UPDATES_EXPANDED, false)
+    fun setIslandLiveUpdatesExpandedEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_LIVE_UPDATES_EXPANDED, enabled)
 
     fun applyHeadsUpSuppression(suppress: Boolean = isIslandEnabled() && isIslandSuppressSystemHeadsUpEnabled()) {
         val targetValue = if (suppress) 0 else 1

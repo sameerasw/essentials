@@ -22,8 +22,8 @@ object IslandPriority {
     const val TIMER_OVERRIDE = 5
     const val CALENDAR_OVERRIDE = 6
 
+    const val PROGRESS = 8
     const val NOTIFICATION = 10
-        const val PROGRESS = 15
     const val FLASHLIGHT = 20
     const val NAVIGATION = 22
     const val TIMER = 25
@@ -101,6 +101,7 @@ class StackIcon(
     val onSelect: (() -> Unit)? = null,
     val highlight: Boolean = false,
     val fill: Boolean = false,
+    val widthFactor: Float = 1f,
     val content: @Composable (size: Dp) -> Unit,
 )
 

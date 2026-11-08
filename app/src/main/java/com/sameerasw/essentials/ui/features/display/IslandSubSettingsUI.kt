@@ -1201,18 +1201,6 @@ fun IslandNotificationSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_notif_follow_dnd"),
             )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_downloading_24,
-                title = stringResource(R.string.island_notif_keep_progress_title),
-                description = stringResource(R.string.island_notif_keep_progress_desc),
-                isChecked = viewModel.isIslandNotifKeepProgress.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandNotifKeepProgress(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_keep_progress"),
-            )
         }
 
         AnimatedVisibility(

@@ -1927,6 +1927,7 @@ class NotificationListener : NotificationListenerService() {
             postTime = postTime,
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
             } catch (_: Exception) {

@@ -1858,6 +1858,9 @@
     <string name="island_dismiss_on_outside_title">アプリ外アクティビティ時に非表示</string>
     <string name="island_notif_conceal_locked_title">通知の内容を非表示</string>
     <string name="island_notif_keep_progress_title">進捗通知は維持する</string>
+    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_count_title">Live updates count</string>
+    <string name="island_live_updates_expanded_title">Expanded live update</string>
     <string name="island_notif_queue_title">通知キュー</string>
     <string name="island_catch_up_timeout_title">取得遅延</string>
     <string name="island_battery_only_low_title">残量が低下しているときのみ表示</string>
