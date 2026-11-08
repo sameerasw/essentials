@@ -1,5 +1,11 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.IslandHaptics
@@ -105,6 +111,27 @@ fun NotificationExpanded(
                         maxLines = 7,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = sidePadding),
+                    )
+                }
+                alert.image?.let { picture ->
+                    val image = remember(picture) { picture.asImageBitmap() }
+                    val ratio = picture.width.toFloat() / picture.height.coerceAtLeast(1)
+                    val maxImageHeight = minOf((LocalConfiguration.current.screenHeightDp * 0.4f).dp, 200.dp)
+                    Spacer(Modifier.height(10.dp))
+                    Image(
+                        bitmap = image,
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .padding(horizontal = sidePadding)
+                            .layout { measurable, constraints ->
+                                val full = constraints.maxWidth
+                                val height = minOf((full / ratio).toInt(), maxImageHeight.roundToPx()).coerceAtLeast(1)
+                                val width = minOf(full, (height * ratio).toInt()).coerceAtLeast(1)
+                                val placeable = measurable.measure(Constraints.fixed(width, height))
+                                layout(full, height) { placeable.place((full - width) / 2, 0) }
+                            }
+                            .clip(RoundedCornerShape(16.dp)),
                     )
                 }
             }

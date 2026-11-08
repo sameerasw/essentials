@@ -82,6 +82,7 @@ class NotificationListener : NotificationListenerService() {
     }
 
     companion object {
+        private const val MAX_CONTENT_IMAGE_PX = 1080
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
         private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
         private val OTP_SKIPPED_CATEGORIES = setOf(
@@ -2436,7 +2437,68 @@ class NotificationListener : NotificationListenerService() {
             chatIcon = chatIcon,
             themedIcon = if (themedBubble) AppIconUtil.monochromeAppIcon(this, sbn.packageName) else null,
             smallIcon = smallIconBitmap,
+            image = contentImage(notif),
         )
+    }
+
+    private fun contentImage(notif: Notification): Bitmap? {
+        val extras = notif.extras ?: return null
+        val picture = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                extras.getParcelable(Notification.EXTRA_PICTURE, Bitmap::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                extras.getParcelable<Bitmap>(Notification.EXTRA_PICTURE)
+            }
+        }.getOrNull()
+        if (picture != null) return scaledImage(picture)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val icon = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    extras.getParcelable(Notification.EXTRA_PICTURE_ICON, Icon::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    extras.getParcelable<Icon>(Notification.EXTRA_PICTURE_ICON)
+                }
+            }.getOrNull()
+            icon?.let { runCatching { it.loadDrawable(this) }.getOrNull() }?.let { return scaledImage(AppUtil.drawableToBitmap(it)) }
+        }
+        @Suppress("DEPRECATION")
+        val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES) ?: return null
+        for (message in messages.reversed()) {
+            val bundle = message as? Bundle ?: continue
+            val type = bundle.getString("type") ?: continue
+            if (!type.startsWith("image/")) continue
+            val uri = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    bundle.getParcelable("uri", android.net.Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    bundle.getParcelable<android.net.Uri>("uri")
+                }
+            }.getOrNull() ?: continue
+            decodeUriImage(uri)?.let { return it }
+        }
+        return null
+    }
+
+    private fun decodeUriImage(uri: android.net.Uri): Bitmap? = runCatching {
+        val source = android.graphics.ImageDecoder.createSource(contentResolver, uri)
+        android.graphics.ImageDecoder.decodeBitmap(source) { decoder, info, _ ->
+            decoder.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
+            val longest = maxOf(info.size.width, info.size.height)
+            if (longest > MAX_CONTENT_IMAGE_PX) {
+                val ratio = MAX_CONTENT_IMAGE_PX.toFloat() / longest
+                decoder.setTargetSize((info.size.width * ratio).toInt().coerceAtLeast(1), (info.size.height * ratio).toInt().coerceAtLeast(1))
+            }
+        }
+    }.getOrNull()
+
+    private fun scaledImage(source: Bitmap): Bitmap {
+        val longest = maxOf(source.width, source.height)
+        if (longest <= MAX_CONTENT_IMAGE_PX) return source
+        val ratio = MAX_CONTENT_IMAGE_PX.toFloat() / longest
+        return Bitmap.createScaledBitmap(source, (source.width * ratio).toInt().coerceAtLeast(1), (source.height * ratio).toInt().coerceAtLeast(1), true)
     }
 
     private fun groupNameFrom(
