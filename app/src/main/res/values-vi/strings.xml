@@ -2147,10 +2147,6 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
-    <string name="island_notif_tap_to_open_title">Chạm để mở thông báo</string>
-    <string name="island_pulse_shadow_size_title">Kích thước phát sáng</string>
-    <string name="island_pulse_shadow_y_shift_title">Dịch chuyển theo chiều dọc</string>
-    <string name="island_notif_tap_to_open_desc">Nhấn vào thông báo đã mở rộng để mở ứng dụng của thông báo đó</string>
     <string name="feat_back_gesture_left_title">Độ rộng cạnh trái</string>
     <string name="feat_back_gesture_default_width_desc">Vuốt vào sâu bao nhiêu từ mép màn hình thì sẽ kích hoạt thao tác quay lại. Giống với Độ nhạy thao tác quay lại trong cài đặt hệ thống.</string>
     <string name="feat_back_gesture_right_title">Độ rộng cạnh phải</string>
