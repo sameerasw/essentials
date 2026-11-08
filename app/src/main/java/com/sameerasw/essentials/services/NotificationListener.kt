@@ -70,6 +70,8 @@ import java.io.FileOutputStream
 class NotificationListener : NotificationListenerService() {
     interface ProgressNotificationListener {
         fun onProgressNotificationUpdated(data: ProgressNotificationData?)
+
+        fun onProgressNotificationsUpdated(all: List<ProgressNotificationData>) {}
     }
 
     interface NavigationNotificationListener {
@@ -84,6 +86,7 @@ class NotificationListener : NotificationListenerService() {
     companion object {
         private const val MAX_CONTENT_IMAGE_PX = 1080
         private const val PROGRESS_REFRESH_DEBOUNCE_MS = 250L
+        const val FAKE_LIVE_UPDATE_TAG = "fake_live_update"
         private const val EXTRA_SHORT_CRITICAL_TEXT = "android.shortCriticalText"
         private val OTP_SKIPPED_CATEGORIES = setOf(
             Notification.CATEGORY_CALL,
@@ -173,13 +176,20 @@ class NotificationListener : NotificationListenerService() {
             }
         }
 
-        fun notifyProgressListeners(data: ProgressNotificationData?) {
+        fun notifyProgressListeners(all: List<ProgressNotificationData>) {
             val listenersCopy = synchronized(progressListeners) { progressListeners.toList() }
-            listenersCopy.forEach { it.onProgressNotificationUpdated(data) }
+            val latest = all.firstOrNull()
+            listenersCopy.forEach {
+                it.onProgressNotificationUpdated(latest)
+                it.onProgressNotificationsUpdated(all)
+            }
         }
 
         fun getLatestProgressNotification(): ProgressNotificationData? =
             instance?.extractLatestProgressNotification()
+
+        fun getProgressNotifications(): List<ProgressNotificationData> =
+            instance?.extractProgressNotifications().orEmpty()
 
         fun getCachedBitmap(hash: Long): Bitmap? = if (latestArtHash == hash) latestArtBitmap else null
 
@@ -1066,6 +1076,7 @@ class NotificationListener : NotificationListenerService() {
         // Skip our own app's notifications early to avoid flooding logs and redundant processing
         if (sbn.packageName == packageName) {
             if (hasReadableExtras(sbn)) LiveUpdateSnoozer.onPosted(this, sbn)
+            if (isFakeLiveUpdate(sbn)) scheduleProgressRefresh()
             return
         }
         if (!hasReadableExtras(sbn)) return
@@ -1505,6 +1516,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         if (LiveUpdateSnoozer.isSnoozedByUs(sbn.key)) return
+        if (isFakeLiveUpdate(sbn)) scheduleProgressRefresh()
         NotificationRepostFilter.forget(sbn.key)
         HilightProgressTracker.onRemoved(sbn.key)
         CallStateRepository.onCallNotificationRemoved(sbn.key)
@@ -1915,6 +1927,7 @@ class NotificationListener : NotificationListenerService() {
             postTime = postTime,
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
             } catch (_: Exception) {
@@ -1952,15 +1965,15 @@ class NotificationListener : NotificationListenerService() {
                             null
                         }
                     progressHandler.post { notifyNavigationListeners(navigation) }
-                    val data =
+                    val all =
                         try {
-                            extractLatestProgressNotification()
+                            extractProgressNotifications()
                         } catch (e: Exception) {
                             Log.e("NotificationListener", "Failed to extract progress notification", e)
                             return@execute
                         }
-                    HilightProgressTracker.onProgress(applicationContext, data)
-                    progressHandler.post { notifyProgressListeners(data) }
+                    HilightProgressTracker.onProgress(applicationContext, all.firstOrNull())
+                    progressHandler.post { notifyProgressListeners(all) }
                 }
             } catch (_: java.util.concurrent.RejectedExecutionException) {
             }
@@ -1990,14 +2003,18 @@ class NotificationListener : NotificationListenerService() {
 
     fun refreshProgressNow() = scheduleProgressRefresh()
 
-    fun extractLatestProgressNotification(): ProgressNotificationData? {
-        val active = (safeActiveNotifications() ?: return null).toList() + LiveUpdateSnoozer.snoozedNotifications()
-        val progressNotifs = active.mapNotNull { sbn ->
-            if (sbn.packageName == packageName || isMediaNotification(sbn)) return@mapNotNull null
+    private fun isFakeLiveUpdate(sbn: StatusBarNotification): Boolean =
+        com.sameerasw.essentials.BuildConfig.DEBUG && sbn.packageName == packageName && sbn.tag == FAKE_LIVE_UPDATE_TAG
+
+    fun extractLatestProgressNotification(): ProgressNotificationData? = extractProgressNotifications().firstOrNull()
+
+    fun extractProgressNotifications(): List<ProgressNotificationData> {
+        val active = (safeActiveNotifications() ?: return emptyList()).toList() + LiveUpdateSnoozer.snoozedNotifications()
+        return active.mapNotNull { sbn ->
+            if ((sbn.packageName == packageName && !isFakeLiveUpdate(sbn)) || isMediaNotification(sbn)) return@mapNotNull null
             if (islandShowsNavigation && sbn.isOngoing && isNavigationNotification(sbn)) return@mapNotNull null
             extractProgressNotification(sbn)
-        }
-        return progressNotifs.maxByOrNull { it.postTime }
+        }.distinctBy { it.key }.sortedByDescending { it.postTime }
     }
 
     private val islandShowsNavigation: Boolean

@@ -873,6 +873,11 @@ object FeatureRegistry {
                             "island_show_sound_mode",
                         ),
                         SearchSetting(
+                            R.string.island_live_updates_title,
+                            R.string.island_notif_keep_progress_desc,
+                            "island_notif_keep_progress",
+                        ),
+                        SearchSetting(
                             R.string.island_brief_title,
                             R.string.island_brief_desc,
                             "island_brief_enabled",
@@ -1099,11 +1104,6 @@ object FeatureRegistry {
                             R.string.island_notif_follow_dnd_title,
                             R.string.island_notif_follow_dnd_desc,
                             "island_notif_follow_dnd",
-                        ),
-                        SearchSetting(
-                            R.string.island_notif_keep_progress_title,
-                            R.string.island_notif_keep_progress_desc,
-                            "island_notif_keep_progress",
                         ),
                         SearchSetting(
                             R.string.island_notif_condensed_info_title,

@@ -1825,6 +1825,10 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
     <string name="island_dismiss_on_outside_title">Bỏ qua khi chạm bên ngoài</string>
     <string name="island_notif_keep_progress_title">Giữ lại thông báo tiến độ</string>
+    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_count_title">Live updates count</string>
+    <string name="island_live_updates_expanded_title">Expanded live update</string>
+    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
     <string name="island_notif_queue_title">Hàng đợi thông báo</string>
     <string name="island_catch_up_title">Bắt kịp</string>
     <string name="island_catch_up_desc">Giữ thông báo cuối cùng trên island lâu hơn</string>

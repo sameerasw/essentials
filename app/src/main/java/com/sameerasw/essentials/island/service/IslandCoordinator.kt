@@ -783,6 +783,8 @@ class IslandCoordinator(
         controller.balanceCompact = settings.isIslandBalanceCompactEnabled()
         controller.chipsEnabled = settings.getBoolean(SettingsRepository.KEY_ISLAND_CHIPS, false)
         controller.secondaryBubbleEnabled = settings.isIslandSecondaryBubbleEnabled()
+        controller.secondaryBubbleMax = settings.getIslandNotifHubIcons()
+        controller.secondaryBubbleOverlap = settings.getIslandNotifQueueStyle() == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
         controller.relayout()
         controller.expandedTimeoutMs = settings.getIslandExpandedTimeoutMs()
         applyPreviewRing()
@@ -1023,6 +1025,8 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BOND_EDGE,
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
+            SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
+            SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,
             SettingsRepository.KEY_ISLAND_MAX_ITEMS,
             SettingsRepository.KEY_ISLAND_STATUSBAR_AWARE_WIDTH,
             SettingsRepository.KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS,

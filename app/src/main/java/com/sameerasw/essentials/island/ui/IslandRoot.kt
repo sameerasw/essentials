@@ -579,7 +579,10 @@ private fun IslandRootContent(
     } ?: OVERLAP_MAX
     val sideBubbleWidth = lastCatchUp
         ?.takeIf { spec.queueStyle == QueueStyle.Overlap && it.content == null && it.icons.isNotEmpty() }
-        ?.let { stackOverlapWidth(it.icons.size, spec.compactHeight, bubbleMaxIcons, it.overflow) }
+        ?.let {
+            stackOverlapWidth(it.icons.size, spec.compactHeight, overlapSlots(it.icons, bubbleMaxIcons), it.overflow) +
+                overlapExtraWidth(it.icons, spec.compactHeight, bubbleMaxIcons, it.overflow)
+        }
         ?: spec.compactHeight
     val sideWidthPx = with(density) { sideBubbleWidth.roundToPx() }
     val sideWidthAnim = remember { Animatable(sideWidthPx.toFloat()) }

@@ -815,6 +815,21 @@ fun IslandBehaviorSettingsUI(
                 )
             }
 
+            val autoLabel = stringResource(R.string.island_notif_hub_icons_auto)
+            ConfigSliderItem(
+                title = stringResource(R.string.island_secondary_bubbles_count_title),
+                value = viewModel.islandNotifHubIcons.intValue.toFloat(),
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandNotifHubIcons(it.toInt())
+                },
+                valueRange = 0f..8f,
+                increment = 1f,
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                valueFormatter = { if (it.toInt() == 0) autoLabel else it.toInt().toString() },
+                modifier = Modifier.highlight(highlightSetting == "island_secondary_bubbles_count"),
+            )
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_motion_play_24,
                 title = stringResource(R.string.island_line_peek_title),
@@ -1200,18 +1215,6 @@ fun IslandNotificationSettingsUI(
                     viewModel.setIslandNotifFollowDnd(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_notif_follow_dnd"),
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_downloading_24,
-                title = stringResource(R.string.island_notif_keep_progress_title),
-                description = stringResource(R.string.island_notif_keep_progress_desc),
-                isChecked = viewModel.isIslandNotifKeepProgress.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandNotifKeepProgress(checked)
-                },
-                modifier = Modifier.highlight(highlightSetting == "island_notif_keep_progress"),
             )
         }
 
