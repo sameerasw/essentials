@@ -13,16 +13,39 @@ object NotificationRepostFilter {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?) = size > MAX_TRACKED
     }
 
+    private const val STALE_MS = 2 * 60_000L
+
+    private val lastMessageTime = object : LinkedHashMap<String, Long>(64, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Long>?) = size > MAX_TRACKED
+    }
+
     @Synchronized
     fun isUnchangedRepost(sbn: StatusBarNotification): Boolean {
         if (sbn.isOngoing) return false
         val content = contentOf(sbn.notification)
-        return lastContent.put(sbn.key, content) == content
+        val sameContent = lastContent.put(sbn.key, content) == content
+        val messageTime = messageTimeOf(sbn.notification) ?: return sameContent
+        val previous = lastMessageTime[sbn.key]
+        if (previous == null || messageTime > previous) lastMessageTime[sbn.key] = messageTime
+        if (sameContent) return true
+        if (previous != null) return messageTime <= previous
+        val now = System.currentTimeMillis()
+        return now - messageTime > STALE_MS && sbn.postTime - messageTime > STALE_MS
     }
 
     @Synchronized
     fun forget(key: String) {
         lastContent.remove(key)
+    }
+
+    private fun messageTimeOf(n: Notification): Long? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return null
+        val extras = n.extras
+        val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES)
+        val isMessaging = !messages.isNullOrEmpty() || n.category == Notification.CATEGORY_MESSAGE
+        if (!isMessaging) return null
+        val newest = messages?.mapNotNull { (it as? Bundle)?.getLong("time")?.takeIf { t -> t > 0 } }?.maxOrNull()
+        return newest ?: n.`when`.takeIf { it > 0 }
     }
 
     private fun contentOf(n: Notification): String {
