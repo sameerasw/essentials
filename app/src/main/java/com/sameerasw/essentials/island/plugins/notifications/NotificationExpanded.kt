@@ -144,13 +144,17 @@ fun NotificationExpanded(
                     Image(
                         bitmap = image,
                         contentDescription = null,
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
+                            .weight(1f, fill = false)
                             .padding(horizontal = sidePadding)
                             .layout { measurable, constraints ->
                                 val full = constraints.maxWidth
-                                val height = minOf((full / ratio).toInt(), maxImageHeight.roundToPx()).coerceAtLeast(1)
-                                val width = minOf(full, (height * ratio).toInt()).coerceAtLeast(1)
+                                val natural = (full / ratio).toInt()
+                                val capped = minOf(natural, maxImageHeight.roundToPx())
+                                val width = minOf(full, (capped * ratio).toInt()).coerceAtLeast(1)
+                                val height = minOf(capped, constraints.maxHeight)
+                                if (height < 32.dp.roundToPx()) return@layout layout(full, 0) {}
                                 val placeable = measurable.measure(Constraints.fixed(width, height))
                                 layout(full, height) { placeable.place((full - width) / 2, 0) }
                             }
