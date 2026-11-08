@@ -178,6 +178,9 @@ class MainViewModel : ViewModel() {
     val quickBallColorMode = mutableStateOf("DYNAMIC")
     val quickBallCustomColor = mutableStateOf("#00E676")
     val quickBallBallStyle = mutableStateOf("CLASSIC")
+    val quickBallStashDelay = mutableLongStateOf(2500L)
+    val quickBallShortcutStyle = mutableStateOf("FULL_BLEED")
+    val quickBallIconPack = mutableStateOf("MATERIAL")
     val quickBallMenuRadius = mutableFloatStateOf(90f)
     val quickBallMenuSize = mutableFloatStateOf(48f)
     val isQuickBallStickToEdge = mutableStateOf(true)
@@ -872,6 +875,15 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_QUICK_BALL_BALL_STYLE ->
                         quickBallBallStyle.value = settingsRepository.getQuickBallBallStyle()
+
+                    SettingsRepository.KEY_QUICK_BALL_STASH_DELAY ->
+                        quickBallStashDelay.longValue = settingsRepository.getQuickBallStashDelay()
+
+                    SettingsRepository.KEY_QUICK_BALL_SHORTCUT_STYLE ->
+                        quickBallShortcutStyle.value = settingsRepository.getQuickBallShortcutStyle()
+
+                    SettingsRepository.KEY_QUICK_BALL_ICON_PACK ->
+                        quickBallIconPack.value = settingsRepository.getQuickBallIconPack()
 
                     SettingsRepository.KEY_QUICK_BALL_MENU_RADIUS ->
                         quickBallMenuRadius.floatValue = settingsRepository.getQuickBallMenuRadius()
@@ -2613,6 +2625,9 @@ class MainViewModel : ViewModel() {
         quickBallColorMode.value = settingsRepository.getQuickBallColorMode()
         quickBallCustomColor.value = settingsRepository.getQuickBallCustomColor()
         quickBallBallStyle.value = settingsRepository.getQuickBallBallStyle()
+        quickBallStashDelay.longValue = settingsRepository.getQuickBallStashDelay()
+        quickBallShortcutStyle.value = settingsRepository.getQuickBallShortcutStyle()
+        quickBallIconPack.value = settingsRepository.getQuickBallIconPack()
         quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
         quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
         quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
@@ -5705,6 +5720,23 @@ class MainViewModel : ViewModel() {
     fun setQuickBallBallStyle(style: String) {
         quickBallBallStyle.value = style
         settingsRepository.setQuickBallBallStyle(style)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallStashDelay(delayMs: Long) {
+        quickBallStashDelay.longValue = delayMs
+        settingsRepository.setQuickBallStashDelay(delayMs)
+    }
+
+    fun setQuickBallShortcutStyle(style: String) {
+        quickBallShortcutStyle.value = style
+        settingsRepository.setQuickBallShortcutStyle(style)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallIconPack(pack: String) {
+        quickBallIconPack.value = pack
+        settingsRepository.setQuickBallIconPack(pack)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 

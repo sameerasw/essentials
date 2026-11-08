@@ -21,6 +21,7 @@ import android.os.Build
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
@@ -40,6 +41,8 @@ class FloatPanelView(
     fabY: Int,
     fabSize: Int,
     private val actions: List<Action>,
+    private val isOnRight: Boolean,
+    private val panelHeight: Int,
     private val onDismiss: () -> Unit,
     private val onDismissFinished: () -> Unit,
     private val onActionClicked: (Action) -> Unit,
@@ -63,24 +66,6 @@ class FloatPanelView(
     private val halfFab = fabSize / 2
     private val fabCenterX = fabX + halfFab
     private val fabCenterY = fabY + halfFab
-
-    private val screenWidth: Int
-    private val screenHeight: Int
-
-    init {
-        val wm = context.getSystemService(WindowManager::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && wm != null) {
-            val bounds = wm.maximumWindowMetrics.bounds
-            screenWidth = bounds.width()
-            screenHeight = bounds.height()
-        } else {
-            val dm = context.resources.displayMetrics
-            screenWidth = dm.widthPixels
-            screenHeight = dm.heightPixels
-        }
-    }
-
-    private val isOnRight = fabCenterX > (screenWidth / 2)
 
     private val colors = QuickBallTheme.resolveColors(context, settings)
 
@@ -123,15 +108,17 @@ class FloatPanelView(
     private fun setupTouchHandling() {
         setOnTouchListener { view, event ->
             when (event.action) {
-                MotionEvent.ACTION_DOWN -> true
+                MotionEvent.ACTION_OUTSIDE,
+                MotionEvent.ACTION_DOWN -> {
+                    onDismiss()
+                    true
+                }
                 MotionEvent.ACTION_UP -> {
                     view.performClick()
                     onDismiss()
                     true
                 }
-                MotionEvent.ACTION_CANCEL,
-                MotionEvent.ACTION_OUTSIDE,
-                -> {
+                MotionEvent.ACTION_CANCEL -> {
                     onDismiss()
                     true
                 }
@@ -145,41 +132,75 @@ class FloatPanelView(
         val iconColor = colors.accentColor
         val borderColor = colors.borderColor
 
+        val shortcutStyle = QuickBallShortcutStyle.fromName(settings.getQuickBallShortcutStyle())
+        val iconPack = QuickBallIconPack.fromName(settings.getQuickBallIconPack())
+
         actions.forEachIndexed { index, action ->
+            val isApp = action is Action.OpenApp && action.packageName.isNotBlank()
             val itemView =
                 FrameLayout(context).apply {
-                    background =
+                    elevation = 4f * density
+                    outlineProvider = ViewOutlineProvider.BACKGROUND
+                    clipToOutline = true
+
+                    val itemBg = if (isApp && shortcutStyle == QuickBallShortcutStyle.FULL_BLEED) {
+                        GradientDrawable().apply {
+                            shape = GradientDrawable.OVAL
+                            setColor(Color.TRANSPARENT)
+                        }
+                    } else {
                         GradientDrawable().apply {
                             shape = GradientDrawable.OVAL
                             setColor(buttonBg)
                             setStroke((1.5f * density).roundToInt(), borderColor)
                         }
+                    }
+                    background = itemBg
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         foreground =
                             RippleDrawable(
                                 ColorStateList.valueOf(Color.argb(50, 255, 255, 255)),
                                 null,
-                                background,
+                                itemBg,
                             )
                     }
 
                     val imageView =
                         ImageView(context).apply {
-                            if (action is Action.OpenApp && action.packageName.isNotBlank()) {
+                            if (isApp) {
+                                val pkg = (action as Action.OpenApp).packageName
                                 try {
-                                    setImageDrawable(context.packageManager.getApplicationIcon(action.packageName))
+                                    setImageDrawable(context.packageManager.getApplicationIcon(pkg))
+                                    if (shortcutStyle == QuickBallShortcutStyle.MONOCHROME) {
+                                        setColorFilter(iconColor)
+                                    }
                                 } catch (_: Exception) {
-                                    setImageResource(action.icon)
+                                    val iconRes = QuickBallIconResolver.resolveIcon(action, iconPack)
+                                    setImageResource(iconRes)
                                     setColorFilter(iconColor)
                                 }
                             } else {
-                                setImageResource(action.icon)
+                                val iconRes = QuickBallIconResolver.resolveIcon(action, iconPack)
+                                setImageResource(iconRes)
                                 setColorFilter(iconColor)
                             }
                         }
 
-                    addView(imageView, FrameLayout.LayoutParams(iconSize, iconSize, Gravity.CENTER))
+                    val imageParams = if (isApp && shortcutStyle == QuickBallShortcutStyle.FULL_BLEED) {
+                        FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER,
+                        ).apply {
+                            val pad = (2 * density).roundToInt()
+                            setMargins(pad, pad, pad, pad)
+                        }
+                    } else {
+                        FrameLayout.LayoutParams(iconSize, iconSize, Gravity.CENTER)
+                    }
+
+                    addView(imageView, imageParams)
 
                     setOnClickListener {
                         if (!isCollapsing) {
@@ -213,7 +234,7 @@ class FloatPanelView(
                 radius = radius.toFloat(),
                 halfFab = halfFab.toFloat(),
                 density = density,
-                maxHalfSpan = if (screenHeight > 0) (screenHeight - buttonSize) / 2f - margin else Float.MAX_VALUE,
+                maxHalfSpan = if (panelHeight > 0) (panelHeight - buttonSize) / 2f - margin else Float.MAX_VALUE,
             )
 
         val offsets =
@@ -235,15 +256,15 @@ class FloatPanelView(
         minOffsetY: Float,
         maxOffsetY: Float,
     ): Float {
-        if (screenHeight <= 0) return 0f
-        val margin = SCREEN_MARGIN_DP * density
+        if (panelHeight <= 0) return 0f
+        val margin = 8f * density
         val halfButton = buttonSize / 2f
         val top = fabCenterY + minOffsetY - halfButton
         val bottom = fabCenterY + maxOffsetY + halfButton
 
         return when {
             top < margin -> margin - top
-            bottom > screenHeight - margin -> screenHeight - margin - bottom
+            bottom > panelHeight - margin -> panelHeight - margin - bottom
             else -> 0f
         }
     }

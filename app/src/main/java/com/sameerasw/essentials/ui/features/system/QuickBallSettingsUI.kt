@@ -72,6 +72,8 @@ import com.sameerasw.essentials.ui.features.system.quickball.ConnectorStylePrevi
 import com.sameerasw.essentials.ui.features.system.quickball.MenuConnectorStyle
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallBallStyle
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallColorMode
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallIconPack
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallShortcutStyle
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -96,6 +98,8 @@ fun QuickBallSettingsUI(
     var activePickingGesture by remember { mutableStateOf<String?>(null) }
     var showConnectorSheet by remember { mutableStateOf(false) }
     var showBallStyleSheet by remember { mutableStateOf(false) }
+    var showShortcutStyleSheet by remember { mutableStateOf(false) }
+    var showIconPackSheet by remember { mutableStateOf(false) }
     var showAppSelectionSheet by remember { mutableStateOf(false) }
 
     if (showPermissionSheet) {
@@ -287,6 +291,112 @@ fun QuickBallSettingsUI(
                         headlineContent = {
                             Text(
                                 text = stringResource(style.titleRes),
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        },
+                        trailingContent = if (isSelected) {
+                            {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_check_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
+                        } else null,
+                        colors = ListItemDefaults.colors(
+                            containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceBright,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    if (showShortcutStyleSheet) {
+        EssentialsBottomSheet(
+            onDismissRequest = { showShortcutStyleSheet = false },
+        ) {
+            Text(
+                text = stringResource(R.string.quick_ball_shortcut_style_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                QuickBallShortcutStyle.entries.forEach { style ->
+                    val isSelected = viewModel.quickBallShortcutStyle.value == style.name
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .clickable {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setQuickBallShortcutStyle(style.name)
+                                showShortcutStyleSheet = false
+                            },
+                        headlineContent = {
+                            Text(
+                                text = stringResource(style.titleRes),
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        },
+                        trailingContent = if (isSelected) {
+                            {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_check_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
+                        } else null,
+                        colors = ListItemDefaults.colors(
+                            containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceBright,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    if (showIconPackSheet) {
+        EssentialsBottomSheet(
+            onDismissRequest = { showIconPackSheet = false },
+        ) {
+            Text(
+                text = stringResource(R.string.quick_ball_icon_pack_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                QuickBallIconPack.entries.forEach { pack ->
+                    val isSelected = viewModel.quickBallIconPack.value == pack.name
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .clickable {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setQuickBallIconPack(pack.name)
+                                showIconPackSheet = false
+                            },
+                        headlineContent = {
+                            Text(
+                                text = stringResource(pack.titleRes),
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             )
                         },
@@ -615,6 +725,26 @@ fun QuickBallSettingsUI(
                             valueFormatter = { "%.0f dp".format(it) },
                         )
 
+                        // Auto-Collapse Delay Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_stash_delay_title, viewModel.quickBallStashDelay.longValue / 1000f),
+                            value = (viewModel.quickBallStashDelay.longValue / 1000f),
+                            onValueChange = { viewModel.setQuickBallStashDelay((it * 1000).toLong()) },
+                            valueRange = 0.5f..5.0f,
+                            icon = R.drawable.rounded_timer_24,
+                            valueFormatter = { "%.1f s".format(it) },
+                        )
+
+                        // Menu Arc Radius Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_radius_title, viewModel.quickBallMenuRadius.floatValue.toInt()),
+                            value = viewModel.quickBallMenuRadius.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuRadius(it) },
+                            valueRange = 60f..140f,
+                            icon = R.drawable.rounded_circles_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
+
                         // Ball Style Selector
                         val currentBallStyleName = viewModel.quickBallBallStyle.value
                         val currentBallStyle = QuickBallBallStyle.fromName(currentBallStyleName)
@@ -623,6 +753,24 @@ fun QuickBallSettingsUI(
                             description = stringResource(currentBallStyle.titleRes),
                             iconRes = R.drawable.rounded_circles_24,
                             onClick = { showBallStyleSheet = true },
+                        )
+
+                        // Shortcut Display Style Selector
+                        val currentShortcutStyle = QuickBallShortcutStyle.fromName(viewModel.quickBallShortcutStyle.value)
+                        SelectionCardItem(
+                            title = stringResource(R.string.quick_ball_shortcut_style_title),
+                            description = stringResource(currentShortcutStyle.titleRes),
+                            iconRes = R.drawable.rounded_apps_24,
+                            onClick = { showShortcutStyleSheet = true },
+                        )
+
+                        // System Icon Pack Selector
+                        val currentIconPack = QuickBallIconPack.fromName(viewModel.quickBallIconPack.value)
+                        SelectionCardItem(
+                            title = stringResource(R.string.quick_ball_icon_pack_title),
+                            description = stringResource(currentIconPack.titleRes),
+                            iconRes = R.drawable.rounded_palette_24,
+                            onClick = { showIconPackSheet = true },
                         )
 
                         IconToggleItem(

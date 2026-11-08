@@ -217,6 +217,9 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_COLOR_MODE = "quick_ball_color_mode"
         const val KEY_QUICK_BALL_CUSTOM_COLOR = "quick_ball_custom_color"
         const val KEY_QUICK_BALL_BALL_STYLE = "quick_ball_ball_style"
+        const val KEY_QUICK_BALL_STASH_DELAY = "quick_ball_stash_delay"
+        const val KEY_QUICK_BALL_SHORTCUT_STYLE = "quick_ball_shortcut_style"
+        const val KEY_QUICK_BALL_ICON_PACK = "quick_ball_icon_pack"
         const val KEY_QUICK_BALL_MENU_RADIUS = "quick_ball_menu_radius"
         const val KEY_QUICK_BALL_MENU_SIZE = "quick_ball_menu_size"
         const val KEY_QUICK_BALL_STICK_TO_EDGE = "quick_ball_stick_to_edge"
@@ -4877,6 +4880,18 @@ class SettingsRepository(
     fun getQuickBallBallStyle(): String = prefs.getString(KEY_QUICK_BALL_BALL_STYLE, "CLASSIC") ?: "CLASSIC"
 
     fun setQuickBallBallStyle(style: String) = putString(KEY_QUICK_BALL_BALL_STYLE, style)
+
+    fun getQuickBallStashDelay(): Long = prefs.getLong(KEY_QUICK_BALL_STASH_DELAY, 2500L)
+
+    fun setQuickBallStashDelay(delayMs: Long) = putLong(KEY_QUICK_BALL_STASH_DELAY, delayMs)
+
+    fun getQuickBallShortcutStyle(): String = prefs.getString(KEY_QUICK_BALL_SHORTCUT_STYLE, "FULL_BLEED") ?: "FULL_BLEED"
+
+    fun setQuickBallShortcutStyle(style: String) = putString(KEY_QUICK_BALL_SHORTCUT_STYLE, style)
+
+    fun getQuickBallIconPack(): String = prefs.getString(KEY_QUICK_BALL_ICON_PACK, "MATERIAL") ?: "MATERIAL"
+
+    fun setQuickBallIconPack(pack: String) = putString(KEY_QUICK_BALL_ICON_PACK, pack)
 
     fun getQuickBallGestureAction(gestureName: String): Action? {
         val key = "quick_ball_gesture_$gestureName"

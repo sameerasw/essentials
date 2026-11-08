@@ -564,18 +564,35 @@ class QuickBallHandler(
             IslandHaptics.openClick(service)
         }
 
-        val (screenWidth, _) = getScreenDimensions()
+        val (screenWidth, screenHeight) = getScreenDimensions()
         val actualFabX = getEdgeX(screenWidth)
+        val density = service.resources.displayMetrics.density
+
+        val radiusPx = (settings.getQuickBallMenuRadius() * density).toInt()
+        val buttonSizePx = (settings.getQuickBallMenuSize() * density).toInt()
+        val maxReach = radiusPx + buttonSizePx + (24 * density).toInt()
+
+        val isOnRight = actualFabX + fabSizePx / 2 > screenWidth / 2
+        val menuWidth = (maxReach + fabSizePx).coerceAtMost(screenWidth)
+        val menuHeight = (2 * maxReach + fabSizePx).coerceAtMost(screenHeight)
+
+        val windowX = if (isOnRight) screenWidth - menuWidth else 0
+        val windowY = (fabY + fabSizePx / 2 - menuHeight / 2).coerceIn(0, (screenHeight - menuHeight).coerceAtLeast(0))
+
+        val localFabX = if (isOnRight) menuWidth - fabSizePx else 0
+        val localFabY = fabY - windowY
 
         val slotCount = settings.getQuickBallSlotCount()
         val actionList = (1..slotCount).map { settings.getQuickBallSlotAction(it) }
 
         menuView = FloatPanelView(
             context = service,
-            fabX = actualFabX,
-            fabY = fabY,
+            fabX = localFabX,
+            fabY = localFabY,
             fabSize = fabSizePx,
             actions = actionList,
+            isOnRight = isOnRight,
+            panelHeight = menuHeight,
             onDismiss = {
                 collapseMenu()
             },
@@ -594,11 +611,14 @@ class QuickBallHandler(
         )
 
         menuParams = createOverlayParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
+            menuWidth,
+            menuHeight,
         ).apply {
-            x = 0
-            y = 0
+            this.x = windowX
+            this.y = windowY
+            flags = flags or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
         }
 
         addViewSafe(menuView ?: return, menuParams ?: return)
@@ -711,7 +731,8 @@ class QuickBallHandler(
     private fun resetInactivityTimer() {
         stopInactivityTimer()
         if (settings.isQuickBallStickToEdge() && !isExpanded) {
-            handler.postDelayed(stashRunnable, STASH_DELAY_MS)
+            val delay = settings.getQuickBallStashDelay().coerceIn(500L, 8000L)
+            handler.postDelayed(stashRunnable, delay)
         }
     }
 
