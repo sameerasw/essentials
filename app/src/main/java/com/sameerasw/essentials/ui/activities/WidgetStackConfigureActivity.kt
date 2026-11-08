@@ -51,7 +51,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -73,18 +72,19 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.WidgetStackRepository
 import com.sameerasw.essentials.domain.model.WidgetStackConfig
 import com.sameerasw.essentials.services.widgets.StackHost
 import com.sameerasw.essentials.services.widgets.StackWidgetProvider
+import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.features.widgets.WidgetPickerSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import kotlinx.coroutines.delay
 
 class WidgetStackConfigureActivity : ComponentActivity() {
     private lateinit var repository: WidgetStackRepository
@@ -388,20 +388,11 @@ class WidgetStackConfigureActivity : ComponentActivity() {
 
                 SectionTitle(stringResource(R.string.widget_stack_smart_section))
                 RoundedCardContainer {
-                    ListItem(
-                        modifier = Modifier.clip(MaterialTheme.shapes.extraSmall),
-                        headlineContent = { Text(stringResource(R.string.widget_stack_smart_title)) },
-                        supportingContent = { Text(stringResource(R.string.widget_stack_smart_desc)) },
-                        trailingContent = {
-                            Switch(
-                                checked = config.smart,
-                                onCheckedChange = {
-                                    HapticUtil.performUIHaptic(view)
-                                    updateConfig(config.withSmart(it))
-                                },
-                            )
-                        },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_auto_awesome_24,
+                        title = stringResource(R.string.widget_stack_smart_title),
+                        isChecked = config.smart,
+                        onCheckedChange = { updateConfig(config.withSmart(it)) },
                     )
                     if (config.smart && !notificationAccess) {
                         ListItem(

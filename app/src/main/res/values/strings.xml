@@ -3651,7 +3651,6 @@
     <string name="widget_stack_max_reached">A stack can hold up to %1$d widgets</string>
     <string name="widget_stack_smart_section">Smart rotation</string>
     <string name="widget_stack_smart_title">Show what matters now</string>
-    <string name="widget_stack_smart_desc">Brings forward the widget of the app playing music, your calendar when an event starts soon, and a battery widget while charging. If you switch yourself, it waits until the screen turns off.</string>
     <string name="widget_stack_smart_needs_access">Needs notification access to see what\'s playing</string>
     <string name="widget_stack_smart_needs_calendar">Needs calendar access to see upcoming events</string>
     <string name="widget_stack_interval_title">Switch automatically</string>
