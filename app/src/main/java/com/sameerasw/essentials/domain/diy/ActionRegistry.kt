@@ -86,8 +86,13 @@ object ActionRegistry {
                 add(Action.CircleToSearch())
                 add(Action.TurnOffBackGesture)
                 add(Action.TurnOnBackGesture)
-                // TakeScreenshot only available on screen-on context (null means no filter = include always)
+                // Navigation and screenshot only available on screen-on context (null means no filter = include always)
                 if (screenOnOnly == null || screenOnOnly == true) {
+                    add(Action.Back)
+                    add(Action.Home)
+                    add(Action.RecentApps)
+                    add(Action.OpenNotifications)
+                    add(Action.OpenQuickSettings)
                     add(Action.TakeScreenshot)
                 }
             }

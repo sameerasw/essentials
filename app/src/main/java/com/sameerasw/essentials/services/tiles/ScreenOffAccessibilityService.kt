@@ -51,6 +51,7 @@ import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.FaceUnlockBrightnessHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
+import com.sameerasw.essentials.services.handlers.QuickBallHandler
 import com.sameerasw.essentials.services.handlers.ScreenshotAutoCleanHandler
 import com.sameerasw.essentials.services.handlers.ScreenshotShareCleanupHandler
 import com.sameerasw.essentials.services.handlers.AppVolumeOverlayHandler
@@ -102,6 +103,7 @@ class ScreenOffAccessibilityService :
     private lateinit var screenshotAutoCleanHandler: ScreenshotAutoCleanHandler
     private lateinit var lockscreenShortcutsHandler: LockscreenShortcutsHandler
     private lateinit var appVolumeOverlayHandler: AppVolumeOverlayHandler
+    private lateinit var quickBallHandler: QuickBallHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -441,6 +443,7 @@ class ScreenOffAccessibilityService :
         appVolumeOverlayHandler = AppVolumeOverlayHandler(this)
         screenshotShareCleanupHandler = ScreenshotShareCleanupHandler(this, serviceScope)
         screenshotAutoCleanHandler = ScreenshotAutoCleanHandler(this, serviceScope)
+        quickBallHandler = QuickBallHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -448,6 +451,7 @@ class ScreenOffAccessibilityService :
         smartPixelsHandler.init()
         duoOverlayHandler.init()
         statusGlanceHandler.init()
+        quickBallHandler.init()
         AppVolumeController.updateState(this)
         setupReceivers()
     }
@@ -499,6 +503,7 @@ class ScreenOffAccessibilityService :
                             lockscreenShortcutsHandler.onScreenOff()
                             appVolumeOverlayHandler.onScreenOff()
                             omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
+                            quickBallHandler.onScreenOff()
                             pocketModeHandler.onScreenOff()
                             faceUnlockBrightnessHandler.onScreenOff()
                             updatePocketModeSensors()
@@ -691,6 +696,7 @@ class ScreenOffAccessibilityService :
         statusGlanceHandler.destroy()
         lockscreenShortcutsHandler.onDestroy()
         appVolumeOverlayHandler.onDestroy()
+        quickBallHandler.destroy()
         statusBarIconHandler.unregister()
         screenshotAutoCleanHandler.unregister()
         stopInputEventListener()
@@ -1237,6 +1243,10 @@ class ScreenOffAccessibilityService :
 
         fun updateSmartPixelsState() {
             instance?.smartPixelsHandler?.updateState()
+        }
+
+        fun updateQuickBallState() {
+            instance?.quickBallHandler?.updateState()
         }
     }
 }

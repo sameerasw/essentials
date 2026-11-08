@@ -200,6 +200,18 @@ class SettingsRepository(
         const val KEY_DAILY_WALLPAPER_RETRY_COUNT = "daily_wallpaper_retry_count"
 
         const val KEY_WIDGET_ENABLED = "widget_enabled"
+        const val KEY_QUICK_BALL_ENABLED = "quick_ball_enabled"
+        const val KEY_QUICK_BALL_SIZE = "quick_ball_size"
+        const val KEY_QUICK_BALL_IDLE_ALPHA = "quick_ball_idle_alpha"
+        const val KEY_QUICK_BALL_AUTO_HIDE = "quick_ball_auto_hide"
+        const val KEY_QUICK_BALL_HAPTIC = "quick_ball_haptic"
+        const val KEY_QUICK_BALL_POSITION_Y = "quick_ball_position_y"
+        const val KEY_QUICK_BALL_POSITION_SIDE = "quick_ball_position_side"
+        const val KEY_QUICK_BALL_SLOT_1 = "quick_ball_slot_1"
+        const val KEY_QUICK_BALL_SLOT_2 = "quick_ball_slot_2"
+        const val KEY_QUICK_BALL_SLOT_3 = "quick_ball_slot_3"
+        const val KEY_QUICK_BALL_SLOT_4 = "quick_ball_slot_4"
+        const val KEY_QUICK_BALL_SLOT_5 = "quick_ball_slot_5"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
         const val KEY_MAPS_POWER_SAVING_ENABLED = "maps_power_saving_enabled"
         const val KEY_MAPS_DISCOVERED_CHANNELS = "maps_discovered_channels"
@@ -4756,4 +4768,68 @@ class SettingsRepository(
         } ?: emptyMap()
 
     fun setAppVolumeLevels(levels: Map<String, Float>) = putString(KEY_APP_VOLUME_LEVELS, gson.toJson(levels))
+
+    fun isQuickBallEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_ENABLED, false)
+
+    fun setQuickBallEnabled(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_ENABLED, enabled)
+
+    fun getQuickBallSize(): Float = getFloat(KEY_QUICK_BALL_SIZE, 48f)
+
+    fun setQuickBallSize(size: Float) = putFloat(KEY_QUICK_BALL_SIZE, size)
+
+    fun getQuickBallIdleAlpha(): Float = getFloat(KEY_QUICK_BALL_IDLE_ALPHA, 0.4f)
+
+    fun setQuickBallIdleAlpha(alpha: Float) = putFloat(KEY_QUICK_BALL_IDLE_ALPHA, alpha)
+
+    fun isQuickBallAutoHide(): Boolean = getBoolean(KEY_QUICK_BALL_AUTO_HIDE, true)
+
+    fun setQuickBallAutoHide(autoHide: Boolean) = putBoolean(KEY_QUICK_BALL_AUTO_HIDE, autoHide)
+
+    fun isQuickBallHaptic(): Boolean = getBoolean(KEY_QUICK_BALL_HAPTIC, true)
+
+    fun setQuickBallHaptic(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_HAPTIC, enabled)
+
+    fun getQuickBallPositionY(): Float = getFloat(KEY_QUICK_BALL_POSITION_Y, 0.5f)
+
+    fun setQuickBallPositionY(yRatio: Float) = putFloat(KEY_QUICK_BALL_POSITION_Y, yRatio)
+
+    fun getQuickBallPositionSide(): Int = getInt(KEY_QUICK_BALL_POSITION_SIDE, 0)
+
+    fun setQuickBallPositionSide(side: Int) = putInt(KEY_QUICK_BALL_POSITION_SIDE, side)
+
+    fun getQuickBallSlotAction(slot: Int): Action {
+        val key =
+            when (slot) {
+                1 -> KEY_QUICK_BALL_SLOT_1
+                2 -> KEY_QUICK_BALL_SLOT_2
+                3 -> KEY_QUICK_BALL_SLOT_3
+                4 -> KEY_QUICK_BALL_SLOT_4
+                5 -> KEY_QUICK_BALL_SLOT_5
+                else -> return Action.Back
+            }
+        val defaultAction =
+            when (slot) {
+                1 -> Action.Back
+                2 -> Action.Home
+                3 -> Action.RecentApps
+                4 -> Action.TakeScreenshot
+                5 -> Action.ScreenOff()
+                else -> Action.Back
+            }
+        val raw = prefs.getString(key, null) ?: return defaultAction
+        return ActionGsonAdapter.fromJson(raw) ?: defaultAction
+    }
+
+    fun setQuickBallSlotAction(slot: Int, action: Action) {
+        val key =
+            when (slot) {
+                1 -> KEY_QUICK_BALL_SLOT_1
+                2 -> KEY_QUICK_BALL_SLOT_2
+                3 -> KEY_QUICK_BALL_SLOT_3
+                4 -> KEY_QUICK_BALL_SLOT_4
+                5 -> KEY_QUICK_BALL_SLOT_5
+                else -> return
+            }
+        prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
+    }
 }

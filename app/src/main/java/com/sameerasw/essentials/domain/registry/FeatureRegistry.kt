@@ -29,6 +29,7 @@ import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.ui.features.consciousgate.CONSCIOUS_GATE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.system.BACK_GESTURE_FEATURE_ID
+import com.sameerasw.essentials.ui.features.system.QUICK_BALL_FEATURE_ID
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.hardware.HilightLights
 import com.sameerasw.essentials.utils.ShellUtils
@@ -338,6 +339,52 @@ object FeatureRegistry {
                     context: Context,
                     enabled: Boolean,
                 ) {}
+            },
+            object : Feature(
+                id = QUICK_BALL_FEATURE_ID,
+                contributors = listOf("labibrafat"),
+                title = R.string.feat_quick_ball_title,
+                iconRes = R.drawable.rounded_touch_app_24,
+                category = R.string.cat_interface,
+                description = R.string.feat_quick_ball_desc,
+                aboutDescription = R.string.about_desc_quick_ball,
+                permissionKeys = listOf("ACCESSIBILITY"),
+                showToggle = true,
+                parentFeatureId = null,
+                isVisibleInMain = true,
+                searchableSettings =
+                    listOf(
+                        SearchSetting(
+                            R.string.quick_ball_enable_title,
+                            R.string.quick_ball_enable_desc,
+                            "quick_ball_enabled",
+                        ),
+                        SearchSetting(
+                            R.string.quick_ball_size_title,
+                            R.string.quick_ball_size_desc,
+                            "quick_ball_size",
+                        ),
+                        SearchSetting(
+                            R.string.quick_ball_idle_alpha_title,
+                            R.string.quick_ball_idle_alpha_desc,
+                            "quick_ball_idle_alpha",
+                        ),
+                    ),
+            ) {
+                override fun isEnabled(viewModel: MainViewModel): Boolean = viewModel.isQuickBallEnabled.value
+
+                override fun isToggleEnabled(
+                    viewModel: MainViewModel,
+                    context: Context,
+                ): Boolean = viewModel.isAccessibilityEnabled.value
+
+                override fun onToggle(
+                    viewModel: MainViewModel,
+                    context: Context,
+                    enabled: Boolean,
+                ) {
+                    viewModel.setQuickBallEnabled(enabled)
+                }
             },
             object : Feature(
                 id = "Essentials On Display",

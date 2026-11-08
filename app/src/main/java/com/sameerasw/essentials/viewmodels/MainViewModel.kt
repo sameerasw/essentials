@@ -168,6 +168,17 @@ class MainViewModel : ViewModel() {
     val smartPixelsIntensity = mutableFloatStateOf(50f)
     val isSmartPixelsDisableOnCastEnabled = mutableStateOf(true)
 
+    val isQuickBallEnabled = mutableStateOf(false)
+    val quickBallSize = mutableFloatStateOf(48f)
+    val quickBallIdleAlpha = mutableFloatStateOf(0.4f)
+    val isQuickBallAutoHide = mutableStateOf(true)
+    val isQuickBallHaptic = mutableStateOf(true)
+    val quickBallSlot1Action = mutableStateOf<Action>(Action.Back)
+    val quickBallSlot2Action = mutableStateOf<Action>(Action.Home)
+    val quickBallSlot3Action = mutableStateOf<Action>(Action.RecentApps)
+    val quickBallSlot4Action = mutableStateOf<Action>(Action.TakeScreenshot)
+    val quickBallSlot5Action = mutableStateOf<Action>(Action.ScreenOff())
+
     val isDuoEnabled = mutableStateOf(false)
     val isDuoIslandCombined = mutableStateOf(false)
     val isDuoTapForBrief = mutableStateOf(false)
@@ -797,6 +808,36 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST ->
                         isSmartPixelsDisableOnCastEnabled.value =
                             settingsRepository.getBoolean(key, true)
+
+                    SettingsRepository.KEY_QUICK_BALL_ENABLED ->
+                        isQuickBallEnabled.value = settingsRepository.isQuickBallEnabled()
+
+                    SettingsRepository.KEY_QUICK_BALL_SIZE ->
+                        quickBallSize.floatValue = settingsRepository.getQuickBallSize()
+
+                    SettingsRepository.KEY_QUICK_BALL_IDLE_ALPHA ->
+                        quickBallIdleAlpha.floatValue = settingsRepository.getQuickBallIdleAlpha()
+
+                    SettingsRepository.KEY_QUICK_BALL_AUTO_HIDE ->
+                        isQuickBallAutoHide.value = settingsRepository.isQuickBallAutoHide()
+
+                    SettingsRepository.KEY_QUICK_BALL_HAPTIC ->
+                        isQuickBallHaptic.value = settingsRepository.isQuickBallHaptic()
+
+                    SettingsRepository.KEY_QUICK_BALL_SLOT_1 ->
+                        quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
+
+                    SettingsRepository.KEY_QUICK_BALL_SLOT_2 ->
+                        quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
+
+                    SettingsRepository.KEY_QUICK_BALL_SLOT_3 ->
+                        quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
+
+                    SettingsRepository.KEY_QUICK_BALL_SLOT_4 ->
+                        quickBallSlot4Action.value = settingsRepository.getQuickBallSlotAction(4)
+
+                    SettingsRepository.KEY_QUICK_BALL_SLOT_5 ->
+                        quickBallSlot5Action.value = settingsRepository.getQuickBallSlotAction(5)
 
                     SettingsRepository.KEY_DUO_ENABLED ->
                         isDuoEnabled.value = settingsRepository.isDuoEnabled()
@@ -2476,6 +2517,16 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_SMART_PIXELS_INTENSITY, 50f)
         isSmartPixelsDisableOnCastEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST, true)
+        isQuickBallEnabled.value = settingsRepository.isQuickBallEnabled()
+        quickBallSize.floatValue = settingsRepository.getQuickBallSize()
+        quickBallIdleAlpha.floatValue = settingsRepository.getQuickBallIdleAlpha()
+        isQuickBallAutoHide.value = settingsRepository.isQuickBallAutoHide()
+        isQuickBallHaptic.value = settingsRepository.isQuickBallHaptic()
+        quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
+        quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
+        quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
+        quickBallSlot4Action.value = settingsRepository.getQuickBallSlotAction(4)
+        quickBallSlot5Action.value = settingsRepository.getQuickBallSlotAction(5)
         isDuoEnabled.value = settingsRepository.isDuoEnabled()
         isDuoAutoDetect.value = settingsRepository.isDuoAutoDetectEnabled()
         duoCameraOffsetX.floatValue = settingsRepository.getDuoCameraOffsetX()
@@ -5471,6 +5522,47 @@ class MainViewModel : ViewModel() {
     ) {
         isSmartPixelsDisableOnCastEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_SMART_PIXELS_DISABLE_ON_CAST, enabled)
+    }
+
+    fun setQuickBallEnabled(enabled: Boolean) {
+        isQuickBallEnabled.value = enabled
+        settingsRepository.setQuickBallEnabled(enabled)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallSize(size: Float) {
+        quickBallSize.floatValue = size
+        settingsRepository.setQuickBallSize(size)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallIdleAlpha(alpha: Float) {
+        quickBallIdleAlpha.floatValue = alpha
+        settingsRepository.setQuickBallIdleAlpha(alpha)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallAutoHide(autoHide: Boolean) {
+        isQuickBallAutoHide.value = autoHide
+        settingsRepository.setQuickBallAutoHide(autoHide)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallHaptic(enabled: Boolean) {
+        isQuickBallHaptic.value = enabled
+        settingsRepository.setQuickBallHaptic(enabled)
+    }
+
+    fun setQuickBallSlotAction(slot: Int, action: Action) {
+        when (slot) {
+            1 -> quickBallSlot1Action.value = action
+            2 -> quickBallSlot2Action.value = action
+            3 -> quickBallSlot3Action.value = action
+            4 -> quickBallSlot4Action.value = action
+            5 -> quickBallSlot5Action.value = action
+        }
+        settingsRepository.setQuickBallSlotAction(slot, action)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 
     fun setDuoEnabled(enabled: Boolean) {

@@ -83,6 +83,8 @@ import com.sameerasw.essentials.ui.features.security.ScreenshotsSettingsUI
 import com.sameerasw.essentials.ui.features.system.AlwaysOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.features.system.BACK_GESTURE_FEATURE_ID
 import com.sameerasw.essentials.ui.features.system.BackGestureSettingsUI
+import com.sameerasw.essentials.ui.features.system.QUICK_BALL_FEATURE_ID
+import com.sameerasw.essentials.ui.features.system.QuickBallSettingsUI
 import com.sameerasw.essentials.ui.features.system.ActivityLauncherSearchBar
 import com.sameerasw.essentials.ui.features.system.ActivityLauncherSettingsUI
 import com.sameerasw.essentials.ui.features.system.ButtonRemapSettingsUI
@@ -1430,6 +1432,14 @@ fun FeatureSettingsScreen(
 
                             BACK_GESTURE_FEATURE_ID -> {
                                 BackGestureSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting,
+                                )
+                            }
+
+                            QUICK_BALL_FEATURE_ID -> {
+                                QuickBallSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting,

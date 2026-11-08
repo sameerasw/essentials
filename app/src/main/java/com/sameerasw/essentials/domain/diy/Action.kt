@@ -44,6 +44,36 @@ sealed interface Action {
     }
 
     @Keep
+    data object Back : Action {
+        override val title: Int = R.string.diy_action_back
+        override val icon: Int = R.drawable.rounded_arrow_back_24
+    }
+
+    @Keep
+    data object Home : Action {
+        override val title: Int = R.string.diy_action_home
+        override val icon: Int = R.drawable.rounded_home_24
+    }
+
+    @Keep
+    data object RecentApps : Action {
+        override val title: Int = R.string.diy_action_recents
+        override val icon: Int = R.drawable.rounded_grid_view_24
+    }
+
+    @Keep
+    data object OpenNotifications : Action {
+        override val title: Int = R.string.diy_action_notifications
+        override val icon: Int = R.drawable.rounded_notifications_24
+    }
+
+    @Keep
+    data object OpenQuickSettings : Action {
+        override val title: Int = R.string.diy_action_quick_settings
+        override val icon: Int = R.drawable.rounded_notification_settings_24
+    }
+
+    @Keep
     data class Hilight(
         @SerializedName("pattern") val pattern: HilightPattern = HilightPattern.GLOW,
         @SerializedName("color") val color: Int = HilightEffect.DEFAULT_COLOR,

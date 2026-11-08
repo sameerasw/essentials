@@ -3714,4 +3714,33 @@
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
+
+    <!-- Quick Ball -->
+    <string name="feat_quick_ball_title">Quick Ball</string>
+    <string name="feat_quick_ball_desc">Floating assistive touch shortcuts docked to the screen edge</string>
+    <string name="about_desc_quick_ball">A floating assistive touch dock that snaps to the screen edge, providing quick one-handed access to navigation, screen capture, locking, and system shortcuts.\n\nTap or swipe outward to expand the shortcut menu. Drag along the edge to reposition.</string>
+    <string name="quick_ball_enable_title">Enable Quick Ball</string>
+    <string name="quick_ball_enable_desc">Show floating shortcut ball on screen edge</string>
+    <string name="quick_ball_slots_section">Shortcuts</string>
+    <string name="quick_ball_slot_1">Slot 1 (Top)</string>
+    <string name="quick_ball_slot_2">Slot 2</string>
+    <string name="quick_ball_slot_3">Slot 3 (Center)</string>
+    <string name="quick_ball_slot_4">Slot 4</string>
+    <string name="quick_ball_slot_5">Slot 5 (Bottom)</string>
+    <string name="quick_ball_appearance_section">Appearance &amp; Behavior</string>
+    <string name="quick_ball_size_title">Ball Size</string>
+    <string name="quick_ball_size_desc">Adjust the size of the floating ball</string>
+    <string name="quick_ball_idle_alpha_title">Idle Opacity</string>
+    <string name="quick_ball_idle_alpha_desc">Transparency when not in use</string>
+    <string name="quick_ball_auto_hide_title">Collapse to Edge</string>
+    <string name="quick_ball_auto_hide_desc">Collapse into a thin edge handle after 3 seconds</string>
+    <string name="quick_ball_vibration_title">Haptic Feedback</string>
+    <string name="quick_ball_vibration_desc">Tactile feedback on touch and shortcut selection</string>
+
+    <!-- Navigation Actions -->
+    <string name="diy_action_back">Back</string>
+    <string name="diy_action_home">Home</string>
+    <string name="diy_action_recents">Recent Apps</string>
+    <string name="diy_action_notifications">Notifications</string>
+    <string name="diy_action_quick_settings">Quick Settings</string>
 </resources>

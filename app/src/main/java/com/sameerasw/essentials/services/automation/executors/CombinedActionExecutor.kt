@@ -181,6 +181,46 @@ object CombinedActionExecutor {
                 is Action.HapticVibration -> {
                     HapticUtil.performCustomHaptic(context, 0.6f)
                 }
+                is Action.Back -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Action.Home -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Action.RecentApps -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_RECENTS)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Action.OpenNotifications -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Action.OpenQuickSettings -> {
+                    val serviceInst = ScreenOffAccessibilityService.instance
+                    if (serviceInst != null) {
+                        serviceInst.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
+                    } else {
+                        Toast.makeText(context, R.string.perm_accessibility_title, Toast.LENGTH_SHORT).show()
+                    }
+                }
 
                 is Action.Hilight -> HilightController.play(action.toEffect())
                 is Action.TurnOnFlashlight -> toggleFlashlight(context, true)
