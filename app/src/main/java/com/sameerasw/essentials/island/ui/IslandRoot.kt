@@ -229,10 +229,19 @@ private fun IslandRootContent(
         }
     }
 
-    val outlineAlpha by animateFloatAsState(
-        targetValue = if (spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded) 0f else 1f,
+    val collapse = remember { Animatable(0f) }
+    val outlineHidden = spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded
+    val outlineStageAlpha by animateFloatAsState(
+        targetValue = if (outlineHidden) 0f else 1f,
+        animationSpec = if (outlineHidden) IslandMotion.contentOut() else IslandMotion.contentIn(),
         label = "islandOutlineAlpha",
     )
+    val outlineAlpha by remember(spec.outlineHiddenWhenExpanded) {
+        derivedStateOf {
+            val reveal = if (spec.outlineHiddenWhenExpanded) ((collapse.value - 0.5f) / 0.5f).coerceIn(0f, 1f) else 0f
+            maxOf(outlineStageAlpha, reveal)
+        }
+    }
 
     val pulseAccent = state.items[state.focusedKey]?.accent
     val pulsePaint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
@@ -298,7 +307,6 @@ private fun IslandRootContent(
     val outgoingAlpha = remember { Animatable(0f) }
     val outgoingMotion = remember { Animatable(0f) }
     val contentShiftPx = with(density) { 10.dp.toPx() }
-    val collapse = remember { Animatable(0f) }
     // Hidden: the width shrinks to a circle first, then the circle shrinks to nothing, so it never turns oval.
     val squash = remember { Animatable(0f) }
     val holdSize = remember { IntArray(2) }
@@ -1038,7 +1046,8 @@ private fun IslandRootContent(
                 .background(Color.Black)
                 .then(
                     outlineFor(1f - bond)
-                        ?.let { Modifier.border(spec.outlineThickness, it, surfaceShape) }
+                        // The stroke draws in from hairline to full width as it fades in
+                        ?.let { Modifier.border(spec.outlineThickness * (0.35f + 0.65f * outlineAlpha), it, surfaceShape) }
                         ?: Modifier,
                 )
                 // Finger-driven shrink sits inside the clip/background so the pill itself follows the drag.
