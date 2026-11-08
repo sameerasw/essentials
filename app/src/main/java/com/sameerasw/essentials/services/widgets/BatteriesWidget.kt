@@ -10,8 +10,6 @@
 package com.sameerasw.essentials.services.widgets
 
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.BatteryManager
 import androidx.compose.runtime.Composable
 import androidx.core.content.ContextCompat
@@ -52,8 +50,6 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
-import androidx.glance.state.GlanceStateDefinition
-import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -65,10 +61,10 @@ import com.sameerasw.essentials.utils.BatteryRingDrawer
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.sameerasw.essentials.utils.BluetoothDeviceIcons
 import com.sameerasw.essentials.utils.BluetoothDeviceOrder
+import com.sameerasw.essentials.utils.battery.BatteryInfoUtil
 import com.sameerasw.essentials.utils.battery.ChargeLimitUtil
 
 class BatteriesWidget : GlanceAppWidget() {
-    override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
     override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(
@@ -114,33 +110,10 @@ class BatteriesWidget : GlanceAppWidget() {
     ): List<Item> {
         val items = mutableListOf<Item>()
 
-        val batteryStatus = try {
-            context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        } catch (_: Exception) {
-            null
-        }
-        val rawLevel = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-        val plugged = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) ?: 0
-        val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-        val bm = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
-        val fallbackLevel = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: -1
-        val realTimeLevel = if (rawLevel >= 0 && scale > 0) {
-            (rawLevel * 100 / scale)
-        } else {
-            fallbackLevel
-        }
-        val bmCharging = bm?.isCharging == true
-        val intentCharging = plugged != 0 ||
-            status == BatteryManager.BATTERY_STATUS_CHARGING ||
-            status == BatteryManager.BATTERY_STATUS_FULL
-        val realTimeCharging = if (batteryStatus != null) intentCharging else bmCharging
-
-        val storedLevel = prefs[intPreferencesKey(SettingsRepository.KEY_PHONE_BATTERY_LEVEL)]
-        val storedCharging = prefs[booleanPreferencesKey(SettingsRepository.KEY_PHONE_BATTERY_IS_CHARGING)]
-        val phoneLevel = (if (realTimeLevel >= 0) realTimeLevel else storedLevel ?: 0).coerceIn(0, 100)
-        val phoneCharging = if (batteryStatus != null || bm != null) realTimeCharging else (storedCharging ?: false)
-
+        val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+        val phoneLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+        val phoneCharging =
+            (BatteryInfoUtil.getBatteryIntent(context)?.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) ?: 0) > 0
         items += Item(BluetoothDeviceOrder.PHONE, phoneLevel, R.drawable.rounded_mobile_24, statusIcon(phoneLevel, phoneCharging, ChargeLimitUtil.isShielded(context, phoneLevel, phoneCharging)))
 
         val macEnabled = prefs[booleanPreferencesKey(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)] ?: false

@@ -14,7 +14,6 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.services.widgets.BatteriesWidgetReceiver
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 
 class StatusBarAutomationReceiver : BroadcastReceiver() {
@@ -28,7 +27,6 @@ class StatusBarAutomationReceiver : BroadcastReceiver() {
             action == Intent.ACTION_BOOT_COMPLETED
         ) {
             updateBatteryPercentage(context, action)
-            BatteriesWidgetReceiver.updateWidgets(context)
         }
     }
 

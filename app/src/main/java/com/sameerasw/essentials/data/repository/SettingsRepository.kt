@@ -398,8 +398,6 @@ class SettingsRepository(
         const val KEY_BATTERY_WIDGET_CENTER_ITEMS = "battery_widget_center_items"
         const val KEY_BATTERY_WIDGET_MAX_DEVICES = "battery_widget_max_devices"
         const val KEY_BATTERY_WIDGET_BACKGROUND_ENABLED = "battery_widget_background_enabled"
-        const val KEY_PHONE_BATTERY_LEVEL = "phone_battery_level"
-        const val KEY_PHONE_BATTERY_IS_CHARGING = "phone_battery_is_charging"
 
         const val KEY_PINNED_FEATURES = "pinned_features"
         const val KEY_PINNED_QS_TILES = "pinned_qs_tiles"
