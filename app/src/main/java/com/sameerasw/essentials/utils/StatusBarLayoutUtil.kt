@@ -83,6 +83,72 @@ object StatusBarLayoutUtil {
         return emptyList()
     }
 
+    private const val MAX_COMPONENTS = 200
+
+    fun systemUiComponentSections(service: AccessibilityService): List<Section> {
+        val windows = runCatching { service.windows }.getOrNull() ?: return emptyList()
+        val wm = service.getSystemService(android.view.WindowManager::class.java)
+        val screen = wm?.currentWindowMetrics?.bounds ?: return emptyList()
+        val maxArea = screen.width().toLong() * screen.height() / 2
+        val result = mutableListOf<Section>()
+        val seen = HashSet<Rect>()
+        for (window in windows) {
+            val wb = Rect().also { window.getBoundsInScreen(it) }
+            if (wb.top == 0 && wb.height() <= wb.width() / 4) continue
+            val root = window.root ?: continue
+            if (root.packageName?.toString() != SYSTEMUI) continue
+            if (nodes(root, "volume_dialog").isNotEmpty()) continue
+            fun walk(node: AccessibilityNodeInfo) {
+                if (result.size >= MAX_COMPONENTS) return
+                val name = node.viewIdResourceName?.let { shortName(it) } ?: clockName(node)
+                if (name != null && node.isVisibleToUser) {
+                    val r = Rect().also { node.getBoundsInScreen(it) }
+                    if (!r.isEmpty && r.width().toLong() * r.height() <= maxArea && seen.add(r)) {
+                        result += Section(name, r)
+                    }
+                }
+                for (i in 0 until node.childCount) node.getChild(i)?.let { walk(it) }
+            }
+            walk(root)
+        }
+        return result
+    }
+
+    private fun clockName(node: AccessibilityNodeInfo): String? {
+        val cls = node.className?.toString()?.substringAfterLast('.') ?: ""
+        if (cls.contains("Clock", ignoreCase = true)) return cls
+        val text = (node.text ?: node.contentDescription)?.toString()?.trim() ?: return null
+        return if (TIME_TEXT.matches(text)) "clock" else null
+    }
+
+    fun shadeTree(service: AccessibilityService): List<String> {
+        val windows = runCatching { service.windows }.getOrNull() ?: return emptyList()
+        val root = windows.firstOrNull { w ->
+            val wb = Rect().also { w.getBoundsInScreen(it) }
+            wb.height() > wb.width() && w.root?.packageName?.toString() == SYSTEMUI
+        }?.root ?: return emptyList()
+        return treeLines(root)
+    }
+
+    private fun shortName(id: String): String {
+        val name = id.substringAfter(":id/")
+        return if (NOTIFICATION_KEY.matches(name)) name.split('|').getOrNull(1)?.substringAfterLast('.') ?: name else name
+    }
+
+    fun navigationHandleSection(service: AccessibilityService, bar: Rect): Section? {
+        val res = runCatching { service.createPackageContext(SYSTEMUI, 0).resources }.getOrNull() ?: return null
+        fun dimen(name: String): Int? {
+            val id = res.getIdentifier(name, "dimen", SYSTEMUI)
+            return if (id == 0) null else runCatching { res.getDimensionPixelSize(id) }.getOrNull()
+        }
+        val width = dimen("navigation_handle_width") ?: return null
+        val height = dimen("navigation_handle_height") ?: return null
+        val bottom = dimen("navigation_handle_bottom") ?: ((bar.height() - height) / 2)
+        val left = bar.centerX() - width / 2
+        val b = bar.bottom - bottom
+        return Section("gesture_pill", Rect(left, b - height, left + width, b))
+    }
+
     fun navigationBarSections(service: AccessibilityService): List<Section> {
         val wm = service.getSystemService(android.view.WindowManager::class.java) ?: return emptyList()
         val metrics = wm.currentWindowMetrics
@@ -94,7 +160,9 @@ object StatusBarLayoutUtil {
         val result = mutableListOf<Section>()
         val nav = insets.getInsets(android.view.WindowInsets.Type.navigationBars())
         if (nav.bottom > 0) {
-            result += Section(if (gestural) "gesture_bar" else "navigation_bar", Rect(bounds.left, bounds.bottom - nav.bottom, bounds.right, bounds.bottom))
+            val bar = Rect(bounds.left, bounds.bottom - nav.bottom, bounds.right, bounds.bottom)
+            result += Section(if (gestural) "gesture_bar" else "navigation_bar", bar)
+            if (gestural) navigationHandleSection(service, bar)?.let { result += it }
         }
         if (nav.left > 0) result += Section("navigation_bar", Rect(bounds.left, bounds.top, bounds.left + nav.left, bounds.bottom))
         if (nav.right > 0) result += Section("navigation_bar", Rect(bounds.right - nav.right, bounds.top, bounds.right, bounds.bottom))
@@ -116,8 +184,10 @@ object StatusBarLayoutUtil {
         return Edges(start.maxOfOrNull { it.right }, end.minOfOrNull { it.left })
     }
 
-    fun dumpTree(service: AccessibilityService): List<String> {
-        val root = statusBarRoot(service) ?: return emptyList()
+    fun dumpTree(service: AccessibilityService): List<String> =
+        statusBarRoot(service)?.let { treeLines(it) } ?: emptyList()
+
+    private fun treeLines(root: AccessibilityNodeInfo): List<String> {
         val out = mutableListOf<String>()
         fun walk(node: AccessibilityNodeInfo, depth: Int) {
             val r = Rect().also { node.getBoundsInScreen(it) }
