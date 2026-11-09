@@ -1770,6 +1770,7 @@
     <string name="island_expanded_timeout_title">タイムアウトの延長</string>
     <string name="island_expanded_timeout_desc">折りたたまれたピルに戻るまでの時間（0は無限大）</string>
     <string name="island_show_glow_title">アクセントの輝きを表示する</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_tap_action_title">タップ操作</string>
     <string name="island_catch_up_title">追いつく</string>
     <string name="island_catch_up_desc">最後の通知をアイランドに長時間表示する</string>

@@ -1827,6 +1827,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="duo_hide_when_screen_off_title">Ausblenden, wenn Bildschirm aus</string>
     <string name="island_tap_action_title">Tippaktion</string>
     <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_catch_up_title">Nachholen</string>
     <string name="island_catch_up_desc">Letzte Benachrichtigung länger auf der Insel anzeigen</string>
     <string name="conscious_gate_feel_every_second_title">Spüre jede verschwendete Sekunde</string>

@@ -603,6 +603,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BATTERY_HIDE_LOCKED = "island_battery_hide_locked"
         const val KEY_ISLAND_TIMEOUT_MS = "island_timeout_ms"
         const val KEY_ISLAND_SHOW_GLOW = "island_show_glow"
+        const val KEY_ISLAND_GLOW_INTENSITY = "island_glow_intensity"
         const val KEY_ISLAND_NOTIF_THEMED_BUBBLE = "island_notif_themed_bubble"
         const val KEY_ISLAND_EXPANDED_WIDTH = "island_expanded_width"
         const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
@@ -4199,6 +4200,8 @@ class SettingsRepository(
 
     fun isIslandShowGlowEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_GLOW, true)
     fun setIslandShowGlowEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_GLOW, enabled)
+    fun getIslandGlowIntensity(): Float = getFloat(KEY_ISLAND_GLOW_INTENSITY, 1f)
+    fun setIslandGlowIntensity(value: Float) = putFloat(KEY_ISLAND_GLOW_INTENSITY, value)
 
     fun isIslandNotifThemedBubbleEnabled(): Boolean = getBoolean(KEY_ISLAND_NOTIF_THEMED_BUBBLE, false)
     fun setIslandNotifThemedBubbleEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NOTIF_THEMED_BUBBLE, enabled)

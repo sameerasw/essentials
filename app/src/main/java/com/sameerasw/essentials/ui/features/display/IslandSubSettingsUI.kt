@@ -527,6 +527,23 @@ fun IslandVisualsSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_show_glow"),
             )
 
+            if (viewModel.isIslandShowGlow.value) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_glow_intensity_title),
+                    value = viewModel.islandGlowIntensity.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandGlowIntensity(it)
+                    },
+                    valueRange = 0.1f..2f,
+                    increment = 0.1f,
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    valueFormatter = { "%.1fx".format(it) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_glow_intensity"),
+                )
+            }
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
                 title = stringResource(R.string.island_pulse_shadow_title),
