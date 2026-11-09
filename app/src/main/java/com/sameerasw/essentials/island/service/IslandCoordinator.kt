@@ -967,7 +967,7 @@ class IslandCoordinator(
 
     private companion object {
         const val REVEAL_DELAY_MS = 160L
-        const val OUTSIDE_DISMISS_GRACE_MS = 2000L
+        const val OUTSIDE_DISMISS_GRACE_MS = 1000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
         const val HOLD_TICK_MS = 1000L
