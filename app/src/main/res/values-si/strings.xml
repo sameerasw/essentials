@@ -1506,4 +1506,5 @@
     <string name="feat_networks_desc">ගුවන් විදුලි සහ network පාලනය</string>
     <string name="feat_power_battery_desc">Battery බහින විදිහ පාලනය කරන්න</string>
     <string name="duo_desc">This device doesn\'t fold</string>
+    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
 </resources>

@@ -155,14 +155,16 @@ fun MediaExpanded(
                 val camera = { frame().let { MediaCameraGeometry(it.cameraCenter, it.cameraRadius) } }
                 Box(Modifier.fillMaxSize()) {
                     MediaSurface(surfaceAccent, spec.expandedCorner, { frame().pulse }, geometry, camera, Modifier.matchParentSize())
-                    GeminiParticlePill(
-                        modifier = Modifier.matchParentSize(),
-                        color = surfaceAccent,
-                        cornerRadius = spec.expandedCorner,
-                        activation = { frame().pulse },
-                        geometry = geometry,
-                        protectedCamera = camera,
-                    )
+                    if (spec.neuralExpressive) {
+                        GeminiParticlePill(
+                            modifier = Modifier.matchParentSize(),
+                            color = surfaceAccent,
+                            cornerRadius = spec.expandedCorner,
+                            activation = { frame().pulse },
+                            geometry = geometry,
+                            protectedCamera = camera,
+                        )
+                    }
                 }
             }
             if (!detached && !SurfaceBackdrop { MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.fillMaxSize()) }) {
