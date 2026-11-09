@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.service
 
+import android.os.PowerManager
 import com.sameerasw.essentials.island.state.IslandStillness
 import android.provider.Settings
 import android.os.SystemClock
@@ -246,6 +247,10 @@ class IslandCoordinator(
         }
     }
 
+    private val powerSaveReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = pokeStillness()
+    }
+
     private val screenReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
@@ -270,6 +275,7 @@ class IslandCoordinator(
                 addAction(Intent.ACTION_USER_PRESENT)
             },
         )
+        service.registerReceiver(powerSaveReceiver, IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED))
         controller.fallbackTapKey = { BriefPlugin.ITEM_KEY.takeIf { settings.isIslandBriefEnabled() } }
         controller.opensOnExpandedTap = { it.key != BriefPlugin.ITEM_KEY && settings.isIslandTapToOpenExpandedEnabled() }
         controller.onStageChanged = { stage ->
@@ -313,15 +319,18 @@ class IslandCoordinator(
 
     private val stillRunnable = Runnable {
         val stage = controller.state.value.stage
-        if (running && settings.isIslandPreferStillEnabled() && (stage == IslandStage.Compact || stage == IslandStage.Hidden)) {
+        if (running && preferStill() && (stage == IslandStage.Compact || stage == IslandStage.Hidden)) {
             setStill(true)
         }
     }
 
+    private fun preferStill(): Boolean =
+        settings.isIslandPreferStillEnabled() || service.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true
+
     private fun pokeStillness() {
         mainHandler.removeCallbacks(stillRunnable)
         setStill(false)
-        if (running && settings.isIslandPreferStillEnabled()) mainHandler.postDelayed(stillRunnable, IslandStillness.IDLE_MS)
+        if (running && preferStill()) mainHandler.postDelayed(stillRunnable, IslandStillness.IDLE_MS)
     }
 
     private fun setStill(still: Boolean) {
@@ -467,6 +476,10 @@ class IslandCoordinator(
         settings.unregisterOnSharedPreferenceChangeListener(this)
         try {
             service.unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
+        try {
+            service.unregisterReceiver(powerSaveReceiver)
         } catch (_: Exception) {
         }
         stop()
