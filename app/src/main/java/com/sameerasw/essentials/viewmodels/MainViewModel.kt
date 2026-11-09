@@ -513,7 +513,7 @@ class MainViewModel : ViewModel() {
     val isShutUpLoading = mutableStateOf(false)
     val isShutUpAttemptShizukuRestart = mutableStateOf(true)
     val shutUpRestoreDelay = mutableIntStateOf(10)
-    val shutUpRestoreMode = mutableStateOf("Auto")
+    val shutUpRestoreMode = mutableStateOf("Notify")
     val shutUpKeyboard = mutableStateOf("")
     val shizukuAuthToken = mutableStateOf("")
     val edgeLightingSweepSelectedShapes = mutableStateOf<Set<String>>(emptySet())

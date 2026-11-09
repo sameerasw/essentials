@@ -2368,7 +2368,7 @@ class SettingsRepository(
 
     fun setShutUpKeyboard(ime: String) = putString(KEY_SHUT_UP_KEYBOARD, ime)
 
-    fun getShutUpRestoreMode(): String = prefs.getString(KEY_SHUT_UP_RESTORE_MODE, "Auto") ?: "Auto"
+    fun getShutUpRestoreMode(): String = prefs.getString(KEY_SHUT_UP_RESTORE_MODE, "Notify") ?: "Notify"
 
     /**
      * Executes the set shut up restore mode operation.

@@ -2285,6 +2285,7 @@ object FeatureRegistry {
                 category = R.string.cat_system,
                 description = R.string.feat_shut_up_desc,
                 aboutDescription = R.string.shut_up_description,
+                howToUse = R.string.shut_up_how_to_use,
                 permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
                 showToggle = false,
                 hasMoreSettings = true,

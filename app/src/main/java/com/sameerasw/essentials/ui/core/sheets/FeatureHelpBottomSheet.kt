@@ -198,6 +198,25 @@ fun FeatureHelpBottomSheet(
                 }
             }
 
+            feature.howToUse?.let { howRes ->
+                Text(
+                    text = stringResource(R.string.label_how_to_use),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                )
+                RoundedCardContainer(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright,
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        TranslatableText(
+                            stringResId = howRes,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            }
+
             if (customHelp != null) {
                 FilledTonalButton(
                     onClick = {
