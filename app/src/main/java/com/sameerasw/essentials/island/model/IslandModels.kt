@@ -134,6 +134,8 @@ class QueueInfo(
     val onAdvance: () -> Unit,
 )
 
+enum class ExpandedSurfaceStyle { Default, Layered }
+
 class IslandItem(
     val key: String,
     val priority: Int,
@@ -170,6 +172,7 @@ class IslandItem(
     val priorityGroup: String? = null,
     // Rendered inside a colored chip when Island chips is enabled.
     val chip: Boolean = key in IslandChips.items,
+    val expandedSurfaceStyle: ExpandedSurfaceStyle = ExpandedSurfaceStyle.Default,
 ) {
     var userPriority: Int? = null
 
@@ -203,6 +206,7 @@ class IslandItem(
         queued = queued,
         priorityGroup = priorityGroup,
         chip = chip,
+        expandedSurfaceStyle = expandedSurfaceStyle,
     ).also { it.userPriority = userPriority }
 
     val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority
