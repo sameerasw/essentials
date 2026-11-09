@@ -579,7 +579,7 @@ class QuickBallHandler(
         val windowX = if (isOnRight) screenWidth - menuWidth else 0
         val windowY = (fabY + fabSizePx / 2 - menuHeight / 2).coerceIn(0, (screenHeight - menuHeight).coerceAtLeast(0))
 
-        val localFabX = if (isOnRight) menuWidth - fabSizePx else 0
+        val localFabX = if (isOnRight) menuWidth - fabSizePx - edgePaddingPx else edgePaddingPx
         val localFabY = fabY - windowY
 
         val slotCount = settings.getQuickBallSlotCount()

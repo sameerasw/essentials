@@ -215,6 +215,7 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_SLOT_COUNT = "quick_ball_slot_count"
         const val KEY_QUICK_BALL_CONNECTOR_STYLE = "quick_ball_connector_style"
         const val KEY_QUICK_BALL_COLOR_MODE = "quick_ball_color_mode"
+        const val KEY_QUICK_BALL_PRESET_THEME = "quick_ball_preset_theme"
         const val KEY_QUICK_BALL_CUSTOM_COLOR = "quick_ball_custom_color"
         const val KEY_QUICK_BALL_BALL_STYLE = "quick_ball_ball_style"
         const val KEY_QUICK_BALL_STASH_DELAY = "quick_ball_stash_delay"
@@ -222,6 +223,11 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_ICON_PACK = "quick_ball_icon_pack"
         const val KEY_QUICK_BALL_MENU_RADIUS = "quick_ball_menu_radius"
         const val KEY_QUICK_BALL_MENU_SIZE = "quick_ball_menu_size"
+        const val KEY_QUICK_BALL_MENU_ICON_SIZE = "quick_ball_menu_icon_size"
+        const val KEY_QUICK_BALL_CONNECTOR_WIDTH = "quick_ball_connector_width"
+        const val KEY_QUICK_BALL_BORDER_ENABLED = "quick_ball_border_enabled"
+        const val KEY_QUICK_BALL_BORDER_WIDTH = "quick_ball_border_width"
+        const val KEY_QUICK_BALL_HAPTIC_INTENSITY = "quick_ball_haptic_intensity"
         const val KEY_QUICK_BALL_STICK_TO_EDGE = "quick_ball_stick_to_edge"
         const val KEY_QUICK_BALL_LOCK_POSITION = "quick_ball_lock_position"
         const val KEY_QUICK_BALL_HIDE_LANDSCAPE = "quick_ball_hide_landscape"
@@ -4950,4 +4956,28 @@ class SettingsRepository(
         val key = "quick_ball_slot_$slot"
         prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
     }
+
+    fun getQuickBallPresetTheme(): String = prefs.getString(KEY_QUICK_BALL_PRESET_THEME, "ONYX") ?: "ONYX"
+
+    fun setQuickBallPresetTheme(theme: String) = putString(KEY_QUICK_BALL_PRESET_THEME, theme)
+
+    fun getQuickBallConnectorWidth(): Float = getFloat(KEY_QUICK_BALL_CONNECTOR_WIDTH, 2.2f)
+
+    fun setQuickBallConnectorWidth(width: Float) = putFloat(KEY_QUICK_BALL_CONNECTOR_WIDTH, width)
+
+    fun getQuickBallMenuIconSize(): Float = getFloat(KEY_QUICK_BALL_MENU_ICON_SIZE, 24f)
+
+    fun setQuickBallMenuIconSize(size: Float) = putFloat(KEY_QUICK_BALL_MENU_ICON_SIZE, size)
+
+    fun isQuickBallBorderEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_BORDER_ENABLED, true)
+
+    fun setQuickBallBorderEnabled(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_BORDER_ENABLED, enabled)
+
+    fun getQuickBallBorderWidth(): Float = getFloat(KEY_QUICK_BALL_BORDER_WIDTH, 1.5f)
+
+    fun setQuickBallBorderWidth(width: Float) = putFloat(KEY_QUICK_BALL_BORDER_WIDTH, width)
+
+    fun getQuickBallHapticIntensity(): String = prefs.getString(KEY_QUICK_BALL_HAPTIC_INTENSITY, "MEDIUM") ?: "MEDIUM"
+
+    fun setQuickBallHapticIntensity(intensity: String) = putString(KEY_QUICK_BALL_HAPTIC_INTENSITY, intensity)
 }

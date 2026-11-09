@@ -46,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -69,10 +70,16 @@ import com.sameerasw.essentials.ui.core.sheets.SingleAppSelectionSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.features.display.actions.GestureActionPickerSheet
 import com.sameerasw.essentials.ui.features.system.quickball.ConnectorStylePreview
+import com.sameerasw.essentials.ui.features.system.quickball.ConnectorStyleSample
 import com.sameerasw.essentials.ui.features.system.quickball.MenuConnectorStyle
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallBallStyle
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallColorMode
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHapticIntensity
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHaptics
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallIconPack
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallPresetTheme
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallPresetThemeSheet
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallConnectorSheet
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallShortcutStyle
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
@@ -97,6 +104,7 @@ fun QuickBallSettingsUI(
     var slotPendingAppSelection by remember { mutableIntStateOf(0) }
     var activePickingGesture by remember { mutableStateOf<String?>(null) }
     var showConnectorSheet by remember { mutableStateOf(false) }
+    var showPresetThemeSheet by remember { mutableStateOf(false) }
     var showBallStyleSheet by remember { mutableStateOf(false) }
     var showShortcutStyleSheet by remember { mutableStateOf(false) }
     var showIconPackSheet by remember { mutableStateOf(false) }
@@ -196,67 +204,32 @@ fun QuickBallSettingsUI(
         )
     }
 
+    // Preset Theme Sheet
+    if (showPresetThemeSheet) {
+        val currentStyle = MenuConnectorStyle.fromName(viewModel.quickBallConnectorStyle.value)
+        QuickBallPresetThemeSheet(
+            selectedThemeName = viewModel.quickBallPresetTheme.value,
+            connectorStyle = currentStyle,
+            onThemeSelected = { theme ->
+                HapticUtil.performUIHaptic(view)
+                viewModel.setQuickBallPresetTheme(theme.name)
+                showPresetThemeSheet = false
+            },
+            onDismissRequest = { showPresetThemeSheet = false },
+        )
+    }
+
     // Connector style sheet
     if (showConnectorSheet) {
-        EssentialsBottomSheet(
+        QuickBallConnectorSheet(
+            selectedStyleName = viewModel.quickBallConnectorStyle.value,
+            onStyleSelected = { style ->
+                HapticUtil.performUIHaptic(view)
+                viewModel.setQuickBallConnectorStyle(style.name)
+                showConnectorSheet = false
+            },
             onDismissRequest = { showConnectorSheet = false },
-        ) {
-            Text(
-                text = stringResource(R.string.quick_ball_connector_style),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                MenuConnectorStyle.entries.forEach { style ->
-                    val isSelected = viewModel.quickBallConnectorStyle.value == style.name
-                    ListItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.extraSmall)
-                            .clickable {
-                                HapticUtil.performUIHaptic(view)
-                                viewModel.setQuickBallConnectorStyle(style.name)
-                                showConnectorSheet = false
-                            },
-                        headlineContent = {
-                            Text(
-                                text = stringResource(style.titleRes),
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            )
-                        },
-                        supportingContent = if (isSelected) {
-                            { Text("Selected", color = MaterialTheme.colorScheme.primary) }
-                        } else null,
-                        leadingContent = {
-                            ConnectorStylePreview(
-                                style = style,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        },
-                        trailingContent = if (isSelected) {
-                            {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_check_24),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp),
-                                )
-                            }
-                        } else null,
-                        colors = ListItemDefaults.colors(
-                            containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceBright,
-                        ),
-                    )
-                }
-            }
-        }
+        )
     }
 
     // Ball style sheet
@@ -547,60 +520,6 @@ fun QuickBallSettingsUI(
                                 Text(stringResource(R.string.quick_ball_add_slot))
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Connector Style Selector
-                        val currentStyleName = viewModel.quickBallConnectorStyle.value
-                        val currentStyle = MenuConnectorStyle.fromName(currentStyleName)
-                        ListItem(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(MaterialTheme.shapes.extraSmall)
-                                .clickable {
-                                    HapticUtil.performUIHaptic(view)
-                                    showConnectorSheet = true
-                                },
-                            headlineContent = { Text(stringResource(R.string.quick_ball_connector_style)) },
-                            supportingContent = { Text(stringResource(currentStyle.titleRes)) },
-                            leadingContent = {
-                                ConnectorStylePreview(
-                                    style = currentStyle,
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            },
-                            trailingContent = {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceBright),
-                        )
-
-                        // Menu Radius Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_menu_radius_title),
-                            value = viewModel.quickBallMenuRadius.floatValue,
-                            onValueChange = { viewModel.setQuickBallMenuRadius(it) },
-                            valueRange = 60f..130f,
-                            icon = R.drawable.rounded_target_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                            modifier = Modifier.highlight(highlightSetting == "quick_ball_menu_radius"),
-                        )
-
-                        // Button Size Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_menu_size_title),
-                            value = viewModel.quickBallMenuSize.floatValue,
-                            onValueChange = { viewModel.setQuickBallMenuSize(it) },
-                            valueRange = 36f..60f,
-                            icon = R.drawable.rounded_circle_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                            modifier = Modifier.highlight(highlightSetting == "quick_ball_menu_size"),
-                        )
                     }
                 }
 
@@ -663,7 +582,7 @@ fun QuickBallSettingsUI(
                     }
                 }
 
-                // SECTION 3: Appearance
+                // SECTION 3: Appearance & Sizing
                 Text(
                     text = stringResource(R.string.quick_ball_appearance_section),
                     style = MaterialTheme.typography.labelLarge,
@@ -698,30 +617,33 @@ fun QuickBallSettingsUI(
                             modifier = Modifier.highlight(highlightSetting == "quick_ball_idle_alpha"),
                         )
 
+                        // Menu Arc Radius Slider
                         ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_pill_height_title),
-                            value = viewModel.quickBallPillHeight.floatValue,
-                            onValueChange = { viewModel.setQuickBallPillHeight(it) },
-                            valueRange = 30f..80f,
-                            icon = R.drawable.rounded_view_headline_24,
+                            title = stringResource(R.string.quick_ball_radius_title),
+                            value = viewModel.quickBallMenuRadius.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuRadius(it) },
+                            valueRange = 60f..140f,
+                            icon = R.drawable.rounded_circles_24,
                             valueFormatter = { "%.0f dp".format(it) },
                         )
 
+                        // Shortcut Button Size Slider
                         ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_pill_thickness_title),
-                            value = viewModel.quickBallPillThickness.floatValue,
-                            onValueChange = { viewModel.setQuickBallPillThickness(it) },
-                            valueRange = 1.5f..6.0f,
-                            icon = R.drawable.rounded_line_weight_24,
-                            valueFormatter = { "%.1f dp".format(it) },
+                            title = stringResource(R.string.quick_ball_menu_size_title),
+                            value = viewModel.quickBallMenuSize.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuSize(it) },
+                            valueRange = 40f..60f,
+                            icon = R.drawable.rounded_circle_24,
+                            valueFormatter = { "%.0f dp".format(it) },
                         )
 
+                        // Shortcut Icon Size Slider
                         ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_pill_touch_width_title),
-                            value = viewModel.quickBallPillTouchWidth.floatValue,
-                            onValueChange = { viewModel.setQuickBallPillTouchWidth(it) },
-                            valueRange = 16f..40f,
-                            icon = R.drawable.rounded_touch_app_24,
+                            title = stringResource(R.string.quick_ball_menu_icon_size_title),
+                            value = viewModel.quickBallMenuIconSize.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuIconSize(it) },
+                            valueRange = 16f..36f,
+                            icon = R.drawable.rounded_apps_24,
                             valueFormatter = { "%.0f dp".format(it) },
                         )
 
@@ -733,16 +655,6 @@ fun QuickBallSettingsUI(
                             valueRange = 0.5f..5.0f,
                             icon = R.drawable.rounded_timer_24,
                             valueFormatter = { "%.1f s".format(it) },
-                        )
-
-                        // Menu Arc Radius Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_radius_title),
-                            value = viewModel.quickBallMenuRadius.floatValue,
-                            onValueChange = { viewModel.setQuickBallMenuRadius(it) },
-                            valueRange = 60f..140f,
-                            icon = R.drawable.rounded_circles_24,
-                            valueFormatter = { "%.0f dp".format(it) },
                         )
 
                         // Ball Style Selector
@@ -773,17 +685,104 @@ fun QuickBallSettingsUI(
                             onClick = { showIconPackSheet = true },
                         )
 
+                        // Connector Style Selector with live Canvas sample preview
+                        val currentStyleName = viewModel.quickBallConnectorStyle.value
+                        val currentStyle = MenuConnectorStyle.fromName(currentStyleName)
+                        ListItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable {
+                                    HapticUtil.performUIHaptic(view)
+                                    showConnectorSheet = true
+                                },
+                            headlineContent = { Text(stringResource(R.string.quick_ball_connector_style)) },
+                            supportingContent = { Text(stringResource(currentStyle.titleRes)) },
+                            leadingContent = {
+                                ConnectorStyleSample(
+                                    style = currentStyle,
+                                    connectorColor = MaterialTheme.colorScheme.primary,
+                                    itemColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    ballColor = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(width = 54.dp, height = 36.dp),
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_chevron_right_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+                        )
+
+                        // Connector Line Width Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_connector_width_title),
+                            value = viewModel.quickBallConnectorWidth.floatValue,
+                            onValueChange = { viewModel.setQuickBallConnectorWidth(it) },
+                            valueRange = 1.0f..4.0f,
+                            icon = R.drawable.rounded_line_weight_24,
+                            valueFormatter = { "%.1f dp".format(it) },
+                        )
+
+                        // Button & Ball Borders Toggle
                         IconToggleItem(
-                            title = stringResource(R.string.quick_ball_vibration_title),
-                            description = stringResource(R.string.quick_ball_vibration_desc),
-                            isChecked = viewModel.isQuickBallHaptic.value,
-                            onCheckedChange = { viewModel.setQuickBallHaptic(it) },
-                            iconRes = R.drawable.rounded_mobile_vibrate_24,
+                            title = stringResource(R.string.quick_ball_border_title),
+                            description = stringResource(R.string.quick_ball_border_desc),
+                            isChecked = viewModel.isQuickBallBorderEnabled.value,
+                            onCheckedChange = { viewModel.setQuickBallBorderEnabled(it) },
+                            iconRes = R.drawable.rounded_target_24,
+                        )
+
+                        AnimatedVisibility(
+                            visible = viewModel.isQuickBallBorderEnabled.value,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            ConfigSliderItem(
+                                title = stringResource(R.string.quick_ball_border_width_title),
+                                value = viewModel.quickBallBorderWidth.floatValue,
+                                onValueChange = { viewModel.setQuickBallBorderWidth(it) },
+                                valueRange = 1.0f..4.0f,
+                                icon = R.drawable.rounded_line_weight_24,
+                                valueFormatter = { "%.1f dp".format(it) },
+                            )
+                        }
+
+                        // Stashed Pill Dimensions
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_pill_height_title),
+                            value = viewModel.quickBallPillHeight.floatValue,
+                            onValueChange = { viewModel.setQuickBallPillHeight(it) },
+                            valueRange = 30f..80f,
+                            icon = R.drawable.rounded_view_headline_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
+
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_pill_thickness_title),
+                            value = viewModel.quickBallPillThickness.floatValue,
+                            onValueChange = { viewModel.setQuickBallPillThickness(it) },
+                            valueRange = 1.5f..6.0f,
+                            icon = R.drawable.rounded_line_weight_24,
+                            valueFormatter = { "%.1f dp".format(it) },
+                        )
+
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_pill_touch_width_title),
+                            value = viewModel.quickBallPillTouchWidth.floatValue,
+                            onValueChange = { viewModel.setQuickBallPillTouchWidth(it) },
+                            valueRange = 16f..40f,
+                            icon = R.drawable.rounded_touch_app_24,
+                            valueFormatter = { "%.0f dp".format(it) },
                         )
                     }
                 }
 
-                // SECTION: Colors & Styling
+                // SECTION 4: Colors & Theming
                 Text(
                     text = stringResource(R.string.quick_ball_color_section),
                     style = MaterialTheme.typography.labelLarge,
@@ -799,11 +798,14 @@ fun QuickBallSettingsUI(
                             .padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        val isDynamic = viewModel.quickBallColorMode.value == "DYNAMIC"
+                        val currentMode = viewModel.quickBallColorMode.value
+                        val isDynamic = currentMode == "DYNAMIC"
+                        val isPreset = currentMode == "PRESET"
+                        val isCustom = currentMode == "CUSTOM"
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                             FilterChip(
                                 selected = isDynamic,
@@ -825,13 +827,32 @@ fun QuickBallSettingsUI(
                             )
 
                             FilterChip(
-                                selected = !isDynamic,
+                                selected = isPreset,
+                                onClick = {
+                                    HapticUtil.performUIHaptic(view)
+                                    viewModel.setQuickBallColorMode("PRESET")
+                                },
+                                label = { Text(stringResource(R.string.quick_ball_color_mode_preset)) },
+                                leadingIcon = if (isPreset) {
+                                    {
+                                        Icon(
+                                            painter = painterResource(R.drawable.rounded_check_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                    }
+                                } else null,
+                                modifier = Modifier.weight(1f),
+                            )
+
+                            FilterChip(
+                                selected = isCustom,
                                 onClick = {
                                     HapticUtil.performUIHaptic(view)
                                     viewModel.setQuickBallColorMode("CUSTOM")
                                 },
                                 label = { Text(stringResource(R.string.quick_ball_color_mode_custom)) },
-                                leadingIcon = if (!isDynamic) {
+                                leadingIcon = if (isCustom) {
                                     {
                                         Icon(
                                             painter = painterResource(R.drawable.rounded_check_24),
@@ -845,7 +866,53 @@ fun QuickBallSettingsUI(
                         }
 
                         AnimatedVisibility(
-                            visible = !isDynamic,
+                            visible = isPreset,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            val preset = QuickBallPresetTheme.fromName(viewModel.quickBallPresetTheme.value)
+                            val connectorStyle = MenuConnectorStyle.fromName(viewModel.quickBallConnectorStyle.value)
+                            Column(modifier = Modifier.padding(top = 4.dp)) {
+                                ListItem(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(MaterialTheme.shapes.small)
+                                        .clickable {
+                                            HapticUtil.performUIHaptic(view)
+                                            showPresetThemeSheet = true
+                                        },
+                                    headlineContent = { Text(stringResource(R.string.quick_ball_preset_theme_title)) },
+                                    supportingContent = { Text(preset.title) },
+                                    leadingContent = {
+                                        ConnectorStyleSample(
+                                            style = connectorStyle,
+                                            connectorColor = Color(preset.connectorColor),
+                                            itemColor = Color(preset.menuColor),
+                                            ballColor = Color(preset.ballColor),
+                                            itemBorderColor = Color(preset.menuBorderColor),
+                                            ballBorderColor = Color(preset.ballBorderColor),
+                                            itemIconColor = Color(preset.menuIconColor),
+                                            ballIconColor = Color(preset.ballIconColor),
+                                            modifier = Modifier.size(width = 54.dp, height = 36.dp),
+                                        )
+                                    },
+                                    trailingContent = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.rounded_chevron_right_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(20.dp),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    },
+                                    colors = ListItemDefaults.colors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    ),
+                                )
+                            }
+                        }
+
+                        AnimatedVisibility(
+                            visible = isCustom,
                             enter = expandVertically(),
                             exit = shrinkVertically(),
                         ) {
@@ -863,6 +930,71 @@ fun QuickBallSettingsUI(
                                     },
                                     allowAuto = false,
                                 )
+                            }
+                        }
+                    }
+                }
+
+                // SECTION 5: Haptic Feedback
+                Text(
+                    text = stringResource(R.string.quick_ball_haptic_intensity_title),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 8.dp),
+                )
+
+                RoundedCardContainer {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        IconToggleItem(
+                            title = stringResource(R.string.quick_ball_vibration_title),
+                            description = stringResource(R.string.quick_ball_vibration_desc),
+                            isChecked = viewModel.isQuickBallHaptic.value,
+                            onCheckedChange = { viewModel.setQuickBallHaptic(it) },
+                            iconRes = R.drawable.rounded_mobile_vibrate_24,
+                        )
+
+                        AnimatedVisibility(
+                            visible = viewModel.isQuickBallHaptic.value,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            val currentIntensity = viewModel.quickBallHapticIntensity.value
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                QuickBallHapticIntensity.entries.forEach { intensity ->
+                                    val isSelected = intensity.name.equals(currentIntensity, ignoreCase = true)
+                                    FilterChip(
+                                        selected = isSelected,
+                                        onClick = {
+                                            viewModel.setQuickBallHapticIntensity(intensity.name)
+                                            when (intensity) {
+                                                QuickBallHapticIntensity.LIGHT -> com.sameerasw.essentials.island.ui.IslandHaptics.touchDown(context)
+                                                QuickBallHapticIntensity.MEDIUM -> com.sameerasw.essentials.island.ui.IslandHaptics.commit(context)
+                                                QuickBallHapticIntensity.STRONG -> com.sameerasw.essentials.island.ui.IslandHaptics.thresholdReached(context)
+                                            }
+                                        },
+                                        label = { Text(stringResource(intensity.titleRes)) },
+                                        leadingIcon = if (isSelected) {
+                                            {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.rounded_check_24),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(16.dp),
+                                                )
+                                            }
+                                        } else null,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                }
                             }
                         }
                     }

@@ -69,7 +69,7 @@ class SideKickView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val colors = QuickBallTheme.resolveColors(context, settings)
-        val pillColor = colors.accentColor
+        val pillColor = colors.pillColor
         val idleAlpha = settings.getQuickBallIdleAlpha().coerceIn(0.2f, 1f)
         val alphaInt = (idleAlpha * 255).roundToInt()
 

@@ -73,41 +73,45 @@ class FloatTouchView @JvmOverloads constructor(
     fun updateAppearance() {
         val colors = QuickBallTheme.resolveColors(context, settings)
         val style = QuickBallBallStyle.fromName(settings.getQuickBallBallStyle())
+        val isBorderEnabled = settings.isQuickBallBorderEnabled()
+        val borderWidthPx = if (isBorderEnabled) (settings.getQuickBallBorderWidth() * density).roundToInt() else 0
+        val ballBg = colors.ballColor
+        val ballIconColor = colors.ballIconColor
+        val ballBorderColor = colors.ballBorderColor
 
         val bgDrawable = GradientDrawable()
         when (style) {
             QuickBallBallStyle.CLASSIC -> {
                 bgDrawable.shape = GradientDrawable.OVAL
-                bgDrawable.setColor(colors.surfaceColor)
-                bgDrawable.setStroke((1.5f * density).roundToInt(), colors.borderColor)
-                imageView.setColorFilter(colors.accentColor)
+                bgDrawable.setColor(ballBg)
+                bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.OUTLINE -> {
                 bgDrawable.shape = GradientDrawable.OVAL
-                val glassBg = (colors.surfaceColor and 0x00FFFFFF) or (0x28 shl 24)
+                val glassBg = (ballBg and 0x00FFFFFF) or (0x28 shl 24)
                 bgDrawable.setColor(glassBg)
-                bgDrawable.setStroke((2.5f * density).roundToInt(), colors.accentColor)
-                imageView.setColorFilter(colors.accentColor)
+                bgDrawable.setStroke(kotlin.math.max(borderWidthPx, (2f * density).roundToInt()), ballBorderColor)
+                imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.SQUIRCLE -> {
                 bgDrawable.shape = GradientDrawable.RECTANGLE
                 bgDrawable.cornerRadius = 14f * density
-                bgDrawable.setColor(colors.surfaceColor)
-                bgDrawable.setStroke((1.5f * density).roundToInt(), colors.borderColor)
-                imageView.setColorFilter(colors.accentColor)
+                bgDrawable.setColor(ballBg)
+                bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.NEON -> {
                 bgDrawable.shape = GradientDrawable.OVAL
-                bgDrawable.setColor(colors.surfaceColor)
-                bgDrawable.setStroke((3.0f * density).roundToInt(), colors.accentColor)
-                imageView.setColorFilter(colors.accentColor)
+                bgDrawable.setColor(ballBg)
+                bgDrawable.setStroke(kotlin.math.max(borderWidthPx, (2.5f * density).roundToInt()), colors.accentColor)
+                imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.MINIMAL -> {
                 bgDrawable.shape = GradientDrawable.OVAL
                 bgDrawable.setColor(colors.accentColor)
                 bgDrawable.setStroke(0, 0)
-                val iconTint = if (Color.luminance(colors.accentColor) > 0.5f) Color.BLACK else Color.WHITE
-                imageView.setColorFilter(iconTint)
+                imageView.setColorFilter(ballIconColor)
             }
         }
 

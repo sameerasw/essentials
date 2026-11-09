@@ -181,8 +181,14 @@ class MainViewModel : ViewModel() {
     val quickBallStashDelay = mutableLongStateOf(2500L)
     val quickBallShortcutStyle = mutableStateOf("FULL_BLEED")
     val quickBallIconPack = mutableStateOf("MATERIAL")
+    val quickBallPresetTheme = mutableStateOf("ONYX")
+    val quickBallConnectorWidth = mutableFloatStateOf(2.2f)
     val quickBallMenuRadius = mutableFloatStateOf(90f)
     val quickBallMenuSize = mutableFloatStateOf(48f)
+    val quickBallMenuIconSize = mutableFloatStateOf(24f)
+    val isQuickBallBorderEnabled = mutableStateOf(true)
+    val quickBallBorderWidth = mutableFloatStateOf(1.5f)
+    val quickBallHapticIntensity = mutableStateOf("MEDIUM")
     val isQuickBallStickToEdge = mutableStateOf(true)
     val isQuickBallLockPosition = mutableStateOf(false)
     val isQuickBallHideLandscape = mutableStateOf(false)
@@ -885,11 +891,29 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_QUICK_BALL_ICON_PACK ->
                         quickBallIconPack.value = settingsRepository.getQuickBallIconPack()
 
+                    SettingsRepository.KEY_QUICK_BALL_PRESET_THEME ->
+                        quickBallPresetTheme.value = settingsRepository.getQuickBallPresetTheme()
+
+                    SettingsRepository.KEY_QUICK_BALL_CONNECTOR_WIDTH ->
+                        quickBallConnectorWidth.floatValue = settingsRepository.getQuickBallConnectorWidth()
+
                     SettingsRepository.KEY_QUICK_BALL_MENU_RADIUS ->
                         quickBallMenuRadius.floatValue = settingsRepository.getQuickBallMenuRadius()
 
                     SettingsRepository.KEY_QUICK_BALL_MENU_SIZE ->
                         quickBallMenuSize.floatValue = settingsRepository.getQuickBallMenuSize()
+
+                    SettingsRepository.KEY_QUICK_BALL_MENU_ICON_SIZE ->
+                        quickBallMenuIconSize.floatValue = settingsRepository.getQuickBallMenuIconSize()
+
+                    SettingsRepository.KEY_QUICK_BALL_BORDER_ENABLED ->
+                        isQuickBallBorderEnabled.value = settingsRepository.isQuickBallBorderEnabled()
+
+                    SettingsRepository.KEY_QUICK_BALL_BORDER_WIDTH ->
+                        quickBallBorderWidth.floatValue = settingsRepository.getQuickBallBorderWidth()
+
+                    SettingsRepository.KEY_QUICK_BALL_HAPTIC_INTENSITY ->
+                        quickBallHapticIntensity.value = settingsRepository.getQuickBallHapticIntensity()
 
                     SettingsRepository.KEY_QUICK_BALL_PILL_HEIGHT ->
                         quickBallPillHeight.floatValue = settingsRepository.getQuickBallPillHeight()
@@ -2612,6 +2636,12 @@ class MainViewModel : ViewModel() {
         quickBallConnectorStyle.value = settingsRepository.getQuickBallConnectorStyle()
         quickBallMenuRadius.floatValue = settingsRepository.getQuickBallMenuRadius()
         quickBallMenuSize.floatValue = settingsRepository.getQuickBallMenuSize()
+        quickBallMenuIconSize.floatValue = settingsRepository.getQuickBallMenuIconSize()
+        quickBallPresetTheme.value = settingsRepository.getQuickBallPresetTheme()
+        quickBallConnectorWidth.floatValue = settingsRepository.getQuickBallConnectorWidth()
+        isQuickBallBorderEnabled.value = settingsRepository.isQuickBallBorderEnabled()
+        quickBallBorderWidth.floatValue = settingsRepository.getQuickBallBorderWidth()
+        quickBallHapticIntensity.value = settingsRepository.getQuickBallHapticIntensity()
         quickBallPillHeight.floatValue = settingsRepository.getQuickBallPillHeight()
         quickBallPillThickness.floatValue = settingsRepository.getQuickBallPillThickness()
         quickBallPillTouchWidth.floatValue = settingsRepository.getQuickBallPillTouchWidth()
@@ -5791,6 +5821,42 @@ class MainViewModel : ViewModel() {
             "SWIPE_DOWN" -> quickBallSwipeDownAction.value = action
         }
         settingsRepository.setQuickBallGestureAction(gestureName, action)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallPresetTheme(theme: String) {
+        quickBallPresetTheme.value = theme
+        settingsRepository.setQuickBallPresetTheme(theme)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallConnectorWidth(width: Float) {
+        quickBallConnectorWidth.floatValue = width
+        settingsRepository.setQuickBallConnectorWidth(width)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallMenuIconSize(size: Float) {
+        quickBallMenuIconSize.floatValue = size
+        settingsRepository.setQuickBallMenuIconSize(size)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallBorderEnabled(enabled: Boolean) {
+        isQuickBallBorderEnabled.value = enabled
+        settingsRepository.setQuickBallBorderEnabled(enabled)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallBorderWidth(width: Float) {
+        quickBallBorderWidth.floatValue = width
+        settingsRepository.setQuickBallBorderWidth(width)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallHapticIntensity(intensity: String) {
+        quickBallHapticIntensity.value = intensity
+        settingsRepository.setQuickBallHapticIntensity(intensity)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 

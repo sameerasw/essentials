@@ -60,7 +60,7 @@ class FloatPanelView(
     private val density = context.resources.displayMetrics.density
 
     private val buttonSize = (settings.getQuickBallMenuSize() * density).roundToInt()
-    private val iconSize = ((settings.getQuickBallMenuSize() * 0.52f) * density).roundToInt()
+    private val iconSize = (settings.getQuickBallMenuIconSize() * density).roundToInt()
     private val radius = (settings.getQuickBallMenuRadius() * density).roundToInt()
 
     private val halfFab = fabSize / 2
@@ -72,8 +72,8 @@ class FloatPanelView(
     private val connectors =
         ConnectorRenderer(
             style = MenuConnectorStyle.fromName(settings.getQuickBallConnectorStyle()),
-            color = colors.accentColor,
-            strokeWidth = 2.2f * density,
+            color = colors.connectorColor,
+            strokeWidth = settings.getQuickBallConnectorWidth() * density,
         )
     private val connectorStart = halfFab + (ConnectorRenderer.INSET_DP * density)
 
@@ -129,8 +129,10 @@ class FloatPanelView(
 
     private fun createChildViews() {
         val buttonBg = colors.surfaceColor
-        val iconColor = colors.accentColor
+        val iconColor = colors.contentColor
         val borderColor = colors.borderColor
+        val isBorderEnabled = settings.isQuickBallBorderEnabled()
+        val borderWidthPx = if (isBorderEnabled) (settings.getQuickBallBorderWidth() * density).roundToInt() else 0
 
         val shortcutStyle = QuickBallShortcutStyle.fromName(settings.getQuickBallShortcutStyle())
         val iconPack = QuickBallIconPack.fromName(settings.getQuickBallIconPack())
@@ -152,7 +154,7 @@ class FloatPanelView(
                         GradientDrawable().apply {
                             shape = GradientDrawable.OVAL
                             setColor(buttonBg)
-                            setStroke((1.5f * density).roundToInt(), borderColor)
+                            setStroke(borderWidthPx, borderColor)
                         }
                     }
                     background = itemBg
