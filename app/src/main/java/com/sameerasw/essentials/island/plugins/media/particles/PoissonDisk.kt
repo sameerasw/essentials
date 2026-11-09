@@ -5,7 +5,8 @@ import androidx.compose.ui.geometry.Rect
 import kotlin.math.*
 import java.util.Random
 
-internal class PoissonTile(val width: Float, val height: Float, val points: List<Offset>) {
+internal class PoissonTile(val width: Float, val height: Float, points: List<Offset>) {
+    val coords = FloatArray(points.size*2).also { a -> points.forEachIndexed { i, p -> a[i*2] = p.x; a[i*2+1] = p.y } }
     inline fun visit(bounds: Rect, point: (Float, Float) -> Unit) {
         val x0 = floor(bounds.left/width).toInt()
         val x1 = floor(bounds.right/width).toInt()
@@ -14,9 +15,12 @@ internal class PoissonTile(val width: Float, val height: Float, val points: List
         for (y in y0..y1) for (x in x0..x1) {
             val ox = x*width
             val oy = y*height
-            for (p in points) {
-                val px = p.x+ox
-                val py = p.y+oy
+            val c = coords
+            var i = 0
+            while (i < c.size) {
+                val px = c[i]+ox
+                val py = c[i+1]+oy
+                i += 2
                 if (px >= bounds.left && px <= bounds.right && py >= bounds.top && py <= bounds.bottom) point(px, py)
             }
         }
