@@ -1908,7 +1908,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="app_colors_auto">Tự động</string>
     <string name="island_call_show_peek">Xem trước</string>
     <string name="island_call_show_expanded">Mở rộng</string>
-    <string name="island_pulse_shadow_title">Hiển thị bóng đổ trên thông báo</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Ánh sáng lóe lên trong giây lát phía sau island trong màu sắc của ứng dụng</string>
     <string name="island_border_outline_title">Đường viền</string>
     <string name="island_border_outline_desc">Vẽ một đường viền mỏng xung quanh island</string>

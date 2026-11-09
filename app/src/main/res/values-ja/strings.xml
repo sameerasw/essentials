@@ -1845,7 +1845,7 @@
     <string name="island_expanded_bottom_padding_title">展開時の下部のパディング</string>
     <string name="island_border_outline_title">輪郭線を表示</string>
     <string name="island_border_outline_desc">Islandの周りに細い輪郭線を描きます</string>
-    <string name="island_pulse_shadow_title">通知が来たときに点滅する影を表示</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">アプリの色でIslandの背後が短時間光ります</string>
     <string name="island_show_when_title">表示するタイミング</string>
     <string name="island_show_when_unlocked">ロック解除時</string>

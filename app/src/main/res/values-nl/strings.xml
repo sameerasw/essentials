@@ -1657,7 +1657,7 @@
     <string name="island_border_outline_dynamic_title">Dynamische kleuren</string>
     <string name="island_show_glow_title">Toon accentkleurige gloed</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
-    <string name="island_pulse_shadow_title">Toon puls schaduw tijdens meldingen</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Toont een gloed achter het eiland in de appkleuren</string>
     <string name="island_pulse_shadow_spread_title">Snelheid gloed</string>
     <string name="island_pulse_shadow_duration_title">Puls duur</string>

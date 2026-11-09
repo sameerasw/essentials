@@ -1869,7 +1869,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_expanded_bottom_padding_title">Erweiterter unterer Abstand: 12 dp</string>
     <string name="island_border_outline_title">Rahmenkontur</string>
     <string name="island_border_outline_desc">Zeichnet eine dünne Kontur um die Insel</string>
-    <string name="island_pulse_shadow_title">Pulsierender Schatten bei Benachrichtigungen anzeigen</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Leuchtet kurz hinter der Insel in der App-Farbe</string>
     <string name="island_show_when_title">Anzeigen, wenn</string>
     <string name="island_show_when_unlocked">Entsperrt</string>
