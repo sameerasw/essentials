@@ -235,8 +235,8 @@
     <string name="tile_inactive">Неактивный</string>
     <string name="tile_developer_options">Настройки разработчика</string>
     <string name="about_desc_developer_options">Легко переключайте параметры разработчика системы с помощью плитки QS. Это может привести к сбросу некоторых измененных вами настроек разработчика.</string>
-    <string name="tile_refresh_rate">Refresh Rate</string>
-    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="tile_refresh_rate">Частота обновления</string>
+    <string name="about_desc_refresh_rate_tile">Цикл между системой по умолчанию и предустановленной частотой обновления непосредственно из плитки \"Быстрые настройки\" с использованием Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">Частный DNS</string>
     <string name="tile_private_dns_auto">Авто</string>
@@ -1315,7 +1315,13 @@
     <string name="label_animator_duration_scale">Шкала продолжительности анимации</string>
     <string name="label_transition_animation_scale">Размер анимации перехода</string>
     <string name="label_window_animation_scale">Размер анимации окна</string>
-    <string name="about_desc_text_animations">Adjust how your whole system looks and feels.\n\nChange the font scale and weight, the display scale (smallest width), and the animation speeds for windows, transitions and animators. You can also set the screen timeout and auto rotate.\n\nSwitch between Default and Glove mode profiles in one tap. Glove mode adjusts the UI scale and increases touch sensitivity so the screen responds better with gloves or screen protectors. A Quick Settings tile is available to toggle it quickly.\n\nSome settings may require advanced permissions or a device reboot for certain apps to reflect changes. Shizuku or root permission may be necessary for scale adjustments.</string>
+    <string name="about_desc_text_animations">Настройте, как выглядит и чувствуется вся ваша система.
+
+Измените масштаб и вес шрифта, масштаб дисплея (самая маленькая ширина) и скорость анимации для окон, переходов и аниматоров. Вы также можете установить тайм-аут экрана и автоматически вращаться.
+
+Переключение между профилями режима по умолчанию и перчатки одним касанием. Режим перчатки регулирует масштаб пользовательского интерфейса и увеличивает чувствительность к прикосновениям, поэтому экран лучше реагирует перчатками или защитными плёнками. Доступна плитка \"Быстрые настройки\", чтобы быстро переключить её.
+
+Некоторые настройки могут потребовать расширенных разрешений или перезагрузки устройства для отражения изменений. Разрешение Shizuku или ROOT может потребоваться для корректировки масштаба. </string>
     <string name="about_desc_screen_refresh_rate">Установите пользовательскую частоту обновления экрана с помощью Shizuku. Фиксированный режим фиксирует как минимальную, так и максимальную частоту обновления на одном значении, а режим диапазона позволяет задать отдельные минимальные и максимальные значения. Сброс удаляет пользовательские настройки и возвращает устройство к системному управлению частотой обновления</string>
     <string name="refresh_rate_section_mode">Mode</string>
     <string name="refresh_rate_section_values">Refresh Rate</string>
@@ -1568,7 +1574,7 @@
     <string name="feat_aod_wallpaper_use_album_art">Использовать обложку альбома</string>
     <string name="feat_aod_wallpaper_share_lock">Share with lock screen wallpaper</string>
     <string name="feat_aod_wallpaper_media_apps">Игнорируемые приложения</string>
-    <string name="feat_aod_wallpaper_opacity">Непрозрачность</string>
+    <string name="feat_aod_wallpaper_opacity">Прозрачность</string>
     <string name="feat_aod_wallpaper_blur">Размытие</string>
     <string name="feat_aod_wallpaper_vignette">Виньетирование</string>
     <string name="feat_aod_wallpaper_black_threshold">Порог чёрного цвета</string>
@@ -1713,24 +1719,24 @@
     <string name="status_glance_hide_in_quick_settings_title">Скрыть в быстрых настройках</string>
     <string name="island_notif_queue_title">Очередь уведомлений</string>
     <string name="island_notif_keep_progress_title">Сохраняйте уведомления о ходе выполнения</string>
-    <string name="island_live_updates_title">Live updates</string>
+    <string name="island_live_updates_title">Живые обновления</string>
     <string name="island_live_updates_count_title">Live updates count</string>
     <string name="island_live_updates_expanded_title">Expanded live update</string>
-    <string name="island_secondary_bubbles_count_title">Secondary bubbles count</string>
+    <string name="island_secondary_bubbles_count_title">Считать вторые пузыри</string>
     <string name="island_catch_up_title">Удержание</string>
     <string name="island_catch_up_desc">Держать последнее уведомление в острове дольше</string>
     <string name="island_catch_up_timeout_title">Время удержания </string>
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
     <string name="island_show_glow_title">Показывать акцентное свечение</string>
-    <string name="island_glow_intensity_title">Интенсивность свечения</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>
     <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
-    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
+    <string name="island_tap_to_open_expanded_title">Нажмите, чтобы открыться при расширении </string>
     <string name="island_dismiss_on_outside_title">Скрывать при действиях снаружи</string>
     <string name="duo_battery_percentage_only_colored_title">Только для цветных экземпляров</string>
     <string name="duo_battery_percentage_only_colored_desc">Отображать процентное содержание только при зарядке, в режиме экономии заряда батареи или при низком уровне заряда батареи</string>
@@ -1874,16 +1880,30 @@
     <string name="keep_in_full_screen_title">Держать в полном экране</string>
     <string name="disable_interactions_in_full_screen_title">Отключить взаимодействия в полном экране</string>
     <string name="island_balance_compact_title">Визуальная балансировка компактного острова</string>
-    <string name="island_neural_expressive_title">Анимация раскрытия Neural Expressive</string>
-    <string name="island_neural_expressive_always_title">Всегда показывать при раскрытии</string>
-    <string name="island_statusbar_aware_width_title">Ширина учитывающая строку состояния</string>
+    <string name="island_neural_expressive_title">Нейронная экспрессивная расширенная анимация </string>
+    <string name="island_neural_expressive_always_title">Always show on expansion</string>
+    <string name="island_statusbar_aware_width_title">Ширина панели состояния </string>
     <string name="island_secondary_bubble_title">Вторичный пузырь</string>
     <string name="island_max_items_title">Максимальное количество отображаемых предметов</string>
     <string name="duo_action_horizontal_slide_brightness">Яркость</string>
     <string name="island_keep_on_landscape_title">Показывать в горизонтальном режиме</string>
-    <string name="about_desc_duo">This doesn\'t fold\n\nAn iPhone Duo style status indicator to show your battery, network, media status and more in a compact, minimal UI ideally around your camera with various items to show and gestures to interact with.\n\nFor foldable devices, Ensure to turn off \'Auto-detect camera\' option if it\'s not reliable and manually align Duo with your inside and outside camera positions and then Essentials will remember your layout.</string>
+    <string name="about_desc_duo">Это не складывается
+
+Индикатор состояния стиля iPhone Duo, чтобы показать вашу батарею, сеть, медиа-статус и многое другое в компактном минимальном пользовательском интерфейсе вокруг вашей камеры с различными предметами для показа и жестами для взаимодействия.
+
+Для складных устройств убедитесь, что вы выключите опцию «Авто-обнаружение камеры», если она не надёжна, и вручную выровняйте Duo с вашим внутренним и внешним положением камеры, а затем Essentials запомнит ваш макет. </string>
     <string name="label_shake_for_help">Shake for help</string>
-    <string name="about_desc_island">A dynamic island for your Android, around your camera cutout.\n\nIt brings live info together in one compact, expandable space: notifications with quick replies, media with album art and controls, calls, timers and stopwatches, alarms, calendar events, navigation, progress updates, hotspot and network status, connected devices, flashlight, sound mode, caffeinate, travel info and time and battery.\n\nThird party apps can pair with the island to show their own live content, and you choose which ones are allowed.\n\nInteract with simple gestures like tapping, swiping up and sliding along the island for volume, brightness and more, and assign your own tap actions.\n\nCustomize almost everything, including camera position and size with auto detect, width, placement, visuals like glow, outlines and pulse shadows, expanded size and roundness, display durations, what shows and when, hiding system heads up and status bar icons, and privacy options for locked screens.\n\nIt can also be combined with Duo for a single unified camera area.</string>
+    <string name="about_desc_island">Динамичный остров для вашего Android, вокруг выреза камеры.
+
+Он объединяет живую информацию в одном компактном расширяемом пространстве: уведомления с быстрыми ответами, медиа с оформлением альбома и элементами управления, звонки, таймеры и секундомеры, будильники, события календаря, навигацию, обновления прогресса, состояние горячей точки и сети, подключённые устройства, фонарик, звуковой режим, кофеинат, информацию о путешествиях и время и аккумулятор.
+
+Сторонние приложения могут работать в паре с островом, чтобы показывать свой собственный живой контент, и вы выбираете, какие из них разрешены.
+
+Взаимодействуйте с помощью простых жестов, таких как нажатие, свайп вверх и скользя по острову для громкости, яркости и многого другого, и назначайте свои собственные действия нажатия.
+
+Настройте почти все, включая положение и размер камеры с автоматическим обнаружением, ширину, размещением, визуальными эффектами, такими как свечение, очертания и импульсные тени, расширенный размер и округлость дисплея, продолжительность отображения, что показывает и когда, скрытые значки системных головок и значки панели состояния, а также варианты конфиденциальности для заблокированных экранов.
+
+Его также можно объединить с Duo для одной унифицированной области камеры. </string>
     <string name="about_desc_pocket_mode">Prevents accidental touches while your phone is in your pocket or bag.\n\nWhen the proximity sensor is covered, Pocket mode shows a blocking screen so stray touches do nothing. Press any volume key to dismiss it. You can also use the light sensor along with proximity for better accuracy, add a trigger delay, and choose to only trigger while the device is locked.\n\nExclude apps where it should not trigger. It does not work while streaming or gaming by default.\n\nAccessibility permission is required. On some devices with missing sensors, enabling it may break deep sleep and cause higher battery drain.</string>
     <string name="about_desc_flashlight">Get more control over your flashlight.\n\nAdjust the brightness, fade it in and out smoothly, and use the volume keys to change the intensity. Show the brightness as a live update in the status bar.\n\nTurn it off automatically when your phone is in a pocket, lower the brightness during long use to prevent overheating, or always turn it off, even while the display is on.\n\nBrightness control needs hardware support that some devices lack.</string>
     <string name="about_desc_face_illumination">Helps face unlock recognize you in the dark.\n\nWhen the screen wakes up in low light, Essentials lights up the screen with a soft tinted glow so the front camera can see your face. You can set the ambient light threshold that decides when it kicks in, pick the light tint, and choose whether it illuminates automatically on wake-up or only when you trigger it.\n\nIt can also trigger the unlock for you. Accessibility permission is required.</string>
@@ -2032,7 +2052,7 @@
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
-    <string name="island_statusbar_ignore_notifications_title">Игнорировать уведомления</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="app_volume_apps_section">Приложения </string>
     <string name="label_battery_charging_policy">Политика зарядки</string>
     <string name="label_battery_avg_remaining">Примерно до полной разрядки</string>
@@ -2092,15 +2112,17 @@
     <string name="button_remap_power_camera_flip_title">Перевернуть камеру при двойном нажатии</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
-    <string name="island_dismiss_direction_title">Dismissals</string>
-    <string name="island_dismiss_direction_horizontal">Horizontal</string>
-    <string name="island_dismiss_direction_down">Down</string>
+    <string name="island_dismiss_direction_title">Отставка</string>
+    <string name="island_dismiss_direction_horizontal">Горизонтально</string>
+    <string name="island_dismiss_direction_down">Вниз</string>
     <string name="island_media_bubble_title">Show as a bubble</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
-    <string name="island_transparency_title">Прозрачность острова</string>
+    <string name="island_transparency_title">Прозрачность острова </string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="island_pulse_shadow_offset_y_title">Вертикальное смещение </string>
+    <string name="island_animation_speed_title">Скорость анимации </string>
 </resources>
