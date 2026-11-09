@@ -103,6 +103,7 @@ import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.ui.components.IslandIcon
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class IslandCoordinator(
@@ -812,13 +813,23 @@ class IslandCoordinator(
     }
 
     private var statusBarEdges: StatusBarLayoutUtil.Edges? = null
+    private var pendingStatusBarEdges: StatusBarLayoutUtil.Edges? = null
+
+    private fun StatusBarLayoutUtil.Edges?.closeTo(other: StatusBarLayoutUtil.Edges?): Boolean {
+        if (this == null || other == null) return this == other
+        val tolerance = (STATUS_BAR_TOLERANCE_DP * service.resources.displayMetrics.density).toInt()
+        fun near(a: Int?, b: Int?) = if (a == null || b == null) a == b else abs(a - b) <= tolerance
+        return near(startContentEnd, other.startContentEnd) && near(endContentStart, other.endContentStart)
+    }
 
     private val statusBarPoll = object : Runnable {
         override fun run() {
             val stage = controller.state.value.stage
             if (stage == IslandStage.Compact || stage == IslandStage.Hidden) {
                 val edges = StatusBarLayoutUtil.edges(service, settings.isIslandStatusBarIgnoreNotificationsEnabled())
-                if (edges != statusBarEdges || stage == IslandStage.Compact) {
+                val stable = edges.closeTo(pendingStatusBarEdges)
+                pendingStatusBarEdges = edges
+                if (stable && !edges.closeTo(statusBarEdges)) {
                     statusBarEdges = edges
                     controller.relayout()
                     publishSideLimits()
@@ -841,6 +852,7 @@ class IslandCoordinator(
         }
         if (!settings.isIslandStatusBarAwareWidthEnabled()) {
             statusBarEdges = null
+            pendingStatusBarEdges = null
             publishSideLimits()
             return
         }
@@ -1058,6 +1070,7 @@ class IslandCoordinator(
         )
         private const val STATUS_BAR_POLL_MS = 1000L
         private const val STATUS_BAR_MARGIN_DP = 10f
+        private const val STATUS_BAR_TOLERANCE_DP = 2f
         private const val GROW_SLACK_DP = 12f
     }
 }
