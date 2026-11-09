@@ -567,6 +567,19 @@ fun IslandVisualsSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "island_neural_expressive"),
             )
+
+            if (viewModel.isIslandTransparency.value && viewModel.isIslandNeuralExpressive.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_grain_24,
+                    title = stringResource(R.string.island_neural_expressive_always_title),
+                    isChecked = viewModel.isIslandNeuralExpressiveAlways.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNeuralExpressiveAlways(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_neural_expressive_always"),
+                )
+            }
         }
 
         IslandSettingsSection(R.string.island_section_icon_color) {

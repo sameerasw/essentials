@@ -763,6 +763,7 @@ class IslandCoordinator(
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
             neuralExpressive = settings.isIslandTransparencyEnabled() && settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             transparency = settings.isIslandTransparencyEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
@@ -1062,6 +1063,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_DISMISS_DIRECTION,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
+            SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS,
             SettingsRepository.KEY_ISLAND_TRANSPARENCY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
