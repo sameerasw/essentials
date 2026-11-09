@@ -727,7 +727,7 @@ fun QuickBallSettingsUI(
 
                         // Auto-Collapse Delay Slider
                         ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_stash_delay_title, viewModel.quickBallStashDelay.longValue / 1000f),
+                            title = stringResource(R.string.quick_ball_stash_delay_title),
                             value = (viewModel.quickBallStashDelay.longValue / 1000f),
                             onValueChange = { viewModel.setQuickBallStashDelay((it * 1000).toLong()) },
                             valueRange = 0.5f..5.0f,
@@ -737,7 +737,7 @@ fun QuickBallSettingsUI(
 
                         // Menu Arc Radius Slider
                         ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_radius_title, viewModel.quickBallMenuRadius.floatValue.toInt()),
+                            title = stringResource(R.string.quick_ball_radius_title),
                             value = viewModel.quickBallMenuRadius.floatValue,
                             onValueChange = { viewModel.setQuickBallMenuRadius(it) },
                             valueRange = 60f..140f,

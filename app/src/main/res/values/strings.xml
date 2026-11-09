@@ -3802,7 +3802,7 @@
     <string name="quick_ball_delete_slot">Delete shortcut slot %1$d</string>
 
     <!-- Quick Ball V2: Delay, Shortcut Styles & Icon Packs -->
-    <string name="quick_ball_stash_delay_title">Auto-Collapse Delay: %1$.1f s</string>
+    <string name="quick_ball_stash_delay_title">Auto-Collapse Delay</string>
     <string name="quick_ball_stash_delay_desc">Time before floating ball stashes back to edge pill</string>
     <string name="quick_ball_shortcut_style_title">Shortcut Display Style</string>
     <string name="quick_ball_shortcut_style_desc">How application icons and shortcut buttons are rendered</string>
@@ -3813,7 +3813,7 @@
     <string name="quick_ball_icon_pack_desc">Icon set used for system and utility shortcuts</string>
     <string name="quick_ball_icon_pack_material">Material Rounded</string>
     <string name="quick_ball_icon_pack_classic">Classic QuickBall</string>
-    <string name="quick_ball_radius_title">Menu Arc Radius: %1$d dp</string>
+    <string name="quick_ball_radius_title">Menu Arc Radius</string>
     <string name="quick_ball_radius_desc">Distance between the ball and expanded shortcut buttons</string>
 
     <!-- Navigation & Power Actions -->
