@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.timer
 
+import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import androidx.compose.foundation.layout.Box
@@ -108,7 +109,12 @@ class TimerPlugin : BaseIslandPlugin() {
         if (entries.none { it.running }) return
         ticker = ctx?.scope?.launch {
             while (isActive) {
-                delay(msUntilNextTick())
+                val entry = primary()?.takeIf { it.running }
+                if (entry == null || isUrgent(entry)) {
+                    delay(msUntilNextTick())
+                } else {
+                    IslandStillness.awaitTick(msUntilNextTick(), IslandStillness.msToMinuteChange(entry.displayMillis(), entry.countDown))
+                }
                 render()
             }
         }
@@ -141,7 +147,11 @@ class TimerPlugin : BaseIslandPlugin() {
             publish(null)
             return
         }
-        val time = format(entry.displayMillis())
+        val time = if (IslandStillness.isStill && !isUrgent(entry)) {
+            IslandStillness.coarse(entry.displayMillis(), entry.countDown)
+        } else {
+            format(entry.displayMillis())
+        }
         val icon = if (entry.countDown) R.drawable.rounded_timer_24 else R.drawable.rounded_av_timer_24
         val label = entry.title ?: context.getString(if (entry.countDown) R.string.island_timer_default else R.string.island_stopwatch_default)
         val more = entries.size - 1

@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.timebattery
 
+import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.ui.islandTextColor
@@ -189,7 +190,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         handler.postDelayed(secondsTick, 1000L - System.currentTimeMillis() % 1000L)
     }
 
-    private fun showSeconds() = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false)
+    private fun showSeconds() = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false) && !IslandStillness.isStill
 
     private fun readTime() {
         time = IslandTimeFormat.format(context, settings, System.currentTimeMillis(), seconds = showSeconds())

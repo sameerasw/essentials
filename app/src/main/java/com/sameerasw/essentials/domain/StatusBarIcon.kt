@@ -133,7 +133,7 @@ object StatusBarIconRegistry {
             StatusBarIcon(
                 id = "volte",
                 displayNameRes = R.string.icon_volte,
-                blacklistNames = listOf("volte", "ims_volte", "volte_call", "unicom_call"),
+                blacklistNames = listOf("volte", "ims_volte", "volte_call", "unicom_call", "vonr", "ims_vonr"),
                 categoryRes = CAT_PHONE_NETWORK,
                 iconRes = R.drawable.rounded_wifi_calling_bar_3_24,
             ),

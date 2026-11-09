@@ -243,6 +243,7 @@ class MainViewModel : ViewModel() {
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
     val isIslandNeuralExpressive = mutableStateOf(false)
+    val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
     val isIslandStatusBarAwareWidth = mutableStateOf(false)
     val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
@@ -318,6 +319,7 @@ class MainViewModel : ViewModel() {
     val isIslandOtpEnabled = mutableStateOf(false)
     val islandOtpTimeoutMs = mutableLongStateOf(60_000L)
     val isIslandShowGlow = mutableStateOf(true)
+    val islandGlowIntensity = mutableFloatStateOf(1f)
     val isIslandNotifThemedBubble = mutableStateOf(false)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
@@ -2547,6 +2549,7 @@ class MainViewModel : ViewModel() {
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
+        isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
@@ -2635,6 +2638,7 @@ class MainViewModel : ViewModel() {
         isIslandOtpEnabled.value = settingsRepository.isIslandOtpEnabled()
         islandOtpTimeoutMs.longValue = settingsRepository.getIslandOtpTimeoutMs()
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
+        islandGlowIntensity.floatValue = settingsRepository.getIslandGlowIntensity()
         isIslandNotifThemedBubble.value = settingsRepository.isIslandNotifThemedBubbleEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
@@ -6041,6 +6045,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNeuralExpressiveEnabled(enabled)
     }
 
+    fun setIslandNeuralExpressiveAlways(enabled: Boolean) {
+        isIslandNeuralExpressiveAlways.value = enabled
+        settingsRepository.setIslandNeuralExpressiveAlwaysEnabled(enabled)
+    }
+
     fun setIslandTransparency(enabled: Boolean) {
         isIslandTransparency.value = enabled
         settingsRepository.setIslandTransparencyEnabled(enabled)
@@ -6337,6 +6346,11 @@ class MainViewModel : ViewModel() {
     fun setIslandShowGlow(enabled: Boolean) {
         isIslandShowGlow.value = enabled
         settingsRepository.setIslandShowGlowEnabled(enabled)
+    }
+
+    fun setIslandGlowIntensity(value: Float) {
+        islandGlowIntensity.floatValue = value
+        settingsRepository.setIslandGlowIntensity(value)
     }
 
     fun setIslandNotifThemedBubble(enabled: Boolean) {

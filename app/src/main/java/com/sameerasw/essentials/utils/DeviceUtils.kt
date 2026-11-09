@@ -41,6 +41,13 @@ data class DeviceInfo(
 )
 
 object DeviceUtils {
+    fun isLowEndDevice(context: Context): Boolean {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        if (am.isLowRamDevice) return true
+        val info = ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
+        return info.totalMem < 5L * 1024 * 1024 * 1024 || Runtime.getRuntime().availableProcessors() < 8
+    }
+
     private val isGoogleDeviceLazy: Boolean by lazy {
         Build.MANUFACTURER.equals("google", ignoreCase = true) ||
             Build.BRAND.equals("google", ignoreCase = true) ||

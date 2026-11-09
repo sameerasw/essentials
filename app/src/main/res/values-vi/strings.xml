@@ -1817,6 +1817,9 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_expanded_timeout_title">Thời gian chờ mở rộng</string>
     <string name="island_expanded_timeout_desc">Thời gian trước khi island trở lại trạng thái co lại (0 nghĩa là vô hạn)</string>
     <string name="island_show_glow_title">Hiển thị ánh sáng nhấn mạnh</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_title">Xem trước dòng</string>
     <string name="island_line_peek_desc">Hiển thị nhanh các cập nhật trên khắp island, sau đó quay lại chế độ thu gọn</string>
     <string name="island_hide_in_owner_app_title">Ẩn thông báo lỗi bên trong ứng dụng</string>
@@ -1907,7 +1910,7 @@ Nút Tiếp tục sẽ bị vô hiệu hóa trong vài giây để bạn có th�
     <string name="app_colors_auto">Tự động</string>
     <string name="island_call_show_peek">Xem trước</string>
     <string name="island_call_show_expanded">Mở rộng</string>
-    <string name="island_pulse_shadow_title">Hiển thị bóng đổ trên thông báo</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Ánh sáng lóe lên trong giây lát phía sau island trong màu sắc của ứng dụng</string>
     <string name="island_border_outline_title">Đường viền</string>
     <string name="island_border_outline_desc">Vẽ một đường viền mỏng xung quanh island</string>
@@ -1971,6 +1974,7 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_keep_on_landscape_title">Giữ ở chế độ ngang</string>
     <string name="island_balance_compact_title">Cân bằng trực quan island thu gọn</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
+    <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_secondary_bubble_title">Bong bóng phụ</string>
     <string name="keep_in_full_screen_title">Giữ ở chế độ toàn màn hình</string>

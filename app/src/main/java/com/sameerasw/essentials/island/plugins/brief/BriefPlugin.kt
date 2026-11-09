@@ -167,6 +167,7 @@ class BriefPlugin : BaseIslandPlugin() {
         publish(
             IslandItem(
                 key = ITEM_KEY,
+                expandedParticles = true,
                 priority = IslandPriority.DEFAULT,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),

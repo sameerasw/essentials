@@ -169,6 +169,8 @@ private fun readableOnDark(color: Color): Color {
     return result
 }
 
+
+private const val SURFACE_PULSE_DURATION_MS = 1450
 @Composable
 fun IslandRoot(
     state: IslandUiState,
@@ -297,16 +299,24 @@ private fun IslandRootContent(
         ?.takeIf { outlineAlpha > 0f && fade > 0f }
         ?.let { it.copy(alpha = it.alpha * outlineAlpha * fade) }
     val pulse = remember { Animatable(0f) }
+    val surfacePulse = remember { Animatable(0f) }
     var quietContentChange by remember { mutableStateOf(false) }
     LaunchedEffect(state.focusedKey, state.items[state.focusedKey]?.contentId, spec.pulseShadow) {
         pulse.snapTo(0f)
+        surfacePulse.snapTo(0f)
         if (quietContentChange) {
             quietContentChange = false
             return@LaunchedEffect
         }
-        if (!spec.pulseShadow || state.focusedKey == null) return@LaunchedEffect
-        pulse.animateTo(1f, motionTween(250, easing = LinearEasing))
-        pulse.animateTo(0f, motionTween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
+        if (state.focusedKey == null) return@LaunchedEffect
+        if (spec.pulseShadow) {
+            launch {
+                pulse.animateTo(1f, motionTween(250, easing = LinearEasing))
+                pulse.animateTo(0f, motionTween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
+            }
+        }
+        surfacePulse.animateTo(1f, motionTween(250, easing = LinearEasing))
+        surfacePulse.animateTo(0f, motionTween(SURFACE_PULSE_DURATION_MS - 250, easing = LinearEasing))
     }
     val minSurfaceWidth = with(density) { spec.cameraDiameter.roundToPx() }
     val minSurfaceHeight = with(density) { spec.compactHeight.roundToPx() }
@@ -866,7 +876,7 @@ private fun IslandRootContent(
             bounds,
             surfaceCornerPx(bounds.height, compactHeightPx, expandedCornerPx),
             if (bounds.width > 0f && bounds.height > 0f && hasDetachedSurface()) shellAlpha else 0f,
-            if (layeredSurface) pulse.value else 0f,
+            if (layeredSurface) surfacePulse.value else 0f,
             cameraCenter,
             cameraRadius,
         )
@@ -901,8 +911,8 @@ private fun IslandRootContent(
                     compositingStrategy = CompositingStrategy.ModulateAlpha
                 },
             ) {
-                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency)
-                if (ownerItem?.expandedParticles == true && spec.neuralExpressive) {
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency, glowIntensity = spec.glowIntensity)
+                if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
                         color = glow,

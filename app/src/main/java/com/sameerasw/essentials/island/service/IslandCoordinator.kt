@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.island.service
 
+import android.os.PowerManager
+import com.sameerasw.essentials.island.state.IslandStillness
 import android.provider.Settings
 import android.os.SystemClock
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
@@ -219,6 +221,7 @@ class IslandCoordinator(
         override fun onCollapse() = controller.collapse()
         override fun onDismiss(): Boolean = controller.dismissFocused()
         override fun onInteraction() {
+            pokeStillness()
             controller.onUserInteraction()
             val focused = controller.state.value.focusedKey
             plugins.forEach { it.onUserInteraction(focused) }
@@ -242,6 +245,10 @@ class IslandCoordinator(
             controller.state.value.focused?.onOpen?.invoke()
             controller.collapse()
         }
+    }
+
+    private val powerSaveReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = pokeStillness()
     }
 
     private val screenReceiver = object : BroadcastReceiver() {
@@ -268,6 +275,7 @@ class IslandCoordinator(
                 addAction(Intent.ACTION_USER_PRESENT)
             },
         )
+        service.registerReceiver(powerSaveReceiver, IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED))
         controller.fallbackTapKey = { BriefPlugin.ITEM_KEY.takeIf { settings.isIslandBriefEnabled() } }
         controller.opensOnExpandedTap = { it.key != BriefPlugin.ITEM_KEY && settings.isIslandTapToOpenExpandedEnabled() }
         controller.onStageChanged = { stage ->
@@ -308,6 +316,26 @@ class IslandCoordinator(
     }
 
     private var autoExpandedAt = 0L
+
+    private val stillRunnable = Runnable {
+        val stage = controller.state.value.stage
+        if (running && preferStill() && (stage == IslandStage.Compact || stage == IslandStage.Hidden)) {
+            setStill(true)
+        }
+    }
+
+    private fun preferStill(): Boolean =
+        settings.isIslandPreferStillEnabled() || service.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true
+
+    private fun pokeStillness() {
+        mainHandler.removeCallbacks(stillRunnable)
+        setStill(false)
+        if (running && preferStill()) mainHandler.postDelayed(stillRunnable, IslandStillness.IDLE_MS)
+    }
+
+    private fun setStill(still: Boolean) {
+        if (IslandStillness.set(still) && running) plugins.forEach { it.refresh() }
+    }
 
     private val holdTick: Runnable = object : Runnable {
         override fun run() {
@@ -450,6 +478,10 @@ class IslandCoordinator(
             service.unregisterReceiver(screenReceiver)
         } catch (_: Exception) {
         }
+        try {
+            service.unregisterReceiver(powerSaveReceiver)
+        } catch (_: Exception) {
+        }
         stop()
     }
 
@@ -483,6 +515,12 @@ class IslandCoordinator(
         applyUpdateOnly()
         val newScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         scope = newScope
+        newScope.launch {
+            controller.state
+                .map { Triple(it.stage, it.focusedKey, it.arrangement.visibleItems) }
+                .distinctUntilChanged()
+                .collect { pokeStillness() }
+        }
         applyConfig()
         val geo = geometry ?: return
         windowHost.onOutsideTouch = ::onOutsideTouch
@@ -698,6 +736,8 @@ class IslandCoordinator(
             return
         }
         mainHandler.removeCallbacks(endReveal)
+        mainHandler.removeCallbacks(stillRunnable)
+        IslandStillness.set(false)
         revealing = false
         running = false
         controller.holdFocus = false
@@ -763,6 +803,8 @@ class IslandCoordinator(
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
             neuralExpressive = settings.isIslandTransparencyEnabled() && settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
+            glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
             transparency = settings.isIslandTransparencyEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
@@ -982,6 +1024,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
             SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE -> updateState()
             SettingsRepository.KEY_ISLAND_ALWAYS_GESTURES -> syncGestureHitbox()
+            SettingsRepository.KEY_ISLAND_PREFER_STILL -> pokeStillness()
             SettingsRepository.KEY_ISLAND_PRIORITY_ORDER, SettingsRepository.KEY_ISLAND_PROVIDERS -> if (running) reloadPriorities()
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR,
             SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, SettingsRepository.KEY_ISLAND_HIDE_ICONS -> syncStatusBar()
@@ -1062,7 +1105,10 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_DISMISS_DIRECTION,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
+            SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS,
             SettingsRepository.KEY_ISLAND_TRANSPARENCY,
+            SettingsRepository.KEY_ISLAND_SHOW_GLOW,
+            SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,

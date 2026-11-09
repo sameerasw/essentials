@@ -1770,6 +1770,9 @@
     <string name="island_expanded_timeout_title">タイムアウトの延長</string>
     <string name="island_expanded_timeout_desc">折りたたまれたピルに戻るまでの時間（0は無限大）</string>
     <string name="island_show_glow_title">アクセントの輝きを表示する</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_tap_action_title">タップ操作</string>
     <string name="island_catch_up_title">追いつく</string>
     <string name="island_catch_up_desc">最後の通知をアイランドに長時間表示する</string>
@@ -1844,7 +1847,7 @@
     <string name="island_expanded_bottom_padding_title">展開時の下部のパディング</string>
     <string name="island_border_outline_title">輪郭線を表示</string>
     <string name="island_border_outline_desc">Islandの周りに細い輪郭線を描きます</string>
-    <string name="island_pulse_shadow_title">通知が来たときに点滅する影を表示</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">アプリの色でIslandの背後が短時間光ります</string>
     <string name="island_show_when_title">表示するタイミング</string>
     <string name="island_show_when_unlocked">ロック解除時</string>
@@ -1995,6 +1998,7 @@
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
+    <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
     <string name="island_dismiss_direction_title">Dismissals</string>

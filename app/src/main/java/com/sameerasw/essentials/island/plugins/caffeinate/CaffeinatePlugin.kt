@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.caffeinate
 
+import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import android.content.Intent
@@ -84,13 +85,15 @@ class CaffeinatePlugin : BaseIslandPlugin() {
         ticker = ctx?.scope?.launch {
             while (isActive) {
                 val remaining = CaffeinateController.endTime.value - System.currentTimeMillis()
-                delay((remaining % 1000L).let { if (it <= 0L) 1000L else it } + 2L)
+                val secondTick = (remaining % 1000L).let { if (it <= 0L) 1000L else it } + 2L
+                if (remaining < 60_000L) delay(secondTick) else IslandStillness.awaitTick(secondTick, IslandStillness.msToMinuteChange(remaining, true))
                 render()
             }
         }
     }
 
     private fun format(ms: Long): String {
+        if (IslandStillness.isStill && ms >= 60_000L) return IslandStillness.coarse(ms, true)
         val total = (ms.coerceAtLeast(0L) + 999L) / 1000L
         val h = total / 3600
         val m = (total % 3600) / 60

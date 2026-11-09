@@ -1827,6 +1827,9 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="duo_hide_when_screen_off_title">Ausblenden, wenn Bildschirm aus</string>
     <string name="island_tap_action_title">Tippaktion</string>
     <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_catch_up_title">Nachholen</string>
     <string name="island_catch_up_desc">Letzte Benachrichtigung länger auf der Insel anzeigen</string>
     <string name="conscious_gate_feel_every_second_title">Spüre jede verschwendete Sekunde</string>
@@ -1868,7 +1871,7 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_expanded_bottom_padding_title">Erweiterter unterer Abstand: 12 dp</string>
     <string name="island_border_outline_title">Rahmenkontur</string>
     <string name="island_border_outline_desc">Zeichnet eine dünne Kontur um die Insel</string>
-    <string name="island_pulse_shadow_title">Pulsierender Schatten bei Benachrichtigungen anzeigen</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Leuchtet kurz hinter der Insel in der App-Farbe</string>
     <string name="island_show_when_title">Anzeigen, wenn</string>
     <string name="island_show_when_unlocked">Entsperrt</string>
@@ -1916,6 +1919,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
+    <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Im Vollbildmodus behalten</string>
     <string name="island_battery_style_title">Akkustil</string>

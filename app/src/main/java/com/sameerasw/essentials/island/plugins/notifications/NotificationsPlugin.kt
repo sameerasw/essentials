@@ -254,7 +254,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun applyHub(allLive: List<ActiveNotificationAlert>) {
-        val live = allLive.filter { passesFilters(it) }
+        val live = allLive.filter { passesFilters(it, forHub = true) }
         val liveKeys = live.mapTo(HashSet()) { it.key }
         val stale = alerts.filter { it.key !in liveKeys && !it.key.startsWith("simulated_") }
         stale.forEach { removeQuietly(it.key) }
@@ -287,7 +287,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun addSilently(alert: ActiveNotificationAlert) {
-        if (!passesFilters(alert)) {
+        if (!passesFilters(alert, forHub = true)) {
             removeQuietly(alert.key)
             render()
             return
@@ -327,8 +327,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
 
-    private fun passesFilters(alert: ActiveNotificationAlert): Boolean {
-        if (alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
+    private fun passesFilters(alert: ActiveNotificationAlert, forHub: Boolean = false): Boolean {
+        if (!forHub && alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
         if (alert.blockedByDnd && settings.isIslandNotifFollowDndEnabled()) return false
         if (isOtp(alert) && settings.isIslandOtpBypassFilterEnabled()) return true
         if (!settings.isIslandNotifFilterAppsEnabled()) return true
