@@ -58,6 +58,8 @@ class SettingsRepository(
         migrateUsageAccessKey()
         migrateRemapStringToAction()
         migratePixelSearchbarType()
+        migrateDebugUiMarginOverlayReset()
+        migrateStatusBarAwareWidthReset()
     }
 
     private fun migrateUsageAccessKey() {
@@ -104,6 +106,24 @@ class SettingsRepository(
         }
 
         putBoolean(KEY_BUTTON_REMAP_MIGRATION_DONE, true)
+    }
+
+    private fun migrateStatusBarAwareWidthReset() {
+        if (prefs.getBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1, false)) return
+        val editor = prefs.edit()
+        prefs.all.keys
+            .filter { it == KEY_ISLAND_STATUSBAR_AWARE_WIDTH || it.startsWith("$KEY_ISLAND_STATUSBAR_AWARE_WIDTH@") }
+            .forEach { editor.putBoolean(it, false) }
+        editor.putBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1, true).apply()
+    }
+
+    private fun migrateDebugUiMarginOverlayReset() {
+        if (!prefs.getBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1, false)) {
+            prefs.edit()
+                .putBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY, false)
+                .putBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1, true)
+                .apply()
+        }
     }
 
     private fun migratePixelSearchbarType() {
@@ -567,6 +587,9 @@ class SettingsRepository(
         const val ISLAND_HIDE_ICON_CLOCK = "clock"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
         const val KEY_ISLAND_SHOW_WHEN = "island_show_when"
+        const val KEY_ISLAND_DISMISS_DIRECTION = "island_dismiss_direction"
+        const val ISLAND_DISMISS_HORIZONTAL = "horizontal"
+        const val ISLAND_DISMISS_DOWN = "down"
         const val ISLAND_SHOW_WHEN_UNLOCKED = "unlocked"
         const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
         const val ISLAND_SHOW_WHEN_ALWAYS = "always"
@@ -645,8 +668,12 @@ class SettingsRepository(
         const val KEY_ISLAND_LANDSCAPE_TOP_SPACING = "island_landscape_top_spacing"
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
+        const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
+        const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
+        const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
+        const val KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1 = "debug_ui_margin_overlay_reset_v1"
         const val KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS = "island_statusbar_ignore_notifications"
         const val KEY_ISLAND_SECONDARY_BUBBLE = "island_secondary_bubble"
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
@@ -723,6 +750,9 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
+        const val KEY_ISLAND_MEDIA_BUBBLE = "island_media_bubble"
+        const val KEY_ISLAND_MEDIA_BUBBLE_WIDE = "island_media_bubble_wide"
+        const val KEY_ISLAND_MEDIA_BUBBLE_FILL_ART = "island_media_bubble_fill_art"
         const val KEY_ISLAND_MEDIA_PLAYER_STYLE = "island_media_player_style"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
@@ -2338,7 +2368,7 @@ class SettingsRepository(
 
     fun setShutUpKeyboard(ime: String) = putString(KEY_SHUT_UP_KEYBOARD, ime)
 
-    fun getShutUpRestoreMode(): String = prefs.getString(KEY_SHUT_UP_RESTORE_MODE, "Auto") ?: "Auto"
+    fun getShutUpRestoreMode(): String = prefs.getString(KEY_SHUT_UP_RESTORE_MODE, "Notify") ?: "Notify"
 
     /**
      * Executes the set shut up restore mode operation.
@@ -4124,6 +4154,11 @@ class SettingsRepository(
             ?: if (isIslandHideWhenScreenOffEnabled()) ISLAND_SHOW_WHEN_UNLOCKED else ISLAND_SHOW_WHEN_ALWAYS
     fun setIslandShowWhen(value: String) = putString(KEY_ISLAND_SHOW_WHEN, value)
 
+    fun getIslandDismissDirection(): String =
+        getString(KEY_ISLAND_DISMISS_DIRECTION, ISLAND_DISMISS_HORIZONTAL) ?: ISLAND_DISMISS_HORIZONTAL
+
+    fun setIslandDismissDirection(value: String) = putString(KEY_ISLAND_DISMISS_DIRECTION, value)
+
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
 
@@ -4430,7 +4465,15 @@ class SettingsRepository(
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
 
-    fun isIslandStatusBarAwareWidthEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, true)
+    fun isIslandNeuralExpressiveEnabled(): Boolean = getBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, false)
+
+    fun setIslandNeuralExpressiveEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, enabled)
+
+    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, true)
+
+    fun setIslandTransparencyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TRANSPARENCY, enabled)
+
+    fun isIslandStatusBarAwareWidthEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, false)
 
     fun setIslandStatusBarAwareWidthEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, enabled)
 
@@ -4490,6 +4533,18 @@ class SettingsRepository(
     fun isIslandMediaUseArtColorEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, true)
 
     fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
+
+    fun isIslandMediaBubbleEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BUBBLE, false)
+
+    fun setIslandMediaBubbleEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BUBBLE, enabled)
+
+    fun isIslandMediaBubbleWideEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BUBBLE_WIDE, false)
+
+    fun setIslandMediaBubbleWideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BUBBLE_WIDE, enabled)
+
+    fun isIslandMediaBubbleFillArtEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BUBBLE_FILL_ART, false)
+
+    fun setIslandMediaBubbleFillArtEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BUBBLE_FILL_ART, enabled)
 
     fun getIslandMediaPlayerStyle(): String = getString(KEY_ISLAND_MEDIA_PLAYER_STYLE, null) ?: "default"
 

@@ -3,6 +3,7 @@ package com.sameerasw.essentials.island.plugins.call
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
+import com.sameerasw.essentials.island.plugins.launchPackage
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -174,7 +175,7 @@ class CallPlugin : BaseIslandPlugin() {
                     )
                 },
                 accent = null,
-                onOpen = { guarded { if (!sendPendingIntent(context, snap.contentIntent)) CallControlUtil.showInCallScreen(context) } },
+                onOpen = { openCall(snap) },
                 sourcePackage = snap.packageName,
             ),
         )
@@ -257,7 +258,7 @@ class CallPlugin : BaseIslandPlugin() {
         icon = R.drawable.rounded_open_in_new_24,
         label = context.getString(R.string.island_call_open),
         onClick = {
-            guarded { if (!sendPendingIntent(context, snap.contentIntent)) CallControlUtil.showInCallScreen(context) }
+            guarded { openCall(snap) }
             null
         },
     )
@@ -280,6 +281,15 @@ class CallPlugin : BaseIslandPlugin() {
             null
         },
     )
+
+    private fun openCall(snap: CallSnapshot) {
+        if (sendPendingIntent(context, snap.contentIntent)) return
+        if (CallControlUtil.showInCallScreen(context)) return
+        val pkg = snap.packageName
+            ?: guarded<String?>(null) { context.getSystemService(TelecomManager::class.java)?.defaultDialerPackage }
+            ?: return
+        launchPackage(context, pkg)
+    }
 
     private fun guarded(block: () -> Unit) {
         try {

@@ -42,7 +42,6 @@ class IslandWindowHost(
     private var stage = IslandStage.Hidden
     private var textInput = false
     private var interactionsDisabled = false
-
     var maxWidthPx: Int = 0
 
     var hiddenTouch: ((MotionEvent) -> Boolean)? = null
@@ -112,10 +111,11 @@ class IslandWindowHost(
         textInput = active
         val lp = drawParams ?: return
         val view = drawRoot ?: return
+        applyDrawSize(lp)
         val inert = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         lp.flags = if (active) lp.flags and inert.inv() else lp.flags or inert
         lp.softInputMode = if (active) {
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED
         } else {
             WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
         }
@@ -188,12 +188,20 @@ class IslandWindowHost(
 
     private fun applyDrawSize(lp: WindowManager.LayoutParams) {
         val geo = geometry ?: return
-        val reach = maxWidthPx + 32 * density
-        val width = if (geo.anchor == CameraAnchor.Center) reach.roundToInt().coerceAtMost(geo.screenWidth) else (reach * 2).roundToInt()
-        lp.width = width
-        lp.height = if (geo.screenWidth > geo.screenHeight) geo.screenHeight else (geo.screenHeight * 0.6f).roundToInt()
-        lp.x = (geo.centerX - width / 2f).roundToInt()
-        lp.y = 0
+        if (textInput) {
+            val reach = maxWidthPx + 32 * density
+            val width = if (geo.anchor == CameraAnchor.Center) reach.roundToInt().coerceAtMost(geo.screenWidth) else (reach * 2).roundToInt()
+            lp.width = width
+            lp.height = if (geo.screenWidth > geo.screenHeight) geo.screenHeight else (geo.screenHeight * 0.6f).roundToInt()
+            lp.x = (geo.centerX - width / 2f).roundToInt()
+            lp.y = 0
+            return
+        }
+        val viewport = islandDrawViewport(geo)
+        lp.width = viewport.width
+        lp.height = viewport.height
+        lp.x = viewport.left
+        lp.y = viewport.top
     }
 
     private fun layoutDrawWindow() {

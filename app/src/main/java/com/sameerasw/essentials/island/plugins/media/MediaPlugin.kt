@@ -23,6 +23,9 @@ import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.IslandPriority
 import com.sameerasw.essentials.island.model.LineContent
 import com.sameerasw.essentials.island.model.PluginRequest
+import androidx.compose.ui.graphics.asImageBitmap
+import com.sameerasw.essentials.island.model.SideBubblePriority
+import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.plugins.BaseIslandPlugin
 import com.sameerasw.essentials.island.plugins.accentFrom
 import com.sameerasw.essentials.island.plugins.launchPackage
@@ -52,6 +55,9 @@ class MediaPlugin : BaseIslandPlugin() {
         SettingsRepository.KEY_ISLAND_MEDIA_SHOW_LIKE,
         SettingsRepository.KEY_ISLAND_MEDIA_USE_ART_COLOR,
         SettingsRepository.KEY_ISLAND_MEDIA_PLAYER_STYLE,
+        SettingsRepository.KEY_ISLAND_MEDIA_BUBBLE,
+        SettingsRepository.KEY_ISLAND_MEDIA_BUBBLE_WIDE,
+        SettingsRepository.KEY_ISLAND_MEDIA_BUBBLE_FILL_ART,
     )
 
     private val ART_RETRY_DELAYS_MS = longArrayOf(1500L, 3000L)
@@ -88,6 +94,7 @@ class MediaPlugin : BaseIslandPlugin() {
 
     override fun onStop() {
         IslandMediaState.current.value = null
+        IslandMediaState.live.value = false
         lastController = null
         lastTrack = null
         ctx?.mainHandler?.removeCallbacks(pausedGrace)
@@ -227,9 +234,11 @@ class MediaPlugin : BaseIslandPlugin() {
         val controller = active
         publishLastPlayer()
         if (t == null || controller == null) {
+            IslandMediaState.live.value = false
             publish(null)
             return
         }
+        IslandMediaState.live.value = true
         val artAccent = artAccent(t)
         val playerStyle = MediaPlayerStyle.from(settings.getIslandMediaPlayerStyle())
         val isPlaying = playing
@@ -249,6 +258,7 @@ class MediaPlugin : BaseIslandPlugin() {
         publish(
             IslandItem(
                 key = ITEM_KEY,
+                expandedParticles = true,
                 priority = IslandPriority.MEDIA,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
@@ -279,8 +289,29 @@ class MediaPlugin : BaseIslandPlugin() {
                 expandedQueueOnly = true,
                 queueAccent = t.accent?.let { Color(it) },
                 stack = stack,
+                sideBubble = if (settings.isIslandMediaBubbleEnabled()) mediaBubble(t, isPlaying, artAccent) else null,
             ),
         )
+    }
+
+    private fun mediaBubble(t: Track, playing: Boolean, artAccent: Color?): SideBubble {
+        val art = t.artwork?.asImageBitmap()
+        val progress = { active?.let(MediaSessionSource::position) ?: 0f }
+        val open = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)); Unit }
+        val fillArt = settings.isIslandMediaBubbleFillArtEnabled()
+        val round = StackIcon("media.bubble", onSelect = open, fill = true) { size ->
+            MediaBubbleRing(art, playing, progress, mediaAccent(artAccent), size)
+        }
+        val wide = if (settings.isIslandMediaBubbleWideEnabled()) {
+            listOf(
+                StackIcon("media.bubble", onSelect = open, fill = true, widthFactor = MEDIA_PILL_WIDTH) { size ->
+                    MediaBubblePill(art, playing, progress, mediaAccent(artAccent), size, fillArt)
+                },
+            )
+        } else {
+            null
+        }
+        return SideBubble(priority = SideBubblePriority.MEDIA, onOpen = open, icons = listOf(round), soloIcons = wide)
     }
 
     private fun publishLastPlayer() {

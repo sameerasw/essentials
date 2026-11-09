@@ -1915,6 +1915,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="haptic_mode_stronger">Stärker</string>
     <string name="island_secondary_bubble_title">Sekundäre Blase</string>
     <string name="island_balance_compact_title">Visuell ausgewogene, kompakte Insel</string>
+    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Im Vollbildmodus behalten</string>
     <string name="island_battery_style_title">Akkustil</string>
@@ -1955,7 +1956,7 @@ Eingeschränkt – Niedrigste Priorität (Android 12+); etwa einmal täglich geb
     <string name="island_timers_show_screen_recorder_title">Bildschirmaufzeichnung anzeigen</string>
     <string name="island_timers_filter_apps_title">App-Filter</string>
     <string name="island_media_show_like_title">\"Gefällt mir\" Button  anzeigen</string>
-    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_media_show_previous_title">\"Vorherige Titel\" Button anzeigen </string>
     <string name="island_media_keep_when_paused_title">Wiedergabefortsetzung beibehalten</string>
@@ -2074,4 +2075,17 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_combine_with_duo">Kombinieren mit Duo</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
+    <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
+    <string name="island_dismiss_direction_title">Dismissals</string>
+    <string name="island_dismiss_direction_horizontal">Horizontal</string>
+    <string name="island_dismiss_direction_down">Down</string>
+    <string name="island_media_bubble_title">Show as a bubble</string>
+    <string name="island_media_bubble_wide_title">Wider pill</string>
+    <string name="island_media_bubble_fill_art_title">Fill album art</string>
+    <string name="island_transparency_title">Island transparency</string>
+    <string name="what_is_this">What is this?</string>
+    <string name="label_feature_designed_by">Designed by</string>
+    <string name="label_how_to_use">How to use</string>
+    <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
 </resources>

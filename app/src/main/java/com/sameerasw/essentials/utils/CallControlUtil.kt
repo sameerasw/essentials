@@ -135,12 +135,15 @@ object CallControlUtil {
             false
         }
 
-    fun showInCallScreen(context: Context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) return
-        try {
-            (context.getSystemService(Context.TELECOM_SERVICE) as? TelecomManager)?.showInCallScreen(false)
+    fun showInCallScreen(context: Context): Boolean {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) return false
+        return try {
+            val telecom = context.getSystemService(Context.TELECOM_SERVICE) as? TelecomManager ?: return false
+            telecom.showInCallScreen(false)
+            true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to show in-call screen", e)
+            false
         }
     }
 

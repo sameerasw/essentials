@@ -504,6 +504,11 @@ fun FeatureSettingsScreen(
 
             ShakeForHelp(feature = featureObj, viewModel = viewModel)
 
+            var showWhatIsThis by remember { mutableStateOf(false) }
+            if (showWhatIsThis) {
+                com.sameerasw.essentials.ui.core.sheets.FeatureHelpSheet(featureObj, viewModel) { showWhatIsThis = false }
+            }
+
             val pageTitle =
                 if (featureObj != null) stringResource(featureObj.title) else featureId
             val hasMenu = featureObj != null && featureObj.aboutDescription != null
@@ -1487,6 +1492,12 @@ fun FeatureSettingsScreen(
                                 )
                             }
                         }
+                    }
+                    if (featureObj != null && hasScroll) {
+                        com.sameerasw.essentials.ui.core.sheets.WhatIsThisButton(
+                            onClick = { showWhatIsThis = true },
+                            modifier = Modifier.padding(top = 24.dp),
+                        )
                     }
                     // Bottom padding for toolbar
                     if (featureId != "Quick settings tiles" && featureId != "Location reached") {
