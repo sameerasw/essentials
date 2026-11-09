@@ -33,6 +33,9 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import com.sameerasw.essentials.island.plugins.media.IslandMediaState
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
+import com.sameerasw.essentials.island.plugins.media.MediaPlugin
+import com.sameerasw.essentials.island.model.PluginRequest
 import com.sameerasw.essentials.island.plugins.media.MediaExpanded
 import com.sameerasw.essentials.island.plugins.media.MediaSnapshot
 import com.sameerasw.essentials.island.plugins.media.mediaAccent
@@ -168,7 +171,10 @@ class BriefPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(CompactCell("brief.placeholder") {}),
                 expanded = ExpandedContent { scope ->
-                    BriefExpanded(scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader) { open ->
+                    BriefExpanded(
+                        scope, iconStyle, devicesIconStyle, alarmHours, calendarEnabled, calendarIds, showAllDay, showGlow, twoLineHeader,
+                        onOpenLivePlayer = { ctx?.request?.invoke(PluginRequest.Expand(MediaPlugin.ITEM_KEY)) },
+                    ) { open ->
                         pageOpen = open
                     }
                 },
@@ -194,6 +200,7 @@ private fun BriefExpanded(
     showAllDay: Boolean,
     showGlow: Boolean,
     twoLineHeader: Boolean,
+    onOpenLivePlayer: () -> Unit,
     onPageOpenChanged: ((() -> Unit)?) -> Unit,
 ) {
     val context = LocalContext.current
@@ -243,7 +250,7 @@ private fun BriefExpanded(
                         media = media,
                         twoLineHeader = twoLineHeader,
                         onEventClick = { page = BriefPage.Event(it) },
-                        onPlayerClick = { page = BriefPage.Player },
+                        onPlayerClick = { if (IslandMediaState.live.value) onOpenLivePlayer() else page = BriefPage.Player },
                         onCardClick = { page = BriefPage.Remote(it) },
                     )
                     is BriefPage.Event -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
@@ -270,6 +277,7 @@ private fun BriefExpanded(
                     }
                     BriefPage.Player -> SwipeBackPage(scope, onBack = { page = BriefPage.Overview }) {
                         media?.let { m ->
+                            IslandSurfaceAccent(mediaAccent(m.playerAccent ?: m.accent))
                             MediaExpanded(m.title, m.artist, m.artwork, mediaAccent(m.playerAccent ?: m.accent), m.playing, m.liked, m.actions, scope, drawBackground = false, canSkipBack = m.canSkipBack, canSkipForward = m.canSkipForward, packageName = m.packageName, style = m.style)
                         }
                     }

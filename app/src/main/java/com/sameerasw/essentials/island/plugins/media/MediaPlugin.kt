@@ -94,6 +94,7 @@ class MediaPlugin : BaseIslandPlugin() {
 
     override fun onStop() {
         IslandMediaState.current.value = null
+        IslandMediaState.live.value = false
         lastController = null
         lastTrack = null
         ctx?.mainHandler?.removeCallbacks(pausedGrace)
@@ -233,9 +234,11 @@ class MediaPlugin : BaseIslandPlugin() {
         val controller = active
         publishLastPlayer()
         if (t == null || controller == null) {
+            IslandMediaState.live.value = false
             publish(null)
             return
         }
+        IslandMediaState.live.value = true
         val artAccent = artAccent(t)
         val playerStyle = MediaPlayerStyle.from(settings.getIslandMediaPlayerStyle())
         val isPlaying = playing

@@ -102,6 +102,7 @@ enum class MediaPlayerStyle(val key: String) {
 
 object IslandMediaState {
     val current = kotlinx.coroutines.flow.MutableStateFlow<MediaSnapshot?>(null)
+    val live = kotlinx.coroutines.flow.MutableStateFlow(false)
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
