@@ -1504,8 +1504,8 @@ private fun IslandRootContent(
                                 val width = size.width.toFloat().coerceAtLeast(1f)
                                 scope.launch {
                                     if (!commit || focused == null || target == null) {
-                                        carouselDrag = false
                                         dismissOffset.animateTo(0f, IslandMotion.fling(), initialVelocity = v.x)
+                                        carouselDrag = false
                                         return@launch
                                     }
                                     IslandHaptics.commit(context)
@@ -1605,9 +1605,11 @@ private fun IslandRootContent(
                         },
                         onDragCancel = {
                             swipeIntent = null
-                            carouselDrag = false
                             scope.launch { collapse.animateTo(0f, IslandMotion.release()) }
-                            scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
+                            scope.launch {
+                                dismissOffset.animateTo(0f, IslandMotion.fling())
+                                carouselDrag = false
+                            }
                             scope.launch { dropOffset.animateTo(0f, IslandMotion.fling()) }
                         },
                     )
@@ -1627,7 +1629,7 @@ private fun IslandRootContent(
                 else -> Alignment.TopCenter
             }
             val queuedNext = item?.queue?.next
-            if (showDismissReveal && queuedNext != null && !((spec.dismissDown || item?.dismissible != true) && dismissOffset.value > 0f)) {
+            if (showDismissReveal && queuedNext != null && !spec.dismissDown && item?.dismissible == true) {
                 Box(
                     Modifier
                         .matchParentSize()
