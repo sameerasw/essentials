@@ -4474,7 +4474,7 @@ class SettingsRepository(
 
     fun setIslandNeuralExpressiveAlwaysEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS, enabled)
 
-    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, true)
+    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, !com.sameerasw.essentials.utils.DeviceUtils.isLowEndDevice(context))
 
     fun setIslandTransparencyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TRANSPARENCY, enabled)
 
