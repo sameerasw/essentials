@@ -1730,7 +1730,7 @@
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
     <string name="island_show_glow_title">Показывать акцентное свечение</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
-    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_title">Предпочитать меньше анимаций у острова</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
@@ -1881,7 +1881,7 @@
     <string name="disable_interactions_in_full_screen_title">Отключить взаимодействия в полном экране</string>
     <string name="island_balance_compact_title">Визуальная балансировка компактного острова</string>
     <string name="island_neural_expressive_title">Нейронная экспрессивная расширенная анимация </string>
-    <string name="island_neural_expressive_always_title">Always show on expansion</string>
+    <string name="island_neural_expressive_always_title">Всегда показывать при расширении</string>
     <string name="island_statusbar_aware_width_title">Ширина панели состояния </string>
     <string name="island_secondary_bubble_title">Вторичный пузырь</string>
     <string name="island_max_items_title">Максимальное количество отображаемых предметов</string>
