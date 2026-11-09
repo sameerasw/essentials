@@ -120,8 +120,8 @@ private fun QueueExitWatcher(entry: QueueEntry) {
     }
 }
 
-private fun queueEnter(motion: IslandSurfaceMotion) = scaleIn(motion.expressiveFastSpatial(), initialScale = 0.4f) + fadeIn(motion.expressiveFastEffects())
-private fun queueExit(motion: IslandSurfaceMotion) = scaleOut(motion.expressiveFastEffects(), targetScale = 0.6f) + fadeOut(motion.expressiveFastEffects())
+private val QueueEnter = scaleIn(IslandMotion.expressiveFastSpatial(), initialScale = 0.4f) + fadeIn(IslandMotion.expressiveFastEffects())
+private val QueueExit = scaleOut(IslandMotion.expressiveFastEffects(), targetScale = 0.6f) + fadeOut(IslandMotion.expressiveFastEffects())
 
 @Composable
 fun IslandStackBubble(
@@ -132,7 +132,6 @@ fun IslandStackBubble(
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
 ) {
-    val motion = currentIslandSurfaceMotion()
     val shown = queueVisible(icons, BUBBLE_MAX_MINIS)
     val count = shown.size
     val iconSize = when (count) {
@@ -150,7 +149,7 @@ fun IslandStackBubble(
     val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
     Box(
         modifier = modifier
-            .liquid(liquid, deform = !motion.emphasized)
+            .liquid(liquid)
             .size(size)
             .clip(CircleShape)
             .background(Color.Black)
@@ -163,15 +162,15 @@ fun IslandStackBubble(
                 val held = remember { arrayOfNulls<Pair<Dp, Dp>>(1) }
                 val index = shown.indexOfFirst { it.key == entry.icon.key }
                 val target = if (index >= 0) slot(index).also { held[0] = it } else held[0] ?: (0.dp to 0.dp)
-                val x by animateDpAsState(target.first, motion.expressiveDefaultSpatial(), label = "bubbleX")
-                val y by animateDpAsState(target.second, motion.expressiveDefaultSpatial(), label = "bubbleY")
-                val s by animateDpAsState(iconSize, motion.expressiveDefaultSpatial(), label = "bubbleSize")
+                val x by animateDpAsState(target.first, IslandMotion.expressiveDefaultSpatial(), label = "bubbleX")
+                val y by animateDpAsState(target.second, IslandMotion.expressiveDefaultSpatial(), label = "bubbleY")
+                val s by animateDpAsState(iconSize, IslandMotion.expressiveDefaultSpatial(), label = "bubbleSize")
                 val miniLiquid = rememberLiquidBody(LiquidSpec.Droplet)
                 AnimatedVisibility(
                     visibleState = entry.visibility,
-                    enter = queueEnter(motion),
-                    exit = queueExit(motion),
-                    modifier = Modifier.offset(x, y).liquid(miniLiquid, deform = !motion.emphasized),
+                    enter = QueueEnter,
+                    exit = QueueExit,
+                    modifier = Modifier.offset(x, y).liquid(miniLiquid),
                 ) {
                     Box(Modifier.size(s), contentAlignment = Alignment.Center) { entry.icon.content(s) }
                 }
@@ -189,11 +188,10 @@ fun IslandQueueCount(
     outlineThickness: Dp = 1.dp,
     bond: LiquidBond? = null,
 ) {
-    val motion = currentIslandSurfaceMotion()
     val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
     Box(
         modifier = modifier
-            .liquid(liquid, deform = !motion.emphasized)
+            .liquid(liquid)
             .size(size)
             .clip(CircleShape)
             .background(Color.Black)
@@ -229,7 +227,6 @@ private fun QueueOverflowDot(size: Dp) {
 
 @Composable
 private fun QueueOverflowCounter(count: Int, size: Dp) {
-    val motion = currentIslandSurfaceMotion()
     Box(
         Modifier
             .size(size)
@@ -241,8 +238,8 @@ private fun QueueOverflowCounter(count: Int, size: Dp) {
             targetState = count,
             transitionSpec = {
                 val up = targetState > initialState
-                (slideInVertically(motion.expressiveFastSpatial()) { if (up) it else -it } + fadeIn(motion.expressiveFastEffects()))
-                    .togetherWith(slideOutVertically(motion.expressiveFastEffects()) { if (up) -it else it } + fadeOut(motion.expressiveFastEffects()))
+                (slideInVertically(IslandMotion.expressiveFastSpatial()) { if (up) it else -it } + fadeIn(IslandMotion.expressiveFastEffects()))
+                    .togetherWith(slideOutVertically(IslandMotion.expressiveFastEffects()) { if (up) -it else it } + fadeOut(IslandMotion.expressiveFastEffects()))
             },
             label = "queueOverflow",
         ) { shownCount ->
@@ -295,19 +292,18 @@ fun IslandStackOverlap(
     spread: () -> Float = { 1f },
     gatherToEnd: Boolean = true,
 ) {
-    val motion = currentIslandSurfaceMotion()
     val slots = overlapSlots(icons, maxIcons)
     val shown = queueVisible(icons, slots, overflow)
     val width by animateDpAsState(
         stackOverlapWidth(icons.size, size, slots, overflow) + overlapExtraWidth(icons, size, maxIcons, overflow),
-        motion.expressiveSlowSpatial(),
+        IslandMotion.expressiveSlowSpatial(),
         label = "overlapWidth",
     )
     val liquid = rememberLiquidBody(LiquidSpec.Droplet, bond)
     val field = remember { LiquidField() }
     field.reach = with(LocalDensity.current) { size.toPx() } * 0.3f
-    Box(modifier.liquid(liquid, deform = !motion.emphasized).size(width, size)) {
-        if (!motion.emphasized) LiquidBridges(field)
+    Box(modifier.liquid(liquid).size(width, size)) {
+        LiquidBridges(field)
         CompositionLocalProvider(LocalLiquidField provides field) {
             val order = shown.asReversed()
             val step = size * OVERLAP_STEP
@@ -330,14 +326,14 @@ fun IslandStackOverlap(
                     }
                     val spawn = remember { if (entry.visibility.currentState) target else step * (index - 1).coerceAtLeast(0) }
                     val x = remember { Animatable(spawn, Dp.VectorConverter) }
-                    LaunchedEffect(target) { x.animateTo(target, motion.expressiveSlowSpatial()) }
-                    val presence = animateFloatAsState(if (present) 1f else 0f, motion.expressiveFastEffects(), label = "overlapPresence")
+                    LaunchedEffect(target) { x.animateTo(target, IslandMotion.expressiveSlowSpatial()) }
+                    val presence = animateFloatAsState(if (present) 1f else 0f, IslandMotion.expressiveFastEffects(), label = "overlapPresence")
                     val entryBond = remember { LiquidBond("overlap_${entry.icon.key}", presence = { presence.value }) }
                     val entryLiquid = rememberLiquidBody(LiquidSpec.Droplet, entryBond)
                     AnimatedVisibility(
                         visibleState = entry.visibility,
-                        enter = queueEnter(motion),
-                        exit = queueExit(motion),
+                        enter = QueueEnter,
+                        exit = QueueExit,
                         modifier = Modifier
                             .offset {
                                 val s = spread().coerceIn(0f, 1f)
@@ -345,10 +341,10 @@ fun IslandStackOverlap(
                                 val px = anchor + (x.value.toPx() - anchor) * s
                                 IntOffset(px.roundToInt(), if (isDot) ((size - boxSize) / 2).roundToPx() else 0)
                             }
-                            .liquid(entryLiquid, deform = !motion.emphasized),
+                            .liquid(entryLiquid),
                     ) {
                         val ringColor = islandAccent()
-                        val ringAlpha by animateFloatAsState(if (entry.icon.highlight) 1f else 0f, motion.expressiveDefaultEffects(), label = "overlapRing")
+                        val ringAlpha by animateFloatAsState(if (entry.icon.highlight) 1f else 0f, IslandMotion.expressiveDefaultEffects(), label = "overlapRing")
                         Box(
                             Modifier
                                 .size(boxWidth, boxSize)
@@ -401,7 +397,6 @@ fun IslandStackPill(
     accent: Color? = null,
     onInteraction: () -> Unit = {},
 ) {
-    val motion = currentIslandSurfaceMotion()
     val ring by animateColorAsState(accent ?: islandAccent(), label = "stackRing")
     val container by animateColorAsState(
         if (accent != null) androidx.compose.ui.graphics.lerp(Color.Black, accent, 0.22f) else Color.Black,
@@ -444,14 +439,14 @@ fun IslandStackPill(
         }
     }
     val visibleSlots = icons.size.coerceAtMost(PILL_MAX_ICONS)
-    val carouselWidth by animateDpAsState(itemWidth * visibleSlots + spacing * (visibleSlots - 1).coerceAtLeast(0) + 12.dp, motion.expressiveDefaultSpatial(), label = "pillWidth")
+    val carouselWidth by animateDpAsState(itemWidth * visibleSlots + spacing * (visibleSlots - 1).coerceAtLeast(0) + 12.dp, IslandMotion.expressiveDefaultSpatial(), label = "pillWidth")
     Box(
         modifier = modifier
-            .liquid(liquid, deform = !motion.emphasized)
+            .liquid(liquid)
             .clip(CircleShape)
             .background(container)
             .islandOutline(outlineColor, outlineThickness, CircleShape)
-            .animateContentSize(motion.compactSize)
+            .animateContentSize(IslandMotion.compactSize)
             .padding(vertical = 5.dp),
     ) {
         HorizontalUncontainedCarousel(
@@ -464,7 +459,7 @@ fun IslandStackPill(
                 .height(itemWidth),
         ) { index ->
             val icon = icons[index]
-            val selected by animateFloatAsState(if (icon.key == selectedKey) 1f else 0f, motion.float(), label = "stackSelected")
+            val selected by animateFloatAsState(if (icon.key == selectedKey) 1f else 0f, IslandMotion.float(), label = "stackSelected")
             val shape = RoundedCornerShape(14.dp)
             Box(
                 Modifier
@@ -506,13 +501,12 @@ fun IslandSideBubble(
     spread: () -> Float = { 1f },
     gatherToEnd: Boolean = true,
 ) {
-    val motion = currentIslandSurfaceMotion()
     Box(modifier.height(size)) {
         AnimatedContent(
             targetState = ownerKey,
             transitionSpec = {
-                (fadeIn(motion.expressiveDefaultEffects()) + scaleIn(motion.expressiveFastSpatial(), initialScale = 0.7f))
-                    .togetherWith(fadeOut(motion.expressiveFastEffects()) + scaleOut(motion.expressiveFastEffects(), targetScale = 0.8f))
+                (fadeIn(IslandMotion.expressiveDefaultEffects()) + scaleIn(IslandMotion.expressiveFastSpatial(), initialScale = 0.7f))
+                    .togetherWith(fadeOut(IslandMotion.expressiveFastEffects()) + scaleOut(IslandMotion.expressiveFastEffects(), targetScale = 0.8f))
             },
             label = "sideBubble",
         ) { key ->
