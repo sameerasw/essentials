@@ -16,6 +16,10 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import kotlinx.coroutines.launch
 
 class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
+    companion object {
+        const val ACTION_POWER_STATE_CHANGED = "com.sameerasw.essentials.action.POWER_STATE_CHANGED"
+    }
+
     override val glanceAppWidget: GlanceAppWidget = BatteriesWidget()
 
     override fun onReceive(
@@ -54,6 +58,7 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
 
         if (intent.action == Intent.ACTION_POWER_CONNECTED ||
             intent.action == Intent.ACTION_POWER_DISCONNECTED ||
+            intent.action == ACTION_POWER_STATE_CHANGED ||
             intent.action == Intent.ACTION_BATTERY_LOW ||
             intent.action == Intent.ACTION_BATTERY_OKAY ||
             intent.action == "android.bluetooth.device.action.BATTERY_LEVEL_CHANGED" ||
