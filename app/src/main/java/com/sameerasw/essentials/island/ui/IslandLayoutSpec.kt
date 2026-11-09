@@ -29,6 +29,7 @@ data class IslandLayoutSpec(
     val balanceCompact: Boolean = true,
     val dismissDown: Boolean = false,
     val neuralExpressive: Boolean = false,
+    val transparency: Boolean = true,
     val landscape: Boolean = false,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,
     val outlineColor: Color? = null,

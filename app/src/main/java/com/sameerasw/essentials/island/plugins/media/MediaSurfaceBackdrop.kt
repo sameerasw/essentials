@@ -83,10 +83,11 @@ fun MediaSurface(
     geometry: (() -> MediaVisualGeometry)?,
     camera: () -> MediaCameraGeometry?,
     modifier: Modifier = Modifier,
+    transparent: Boolean = true,
 ) {
     val accentState = rememberUpdatedState(accent)
     var viewportHeight by remember { mutableIntStateOf(1) }
-    val progressiveBlur = Modifier.blur {
+    val progressiveBlur = if (!transparent) Modifier else Modifier.blur {
         edgeTreatment = if (geometry != null) BlurredEdgeTreatment.Unbounded else BlurredEdgeTreatment.Rectangle
         val p = pulse().coerceIn(0f, 1f)
         val rect = geometry?.invoke()?.bounds
@@ -112,7 +113,11 @@ fun MediaSurface(
             val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 shader = RadialGradient(
                     0f, 0f, 1f,
-                    intArrayOf(0xFF000000.toInt(), 0xF2000000.toInt(), 0xE6000000.toInt(), 0xCC000000.toInt(), 0x8C000000.toInt(), 0x80000000.toInt()),
+                    if (transparent) {
+                        intArrayOf(0xFF000000.toInt(), 0xF2000000.toInt(), 0xE6000000.toInt(), 0xCC000000.toInt(), 0x8C000000.toInt(), 0x80000000.toInt())
+                    } else {
+                        IntArray(6) { 0xFF000000.toInt() }
+                    },
                     gradient.stops,
                     Shader.TileMode.CLAMP,
                 ).apply {

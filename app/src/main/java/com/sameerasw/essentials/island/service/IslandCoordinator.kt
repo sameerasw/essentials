@@ -762,7 +762,8 @@ class IslandCoordinator(
             bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
-            neuralExpressive = settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressive = settings.isIslandTransparencyEnabled() && settings.isIslandNeuralExpressiveEnabled(),
+            transparency = settings.isIslandTransparencyEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
                 runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
@@ -1061,6 +1062,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_BALANCE_COMPACT,
             SettingsRepository.KEY_ISLAND_DISMISS_DIRECTION,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
+            SettingsRepository.KEY_ISLAND_TRANSPARENCY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
             SettingsRepository.KEY_ISLAND_NOTIF_HUB_ICONS,
             SettingsRepository.KEY_ISLAND_NOTIF_QUEUE_STYLE,

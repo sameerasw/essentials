@@ -539,11 +539,28 @@ fun IslandVisualsSettingsUI(
                 onSettingsClick = { showPulseShadowSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
             )
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_blur_on_24,
+                title = stringResource(R.string.island_transparency_title),
+                isChecked = viewModel.isIslandTransparency.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandTransparency(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_transparency"),
+            )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_grain_24,
                 title = stringResource(R.string.island_neural_expressive_title),
                 isChecked = viewModel.isIslandNeuralExpressive.value,
+                enabled = viewModel.isIslandTransparency.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandNeuralExpressive(checked)

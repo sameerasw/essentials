@@ -901,7 +901,7 @@ private fun IslandRootContent(
                     compositingStrategy = CompositingStrategy.ModulateAlpha
                 },
             ) {
-                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize())
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency)
                 if (ownerItem?.expandedParticles == true && spec.neuralExpressive) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
