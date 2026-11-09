@@ -934,6 +934,8 @@ object FeatureRegistry {
                         ),
                     ),
                 parentFeatureId = "Display",
+                contributors = listOf("Slayemus"),
+                creditsLabel = R.string.label_feature_designed_by,
             ) {
                 override fun isEnabled(viewModel: MainViewModel) = viewModel.isIslandEnabled.value
 

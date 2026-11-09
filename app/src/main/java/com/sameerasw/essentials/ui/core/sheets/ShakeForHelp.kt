@@ -9,6 +9,20 @@
 
 package com.sameerasw.essentials.ui.core.sheets
 
+import com.sameerasw.essentials.R
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,17 +72,47 @@ fun ShakeForHelp(
     }
 
     if (showHelp) {
-        val customHelp = feature?.let { FeatureCustomHelp.forFeature(it.id) }
-        if (customHelp != null) {
-            customHelp.sheet { showHelp = false }
-        } else if (feature != null) {
-            FeatureHelpBottomSheet(
-                onDismissRequest = { showHelp = false },
-                feature = feature,
-                viewModel = viewModel,
+        FeatureHelpSheet(feature, viewModel) { showHelp = false }
+    }
+}
+
+@Composable
+fun FeatureHelpSheet(
+    feature: Feature?,
+    viewModel: MainViewModel = viewModel(),
+    onDismissRequest: () -> Unit,
+) {
+    val customHelp = feature?.let { FeatureCustomHelp.forFeature(it.id) }
+    if (customHelp != null) {
+        customHelp.sheet(onDismissRequest)
+    } else if (feature != null) {
+        FeatureHelpBottomSheet(
+            onDismissRequest = onDismissRequest,
+            feature = feature,
+            viewModel = viewModel,
+        )
+    } else {
+        InstructionsBottomSheet(onDismissRequest = onDismissRequest)
+    }
+}
+
+@Composable
+fun WhatIsThisButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val view = LocalView.current
+    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        TextButton(
+            onClick = {
+                HapticUtil.performUIHaptic(view)
+                onClick()
+            },
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.rounded_help_24),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
             )
-        } else {
-            InstructionsBottomSheet(onDismissRequest = { showHelp = false })
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.what_is_this))
         }
     }
 }

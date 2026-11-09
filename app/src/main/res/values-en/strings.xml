@@ -1518,4 +1518,6 @@
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="what_is_this">What is this?</string>
+    <string name="label_feature_designed_by">Designed by</string>
 </resources>

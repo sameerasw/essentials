@@ -222,7 +222,7 @@ fun FeatureHelpBottomSheet(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.label_feature_credits),
+                        text = stringResource(feature.creditsLabel ?: R.string.label_feature_credits),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
