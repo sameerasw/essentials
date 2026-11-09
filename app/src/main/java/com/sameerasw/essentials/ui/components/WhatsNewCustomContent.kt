@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.island.remote.OvercastLink
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
@@ -58,6 +59,7 @@ fun WhatsNewCustomContent(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val overcastInstalled = OvercastLink.isInstalled(context)
     var expandedSection by rememberSaveable { mutableStateOf<Int?>(null) }
 
     LifecycleResumeEffect(Unit) {
@@ -74,17 +76,85 @@ fun WhatsNewCustomContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxWidth(),
     ) {
-        ShakeForHelpCard(
+        WhatsNewSectionCard(
+            title = "Overcast is now on Play Store",
+            summary = "Get the weather island provider from Google Play",
             expanded = expandedSection == 0,
             onToggle = { toggle(0) },
-            mainViewModel = mainViewModel,
-        )
+            icon = { SectionIcon(R.drawable.overcast_logo, tinted = false) },
+        ) {
+            Text(
+                text = "Overcast brings live weather to your island as an external provider. It is now available on Google Play, so you can install it and keep it up to date like any other app.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            StackedActionCard(
+                iconRes = R.drawable.rounded_cloud_24,
+                title = "Overcast",
+                description = if (overcastInstalled) "Installed and ready to use" else "Not installed yet",
+                actionLabel = if (overcastInstalled) "Open" else "Get it on Google Play",
+                actionIconRes = if (overcastInstalled) R.drawable.rounded_open_in_new_24 else R.drawable.rounded_download_24,
+                isPrimaryAction = !overcastInstalled,
+                onAction = {
+                    if (overcastInstalled) OvercastLink.openApp(context) else OvercastLink.openInstallPage(context)
+                },
+            )
+        }
+
+        WhatsNewSectionCard(
+            title = "Hello foldables",
+            summary = "Layouts built for bigger and wider screens",
+            expanded = expandedSection == 3,
+            onToggle = { toggle(3) },
+            icon = { SectionIcon(R.drawable.rounded_tablet_android_24) },
+        ) {
+            Text(
+                text = "Essentials now uses Navigation3 for adaptive layouts. On foldables and tablets, screens make better use of the extra space with side-by-side panes, and phones in landscape get layouts that fit the wider screen instead of stretching a portrait one.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "Unfold your device or rotate your phone to see it in action.",
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+
+        WhatsNewSectionCard(
+            title = "Island feels new",
+            summary = "A fresh look with smoother animations",
+            expanded = expandedSection == 4,
+            onToggle = { toggle(4) },
+            icon = { SectionIcon(R.drawable.rounded_auto_awesome_24) },
+        ) {
+            Text(
+                text = "Expanded views have a new translucent design with a soft glow that follows the colors of what you are viewing, from notifications to your music.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "Swipe sideways to move between notifications and media players in carousel order, or switch Dismissals to Down to swipe down to dismiss. Media can also live in a secondary bubble or a wide pill, and colors now change smoothly as the island collapses.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "Plus many refinements to animations, gestures and stability. Prefer something lighter? Turn off Island transparency for an efficient mode that keeps just the color glow.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
 
         Text(
             text = stringResource(R.string.whats_new_previous_updates),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+        )
+
+        ShakeForHelpCard(
+            expanded = expandedSection == 2,
+            onToggle = { toggle(2) },
+            mainViewModel = mainViewModel,
         )
 
         WhatsNewSectionCard(
@@ -112,7 +182,7 @@ fun ShakeForHelpCard(
 ) {
     val context = LocalContext.current
     WhatsNewSectionCard(
-        title = "New: Shake to get help",
+        title = "Shake to get help",
         summary = "Shake your phone for instant help",
         expanded = expanded,
         onToggle = onToggle,

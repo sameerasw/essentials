@@ -7,7 +7,7 @@ import androidx.core.net.toUri
 
 object OvercastLink {
     const val PACKAGE = "com.sameerasw.overcast"
-    private const val INSTALL_URL = "https://github.com/sameerasw/Overcast/releases/latest"
+    private const val INSTALL_URL = "https://play.google.com/store/apps/details?id=com.sameerasw.overcast"
 
     fun isInstalled(context: Context): Boolean =
         try {
