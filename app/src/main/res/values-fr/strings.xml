@@ -1797,4 +1797,6 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="feat_screenshots_title">Nettoyage des screenshots</string>
     <string name="feat_screenshots_desc">Nettoyer les screenshots partagés et anciens</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
+    <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
+    <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
 </resources>

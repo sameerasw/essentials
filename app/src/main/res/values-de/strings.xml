@@ -2075,4 +2075,6 @@ Die Stufen können nur von der normalen Lautstärke abwärts, niemals darüber h
     <string name="island_combine_with_duo">Kombinieren mit Duo</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
+    <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
 </resources>

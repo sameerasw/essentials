@@ -74,6 +74,7 @@ import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.StatusBarAwareWidthInfoBottomSheet
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -354,6 +355,11 @@ fun IslandVisualsSettingsUI(
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
     var showPulseShadowSheet by remember { mutableStateOf(false) }
+    var showStatusBarAwareInfo by remember { mutableStateOf(false) }
+
+    if (showStatusBarAwareInfo) {
+        StatusBarAwareWidthInfoBottomSheet(onDismissRequest = { showStatusBarAwareInfo = false })
+    }
 
     Column(
         modifier = modifier
@@ -493,6 +499,7 @@ fun IslandVisualsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandStatusBarAwareWidth(checked)
                 },
+                onInfoClick = { showStatusBarAwareInfo = true },
                 modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
             )
 
