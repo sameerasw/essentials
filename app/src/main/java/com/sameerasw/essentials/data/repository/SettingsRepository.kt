@@ -58,6 +58,7 @@ class SettingsRepository(
         migrateUsageAccessKey()
         migrateRemapStringToAction()
         migratePixelSearchbarType()
+        migrateDebugUiMarginOverlayReset()
     }
 
     private fun migrateUsageAccessKey() {
@@ -104,6 +105,15 @@ class SettingsRepository(
         }
 
         putBoolean(KEY_BUTTON_REMAP_MIGRATION_DONE, true)
+    }
+
+    private fun migrateDebugUiMarginOverlayReset() {
+        if (!prefs.getBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1, false)) {
+            prefs.edit()
+                .putBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY, false)
+                .putBoolean(KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1, true)
+                .apply()
+        }
     }
 
     private fun migratePixelSearchbarType() {
@@ -647,6 +657,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
+        const val KEY_DEBUG_UI_MARGIN_OVERLAY_RESET_V1 = "debug_ui_margin_overlay_reset_v1"
         const val KEY_ISLAND_STATUSBAR_IGNORE_NOTIFICATIONS = "island_statusbar_ignore_notifications"
         const val KEY_ISLAND_SECONDARY_BUBBLE = "island_secondary_bubble"
         const val KEY_ISLAND_MAX_ITEMS = "island_max_items"
