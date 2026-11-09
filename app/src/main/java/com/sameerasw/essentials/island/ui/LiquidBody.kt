@@ -165,8 +165,8 @@ fun rememberLiquidBody(
     return body
 }
 
-fun Modifier.liquid(body: LiquidBody, origin: TransformOrigin = TransformOrigin.Center, deform: Boolean = true): Modifier =
-    this.then(LiquidTrackElement(body)).then(if (deform) Modifier.graphicsLayer { body.applyTo(this, origin) } else Modifier)
+fun Modifier.liquid(body: LiquidBody, origin: TransformOrigin = TransformOrigin.Center): Modifier =
+    this.then(LiquidTrackElement(body)).graphicsLayer { body.applyTo(this, origin) }
 
 private class LiquidTrackElement(val body: LiquidBody) : ModifierNodeElement<LiquidTrackNode>() {
     override fun create() = LiquidTrackNode(body)
