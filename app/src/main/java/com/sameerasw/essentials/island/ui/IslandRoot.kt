@@ -127,6 +127,12 @@ import com.sameerasw.essentials.island.state.IslandUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.sign
+import kotlinx.coroutines.coroutineScope
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import kotlin.math.roundToInt
 
 interface IslandActions {
@@ -291,8 +297,13 @@ private fun IslandRootContent(
         ?.takeIf { outlineAlpha > 0f && fade > 0f }
         ?.let { it.copy(alpha = it.alpha * outlineAlpha * fade) }
     val pulse = remember { Animatable(0f) }
+    var quietContentChange by remember { mutableStateOf(false) }
     LaunchedEffect(state.focusedKey, state.items[state.focusedKey]?.contentId, spec.pulseShadow) {
         pulse.snapTo(0f)
+        if (quietContentChange) {
+            quietContentChange = false
+            return@LaunchedEffect
+        }
         if (!spec.pulseShadow || state.focusedKey == null) return@LaunchedEffect
         pulse.animateTo(1f, motionTween(250, easing = LinearEasing))
         pulse.animateTo(0f, motionTween((spec.pulseDurationMs - 250).coerceAtLeast(100), easing = LinearEasing))
@@ -348,6 +359,14 @@ private fun IslandRootContent(
     val holdSize = remember { IntArray(2) }
     val previewCompactSize = remember { IntArray(2) }
     val dismissOffset = remember { Animatable(0f) }
+    val dropOffset = remember { Animatable(0f) }
+    val carouselSnapshot = rememberGraphicsLayer()
+    val carouselProgress = remember { Animatable(0f) }
+    var carouselDrag by remember { mutableStateOf(false) }
+    var carouselActive by remember { mutableStateOf(false) }
+    var carouselReady by remember { mutableStateOf(false) }
+    var carouselDir by remember { mutableFloatStateOf(0f) }
+    var carouselStart by remember { mutableFloatStateOf(0f) }
     var target by remember { mutableStateOf(IntSize.Zero) }
     var compactSize by remember { mutableStateOf(IntSize.Zero) }
     var windowWidth by remember { mutableStateOf(0) }
@@ -357,7 +376,7 @@ private fun IslandRootContent(
     var dismissCommitted by remember { mutableStateOf(false) }
     val showPreview by remember { derivedStateOf { collapse.value > 0f } }
     var swipeIntent by remember { mutableStateOf<SwipeIntent?>(null) }
-    val showDismissReveal by remember { derivedStateOf { dismissOffset.value != 0f } }
+    val showDismissReveal by remember { derivedStateOf { dismissOffset.value != 0f && !carouselDrag && !carouselActive } }
     val revealDirection by remember { derivedStateOf { if (dismissOffset.value >= 0f) 1f else -1f } }
     val dismissThresholdPx = with(density) { 48.dp.toPx() }
     val jelly = rememberCompactJellyState()
@@ -1366,6 +1385,24 @@ private fun IslandRootContent(
                     var dy = 0f
                     
                     var sliding = false
+                    var dropping = false
+                    val downMode = spec.dismissDown && !peek
+                    var switchMode = downMode
+                    suspend fun awaitNextContent(focused: IslandItem) {
+                        quietContentChange = true
+                        val changed = withTimeoutOrNull(600L) {
+                            snapshotFlow { currentState.focused }.first {
+                                it !== focused && (focused.contentId == null || it?.contentId != focused.contentId)
+                            }
+                        }
+                        if (changed == null) quietContentChange = false
+                    }
+                    fun switchTarget(dir: Float): (() -> Unit)? {
+                        val focused = currentState.focused ?: return null
+                        val index = focused.stack.indexOfFirst { it.current }
+                        if (index >= 0) return focused.stack.getOrNull(if (dir < 0f) index + 1 else index - 1)?.onSelect
+                        return if (dir < 0f) focused.queue?.let { { actions.onAdvance() } } else null
+                    }
                     var crossed = false
                     var progress = 0f
                     var collapseBase = 0f
@@ -1394,6 +1431,9 @@ private fun IslandRootContent(
                             dismissBase = dismissOffset.value
                             scope.launch { collapse.stop() }
                             scope.launch { dismissOffset.stop() }
+                            scope.launch { dropOffset.stop() }
+                            dropping = false
+                            switchMode = downMode || (!peek && currentState.focused?.dismissible != true)
                             lastStep = 0f
                             crossed = false
                             sliding = false
@@ -1406,23 +1446,40 @@ private fun IslandRootContent(
                             val inward = dx * inwardSign()
                             val horizontal = abs(dx) >= abs(dy)
                             val dismissible = currentState.focused?.dismissible == true
+                            val canSwitch = dx != 0f && switchTarget(dx) != null
                             sliding = if (peek) horizontal && inward <= 0f else horizontal
-                            val slide = dismissBase + if (dismissible) dx else dx * 0.25f
+                            carouselDrag = sliding && switchMode && !carouselActive
+                            dropping = downMode && !horizontal && dy > 0f
+                            val slideFree = if (switchMode) canSwitch else dismissible
+                            val slide = dismissBase + if (slideFree) dx else dx * 0.25f
+                            val drop = if (dismissible) dy else dy * 0.25f
                             if (sliding) {
                                 progress = 0f
                                 if (collapse.targetValue != 0f) scope.launch { collapse.animateTo(0f, IslandMotion.release()) }
+                                if (dropOffset.targetValue != 0f) scope.launch { dropOffset.animateTo(0f, IslandMotion.fling()) }
                                 scope.launch { dismissOffset.snapTo(slide) }
+                            } else if (dropping) {
+                                progress = 0f
+                                if (collapse.targetValue != 0f) scope.launch { collapse.animateTo(0f, IslandMotion.release()) }
+                                if (dismissOffset.targetValue != 0f) scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
+                                scope.launch { dropOffset.snapTo(drop) }
                             } else {
                                 val pull = if (peek) maxOf(inward, -dy) else -dy
                                 progress = (collapseBase + pull / collapseRange).coerceIn(0f, 1f)
                                 scope.launch { collapse.snapTo(progress) }
                                 if (dismissOffset.targetValue != 0f) scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
+                                if (dropOffset.targetValue != 0f) scope.launch { dropOffset.animateTo(0f, IslandMotion.fling()) }
                             }
-                            val now = if (sliding) abs(slide) > dismissThreshold && dismissible else progress > COLLAPSE_COMMIT
+                            val now = when {
+                                sliding -> abs(slide) > dismissThreshold && slideFree
+                                dropping -> drop > dismissThreshold && dismissible
+                                else -> progress > COLLAPSE_COMMIT
+                            }
                             swipeIntent = when {
                                 !now -> null
-                                !sliding -> SwipeIntent.Hide
-                                else -> SwipeIntent.Dismiss
+                                sliding && switchMode -> null
+                                sliding || dropping -> SwipeIntent.Dismiss
+                                else -> SwipeIntent.Hide
                             }
                             if (now != crossed) {
                                 crossed = now
@@ -1438,7 +1495,75 @@ private fun IslandRootContent(
                         onDragEnd = {
                             swipeIntent = null
                             val v = tracker.calculateVelocity()
-                            if (sliding) {
+                            if (sliding && switchMode) {
+                                val focused = currentState.focused
+                                val flung = abs(v.x) > 1000f && sign(v.x) == sign(dismissOffset.value)
+                                val dir = if (dismissOffset.value > 0f) 1f else -1f
+                                val target = switchTarget(dir)
+                                val commit = target != null && focused != null && (crossed || flung)
+                                val width = size.width.toFloat().coerceAtLeast(1f)
+                                scope.launch {
+                                    if (!commit || focused == null || target == null) {
+                                        carouselDrag = false
+                                        dismissOffset.animateTo(0f, IslandMotion.fling(), initialVelocity = v.x)
+                                        return@launch
+                                    }
+                                    IslandHaptics.commit(context)
+                                    carouselStart = dismissOffset.value
+                                    carouselDir = dir
+                                    carouselReady = false
+                                    carouselProgress.snapTo(0f)
+                                    carouselActive = true
+                                    carouselDrag = false
+                                    dismissOffset.snapTo(0f)
+                                    target()
+                                    actions.onInteraction()
+                                    try {
+                                        coroutineScope {
+                                            launch {
+                                                awaitNextContent(focused)
+                                                carouselReady = true
+                                            }
+                                            val remaining = abs(dir * width - carouselStart).coerceAtLeast(1f)
+                                            carouselProgress.animateTo(
+                                                1f,
+                                                spring(Spring.DampingRatioNoBouncy, Spring.StiffnessMediumLow),
+                                                initialVelocity = (abs(v.x) / remaining).coerceAtMost(6f),
+                                            )
+                                        }
+                                    } finally {
+                                        carouselActive = false
+                                        carouselReady = false
+                                        carouselProgress.snapTo(0f)
+                                    }
+                                }
+                            } else if (dropping) {
+                                val focused = currentState.focused
+                                val flung = v.y > 1500f
+                                val commit = focused?.dismissible == true && (crossed || flung)
+                                scope.launch {
+                                    if (!commit || focused == null) {
+                                        dropOffset.animateTo(0f, IslandMotion.fling(), initialVelocity = v.y)
+                                        return@launch
+                                    }
+                                    IslandHaptics.commit(context)
+                                    val target = size.height.toFloat()
+                                    val remaining = abs(target - dropOffset.value)
+                                    val speed = maxOf(v.y, 2500f)
+                                    val throwMs = (remaining / speed * 1000f).toInt().coerceIn(90, 200)
+                                    dropOffset.animateTo(target, tween(throwMs, easing = LinearEasing))
+                                    if (focused.queue != null) {
+                                        actions.onDismiss()
+                                        awaitNextContent(focused)
+                                        dropOffset.snapTo(target * 0.3f)
+                                        dropOffset.animateTo(0f, IslandMotion.fling())
+                                    } else {
+                                        dismissCommitted = true
+                                        actions.onDismiss()
+                                        dropOffset.snapTo(0f)
+                                    }
+                                }
+                            } else if (sliding) {
                                 val focused = currentState.focused
                                 val flung = abs(v.x) > 1500f
                                 val dir = if ((if (flung) v.x else dismissOffset.value) > 0f) 1f else -1f
@@ -1456,7 +1581,7 @@ private fun IslandRootContent(
                                     dismissOffset.animateTo(dir * flyOff, throwSpec)
                                     if (focused.queue != null) {
                                         actions.onDismiss()
-                                        withTimeoutOrNull(250L) { snapshotFlow { currentState.focused }.first { it !== focused } }
+                                        awaitNextContent(focused)
                                     } else {
                                         dismissCommitted = true
                                         actions.onDismiss()
@@ -1480,8 +1605,10 @@ private fun IslandRootContent(
                         },
                         onDragCancel = {
                             swipeIntent = null
+                            carouselDrag = false
                             scope.launch { collapse.animateTo(0f, IslandMotion.release()) }
                             scope.launch { dismissOffset.animateTo(0f, IslandMotion.fling()) }
+                            scope.launch { dropOffset.animateTo(0f, IslandMotion.fling()) }
                         },
                     )
                 },
@@ -1500,7 +1627,7 @@ private fun IslandRootContent(
                 else -> Alignment.TopCenter
             }
             val queuedNext = item?.queue?.next
-            if (showDismissReveal && queuedNext != null) {
+            if (showDismissReveal && queuedNext != null && !((spec.dismissDown || item?.dismissible != true) && dismissOffset.value > 0f)) {
                 Box(
                     Modifier
                         .matchParentSize()
@@ -1516,7 +1643,7 @@ private fun IslandRootContent(
                 ) {
                     StageContent(key.stage, queuedNext, state, spec, actions, interactive = false)
                 }
-            } else if (showDismissReveal && item?.dismissible == true) {
+            } else if (showDismissReveal && item?.dismissible == true && !spec.dismissDown) {
                 DismissReveal(
                     fromStart = revealDirection > 0f,
                     progress = { (abs(dismissOffset.value) / dismissThresholdPx).coerceIn(0f, 1f) },
@@ -1566,20 +1693,34 @@ private fun IslandRootContent(
                         .graphicsLayer {
                             alpha = (if (pending) 0f else contentAlpha.value) * growGate(0.3f, 0.5f) *
                                 (if (previewing) 1f - collapse.value * 1.6f else 1f).coerceIn(0f, 1f) *
-                                if (surfaceSize.width > 0) (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f) else 1f
-                            translationX = dismissOffset.value + wiggle.value
+                                (if (carouselDrag || carouselActive || surfaceSize.width <= 0) 1f else (1f - abs(dismissOffset.value) / surfaceSize.width * 0.6f).coerceIn(0f, 1f)) *
+                                (if (surfaceSize.height > 0) (1f - dropOffset.value / surfaceSize.height).coerceIn(0f, 1f) else 1f)
+                            translationX = if (carouselActive) {
+                                carouselStart + (carouselDir * size.width - carouselStart) * carouselProgress.value - carouselDir * size.width
+                            } else {
+                                dismissOffset.value + wiggle.value
+                            }
                             val m = contentMotion.value - if (previewing) collapse.value.coerceIn(0f, 1f) else 0f
                             // Only shrink (growing entry, drag preview); rising in from below keeps its size.
                             val scale = 1f + contentScaleFor(key.stage, spec.bondEdge) * m.coerceAtMost(0f)
                             scaleX = scale
                             scaleY = scale
-                            translationY = contentShiftPx * m + edgeCorrection(key.stage)
+                            translationY = contentShiftPx * m + edgeCorrection(key.stage) + dropOffset.value
                             transformOrigin = TransformOrigin(contentOriginX, 0f)
-                            val sliding = dismissOffset.value != 0f
+                            val sliding = !carouselActive && !carouselDrag && (dismissOffset.value != 0f || dropOffset.value != 0f)
                             shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
                             clip = sliding
                         }
                         .drawBehind { if (dismissOffset.value != 0f && backdrop == null && !layeredSurface) drawRect(Color.Black) }
+                        .drawWithContent {
+                            if (carouselActive) {
+                                translate(left = carouselDir * size.width) { drawLayer(carouselSnapshot) }
+                                if (carouselReady) drawContent()
+                            } else {
+                                if (carouselDrag) carouselSnapshot.record { this@drawWithContent.drawContent() }
+                                drawContent()
+                            }
+                        }
                 } else {
                     Modifier
                         .layout { measurable, _ ->

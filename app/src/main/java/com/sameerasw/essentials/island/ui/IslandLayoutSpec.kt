@@ -27,6 +27,7 @@ data class IslandLayoutSpec(
     val cameraPresence: Float = 1f,
     val bondEdge: Boolean = false,
     val balanceCompact: Boolean = true,
+    val dismissDown: Boolean = false,
     val neuralExpressive: Boolean = false,
     val landscape: Boolean = false,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,

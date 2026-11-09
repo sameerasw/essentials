@@ -718,6 +718,7 @@ fun IslandBehaviorSettingsUI(
     val view = LocalView.current
     val previewSettings = remember { SettingsRepository(context) }
     var showWhen by remember { mutableStateOf(previewSettings.getIslandShowWhen()) }
+    var dismissDirection by remember { mutableStateOf(previewSettings.getIslandDismissDirection()) }
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showHideStatusBarInfo by remember { mutableStateOf(false) }
     val hasShellPermission =
@@ -784,6 +785,34 @@ fun IslandBehaviorSettingsUI(
                     },
                     labelProvider = { showWhenLabels[it].orEmpty() },
                     title = R.string.island_show_when_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp)
+                    .highlight(highlightSetting == "island_dismiss_direction"),
+            ) {
+                Text(
+                    text = stringResource(R.string.island_dismiss_direction_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                val horizontalLabel = stringResource(R.string.island_dismiss_direction_horizontal)
+                val downLabel = stringResource(R.string.island_dismiss_direction_down)
+                SegmentedPicker(
+                    items = listOf(SettingsRepository.ISLAND_DISMISS_HORIZONTAL, SettingsRepository.ISLAND_DISMISS_DOWN),
+                    selectedItem = dismissDirection,
+                    onItemSelected = {
+                        dismissDirection = it
+                        previewSettings.setIslandDismissDirection(it)
+                    },
+                    labelProvider = { if (it == SettingsRepository.ISLAND_DISMISS_DOWN) downLabel else horizontalLabel },
+                    title = R.string.island_dismiss_direction_title,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

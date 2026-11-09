@@ -587,6 +587,9 @@ class SettingsRepository(
         const val ISLAND_HIDE_ICON_CLOCK = "clock"
         const val KEY_ISLAND_HIDE_WHEN_SCREEN_OFF = "island_hide_when_screen_off"
         const val KEY_ISLAND_SHOW_WHEN = "island_show_when"
+        const val KEY_ISLAND_DISMISS_DIRECTION = "island_dismiss_direction"
+        const val ISLAND_DISMISS_HORIZONTAL = "horizontal"
+        const val ISLAND_DISMISS_DOWN = "down"
         const val ISLAND_SHOW_WHEN_UNLOCKED = "unlocked"
         const val ISLAND_SHOW_WHEN_SCREEN_ON = "screen_on"
         const val ISLAND_SHOW_WHEN_ALWAYS = "always"
@@ -4146,6 +4149,11 @@ class SettingsRepository(
         getString(KEY_ISLAND_SHOW_WHEN, null)
             ?: if (isIslandHideWhenScreenOffEnabled()) ISLAND_SHOW_WHEN_UNLOCKED else ISLAND_SHOW_WHEN_ALWAYS
     fun setIslandShowWhen(value: String) = putString(KEY_ISLAND_SHOW_WHEN, value)
+
+    fun getIslandDismissDirection(): String =
+        getString(KEY_ISLAND_DISMISS_DIRECTION, ISLAND_DISMISS_HORIZONTAL) ?: ISLAND_DISMISS_HORIZONTAL
+
+    fun setIslandDismissDirection(value: String) = putString(KEY_ISLAND_DISMISS_DIRECTION, value)
 
     fun getIslandTimeoutMs(): Long = getLong(KEY_ISLAND_TIMEOUT_MS, 4500L)
     fun setIslandTimeoutMs(value: Long) = putLong(KEY_ISLAND_TIMEOUT_MS, value)
