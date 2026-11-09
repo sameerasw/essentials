@@ -101,7 +101,6 @@ import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
-import com.sameerasw.essentials.island.ui.components.accentGlow
 
 @Composable
 fun NotificationExpanded(
@@ -128,7 +127,6 @@ fun NotificationExpanded(
         null
     }
     Box(propagateMinConstraints = true) {
-        Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier
                 .fillMaxWidth()

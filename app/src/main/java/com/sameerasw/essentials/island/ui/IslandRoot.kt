@@ -111,6 +111,7 @@ import com.sameerasw.essentials.island.gestures.SlideFeedback
 import com.sameerasw.essentials.island.ui.components.SlideFeedbackCompact
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.ExpandedSurfaceStyle
+import com.sameerasw.essentials.island.ui.components.islandAccent
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.StackIcon
@@ -297,6 +298,7 @@ private fun IslandRootContent(
         if (!growFlags[1]) 1f else (1f - growProgress.floatValue / end).coerceIn(0f, 1f)
     fun pillGate(): Float = if (currentState.stage == IslandStage.Expanded) growGate(0.5f, 0.5f) else 1f
     val backdropSlot = remember { IslandBackdropSlot() }
+    val backdropSink = remember { IslandBackdropSlot() }
     val layeredSurface = stage == IslandStage.Expanded && focusedLayered
     var visualRootCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var visualBounds by remember { mutableStateOf(Rect.Zero) }
@@ -1556,14 +1558,13 @@ private fun IslandRootContent(
                         }
                 }
                 val layerItem = if (current) item else layerKey.itemKey?.let { state.items[it] ?: lastItems[it] }
+                val layerLayered = layerItem?.expandedSurfaceStyle == ExpandedSurfaceStyle.Layered
                 Box(layerModifier) {
                     CompositionLocalProvider(
-                        LocalIslandBackdropSlot provides backdropSlot.takeIf { current },
+                        LocalIslandBackdropSlot provides if (layerLayered) backdropSink else backdropSlot.takeIf { current },
                         LocalIslandCollapse provides { if (current) collapse.value else 0f },
                         LocalIslandPulse provides { if (current) pulse.value else 0f },
-                        LocalIslandVisualRegistration provides layerKey.itemKey?.takeIf {
-                            layerItem?.expandedSurfaceStyle == ExpandedSurfaceStyle.Layered
-                        }?.let { owner -> remember(owner, current) { IslandVisualRegistration(visualSlot, owner, current) } },
+                        LocalIslandVisualRegistration provides layerKey.itemKey?.takeIf { layerLayered }?.let { owner -> remember(owner, current) { IslandVisualRegistration(visualSlot, owner, current) } },
                         LocalIslandCamera provides {
                             if (spec.cameraDiameter > 0.dp && windowWidth > 0) {
                                 IslandCameraSpot(
@@ -1578,6 +1579,13 @@ private fun IslandRootContent(
                         LocalLineLeading provides inlineQueue.takeIf { current && inlineLineQueue },
                         LocalIslandMorph provides remember(layerKey) { IslandMorphLayer(morph, layerKey) },
                     ) {
+                        if (layerLayered && layerKey.stage == IslandStage.Expanded && layerItem?.ownsSurfaceVisuals != true) {
+                            IslandSurfaceVisuals(
+                                layerItem?.accent ?: islandAccent(),
+                                spec.expandedCorner,
+                                layerItem?.expandedParticles == true && spec.neuralExpressive,
+                            )
+                        }
                         StageContent(
                             layerKey.stage, layerItem, state, spec, actions, interactive = current,
                             onCellTap = ::handleTap,

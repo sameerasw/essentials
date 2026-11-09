@@ -34,7 +34,6 @@ import com.sameerasw.essentials.island.ui.components.ConnectedItem
 import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.MarqueeText
-import com.sameerasw.essentials.island.ui.components.accentGlow
 import com.sameerasw.essentials.island.ui.components.cameraClearance
 
 fun formatOtp(code: String): String = when {
@@ -60,7 +59,6 @@ fun OtpExpanded(
     val accent = alert.appColor?.let { Color(it) } ?: Color.White
     var showMessage by remember(alert.key) { mutableStateOf(false) }
     Box(propagateMinConstraints = true) {
-        Box(Modifier.matchParentSize().accentGlow(accent, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,

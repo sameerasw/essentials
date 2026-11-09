@@ -3,10 +3,7 @@ package com.sameerasw.essentials.island.plugins.media
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
-import com.sameerasw.essentials.island.ui.DetachedSurfaceVisuals
-import com.sameerasw.essentials.island.plugins.media.particles.GeminiParticlePill
-import com.sameerasw.essentials.island.plugins.media.particles.MediaCameraGeometry
-import com.sameerasw.essentials.island.plugins.media.particles.MediaVisualGeometry
+import com.sameerasw.essentials.island.ui.IslandSurfaceVisuals
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
@@ -150,23 +147,7 @@ fun MediaExpanded(
     Box {
         if (drawBackground && layered) {
             val surfaceAccent = rememberMediaArtworkColors(artwork).primary
-            val detached = DetachedSurfaceVisuals { frame ->
-                val geometry = { frame().let { MediaVisualGeometry(it.bounds, it.cornerRadius) } }
-                val camera = { frame().let { MediaCameraGeometry(it.cameraCenter, it.cameraRadius) } }
-                Box(Modifier.fillMaxSize()) {
-                    MediaSurface(surfaceAccent, spec.expandedCorner, { frame().pulse }, geometry, camera, Modifier.matchParentSize())
-                    if (spec.neuralExpressive) {
-                        GeminiParticlePill(
-                            modifier = Modifier.matchParentSize(),
-                            color = surfaceAccent,
-                            cornerRadius = spec.expandedCorner,
-                            activation = { frame().pulse },
-                            geometry = geometry,
-                            protectedCamera = camera,
-                        )
-                    }
-                }
-            }
+            val detached = IslandSurfaceVisuals(surfaceAccent, spec.expandedCorner, spec.neuralExpressive)
             if (!detached && !SurfaceBackdrop { MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.fillMaxSize()) }) {
                 MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.matchParentSize())
             }
