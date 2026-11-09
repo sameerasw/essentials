@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import com.sameerasw.essentials.island.ui.components.resizableCard
 import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
 import com.sameerasw.essentials.island.ui.components.ResizeHandle
@@ -116,6 +117,7 @@ fun NotificationExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
+    IslandSurfaceAccent(glowColor)
     val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_NOTIF_MAX_HEIGHT)
     val density = LocalDensity.current
     val imeInset = WindowInsets.ime.getBottom(density)

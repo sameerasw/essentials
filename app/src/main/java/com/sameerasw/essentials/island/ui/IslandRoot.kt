@@ -111,6 +111,12 @@ import com.sameerasw.essentials.island.gestures.SlideFeedback
 import com.sameerasw.essentials.island.ui.components.SlideFeedbackCompact
 import com.sameerasw.essentials.island.model.IslandItem
 import com.sameerasw.essentials.island.model.ExpandedSurfaceStyle
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateMapOf
+import com.sameerasw.essentials.island.plugins.media.particles.MediaVisualGeometry
+import com.sameerasw.essentials.island.plugins.media.particles.MediaCameraGeometry
+import com.sameerasw.essentials.island.plugins.media.particles.GeminiParticlePill
+import com.sameerasw.essentials.island.plugins.media.MediaSurface
 import com.sameerasw.essentials.island.ui.components.islandAccent
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import com.sameerasw.essentials.island.model.SideBubble
@@ -202,7 +208,6 @@ private fun IslandRootContent(
     val key = ContentKey(stage, state.focusedKey)
     val currentState by rememberUpdatedState(state)
     val inspection = LocalInspectionMode.current
-    val visualSlot = remember { IslandVisualSlot() }
     val focusedLayered = state.items[state.focusedKey]?.expandedSurfaceStyle == ExpandedSurfaceStyle.Layered
 
     val bondCandidate = targetSpec.bondEdge && stage == IslandStage.Compact
@@ -780,23 +785,25 @@ private fun IslandRootContent(
         })
     }
 
-    LaunchedEffect(visualSlot.entry, key, state.items.keys) {
-        val entry = visualSlot.entry ?: return@LaunchedEffect
-        val replaced = (stage == IslandStage.Expanded && (!layeredSurface || key.itemKey != entry.owner)) ||
-            (stage == IslandStage.Line && key.itemKey != entry.owner)
-        if (!replaced && stage != IslandStage.Hidden && entry.owner in state.items) return@LaunchedEffect
+    var surfaceOwner by remember { mutableStateOf<String?>(null) }
+    val activeOwner = if (layeredSurface) state.focusedKey else surfaceOwner
+    SideEffect { if (layeredSurface) surfaceOwner = state.focusedKey }
+    val reportedAccents = remember { mutableStateMapOf<String, Color>() }
+    LaunchedEffect(surfaceOwner, key, state.items.keys) {
+        val owner = surfaceOwner ?: return@LaunchedEffect
+        val replaced = (stage == IslandStage.Expanded || stage == IslandStage.Line) && key.itemKey != owner
+        if (!replaced && stage != IslandStage.Hidden && owner in state.items) return@LaunchedEffect
         if (!replaced) {
             snapshotFlow { !visible || liveSurfaceHeight.intValue <= compactSize.height.coerceAtLeast(minSurfaceHeight) + 1 }
                 .first { it }
         }
-        if (visualSlot.entry === entry) visualSlot.entry = null
+        if (surfaceOwner == owner) surfaceOwner = null
     }
 
     fun hasDetachedSurface(): Boolean {
-        val owner = visualSlot.entry?.owner ?: return false
+        val owner = activeOwner ?: return false
         return when (key.stage) {
-            IslandStage.Expanded -> layeredSurface && key.itemKey == owner && visualSlot.entry?.registered == true
-            IslandStage.Line -> key.itemKey == owner
+            IslandStage.Expanded, IslandStage.Line -> key.itemKey == owner
             IslandStage.Compact, IslandStage.Hidden -> true
         }
     }
@@ -823,7 +830,7 @@ private fun IslandRootContent(
             bounds,
             surfaceCornerPx(bounds.height, compactHeightPx, expandedCornerPx),
             if (bounds.width > 0f && bounds.height > 0f) shellAlpha * detachedAmount() * dismissAlpha else 0f,
-            if (layeredSurface && hasDetachedSurface()) pulse.value else 0f,
+            if (layeredSurface) pulse.value else 0f,
             cameraCenter,
             cameraRadius,
         )
@@ -840,14 +847,31 @@ private fun IslandRootContent(
                 detectTapGestures { actions.onCollapse() }
             },
     ) {
-        visualSlot.entry?.let { entry ->
-            key(entry.owner) {
-                Box(
-                    Modifier.fillMaxSize().graphicsLayer {
-                        alpha = visualFrame().alpha
-                        compositingStrategy = CompositingStrategy.ModulateAlpha
-                    },
-                ) { entry.content(::visualFrame) }
+        activeOwner?.let { owner ->
+            val ownerItem = state.items[owner] ?: lastItems[owner]
+            val glow by animateColorAsState(
+                reportedAccents[owner] ?: ownerItem?.accent ?: islandAccent(),
+                label = "islandSurfaceGlow",
+            )
+            val geometry = { visualFrame().let { MediaVisualGeometry(it.bounds, it.cornerRadius) } }
+            val camera = { visualFrame().let { MediaCameraGeometry(it.cameraCenter, it.cameraRadius) } }
+            Box(
+                Modifier.fillMaxSize().graphicsLayer {
+                    alpha = visualFrame().alpha
+                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                },
+            ) {
+                MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize())
+                if (ownerItem?.expandedParticles == true && spec.neuralExpressive) {
+                    GeminiParticlePill(
+                        modifier = Modifier.matchParentSize(),
+                        color = glow,
+                        cornerRadius = spec.expandedCorner,
+                        activation = { visualFrame().pulse },
+                        geometry = geometry,
+                        protectedCamera = camera,
+                    )
+                }
             }
         }
         LiquidBridges(liquidField)
@@ -1146,7 +1170,7 @@ private fun IslandRootContent(
                     clip = true
                 }
                 .drawBehind {
-                    val amount = if (layeredSurface && visualSlot.entry?.owner != key.itemKey) 1f else detachedAmount()
+                    val amount = detachedAmount()
                     drawRect(Color.Black.copy(alpha = 1f - amount))
                 }
                 .onGloballyPositioned { coordinates ->
@@ -1563,29 +1587,11 @@ private fun IslandRootContent(
                     CompositionLocalProvider(
                         LocalIslandBackdropSlot provides if (layerLayered) backdropSink else backdropSlot.takeIf { current },
                         LocalIslandCollapse provides { if (current) collapse.value else 0f },
-                        LocalIslandPulse provides { if (current) pulse.value else 0f },
-                        LocalIslandVisualRegistration provides layerKey.itemKey?.takeIf { layerLayered }?.let { owner -> remember(owner, current) { IslandVisualRegistration(visualSlot, owner, current) } },
-                        LocalIslandCamera provides {
-                            if (spec.cameraDiameter > 0.dp && windowWidth > 0) {
-                                IslandCameraSpot(
-                                    Offset(windowWidth / 2f - surfaceLeft(visibleWidth()), compactHeightPx / 2f),
-                                    with(density) { spec.cameraDiameter.toPx() } / 2f,
-                                )
-                            } else {
-                                null
-                            }
-                        },
+                        LocalIslandSurfaceAccent provides remember(layerKey, current) { { color: Color -> if (current) layerKey.itemKey?.let { reportedAccents[it] = color } } },
                         LocalLineInset provides if (current) lineInsets else (0.dp to 0.dp),
                         LocalLineLeading provides inlineQueue.takeIf { current && inlineLineQueue },
                         LocalIslandMorph provides remember(layerKey) { IslandMorphLayer(morph, layerKey) },
                     ) {
-                        if (layerLayered && layerKey.stage == IslandStage.Expanded && layerItem?.ownsSurfaceVisuals != true) {
-                            IslandSurfaceVisuals(
-                                layerItem?.accent ?: islandAccent(),
-                                spec.expandedCorner,
-                                layerItem?.expandedParticles == true && spec.neuralExpressive,
-                            )
-                        }
                         StageContent(
                             layerKey.stage, layerItem, state, spec, actions, interactive = current,
                             onCellTap = ::handleTap,

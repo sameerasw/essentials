@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +58,7 @@ fun OtpExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val accent = alert.appColor?.let { Color(it) } ?: Color.White
+    IslandSurfaceAccent(accent)
     var showMessage by remember(alert.key) { mutableStateOf(false) }
     Box(propagateMinConstraints = true) {
         Column(

@@ -65,6 +65,7 @@ fun GeminiParticlePill(
         }
     }
     val latestActivation by rememberUpdatedState(activation)
+    val latestColor by rememberUpdatedState(color)
     var started by remember(view) { mutableStateOf(false) }
     var powerSave by remember(context) {
         mutableStateOf(context.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true)
@@ -134,7 +135,7 @@ fun GeminiParticlePill(
             if (capsule != null && samples != null && alpha > 0f) {
                 val drawParticles: DrawScope.() -> Unit = {
                     with(painter) {
-                        paint(capsule, timeSeconds?.takeIf { it.isFinite() } ?: elapsed, alpha, color, pixels, screenOrigin, samples)
+                        paint(capsule, timeSeconds?.takeIf { it.isFinite() } ?: elapsed, alpha, latestColor, pixels, screenOrigin, samples)
                     }
                 }
                 if (cameraClip != null) clipPath(cameraClip) { drawParticles() } else drawParticles()

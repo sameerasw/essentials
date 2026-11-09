@@ -249,7 +249,6 @@ class MediaPlugin : BaseIslandPlugin() {
         publish(
             IslandItem(
                 key = ITEM_KEY,
-                ownsSurfaceVisuals = true,
                 expandedParticles = true,
                 priority = IslandPriority.MEDIA,
                 placement = CompactPlacement.Dynamic,
@@ -272,7 +271,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     endSlot = { EqualizerBars(isPlaying, mediaAccent(artAccent)) },
                 ),
                 expanded = ExpandedContent { scope ->
-                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName, style = playerStyle, layered = true)
+                    MediaExpanded(t.title, t.artist, t.artwork, mediaAccent(t.accent?.let { Color(it) }), isPlaying, isLiked, actions, scope, canSkipBack = canSkipBack, canSkipForward = canSkipForward, packageName = t.packageName, style = playerStyle)
                 },
                 accent = artAccent,
                 onOpen = { openPlayer() },

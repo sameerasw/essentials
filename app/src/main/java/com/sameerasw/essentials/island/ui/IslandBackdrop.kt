@@ -15,11 +15,6 @@ class IslandBackdropSlot {
 }
 
 val LocalIslandCollapse = staticCompositionLocalOf<() -> Float> { { 0f } }
-val LocalIslandPulse = staticCompositionLocalOf<() -> Float> { { 0f } }
-
-class IslandCameraSpot(val center: androidx.compose.ui.geometry.Offset, val radius: Float)
-
-val LocalIslandCamera = staticCompositionLocalOf<() -> IslandCameraSpot?> { { null } }
 
 val LocalIslandBackdropSlot = staticCompositionLocalOf<IslandBackdropSlot?> { null }
 
