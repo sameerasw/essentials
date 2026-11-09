@@ -3,6 +3,10 @@ package com.sameerasw.essentials.island.ui
 import androidx.compose.animation.core.snap
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import com.sameerasw.essentials.island.service.islandDrawViewport
+import com.sameerasw.essentials.island.state.CameraGeometry
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.animation.core.spring
@@ -159,6 +163,7 @@ fun IslandRoot(
     onTargetBoundsChanged: (IntRect) -> Unit,
     registerCollapseAnimator: (((() -> Unit) -> Unit)?) -> Unit = {},
     showCameraRing: Boolean = false,
+    cameraGeometry: CameraGeometry? = null,
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val focused = state.items[state.focusedKey]
@@ -175,7 +180,7 @@ fun IslandRoot(
         LocalIslandIconColor provides iconColor,
         LocalIslandTextColor provides if (targetSpec.themedText) pastelOf(iconColor) else null,
     ) {
-        IslandRootContent(state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing)
+        IslandRootContent(state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing, cameraGeometry)
     }
 }
 
@@ -187,6 +192,7 @@ private fun IslandRootContent(
     onTargetBoundsChanged: (IntRect) -> Unit,
     registerCollapseAnimator: (((() -> Unit) -> Unit)?) -> Unit = {},
     showCameraRing: Boolean = false,
+    cameraGeometry: CameraGeometry? = null,
 ) {
     val view = LocalView.current
     val density = LocalDensity.current
@@ -195,13 +201,14 @@ private fun IslandRootContent(
     val key = ContentKey(stage, state.focusedKey)
     val currentState by rememberUpdatedState(state)
     val inspection = LocalInspectionMode.current
+    val visualSlot = remember { IslandVisualSlot() }
     val focusedLayered = state.items[state.focusedKey]?.expandedSurfaceStyle == ExpandedSurfaceStyle.Layered
     val compactLayeredOnly = state.arrangement.visibleItems.isNotEmpty() &&
         state.arrangement.visibleItems.all { state.items[it]?.expandedSurfaceStyle == ExpandedSurfaceStyle.Layered }
     val emphasizedMotion = when (stage) {
         IslandStage.Expanded, IslandStage.Line -> focusedLayered
-        IslandStage.Compact -> compactLayeredOnly
-        IslandStage.Hidden -> false
+        IslandStage.Compact -> compactLayeredOnly || visualSlot.entry != null
+        IslandStage.Hidden -> visualSlot.entry != null
     }
     val surfaceMotion by rememberUpdatedState(rememberIslandSurfaceMotion(emphasizedMotion))
 
@@ -299,6 +306,9 @@ private fun IslandRootContent(
     fun pillGate(): Float = if (currentState.stage == IslandStage.Expanded) growGate(0.5f, 0.5f) else 1f
     val backdropSlot = remember { IslandBackdropSlot() }
     val layeredSurface = stage == IslandStage.Expanded && focusedLayered
+    var visualRootCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var visualBounds by remember { mutableStateOf(Rect.Zero) }
+    var visualExpandedSize by remember { mutableStateOf(IntSize.Zero) }
     val contentAlpha = remember { Animatable(1f) }
     val contentMotion = remember { Animatable(0f) }
     val wiggle = remember { Animatable(0f) }
@@ -782,6 +792,55 @@ private fun IslandRootContent(
         })
     }
 
+    LaunchedEffect(visualSlot.entry, key, state.items.keys) {
+        val entry = visualSlot.entry ?: return@LaunchedEffect
+        val replaced = (stage == IslandStage.Expanded && (!layeredSurface || key.itemKey != entry.owner)) ||
+            (stage == IslandStage.Line && key.itemKey != entry.owner)
+        if (!replaced && stage != IslandStage.Hidden && entry.owner in state.items) return@LaunchedEffect
+        if (!replaced) {
+            snapshotFlow { !visible || liveSurfaceHeight.intValue <= compactSize.height.coerceAtLeast(minSurfaceHeight) + 1 }
+                .first { it }
+        }
+        if (visualSlot.entry === entry) visualSlot.entry = null
+    }
+
+    fun hasDetachedSurface(): Boolean {
+        val owner = visualSlot.entry?.owner ?: return false
+        return when (key.stage) {
+            IslandStage.Expanded -> layeredSurface && key.itemKey == owner && visualSlot.entry?.registered == true
+            IslandStage.Line -> key.itemKey == owner
+            IslandStage.Compact, IslandStage.Hidden -> true
+        }
+    }
+    fun detachedAmount(): Float = if (hasDetachedSurface()) {
+        visualExpansionAmount(
+            IntSize(liveSurfaceWidth.intValue, liveSurfaceHeight.intValue),
+            IntSize(compactSize.width.coerceAtLeast(minSurfaceWidth), compactSize.height.coerceAtLeast(minSurfaceHeight)),
+            visualExpandedSize,
+        )
+    } else {
+        0f
+    }
+    fun visualFrame(): IslandVisualFrame {
+        val bounds = visualBounds.translate(Offset(dismissOffset.value + wiggle.value, 0f))
+        val shellAlpha = (if (visible) 1f else 0f) *
+            (1f - if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 0f)
+        val dismissAlpha = (1f - abs(dismissOffset.value) / bounds.width.coerceAtLeast(1f) * 0.6f).coerceIn(0f, 1f)
+        val cameraCenter = cameraGeometry?.let {
+            Offset(it.centerX - islandDrawViewport(it).left, it.centerY)
+        } ?: Offset(windowWidth / 2f, with(density) { (targetSpec.surfaceTop + targetSpec.compactHeight / 2).toPx() })
+        val cameraRadius = cameraGeometry?.let { if (it.hasCamera) it.radius else 0f }
+            ?: with(density) { targetSpec.cameraDiameter.toPx() / 2f }
+        return IslandVisualFrame(
+            bounds,
+            surfaceCornerPx(bounds.height, compactHeightPx, expandedCornerPx),
+            if (bounds.width > 0f && bounds.height > 0f) shellAlpha * detachedAmount() * dismissAlpha else 0f,
+            if (layeredSurface && hasDetachedSurface()) pulse.value else 0f,
+            cameraCenter,
+            cameraRadius,
+        )
+    }
+
     CompositionLocalProvider(
         LocalLiquidField provides liquidField,
         LocalIslandSurfaceMotion provides surfaceMotion,
@@ -790,11 +849,22 @@ private fun IslandRootContent(
         Modifier
             .fillMaxSize()
             .onSizeChanged { windowWidth = it.width }
+            .onGloballyPositioned { visualRootCoordinates = it }
             .pointerInput(stage) {
                 if (stage != IslandStage.Expanded) return@pointerInput
                 detectTapGestures { actions.onCollapse() }
             },
     ) {
+        visualSlot.entry?.let { entry ->
+            key(entry.owner) {
+                Box(
+                    Modifier.fillMaxSize().graphicsLayer {
+                        alpha = visualFrame().alpha
+                        compositingStrategy = CompositingStrategy.ModulateAlpha
+                    },
+                ) { entry.content(::visualFrame) }
+            }
+        }
         if (!surfaceMotion.emphasized) LiquidBridges(liquidField)
         val pillGapPx = with(density) { 2.dp.roundToPx() }
         AnimatedVisibility(
@@ -1091,14 +1161,20 @@ private fun IslandRootContent(
                     clip = true
                 }
                 .drawBehind {
-                    val compactH = compactSize.height.coerceAtLeast(minSurfaceHeight)
-                    val range = expandedHeight[0] - compactH
-                    val clear = if (layeredSurface && range > 0) {
-                        ((liveSurfaceHeight.intValue - compactH).toFloat() / range).coerceIn(0f, 1f)
-                    } else {
-                        0f
+                    val amount = if (layeredSurface && visualSlot.entry?.owner != key.itemKey) 1f else detachedAmount()
+                    drawRect(Color.Black.copy(alpha = 1f - amount))
+                }
+                .onGloballyPositioned { coordinates ->
+                    val host = visualRootCoordinates
+                    if (host != null && host.isAttached && coordinates.isAttached) {
+                        val w = coordinates.size.width.toFloat()
+                        val h = coordinates.size.height.toFloat()
+                        val points = listOf(Offset.Zero, Offset(w, 0f), Offset(0f, h), Offset(w, h))
+                            .map { host.localPositionOf(coordinates, it) }
+                        if (points.all { it.x.isFinite() && it.y.isFinite() }) {
+                            visualBounds = Rect(points.minOf { it.x }, points.minOf { it.y }, points.maxOf { it.x }, points.maxOf { it.y })
+                        }
                     }
-                    drawRect(Color.Black.copy(alpha = 1f - clear))
                 }
                 .then(
                     outlineFor(1f - bond)
@@ -1419,7 +1495,7 @@ private fun IslandRootContent(
                 )
             }
             val backdrop = backdropSlot.content
-            if (key.stage == IslandStage.Expanded && backdrop != null) {
+            if (!layeredSurface && key.stage == IslandStage.Expanded && backdrop != null) {
                 Box(
                     Modifier
                         .layout { measurable, _ ->
@@ -1446,7 +1522,10 @@ private fun IslandRootContent(
                     Modifier
                         .layout { measurable, constraints ->
                             val p = measurable.measure(constraints)
-                            if (key.stage == IslandStage.Expanded) expandedHeight[0] = p.height
+                            if (key.stage == IslandStage.Expanded) {
+                                expandedHeight[0] = p.height
+                                if (layeredSurface) visualExpandedSize = IntSize(p.width, p.height)
+                            }
                             layout(p.width, p.height) { p.place(0, 0) }
                         }
                         .onSizeChanged {
@@ -1499,6 +1578,9 @@ private fun IslandRootContent(
                         LocalIslandBackdropSlot provides backdropSlot.takeIf { current },
                         LocalIslandCollapse provides { if (current) collapse.value else 0f },
                         LocalIslandPulse provides { if (current) pulse.value else 0f },
+                        LocalIslandVisualRegistration provides layerKey.itemKey?.takeIf {
+                            layerItem?.expandedSurfaceStyle == ExpandedSurfaceStyle.Layered
+                        }?.let { owner -> remember(owner, current) { IslandVisualRegistration(visualSlot, owner, current) } },
                         LocalIslandCamera provides {
                             if (spec.cameraDiameter > 0.dp && windowWidth > 0) {
                                 IslandCameraSpot(
