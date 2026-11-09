@@ -1386,6 +1386,8 @@ private fun IslandRootContent(
                     
                     var sliding = false
                     var dropping = false
+                    var axisLocked = false
+                    var lockedHorizontal = false
                     val downMode = spec.dismissDown && !peek
                     var switchMode = downMode
                     suspend fun awaitNextContent(focused: IslandItem) {
@@ -1433,6 +1435,7 @@ private fun IslandRootContent(
                             scope.launch { dismissOffset.stop() }
                             scope.launch { dropOffset.stop() }
                             dropping = false
+                            axisLocked = false
                             switchMode = downMode || (!peek && currentState.focused?.dismissible != true)
                             lastStep = 0f
                             crossed = false
@@ -1444,7 +1447,11 @@ private fun IslandRootContent(
                             dx += amount.x
                             dy += amount.y
                             val inward = dx * inwardSign()
-                            val horizontal = abs(dx) >= abs(dy)
+                            if (!axisLocked) {
+                                axisLocked = true
+                                lockedHorizontal = abs(dx) >= abs(dy)
+                            }
+                            val horizontal = lockedHorizontal
                             val dismissible = currentState.focused?.dismissible == true
                             val canSwitch = dx != 0f && switchTarget(dx) != null
                             sliding = if (peek) horizontal && inward <= 0f else horizontal
