@@ -3621,7 +3621,7 @@
     <!-- Overcast Separation What's New -->
     <string name="whats_new_feature_tags_title">New: Feature tags and what they mean</string>
     <string name="island_media_show_like_title">Show like track button</string>
-    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <!-- Widget stack -->
     <string name="widget_stack_label">Widget stack</string>

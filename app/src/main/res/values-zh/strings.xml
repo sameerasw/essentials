@@ -1793,7 +1793,7 @@
     <string name="island_notif_filter_apps_title">筛选应用</string>
     <string name="island_notif_skip_silent_title">跳过静音通知</string>
     <string name="island_notif_follow_dnd_title">跟随勿扰模式</string>
-    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_show_on_update_title">Periodically show on updates</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>

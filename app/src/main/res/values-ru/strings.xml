@@ -2025,7 +2025,7 @@
     <string name="about_desc_haptics">Переключите вибрацию системы и сенсорную обратную связь вместе. Требуется разрешение на изменение настроек системы. </string>
     <string name="tile_haptics">Вибрация</string>
     <string name="app_overcast">Погода</string>
-    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>

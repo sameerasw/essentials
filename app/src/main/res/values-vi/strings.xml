@@ -2148,7 +2148,7 @@ Tính năng này chỉ được dùng cho trình khởi chạy và không phải
     <string name="island_notif_hub_chat_pictures">Ưu tiên hình ảnh trong cuộc trò chuyện</string>
     <string name="island_hide_icon_notifications">Biểu tượng thông báo</string>
     <string name="island_notif_show_title">Hiển thị thông báo</string>
-    <string name="island_media_use_art_color_title">Use album art color</string>
+    <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
