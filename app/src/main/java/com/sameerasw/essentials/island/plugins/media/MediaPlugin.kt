@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.island.plugins.media
 
 import com.sameerasw.essentials.island.model.StackIcon
-import com.sameerasw.essentials.island.model.ExpandedSurfaceStyle
 import com.sameerasw.essentials.island.model.IslandStage
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.Modifier
@@ -250,7 +249,8 @@ class MediaPlugin : BaseIslandPlugin() {
         publish(
             IslandItem(
                 key = ITEM_KEY,
-                expandedSurfaceStyle = ExpandedSurfaceStyle.Layered,
+                ownsSurfaceVisuals = true,
+                expandedParticles = true,
                 priority = IslandPriority.MEDIA,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(

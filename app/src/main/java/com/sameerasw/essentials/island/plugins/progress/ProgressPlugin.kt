@@ -171,6 +171,7 @@ class ProgressPlugin : BaseIslandPlugin() {
             IslandItem(
                 key = ITEM_KEY,
                 priority = IslandPriority.PROGRESS,
+                expandedParticles = true,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("progress.ring") {

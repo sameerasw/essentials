@@ -172,7 +172,9 @@ class IslandItem(
     val priorityGroup: String? = null,
     // Rendered inside a colored chip when Island chips is enabled.
     val chip: Boolean = key in IslandChips.items,
-    val expandedSurfaceStyle: ExpandedSurfaceStyle = ExpandedSurfaceStyle.Default,
+    val expandedSurfaceStyle: ExpandedSurfaceStyle = ExpandedSurfaceStyle.Layered,
+    val expandedParticles: Boolean = false,
+    val ownsSurfaceVisuals: Boolean = false,
 ) {
     var userPriority: Int? = null
 
@@ -207,6 +209,8 @@ class IslandItem(
         priorityGroup = priorityGroup,
         chip = chip,
         expandedSurfaceStyle = expandedSurfaceStyle,
+        expandedParticles = expandedParticles,
+        ownsSurfaceVisuals = ownsSurfaceVisuals,
     ).also { it.userPriority = userPriority }
 
     val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority
