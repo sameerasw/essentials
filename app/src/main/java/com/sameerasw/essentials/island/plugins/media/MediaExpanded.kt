@@ -119,6 +119,7 @@ fun MediaExpanded(
     drawBackground: Boolean = true,
     packageName: String? = null,
     style: MediaPlayerStyle = MediaPlayerStyle.Default,
+    layered: Boolean = false,
 ) {
     val spec = scope.spec
     val context = LocalContext.current
@@ -143,7 +144,12 @@ fun MediaExpanded(
     val image = remember(artwork) { artwork?.asImageBitmap() }
 
     Box {
-        if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
+        if (drawBackground && layered) {
+            val surfaceAccent = rememberMediaArtworkColors(artwork).primary
+            if (!SurfaceBackdrop { MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.fillMaxSize()) }) {
+                MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.matchParentSize())
+            }
+        } else if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
             scope.ArtworkBackdrop(image, Modifier.matchParentSize())
         }
         val art: @Composable (Dp) -> Unit = { artSize ->
