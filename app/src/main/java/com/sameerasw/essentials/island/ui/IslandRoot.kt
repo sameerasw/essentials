@@ -902,7 +902,7 @@ private fun IslandRootContent(
                 },
             ) {
                 MediaSurface(glow, spec.expandedCorner, { visualFrame().pulse }, geometry, camera, Modifier.matchParentSize(), transparent = spec.transparency)
-                if (ownerItem?.expandedParticles == true && spec.neuralExpressive) {
+                if (spec.neuralExpressive && (spec.neuralExpressiveAlways || ownerItem?.expandedParticles == true)) {
                     GeminiParticlePill(
                         modifier = Modifier.matchParentSize(),
                         color = glow,

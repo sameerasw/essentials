@@ -669,6 +669,7 @@ class SettingsRepository(
         const val KEY_ISLAND_BOND_EDGE = "island_bond_edge"
         const val KEY_ISLAND_BALANCE_COMPACT = "island_balance_compact"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
+        const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
@@ -4468,6 +4469,10 @@ class SettingsRepository(
     fun isIslandNeuralExpressiveEnabled(): Boolean = getBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, false)
 
     fun setIslandNeuralExpressiveEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE, enabled)
+
+    fun isIslandNeuralExpressiveAlwaysEnabled(): Boolean = getBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS, false)
+
+    fun setIslandNeuralExpressiveAlwaysEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS, enabled)
 
     fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, true)
 

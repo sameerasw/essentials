@@ -243,6 +243,7 @@ class MainViewModel : ViewModel() {
     val isIslandBondEdge = mutableStateOf(false)
     val isIslandBalanceCompact = mutableStateOf(true)
     val isIslandNeuralExpressive = mutableStateOf(false)
+    val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
     val isIslandStatusBarAwareWidth = mutableStateOf(false)
     val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
@@ -2547,6 +2548,7 @@ class MainViewModel : ViewModel() {
         isIslandBondEdge.value = settingsRepository.isIslandBondEdgeEnabled()
         isIslandBalanceCompact.value = settingsRepository.isIslandBalanceCompactEnabled()
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
+        isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
@@ -6039,6 +6041,11 @@ class MainViewModel : ViewModel() {
     fun setIslandNeuralExpressive(enabled: Boolean) {
         isIslandNeuralExpressive.value = enabled
         settingsRepository.setIslandNeuralExpressiveEnabled(enabled)
+    }
+
+    fun setIslandNeuralExpressiveAlways(enabled: Boolean) {
+        isIslandNeuralExpressiveAlways.value = enabled
+        settingsRepository.setIslandNeuralExpressiveAlwaysEnabled(enabled)
     }
 
     fun setIslandTransparency(enabled: Boolean) {
