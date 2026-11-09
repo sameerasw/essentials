@@ -4441,7 +4441,7 @@ class SettingsRepository(
 
     fun setIslandBalanceCompactEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BALANCE_COMPACT, enabled)
 
-    fun isIslandStatusBarAwareWidthEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, true)
+    fun isIslandStatusBarAwareWidthEnabled(): Boolean = getDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, false)
 
     fun setIslandStatusBarAwareWidthEnabled(enabled: Boolean) = putDisplayBoolean(KEY_ISLAND_STATUSBAR_AWARE_WIDTH, enabled)
 
