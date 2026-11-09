@@ -215,15 +215,6 @@ class IslandItem(
 
     val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority
 
-    //
-    // Self-only tint, applied to this item's own cells so an item can colour itself without
-    // recolouring the island. The battery sets `outlineAccent` to its charging/low/critical state
-    // colour; feeding that into the island-wide accent would recolour every other icon, so it is
-    // scoped per cell instead. Null means inherit the island accent.
-    //
-    val selfTint: Color? get() = outlineAccent
-
-
     init {
         require(compact.size in 1..2) { "IslandItem $key must have 1..2 compact cells" }
     }

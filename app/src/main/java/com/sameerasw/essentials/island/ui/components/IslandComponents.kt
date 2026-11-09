@@ -232,7 +232,7 @@ fun EqualizerBars(
 @Composable
 fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = false, size: Dp = if (showLevel) 24.dp else 18.dp) {
     val sweep by animateFloatAsState(360f * level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batterySweep")
-    val ringColor by animateColorAsState(resolveIconTint(color), label = "batteryColor")
+    val ringColor by animateColorAsState(color, label = "batteryColor")
     var ringPx by remember { mutableStateOf(0) }
     val density = LocalDensity.current
     Box(modifier.squareFit(size).onSizeChanged { ringPx = minOf(it.width, it.height) }, contentAlignment = Alignment.Center) {
@@ -264,7 +264,7 @@ fun BatteryRing(level: Int, color: Color, modifier: Modifier = Modifier, showLev
 @Composable
 fun BatteryGlyph(level: Int, color: Color, modifier: Modifier = Modifier, showLevel: Boolean = true) {
     val fraction by animateFloatAsState(level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batteryFill")
-    val fillColor by animateColorAsState(resolveIconTint(color), label = "batteryGlyphColor")
+    val fillColor by animateColorAsState(color, label = "batteryGlyphColor")
     val onFill = if (fillColor.luminance() > 0.5f) Color.Black else Color.White
     val textStyle = IslandTextStyles.compact.copy(fontSize = 11.sp, lineHeight = 11.sp, fontWeight = FontWeight.Bold)
     val label = level.coerceIn(0, 100).toString()
