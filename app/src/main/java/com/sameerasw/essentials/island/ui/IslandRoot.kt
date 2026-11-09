@@ -625,7 +625,12 @@ private fun IslandRootContent(
             spec.growDirection > 0 -> surfaceLeft(width) + width - sideWidthLive()
             else -> surfaceLeft(width)
         }
-        return (startX + (endX - startX) * catchUpAnim.value).roundToInt()
+        val x = (startX + (endX - startX) * catchUpAnim.value.coerceIn(0f, 1f)).roundToInt()
+        return if (spec.growDirection > 0) {
+            maxOf(x, windowWidth / 2 - bubbleSizePx / 2)
+        } else {
+            minOf(x, windowWidth / 2 + bubbleSizePx / 2 - sideWidthLive())
+        }
     }
     val focusedItem = state.focused
     
