@@ -3312,7 +3312,7 @@
     <string name="island_border_outline_thickness_title">Outline thickness</string>
     <string name="island_border_outline_hide_expanded_title">Hide when expanded</string>
     <string name="island_border_outline_hide_expanded_desc">Only outline the compact and peek island</string>
-    <string name="island_pulse_shadow_title">Show pulse shadow on notification</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Briefly glows behind the island in the app color</string>
     <string name="island_pulse_shadow_blur_title">Blur</string>
     <string name="island_pulse_shadow_offset_y_title">Vertical offset</string>

@@ -1705,7 +1705,7 @@
     <string name="island_expanded_top_padding_title">Acolchoamento superior expandido</string>
     <string name="island_border_outline_title">Contorno da borda</string>
     <string name="island_border_outline_desc">Desenha um contorno fino ao redor da ilha.</string>
-    <string name="island_pulse_shadow_title">Exibir sombra de pulso na notificação</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Brilha brevemente atrás da ilha na cor do aplicativo.</string>
     <string name="island_expanded_scale_desc">Expanda a ilha uniformemente em todos os lados.</string>
     <string name="island_line_peek_title">Espiada na linha</string>

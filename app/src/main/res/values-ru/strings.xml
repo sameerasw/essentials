@@ -1808,7 +1808,7 @@
     <string name="island_expanded_bottom_padding_title">Отступ снизу в развёрнутом виде</string>
     <string name="island_border_outline_title">Контур границы</string>
     <string name="island_border_outline_desc">Рисует тонкую обводку вокруг острова</string>
-    <string name="island_pulse_shadow_title">Импульсная тень при уведомлении</string>
+    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_pulse_shadow_desc">Кратковременно светится за островом в цвет приложения</string>
     <string name="island_show_when_title">Показывать когда</string>
     <string name="island_show_when_unlocked">Разблокировано</string>

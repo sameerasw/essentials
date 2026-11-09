@@ -354,7 +354,6 @@ fun IslandVisualsSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
-    var showPulseShadowSheet by remember { mutableStateOf(false) }
     var showStatusBarAwareInfo by remember { mutableStateOf(false) }
 
     if (showStatusBarAwareInfo) {
@@ -543,19 +542,6 @@ fun IslandVisualsSettingsUI(
                     modifier = Modifier.highlight(highlightSetting == "island_glow_intensity"),
                 )
             }
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_blur_on_24,
-                title = stringResource(R.string.island_pulse_shadow_title),
-                description = stringResource(R.string.island_pulse_shadow_desc),
-                isChecked = viewModel.isIslandPulseShadow.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandPulseShadow(checked)
-                },
-                onSettingsClick = { showPulseShadowSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
-            )
         }
 
         RoundedCardContainer(
@@ -691,13 +677,6 @@ fun IslandVisualsSettingsUI(
         IslandBorderOutlineOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showBorderOutlineSheet = false },
-        )
-    }
-
-    if (showPulseShadowSheet) {
-        IslandPulseShadowOptionsBottomSheet(
-            viewModel = viewModel,
-            onDismissRequest = { showPulseShadowSheet = false },
         )
     }
 }
@@ -1203,6 +1182,7 @@ fun IslandNotificationSettingsUI(
     val view = LocalView.current
     var showFilterAppsSheet by remember { mutableStateOf(false) }
     var showHubSheet by remember { mutableStateOf(false) }
+    var showPulseShadowSheet by remember { mutableStateOf(false) }
     var showOtpPermissions by remember { mutableStateOf(false) }
     var lockedDisabled by remember {
         mutableStateOf(
@@ -1441,6 +1421,18 @@ fun IslandNotificationSettingsUI(
                     modifier = Modifier.highlight(highlightSetting == "island_catch_up_timeout"),
                 )
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_blur_on_24,
+                title = stringResource(R.string.island_pulse_shadow_title),
+                isChecked = viewModel.isIslandPulseShadow.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandPulseShadow(checked)
+                },
+                onSettingsClick = { showPulseShadowSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
+            )
         }
 
         if (showOtpPermissions) {
@@ -1563,6 +1555,13 @@ fun IslandNotificationSettingsUI(
                 }
             }
         }
+    }
+
+    if (showPulseShadowSheet) {
+        IslandPulseShadowOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showPulseShadowSheet = false },
+        )
     }
 
     if (showHubSheet) {
