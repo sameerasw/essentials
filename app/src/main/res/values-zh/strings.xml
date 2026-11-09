@@ -1673,6 +1673,7 @@
     <string name="island_balance_compact_title">视觉上居中对齐</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_show_when_title">在什么时候显示</string>
     <string name="island_show_when_unlocked">解锁时</string>

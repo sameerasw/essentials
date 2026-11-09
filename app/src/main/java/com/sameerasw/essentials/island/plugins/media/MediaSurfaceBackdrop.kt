@@ -88,6 +88,7 @@ fun MediaSurface(
     camera: () -> MediaCameraGeometry?,
     modifier: Modifier = Modifier,
     transparent: Boolean = true,
+    glowIntensity: Float = 1f,
 ) {
     val accentState = rememberUpdatedState(accent)
     var viewportHeight by remember { mutableIntStateOf(1) }
@@ -164,6 +165,7 @@ fun MediaSurface(
                         }
                     }
                     .drawBehind {
+                        if (glowIntensity <= 0f) return@drawBehind
                         val (rect, geometryCorner) = surfaceRect(size)
                         if (rect.width <= 0f || rect.height <= 0f) return@drawBehind
                         val cornerPx = (if (geometry != null) geometryCorner else corner.toPx())
@@ -171,8 +173,8 @@ fun MediaSurface(
                         cardPath.rewind()
                         cardPath.addRoundRect(RoundRect(rect, CornerRadius(cornerPx)))
                         clipPath(cardPath) {
-                            innerGlow(softGlow, rect, cornerPx, accentState.value.copy(alpha = 0.6f), 40.dp.toPx(), 4.dp.toPx(), (-14).dp.toPx())
-                            innerGlow(rimGlow, rect, cornerPx, accentState.value.copy(alpha = 0.5f), 3.dp.toPx(), 0f, 0f)
+                            innerGlow(softGlow, rect, cornerPx, accentState.value.copy(alpha = (0.6f * glowIntensity).coerceAtMost(1f)), 40.dp.toPx() * glowIntensity.coerceAtLeast(1f), 4.dp.toPx(), (-14).dp.toPx())
+                            innerGlow(rimGlow, rect, cornerPx, accentState.value.copy(alpha = (0.5f * glowIntensity).coerceAtMost(1f)), 3.dp.toPx(), 0f, 0f)
                         }
                     },
             )

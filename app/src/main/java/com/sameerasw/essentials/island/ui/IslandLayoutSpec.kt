@@ -30,6 +30,7 @@ data class IslandLayoutSpec(
     val dismissDown: Boolean = false,
     val neuralExpressive: Boolean = false,
     val neuralExpressiveAlways: Boolean = false,
+    val glowIntensity: Float = 1f,
     val transparency: Boolean = true,
     val landscape: Boolean = false,
     val cameraAnchor: CameraAnchor = CameraAnchor.Center,

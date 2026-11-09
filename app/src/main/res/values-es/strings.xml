@@ -1771,6 +1771,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_expanded_roundness_title">Radio de las Esquinas Expandida</string>
     <string name="island_border_outline_title">Lineas del Borde</string>
     <string name="island_show_glow_title">Activar brillo de Acento</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_pulse_shadow_title">Mostrar animación de pulso en la notificación</string>
     <string name="island_timeout_title">Duración de la Ventana</string>
     <string name="island_expanded_timeout_title">Tiempo de espera expandido</string>

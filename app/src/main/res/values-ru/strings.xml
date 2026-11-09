@@ -1723,6 +1723,7 @@
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
     <string name="island_show_glow_title">Показывать акцентное свечение</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
     <string name="island_line_peek_title">Подглядывание за линией</string>
     <string name="island_hide_in_owner_app_title">Скрыть виджет внутри приложения </string>

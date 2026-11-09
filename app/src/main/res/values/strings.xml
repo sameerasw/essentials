@@ -3305,6 +3305,7 @@
     <string name="island_preview_title">Island</string>
     <string name="island_preview_sample">Dynamic notifications preview</string>
     <string name="island_show_glow_title">Show accent glow</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_border_outline_dynamic_title">Dynamic colors</string>
     <string name="island_border_outline_title">Border outline</string>
     <string name="island_border_outline_desc">Draws a thin outline around the island</string>

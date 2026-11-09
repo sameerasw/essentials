@@ -2230,6 +2230,7 @@
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
+    <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
     <string name="island_dismiss_direction_title">Dismissals</string>
