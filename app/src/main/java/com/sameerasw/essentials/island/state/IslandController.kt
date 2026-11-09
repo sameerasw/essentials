@@ -357,8 +357,13 @@ class IslandController(
         }
         if (peekKey != null && items[peekKey]?.line == null) cancelPeek()
 
+        val liveProgress = items.values.any { item ->
+            item.sideBubble?.let { it.priority == SideBubblePriority.PROGRESS && !it.whenOccupiedOnly && it.icons.isNotEmpty() } == true
+        }
+        val mediaItem = items.values.firstOrNull { it.sideBubble?.priority == SideBubblePriority.MEDIA }
+        val mediaBubble = mediaItem?.sideBubble?.takeIf { secondaryBubbleEnabled && secondaryBubbleOverlap && !liveProgress }
         val bubbleOwner = items.values
-            .filter { secondaryBubbleEnabled && it.sideBubble != null }
+            .filter { secondaryBubbleEnabled && it.sideBubble != null && it.sideBubble.priority != SideBubblePriority.MEDIA }
             .sortedBy { it.sideBubble!!.priority }
             .firstOrNull { candidate ->
                 !candidate.sideBubble!!.whenOccupiedOnly || items.values.any {
@@ -368,10 +373,12 @@ class IslandController(
                         it.sideBubble?.whenOccupiedOnly != true
                 }
             }
-        val merged = if (secondaryBubbleOverlap) mergedBubble(items, bubbleOwner) else null
+        val merged = if (secondaryBubbleOverlap) mergedBubble(items, bubbleOwner, mediaBubble) else null
         val usesBubbleOnly = merged == null && bubbleOwner?.sideBubble?.whenOccupiedOnly == true
         val arrangement = CompactLayoutEngine.arrange(
-            items.values.filter { it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) }.map { item ->
+            items.values.filter {
+                it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) && !(mediaBubble != null && it.key == mediaItem?.key)
+            }.map { item ->
                 CompactEntry(
                     item.key,
                     item.effectivePriority,
@@ -415,14 +422,15 @@ class IslandController(
         if (previous != stage) onStageChanged?.invoke(stage)
     }
 
-    private fun mergedBubble(items: Map<String, IslandItem>, owner: IslandItem?): SideBubble? {
+    private fun mergedBubble(items: Map<String, IslandItem>, owner: IslandItem?, media: SideBubble?): SideBubble? {
         if (!secondaryBubbleEnabled) return null
         val progress = items.values
             .mapNotNull { it.sideBubble }
             .filter { it.priority == SideBubblePriority.PROGRESS && !it.whenOccupiedOnly && it.icons.isNotEmpty() }
-        if (progress.isEmpty()) return null
+        if (progress.isEmpty() && media == null) return null
         val notifications = owner?.sideBubble?.takeIf { it.priority != SideBubblePriority.PROGRESS }
-        val icons = progress.flatMap { it.icons } + notifications?.icons.orEmpty()
+        val lead = media?.let { it.soloIcons ?: it.icons }.orEmpty()
+        val icons = lead + progress.flatMap { it.icons } + notifications?.icons.orEmpty()
         val cap = overlapSlots(icons, secondaryBubbleMax.takeIf { it > 0 } ?: OVERLAP_MAX)
         val shown = icons.size.coerceIn(1, cap)
         val overflow = if (icons.size > cap && notifications?.overflow != QueueOverflow.None) 0.3f else 0f
@@ -430,7 +438,7 @@ class IslandController(
         val cells = maxOf(ceil(1f + 0.55f * (shown - 1) + overflow + wide).toInt(), notifications?.cells ?: 1)
         return SideBubble(
             priority = SideBubblePriority.PROGRESS,
-            onOpen = notifications?.onOpen ?: progress.first().onOpen,
+            onOpen = notifications?.onOpen ?: progress.firstOrNull()?.onOpen ?: media?.onOpen ?: {},
             icons = icons,
             onDismiss = notifications?.onDismiss,
             maxIcons = secondaryBubbleMax,

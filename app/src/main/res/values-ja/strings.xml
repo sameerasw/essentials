@@ -2000,4 +2000,7 @@
     <string name="island_dismiss_direction_title">Dismissals</string>
     <string name="island_dismiss_direction_horizontal">Horizontal</string>
     <string name="island_dismiss_direction_down">Down</string>
+    <string name="island_media_bubble_title">Show as a bubble</string>
+    <string name="island_media_bubble_wide_title">Wider pill</string>
+    <string name="island_media_bubble_fill_art_title">Fill album art</string>
 </resources>

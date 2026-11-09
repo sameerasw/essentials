@@ -846,6 +846,46 @@ fun IslandSettingsUI(
                             modifier = Modifier.highlight(highlightSetting == "island_media_use_art_color"),
                         )
                     }
+                    if (viewModel.isIslandSecondaryBubble.value &&
+                        viewModel.islandNotifQueueStyle.value == SettingsRepository.ISLAND_NOTIF_QUEUE_STYLE_OVERLAP
+                    ) {
+                        RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_bubble_24,
+                                title = stringResource(R.string.island_media_bubble_title),
+                                isChecked = viewModel.isIslandMediaBubble.value,
+                                onCheckedChange = { checked ->
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.setIslandMediaBubble(checked)
+                                },
+                                modifier = Modifier.highlight(highlightSetting == "island_media_bubble"),
+                            )
+                            if (viewModel.isIslandMediaBubble.value) {
+                                IconToggleItem(
+                                    iconRes = R.drawable.rounded_pill_24,
+                                    title = stringResource(R.string.island_media_bubble_wide_title),
+                                    isChecked = viewModel.isIslandMediaBubbleWide.value,
+                                    onCheckedChange = { checked ->
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        viewModel.setIslandMediaBubbleWide(checked)
+                                    },
+                                    modifier = Modifier.highlight(highlightSetting == "island_media_bubble_wide"),
+                                )
+                                if (viewModel.isIslandMediaBubbleWide.value) {
+                                    IconToggleItem(
+                                        iconRes = R.drawable.rounded_image_24,
+                                        title = stringResource(R.string.island_media_bubble_fill_art_title),
+                                        isChecked = viewModel.isIslandMediaBubbleFillArt.value,
+                                        onCheckedChange = { checked ->
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            viewModel.setIslandMediaBubbleFillArt(checked)
+                                        },
+                                        modifier = Modifier.highlight(highlightSetting == "island_media_bubble_fill_art"),
+                                    )
+                                }
+                            }
+                        }
+                    }
                     Text(
                         text = stringResource(R.string.duo_media_skip_apps_title),
                         style = MaterialTheme.typography.titleSmall,

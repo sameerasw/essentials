@@ -749,6 +749,9 @@ class SettingsRepository(
         const val KEY_ISLAND_MEDIA_KEEP_WHEN_PAUSED = "island_media_keep_when_paused"
         const val KEY_ISLAND_MEDIA_SHOW_PREVIOUS = "island_media_show_previous"
         const val KEY_ISLAND_MEDIA_USE_ART_COLOR = "island_media_use_art_color"
+        const val KEY_ISLAND_MEDIA_BUBBLE = "island_media_bubble"
+        const val KEY_ISLAND_MEDIA_BUBBLE_WIDE = "island_media_bubble_wide"
+        const val KEY_ISLAND_MEDIA_BUBBLE_FILL_ART = "island_media_bubble_fill_art"
         const val KEY_ISLAND_MEDIA_PLAYER_STYLE = "island_media_player_style"
         const val KEY_ISLAND_MEDIA_SHOW_LIKE = "island_media_show_like"
         const val KEY_ISLAND_NOTIF_CONDENSED_INFO = "island_notif_condensed_info"
@@ -4525,6 +4528,18 @@ class SettingsRepository(
     fun isIslandMediaUseArtColorEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, true)
 
     fun setIslandMediaUseArtColorEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_USE_ART_COLOR, enabled)
+
+    fun isIslandMediaBubbleEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BUBBLE, false)
+
+    fun setIslandMediaBubbleEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BUBBLE, enabled)
+
+    fun isIslandMediaBubbleWideEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BUBBLE_WIDE, false)
+
+    fun setIslandMediaBubbleWideEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BUBBLE_WIDE, enabled)
+
+    fun isIslandMediaBubbleFillArtEnabled(): Boolean = getBoolean(KEY_ISLAND_MEDIA_BUBBLE_FILL_ART, false)
+
+    fun setIslandMediaBubbleFillArtEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_MEDIA_BUBBLE_FILL_ART, enabled)
 
     fun getIslandMediaPlayerStyle(): String = getString(KEY_ISLAND_MEDIA_PLAYER_STYLE, null) ?: "default"
 

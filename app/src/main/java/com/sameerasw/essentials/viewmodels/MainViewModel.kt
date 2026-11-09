@@ -290,6 +290,9 @@ class MainViewModel : ViewModel() {
     val isIslandMediaKeepWhenPaused = mutableStateOf(true)
     val isIslandMediaShowPrevious = mutableStateOf(false)
     val isIslandMediaUseArtColor = mutableStateOf(true)
+    val isIslandMediaBubble = mutableStateOf(false)
+    val isIslandMediaBubbleWide = mutableStateOf(false)
+    val isIslandMediaBubbleFillArt = mutableStateOf(false)
     val islandMediaPlayerStyle = mutableStateOf("default")
     val isIslandMediaShowLike = mutableStateOf(true)
     val islandNotifPeekStyle = mutableStateOf(SettingsRepository.ISLAND_NOTIF_PEEK_STYLE_FULL)
@@ -2603,6 +2606,9 @@ class MainViewModel : ViewModel() {
         isIslandMediaKeepWhenPaused.value = settingsRepository.isIslandMediaKeepWhenPausedEnabled()
         isIslandMediaShowPrevious.value = settingsRepository.isIslandMediaShowPreviousEnabled()
         isIslandMediaUseArtColor.value = settingsRepository.isIslandMediaUseArtColorEnabled()
+        isIslandMediaBubble.value = settingsRepository.isIslandMediaBubbleEnabled()
+        isIslandMediaBubbleWide.value = settingsRepository.isIslandMediaBubbleWideEnabled()
+        isIslandMediaBubbleFillArt.value = settingsRepository.isIslandMediaBubbleFillArtEnabled()
         islandMediaPlayerStyle.value = settingsRepository.getIslandMediaPlayerStyle()
         isIslandMediaShowLike.value = settingsRepository.isIslandMediaShowLikeEnabled()
         islandNotifPeekStyle.value = settingsRepository.getIslandNotifPeekStyle()
@@ -6170,6 +6176,21 @@ class MainViewModel : ViewModel() {
     fun setIslandMediaUseArtColor(enabled: Boolean) {
         isIslandMediaUseArtColor.value = enabled
         settingsRepository.setIslandMediaUseArtColorEnabled(enabled)
+    }
+
+    fun setIslandMediaBubble(enabled: Boolean) {
+        isIslandMediaBubble.value = enabled
+        settingsRepository.setIslandMediaBubbleEnabled(enabled)
+    }
+
+    fun setIslandMediaBubbleWide(enabled: Boolean) {
+        isIslandMediaBubbleWide.value = enabled
+        settingsRepository.setIslandMediaBubbleWideEnabled(enabled)
+    }
+
+    fun setIslandMediaBubbleFillArt(enabled: Boolean) {
+        isIslandMediaBubbleFillArt.value = enabled
+        settingsRepository.setIslandMediaBubbleFillArtEnabled(enabled)
     }
 
     fun setIslandMediaShowLike(enabled: Boolean) {
