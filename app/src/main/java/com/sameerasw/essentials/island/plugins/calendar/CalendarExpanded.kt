@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.calendar
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import androidx.compose.ui.draw.clipToBounds
 import com.sameerasw.essentials.island.ui.components.resizableCard
 import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
@@ -67,6 +68,7 @@ fun CalendarExpanded(
     val context = LocalContext.current
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val calendarColor = event.calendarColor?.let { Color(soften(it)) } ?: islandAccent()
+    IslandSurfaceAccent(calendarColor)
     val timeSettings = remember { SettingsRepository(context) }
     val timeText = { millis: Long -> IslandTimeFormat.format(context, timeSettings, millis) }
     val timeRange = when {

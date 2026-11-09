@@ -174,7 +174,6 @@ class IslandItem(
     val chip: Boolean = key in IslandChips.items,
     val expandedSurfaceStyle: ExpandedSurfaceStyle = ExpandedSurfaceStyle.Layered,
     val expandedParticles: Boolean = false,
-    val ownsSurfaceVisuals: Boolean = false,
 ) {
     var userPriority: Int? = null
 
@@ -210,7 +209,6 @@ class IslandItem(
         chip = chip,
         expandedSurfaceStyle = expandedSurfaceStyle,
         expandedParticles = expandedParticles,
-        ownsSurfaceVisuals = ownsSurfaceVisuals,
     ).also { it.userPriority = userPriority }
 
     val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority

@@ -1,5 +1,10 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import android.graphics.BlurMaskFilter
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.toArgb
+import kotlin.math.abs
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RadialGradient
@@ -9,12 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.innerShadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -24,29 +29,20 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.blur.BlurRadiusSpec
 import androidx.compose.ui.graphics.blur.BlurStop
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.island.plugins.media.particles.MediaCameraClearance
 import com.sameerasw.essentials.island.plugins.media.particles.MediaCameraGeometry
 import com.sameerasw.essentials.island.plugins.media.particles.MediaVisualGeometry
-import com.sameerasw.essentials.island.ui.LocalIslandCamera
-import com.sameerasw.essentials.island.ui.LocalIslandPulse
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 private class SurfaceGradient(val center: Offset, val radiusX: Float, val radiusY: Float, val stops: FloatArray)
 
@@ -60,22 +56,24 @@ private fun surfaceGradient(rect: Rect, camera: MediaCameraGeometry?, clearance:
     return SurfaceGradient(camera?.center ?: Offset(rect.center.x, rect.top + rect.height * 0.175f), radiusX, radiusY, stops)
 }
 
+private fun DrawScope.innerGlow(rect: Rect, corner: Float, color: Color, radius: Float, spread: Float, dy: Float) {
+    val inner = Rect(rect.left + spread, rect.top + spread + dy, rect.right - spread, rect.bottom - spread + dy)
+    val innerCorner = (corner - spread).coerceAtLeast(0f)
+    val reach = radius * 2f + abs(dy) + spread
+    val path = android.graphics.Path().apply {
+        fillType = android.graphics.Path.FillType.EVEN_ODD
+        addRect(rect.left - reach, rect.top - reach, rect.right + reach, rect.bottom + reach, android.graphics.Path.Direction.CW)
+        addRoundRect(inner.left, inner.top, inner.right, inner.bottom, innerCorner, innerCorner, android.graphics.Path.Direction.CW)
+    }
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        this.color = color.toArgb()
+        if (radius > 0f) maskFilter = BlurMaskFilter(radius / 2f, BlurMaskFilter.Blur.NORMAL)
+    }
+    drawContext.canvas.nativeCanvas.drawPath(path, paint)
+}
+
 private fun shadowClearUntil(rect: Rect, corner: Float, camera: MediaCameraGeometry?, clearance: Float): Float =
     max(rect.top + corner, camera?.takeIf { it.radius > 0f }?.let { it.center.y + it.radius + clearance } ?: rect.top)
-
-@Composable
-fun MediaSurfaceBackdrop(accent: Color, corner: Dp, modifier: Modifier = Modifier) {
-    val pulse = LocalIslandPulse.current
-    val camera = LocalIslandCamera.current
-    MediaSurface(
-        accent = accent,
-        corner = corner,
-        pulse = pulse,
-        geometry = null,
-        camera = { camera()?.let { MediaCameraGeometry(it.center, it.radius) } },
-        modifier = modifier,
-    )
-}
 
 @Composable
 fun MediaSurface(
@@ -86,16 +84,8 @@ fun MediaSurface(
     camera: () -> MediaCameraGeometry?,
     modifier: Modifier = Modifier,
 ) {
+    val accentState = rememberUpdatedState(accent)
     var viewportHeight by remember { mutableIntStateOf(1) }
-    val shape = remember(geometry, corner) {
-        object : Shape {
-            override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-                val radius = (geometry?.invoke()?.cornerRadius ?: with(density) { corner.toPx() })
-                    .coerceIn(0f, minOf(size.width, size.height) / 2f)
-                return Outline.Rounded(RoundRect(Rect(Offset.Zero, size), CornerRadius(radius)))
-            }
-        }
-    }
     val progressiveBlur = Modifier.blur {
         edgeTreatment = if (geometry != null) BlurredEdgeTreatment.Unbounded else BlurredEdgeTreatment.Rectangle
         val p = pulse().coerceIn(0f, 1f)
@@ -163,33 +153,17 @@ fun MediaSurface(
                 .then(progressiveBlur),
         ) {
             Box(
-                Modifier
-                    .layout { measurable, constraints ->
-                        val rect = geometry?.invoke()?.bounds
-                            ?: Rect(0f, 0f, constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
-                        val child = measurable.measure(
-                            Constraints.fixed(rect.width.roundToInt().coerceAtLeast(0), rect.height.roundToInt().coerceAtLeast(0)),
-                        )
-                        val left = rect.left.roundToInt()
-                        val top = rect.top.roundToInt()
-                        layout(constraints.maxWidth, constraints.maxHeight) {
-                            child.placeWithLayer(left, top) {
-                                translationX = rect.left - left
-                                translationY = rect.top - top
-                            }
-                        }
+                Modifier.matchParentSize().drawBehind {
+                    val (rect, geometryCorner) = surfaceRect(size)
+                    if (rect.width <= 0f || rect.height <= 0f) return@drawBehind
+                    val cornerPx = (if (geometry != null) geometryCorner else corner.toPx())
+                        .coerceIn(0f, minOf(rect.width, rect.height) / 2f)
+                    val card = Path().apply { addRoundRect(RoundRect(rect, CornerRadius(cornerPx))) }
+                    clipPath(card) {
+                        innerGlow(rect, cornerPx, accentState.value.copy(alpha = 0.6f), 40.dp.toPx(), 4.dp.toPx(), (-14).dp.toPx())
+                        innerGlow(rect, cornerPx, accentState.value.copy(alpha = 0.5f), 3.dp.toPx(), 0f, 0f)
                     }
-                    .innerShadow(shape) {
-                        radius = 40.dp.toPx()
-                        spread = 4.dp.toPx()
-                        color = accent.copy(alpha = 0.6f)
-                        offset = Offset(0f, (-14).dp.toPx())
-                    }
-                    .innerShadow(shape) {
-                        radius = 3.dp.toPx()
-                        color = accent.copy(alpha = 0.5f)
-                        offset = Offset.Zero
-                    },
+                },
             )
         }
         Box(

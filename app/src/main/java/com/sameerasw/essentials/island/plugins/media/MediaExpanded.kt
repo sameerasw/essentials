@@ -1,9 +1,9 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
-import com.sameerasw.essentials.island.ui.IslandSurfaceVisuals
 import com.sameerasw.essentials.island.ui.components.ArtworkBackdrop
 import com.sameerasw.essentials.island.ui.components.MarqueeText
 import android.graphics.Bitmap
@@ -120,9 +120,9 @@ fun MediaExpanded(
     drawBackground: Boolean = true,
     packageName: String? = null,
     style: MediaPlayerStyle = MediaPlayerStyle.Default,
-    layered: Boolean = false,
 ) {
     val spec = scope.spec
+    if (drawBackground) IslandSurfaceAccent(accent)
     val context = LocalContext.current
     var progress by remember { mutableFloatStateOf(actions.progress()) }
     var pendingSeek by remember { mutableStateOf<Pair<Float, Long>?>(null) }
@@ -145,13 +145,7 @@ fun MediaExpanded(
     val image = remember(artwork) { artwork?.asImageBitmap() }
 
     Box {
-        if (drawBackground && layered) {
-            val surfaceAccent = rememberMediaArtworkColors(artwork).primary
-            val detached = IslandSurfaceVisuals(surfaceAccent, spec.expandedCorner, spec.neuralExpressive)
-            if (!detached && !SurfaceBackdrop { MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.fillMaxSize()) }) {
-                MediaSurfaceBackdrop(surfaceAccent, spec.expandedCorner, Modifier.matchParentSize())
-            }
-        } else if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
+        if (drawBackground && !SurfaceBackdrop { scope.ArtworkBackdrop(image, Modifier.fillMaxSize()) }) {
             scope.ArtworkBackdrop(image, Modifier.matchParentSize())
         }
         val art: @Composable (Dp) -> Unit = { artSize ->
