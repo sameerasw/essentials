@@ -1970,6 +1970,7 @@ Cần có quyền truy cập trợ năng để hiển thị lớp phủ và cầ
     <string name="island_always_gestures_desc">Giữ cho vùng thao tác cử chỉ vẫn khả dụng ngay cả khi island đang ẩn đi </string>
     <string name="island_keep_on_landscape_title">Giữ ở chế độ ngang</string>
     <string name="island_balance_compact_title">Cân bằng trực quan island thu gọn</string>
+    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="island_secondary_bubble_title">Bong bóng phụ</string>
     <string name="keep_in_full_screen_title">Giữ ở chế độ toàn màn hình</string>

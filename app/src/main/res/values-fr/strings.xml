@@ -1796,4 +1796,5 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="qs_secure_sensitive_tiles_desc">Demande de déverrouillage avant d\'activer des raccourcis rapides sensibles en mode verrouillé</string>
     <string name="feat_screenshots_title">Nettoyage des screenshots</string>
     <string name="feat_screenshots_desc">Nettoyer les screenshots partagés et anciens</string>
+    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
 </resources>

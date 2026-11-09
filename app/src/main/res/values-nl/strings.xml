@@ -1735,4 +1735,5 @@
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
     <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
 </resources>

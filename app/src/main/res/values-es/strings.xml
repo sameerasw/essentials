@@ -1826,6 +1826,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_navigation_peek_after_expand_title">Línea compacta después expandir</string>
     <string name="island_secondary_bubble_title">Burbuja secundaria</string>
     <string name="island_balance_compact_title">Isla compacta visualmente equilibrada</string>
+    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
     <string name="keep_in_full_screen_title">Mantenlo en pantalla completa</string>
     <string name="feat_volume_steps_title">Escalones de volumen</string>
