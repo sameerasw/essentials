@@ -4875,7 +4875,7 @@ class SettingsRepository(
         editor.apply()
     }
 
-    fun getQuickBallColorMode(): String = prefs.getString(KEY_QUICK_BALL_COLOR_MODE, "DYNAMIC") ?: "DYNAMIC"
+    fun getQuickBallColorMode(): String = prefs.getString(KEY_QUICK_BALL_COLOR_MODE, "PRESET") ?: "PRESET"
 
     fun setQuickBallColorMode(mode: String) = putString(KEY_QUICK_BALL_COLOR_MODE, mode)
 
@@ -4957,7 +4957,7 @@ class SettingsRepository(
         prefs.edit().putString(key, ActionGsonAdapter.toJson(action)).apply()
     }
 
-    fun getQuickBallPresetTheme(): String = prefs.getString(KEY_QUICK_BALL_PRESET_THEME, "ONYX") ?: "ONYX"
+    fun getQuickBallPresetTheme(): String = prefs.getString(KEY_QUICK_BALL_PRESET_THEME, "DEFAULT") ?: "DEFAULT"
 
     fun setQuickBallPresetTheme(theme: String) = putString(KEY_QUICK_BALL_PRESET_THEME, theme)
 

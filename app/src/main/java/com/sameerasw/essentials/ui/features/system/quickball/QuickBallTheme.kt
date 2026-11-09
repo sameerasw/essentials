@@ -70,6 +70,17 @@ enum class QuickBallPresetTheme(
     val connectorColor: Int,
     val pillColor: Int,
 ) {
+    DEFAULT(
+        title = "Default",
+        ballColor = 0xBF2C2C2C.toInt(),
+        ballIconColor = 0xFFFFFFFF.toInt(),
+        ballBorderColor = 0x66FFFFFF,
+        menuColor = 0xBF2C2C2C.toInt(),
+        menuIconColor = 0xFFFFFFFF.toInt(),
+        menuBorderColor = 0x66FFFFFF,
+        connectorColor = 0x802C2C2C.toInt(),
+        pillColor = 0xCC777777.toInt(),
+    ),
     ONYX("Onyx", ring = 0xE9ECF0, itemRing = 0x363C45, base = 0x0B0D10, icon = 0xB4BAC4, connector = 0x4ADE80),
     QUARTZ("Quartz", ring = 0x14171C, itemRing = 0x8B929C, base = 0xECEEF1, icon = 0x3E444D, connector = 0x16A34A),
     BLACK("Black", ring = 0xFFFFFF, itemRing = 0xA0A0A0, base = 0x000000, icon = 0xFFFFFF, connector = 0x404040),
@@ -176,7 +187,7 @@ enum class QuickBallPresetTheme(
 
     companion object {
         fun fromName(name: String?): QuickBallPresetTheme {
-            return entries.firstOrNull { it.name.equals(name, ignoreCase = true) } ?: ONYX
+            return entries.firstOrNull { it.name.equals(name, ignoreCase = true) } ?: DEFAULT
         }
     }
 }
