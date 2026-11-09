@@ -440,6 +440,7 @@ class IslandCoordinator(
     }
 
     fun onDestroy() {
+        mainHandler.removeCallbacks(attachRetry)
         mainHandler.removeCallbacks(applyForegroundPackage)
         mainHandler.removeCallbacks(applyFullscreen)
         mainHandler.removeCallbacks(applyShadeExpanded)
@@ -449,6 +450,21 @@ class IslandCoordinator(
         } catch (_: Exception) {
         }
         stop()
+    }
+
+    private var attachRetries = 0
+    private val attachRetry = Runnable {
+        if (!running && settings.isIslandEnabled() && !isWindowSuppressed) start()
+    }
+
+    private fun scheduleAttachRetry() {
+        if (attachRetries >= MAX_ATTACH_RETRIES) {
+            attachRetries = 0
+            return
+        }
+        attachRetries++
+        mainHandler.removeCallbacks(attachRetry)
+        mainHandler.postDelayed(attachRetry, ATTACH_RETRY_BASE_MS * attachRetries)
     }
 
     private fun start() {
@@ -498,8 +514,10 @@ class IslandCoordinator(
             revealing = false
             newScope.cancel()
             scope = null
+            scheduleAttachRetry()
             return
         }
+        attachRetries = 0
         mainHandler.postDelayed(endReveal, REVEAL_DELAY_MS)
         val context = IslandPluginContext(
             service = service,
@@ -970,6 +988,8 @@ class IslandCoordinator(
         const val OUTSIDE_DISMISS_GRACE_MS = 1000L
         const val HIDE_SETTLE_MS = 700L
         const val SETTLE_MS = 300L
+        const val MAX_ATTACH_RETRIES = 4
+        const val ATTACH_RETRY_BASE_MS = 60L
         const val HOLD_TICK_MS = 1000L
         const val PREVIEW_SOURCE = "preview"
         const val PREVIEW_KEY = "preview.sample"
