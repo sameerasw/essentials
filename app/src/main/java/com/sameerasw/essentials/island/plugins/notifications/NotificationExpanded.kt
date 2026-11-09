@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
-import kotlinx.coroutines.delay
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -41,6 +40,9 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.FocusRequester
+import kotlinx.coroutines.flow.first
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.setValue
@@ -312,8 +314,9 @@ private fun ReplyInput(
         scope.setTextInput(true)
         onDispose { scope.setTextInput(false) }
     }
+    val windowInfo = LocalWindowInfo.current
     LaunchedEffect(Unit) {
-        delay(80)
+        snapshotFlow { windowInfo.isWindowFocused }.first { it }
         focus.requestFocus()
         keyboard?.show()
     }
