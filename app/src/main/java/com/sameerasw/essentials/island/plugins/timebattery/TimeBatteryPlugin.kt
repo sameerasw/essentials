@@ -271,7 +271,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             placement = CompactPlacement.Pinned,
             needsCompanyAtCenter = settings.isIslandBatteryIconConditional(),
             chip = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_CHIP, false),
-            interactions = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK, true)) {
+            interactions = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK, false)) {
                 InteractionOverrides(onTap = { openClock(); true })
             } else {
                 InteractionOverrides.Default
