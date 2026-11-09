@@ -4969,7 +4969,7 @@ class SettingsRepository(
 
     fun setQuickBallMenuIconSize(size: Float) = putFloat(KEY_QUICK_BALL_MENU_ICON_SIZE, size)
 
-    fun isQuickBallBorderEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_BORDER_ENABLED, true)
+    fun isQuickBallBorderEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_BORDER_ENABLED, false)
 
     fun setQuickBallBorderEnabled(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_BORDER_ENABLED, enabled)
 

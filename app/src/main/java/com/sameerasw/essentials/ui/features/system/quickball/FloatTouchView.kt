@@ -84,33 +84,43 @@ class FloatTouchView @JvmOverloads constructor(
             QuickBallBallStyle.CLASSIC -> {
                 bgDrawable.shape = GradientDrawable.OVAL
                 bgDrawable.setColor(ballBg)
-                bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                if (borderWidthPx > 0) {
+                    bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                }
                 imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.OUTLINE -> {
                 bgDrawable.shape = GradientDrawable.OVAL
                 val glassBg = (ballBg and 0x00FFFFFF) or (0x28 shl 24)
                 bgDrawable.setColor(glassBg)
-                bgDrawable.setStroke(kotlin.math.max(borderWidthPx, (2f * density).roundToInt()), ballBorderColor)
+                if (borderWidthPx > 0) {
+                    bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                }
                 imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.SQUIRCLE -> {
                 bgDrawable.shape = GradientDrawable.RECTANGLE
                 bgDrawable.cornerRadius = 14f * density
                 bgDrawable.setColor(ballBg)
-                bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                if (borderWidthPx > 0) {
+                    bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                }
                 imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.NEON -> {
                 bgDrawable.shape = GradientDrawable.OVAL
                 bgDrawable.setColor(ballBg)
-                bgDrawable.setStroke(kotlin.math.max(borderWidthPx, (2.5f * density).roundToInt()), colors.accentColor)
+                if (borderWidthPx > 0) {
+                    bgDrawable.setStroke(borderWidthPx, colors.accentColor)
+                }
                 imageView.setColorFilter(ballIconColor)
             }
             QuickBallBallStyle.MINIMAL -> {
                 bgDrawable.shape = GradientDrawable.OVAL
                 bgDrawable.setColor(colors.accentColor)
-                bgDrawable.setStroke(0, 0)
+                if (borderWidthPx > 0) {
+                    bgDrawable.setStroke(borderWidthPx, ballBorderColor)
+                }
                 imageView.setColorFilter(ballIconColor)
             }
         }
@@ -122,7 +132,7 @@ class FloatTouchView @JvmOverloads constructor(
         }
 
         val ballSizeDp = settings.getQuickBallSize()
-        val iconSizePx = ((ballSizeDp - 18f).coerceAtLeast(20f) * density).roundToInt()
+        val iconSizePx = ((ballSizeDp - 16f).coerceAtLeast(20f) * density).roundToInt()
         imageView.layoutParams = LayoutParams(iconSizePx, iconSizePx, Gravity.CENTER)
     }
 

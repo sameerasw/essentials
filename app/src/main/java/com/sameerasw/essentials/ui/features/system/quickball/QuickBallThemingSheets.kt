@@ -10,32 +10,47 @@
 package com.sameerasw.essentials.ui.features.system.quickball
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +59,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import kotlin.math.abs
 import kotlin.math.hypot
@@ -346,6 +362,157 @@ fun QuickBallPresetThemeSheet(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+private const val MAX_PREVIEW_HEIGHT_DP = 210f
+
+@Composable
+fun QuickBallMenuPreview(
+    actions: List<Action>,
+    connectorStyle: MenuConnectorStyle,
+    connectorColor: Color,
+    connectorWidthDp: Float,
+    ballSizeDp: Float,
+    buttonSizeDp: Float,
+    menuRadiusDp: Float,
+    iconSizeDp: Float,
+    ballColor: Color,
+    ballIconColor: Color,
+    buttonColor: Color,
+    buttonIconColor: Color,
+    isBorderEnabled: Boolean,
+    borderWidthDp: Float,
+    borderColor: Color,
+    ballBorderColor: Color,
+    modifier: Modifier = Modifier,
+) {
+    if (actions.size < 2) return
+
+    val context = LocalContext.current
+    val halfFab = ballSizeDp / 2f
+
+    BoxWithConstraints(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        val layout = remember(actions.size, buttonSizeDp, menuRadiusDp, halfFab) {
+            FanLayout.compute(
+                count = actions.size,
+                buttonSize = buttonSizeDp,
+                radius = menuRadiusDp,
+                halfFab = halfFab,
+                density = 1f,
+            )
+        }
+
+        val reach = layout.offsets.maxOf { -it.first } + buttonSizeDp / 2f
+        val halfHeight = max(
+            layout.offsets.maxOf { abs(it.second) } + buttonSizeDp / 2f,
+            max(halfFab, layout.arcRadius),
+        )
+        val fullWidth = reach + halfFab
+        val fullHeight = halfHeight * 2f
+        val scale = min(1f, min(maxWidth.value / fullWidth, MAX_PREVIEW_HEIGHT_DP / fullHeight))
+
+        Box(
+            modifier = Modifier.size((fullWidth * scale).dp, (fullHeight * scale).dp),
+        ) {
+            Canvas(modifier = Modifier.matchParentSize()) {
+                drawSampleConnectors(
+                    layout = layout,
+                    style = connectorStyle,
+                    color = connectorColor,
+                    center = Offset((reach * scale).dp.toPx(), (halfHeight * scale).dp.toPx()),
+                    unit = scale.dp.toPx(),
+                    strokeWidth = (connectorWidthDp * scale).dp.toPx(),
+                    halfBall = halfFab,
+                    halfButton = buttonSizeDp / 2f,
+                )
+            }
+
+            // Radial shortcut buttons
+            actions.forEachIndexed { index, action ->
+                val (offsetX, offsetY) = layout.offsets[index]
+                val borderModifier = if (isBorderEnabled && borderWidthDp > 0f) {
+                    Modifier.border((borderWidthDp * scale).dp, borderColor, CircleShape)
+                } else Modifier
+
+                Box(
+                    modifier = Modifier
+                        .offset(
+                            x = ((reach + offsetX - buttonSizeDp / 2f) * scale).dp,
+                            y = ((halfHeight + offsetY - buttonSizeDp / 2f) * scale).dp,
+                        )
+                        .size((buttonSizeDp * scale).dp)
+                        .clip(CircleShape)
+                        .background(buttonColor)
+                        .then(borderModifier),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val iconModifier = Modifier.size((iconSizeDp * scale).dp)
+                    val isApp = action is Action.OpenApp && action.packageName.isNotBlank()
+                    var appBitmap by remember(action) { mutableStateOf<androidx.compose.ui.graphics.ImageBitmap?>(null) }
+
+                    LaunchedEffect(action) {
+                        if (isApp) {
+                            try {
+                                val d = context.packageManager.getApplicationIcon((action as Action.OpenApp).packageName)
+                                val bmp = android.graphics.Bitmap.createBitmap(
+                                    d.intrinsicWidth.coerceAtLeast(1),
+                                    d.intrinsicHeight.coerceAtLeast(1),
+                                    android.graphics.Bitmap.Config.ARGB_8888,
+                                )
+                                val c = android.graphics.Canvas(bmp)
+                                d.setBounds(0, 0, c.width, c.height)
+                                d.draw(c)
+                                appBitmap = bmp.asImageBitmap()
+                            } catch (_: Exception) {
+                                appBitmap = null
+                            }
+                        }
+                    }
+
+                    val bmp = appBitmap
+                    if (bmp != null) {
+                        Image(bitmap = bmp, contentDescription = null, modifier = iconModifier)
+                    } else {
+                        val iconRes = QuickBallIconResolver.resolveIcon(action, QuickBallIconPack.CLASSIC)
+                        Icon(
+                            painter = painterResource(id = iconRes),
+                            contentDescription = null,
+                            tint = buttonIconColor,
+                            modifier = iconModifier,
+                        )
+                    }
+                }
+            }
+
+            // Floating Ball (shown expanded with ic_menu_close 'X')
+            val ballBorderModifier = if (isBorderEnabled && borderWidthDp > 0f) {
+                Modifier.border((borderWidthDp * scale).dp, ballBorderColor, CircleShape)
+            } else Modifier
+
+            Box(
+                modifier = Modifier
+                    .offset(
+                        x = ((reach - halfFab) * scale).dp,
+                        y = ((halfHeight - halfFab) * scale).dp,
+                    )
+                    .size((ballSizeDp * scale).dp)
+                    .clip(CircleShape)
+                    .background(ballColor)
+                    .then(ballBorderModifier),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_menu_close),
+                    contentDescription = null,
+                    tint = ballIconColor,
+                    modifier = Modifier.size(((ballSizeDp - 16f).coerceAtLeast(18f) * scale).dp),
+                )
             }
         }
     }

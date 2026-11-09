@@ -29,6 +29,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -53,6 +54,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
@@ -77,10 +79,13 @@ import com.sameerasw.essentials.ui.features.system.quickball.QuickBallColorMode
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHapticIntensity
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHaptics
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallIconPack
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallIconResolver
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallMenuPreview
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallPresetTheme
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallPresetThemeSheet
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallConnectorSheet
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallShortcutStyle
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallTheme
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -445,13 +450,25 @@ fun QuickBallSettingsUI(
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
                 // SECTION 1: Shortcuts & Radial Menu
-                Text(
-                    text = stringResource(R.string.quick_ball_slots_section),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 8.dp),
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.quick_ball_slots_section),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = "$slotCount/9",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
 
                 RoundedCardContainer {
                     Column(
@@ -460,8 +477,8 @@ fun QuickBallSettingsUI(
                             .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        for (i in 1..slotCount) {
-                            val action = when (i) {
+                        val currentActions = (1..slotCount).map { i ->
+                            when (i) {
                                 1 -> viewModel.quickBallSlot1Action.value
                                 2 -> viewModel.quickBallSlot2Action.value
                                 3 -> viewModel.quickBallSlot3Action.value
@@ -473,24 +490,60 @@ fun QuickBallSettingsUI(
                                 9 -> viewModel.quickBallSlot9Action.value
                                 else -> Action.Back
                             }
+                        }
 
-                            val slotLabel = when (i) {
-                                1 -> stringResource(R.string.quick_ball_slot_1)
-                                2 -> stringResource(R.string.quick_ball_slot_2)
-                                3 -> stringResource(R.string.quick_ball_slot_3)
-                                4 -> stringResource(R.string.quick_ball_slot_4)
-                                5 -> stringResource(R.string.quick_ball_slot_5)
-                                else -> stringResource(R.string.quick_ball_slot_n, i)
-                            }
+                        val resolvedColors = QuickBallTheme.resolveColors(context, com.sameerasw.essentials.data.repository.SettingsRepository(context))
+
+                        val connectorStyle = MenuConnectorStyle.fromName(viewModel.quickBallConnectorStyle.value)
+
+                        QuickBallMenuPreview(
+                            actions = currentActions,
+                            connectorStyle = connectorStyle,
+                            connectorColor = Color(resolvedColors.connectorColor),
+                            connectorWidthDp = viewModel.quickBallConnectorWidth.floatValue,
+                            ballSizeDp = viewModel.quickBallSize.floatValue,
+                            buttonSizeDp = viewModel.quickBallMenuSize.floatValue,
+                            menuRadiusDp = viewModel.quickBallMenuRadius.floatValue,
+                            iconSizeDp = viewModel.quickBallMenuIconSize.floatValue,
+                            ballColor = Color(resolvedColors.ballColor),
+                            ballIconColor = Color(resolvedColors.ballIconColor),
+                            buttonColor = Color(resolvedColors.surfaceColor),
+                            buttonIconColor = Color(resolvedColors.contentColor),
+                            isBorderEnabled = viewModel.isQuickBallBorderEnabled.value,
+                            borderWidthDp = viewModel.quickBallBorderWidth.floatValue,
+                            borderColor = Color(resolvedColors.borderColor),
+                            ballBorderColor = Color(resolvedColors.ballBorderColor),
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                        )
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                        )
+
+                        for (i in 1..slotCount) {
+                            val action = currentActions[i - 1]
 
                             QuickBallSlotRow(
-                                slotLabel = slotLabel,
                                 slotIndex = i,
                                 action = action,
+                                slotCount = slotCount,
                                 onClick = {
                                     HapticUtil.performUIHaptic(view)
                                     activePickingSlot = i
                                 },
+                                onMoveUp = if (i > 1) {
+                                    {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.reorderQuickBallSlots(i, i - 1)
+                                    }
+                                } else null,
+                                onMoveDown = if (i < slotCount) {
+                                    {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.reorderQuickBallSlots(i, i + 1)
+                                    }
+                                } else null,
                                 onDelete = if (slotCount > 2) {
                                     {
                                         HapticUtil.performVirtualKeyHaptic(view)
@@ -1063,11 +1116,13 @@ fun QuickBallSettingsUI(
 
 @Composable
 private fun QuickBallSlotRow(
-    slotLabel: String,
     slotIndex: Int,
     action: Action,
+    slotCount: Int,
     onClick: () -> Unit,
-    onDelete: (() -> Unit)? = null,
+    onMoveUp: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onDelete: (() -> Unit)?,
 ) {
     val context = LocalContext.current
     var appLabel by remember(action) { mutableStateOf<String?>(null) }
@@ -1093,28 +1148,21 @@ private fun QuickBallSlotRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(50.dp)
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = slotLabel,
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Text(
-                text = if (appLabel != null) {
-                    "${stringResource(action.title)} ($appLabel)"
-                } else {
-                    stringResource(action.title)
-                },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+        Icon(
+            painter = painterResource(id = R.drawable.rounded_drag_handle_24),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+            modifier = Modifier.size(20.dp),
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
         val iconDrawable = appIconDrawable
         if (iconDrawable != null) {
             Image(
@@ -1133,16 +1181,56 @@ private fun QuickBallSlotRow(
                 modifier = Modifier.size(24.dp),
             )
         } else {
+            val iconRes = QuickBallIconResolver.resolveIcon(action, QuickBallIconPack.CLASSIC)
             Icon(
-                painter = painterResource(id = action.icon),
+                painter = painterResource(id = iconRes),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp),
             )
         }
 
+        Spacer(modifier = Modifier.width(14.dp))
+
+        Text(
+            text = appLabel ?: stringResource(action.title),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+
+        if (onMoveUp != null) {
+            IconButton(
+                onClick = onMoveUp,
+                modifier = Modifier.size(28.dp),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_keyboard_arrow_up_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+
+        if (onMoveDown != null) {
+            IconButton(
+                onClick = onMoveDown,
+                modifier = Modifier.size(28.dp),
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+
         if (onDelete != null) {
-            Spacer(modifier = Modifier.width(8.dp))
             IconButton(
                 onClick = onDelete,
                 modifier = Modifier.size(32.dp),
@@ -1150,7 +1238,7 @@ private fun QuickBallSlotRow(
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_remove_24),
                     contentDescription = stringResource(R.string.quick_ball_delete_slot, slotIndex),
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     modifier = Modifier.size(18.dp),
                 )
             }

@@ -186,7 +186,7 @@ class MainViewModel : ViewModel() {
     val quickBallMenuRadius = mutableFloatStateOf(90f)
     val quickBallMenuSize = mutableFloatStateOf(48f)
     val quickBallMenuIconSize = mutableFloatStateOf(24f)
-    val isQuickBallBorderEnabled = mutableStateOf(true)
+    val isQuickBallBorderEnabled = mutableStateOf(false)
     val quickBallBorderWidth = mutableFloatStateOf(1.5f)
     val quickBallHapticIntensity = mutableStateOf("MEDIUM")
     val isQuickBallStickToEdge = mutableStateOf(true)
@@ -5723,6 +5723,30 @@ class MainViewModel : ViewModel() {
     fun deleteQuickBallSlot(slotIndex: Int) {
         settingsRepository.deleteQuickBallSlot(slotIndex)
         quickBallSlotCount.intValue = settingsRepository.getQuickBallSlotCount()
+        quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
+        quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
+        quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)
+        quickBallSlot4Action.value = settingsRepository.getQuickBallSlotAction(4)
+        quickBallSlot5Action.value = settingsRepository.getQuickBallSlotAction(5)
+        quickBallSlot6Action.value = settingsRepository.getQuickBallSlotAction(6)
+        quickBallSlot7Action.value = settingsRepository.getQuickBallSlotAction(7)
+        quickBallSlot8Action.value = settingsRepository.getQuickBallSlotAction(8)
+        quickBallSlot9Action.value = settingsRepository.getQuickBallSlotAction(9)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun reorderQuickBallSlots(fromIndex: Int, toIndex: Int) {
+        if (fromIndex == toIndex) return
+        val count = quickBallSlotCount.intValue
+        if (fromIndex !in 1..count || toIndex !in 1..count) return
+
+        val actions = (1..count).map { settingsRepository.getQuickBallSlotAction(it) }.toMutableList()
+        val item = actions.removeAt(fromIndex - 1)
+        actions.add(toIndex - 1, item)
+
+        actions.forEachIndexed { idx, act ->
+            settingsRepository.setQuickBallSlotAction(idx + 1, act)
+        }
         quickBallSlot1Action.value = settingsRepository.getQuickBallSlotAction(1)
         quickBallSlot2Action.value = settingsRepository.getQuickBallSlotAction(2)
         quickBallSlot3Action.value = settingsRepository.getQuickBallSlotAction(3)

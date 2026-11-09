@@ -154,7 +154,9 @@ class FloatPanelView(
                         GradientDrawable().apply {
                             shape = GradientDrawable.OVAL
                             setColor(buttonBg)
-                            setStroke(borderWidthPx, borderColor)
+                            if (borderWidthPx > 0) {
+                                setStroke(borderWidthPx, borderColor)
+                            }
                         }
                     }
                     background = itemBg
