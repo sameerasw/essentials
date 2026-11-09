@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.service
 
+import com.sameerasw.essentials.island.state.IslandStillness
 import android.provider.Settings
 import android.os.SystemClock
 import com.sameerasw.essentials.island.plugins.alarm.AlarmPlugin
@@ -219,6 +220,7 @@ class IslandCoordinator(
         override fun onCollapse() = controller.collapse()
         override fun onDismiss(): Boolean = controller.dismissFocused()
         override fun onInteraction() {
+            pokeStillness()
             controller.onUserInteraction()
             val focused = controller.state.value.focusedKey
             plugins.forEach { it.onUserInteraction(focused) }
@@ -308,6 +310,23 @@ class IslandCoordinator(
     }
 
     private var autoExpandedAt = 0L
+
+    private val stillRunnable = Runnable {
+        val stage = controller.state.value.stage
+        if (running && settings.isIslandPreferStillEnabled() && (stage == IslandStage.Compact || stage == IslandStage.Hidden)) {
+            setStill(true)
+        }
+    }
+
+    private fun pokeStillness() {
+        mainHandler.removeCallbacks(stillRunnable)
+        setStill(false)
+        if (running && settings.isIslandPreferStillEnabled()) mainHandler.postDelayed(stillRunnable, IslandStillness.IDLE_MS)
+    }
+
+    private fun setStill(still: Boolean) {
+        if (IslandStillness.set(still) && running) plugins.forEach { it.refresh() }
+    }
 
     private val holdTick: Runnable = object : Runnable {
         override fun run() {
@@ -483,6 +502,12 @@ class IslandCoordinator(
         applyUpdateOnly()
         val newScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         scope = newScope
+        newScope.launch {
+            controller.state
+                .map { Triple(it.stage, it.focusedKey, it.arrangement.visibleItems) }
+                .distinctUntilChanged()
+                .collect { pokeStillness() }
+        }
         applyConfig()
         val geo = geometry ?: return
         windowHost.onOutsideTouch = ::onOutsideTouch
@@ -698,6 +723,8 @@ class IslandCoordinator(
             return
         }
         mainHandler.removeCallbacks(endReveal)
+        mainHandler.removeCallbacks(stillRunnable)
+        IslandStillness.set(false)
         revealing = false
         running = false
         controller.holdFocus = false
@@ -984,6 +1011,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_HIDE_PORTRAIT,
             SettingsRepository.KEY_ISLAND_HIDE_LANDSCAPE -> updateState()
             SettingsRepository.KEY_ISLAND_ALWAYS_GESTURES -> syncGestureHitbox()
+            SettingsRepository.KEY_ISLAND_PREFER_STILL -> pokeStillness()
             SettingsRepository.KEY_ISLAND_PRIORITY_ORDER, SettingsRepository.KEY_ISLAND_PROVIDERS -> if (running) reloadPriorities()
             SettingsRepository.KEY_ISLAND_DYNAMIC_HIDE_STATUS_BAR, SettingsRepository.KEY_ISLAND_COMPACT_HIDE_STATUS_BAR,
             SettingsRepository.KEY_ISLAND_HIDE_ICONS_ENABLED, SettingsRepository.KEY_ISLAND_HIDE_ICONS -> syncStatusBar()

@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.ui.components
 
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -48,6 +49,8 @@ fun MarqueeText(
         val overflows = constraints.hasBoundedWidth && textWidth > constraints.maxWidth
         if (!overflows) {
             Text(text, style = style.copy(textAlign = textAlign), maxLines = 1, softWrap = false, modifier = Modifier.fillMaxWidth())
+        } else if (islandStill()) {
+            Text(text, style = style.copy(textAlign = textAlign), maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis, modifier = Modifier.fillMaxWidth())
         } else {
             Text(
                 text = text,

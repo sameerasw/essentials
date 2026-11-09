@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.island.ui.components.islandStill
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -36,14 +37,17 @@ import kotlinx.coroutines.delay
 
 const val MEDIA_PILL_WIDTH = 2.2f
 
+private const val STILL_PROGRESS_POLL_MS = 30_000L
+
 @Composable
 private fun rememberPlaybackProgress(playing: Boolean, read: () -> Float): Float {
     var value by remember { mutableFloatStateOf(read()) }
-    LaunchedEffect(playing) {
+    val still = islandStill()
+    LaunchedEffect(playing, still) {
         while (true) {
             value = read()
             if (!playing) break
-            delay(500L)
+            delay(if (still) STILL_PROGRESS_POLL_MS else 500L)
         }
     }
     return value

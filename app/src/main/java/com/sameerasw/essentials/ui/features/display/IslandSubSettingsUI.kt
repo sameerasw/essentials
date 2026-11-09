@@ -75,6 +75,7 @@ import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
 import com.sameerasw.essentials.ui.core.sheets.StatusBarAwareWidthInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PreferStillIslandInfoBottomSheet
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -355,9 +356,14 @@ fun IslandVisualsSettingsUI(
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
     var showStatusBarAwareInfo by remember { mutableStateOf(false) }
+    var showPreferStillInfo by remember { mutableStateOf(false) }
 
     if (showStatusBarAwareInfo) {
         StatusBarAwareWidthInfoBottomSheet(onDismissRequest = { showStatusBarAwareInfo = false })
+    }
+
+    if (showPreferStillInfo) {
+        PreferStillIslandInfoBottomSheet(onDismissRequest = { showPreferStillInfo = false })
     }
 
     Column(
@@ -669,6 +675,26 @@ fun IslandVisualsSettingsUI(
                     chips = checked
                     iconSettings.putBoolean(SettingsRepository.KEY_ISLAND_CHIPS, checked)
                 },
+            )
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            val stillSettings = remember { SettingsRepository(context) }
+            var preferStill by remember { mutableStateOf(stillSettings.isIslandPreferStillEnabled()) }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_motion_photos_paused_24,
+                title = stringResource(R.string.island_prefer_still_title),
+                isChecked = preferStill,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    preferStill = checked
+                    stillSettings.setIslandPreferStillEnabled(checked)
+                },
+                onInfoClick = { showPreferStillInfo = true },
+                modifier = Modifier.highlight(highlightSetting == "island_prefer_still"),
             )
         }
     }

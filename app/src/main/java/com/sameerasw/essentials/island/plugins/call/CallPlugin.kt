@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.call
 
+import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.plugins.sendPendingIntent
@@ -115,7 +116,11 @@ class CallPlugin : BaseIslandPlugin() {
         if (call == null) return
         ticker = ctx?.scope?.launch {
             while (isActive) {
-                delay(1000L - System.currentTimeMillis() % 1000L)
+                val startedAt = call?.takeIf { it.phase == CallPhase.Active }?.startedAt
+                IslandStillness.awaitTick(
+                    1000L - System.currentTimeMillis() % 1000L,
+                    startedAt?.let { IslandStillness.msToMinuteChange(System.currentTimeMillis() - it, false) } ?: IslandStillness.msToNextMinute(),
+                )
                 CallStateRepository.reconcile(context, activeNotificationKeys())
                 if (call?.phase == CallPhase.Active) render()
             }
@@ -305,6 +310,7 @@ class CallPlugin : BaseIslandPlugin() {
     }
 
     private fun elapsed(startedAt: Long): String {
+        if (IslandStillness.isStill) return IslandStillness.coarse(System.currentTimeMillis() - startedAt, false)
         val total = ((System.currentTimeMillis() - startedAt) / 1000L).coerceAtLeast(0L)
         val h = total / 3600
         val m = (total % 3600) / 60

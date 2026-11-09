@@ -1828,6 +1828,8 @@ Zugriff auf die Barrierefreiheit ist erforderlich, um die Überlagerung zu zeich
     <string name="island_tap_action_title">Tippaktion</string>
     <string name="island_show_glow_title">Akzentleuchten anzeigen</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_catch_up_title">Nachholen</string>
     <string name="island_catch_up_desc">Letzte Benachrichtigung länger auf der Insel anzeigen</string>
     <string name="conscious_gate_feel_every_second_title">Spüre jede verschwendete Sekunde</string>

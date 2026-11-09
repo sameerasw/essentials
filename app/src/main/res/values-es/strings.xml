@@ -1772,6 +1772,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_border_outline_title">Lineas del Borde</string>
     <string name="island_show_glow_title">Activar brillo de Acento</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_timeout_title">Duración de la Ventana</string>
     <string name="island_expanded_timeout_title">Tiempo de espera expandido</string>

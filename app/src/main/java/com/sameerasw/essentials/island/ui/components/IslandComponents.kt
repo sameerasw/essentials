@@ -1,5 +1,10 @@
 package com.sameerasw.essentials.island.ui.components
 
+import com.sameerasw.essentials.island.ui.motionTween
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Animatable
+import androidx.compose.runtime.collectAsState
+import com.sameerasw.essentials.island.state.IslandStillness
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.ColorMatrix
@@ -183,6 +188,22 @@ fun IslandIcon(res: Int, tint: Color = Color.White, size: Dp = 20.dp, modifier: 
 }
 
 @Composable
+fun islandStill(): Boolean = IslandStillness.still.collectAsState().value
+
+@Composable
+fun rememberLoopValue(active: Boolean, target: Float, durationMs: Int): Float {
+    val value = remember { Animatable(0f) }
+    LaunchedEffect(active) {
+        if (!active) return@LaunchedEffect
+        while (true) {
+            value.animateTo(target, motionTween(((1f - value.value / target) * durationMs).toInt().coerceAtLeast(1), easing = LinearEasing))
+            value.snapTo(0f)
+        }
+    }
+    return value.value
+}
+
+@Composable
 fun EqualizerBars(
     playing: Boolean,
     color: Color,
@@ -192,9 +213,16 @@ fun EqualizerBars(
 ) {
     val barColor = if (LocalIslandChipInk.current != null) Color.Black else color
     val levels = remember { mutableStateListOf(0.16f, 0.16f, 0.16f) }
-    LaunchedEffect(playing) {
+    val still = islandStill()
+    LaunchedEffect(playing, still) {
         if (!playing) {
             for (i in levels.indices) levels[i] = 0.16f
+            return@LaunchedEffect
+        }
+        if (still) {
+            levels[0] = 0.5f
+            levels[1] = 0.85f
+            levels[2] = 0.65f
             return@LaunchedEffect
         }
         val random = Random(System.nanoTime())

@@ -3306,6 +3306,8 @@
     <string name="island_preview_sample">Dynamic notifications preview</string>
     <string name="island_show_glow_title">Show accent glow</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_border_outline_dynamic_title">Dynamic colors</string>
     <string name="island_border_outline_title">Border outline</string>
     <string name="island_border_outline_desc">Draws a thin outline around the island</string>

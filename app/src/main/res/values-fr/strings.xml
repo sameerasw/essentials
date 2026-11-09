@@ -1799,6 +1799,8 @@ Les effets de la LED HiLight peuvent être aussi utilisés comme une action dans
     <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
     <string name="island_neural_expressive_always_title">Always show on expansion</string>
     <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_prefer_still_title">Prefer still island</string>
+    <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_pulse_shadow_title">Pulse for new notifications</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
