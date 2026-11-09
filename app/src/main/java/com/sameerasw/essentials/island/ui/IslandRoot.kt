@@ -846,7 +846,7 @@ private fun IslandRootContent(
         return IslandVisualFrame(
             bounds,
             surfaceCornerPx(bounds.height, compactHeightPx, expandedCornerPx),
-            if (bounds.width > 0f && bounds.height > 0f) shellAlpha * detachedAmount() else 0f,
+            if (bounds.width > 0f && bounds.height > 0f && hasDetachedSurface()) shellAlpha else 0f,
             if (layeredSurface) pulse.value else 0f,
             cameraCenter,
             cameraRadius,
@@ -1191,8 +1191,8 @@ private fun IslandRootContent(
                     clip = true
                 }
                 .drawBehind {
-                    val amount = detachedAmount()
-                    drawRect(Color.Black.copy(alpha = 1f - amount))
+                    val fill = maxOf(1f - detachedAmount(), collapse.value.coerceIn(0f, 1f))
+                    drawRect(Color.Black.copy(alpha = fill))
                 }
                 .onGloballyPositioned { coordinates ->
                     val host = visualRootCoordinates
