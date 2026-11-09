@@ -91,6 +91,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import android.graphics.BlurMaskFilter
@@ -173,22 +174,15 @@ fun IslandRoot(
     cameraGeometry: CameraGeometry? = null,
 ) {
     val primary = MaterialTheme.colorScheme.primary
-    val focused = state.items[state.focusedKey]
-    val dynamicAccent = focused?.accent
-        ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
     val iconBase = if (targetSpec.iconMaterialYou) primary else Color.White
-    val iconTarget = if (targetSpec.iconDynamic) {
-        dynamicAccent ?: iconBase
-    } else {
-        targetSpec.iconColorCustom ?: iconBase
-    }
-    val iconColor by animateColorAsState(readableOnDark(iconTarget), label = "islandIconColor")
-    CompositionLocalProvider(
-        LocalIslandIconColor provides iconColor,
-        LocalIslandTextColor provides if (targetSpec.themedText) pastelOf(iconColor) else null,
-    ) {
-        IslandRootContent(state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing, cameraGeometry)
-    }
+    fun iconFor(accent: Color?): Color =
+        readableOnDark(if (targetSpec.iconDynamic) accent ?: iconBase else targetSpec.iconColorCustom ?: iconBase)
+    val compactAccent = state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.accent }
+    IslandRootContent(
+        state, targetSpec, actions, onTargetBoundsChanged, registerCollapseAnimator, showCameraRing, cameraGeometry,
+        iconTarget = iconFor(state.items[state.focusedKey]?.accent ?: compactAccent),
+        collapsedIconTarget = iconFor(compactAccent),
+    )
 }
 
 @Composable
@@ -200,6 +194,8 @@ private fun IslandRootContent(
     registerCollapseAnimator: (((() -> Unit) -> Unit)?) -> Unit = {},
     showCameraRing: Boolean = false,
     cameraGeometry: CameraGeometry? = null,
+    iconTarget: Color = Color.White,
+    collapsedIconTarget: Color = iconTarget,
 ) {
     val view = LocalView.current
     val density = LocalDensity.current
@@ -248,25 +244,48 @@ private fun IslandRootContent(
         }
     }
 
-    val outlineAlpha by animateFloatAsState(
-        targetValue = if (spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded) 0f else 1f,
-        label = "islandOutlineAlpha",
-    )
+    val collapse = remember { Animatable(0f) }
+    val collapsingStage = stage == IslandStage.Expanded || stage == IslandStage.Line
+    val collapseMix = if (collapsingStage) collapse.value.coerceIn(0f, 1f) else 0f
+    val justCollapsed = !collapsingStage && collapse.value >= 0.5f
+
+    val iconAnim = remember { androidx.compose.animation.Animatable(iconTarget) }
+    LaunchedEffect(iconTarget) {
+        if (justCollapsed) iconAnim.snapTo(iconTarget) else iconAnim.animateTo(iconTarget)
+    }
+    val iconColor = if (justCollapsed) iconTarget else lerp(iconAnim.value, collapsedIconTarget, collapseMix)
+
+    val outlineAlphaTarget = if (spec.outlineHiddenWhenExpanded && stage == IslandStage.Expanded) 0f else 1f
+    val outlineAlphaAnim = remember { Animatable(outlineAlphaTarget) }
+    LaunchedEffect(outlineAlphaTarget) {
+        if (justCollapsed) outlineAlphaAnim.snapTo(outlineAlphaTarget) else outlineAlphaAnim.animateTo(outlineAlphaTarget)
+    }
+    val outlineAlpha = when {
+        justCollapsed -> outlineAlphaTarget
+        stage == IslandStage.Expanded -> outlineAlphaAnim.value + (1f - outlineAlphaAnim.value) * collapseMix
+        else -> outlineAlphaAnim.value
+    }
 
     val pulseAccent = state.items[state.focusedKey]?.accent
     val pulsePaint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
     val pulseBlur = remember(spec.pulseBlur, density) {
         with(density) { spec.pulseBlur.toPx() }.takeIf { it > 0f }?.let { BlurMaskFilter(it * 0.866f, BlurMaskFilter.Blur.NORMAL) }
     }
+    val compactOutline = state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.let { it.outlineAccent ?: it.accent } }
     val dynamicOutline: Color? = if (spec.outlineDynamic) {
         val focused = state.items[state.focusedKey]
-        (focused?.outlineAccent ?: focused?.accent)
-            ?: state.arrangement.visibleItems.firstNotNullOfOrNull { key -> state.items[key]?.let { it.outlineAccent ?: it.accent } }
+        (focused?.outlineAccent ?: focused?.accent) ?: compactOutline
     } else {
         null
     }
     val animatedOutlineColor: Color? = spec.outlineColor?.let { base ->
-        animateColorAsState(dynamicOutline ?: base, label = "islandOutlineColor").value
+        val target = dynamicOutline ?: base
+        val collapsedTarget = (if (spec.outlineDynamic) compactOutline else null) ?: base
+        val outlineAnim = remember { androidx.compose.animation.Animatable(target) }
+        LaunchedEffect(target) {
+            if (justCollapsed) outlineAnim.snapTo(target) else outlineAnim.animateTo(target)
+        }
+        if (justCollapsed) target else lerp(outlineAnim.value, collapsedTarget, collapseMix)
     }
     fun outlineFor(fade: Float): Color? = animatedOutlineColor
         ?.takeIf { outlineAlpha > 0f && fade > 0f }
@@ -324,7 +343,6 @@ private fun IslandRootContent(
     val morph = remember { IslandMorph() }
     val morphOrigin = remember { FloatArray(2) }
     val contentShiftPx = with(density) { 10.dp.toPx() }
-    val collapse = remember { Animatable(0f) }
     // Hidden: the width shrinks to a circle first, then the circle shrinks to nothing, so it never turns oval.
     val squash = remember { Animatable(0f) }
     val holdSize = remember { IntArray(2) }
@@ -817,10 +835,9 @@ private fun IslandRootContent(
         0f
     }
     fun visualFrame(): IslandVisualFrame {
-        val bounds = visualBounds.translate(Offset(dismissOffset.value + wiggle.value, 0f))
+        val bounds = visualBounds
         val shellAlpha = (if (visible) 1f else 0f) *
             (1f - if (bubbleOnlyLayout) catchUpAnim.value.coerceIn(0f, 1f) else 0f)
-        val dismissAlpha = (1f - abs(dismissOffset.value) / bounds.width.coerceAtLeast(1f) * 0.6f).coerceIn(0f, 1f)
         val cameraCenter = cameraGeometry?.let {
             Offset(it.centerX - islandDrawViewport(it).left, it.centerY)
         } ?: Offset(windowWidth / 2f, with(density) { (targetSpec.surfaceTop + targetSpec.compactHeight / 2).toPx() })
@@ -829,14 +846,18 @@ private fun IslandRootContent(
         return IslandVisualFrame(
             bounds,
             surfaceCornerPx(bounds.height, compactHeightPx, expandedCornerPx),
-            if (bounds.width > 0f && bounds.height > 0f) shellAlpha * detachedAmount() * dismissAlpha else 0f,
+            if (bounds.width > 0f && bounds.height > 0f) shellAlpha * detachedAmount() else 0f,
             if (layeredSurface) pulse.value else 0f,
             cameraCenter,
             cameraRadius,
         )
     }
 
-    CompositionLocalProvider(LocalLiquidField provides liquidField) {
+    CompositionLocalProvider(
+        LocalLiquidField provides liquidField,
+        LocalIslandIconColor provides iconColor,
+        LocalIslandTextColor provides if (targetSpec.themedText) pastelOf(iconColor) else null,
+    ) {
     Box(
         Modifier
             .fillMaxSize()
@@ -1558,7 +1579,7 @@ private fun IslandRootContent(
                             shape = RoundedCornerShape(if (sliding) cardCorner.toPx() else 0f)
                             clip = sliding
                         }
-                        .drawBehind { if (dismissOffset.value != 0f && backdrop == null) drawRect(Color.Black) }
+                        .drawBehind { if (dismissOffset.value != 0f && backdrop == null && !layeredSurface) drawRect(Color.Black) }
                 } else {
                     Modifier
                         .layout { measurable, _ ->
