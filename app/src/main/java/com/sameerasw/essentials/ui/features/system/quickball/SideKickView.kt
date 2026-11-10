@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
@@ -338,6 +339,7 @@ class SideKickView @JvmOverloads constructor(
     ) {
         super.onLayout(changed, left, top, right, bottom)
         updateArcGeometry()
+        updateGestureExclusion()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -391,6 +393,16 @@ class SideKickView @JvmOverloads constructor(
         }
 
         return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
+    }
+
+    fun updateGestureExclusion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val w = width
+            val h = height
+            if (w > 0 && h > 0) {
+                systemGestureExclusionRects = listOf(Rect(0, 0, w, h))
+            }
+        }
     }
 
     override fun onDetachedFromWindow() {

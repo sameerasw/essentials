@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Build
@@ -215,7 +216,8 @@ class FloatTouchView @JvmOverloads constructor(
 
                 if (dist > touchSlop) {
                     if (isMoveMode) {
-                        // User held for configured duration to enter move mode: Flick-to-Select is bypassed, freely drag across screen
+                        // User held down for preferred duration (1-3s) to unlock Move Mode:
+                        // Freely drag across the screen to reposition
                         if (!isDragging) {
                             isDragging = true
                         }
@@ -223,7 +225,6 @@ class FloatTouchView @JvmOverloads constructor(
                         return true
                     }
 
-                    val isVerticalEdge = abs(dy) > abs(dx) * 1.25f
                     val isInward = if (onRight) {
                         dx < -touchSlop * 0.45f
                     } else {
@@ -231,7 +232,7 @@ class FloatTouchView @JvmOverloads constructor(
                     }
 
                     // Check if inward swipe towards radial arc (Flick-to-Select)
-                    if (settings.isQuickBallFlickToSelect() && (isFlicking || (isInward && !isVerticalEdge))) {
+                    if (settings.isQuickBallFlickToSelect() && (isFlicking || isInward)) {
                         handler.removeCallbacks(holdToMoveRunnable)
                         if (!isFlicking) {
                             isFlicking = true
@@ -241,18 +242,9 @@ class FloatTouchView @JvmOverloads constructor(
                         return true
                     }
 
-                    // Vertical edge drag (or any drag if flick-to-select disabled) without position lock
-                    if (!settings.isQuickBallLockPosition() && !isFlicking && (isVerticalEdge || !settings.isQuickBallFlickToSelect())) {
-                        handler.removeCallbacks(holdToMoveRunnable)
-                        if (!isDragging) {
-                            isDragging = true
-                            if (settings.isQuickBallHaptic()) {
-                                IslandHaptics.thresholdReached(context)
-                            }
-                        }
-                        listener?.onDragMove(dx, dy)
-                        return true
-                    }
+                    // User moved finger before holding for preferred duration -> cancel hold timer
+                    // Moving without holding is strictly blocked!
+                    handler.removeCallbacks(holdToMoveRunnable)
                 }
                 return true
             }
@@ -306,6 +298,21 @@ class FloatTouchView @JvmOverloads constructor(
             }
 
             else -> return super.onTouchEvent(event)
+        }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        updateGestureExclusion()
+    }
+
+    fun updateGestureExclusion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val w = width
+            val h = height
+            if (w > 0 && h > 0) {
+                systemGestureExclusionRects = listOf(Rect(0, 0, w, h))
+            }
         }
     }
 

@@ -17,6 +17,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.graphics.Rect
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
@@ -580,6 +581,20 @@ class FloatPanelView(
             val halfWidth = child.measuredWidth / 2
             val halfHeight = child.measuredHeight / 2
             child.layout(centerX - halfWidth, centerY - halfHeight, centerX + halfWidth, centerY + halfHeight)
+        }
+        updateGestureExclusion()
+    }
+
+    fun updateGestureExclusion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val exclusionTop = (fabCenterY - 100 * density).roundToInt().coerceAtLeast(0)
+            val exclusionBottom = (fabCenterY + 100 * density).roundToInt().coerceAtMost(height)
+            val edgeWidth = (64f * density).roundToInt()
+            val exclusionLeft = if (isOnRight) (width - edgeWidth).coerceAtLeast(0) else 0
+            val exclusionRight = if (isOnRight) width else edgeWidth
+            if (exclusionBottom > exclusionTop && exclusionRight > exclusionLeft) {
+                systemGestureExclusionRects = listOf(Rect(exclusionLeft, exclusionTop, exclusionRight, exclusionBottom))
+            }
         }
     }
 

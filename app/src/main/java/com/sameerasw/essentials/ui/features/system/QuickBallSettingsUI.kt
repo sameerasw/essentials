@@ -689,104 +689,53 @@ fun QuickBallSettingsUI(
                         )
 
                         // Folder Hub Cards
-                        RoundedCardContainer {
-                            Column(modifier = Modifier.fillMaxWidth()) {
-                                QuickBallSubMenu.entries.forEachIndexed { index, menu ->
-                                    val summaryBadge = when (menu) {
-                                        QuickBallSubMenu.SHORTCUTS -> "$slotCount/9 active"
-                                        QuickBallSubMenu.GESTURES -> {
-                                            val style = QuickBallPillStyle.fromName(viewModel.quickBallPillStyle.value)
-                                            stringResource(style.titleRes)
-                                        }
-                                        QuickBallSubMenu.STYLING -> {
-                                            when (viewModel.quickBallColorMode.value) {
-                                                "DYNAMIC" -> stringResource(R.string.quick_ball_color_mode_dynamic_short)
-                                                "PRESET" -> QuickBallPresetTheme.fromName(viewModel.quickBallPresetTheme.value).title
-                                                else -> stringResource(R.string.quick_ball_color_mode_custom_short)
-                                            }
-                                        }
-                                        QuickBallSubMenu.DIMENSIONS -> "${viewModel.quickBallSize.floatValue.roundToInt()}dp ball"
-                                        QuickBallSubMenu.BEHAVIOR -> "${String.format(Locale.getDefault(), "%.1fs", viewModel.quickBallStashDelay.longValue / 1000f)} stash"
+                        RoundedCardContainer(
+                            spacing = 2.dp,
+                            cornerRadius = 24.dp,
+                        ) {
+                            QuickBallSubMenu.entries.forEach { menu ->
+                                val summaryBadge = when (menu) {
+                                    QuickBallSubMenu.SHORTCUTS -> "$slotCount/9 active"
+                                    QuickBallSubMenu.GESTURES -> {
+                                        val style = QuickBallPillStyle.fromName(viewModel.quickBallPillStyle.value)
+                                        stringResource(style.titleRes)
                                     }
-
-                                    ListItem(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(MaterialTheme.shapes.small)
-                                            .clickable {
-                                                HapticUtil.performUIHaptic(view)
-                                                onSubMenuChange(menu)
-                                            },
-                                        leadingContent = {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(40.dp)
-                                                    .background(
-                                                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-                                                        shape = CircleShape,
-                                                    ),
-                                                contentAlignment = Alignment.Center,
-                                            ) {
-                                                Icon(
-                                                    painter = painterResource(id = menu.iconRes),
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.primary,
-                                                    modifier = Modifier.size(22.dp),
-                                                )
-                                            }
-                                        },
-                                        headlineContent = {
-                                            Text(
-                                                text = stringResource(id = menu.titleRes),
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight.SemiBold,
-                                            )
-                                        },
-                                        supportingContent = {
-                                            Text(
-                                                text = stringResource(id = menu.subtitleRes),
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                            )
-                                        },
-                                        trailingContent = {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                            ) {
-                                                Surface(
-                                                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                                    shape = RoundedCornerShape(12.dp),
-                                                ) {
-                                                    Text(
-                                                        text = summaryBadge,
-                                                        style = MaterialTheme.typography.labelSmall,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                                    )
-                                                }
-                                                Icon(
-                                                    painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(20.dp),
-                                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                )
-                                            }
-                                        },
-                                        colors = ListItemDefaults.colors(
-                                            containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                        ),
-                                    )
-
-                                    if (index < QuickBallSubMenu.entries.lastIndex) {
-                                        HorizontalDivider(
-                                            modifier = Modifier.padding(horizontal = 16.dp),
-                                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
-                                        )
+                                    QuickBallSubMenu.STYLING -> {
+                                        when (viewModel.quickBallColorMode.value) {
+                                            "DYNAMIC" -> stringResource(R.string.quick_ball_color_mode_dynamic_short)
+                                            "PRESET" -> QuickBallPresetTheme.fromName(viewModel.quickBallPresetTheme.value).title
+                                            else -> stringResource(R.string.quick_ball_color_mode_custom_short)
+                                        }
                                     }
+                                    QuickBallSubMenu.DIMENSIONS -> "${viewModel.quickBallSize.floatValue.roundToInt()}dp ball"
+                                    QuickBallSubMenu.BEHAVIOR -> "${String.format(Locale.getDefault(), "%.1fs", viewModel.quickBallStashDelay.longValue / 1000f)} stash"
                                 }
+
+                                FeatureCard(
+                                    title = stringResource(menu.titleRes),
+                                    description = stringResource(menu.subtitleRes),
+                                    iconRes = menu.iconRes,
+                                    isEnabled = true,
+                                    showToggle = false,
+                                    onToggle = {},
+                                    onClick = {
+                                        HapticUtil.performUIHaptic(view)
+                                        onSubMenuChange(menu)
+                                    },
+                                    customTrailingContent = {
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                            shape = RoundedCornerShape(12.dp),
+                                        ) {
+                                            Text(
+                                                text = summaryBadge,
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                            )
+                                        }
+                                    },
+                                )
                             }
                         }
                     }
@@ -802,39 +751,23 @@ fun QuickBallSettingsUI(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Header Bar with Back Button
-                Row(
+                // Sub-menu Page Header
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
                 ) {
-                    IconButton(
-                        onClick = {
-                            HapticUtil.performUIHaptic(view)
-                            onSubMenuChange(null)
-                        },
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_arrow_back_24),
-                            contentDescription = stringResource(R.string.action_back),
-                            tint = MaterialTheme.colorScheme.onSurface,
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(currentMenu.titleRes),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Text(
-                            text = stringResource(currentMenu.subtitleRes),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
+                    Text(
+                        text = stringResource(currentMenu.titleRes),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = stringResource(currentMenu.subtitleRes),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
 
                 when (currentMenu) {
@@ -988,14 +921,6 @@ fun QuickBallSettingsUI(
                                 },
                                 headlineContent = { Text(stringResource(currentPillStyle.titleRes)) },
                                 supportingContent = { Text(stringResource(currentPillStyle.descRes)) },
-                                trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
                                 colors = ListItemDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surfaceBright,
                                 ),
@@ -1212,14 +1137,6 @@ fun QuickBallSettingsUI(
                                                 modifier = Modifier.size(width = 54.dp, height = 36.dp),
                                             )
                                         },
-                                        trailingContent = {
-                                            Icon(
-                                                painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(20.dp),
-                                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            )
-                                        },
                                         colors = ListItemDefaults.colors(
                                             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         ),
@@ -1306,14 +1223,6 @@ fun QuickBallSettingsUI(
                                             itemColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                             ballColor = MaterialTheme.colorScheme.primary,
                                             modifier = Modifier.size(width = 54.dp, height = 36.dp),
-                                        )
-                                    },
-                                    trailingContent = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(20.dp),
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
                                     },
                                     colors = ListItemDefaults.colors(
