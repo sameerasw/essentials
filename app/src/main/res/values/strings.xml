@@ -3856,4 +3856,25 @@
     <string name="diy_action_quick_settings">Quick Settings</string>
     <string name="diy_action_power_dialog">Power Menu</string>
     <string name="diy_action_lock_screen">Lock Screen</string>
+
+    <!-- Quick Ball Navigation Folders / Categories -->
+    <string name="quick_ball_categories_header">Customization Folders</string>
+    <string name="quick_ball_menu_shortcuts_title">Shortcuts &amp; Radial Menu</string>
+    <string name="quick_ball_menu_shortcuts_subtitle">Radial dial preview, slot actions, and fluid reordering</string>
+    <string name="quick_ball_menu_gestures_title">Docked Pill &amp; Gestures</string>
+    <string name="quick_ball_menu_gestures_subtitle">Pill handle styles, flick-to-select, and edge gestures</string>
+    <string name="quick_ball_menu_styling_title">Colors &amp; Visual Styling</string>
+    <string name="quick_ball_menu_styling_subtitle">Uniform theme modes, ball and icon shapes, and outlines</string>
+    <string name="quick_ball_menu_dimensions_title">Dimensions &amp; Sizing</string>
+    <string name="quick_ball_menu_dimensions_subtitle">Ball, arc radius, pill, and button scaling</string>
+    <string name="quick_ball_menu_behavior_title">Behavior &amp; Triggers</string>
+    <string name="quick_ball_menu_behavior_subtitle">Auto-stash timer, action HUD, edge stick, and app exclusion</string>
+
+    <!-- Color Theme Short Labels & Descriptions -->
+    <string name="quick_ball_color_mode_dynamic_short">Dynamic</string>
+    <string name="quick_ball_color_mode_preset_short">Presets</string>
+    <string name="quick_ball_color_mode_custom_short">Custom</string>
+    <string name="quick_ball_color_mode_dynamic_sub">Adapts colors to your wallpaper palette</string>
+    <string name="quick_ball_color_mode_preset_sub">57 curated theme color palettes</string>
+    <string name="quick_ball_color_mode_custom_sub">Fine-tune with a custom accent color</string>
 </resources>
