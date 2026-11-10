@@ -74,6 +74,8 @@ import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.core.sheets.HideStatusBarInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.StatusBarAwareWidthInfoBottomSheet
+import com.sameerasw.essentials.ui.core.sheets.PreferStillIslandInfoBottomSheet
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -353,7 +355,16 @@ fun IslandVisualsSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var showBorderOutlineSheet by remember { mutableStateOf(false) }
-    var showPulseShadowSheet by remember { mutableStateOf(false) }
+    var showStatusBarAwareInfo by remember { mutableStateOf(false) }
+    var showPreferStillInfo by remember { mutableStateOf(false) }
+
+    if (showStatusBarAwareInfo) {
+        StatusBarAwareWidthInfoBottomSheet(onDismissRequest = { showStatusBarAwareInfo = false })
+    }
+
+    if (showPreferStillInfo) {
+        PreferStillIslandInfoBottomSheet(onDismissRequest = { showPreferStillInfo = false })
+    }
 
     Column(
         modifier = modifier
@@ -493,6 +504,7 @@ fun IslandVisualsSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandStatusBarAwareWidth(checked)
                 },
+                onInfoClick = { showStatusBarAwareInfo = true },
                 modifier = Modifier.highlight(highlightSetting == "island_statusbar_aware_width"),
             )
 
@@ -520,18 +532,63 @@ fun IslandVisualsSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "island_show_glow"),
             )
 
+            if (viewModel.isIslandShowGlow.value) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.island_glow_intensity_title),
+                    value = viewModel.islandGlowIntensity.floatValue,
+                    onValueChange = {
+                        HapticUtil.performUIHaptic(view)
+                        viewModel.setIslandGlowIntensity(it)
+                    },
+                    valueRange = 0.1f..2f,
+                    increment = 0.1f,
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    valueFormatter = { "%.1fx".format(it) },
+                    allowDecimals = true,
+                    modifier = Modifier.highlight(highlightSetting == "island_glow_intensity"),
+                )
+            }
+        }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
-                title = stringResource(R.string.island_pulse_shadow_title),
-                description = stringResource(R.string.island_pulse_shadow_desc),
-                isChecked = viewModel.isIslandPulseShadow.value,
+                title = stringResource(R.string.island_transparency_title),
+                isChecked = viewModel.isIslandTransparency.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setIslandPulseShadow(checked)
+                    viewModel.setIslandTransparency(checked)
                 },
-                onSettingsClick = { showPulseShadowSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
+                modifier = Modifier.highlight(highlightSetting == "island_transparency"),
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_grain_24,
+                title = stringResource(R.string.island_neural_expressive_title),
+                isChecked = viewModel.isIslandNeuralExpressive.value,
+                enabled = viewModel.isIslandTransparency.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandNeuralExpressive(checked)
+                },
+                modifier = Modifier.highlight(highlightSetting == "island_neural_expressive"),
+            )
+
+            if (viewModel.isIslandTransparency.value && viewModel.isIslandNeuralExpressive.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_grain_24,
+                    title = stringResource(R.string.island_neural_expressive_always_title),
+                    isChecked = viewModel.isIslandNeuralExpressiveAlways.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setIslandNeuralExpressiveAlways(checked)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "island_neural_expressive_always"),
+                )
+            }
         }
 
         IslandSettingsSection(R.string.island_section_icon_color) {
@@ -620,19 +677,32 @@ fun IslandVisualsSettingsUI(
                 },
             )
         }
+
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp,
+        ) {
+            val stillSettings = remember { SettingsRepository(context) }
+            var preferStill by remember { mutableStateOf(stillSettings.isIslandPreferStillEnabled()) }
+            IconToggleItem(
+                iconRes = R.drawable.rounded_motion_photos_paused_24,
+                title = stringResource(R.string.island_prefer_still_title),
+                isChecked = preferStill,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    preferStill = checked
+                    stillSettings.setIslandPreferStillEnabled(checked)
+                },
+                onInfoClick = { showPreferStillInfo = true },
+                modifier = Modifier.highlight(highlightSetting == "island_prefer_still"),
+            )
+        }
     }
 
     if (showBorderOutlineSheet) {
         IslandBorderOutlineOptionsBottomSheet(
             viewModel = viewModel,
             onDismissRequest = { showBorderOutlineSheet = false },
-        )
-    }
-
-    if (showPulseShadowSheet) {
-        IslandPulseShadowOptionsBottomSheet(
-            viewModel = viewModel,
-            onDismissRequest = { showPulseShadowSheet = false },
         )
     }
 }
@@ -700,6 +770,7 @@ fun IslandBehaviorSettingsUI(
     val view = LocalView.current
     val previewSettings = remember { SettingsRepository(context) }
     var showWhen by remember { mutableStateOf(previewSettings.getIslandShowWhen()) }
+    var dismissDirection by remember { mutableStateOf(previewSettings.getIslandDismissDirection()) }
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showHideStatusBarInfo by remember { mutableStateOf(false) }
     val hasShellPermission =
@@ -766,6 +837,34 @@ fun IslandBehaviorSettingsUI(
                     },
                     labelProvider = { showWhenLabels[it].orEmpty() },
                     title = R.string.island_show_when_title,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceBright, MaterialTheme.shapes.extraSmall)
+                    .padding(top = 12.dp)
+                    .highlight(highlightSetting == "island_dismiss_direction"),
+            ) {
+                Text(
+                    text = stringResource(R.string.island_dismiss_direction_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                val horizontalLabel = stringResource(R.string.island_dismiss_direction_horizontal)
+                val downLabel = stringResource(R.string.island_dismiss_direction_down)
+                SegmentedPicker(
+                    items = listOf(SettingsRepository.ISLAND_DISMISS_HORIZONTAL, SettingsRepository.ISLAND_DISMISS_DOWN),
+                    selectedItem = dismissDirection,
+                    onItemSelected = {
+                        dismissDirection = it
+                        previewSettings.setIslandDismissDirection(it)
+                    },
+                    labelProvider = { if (it == SettingsRepository.ISLAND_DISMISS_DOWN) downLabel else horizontalLabel },
+                    title = R.string.island_dismiss_direction_title,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -1109,6 +1208,7 @@ fun IslandNotificationSettingsUI(
     val view = LocalView.current
     var showFilterAppsSheet by remember { mutableStateOf(false) }
     var showHubSheet by remember { mutableStateOf(false) }
+    var showPulseShadowSheet by remember { mutableStateOf(false) }
     var showOtpPermissions by remember { mutableStateOf(false) }
     var lockedDisabled by remember {
         mutableStateOf(
@@ -1347,6 +1447,18 @@ fun IslandNotificationSettingsUI(
                     modifier = Modifier.highlight(highlightSetting == "island_catch_up_timeout"),
                 )
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_blur_on_24,
+                title = stringResource(R.string.island_pulse_shadow_title),
+                isChecked = viewModel.isIslandPulseShadow.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.setIslandPulseShadow(checked)
+                },
+                onSettingsClick = { showPulseShadowSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "island_pulse_shadow_on_notification"),
+            )
         }
 
         if (showOtpPermissions) {
@@ -1469,6 +1581,13 @@ fun IslandNotificationSettingsUI(
                 }
             }
         }
+    }
+
+    if (showPulseShadowSheet) {
+        IslandPulseShadowOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showPulseShadowSheet = false },
+        )
     }
 
     if (showHubSheet) {

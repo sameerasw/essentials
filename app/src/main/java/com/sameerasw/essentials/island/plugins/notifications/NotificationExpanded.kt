@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import com.sameerasw.essentials.island.ui.components.resizableCard
 import com.sameerasw.essentials.island.ui.components.rememberExpandedResize
 import com.sameerasw.essentials.island.ui.components.ResizeHandle
@@ -24,7 +25,6 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
-import kotlinx.coroutines.delay
 import com.sameerasw.essentials.island.ui.components.IslandIcon
 import com.sameerasw.essentials.island.ui.IslandHaptics
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -40,6 +40,9 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.FocusRequester
+import kotlinx.coroutines.flow.first
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.setValue
@@ -101,7 +104,6 @@ import com.sameerasw.essentials.island.ui.islandTextColor
 import com.sameerasw.essentials.island.ui.components.CameraRow
 import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
-import com.sameerasw.essentials.island.ui.components.accentGlow
 
 @Composable
 fun NotificationExpanded(
@@ -117,6 +119,7 @@ fun NotificationExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val glowColor = alert.appColor?.let { Color(it) } ?: Color.White
+    IslandSurfaceAccent(glowColor)
     val resize = scope.rememberExpandedResize(SettingsRepository.KEY_ISLAND_NOTIF_MAX_HEIGHT)
     val density = LocalDensity.current
     val imeInset = WindowInsets.ime.getBottom(density)
@@ -128,7 +131,6 @@ fun NotificationExpanded(
         null
     }
     Box(propagateMinConstraints = true) {
-        Box(Modifier.matchParentSize().accentGlow(glowColor, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -312,8 +314,9 @@ private fun ReplyInput(
         scope.setTextInput(true)
         onDispose { scope.setTextInput(false) }
     }
+    val windowInfo = LocalWindowInfo.current
     LaunchedEffect(Unit) {
-        delay(80)
+        snapshotFlow { windowInfo.isWindowFocused }.first { it }
         focus.requestFocus()
         keyboard?.show()
     }

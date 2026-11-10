@@ -1,15 +1,13 @@
 package com.sameerasw.essentials.island.plugins.progress
 
+import com.sameerasw.essentials.island.ui.components.rememberLoopValue
+import com.sameerasw.essentials.island.ui.components.islandStill
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.ui.motionTween
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -171,6 +169,7 @@ class ProgressPlugin : BaseIslandPlugin() {
             IslandItem(
                 key = ITEM_KEY,
                 priority = IslandPriority.PROGRESS,
+                expandedParticles = true,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("progress.ring") {
@@ -245,12 +244,7 @@ class ProgressPlugin : BaseIslandPlugin() {
 @Composable
 private fun ProgressPill(progress: Float, indeterminate: Boolean, icon: ImageBitmap?, label: String, color: Color, height: Dp, tinted: Boolean = false) {
     val fraction by animateFloatAsState(progress.coerceIn(0f, 1f), IslandMotion.float(), label = "pillProgress")
-    val phase by rememberInfiniteTransition(label = "pillSpin").animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(motionTween(1600, easing = LinearEasing), RepeatMode.Restart),
-        label = "pillPhase",
-    )
+    val phase = rememberLoopValue(indeterminate && !islandStill(), 1f, 1600)
     Box(Modifier.fillMaxSize()) {
         Canvas(Modifier.fillMaxSize()) {
             val stroke = this.size.height * 0.1f
@@ -321,12 +315,7 @@ private fun ProgressPill(progress: Float, indeterminate: Boolean, icon: ImageBit
 @Composable
 internal fun ProgressRing(progress: Float, indeterminate: Boolean, icon: ImageBitmap?, color: Color, size: Dp = 24.dp, tinted: Boolean = false) {
     val sweep by animateFloatAsState(360f * progress.coerceIn(0f, 1f), IslandMotion.float(), label = "progressSweep")
-    val rotation by rememberInfiniteTransition(label = "progressSpin").animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(motionTween(1200, easing = LinearEasing), RepeatMode.Restart),
-        label = "progressRotation",
-    )
+    val rotation = rememberLoopValue(indeterminate && !islandStill(), 360f, 1200)
     Box(
         Modifier
             .sizeIn(maxWidth = size, maxHeight = size)

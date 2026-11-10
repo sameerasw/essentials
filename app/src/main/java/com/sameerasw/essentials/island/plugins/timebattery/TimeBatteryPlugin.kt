@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.timebattery
 
+import com.sameerasw.essentials.island.state.IslandStillness
 import com.sameerasw.essentials.island.ui.components.islandAccent
 
 import com.sameerasw.essentials.island.ui.islandTextColor
@@ -189,7 +190,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         handler.postDelayed(secondsTick, 1000L - System.currentTimeMillis() % 1000L)
     }
 
-    private fun showSeconds() = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false)
+    private fun showSeconds() = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_SHOW_SECONDS, false) && !IslandStillness.isStill
 
     private fun readTime() {
         time = IslandTimeFormat.format(context, settings, System.currentTimeMillis(), seconds = showSeconds())
@@ -271,7 +272,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             placement = CompactPlacement.Pinned,
             needsCompanyAtCenter = settings.isIslandBatteryIconConditional(),
             chip = settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_CHIP, false),
-            interactions = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK, true)) {
+            interactions = if (settings.getBoolean(SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK, false)) {
                 InteractionOverrides(onTap = { openClock(); true })
             } else {
                 InteractionOverrides.Default

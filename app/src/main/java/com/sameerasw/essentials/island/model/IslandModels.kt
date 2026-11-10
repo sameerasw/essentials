@@ -116,10 +116,12 @@ class SideBubble(
     val overflow: QueueOverflow = QueueOverflow.Number,
     // Compact cells' worth of room the bubble takes beside the camera
     val cells: Int = 1,
+    val soloIcons: List<StackIcon>? = null,
 )
 
 object SideBubblePriority {
     const val NOTIFICATION = 0
+    const val MEDIA = 5
     const val PROGRESS = 10
 }
 
@@ -133,6 +135,8 @@ class QueueInfo(
     val next: IslandItem,
     val onAdvance: () -> Unit,
 )
+
+enum class ExpandedSurfaceStyle { Default, Layered }
 
 class IslandItem(
     val key: String,
@@ -170,6 +174,8 @@ class IslandItem(
     val priorityGroup: String? = null,
     // Rendered inside a colored chip when Island chips is enabled.
     val chip: Boolean = key in IslandChips.items,
+    val expandedSurfaceStyle: ExpandedSurfaceStyle = ExpandedSurfaceStyle.Layered,
+    val expandedParticles: Boolean = false,
 ) {
     var userPriority: Int? = null
 
@@ -203,6 +209,8 @@ class IslandItem(
         queued = queued,
         priorityGroup = priorityGroup,
         chip = chip,
+        expandedSurfaceStyle = expandedSurfaceStyle,
+        expandedParticles = expandedParticles,
     ).also { it.userPriority = userPriority }
 
     val effectivePriority: Int get() = priorityOverride ?: userPriority ?: priority

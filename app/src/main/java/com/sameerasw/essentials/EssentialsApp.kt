@@ -40,7 +40,7 @@ class EssentialsApp : Application() {
     private val securityReceiver = SecurityReceiver()
     private val powerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            context.sendBroadcast(Intent(context, BatteriesWidgetReceiver::class.java).setAction(intent.action))
+            context.sendBroadcast(Intent(context, BatteriesWidgetReceiver::class.java).setAction(BatteriesWidgetReceiver.ACTION_POWER_STATE_CHANGED))
         }
     }
 

@@ -254,7 +254,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun applyHub(allLive: List<ActiveNotificationAlert>) {
-        val live = allLive.filter { passesFilters(it) }
+        val live = allLive.filter { passesFilters(it, forHub = true) }
         val liveKeys = live.mapTo(HashSet()) { it.key }
         val stale = alerts.filter { it.key !in liveKeys && !it.key.startsWith("simulated_") }
         stale.forEach { removeQuietly(it.key) }
@@ -287,7 +287,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
     }
 
     private fun addSilently(alert: ActiveNotificationAlert) {
-        if (!passesFilters(alert)) {
+        if (!passesFilters(alert, forHub = true)) {
             removeQuietly(alert.key)
             render()
             return
@@ -327,8 +327,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         if (ctx?.isContentSuppressed?.invoke() == true) clearAll() else render()
     }
 
-    private fun passesFilters(alert: ActiveNotificationAlert): Boolean {
-        if (alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
+    private fun passesFilters(alert: ActiveNotificationAlert, forHub: Boolean = false): Boolean {
+        if (!forHub && alert.isSilent && settings.isIslandNotifSkipSilentEnabled()) return false
         if (alert.blockedByDnd && settings.isIslandNotifFollowDndEnabled()) return false
         if (isOtp(alert) && settings.isIslandOtpBypassFilterEnabled()) return true
         if (!settings.isIslandNotifFilterAppsEnabled()) return true
@@ -565,6 +565,12 @@ class NotificationsPlugin : BaseIslandPlugin() {
         return if (pinned != null) listOf(pinned) + byPriority.filter { it !== pinned } else byPriority
     }
 
+    private fun carouselOrder(): List<ActiveNotificationAlert> {
+        if (!hub()) return alerts
+        val ordered = hubEntries().asReversed().flatMap { it.alerts.asReversed() }
+        return alerts.filter { a -> ordered.none { it === a } } + ordered
+    }
+
     private fun hubIconFor(entry: HubEntry): StackIcon {
         val highlight = pinnedKey?.let { key -> entry.alerts.any { it.key == key } } == true
         if (!entry.grouped) return stackIconFor(entry.lead, current = false, highlight = highlight)
@@ -653,7 +659,8 @@ class NotificationsPlugin : BaseIslandPlugin() {
         } else {
             null
         }
-        val stack = alerts.map { stackIconFor(it, current = it === alert) }
+        val row = carouselOrder()
+        val stack = row.map { stackIconFor(it, current = it === alert) }
         val waitingAlerts = waitingInOrder(alert).filter { !it.hubOnly && it.key !in seen }
         val queued = if (hub()) {
             hubEntries().filter { entry -> entry.alerts.none { it === alert } }.map { hubIconFor(it) }
@@ -661,13 +668,14 @@ class NotificationsPlugin : BaseIslandPlugin() {
             waitingAlerts.map { stackIconFor(it, current = false) }
         }
         val minimal = minimal()
-        val waiting = if (minimal) waitingAlerts.map { stackIconFor(it, current = false) } else emptyList()
+        val waitingRow = alerts.filter { a -> waitingAlerts.any { it === a } }.asReversed()
+        val waiting = if (minimal) waitingRow.map { stackIconFor(it, current = false) } else emptyList()
         val inlineQueue = minimal && waiting.isNotEmpty() && settings.isIslandNotifQueueInlineEnabled()
         val bubble = when {
             minimal && waiting.isNotEmpty() && !inlineQueue -> SideBubble(
                 priority = SideBubblePriority.NOTIFICATION,
                 icons = waiting,
-                onOpen = { select(waiting.first().key) },
+                onOpen = { select(waitingAlerts.first().key) },
                 onDismiss = { clearWaiting() },
             )
             minimal -> null
@@ -677,7 +685,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                 icons = if (hub()) {
                     hubEntries().map { hubIconFor(it) }
                 } else {
-                    alerts.map { stackIconFor(it, current = false) }
+                    alerts.asReversed().map { stackIconFor(it, current = false) }
                 },
                 onOpen = { select(alert.key) },
                 onDismiss = if (hub()) null else ({ clearAll() }),
@@ -695,7 +703,7 @@ class NotificationsPlugin : BaseIslandPlugin() {
                     leadingCell = if (inlineQueue) queueCell(waiting) else null,
                     queue = next?.let {
                         QueueInfo(
-                            next = itemFor(it).withStack(null, alerts.map { a -> stackIconFor(a, current = a === it) }),
+                            next = itemFor(it).withStack(null, row.map { a -> stackIconFor(a, current = a === it) }),
                             onAdvance = { advanceQueue() },
                         )
                     },

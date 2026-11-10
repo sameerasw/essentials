@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.media
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import com.sameerasw.essentials.island.ui.components.LocalIslandIconColor
 import androidx.compose.foundation.layout.fillMaxSize
 import com.sameerasw.essentials.island.ui.SurfaceBackdrop
@@ -101,6 +102,7 @@ enum class MediaPlayerStyle(val key: String) {
 
 object IslandMediaState {
     val current = kotlinx.coroutines.flow.MutableStateFlow<MediaSnapshot?>(null)
+    val live = kotlinx.coroutines.flow.MutableStateFlow(false)
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -121,6 +123,7 @@ fun MediaExpanded(
     style: MediaPlayerStyle = MediaPlayerStyle.Default,
 ) {
     val spec = scope.spec
+    if (drawBackground) IslandSurfaceAccent(accent)
     val context = LocalContext.current
     var progress by remember { mutableFloatStateOf(actions.progress()) }
     var pendingSeek by remember { mutableStateOf<Pair<Float, Long>?>(null) }

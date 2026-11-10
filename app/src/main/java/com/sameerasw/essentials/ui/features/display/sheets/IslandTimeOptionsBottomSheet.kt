@@ -161,7 +161,7 @@ fun IslandTimeOptionsBottomSheet(
                     settingKey = SettingsRepository.KEY_ISLAND_TIME_TAP_OPENS_CLOCK,
                     iconRes = R.drawable.rounded_alarm_24,
                     title = stringResource(R.string.island_time_tap_opens_clock_title),
-                    defaultValue = true,
+                    defaultValue = false,
                 )
             }
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY)

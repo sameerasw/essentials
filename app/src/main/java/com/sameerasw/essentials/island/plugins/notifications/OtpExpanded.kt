@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.island.plugins.notifications
 
+import com.sameerasw.essentials.island.ui.IslandSurfaceAccent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +35,6 @@ import com.sameerasw.essentials.island.ui.components.ConnectedItem
 import com.sameerasw.essentials.island.ui.components.ConnectedTextLabel
 import com.sameerasw.essentials.island.ui.components.IslandBitmap
 import com.sameerasw.essentials.island.ui.components.MarqueeText
-import com.sameerasw.essentials.island.ui.components.accentGlow
 import com.sameerasw.essentials.island.ui.components.cameraClearance
 
 fun formatOtp(code: String): String = when {
@@ -58,9 +58,9 @@ fun OtpExpanded(
     val spec = scope.spec
     val sidePadding = spec.expandedPadding + spec.expandedCorner * 0.35f
     val accent = alert.appColor?.let { Color(it) } ?: Color.White
+    IslandSurfaceAccent(accent)
     var showMessage by remember(alert.key) { mutableStateOf(false) }
     Box(propagateMinConstraints = true) {
-        Box(Modifier.matchParentSize().accentGlow(accent, showGlow, scope.cameraClearance))
         Column(
             modifier = Modifier.fillMaxWidth().padding(spec.expandedOutset),
             verticalArrangement = Arrangement.SpaceBetween,
