@@ -485,7 +485,10 @@ private fun IslandRootContent(
         launch { contentMotion.animateTo(0f, if (growing) IslandMotion.contentSpring() else IslandMotion.collapseFloat()) }
         contentAlpha.animateTo(1f, motionTween(durationMillis = if (growing) 200 else 160, delayMillis = if (handOver) 60 else 0))
     }
-    val outsetPx = with(density) { spec.expandedOutset.toPx() }
+    // Net upward lift of the expanded surface: scale outset, capped so it never rises above the screen, minus the user offset.
+    val outsetPx = with(density) {
+        minOf(spec.expandedOutset.toPx(), spec.surfaceTop.toPx()) - spec.expandedOffsetY.toPx()
+    }
     val cameraSlotPx = with(density) { spec.cameraSlotWidth.roundToPx() }
     val layerSizes = remember { HashMap<Any, IntSize>() }
     val contentOriginX = when {
@@ -796,7 +799,7 @@ private fun IslandRootContent(
         }
         val left = windowWidth / 2 - target.width / 2 + surfaceShiftFor(target.width) + shift
         val top = (surfaceTopPx - g).coerceAtLeast(0)
-        var bounds = IntRect(left, top, left + target.width, surfaceTopPx - g + target.height)
+        var bounds = IntRect(left, top, left + target.width, maxOf(top, surfaceTopPx - g) + target.height)
         if (queueShown && stage == IslandStage.Line) {
             val bx = if (spec.growDirection > 0) left + target.width + bubbleGapPx else left - bubbleGapPx - queueWidthPx
             bounds = IntRect(minOf(bounds.left, bx), bounds.top, maxOf(bounds.right, bx + queueWidthPx), maxOf(bounds.bottom, surfaceTopPx + bubbleSizePx))

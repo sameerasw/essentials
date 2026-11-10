@@ -610,6 +610,7 @@ class SettingsRepository(
         const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
         const val KEY_ISLAND_EXPANDED_PADDING = "island_expanded_padding"
         const val KEY_ISLAND_EXPANDED_TOP_PADDING = "island_expanded_top_padding"
+        const val KEY_ISLAND_EXPANDED_OFFSET_Y = "island_expanded_offset_y"
         const val KEY_ISLAND_EXPANDED_BOTTOM_PADDING = "island_expanded_bottom_padding"
         const val KEY_ISLAND_EXPANDED_TIMEOUT_MS = "island_expanded_timeout_ms"
         const val KEY_ISLAND_CATCH_UP_ENABLED = "island_catch_up_enabled"
@@ -4223,6 +4224,9 @@ class SettingsRepository(
 
     fun getIslandExpandedTopPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, 0f)
     fun setIslandExpandedTopPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, value)
+
+    fun getIslandExpandedOffsetY(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_OFFSET_Y, 0f)
+    fun setIslandExpandedOffsetY(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_OFFSET_Y, value)
     fun getIslandExpandedBottomPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, 12f)
     fun setIslandExpandedBottomPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, value)
 
