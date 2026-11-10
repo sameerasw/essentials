@@ -1691,7 +1691,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="island_camera_position_right">Derecha</string>
     <string name="island_camera_position_center">Centrar</string>
     <string name="island_hide_in_owner_app_title">Ocultar la notificación dentro de la app activa</string>
-    <string name="island_hide_media_in_owner_app_title">Hide media player inside the app</string>
+    <string name="island_hide_media_in_owner_app_title">Ocultar el reproductor de medios dentro de la app</string>
     <string name="about_desc_conscious_gate">Agrega una breve pantalla de puerta de atención plena antes de abrir las aplicaciones que has elegido usar con más intencionalidad, como las redes sociales.
 
 El botón Continuar permanece deshabilitado durante unos segundos para que tengas un momento para decidir, y la pausa puede reaparecer opcionalmente si sigues usando la aplicación más allá de un tiempo determinado</string>
@@ -1751,7 +1751,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_brief_two_line_header_title">Encabezado de 2 líneas</string>
     <string name="diy_volume_channel_alarm">Alarmas</string>
     <string name="island_launcher_only_title">Solo mostrar en el launcher</string>
-    <string name="island_show_on_update_title">Periodically show on updates</string>
+    <string name="island_show_on_update_title">Mostrar periodicamente en las actualizaciones</string>
     <string name="island_alarm_window_title">Mostrar alarmas dentro</string>
     <string name="island_battery_only_low_title">Solo mostrar si esta baja</string>
     <string name="island_battery_percentage_title">Mostrar porcentaje</string>
@@ -1759,7 +1759,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_launcher_only_desc">Ocultar si una aplicación esta abierta</string>
     <string name="island_section_notifications">Notificaciones</string>
     <string name="island_hide_on_shade_title">Ocultar cuando Barra de Estado se desliza</string>
-    <string name="island_tap_to_open_expanded_title">Tap to open when expanded</string>
+    <string name="island_tap_to_open_expanded_title">Presiona para abrir si esta expandido</string>
     <string name="island_dismiss_on_outside_title">Ocultar al tocar fuera de la notificación</string>
     <string name="island_show_when_title">Mostrar al</string>
     <string name="island_show_when_unlocked">Desbloquear</string>
@@ -1774,7 +1774,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_glow_intensity_title">Glow intensity</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
-    <string name="island_pulse_shadow_title">Pulse for new notifications</string>
+    <string name="island_pulse_shadow_title">Mostrar animación de pulso en la notificación</string>
     <string name="island_timeout_title">Duración de la Ventana</string>
     <string name="island_expanded_timeout_title">Tiempo de espera expandido</string>
     <string name="island_always_gestures_title">Gestos siempre disponibles</string>
@@ -1898,15 +1898,15 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="about_desc_call_sync">Sync call status between your phone and your watch.\n\nThis is only used for the launcher and is not a full call handler.</string>
     <string name="about_desc_mono_audio_tile">Quick Settings tile to toggle mono audio.\n\nMono audio plays the same sound in both ears, which helps when using a single earbud or if you have hearing difficulty in one ear.</string>
     <string name="about_desc_back_gesture">Fine tune the system back gesture.\n\nAdjust the edge widths for the left and right gesture areas and set up per-app back gesture behavior. Requires secure settings permission.</string>
-    <string name="island_chips_title">Island chips</string>
+    <string name="island_chips_title">Tarjetas de la Isla</string>
     <string name="island_calendar_compact_time_title">Compact time</string>
     <string name="feat_aod_wallpaper_compat_title">Modo de compatibilidad</string>
     <string name="feat_aod_wallpaper_compat_info_why">Some devices, especially on One UI, pause app animations while the always-on display is showing and skip drawing app windows. This can leave the AOD wallpaper half transparent or invisible, or stuck on screen after waking the device.</string>
     <string name="feat_aod_wallpaper_compat_info_what">Compatibility mode turns off the fade animations of the wallpaper. The wallpaper appears at full strength right away, disappears instantly when the screen wakes, and image changes are applied without a crossfade. Turn it on only if the wallpaper looks faded, never shows, or stays after waking.</string>
     <string name="feat_circle_to_search_gesture_hide_on_shade">Disable on statusbar expansion</string>
     <string name="island_themed_app_icons_title">Usar iconos de aplicaciones tematizados </string>
-    <string name="island_time_day_suffix_title">Show date suffix</string>
-    <string name="island_time_tap_opens_clock_title">Tap to open clock</string>
+    <string name="island_time_day_suffix_title">Mostrar fecha</string>
+    <string name="island_time_tap_opens_clock_title">Tocar para abrir el reloj</string>
     <string name="diy_cts_method_title">Trigger method</string>
     <string name="diy_cts_method_accessibility">Accessibility</string>
     <string name="diy_cts_method_shizuku">Shizuku / Root</string>
@@ -1934,7 +1934,7 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_media_keep_when_paused_title">Mantener en espera cuando se pausa</string>
     <string name="island_media_show_previous_title">Botón de canción anterior</string>
     <string name="island_media_show_like_title">Botón de \"me gusta\"</string>
-    <string name="island_media_use_art_color_title">Advertise album art color</string>
+    <string name="island_media_use_art_color_title">Usar color del album</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="island_hide_in_fullscreen_title">Ocultar en pantalla completa</string>
     <string name="disable_interactions_in_full_screen_title">Desactivar gestos en pantalla completa</string>
@@ -1948,8 +1948,8 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_section_icon_color">Color de iconos</string>
     <string name="app_colors_custom">Personalizado </string>
     <string name="island_themed_text_title">Color de texto tematizado </string>
-    <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
-    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="debug_ui_margin_overlay_title">Superposicion del margen de la interfaz</string>
+    <string name="island_statusbar_ignore_notifications_title">Ignorar notificaciones</string>
     <string name="island_statusbar_aware_width_info">This may not work on all devices. It works best on Pixels and devices with a status bar close to AOSP.</string>
     <string name="island_statusbar_aware_width_info_tip">Even on those devices, try reducing the number of visible status bar icons to give the island more space.</string>
     <string name="island_dismiss_direction_title">Dismissals</string>
@@ -1963,4 +1963,40 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="island_secondary_bubbles_count_title">Numero de burbujas secundarias</string>
+    <string name="island_secondary_style_title">Estilo de iconos secundarios</string>
+    <string name="island_live_updates_expanded_title">Expandir las actualizaciones en vivo</string>
+    <string name="island_live_updates_title">Actualizaciones en vivo</string>
+    <string name="island_live_updates_count_title">Conteo de actualizaciones en vivo</string>
+    <string name="island_notif_hub_title">Hub de notificaciones</string>
+    <string name="island_notif_hub_group_apps">Agrupar por aplicaciones</string>
+    <string name="island_notif_hub_include_silent">Incluir notificaciones silenciosas</string>
+    <string name="island_notif_filter_apps_title">Filtrar aplicaciones</string>
+    <string name="island_notif_skip_silent_title">Saltar notificaciones silenciosas</string>
+    <string name="island_notif_skip_silent_desc">Ignorar notificaciones que no tienen sonido</string>
+    <string name="island_notif_follow_dnd_title">Seguir el modo No Molestar</string>
+    <string name="island_notif_follow_dnd_desc">Ocultar notificaciones si el modo No Molestar las silencia</string>
+    <string name="island_notif_peek_style_full">Ancho</string>
+    <string name="island_call_show_compact">Compacto</string>
+    <string name="island_otp_enabled_title">Detectar codigos OTP</string>
+    <string name="island_otp_tap_to_copy_title">Tocar para copiar</string>
+    <string name="island_otp_dismiss_after_copy_title">Descartar notificacion despues de copiarlo</string>
+    <string name="island_notif_conceal_locked_title">Ocultar el contenido de la notificacion</string>
+    <string name="island_notif_conceal_chat_pictures_title">Ocultar las imagenes del chat</string>
+    <string name="island_time_chip_title">Mostrar en tarjeta</string>
+    <string name="island_time_show_seconds_title">Mostrar segundos</string>
+    <string name="island_timers_filter_apps_title">Filtrar en aplicaciones</string>
+    <string name="island_timers_show_screen_recorder_title">Mostrar en grabaciones de pantalla</string>
+    <string name="island_caffeinate_show_time_title">Mostrar hora</string>
+    <string name="island_calendar_priority_title">Prioritarios se cierran en</string>
+    <string name="island_signal_low_only_title">Mostrar si hay baja señal</string>
+    <string name="island_signal_show_mode_title">Mostrar modo de conexion</string>
+    <string name="island_signal_wifi_title">Mostrar señal del WI-FI</string>
+    <string name="island_network_activity_title">Mostrar actividad de la conexion</string>
+    <string name="island_show_signal_title">Mostrar señal movil</string>
+    <string name="island_alarm_hide_time_title">Ocultar hora</string>
+    <string name="island_alarm_show_remaining_title">Mostrar tiempo restante</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">No usar en No Molestar</string>
+    <string name="hilight_only_screen_off_title">Solo si la pantalla esta apagada</string>
+    <string name="diy_wait_duration">Duracion</string>
 </resources>

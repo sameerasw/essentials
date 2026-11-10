@@ -1633,7 +1633,7 @@
     <string name="duo_show_battery_percentage_title">电量显示</string>
     <string name="cat_networks">数据信号强度显示</string>
     <string name="duo_show_time_title">時間</string>
-    <string name="duo_rotate_album_art_title">旋轉專輯封面</string>
+    <string name="duo_rotate_album_art_title">旋转专辑封面</string>
     <string name="duo_show_flashlight_title">手电筒</string>
     <string name="duo_material_you_title">使用 Material You 色彩</string>
     <string name="island_hide_on_shade_title">下拉状态栏时隐藏图标</string>
@@ -1792,8 +1792,8 @@
     <string name="island_bond_edge_title">置顶并已刘海屏显示</string>
     <string name="island_call_options_title">電話</string>
     <string name="tile_lockdown_mode">鎖定</string>
-    <string name="feat_screenshots_title">螢幕截圖清理</string>
-    <string name="feat_screenshots_desc">將分享過和舊的截圖清掉</string>
+    <string name="feat_screenshots_title">截图清理</string>
+    <string name="feat_screenshots_desc">将分享后或者是旧的截图清理</string>
     <string name="island_notif_filter_apps_title">筛选应用</string>
     <string name="island_notif_skip_silent_title">跳过静音通知</string>
     <string name="island_notif_follow_dnd_title">跟随勿扰模式</string>
@@ -1815,4 +1815,8 @@
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
     <string name="shut_up_how_to_use">1. Grant Write secure settings and Usage access from the permissions prompt. Shizuku is needed for freezing apps.\n\n2. Tap Select Apps and pick the apps that refuse to run with developer options, debugging or accessibility turned on, such as banking or payment apps.\n\n3. Tap an app to choose what gets hidden for it: Developer Options, USB Debugging, Wireless Debugging and Accessibility Services. You can also turn on Auto Freeze to freeze the app after you leave it, and Restore keyboard to switch back to your keyboard afterwards.\n\n4. Tap Create shortcut for each app and add it to your home screen. Always open the app from this shortcut, never from its normal icon, so the settings are turned off before the app starts and can check them.\n\n5. When you leave the app, Shut-Up! waits for the Restoration Delay and then shows a notification. Tap it to turn everything back on. Set Restore mode to Auto if you would rather have the settings restored on their own.\n\nTips: if wireless debugging was turned off, Shizuku may stop working, so enable Attempt Shizuku restart. Use the Keyboard option to pick the keyboard to restore, or leave it on Skip. With Auto Freeze, a notification counts down and lets you freeze now or abort.</string>
+    <string name="screenshot_auto_clean_title">自动清理截图</string>
+    <string name="screenshot_auto_clean_note">每新的截图都会以静音通知的形式保留它，有星标的截图将会保留</string>
+    <string name="screenshots_cleaned_count_title">截图清理</string>
+    <string name="screenshots_storage_saved_title">截图保留</string>
 </resources>

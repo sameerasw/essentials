@@ -34,6 +34,7 @@ import com.sameerasw.essentials.island.ui.components.MarqueeText
 @Composable
 fun ProgressExpanded(
     icon: Bitmap?,
+    iconIsGlyph: Boolean = false,
     title: String,
     text: String?,
     progress: Float,
@@ -54,7 +55,7 @@ fun ProgressExpanded(
                 horizontalPadding = spec.cameraGap + spec.expandedCorner * 0.35f,
                 title = title,
                 start = {
-                    IslandBitmap(icon, spec.cellSize, fallbackRes = R.drawable.rounded_downloading_24)
+                    IslandBitmap(icon, spec.cellSize, fallbackRes = R.drawable.rounded_downloading_24, tint = if (iconIsGlyph) accent else null)
                 },
                 end = {
                     if (!indeterminate) Text("${(progress * 100).toInt()}%", style = IslandTextStyles.body.copy(color = islandTextColor()))

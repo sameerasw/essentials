@@ -245,6 +245,7 @@ class MainViewModel : ViewModel() {
     val isIslandNeuralExpressive = mutableStateOf(false)
     val isIslandNeuralExpressiveAlways = mutableStateOf(false)
     val isIslandTransparency = mutableStateOf(true)
+    val isIslandProgressiveBlur = mutableStateOf(true)
     val isIslandStatusBarAwareWidth = mutableStateOf(false)
     val isIslandStatusBarIgnoreNotifications = mutableStateOf(true)
     val isDebugUiMarginOverlay = mutableStateOf(false)
@@ -280,6 +281,7 @@ class MainViewModel : ViewModel() {
     val islandDevicesBatteryOrder = mutableStateOf<List<String>>(emptyList())
     val islandExpandedPadding = mutableFloatStateOf(16f)
     val islandExpandedTopPadding = mutableFloatStateOf(0f)
+    val islandExpandedOffsetY = mutableFloatStateOf(0f)
     val islandExpandedBottomPadding = mutableFloatStateOf(12f)
     val islandExpandedTimeoutMs = mutableLongStateOf(0L)
     val isIslandSuppressSystemHeadsUp = mutableStateOf(false)
@@ -2551,6 +2553,7 @@ class MainViewModel : ViewModel() {
         isIslandNeuralExpressive.value = settingsRepository.isIslandNeuralExpressiveEnabled()
         isIslandNeuralExpressiveAlways.value = settingsRepository.isIslandNeuralExpressiveAlwaysEnabled()
         isIslandTransparency.value = settingsRepository.isIslandTransparencyEnabled()
+        isIslandProgressiveBlur.value = settingsRepository.isIslandProgressiveBlurEnabled()
         isIslandStatusBarAwareWidth.value = settingsRepository.isIslandStatusBarAwareWidthEnabled()
         isIslandStatusBarIgnoreNotifications.value = settingsRepository.isIslandStatusBarIgnoreNotificationsEnabled()
         isDebugUiMarginOverlay.value = settingsRepository.isDebugUiMarginOverlayEnabled()
@@ -2591,6 +2594,7 @@ class MainViewModel : ViewModel() {
         islandDevicesBatteryOrder.value = settingsRepository.getIslandDevicesBatteryOrder()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedOffsetY.floatValue = settingsRepository.getIslandExpandedOffsetY()
         islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
         islandExpandedTimeoutMs.longValue = settingsRepository.getIslandExpandedTimeoutMs()
         isIslandSuppressSystemHeadsUp.value = settingsRepository.isIslandSuppressSystemHeadsUpEnabled()
@@ -5554,6 +5558,7 @@ class MainViewModel : ViewModel() {
         islandExpandedRoundness.floatValue = settingsRepository.getIslandExpandedRoundness()
         islandExpandedPadding.floatValue = settingsRepository.getIslandExpandedPadding()
         islandExpandedTopPadding.floatValue = settingsRepository.getIslandExpandedTopPadding()
+        islandExpandedOffsetY.floatValue = settingsRepository.getIslandExpandedOffsetY()
         islandExpandedBottomPadding.floatValue = settingsRepository.getIslandExpandedBottomPadding()
         islandExpandedScale.floatValue = settingsRepository.getIslandExpandedScale()
         islandFontScale.floatValue = settingsRepository.getIslandFontScale()
@@ -6050,6 +6055,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.setIslandNeuralExpressiveAlwaysEnabled(enabled)
     }
 
+    fun setIslandProgressiveBlur(enabled: Boolean) {
+        isIslandProgressiveBlur.value = enabled
+        settingsRepository.setIslandProgressiveBlurEnabled(enabled)
+    }
+
     fun setIslandTransparency(enabled: Boolean) {
         isIslandTransparency.value = enabled
         settingsRepository.setIslandTransparencyEnabled(enabled)
@@ -6114,6 +6124,11 @@ class MainViewModel : ViewModel() {
     fun setIslandExpandedPadding(value: Float) {
         islandExpandedPadding.floatValue = value
         settingsRepository.setIslandExpandedPadding(value)
+    }
+
+    fun setIslandExpandedOffsetY(value: Float) {
+        islandExpandedOffsetY.floatValue = value
+        settingsRepository.setIslandExpandedOffsetY(value)
     }
 
     fun setIslandExpandedTopPadding(value: Float) {

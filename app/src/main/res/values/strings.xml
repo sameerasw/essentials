@@ -3339,6 +3339,7 @@
     <string name="island_reply_send">Send</string>
     <string name="island_expanded_padding_title">Expanded padding</string>
     <string name="island_expanded_top_padding_title">Expanded top padding</string>
+    <string name="island_expanded_offset_y_title">Expanded vertical offset</string>
     <string name="island_expanded_bottom_padding_title">Expanded bottom padding</string>
     <string name="island_catch_up_title">Catch up</string>
     <string name="island_catch_up_desc">Keep last notification in island for longer</string>
@@ -3475,6 +3476,7 @@
     <string name="island_network_disconnected_from">Disconnected from</string>
     <string name="island_timer_default">Timer</string>
     <string name="island_stopwatch_default">Stopwatch</string>
+    <string name="island_recording_default">Recording</string>
     <string name="island_call_incoming">Incoming call</string>
     <string name="island_call_incoming_app">%1$s call</string>
     <string name="island_call_answer">Answer</string>
@@ -3739,6 +3741,7 @@
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
     <string name="island_transparency_title">Island transparency</string>
+    <string name="island_progressive_blur_title">Progressive blur animation</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>

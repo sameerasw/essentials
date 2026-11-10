@@ -610,6 +610,7 @@ class SettingsRepository(
         const val KEY_ISLAND_EXPANDED_ROUNDNESS = "island_expanded_roundness"
         const val KEY_ISLAND_EXPANDED_PADDING = "island_expanded_padding"
         const val KEY_ISLAND_EXPANDED_TOP_PADDING = "island_expanded_top_padding"
+        const val KEY_ISLAND_EXPANDED_OFFSET_Y = "island_expanded_offset_y"
         const val KEY_ISLAND_EXPANDED_BOTTOM_PADDING = "island_expanded_bottom_padding"
         const val KEY_ISLAND_EXPANDED_TIMEOUT_MS = "island_expanded_timeout_ms"
         const val KEY_ISLAND_CATCH_UP_ENABLED = "island_catch_up_enabled"
@@ -673,6 +674,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NEURAL_EXPRESSIVE = "island_neural_expressive"
         const val KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS = "island_neural_expressive_always"
         const val KEY_ISLAND_TRANSPARENCY = "island_transparency"
+        const val KEY_ISLAND_PROGRESSIVE_BLUR = "island_progressive_blur"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH = "island_statusbar_aware_width"
         const val KEY_ISLAND_STATUSBAR_AWARE_WIDTH_RESET_V1 = "island_statusbar_aware_width_reset_v1"
         const val KEY_DEBUG_UI_MARGIN_OVERLAY = "debug_ui_margin_overlay"
@@ -4223,6 +4225,9 @@ class SettingsRepository(
 
     fun getIslandExpandedTopPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, 0f)
     fun setIslandExpandedTopPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_TOP_PADDING, value)
+
+    fun getIslandExpandedOffsetY(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_OFFSET_Y, 0f)
+    fun setIslandExpandedOffsetY(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_OFFSET_Y, value)
     fun getIslandExpandedBottomPadding(): Float = getDisplayFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, 12f)
     fun setIslandExpandedBottomPadding(value: Float) = putDisplayFloat(KEY_ISLAND_EXPANDED_BOTTOM_PADDING, value)
 
@@ -4480,7 +4485,11 @@ class SettingsRepository(
 
     fun setIslandNeuralExpressiveAlwaysEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS, enabled)
 
-    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, !com.sameerasw.essentials.utils.DeviceUtils.isLowEndDevice(context))
+    fun isIslandTransparencyEnabled(): Boolean = getBoolean(KEY_ISLAND_TRANSPARENCY, true)
+
+    fun isIslandProgressiveBlurEnabled(): Boolean = getBoolean(KEY_ISLAND_PROGRESSIVE_BLUR, !com.sameerasw.essentials.utils.DeviceUtils.isLowEndDevice(context))
+
+    fun setIslandProgressiveBlurEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_PROGRESSIVE_BLUR, enabled)
 
     fun setIslandTransparencyEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_TRANSPARENCY, enabled)
 

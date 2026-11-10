@@ -248,7 +248,10 @@ class IslandCoordinator(
     }
 
     private val powerSaveReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = pokeStillness()
+        override fun onReceive(context: Context?, intent: Intent?) {
+            pokeStillness()
+            applyConfig()
+        }
     }
 
     private val screenReceiver = object : BroadcastReceiver() {
@@ -765,6 +768,8 @@ class IslandCoordinator(
     }
 
     private fun applyConfig() {
+        val powerSaving = service.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true
+        val transparent = !powerSaving && settings.isIslandTransparencyEnabled()
         val geo = CameraGeometryResolver.resolve(service, wm, settings)
         geometry = geo
         val density = service.resources.displayMetrics.density
@@ -792,6 +797,7 @@ class IslandCoordinator(
             expandedCorner = settings.getIslandExpandedRoundness().dp,
             expandedPadding = settings.getIslandExpandedPadding().dp,
             expandedTopPadding = settings.getIslandExpandedTopPadding().dp,
+            expandedOffsetY = settings.getIslandExpandedOffsetY().coerceIn(0f, 120f).dp,
             expandedBottomPadding = settings.getIslandExpandedBottomPadding().dp,
             expandedScale = scale,
             fontScale = settings.getIslandFontScale().coerceIn(0.8f, 1.3f),
@@ -802,10 +808,11 @@ class IslandCoordinator(
             bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
-            neuralExpressive = settings.isIslandTransparencyEnabled() && settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled(),
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
-            transparency = settings.isIslandTransparencyEnabled(),
+            transparency = transparent,
+            progressiveBlur = transparent && !powerSaving && settings.isIslandProgressiveBlurEnabled(),
             maxExpandedHeight = if (isLandscape) ((geo.screenHeight - geo.surfaceTop) / density - 12f).dp else Dp.Unspecified,
             outlineColor = if (settings.isIslandBorderOutlineEnabled()) {
                 runCatching { Color(AndroidColor.parseColor(settings.getIslandBorderOutlineColor())) }
@@ -814,7 +821,7 @@ class IslandCoordinator(
                 null
             },
             outlineDynamic = settings.isIslandBorderOutlineDynamicEnabled(),
-            outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
+            outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(0.5f, 5f).dp,
             outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
             pulseShadow = settings.isIslandPulseShadowEnabled(),
             pulseBlur = settings.getIslandPulseShadowBlur().coerceIn(0f, 48f).dp,
@@ -1090,6 +1097,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_ROUNDNESS,
             SettingsRepository.KEY_ISLAND_EXPANDED_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TOP_PADDING,
+            SettingsRepository.KEY_ISLAND_EXPANDED_OFFSET_Y,
             SettingsRepository.KEY_ISLAND_EXPANDED_BOTTOM_PADDING,
             SettingsRepository.KEY_ISLAND_EXPANDED_TIMEOUT_MS,
             SettingsRepository.KEY_ISLAND_LINE_STAGE_ENABLED,
@@ -1107,6 +1115,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE,
             SettingsRepository.KEY_ISLAND_NEURAL_EXPRESSIVE_ALWAYS,
             SettingsRepository.KEY_ISLAND_TRANSPARENCY,
+            SettingsRepository.KEY_ISLAND_PROGRESSIVE_BLUR,
             SettingsRepository.KEY_ISLAND_SHOW_GLOW,
             SettingsRepository.KEY_ISLAND_GLOW_INTENSITY,
             SettingsRepository.KEY_ISLAND_SECONDARY_BUBBLE,
