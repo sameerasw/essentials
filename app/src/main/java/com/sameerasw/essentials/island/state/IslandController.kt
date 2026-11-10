@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.model.QueueOverflow
 import com.sameerasw.essentials.island.ui.OVERLAP_MAX
+import com.sameerasw.essentials.island.ui.overlapMinFactor
 import com.sameerasw.essentials.island.ui.overlapSlots
 import kotlin.math.ceil
 import com.sameerasw.essentials.island.ui.inlineBubbleCell
@@ -42,7 +43,7 @@ class IslandController(
     val state: StateFlow<IslandUiState> = _state.asStateFlow()
 
     var maxCells: Int = CompactLayoutEngine.MAX_CELLS
-    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean) -> Int?)? = null
+    var compactFits: ((before: List<String>, after: List<String>, leftExtra: Int, hubFactor: Float, growing: Boolean) -> Int?)? = null
     var compactCellWidth: (String) -> Float = { 1f }
     var compactBubbleWidth: (Int) -> Float = { it.toFloat() }
     var balanceCompact: Boolean = true
@@ -378,6 +379,9 @@ class IslandController(
         val anchor = anchorProvider()
         val mirrored = bubbleOnRight && anchor == CameraAnchor.Center
         fun CompactArrangement.flipped() = if (mirrored) CompactArrangement(after, before, visibleItems) else this
+        val hub = merged ?: bubbleOwner?.sideBubble
+        val hubFactor = hub?.let { overlapMinFactor(it.icons) } ?: 0f
+        val hubCells = if (hub != null) ceil(hubFactor).toInt() else 0
         val arrangement = CompactLayoutEngine.arrange(
             items.values.filter {
                 it.compactVisible && !(usesBubbleOnly && it.key == bubbleOwner?.key) && !(mediaBubble != null && it.key == mediaItem?.key)
@@ -395,17 +399,18 @@ class IslandController(
             },
             anchor,
             maxCells = maxCells,
-            leftExtra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0,
+            leftExtra = hubCells,
             balance = balanceCompact,
             cellWidth = compactCellWidth,
-            leftExtraWidth = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1)?.let(compactBubbleWidth) ?: 0f,
+            leftExtraWidth = (if (balanceCompact) hub?.cells?.coerceAtLeast(1) ?: 0 else hubCells)
+                .let { if (it > 0) compactBubbleWidth(it) else 0f },
             previous = _state.value.arrangement.flipped(),
             fits = compactFits?.let { fits ->
-                val extra = (merged ?: bubbleOwner?.sideBubble)?.cells?.coerceAtLeast(1) ?: 0
+                val extra = hubCells
                 val shown = (_state.value.arrangement.before + _state.value.arrangement.after).toSet()
                 val wrapped: (List<String>, List<String>) -> Int? = { before, after ->
                     val growing = (before + after).any { it !in shown }
-                    if (mirrored) fits(after, before, extra, growing) else fits(before, after, extra, growing)
+                    if (mirrored) fits(after, before, extra, hubFactor, growing) else fits(before, after, extra, hubFactor, growing)
                 }
                 wrapped
             },
