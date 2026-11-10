@@ -192,6 +192,8 @@ class MainViewModel : ViewModel() {
     val isQuickBallFlickToSelect = mutableStateOf(true)
     val isQuickBallActionHudEnabled = mutableStateOf(true)
     val quickBallActionHudDuration = mutableLongStateOf(2000L)
+    val quickBallHoldToMoveDuration = mutableLongStateOf(2000L)
+    val quickBallPillStyle = mutableStateOf("MIUI_ARC")
     val isQuickBallStickToEdge = mutableStateOf(true)
     val isQuickBallLockPosition = mutableStateOf(false)
     val isQuickBallHideLandscape = mutableStateOf(false)
@@ -869,6 +871,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_QUICK_BALL_ACTION_HUD_DURATION ->
                         quickBallActionHudDuration.longValue = settingsRepository.getQuickBallActionHudDuration()
+
+                    SettingsRepository.KEY_QUICK_BALL_HOLD_TO_MOVE_DURATION ->
+                        quickBallHoldToMoveDuration.longValue = settingsRepository.getQuickBallHoldToMoveDuration()
+
+                    SettingsRepository.KEY_QUICK_BALL_PILL_STYLE ->
+                        quickBallPillStyle.value = settingsRepository.getQuickBallPillStyle()
 
                     SettingsRepository.KEY_QUICK_BALL_LOCK_POSITION ->
                         isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
@@ -2644,6 +2652,8 @@ class MainViewModel : ViewModel() {
         isQuickBallFlickToSelect.value = settingsRepository.isQuickBallFlickToSelect()
         isQuickBallActionHudEnabled.value = settingsRepository.isQuickBallActionHudEnabled()
         quickBallActionHudDuration.longValue = settingsRepository.getQuickBallActionHudDuration()
+        quickBallHoldToMoveDuration.longValue = settingsRepository.getQuickBallHoldToMoveDuration()
+        quickBallPillStyle.value = settingsRepository.getQuickBallPillStyle()
         isQuickBallHideLandscape.value = settingsRepository.isQuickBallHideLandscape()
         isQuickBallShowLockscreen.value = settingsRepository.isQuickBallShowLockscreen()
         quickBallAutoHideApps.value = settingsRepository.getQuickBallAutoHideApps()
@@ -5914,6 +5924,17 @@ class MainViewModel : ViewModel() {
     fun setQuickBallActionHudDuration(duration: Long) {
         quickBallActionHudDuration.longValue = duration
         settingsRepository.setQuickBallActionHudDuration(duration)
+    }
+
+    fun setQuickBallHoldToMoveDuration(duration: Long) {
+        quickBallHoldToMoveDuration.longValue = duration
+        settingsRepository.setQuickBallHoldToMoveDuration(duration)
+    }
+
+    fun setQuickBallPillStyle(style: String) {
+        quickBallPillStyle.value = style
+        settingsRepository.setQuickBallPillStyle(style)
+        com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
     }
 
     fun setQuickBallHaptic(enabled: Boolean) {

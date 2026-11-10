@@ -3766,6 +3766,8 @@
     <string name="quick_ball_action_hud_title">Action Feedback HUD</string>
     <string name="quick_ball_action_hud_desc">Show a floating semi-transparent pill at top of screen on action execution</string>
     <string name="quick_ball_action_hud_duration_title">Pop-up Display Duration</string>
+    <string name="quick_ball_hold_to_move_duration_title">Hold-to-Move Delay</string>
+    <string name="quick_ball_hold_to_move_duration_desc">Hold duration on the floating ball before free drag repositioning engages</string>
     <string name="quick_ball_gesture_double_tap">Double Tap</string>
     <string name="quick_ball_gesture_triple_tap">Triple Tap</string>
     <string name="quick_ball_gesture_long_press">Long Press</string>
@@ -3813,6 +3815,22 @@
     <string name="quick_ball_style_squircle">Expressive Squircle</string>
     <string name="quick_ball_style_neon">Neon Rim</string>
     <string name="quick_ball_style_minimal">Minimal Dot</string>
+    <string name="quick_ball_pill_style_title">Pill Style</string>
+    <string name="quick_ball_pill_style_desc">Visual design of the stashed edge handle</string>
+    <string name="quick_ball_pill_style_miui">Xiaomi MIUI Arc</string>
+    <string name="quick_ball_pill_style_miui_desc">Curved inward arc stroke along the bezel</string>
+    <string name="quick_ball_pill_style_ios">Apple iOS Capsule</string>
+    <string name="quick_ball_pill_style_ios_desc">Soft vertical capsule handle inspired by iOS AssistiveTouch</string>
+    <string name="quick_ball_pill_style_android">Android Gesture Bar</string>
+    <string name="quick_ball_pill_style_android_desc">Clean straight vertical bar resembling Android navigation pill</string>
+    <string name="quick_ball_pill_style_samsung">Samsung One UI Handle</string>
+    <string name="quick_ball_pill_style_samsung_desc">Protruding edge tab with an inward chevron indicator</string>
+    <string name="quick_ball_pill_style_oneplus">OnePlus Smart Sidebar</string>
+    <string name="quick_ball_pill_style_oneplus_desc">Sleek rounded tab with a high-contrast center grip strip</string>
+    <string name="quick_ball_pill_style_nothing">Nothing OS Dash</string>
+    <string name="quick_ball_pill_style_nothing_desc">Distinctive segmented tech dashes inspired by Nothing Glyph</string>
+    <string name="quick_ball_pill_style_dot">Minimal Dot</string>
+    <string name="quick_ball_pill_style_dot_desc">Compact minimalist edge bead inspired by Apple Dynamic Island</string>
     <string name="quick_ball_delete_slot">Delete shortcut slot %1$d</string>
 
     <!-- Quick Ball V2: Delay, Shortcut Styles & Icon Packs -->

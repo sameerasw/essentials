@@ -240,6 +240,8 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_FLICK_TO_SELECT = "quick_ball_flick_to_select"
         const val KEY_QUICK_BALL_ACTION_HUD_ENABLED = "quick_ball_action_hud_enabled"
         const val KEY_QUICK_BALL_ACTION_HUD_DURATION = "quick_ball_action_hud_duration"
+        const val KEY_QUICK_BALL_HOLD_TO_MOVE_DURATION = "quick_ball_hold_to_move_duration"
+        const val KEY_QUICK_BALL_PILL_STYLE = "quick_ball_pill_style"
         const val KEY_QUICK_BALL_LANDSCAPE_POSITION_Y = "quick_ball_landscape_position_y"
         const val KEY_QUICK_BALL_LANDSCAPE_POSITION_SIDE = "quick_ball_landscape_position_side"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
@@ -4997,6 +4999,14 @@ class SettingsRepository(
     fun getQuickBallActionHudDuration(): Long = getLong(KEY_QUICK_BALL_ACTION_HUD_DURATION, 2000L)
 
     fun setQuickBallActionHudDuration(duration: Long) = putLong(KEY_QUICK_BALL_ACTION_HUD_DURATION, duration)
+
+    fun getQuickBallHoldToMoveDuration(): Long = getLong(KEY_QUICK_BALL_HOLD_TO_MOVE_DURATION, 2000L)
+
+    fun setQuickBallHoldToMoveDuration(duration: Long) = putLong(KEY_QUICK_BALL_HOLD_TO_MOVE_DURATION, duration)
+
+    fun getQuickBallPillStyle(): String = prefs.getString(KEY_QUICK_BALL_PILL_STYLE, "MIUI_ARC") ?: "MIUI_ARC"
+
+    fun setQuickBallPillStyle(style: String) = putString(KEY_QUICK_BALL_PILL_STYLE, style)
 
     fun getQuickBallLandscapePositionY(): Float = getFloat(KEY_QUICK_BALL_LANDSCAPE_POSITION_Y, 0.5f)
 

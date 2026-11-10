@@ -52,6 +52,26 @@ enum class QuickBallBallStyle(@field:StringRes val titleRes: Int) {
     }
 }
 
+@Keep
+enum class QuickBallPillStyle(
+    @field:StringRes val titleRes: Int,
+    @field:StringRes val descRes: Int,
+) {
+    MIUI_ARC(R.string.quick_ball_pill_style_miui, R.string.quick_ball_pill_style_miui_desc),
+    IOS_CAPSULE(R.string.quick_ball_pill_style_ios, R.string.quick_ball_pill_style_ios_desc),
+    ANDROID_BAR(R.string.quick_ball_pill_style_android, R.string.quick_ball_pill_style_android_desc),
+    SAMSUNG_EDGE(R.string.quick_ball_pill_style_samsung, R.string.quick_ball_pill_style_samsung_desc),
+    ONEPLUS_SLIDER(R.string.quick_ball_pill_style_oneplus, R.string.quick_ball_pill_style_oneplus_desc),
+    NOTHING_GLYPH(R.string.quick_ball_pill_style_nothing, R.string.quick_ball_pill_style_nothing_desc),
+    MINIMAL_DOT(R.string.quick_ball_pill_style_dot, R.string.quick_ball_pill_style_dot_desc);
+
+    companion object {
+        fun fromName(name: String?): QuickBallPillStyle {
+            return entries.firstOrNull { it.name.equals(name, ignoreCase = true) } ?: MIUI_ARC
+        }
+    }
+}
+
 private const val FILL_ALPHA = 0xBF
 private fun fill(rgb: Long): Int = (FILL_ALPHA shl 24) or (rgb.toInt() and 0xFFFFFF)
 private fun opaque(rgb: Long): Int = (0xFF shl 24) or (rgb.toInt() and 0xFFFFFF)

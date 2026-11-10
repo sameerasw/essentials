@@ -81,6 +81,13 @@ import com.sameerasw.essentials.ui.features.system.quickball.ConnectorStylePrevi
 import com.sameerasw.essentials.ui.features.system.quickball.ConnectorStyleSample
 import com.sameerasw.essentials.ui.features.system.quickball.MenuConnectorStyle
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallBallStyle
+import com.sameerasw.essentials.ui.features.system.quickball.QuickBallPillStyle
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.Stroke
+import kotlin.math.roundToInt
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallColorMode
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHapticIntensity
 import com.sameerasw.essentials.ui.features.system.quickball.QuickBallHaptics
@@ -117,6 +124,7 @@ fun QuickBallSettingsUI(
     var showConnectorSheet by remember { mutableStateOf(false) }
     var showPresetThemeSheet by remember { mutableStateOf(false) }
     var showBallStyleSheet by remember { mutableStateOf(false) }
+    var showPillStyleSheet by remember { mutableStateOf(false) }
     var showShortcutStyleSheet by remember { mutableStateOf(false) }
     var showIconPackSheet by remember { mutableStateOf(false) }
     var showAppSelectionSheet by remember { mutableStateOf(false) }
@@ -276,6 +284,73 @@ fun QuickBallSettingsUI(
                             Text(
                                 text = stringResource(style.titleRes),
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        },
+                        trailingContent = if (isSelected) {
+                            {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_check_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
+                        } else null,
+                        colors = ListItemDefaults.colors(
+                            containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceBright,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    if (showPillStyleSheet) {
+        EssentialsBottomSheet(
+            onDismissRequest = { showPillStyleSheet = false },
+        ) {
+            Text(
+                text = stringResource(R.string.quick_ball_pill_style_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                QuickBallPillStyle.entries.forEach { style ->
+                    val isSelected = viewModel.quickBallPillStyle.value == style.name
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .clickable {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setQuickBallPillStyle(style.name)
+                                showPillStyleSheet = false
+                            },
+                        headlineContent = {
+                            Text(
+                                text = stringResource(style.titleRes),
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(style.descRes),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        },
+                        leadingContent = {
+                            PillStyleMiniPreview(
+                                style = style,
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(width = 36.dp, height = 36.dp),
                             )
                         },
                         trailingContent = if (isSelected) {
@@ -629,6 +704,25 @@ fun QuickBallSettingsUI(
                         )
 
                         AnimatedVisibility(
+                            visible = viewModel.isQuickBallFlickToSelect.value,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            ConfigSliderItem(
+                                title = stringResource(R.string.quick_ball_hold_to_move_duration_title),
+                                description = stringResource(R.string.quick_ball_hold_to_move_duration_desc),
+                                value = (viewModel.quickBallHoldToMoveDuration.longValue / 1000f).coerceIn(1.0f, 3.0f),
+                                onValueChange = {
+                                    val rounded = ((it * 10f).roundToInt() / 10f)
+                                    viewModel.setQuickBallHoldToMoveDuration((rounded * 1000L).toLong())
+                                },
+                                valueRange = 1.0f..3.0f,
+                                icon = R.drawable.rounded_timer_24,
+                                valueFormatter = { "%.1f s".format(it) },
+                            )
+                        }
+
+                        AnimatedVisibility(
                             visible = viewModel.isQuickBallGesturesEnabled.value,
                             enter = expandVertically(),
                             exit = shrinkVertically(),
@@ -828,6 +922,16 @@ fun QuickBallSettingsUI(
                             description = stringResource(currentBallStyle.titleRes),
                             iconRes = R.drawable.rounded_circles_24,
                             onClick = { showBallStyleSheet = true },
+                        )
+
+                        // Pill Style Selector
+                        val currentPillStyleName = viewModel.quickBallPillStyle.value
+                        val currentPillStyle = QuickBallPillStyle.fromName(currentPillStyleName)
+                        SelectionCardItem(
+                            title = stringResource(R.string.quick_ball_pill_style_title),
+                            description = stringResource(currentPillStyle.titleRes),
+                            iconRes = R.drawable.rounded_dock_24,
+                            onClick = { showPillStyleSheet = true },
                         )
 
                         // Shortcut Display Style Selector
@@ -1307,6 +1411,143 @@ private fun QuickBallGestureRow(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp),
             )
+        }
+    }
+}
+
+@Composable
+private fun PillStyleMiniPreview(
+    style: QuickBallPillStyle,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+
+        when (style) {
+            QuickBallPillStyle.MIUI_ARC -> {
+                val strokeW = 2.5.dp.toPx()
+                val sweep = 100f
+                drawArc(
+                    color = color,
+                    startAngle = 130f,
+                    sweepAngle = sweep,
+                    useCenter = false,
+                    topLeft = Offset(w - 20.dp.toPx(), 4.dp.toPx()),
+                    size = Size(24.dp.toPx(), h - 8.dp.toPx()),
+                    style = Stroke(width = strokeW),
+                )
+            }
+
+            QuickBallPillStyle.IOS_CAPSULE -> {
+                val capW = 5.dp.toPx()
+                val capH = h * 0.7f
+                drawRoundRect(
+                    color = color,
+                    topLeft = Offset(w - capW - 4.dp.toPx(), (h - capH) / 2f),
+                    size = Size(capW, capH),
+                    cornerRadius = CornerRadius(capW / 2f, capW / 2f),
+                )
+            }
+
+            QuickBallPillStyle.ANDROID_BAR -> {
+                val barW = 3.5.dp.toPx()
+                val barH = h * 0.6f
+                drawRoundRect(
+                    color = color,
+                    topLeft = Offset(w - barW - 2.dp.toPx(), (h - barH) / 2f),
+                    size = Size(barW, barH),
+                    cornerRadius = CornerRadius(barW / 2f, barW / 2f),
+                )
+            }
+
+            QuickBallPillStyle.SAMSUNG_EDGE -> {
+                val tabW = 9.dp.toPx()
+                val tabH = h * 0.72f
+                val top = (h - tabH) / 2f
+                val left = w - tabW - 1.dp.toPx()
+                drawRoundRect(
+                    color = color.copy(alpha = 0.85f),
+                    topLeft = Offset(left, top),
+                    size = Size(tabW, tabH),
+                    cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx()),
+                )
+                val cx = left + tabW / 2f
+                val cy = h / 2f
+                val chevW = 2.5.dp.toPx()
+                val chevH = 3.5.dp.toPx()
+                drawLine(
+                    color = Color.White,
+                    start = Offset(cx + chevW / 2f, cy - chevH),
+                    end = Offset(cx - chevW / 2f, cy),
+                    strokeWidth = 1.5.dp.toPx(),
+                )
+                drawLine(
+                    color = Color.White,
+                    start = Offset(cx - chevW / 2f, cy),
+                    end = Offset(cx + chevW / 2f, cy + chevH),
+                    strokeWidth = 1.5.dp.toPx(),
+                )
+            }
+
+            QuickBallPillStyle.ONEPLUS_SLIDER -> {
+                val tabW = 7.dp.toPx()
+                val tabH = h * 0.75f
+                val left = w - tabW - 1.dp.toPx()
+                drawRoundRect(
+                    color = color.copy(alpha = 0.5f),
+                    topLeft = Offset(left, (h - tabH) / 2f),
+                    size = Size(tabW, tabH),
+                    cornerRadius = CornerRadius(tabW / 2f, tabW / 2f),
+                )
+                val lineH = tabH * 0.45f
+                drawLine(
+                    color = color,
+                    start = Offset(left + tabW / 2f, (h - lineH) / 2f),
+                    end = Offset(left + tabW / 2f, (h + lineH) / 2f),
+                    strokeWidth = 2.dp.toPx(),
+                )
+            }
+
+            QuickBallPillStyle.NOTHING_GLYPH -> {
+                val dashW = 3.5.dp.toPx()
+                val left = w - dashW - 2.dp.toPx()
+                val mainH = h * 0.38f
+                val gap = 2.5.dp.toPx()
+                val dotH = 3.dp.toPx()
+                val cy = h / 2f
+                drawRoundRect(
+                    color = color,
+                    topLeft = Offset(left, cy - mainH / 2f),
+                    size = Size(dashW, mainH),
+                    cornerRadius = CornerRadius(dashW / 2f, dashW / 2f),
+                )
+                drawRoundRect(
+                    color = color,
+                    topLeft = Offset(left, cy - mainH / 2f - gap - dotH),
+                    size = Size(dashW, dotH),
+                    cornerRadius = CornerRadius(dashW / 2f, dashW / 2f),
+                )
+                drawRoundRect(
+                    color = color,
+                    topLeft = Offset(left, cy + mainH / 2f + gap),
+                    size = Size(dashW, dotH),
+                    cornerRadius = CornerRadius(dashW / 2f, dashW / 2f),
+                )
+            }
+
+            QuickBallPillStyle.MINIMAL_DOT -> {
+                val rad = 5.dp.toPx()
+                drawArc(
+                    color = color,
+                    startAngle = 90f,
+                    sweepAngle = 180f,
+                    useCenter = true,
+                    topLeft = Offset(w - rad * 2, h / 2f - rad),
+                    size = Size(rad * 2, rad * 2),
+                )
+            }
         }
     }
 }

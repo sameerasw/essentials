@@ -56,7 +56,6 @@ class FloatTouchView @JvmOverloads constructor(
     var listener: GestureListener? = null
 
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
-    private val holdToMoveDelayMs = 3000L
 
     private var startX = 0f
     private var startY = 0f
@@ -203,7 +202,8 @@ class FloatTouchView @JvmOverloads constructor(
 
                 handler.removeCallbacks(holdToMoveRunnable)
                 if (!settings.isQuickBallLockPosition()) {
-                    handler.postDelayed(holdToMoveRunnable, holdToMoveDelayMs)
+                    val delay = settings.getQuickBallHoldToMoveDuration().coerceIn(1000L, 5000L)
+                    handler.postDelayed(holdToMoveRunnable, delay)
                 }
                 return true
             }
