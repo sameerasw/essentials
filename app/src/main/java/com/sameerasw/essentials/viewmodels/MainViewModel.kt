@@ -191,6 +191,7 @@ class MainViewModel : ViewModel() {
     val quickBallHapticIntensity = mutableStateOf("MEDIUM")
     val isQuickBallFlickToSelect = mutableStateOf(true)
     val isQuickBallActionHudEnabled = mutableStateOf(true)
+    val quickBallActionHudDuration = mutableLongStateOf(2000L)
     val isQuickBallStickToEdge = mutableStateOf(true)
     val isQuickBallLockPosition = mutableStateOf(false)
     val isQuickBallHideLandscape = mutableStateOf(false)
@@ -865,6 +866,9 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_QUICK_BALL_ACTION_HUD_ENABLED ->
                         isQuickBallActionHudEnabled.value = settingsRepository.isQuickBallActionHudEnabled()
+
+                    SettingsRepository.KEY_QUICK_BALL_ACTION_HUD_DURATION ->
+                        quickBallActionHudDuration.longValue = settingsRepository.getQuickBallActionHudDuration()
 
                     SettingsRepository.KEY_QUICK_BALL_LOCK_POSITION ->
                         isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
@@ -2639,6 +2643,7 @@ class MainViewModel : ViewModel() {
         isQuickBallLockPosition.value = settingsRepository.isQuickBallLockPosition()
         isQuickBallFlickToSelect.value = settingsRepository.isQuickBallFlickToSelect()
         isQuickBallActionHudEnabled.value = settingsRepository.isQuickBallActionHudEnabled()
+        quickBallActionHudDuration.longValue = settingsRepository.getQuickBallActionHudDuration()
         isQuickBallHideLandscape.value = settingsRepository.isQuickBallHideLandscape()
         isQuickBallShowLockscreen.value = settingsRepository.isQuickBallShowLockscreen()
         quickBallAutoHideApps.value = settingsRepository.getQuickBallAutoHideApps()
@@ -5904,6 +5909,11 @@ class MainViewModel : ViewModel() {
         isQuickBallActionHudEnabled.value = enabled
         settingsRepository.setQuickBallActionHudEnabled(enabled)
         com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.updateQuickBallState()
+    }
+
+    fun setQuickBallActionHudDuration(duration: Long) {
+        quickBallActionHudDuration.longValue = duration
+        settingsRepository.setQuickBallActionHudDuration(duration)
     }
 
     fun setQuickBallHaptic(enabled: Boolean) {

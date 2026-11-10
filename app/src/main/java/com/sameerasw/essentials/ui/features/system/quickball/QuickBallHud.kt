@@ -186,6 +186,10 @@ object QuickBallHud {
                 android.util.Log.e("QuickBallHud", "Failed to add HUD view", e)
                 return
             }
+            // Clear any lingering listeners from dismiss animation
+            view.animate().cancel()
+            view.animate().setListener(null)
+
             // Animate entry
             view.alpha = 0f
             view.translationY = -30f * density
@@ -198,10 +202,12 @@ object QuickBallHud {
                 .scaleY(1f)
                 .setDuration(220L)
                 .setInterpolator(OvershootInterpolator(0.85f))
+                .setListener(null)
                 .start()
         } else {
-            // Already showing, just pop slightly
+            // Already showing, cancel pending dismiss/listeners and pop slightly
             view.animate().cancel()
+            view.animate().setListener(null)
             view.alpha = 1f
             view.translationY = 0f
             view.scaleX = 1.05f
@@ -210,13 +216,16 @@ object QuickBallHud {
                 .scaleX(1f)
                 .scaleY(1f)
                 .setDuration(160L)
+                .setListener(null)
                 .start()
         }
 
         isDismissing = false
+        val displayDuration = settings.getQuickBallActionHudDuration().coerceIn(500L, 10000L)
         val dismiss = Runnable {
             if (isDismissing) return@Runnable
             isDismissing = true
+            view.animate().cancel()
             view.animate()
                 .alpha(0f)
                 .translationY(-24f * density)
@@ -237,7 +246,7 @@ object QuickBallHud {
                 .start()
         }
         dismissRunnable = dismiss
-        handler.postDelayed(dismiss, 1400L)
+        handler.postDelayed(dismiss, displayDuration)
     }
 
     fun dismiss() {

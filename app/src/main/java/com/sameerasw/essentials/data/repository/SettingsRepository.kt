@@ -239,6 +239,7 @@ class SettingsRepository(
         const val KEY_QUICK_BALL_GESTURES_ENABLED = "quick_ball_gestures_enabled"
         const val KEY_QUICK_BALL_FLICK_TO_SELECT = "quick_ball_flick_to_select"
         const val KEY_QUICK_BALL_ACTION_HUD_ENABLED = "quick_ball_action_hud_enabled"
+        const val KEY_QUICK_BALL_ACTION_HUD_DURATION = "quick_ball_action_hud_duration"
         const val KEY_QUICK_BALL_LANDSCAPE_POSITION_Y = "quick_ball_landscape_position_y"
         const val KEY_QUICK_BALL_LANDSCAPE_POSITION_SIDE = "quick_ball_landscape_position_side"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
@@ -4992,6 +4993,10 @@ class SettingsRepository(
     fun isQuickBallActionHudEnabled(): Boolean = getBoolean(KEY_QUICK_BALL_ACTION_HUD_ENABLED, true)
 
     fun setQuickBallActionHudEnabled(enabled: Boolean) = putBoolean(KEY_QUICK_BALL_ACTION_HUD_ENABLED, enabled)
+
+    fun getQuickBallActionHudDuration(): Long = getLong(KEY_QUICK_BALL_ACTION_HUD_DURATION, 2000L)
+
+    fun setQuickBallActionHudDuration(duration: Long) = putLong(KEY_QUICK_BALL_ACTION_HUD_DURATION, duration)
 
     fun getQuickBallLandscapePositionY(): Float = getFloat(KEY_QUICK_BALL_LANDSCAPE_POSITION_Y, 0.5f)
 

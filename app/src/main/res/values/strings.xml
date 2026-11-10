@@ -3758,13 +3758,14 @@
     <string name="quick_ball_pill_thickness_desc">Stroke thickness of the handle arc</string>
     <string name="quick_ball_pill_touch_width_title">Touch Target Width</string>
     <string name="quick_ball_pill_touch_width_desc">Width of the sensitive swipe zone from the screen edge</string>
-    <string name="quick_ball_gestures_section">Gestures &amp; Shortcuts (Ball &amp; Pill)</string>
-    <string name="quick_ball_gestures_enable_title">Enable Gestures</string>
-    <string name="quick_ball_gestures_enable_desc">Perform instant actions by gesturing on the floating ball or edge pill</string>
+    <string name="quick_ball_gestures_section">Docked Pill Gestures</string>
+    <string name="quick_ball_gestures_enable_title">Enable Pill Gestures</string>
+    <string name="quick_ball_gestures_enable_desc">Perform instant actions by gesturing directly on the docked edge pill</string>
     <string name="quick_ball_flick_to_select_title">Flick-to-Select</string>
     <string name="quick_ball_flick_to_select_desc">Continuous fluid drag from ball or pill to execute shortcuts in one motion</string>
     <string name="quick_ball_action_hud_title">Action Feedback HUD</string>
     <string name="quick_ball_action_hud_desc">Show a floating semi-transparent pill at top of screen on action execution</string>
+    <string name="quick_ball_action_hud_duration_title">Pop-up Display Duration</string>
     <string name="quick_ball_gesture_double_tap">Double Tap</string>
     <string name="quick_ball_gesture_triple_tap">Triple Tap</string>
     <string name="quick_ball_gesture_long_press">Long Press</string>

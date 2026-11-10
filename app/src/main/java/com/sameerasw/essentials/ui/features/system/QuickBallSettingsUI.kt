@@ -53,6 +53,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.platform.LocalDensity
+import com.sameerasw.essentials.ui.features.system.quickball.DraggableItem
+import com.sameerasw.essentials.ui.features.system.quickball.draggableContainer
+import com.sameerasw.essentials.ui.features.system.quickball.rememberDragDropState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -495,6 +501,7 @@ fun QuickBallSettingsUI(
                         val resolvedColors = QuickBallTheme.resolveColors(context, com.sameerasw.essentials.data.repository.SettingsRepository(context))
 
                         val connectorStyle = MenuConnectorStyle.fromName(viewModel.quickBallConnectorStyle.value)
+                        val currentShortcutStyle = QuickBallShortcutStyle.fromName(viewModel.quickBallShortcutStyle.value)
 
                         QuickBallMenuPreview(
                             actions = currentActions,
@@ -513,6 +520,7 @@ fun QuickBallSettingsUI(
                             borderWidthDp = viewModel.quickBallBorderWidth.floatValue,
                             borderColor = Color(resolvedColors.borderColor),
                             ballBorderColor = Color(resolvedColors.ballBorderColor),
+                            shortcutStyle = currentShortcutStyle,
                             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                         )
 
@@ -521,36 +529,49 @@ fun QuickBallSettingsUI(
                             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
                         )
 
-                        for (i in 1..slotCount) {
-                            val action = currentActions[i - 1]
+                        val listState = rememberLazyListState()
+                        val dragDropState = rememberDragDropState(listState) { fromIndex, toIndex ->
+                            if (fromIndex != toIndex) {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.reorderQuickBallSlots(fromIndex + 1, toIndex + 1)
+                            }
+                        }
 
-                            QuickBallSlotRow(
-                                slotIndex = i,
-                                action = action,
-                                slotCount = slotCount,
-                                onClick = {
-                                    HapticUtil.performUIHaptic(view)
-                                    activePickingSlot = i
-                                },
-                                onMoveUp = if (i > 1) {
-                                    {
-                                        HapticUtil.performUIHaptic(view)
-                                        viewModel.reorderQuickBallSlots(i, i - 1)
-                                    }
-                                } else null,
-                                onMoveDown = if (i < slotCount) {
-                                    {
-                                        HapticUtil.performUIHaptic(view)
-                                        viewModel.reorderQuickBallSlots(i, i + 1)
-                                    }
-                                } else null,
-                                onDelete = if (slotCount > 2) {
-                                    {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        viewModel.deleteQuickBallSlot(i)
-                                    }
-                                } else null,
-                            )
+                        val rowHeight = 52.dp
+                        val listHeight = rowHeight * slotCount
+
+                        LazyColumn(
+                            state = listState,
+                            userScrollEnabled = false,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(listHeight)
+                                .draggableContainer(
+                                    dragDropState = dragDropState,
+                                    handleWidthPx = with(LocalDensity.current) { 56.dp.toPx() },
+                                ),
+                        ) {
+                            items(slotCount, key = { it }) { index ->
+                                val i = index + 1
+                                val action = currentActions[index]
+                                DraggableItem(dragDropState = dragDropState, index = index) { isDragging ->
+                                    QuickBallSlotRow(
+                                        slotIndex = i,
+                                        action = action,
+                                        isDragging = isDragging,
+                                        onClick = {
+                                            HapticUtil.performUIHaptic(view)
+                                            activePickingSlot = i
+                                        },
+                                        onDelete = if (slotCount > 2) {
+                                            {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                viewModel.deleteQuickBallSlot(i)
+                                            }
+                                        } else null,
+                                    )
+                                }
+                            }
                         }
 
                         // Add Slot Button
@@ -643,207 +664,7 @@ fun QuickBallSettingsUI(
                     }
                 }
 
-                // SECTION 3: Appearance & Sizing
-                Text(
-                    text = stringResource(R.string.quick_ball_appearance_section),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 8.dp),
-                )
-
-                RoundedCardContainer {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                    ) {
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_size_title),
-                            value = viewModel.quickBallSize.floatValue,
-                            onValueChange = { viewModel.setQuickBallSize(it) },
-                            valueRange = 36f..72f,
-                            icon = R.drawable.rounded_grid_view_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                            modifier = Modifier.highlight(highlightSetting == "quick_ball_size"),
-                        )
-
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_idle_alpha_title),
-                            value = viewModel.quickBallIdleAlpha.floatValue,
-                            onValueChange = { viewModel.setQuickBallIdleAlpha(it) },
-                            valueRange = 0.1f..1.0f,
-                            icon = R.drawable.rounded_visibility_24,
-                            valueFormatter = { "%.1f".format(it) },
-                            modifier = Modifier.highlight(highlightSetting == "quick_ball_idle_alpha"),
-                        )
-
-                        // Menu Arc Radius Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_radius_title),
-                            value = viewModel.quickBallMenuRadius.floatValue,
-                            onValueChange = { viewModel.setQuickBallMenuRadius(it) },
-                            valueRange = 60f..140f,
-                            icon = R.drawable.rounded_circles_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                        )
-
-                        // Shortcut Button Size Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_menu_size_title),
-                            value = viewModel.quickBallMenuSize.floatValue,
-                            onValueChange = { viewModel.setQuickBallMenuSize(it) },
-                            valueRange = 40f..60f,
-                            icon = R.drawable.rounded_circle_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                        )
-
-                        // Shortcut Icon Size Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_menu_icon_size_title),
-                            value = viewModel.quickBallMenuIconSize.floatValue,
-                            onValueChange = { viewModel.setQuickBallMenuIconSize(it) },
-                            valueRange = 16f..36f,
-                            icon = R.drawable.rounded_apps_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                        )
-
-                        // Auto-Collapse Delay Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_stash_delay_title),
-                            value = (viewModel.quickBallStashDelay.longValue / 1000f),
-                            onValueChange = { viewModel.setQuickBallStashDelay((it * 1000).toLong()) },
-                            valueRange = 0.5f..5.0f,
-                            icon = R.drawable.rounded_timer_24,
-                            valueFormatter = { "%.1f s".format(it) },
-                        )
-
-                        // Ball Style Selector
-                        val currentBallStyleName = viewModel.quickBallBallStyle.value
-                        val currentBallStyle = QuickBallBallStyle.fromName(currentBallStyleName)
-                        SelectionCardItem(
-                            title = stringResource(R.string.quick_ball_style_title),
-                            description = stringResource(currentBallStyle.titleRes),
-                            iconRes = R.drawable.rounded_circles_24,
-                            onClick = { showBallStyleSheet = true },
-                        )
-
-                        // Shortcut Display Style Selector
-                        val currentShortcutStyle = QuickBallShortcutStyle.fromName(viewModel.quickBallShortcutStyle.value)
-                        SelectionCardItem(
-                            title = stringResource(R.string.quick_ball_shortcut_style_title),
-                            description = stringResource(currentShortcutStyle.titleRes),
-                            iconRes = R.drawable.rounded_apps_24,
-                            onClick = { showShortcutStyleSheet = true },
-                        )
-
-                        // System Icon Pack Selector
-                        val currentIconPack = QuickBallIconPack.fromName(viewModel.quickBallIconPack.value)
-                        SelectionCardItem(
-                            title = stringResource(R.string.quick_ball_icon_pack_title),
-                            description = stringResource(currentIconPack.titleRes),
-                            iconRes = R.drawable.rounded_palette_24,
-                            onClick = { showIconPackSheet = true },
-                        )
-
-                        // Connector Style Selector with live Canvas sample preview
-                        val currentStyleName = viewModel.quickBallConnectorStyle.value
-                        val currentStyle = MenuConnectorStyle.fromName(currentStyleName)
-                        ListItem(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(MaterialTheme.shapes.small)
-                                .clickable {
-                                    HapticUtil.performUIHaptic(view)
-                                    showConnectorSheet = true
-                                },
-                            headlineContent = { Text(stringResource(R.string.quick_ball_connector_style)) },
-                            supportingContent = { Text(stringResource(currentStyle.titleRes)) },
-                            leadingContent = {
-                                ConnectorStyleSample(
-                                    style = currentStyle,
-                                    connectorColor = MaterialTheme.colorScheme.primary,
-                                    itemColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                    ballColor = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(width = 54.dp, height = 36.dp),
-                                )
-                            },
-                            trailingContent = {
-                                Icon(
-                                    painter = painterResource(R.drawable.rounded_chevron_right_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
-                        )
-
-                        // Connector Line Width Slider
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_connector_width_title),
-                            value = viewModel.quickBallConnectorWidth.floatValue,
-                            onValueChange = { viewModel.setQuickBallConnectorWidth(it) },
-                            valueRange = 1.0f..4.0f,
-                            icon = R.drawable.rounded_line_weight_24,
-                            valueFormatter = { "%.1f dp".format(it) },
-                        )
-
-                        // Button & Ball Borders Toggle
-                        IconToggleItem(
-                            title = stringResource(R.string.quick_ball_border_title),
-                            description = stringResource(R.string.quick_ball_border_desc),
-                            isChecked = viewModel.isQuickBallBorderEnabled.value,
-                            onCheckedChange = { viewModel.setQuickBallBorderEnabled(it) },
-                            iconRes = R.drawable.rounded_target_24,
-                        )
-
-                        AnimatedVisibility(
-                            visible = viewModel.isQuickBallBorderEnabled.value,
-                            enter = expandVertically(),
-                            exit = shrinkVertically(),
-                        ) {
-                            ConfigSliderItem(
-                                title = stringResource(R.string.quick_ball_border_width_title),
-                                value = viewModel.quickBallBorderWidth.floatValue,
-                                onValueChange = { viewModel.setQuickBallBorderWidth(it) },
-                                valueRange = 1.0f..4.0f,
-                                icon = R.drawable.rounded_line_weight_24,
-                                valueFormatter = { "%.1f dp".format(it) },
-                            )
-                        }
-
-                        // Stashed Pill Dimensions
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_pill_height_title),
-                            value = viewModel.quickBallPillHeight.floatValue,
-                            onValueChange = { viewModel.setQuickBallPillHeight(it) },
-                            valueRange = 30f..80f,
-                            icon = R.drawable.rounded_view_headline_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                        )
-
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_pill_thickness_title),
-                            value = viewModel.quickBallPillThickness.floatValue,
-                            onValueChange = { viewModel.setQuickBallPillThickness(it) },
-                            valueRange = 1.5f..6.0f,
-                            icon = R.drawable.rounded_line_weight_24,
-                            valueFormatter = { "%.1f dp".format(it) },
-                        )
-
-                        ConfigSliderItem(
-                            title = stringResource(R.string.quick_ball_pill_touch_width_title),
-                            value = viewModel.quickBallPillTouchWidth.floatValue,
-                            onValueChange = { viewModel.setQuickBallPillTouchWidth(it) },
-                            valueRange = 16f..40f,
-                            icon = R.drawable.rounded_touch_app_24,
-                            valueFormatter = { "%.0f dp".format(it) },
-                        )
-                    }
-                }
-
-                // SECTION 4: Colors & Theming
+                // SECTION 3: Colors & Styling
                 Text(
                     text = stringResource(R.string.quick_ball_color_section),
                     style = MaterialTheme.typography.labelLarge,
@@ -993,6 +814,211 @@ fun QuickBallSettingsUI(
                                 )
                             }
                         }
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                        )
+
+                        // Ball Style Selector
+                        val currentBallStyleName = viewModel.quickBallBallStyle.value
+                        val currentBallStyle = QuickBallBallStyle.fromName(currentBallStyleName)
+                        SelectionCardItem(
+                            title = stringResource(R.string.quick_ball_style_title),
+                            description = stringResource(currentBallStyle.titleRes),
+                            iconRes = R.drawable.rounded_circles_24,
+                            onClick = { showBallStyleSheet = true },
+                        )
+
+                        // Shortcut Display Style Selector
+                        val currentShortcutStyle = QuickBallShortcutStyle.fromName(viewModel.quickBallShortcutStyle.value)
+                        SelectionCardItem(
+                            title = stringResource(R.string.quick_ball_shortcut_style_title),
+                            description = stringResource(currentShortcutStyle.titleRes),
+                            iconRes = R.drawable.rounded_apps_24,
+                            onClick = { showShortcutStyleSheet = true },
+                        )
+
+                        // System Icon Pack Selector
+                        val currentIconPack = QuickBallIconPack.fromName(viewModel.quickBallIconPack.value)
+                        SelectionCardItem(
+                            title = stringResource(R.string.quick_ball_icon_pack_title),
+                            description = stringResource(currentIconPack.titleRes),
+                            iconRes = R.drawable.rounded_palette_24,
+                            onClick = { showIconPackSheet = true },
+                        )
+
+                        // Connector Style Selector with live Canvas sample preview
+                        val currentStyleName = viewModel.quickBallConnectorStyle.value
+                        val currentStyle = MenuConnectorStyle.fromName(currentStyleName)
+                        ListItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable {
+                                    HapticUtil.performUIHaptic(view)
+                                    showConnectorSheet = true
+                                },
+                            headlineContent = { Text(stringResource(R.string.quick_ball_connector_style)) },
+                            supportingContent = { Text(stringResource(currentStyle.titleRes)) },
+                            leadingContent = {
+                                ConnectorStyleSample(
+                                    style = currentStyle,
+                                    connectorColor = MaterialTheme.colorScheme.primary,
+                                    itemColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    ballColor = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(width = 54.dp, height = 36.dp),
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_chevron_right_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+                        )
+
+                        // Connector Line Width Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_connector_width_title),
+                            value = viewModel.quickBallConnectorWidth.floatValue,
+                            onValueChange = { viewModel.setQuickBallConnectorWidth(it) },
+                            valueRange = 1.0f..4.0f,
+                            icon = R.drawable.rounded_line_weight_24,
+                            valueFormatter = { "%.1f dp".format(it) },
+                        )
+
+                        // Button & Ball Borders Toggle
+                        IconToggleItem(
+                            title = stringResource(R.string.quick_ball_border_title),
+                            description = stringResource(R.string.quick_ball_border_desc),
+                            isChecked = viewModel.isQuickBallBorderEnabled.value,
+                            onCheckedChange = { viewModel.setQuickBallBorderEnabled(it) },
+                            iconRes = R.drawable.rounded_target_24,
+                        )
+
+                        AnimatedVisibility(
+                            visible = viewModel.isQuickBallBorderEnabled.value,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            ConfigSliderItem(
+                                title = stringResource(R.string.quick_ball_border_width_title),
+                                value = viewModel.quickBallBorderWidth.floatValue,
+                                onValueChange = { viewModel.setQuickBallBorderWidth(it) },
+                                valueRange = 1.0f..4.0f,
+                                icon = R.drawable.rounded_line_weight_24,
+                                valueFormatter = { "%.1f dp".format(it) },
+                            )
+                        }
+                    }
+                }
+
+                // SECTION 4: Dimensions & Geometry
+                Text(
+                    text = stringResource(R.string.quick_ball_appearance_section),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 8.dp),
+                )
+
+                RoundedCardContainer {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                    ) {
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_size_title),
+                            value = viewModel.quickBallSize.floatValue,
+                            onValueChange = { viewModel.setQuickBallSize(it) },
+                            valueRange = 36f..72f,
+                            icon = R.drawable.rounded_grid_view_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                            modifier = Modifier.highlight(highlightSetting == "quick_ball_size"),
+                        )
+
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_idle_alpha_title),
+                            value = viewModel.quickBallIdleAlpha.floatValue,
+                            onValueChange = { viewModel.setQuickBallIdleAlpha(it) },
+                            valueRange = 0.1f..1.0f,
+                            icon = R.drawable.rounded_visibility_24,
+                            valueFormatter = { "%.1f".format(it) },
+                            modifier = Modifier.highlight(highlightSetting == "quick_ball_idle_alpha"),
+                        )
+
+                        // Menu Arc Radius Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_radius_title),
+                            value = viewModel.quickBallMenuRadius.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuRadius(it) },
+                            valueRange = 60f..140f,
+                            icon = R.drawable.rounded_circles_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
+
+                        // Shortcut Button Size Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_menu_size_title),
+                            value = viewModel.quickBallMenuSize.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuSize(it) },
+                            valueRange = 40f..60f,
+                            icon = R.drawable.rounded_circle_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
+
+                        // Shortcut Icon Size Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_menu_icon_size_title),
+                            value = viewModel.quickBallMenuIconSize.floatValue,
+                            onValueChange = { viewModel.setQuickBallMenuIconSize(it) },
+                            valueRange = 16f..36f,
+                            icon = R.drawable.rounded_apps_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
+
+                        // Auto-Collapse Delay Slider
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_stash_delay_title),
+                            value = (viewModel.quickBallStashDelay.longValue / 1000f),
+                            onValueChange = { viewModel.setQuickBallStashDelay((it * 1000).toLong()) },
+                            valueRange = 0.5f..5.0f,
+                            icon = R.drawable.rounded_timer_24,
+                            valueFormatter = { "%.1f s".format(it) },
+                        )
+
+                        // Stashed Pill Dimensions
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_pill_height_title),
+                            value = viewModel.quickBallPillHeight.floatValue,
+                            onValueChange = { viewModel.setQuickBallPillHeight(it) },
+                            valueRange = 30f..80f,
+                            icon = R.drawable.rounded_view_headline_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
+
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_pill_thickness_title),
+                            value = viewModel.quickBallPillThickness.floatValue,
+                            onValueChange = { viewModel.setQuickBallPillThickness(it) },
+                            valueRange = 1.5f..6.0f,
+                            icon = R.drawable.rounded_line_weight_24,
+                            valueFormatter = { "%.1f dp".format(it) },
+                        )
+
+                        ConfigSliderItem(
+                            title = stringResource(R.string.quick_ball_pill_touch_width_title),
+                            value = viewModel.quickBallPillTouchWidth.floatValue,
+                            onValueChange = { viewModel.setQuickBallPillTouchWidth(it) },
+                            valueRange = 16f..40f,
+                            icon = R.drawable.rounded_touch_app_24,
+                            valueFormatter = { "%.0f dp".format(it) },
+                        )
                     }
                 }
 
@@ -1116,6 +1142,21 @@ fun QuickBallSettingsUI(
                             iconRes = R.drawable.rounded_notifications_24,
                         )
 
+                        AnimatedVisibility(
+                            visible = viewModel.isQuickBallActionHudEnabled.value,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            ConfigSliderItem(
+                                title = stringResource(R.string.quick_ball_action_hud_duration_title),
+                                value = (viewModel.quickBallActionHudDuration.longValue / 1000f),
+                                onValueChange = { viewModel.setQuickBallActionHudDuration((it * 1000).toLong()) },
+                                valueRange = 1.0f..5.0f,
+                                icon = R.drawable.rounded_timer_24,
+                                valueFormatter = { "%.1f s".format(it) },
+                            )
+                        }
+
                         val autoHideCount = viewModel.quickBallAutoHideApps.value.size
                         SelectionCardItem(
                             title = stringResource(R.string.quick_ball_auto_hide_apps_title),
@@ -1134,10 +1175,8 @@ fun QuickBallSettingsUI(
 private fun QuickBallSlotRow(
     slotIndex: Int,
     action: Action,
-    slotCount: Int,
+    isDragging: Boolean = false,
     onClick: () -> Unit,
-    onMoveUp: (() -> Unit)?,
-    onMoveDown: (() -> Unit)?,
     onDelete: (() -> Unit)?,
 ) {
     val context = LocalContext.current
@@ -1164,7 +1203,7 @@ private fun QuickBallSlotRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
+            .height(52.dp)
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 8.dp),
@@ -1173,8 +1212,8 @@ private fun QuickBallSlotRow(
         Icon(
             painter = painterResource(id = R.drawable.rounded_drag_handle_24),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
-            modifier = Modifier.size(20.dp),
+            tint = if (isDragging) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+            modifier = Modifier.size(24.dp),
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -1218,44 +1257,16 @@ private fun QuickBallSlotRow(
             modifier = Modifier.weight(1f),
         )
 
-        if (onMoveUp != null) {
-            IconButton(
-                onClick = onMoveUp,
-                modifier = Modifier.size(28.dp),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_keyboard_arrow_up_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                    modifier = Modifier.size(18.dp),
-                )
-            }
-        }
-
-        if (onMoveDown != null) {
-            IconButton(
-                onClick = onMoveDown,
-                modifier = Modifier.size(28.dp),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                    modifier = Modifier.size(18.dp),
-                )
-            }
-        }
-
         if (onDelete != null) {
             IconButton(
                 onClick = onDelete,
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(36.dp),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_remove_24),
                     contentDescription = stringResource(R.string.quick_ball_delete_slot, slotIndex),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }

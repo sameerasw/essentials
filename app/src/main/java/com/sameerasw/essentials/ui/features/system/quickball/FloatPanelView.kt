@@ -15,6 +15,9 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Build
@@ -30,6 +33,7 @@ import android.widget.ImageView
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.island.ui.IslandHaptics
+import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlin.math.hypot
 import kotlin.math.roundToInt
@@ -248,9 +252,27 @@ class FloatPanelView(
                             if (isApp) {
                                 val pkg = (action as Action.OpenApp).packageName
                                 try {
-                                    setImageDrawable(context.packageManager.getApplicationIcon(pkg))
                                     if (shortcutStyle == QuickBallShortcutStyle.MONOCHROME) {
-                                        setColorFilter(iconColor)
+                                        val monoBmp = AppIconUtil.monochromeAppIcon(context, pkg)
+                                        if (monoBmp != null) {
+                                            setImageBitmap(monoBmp)
+                                            setColorFilter(iconColor)
+                                        } else {
+                                            val rawIcon = context.packageManager.getApplicationIcon(pkg)
+                                            val monoDrawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                (rawIcon as? AdaptiveIconDrawable)?.monochrome?.mutate()
+                                            } else null
+                                            if (monoDrawable != null) {
+                                                monoDrawable.setTint(iconColor)
+                                                setImageDrawable(monoDrawable)
+                                            } else {
+                                                setImageDrawable(rawIcon)
+                                                val matrix = ColorMatrix().apply { setSaturation(0f) }
+                                                colorFilter = ColorMatrixColorFilter(matrix)
+                                            }
+                                        }
+                                    } else {
+                                        setImageDrawable(context.packageManager.getApplicationIcon(pkg))
                                     }
                                 } catch (_: Exception) {
                                     val iconRes = QuickBallIconResolver.resolveIcon(action, iconPack)

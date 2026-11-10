@@ -326,12 +326,6 @@ class QuickBallHandler(
                     }
                     expandMenu()
                 }
-
-                override fun onDoubleTap() = executeGestureAction("DOUBLE_TAP")
-                override fun onTripleTap() = executeGestureAction("TRIPLE_TAP")
-                override fun onLongPress() = executeGestureAction("LONG_PRESS")
-                override fun onSwipeUp() = executeGestureAction("SWIPE_UP")
-                override fun onSwipeDown() = executeGestureAction("SWIPE_DOWN")
             }
         }
 

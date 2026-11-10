@@ -43,11 +43,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.foundation.layout.fillMaxSize
+import com.sameerasw.essentials.utils.AppIconUtil
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -387,6 +390,7 @@ fun QuickBallMenuPreview(
     borderWidthDp: Float,
     borderColor: Color,
     ballBorderColor: Color,
+    shortcutStyle: QuickBallShortcutStyle = QuickBallShortcutStyle.FULL_BLEED,
     modifier: Modifier = Modifier,
 ) {
     if (actions.size < 2) return
@@ -436,7 +440,14 @@ fun QuickBallMenuPreview(
             // Radial shortcut buttons
             actions.forEachIndexed { index, action ->
                 val (offsetX, offsetY) = layout.offsets[index]
-                val borderModifier = if (isBorderEnabled && borderWidthDp > 0f) {
+                val isApp = action is Action.OpenApp && action.packageName.isNotBlank()
+                val effectiveBg = if (isApp && shortcutStyle == QuickBallShortcutStyle.FULL_BLEED) {
+                    Color.Transparent
+                } else {
+                    buttonColor
+                }
+
+                val borderModifier = if (isBorderEnabled && borderWidthDp > 0f && effectiveBg != Color.Transparent) {
                     Modifier.border((borderWidthDp * scale).dp, borderColor, CircleShape)
                 } else Modifier
 
@@ -448,27 +459,44 @@ fun QuickBallMenuPreview(
                         )
                         .size((buttonSizeDp * scale).dp)
                         .clip(CircleShape)
-                        .background(buttonColor)
+                        .background(effectiveBg)
                         .then(borderModifier),
                     contentAlignment = Alignment.Center,
                 ) {
-                    val iconModifier = Modifier.size((iconSizeDp * scale).dp)
-                    val isApp = action is Action.OpenApp && action.packageName.isNotBlank()
-                    var appBitmap by remember(action) { mutableStateOf<androidx.compose.ui.graphics.ImageBitmap?>(null) }
+                    var appBitmap by remember(action, shortcutStyle) { mutableStateOf<androidx.compose.ui.graphics.ImageBitmap?>(null) }
 
-                    LaunchedEffect(action) {
+                    LaunchedEffect(action, shortcutStyle) {
                         if (isApp) {
                             try {
-                                val d = context.packageManager.getApplicationIcon((action as Action.OpenApp).packageName)
-                                val bmp = android.graphics.Bitmap.createBitmap(
-                                    d.intrinsicWidth.coerceAtLeast(1),
-                                    d.intrinsicHeight.coerceAtLeast(1),
-                                    android.graphics.Bitmap.Config.ARGB_8888,
-                                )
-                                val c = android.graphics.Canvas(bmp)
-                                d.setBounds(0, 0, c.width, c.height)
-                                d.draw(c)
-                                appBitmap = bmp.asImageBitmap()
+                                val pkg = (action as Action.OpenApp).packageName
+                                if (shortcutStyle == QuickBallShortcutStyle.MONOCHROME) {
+                                    val monoBmp = AppIconUtil.monochromeAppIcon(context, pkg)
+                                    if (monoBmp != null) {
+                                        appBitmap = monoBmp.asImageBitmap()
+                                    } else {
+                                        val d = context.packageManager.getApplicationIcon(pkg)
+                                        val bmp = android.graphics.Bitmap.createBitmap(
+                                            d.intrinsicWidth.coerceAtLeast(1),
+                                            d.intrinsicHeight.coerceAtLeast(1),
+                                            android.graphics.Bitmap.Config.ARGB_8888,
+                                        )
+                                        val c = android.graphics.Canvas(bmp)
+                                        d.setBounds(0, 0, c.width, c.height)
+                                        d.draw(c)
+                                        appBitmap = bmp.asImageBitmap()
+                                    }
+                                } else {
+                                    val d = context.packageManager.getApplicationIcon(pkg)
+                                    val bmp = android.graphics.Bitmap.createBitmap(
+                                        d.intrinsicWidth.coerceAtLeast(1),
+                                        d.intrinsicHeight.coerceAtLeast(1),
+                                        android.graphics.Bitmap.Config.ARGB_8888,
+                                    )
+                                    val c = android.graphics.Canvas(bmp)
+                                    d.setBounds(0, 0, c.width, c.height)
+                                    d.draw(c)
+                                    appBitmap = bmp.asImageBitmap()
+                                }
                             } catch (_: Exception) {
                                 appBitmap = null
                             }
@@ -477,14 +505,35 @@ fun QuickBallMenuPreview(
 
                     val bmp = appBitmap
                     if (bmp != null) {
-                        Image(bitmap = bmp, contentDescription = null, modifier = iconModifier)
+                        if (shortcutStyle == QuickBallShortcutStyle.FULL_BLEED) {
+                            Image(
+                                bitmap = bmp,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(CircleShape),
+                            )
+                        } else if (shortcutStyle == QuickBallShortcutStyle.MONOCHROME) {
+                            Image(
+                                bitmap = bmp,
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(buttonIconColor),
+                                modifier = Modifier.size((iconSizeDp * scale).dp),
+                            )
+                        } else {
+                            Image(
+                                bitmap = bmp,
+                                contentDescription = null,
+                                modifier = Modifier.size((iconSizeDp * scale).dp),
+                            )
+                        }
                     } else {
                         val iconRes = QuickBallIconResolver.resolveIcon(action, QuickBallIconPack.CLASSIC)
                         Icon(
                             painter = painterResource(id = iconRes),
                             contentDescription = null,
                             tint = buttonIconColor,
-                            modifier = iconModifier,
+                            modifier = Modifier.size((iconSizeDp * scale).dp),
                         )
                     }
                 }

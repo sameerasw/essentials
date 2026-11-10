@@ -56,36 +56,22 @@ class FloatTouchView @JvmOverloads constructor(
     var listener: GestureListener? = null
 
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
-    private val tapTimeoutMs = 220L
-    private val longPressTimeoutMs = ViewConfiguration.getLongPressTimeout().toLong()
+    private val holdToMoveDelayMs = 3000L
 
     private var startX = 0f
     private var startY = 0f
     private var isDragging = false
     private var isFlicking = false
-    private var isLongPressTriggered = false
-    private var tapCount = 0
+    private var isMoveMode = false
 
-    private val tapRunnable =
+    private val holdToMoveRunnable =
         Runnable {
-            when (tapCount) {
-                1 -> listener?.onSingleTap()
-                2 -> listener?.onDoubleTap()
-                else -> if (tapCount >= 3) listener?.onTripleTap()
-            }
-            tapCount = 0
-        }
-
-    private val longPressRunnable =
-        Runnable {
-            if (!isDragging && !isFlicking) {
-                isLongPressTriggered = true
-                handler.removeCallbacks(tapRunnable)
-                tapCount = 0
+            if (!isExpanded && !isFlicking) {
+                isMoveMode = true
                 if (settings.isQuickBallHaptic()) {
-                    IslandHaptics.commit(context)
+                    IslandHaptics.thresholdReached(context)
                 }
-                listener?.onLongPress()
+                animate().scaleX(1.15f).scaleY(1.15f).setDuration(180L).start()
             }
         }
 
@@ -213,24 +199,32 @@ class FloatTouchView @JvmOverloads constructor(
                 startY = event.rawY
                 isDragging = false
                 isFlicking = false
-                isLongPressTriggered = false
+                isMoveMode = false
 
-                handler.removeCallbacks(longPressRunnable)
-                if (settings.isQuickBallGesturesEnabled()) {
-                    handler.postDelayed(longPressRunnable, longPressTimeoutMs)
+                handler.removeCallbacks(holdToMoveRunnable)
+                if (!settings.isQuickBallLockPosition()) {
+                    handler.postDelayed(holdToMoveRunnable, holdToMoveDelayMs)
                 }
                 return true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (isLongPressTriggered) return true
-
                 val dx = event.rawX - startX
                 val dy = event.rawY - startY
                 val dist = hypot(dx, dy)
 
                 if (dist > touchSlop) {
-                    handler.removeCallbacks(longPressRunnable)
+                    if (isMoveMode) {
+                        // User held for 3s to enter move mode: Flick-to-Select is disabled, freely drag across screen
+                        if (!isDragging) {
+                            isDragging = true
+                        }
+                        listener?.onDragMove(dx, dy)
+                        return true
+                    }
+
+                    // Moved before 3s hold threshold: cancel hold runnable
+                    handler.removeCallbacks(holdToMoveRunnable)
 
                     // Check if inward swipe towards radial arc (Flick-to-Select)
                     val isInward = if (onRight) {
@@ -242,43 +236,38 @@ class FloatTouchView @JvmOverloads constructor(
                     if (settings.isQuickBallFlickToSelect() && (isFlicking || isInward)) {
                         if (!isFlicking) {
                             isFlicking = true
-                            handler.removeCallbacks(tapRunnable)
-                            tapCount = 0
                             listener?.onFlickStart()
                         }
                         listener?.onFlickMove(event.rawX, event.rawY)
                         return true
                     }
 
-                    // Otherwise regular dragging or locked position gestures
-                    if (!settings.isQuickBallLockPosition()) {
+                    // If Flick-to-Select is disabled, normal immediate drag repositioning
+                    if (!settings.isQuickBallFlickToSelect() && !settings.isQuickBallLockPosition()) {
                         if (!isDragging) {
                             isDragging = true
-                            handler.removeCallbacks(tapRunnable)
-                            tapCount = 0
                             if (settings.isQuickBallHaptic()) {
                                 IslandHaptics.thresholdReached(context)
                             }
                         }
                         listener?.onDragMove(dx, dy)
-                    } else if (settings.isQuickBallGesturesEnabled()) {
-                        val swipeThreshold = 24f * density
-                        if (abs(dy) > swipeThreshold && abs(dy) > abs(dx) * 1.8f) {
-                            handler.removeCallbacks(tapRunnable)
-                            tapCount = 0
-                            if (dy < 0) {
-                                listener?.onSwipeUp()
-                            } else {
-                                listener?.onSwipeDown()
-                            }
-                        }
                     }
                 }
                 return true
             }
 
             MotionEvent.ACTION_UP -> {
-                handler.removeCallbacks(longPressRunnable)
+                handler.removeCallbacks(holdToMoveRunnable)
+
+                if (isMoveMode) {
+                    animate().scaleX(1f).scaleY(1f).setDuration(160L).start()
+                    isMoveMode = false
+                    if (isDragging) {
+                        isDragging = false
+                        listener?.onDragEnd()
+                    }
+                    return true
+                }
 
                 if (isFlicking) {
                     isFlicking = false
@@ -292,30 +281,17 @@ class FloatTouchView @JvmOverloads constructor(
                     return true
                 }
 
-                if (isLongPressTriggered) {
-                    isLongPressTriggered = false
-                    return true
-                }
-
-                // Tap handling (Single / Double tap)
-                if (settings.isQuickBallGesturesEnabled()) {
-                    tapCount++
-                    handler.removeCallbacks(tapRunnable)
-                    if (tapCount >= 2) {
-                        tapCount = 0
-                        listener?.onDoubleTap()
-                    } else {
-                        handler.postDelayed(tapRunnable, tapTimeoutMs)
-                    }
-                } else {
-                    listener?.onSingleTap()
-                }
+                // Plain single tap on the floating ball
+                listener?.onSingleTap()
                 return true
             }
 
             MotionEvent.ACTION_CANCEL -> {
-                handler.removeCallbacks(longPressRunnable)
-                handler.removeCallbacks(tapRunnable)
+                handler.removeCallbacks(holdToMoveRunnable)
+                if (isMoveMode) {
+                    animate().scaleX(1f).scaleY(1f).setDuration(160L).start()
+                    isMoveMode = false
+                }
                 if (isFlicking) {
                     isFlicking = false
                     listener?.onFlickEnd()
@@ -325,8 +301,6 @@ class FloatTouchView @JvmOverloads constructor(
                     listener?.onDragEnd()
                 }
                 listener?.onTouchCancel()
-                tapCount = 0
-                isLongPressTriggered = false
                 return true
             }
 
