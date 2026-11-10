@@ -173,12 +173,13 @@ class ProgressPlugin : BaseIslandPlugin() {
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
                     CompactCell("progress.ring") {
-                        ProgressRing(progress, indeterminate, image, islandAccent())
+                        ProgressRing(progress, indeterminate, image, islandAccent(), tinted = d.iconIsGlyph)
                     },
                 ),
                 expanded = ExpandedContent { scope ->
                     ProgressExpanded(
                         icon = icons[d.key]?.first ?: d.icon,
+                        iconIsGlyph = d.iconIsGlyph,
                         title = d.title ?: d.appName ?: d.packageName,
                         text = d.text,
                         progress = progress,
@@ -201,7 +202,7 @@ class ProgressPlugin : BaseIslandPlugin() {
                         priority = SideBubblePriority.PROGRESS,
                         onOpen = { select(d.key) },
                         icons = shown.mapIndexed { index, entry ->
-                            val glyph = themed[entry.packageName]
+                            val glyph = if (entry.iconIsGlyph) icons[entry.key]?.second else themed[entry.packageName]
                             val ringIcon = glyph ?: icons[entry.key]?.second
                             val pill = expandedLead && index == 0
                             StackIcon(entry.key, onSelect = { select(entry.key) }, fill = true, widthFactor = if (pill) PILL_WIDTH else 1f) { size ->
@@ -219,7 +220,7 @@ class ProgressPlugin : BaseIslandPlugin() {
                         whenOccupiedOnly = true,
                         onOpen = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)) },
                         content = { bubbleSize ->
-                            ProgressRing(progress, indeterminate, image, islandAccent(), bubbleSize)
+                            ProgressRing(progress, indeterminate, image, islandAccent(), bubbleSize, tinted = d.iconIsGlyph)
                         },
                     )
                 },

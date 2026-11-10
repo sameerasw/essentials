@@ -1899,15 +1899,28 @@ class NotificationListener : NotificationListenerService() {
         }
 
         var bitmap: Bitmap? = null
-        try {
-            val largeIcon = notif.getLargeIcon()
-            if (largeIcon != null) {
-                val drawable = largeIcon.loadDrawable(this)
-                if (drawable != null) {
-                    bitmap = AppUtil.drawableToBitmap(drawable)
+        var iconIsGlyph = false
+        // Live updates carry their own status bar glyph; prefer it over the large or app icon, like the system chip does.
+        if (LiveUpdateSnoozer.isLiveUpdate(sbn) || isFakeLiveUpdate(sbn)) {
+            try {
+                notif.smallIcon?.loadDrawable(this)?.let {
+                    bitmap = AppUtil.drawableToBitmap(it)
+                    iconIsGlyph = true
                 }
-            }
-        } catch (_: Exception) {}
+            } catch (_: Exception) {}
+        }
+
+        if (bitmap == null) {
+            try {
+                val largeIcon = notif.getLargeIcon()
+                if (largeIcon != null) {
+                    val drawable = largeIcon.loadDrawable(this)
+                    if (drawable != null) {
+                        bitmap = AppUtil.drawableToBitmap(drawable)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
 
         if (bitmap == null) {
             try {
@@ -1927,6 +1940,7 @@ class NotificationListener : NotificationListenerService() {
             postTime = postTime,
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
             text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            iconIsGlyph = iconIsGlyph,
             shortText = extras.getCharSequence("android.shortCriticalText")?.toString()?.trim()?.takeIf { it.isNotEmpty() },
             appName = try {
                 packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString()
