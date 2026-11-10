@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.sameerasw.essentials.FeatureSettingsActivity
-import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.SettingsActivity
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
@@ -118,7 +117,7 @@ object AppRoutes {
 
     fun redirectToMain(activity: Activity) {
         activity.startActivity(
-            Intent(activity, MainActivity::class.java).apply {
+            com.sameerasw.essentials.utils.AppIconUtil.mainIntent(activity).apply {
                 activity.intent?.extras?.let { putExtras(it) }
                 putExtra(EXTRA_NAV_TARGET, activity.javaClass.name)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
