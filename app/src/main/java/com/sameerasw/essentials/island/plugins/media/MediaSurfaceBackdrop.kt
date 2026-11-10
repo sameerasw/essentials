@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.blur.BlurRadiusSpec
 import androidx.compose.ui.graphics.blur.BlurStop
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.onSizeChanged
@@ -115,7 +117,12 @@ fun MediaSurface(
         return rect to (g?.cornerRadius ?: 0f)
     }
     Box(modifier.onSizeChanged { viewportHeight = it.height.coerceAtLeast(1) }) {
-        Box(Modifier.matchParentSize().then(blurModifier)) {
+        val blurClip = if (!transparent) Modifier else Modifier.drawWithContent {
+            val (rect, _) = surfaceRect(size)
+            val r = rect.inflate(16.dp.toPx())
+            clipRect(r.left, r.top, r.right, r.bottom) { this@drawWithContent.drawContent() }
+        }
+        Box(Modifier.matchParentSize().then(blurClip).then(blurModifier)) {
             Box(Modifier.matchParentSize().drawWithCache {
                 val (rect, geometryCorner) = surfaceRect(size)
                 val cornerPx = (if (geometry != null) geometryCorner else corner.toPx())

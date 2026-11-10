@@ -83,6 +83,7 @@ import com.sameerasw.essentials.island.model.SideBubble
 import com.sameerasw.essentials.island.model.SideBubblePriority
 import com.sameerasw.essentials.island.model.StackIcon
 import com.sameerasw.essentials.utils.ShellUtils
+import com.sameerasw.essentials.island.plugins.media.particles.prewarmParticles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -247,7 +248,7 @@ class IslandCoordinator(
     private val powerSaveReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             pokeStillness()
-            applyConfig()
+            if (running) applyConfig()
         }
     }
 
@@ -784,6 +785,8 @@ class IslandCoordinator(
         val iconCustomMode = settings.getString(SettingsRepository.KEY_ISLAND_ICON_COLOR_MODE, null) == SettingsRepository.ISLAND_ICON_COLOR_CUSTOM
         val iconMaterialYou = settings.getBoolean(SettingsRepository.KEY_ISLAND_ICON_MATERIAL_YOU, true)
         IslandMotion.speed = settings.getIslandAnimationSpeed().coerceIn(0.5f, 1.5f)
+        val neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled()
+        if (neuralExpressive) scope?.launch(Dispatchers.Default) { prewarmParticles(Density(density)) }
         spec.value = IslandLayoutSpec(
             cameraDiameter = (geo.diameter / density).dp,
             cameraGap = (geo.gap / density).dp,
@@ -806,7 +809,7 @@ class IslandCoordinator(
             bondEdge = !geo.hasCamera && settings.isIslandBondEdgeEnabled(),
             balanceCompact = settings.isIslandBalanceCompactEnabled(),
             dismissDown = settings.getIslandDismissDirection() == SettingsRepository.ISLAND_DISMISS_DOWN,
-            neuralExpressive = transparent && settings.isIslandNeuralExpressiveEnabled(),
+            neuralExpressive = neuralExpressive,
             neuralExpressiveAlways = settings.isIslandNeuralExpressiveAlwaysEnabled(),
             glowIntensity = if (settings.isIslandShowGlowEnabled()) settings.getIslandGlowIntensity().coerceIn(0f, 2f) else 0f,
             transparency = transparent,

@@ -1,15 +1,13 @@
 package com.sameerasw.essentials.island.plugins.media.particles
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
-import android.os.PowerManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Density
+import java.util.concurrent.ConcurrentHashMap
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -20,12 +18,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionOnScreen
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -37,6 +33,17 @@ import kotlinx.coroutines.ensureActive
 import kotlin.math.roundToInt
 
 val MediaParticleOutset = ParticleFieldStyle().outerBand + 8.dp
+
+private val tileCache = ConcurrentHashMap<Float, PoissonTile>()
+private val sharedPainter: ParticlePainter by lazy {
+    if (Build.VERSION.SDK_INT >= 33) createRuntimeParticlePainter() ?: StaticParticlePainter() else StaticParticlePainter()
+}
+
+fun prewarmParticles(density: Density, style: ParticleFieldStyle = ParticleFieldStyle()) {
+    sharedPainter
+    val d = style.resolve(density).minDistance
+    if (!tileCache.containsKey(d)) tileCache[d] = generatePoissonTile(d)
+}
 
 @Composable
 fun GeminiParticlePill(
@@ -53,23 +60,20 @@ fun GeminiParticlePill(
     geometry: (() -> MediaVisualGeometry)? = null,
     protectedCamera: (() -> MediaCameraGeometry)? = null,
 ) {
-    val context = LocalContext.current
     val view = LocalView.current
     val density = LocalDensity.current
     val pixels = remember(style, density) { style.resolve(density) }
-    val tile by produceState<PoissonTile?>(null, pixels.minDistance) {
-        value = null
+    val tile by produceState(tileCache[pixels.minDistance], pixels.minDistance) {
+        if (value != null) return@produceState
         value = withContext(Dispatchers.Default) {
             val running = currentCoroutineContext()
             generatePoissonTile(pixels.minDistance, checkCancelled = { running.ensureActive() })
+                .also { tileCache[pixels.minDistance] = it }
         }
     }
     val latestActivation by rememberUpdatedState(activation)
     val latestColor by rememberUpdatedState(color)
     var started by remember(view) { mutableStateOf(false) }
-    var powerSave by remember(context) {
-        mutableStateOf(context.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true)
-    }
     DisposableEffect(view) {
         val lifecycle = view.findViewTreeLifecycleOwner()?.lifecycle
         fun update() { started = lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: view.isShown }
@@ -78,24 +82,12 @@ fun GeminiParticlePill(
         update()
         onDispose { lifecycle?.removeObserver(observer) }
     }
-    DisposableEffect(context) {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                powerSave = context.getSystemService(PowerManager::class.java)?.isPowerSaveMode == true
-            }
-        }
-        ContextCompat.registerReceiver(context, receiver,
-            IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED)
-        onDispose { context.unregisterReceiver(receiver) }
-    }
-    val painter = remember(forceFallback) {
-        if (!forceFallback && Build.VERSION.SDK_INT >= 33) createRuntimeParticlePainter() ?: StaticParticlePainter()
-        else StaticParticlePainter()
-    }
+    val painter = remember(forceFallback) { if (forceFallback) StaticParticlePainter() else sharedPainter }
     var hasArea by remember { mutableStateOf(false) }
     var elapsed by remember { mutableFloatStateOf(0f) }
     var screenOrigin by remember { mutableStateOf(Offset.Zero) }
-    val visible = enabled && started && !powerSave && style.opacity > 0f
+    val cameraClip = remember { Path().apply { fillType = PathFillType.EvenOdd } }
+    val visible = enabled && started && style.opacity > 0f
     LaunchedEffect(visible, hasArea, painter, timeSeconds, tile) {
         if (!visible || !hasArea || tile == null || !painter.animated || timeSeconds != null) return@LaunchedEffect
         snapshotFlow { particleActivation(latestActivation()) > 0f }.collectLatest { active ->
@@ -114,19 +106,17 @@ fun GeminiParticlePill(
         .onGloballyPositioned {
             val origin = it.positionOnScreen()
             if (origin.x.isFinite() && origin.y.isFinite()) screenOrigin = origin
-        }.drawWithCache {
-        val cameraInset = if (geometry == null && capsuleRect == null) capsuleInset.toPx() else 0f
-        val camera = protectedCamera?.invoke()?.takeIf { it.radius > 0f }?.let {
-            it.copy(center = it.center + Offset(cameraInset, cameraInset))
         }
-        val cameraClip = camera?.let {
-            Path().apply {
-                fillType = PathFillType.EvenOdd
-                addRect(Rect(Offset.Zero, size))
-                addOval(Rect(it.center, it.radius + MediaCameraClearance.toPx()))
+        .graphicsLayer()
+        .drawBehind {
+            val cameraInset = if (geometry == null && capsuleRect == null) capsuleInset.toPx() else 0f
+            val camera = protectedCamera?.invoke()?.takeIf { it.radius > 0f }
+            val clip = camera?.let {
+                cameraClip.rewind()
+                cameraClip.addRect(Rect(Offset.Zero, size))
+                cameraClip.addOval(Rect(it.center + Offset(cameraInset, cameraInset), it.radius + MediaCameraClearance.toPx()))
+                cameraClip
             }
-        }
-        onDrawBehind {
             val frame = geometry?.invoke()
             val capsule = CapsuleParticleGeometry.create(size, if (frame != null) 0f else capsuleInset.toPx(),
                 frame?.cornerRadius ?: cornerRadius.toPx(), frame?.bounds ?: capsuleRect)
@@ -138,10 +128,9 @@ fun GeminiParticlePill(
                         paint(capsule, timeSeconds?.takeIf { it.isFinite() } ?: elapsed, alpha, latestColor, pixels, screenOrigin, samples)
                     }
                 }
-                if (cameraClip != null) clipPath(cameraClip) { drawParticles() } else drawParticles()
+                if (clip != null) clipPath(clip) { drawParticles() } else drawParticles()
             }
-        }
-    })
+        })
 }
 
 internal interface ParticlePainter {
