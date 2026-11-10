@@ -47,10 +47,12 @@ import com.sameerasw.essentials.domain.model.RippleConfig
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import com.sameerasw.essentials.ui.activities.LockscreenActionActivity
 import com.sameerasw.essentials.ui.activities.PixelSearchResultsActivity
 import com.sameerasw.essentials.utils.AutomationFailureNotifier
 import com.sameerasw.essentials.utils.AutomationNotificationPoster
 import com.sameerasw.essentials.utils.DeviceLockUtils
+import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
@@ -662,19 +664,37 @@ object CombinedActionExecutor {
                 }
 
                 is Action.OpenApp -> {
-                    try {
-                        val launchIntent =
-                            context.packageManager.getLaunchIntentForPackage(action.packageName)
-                        if (launchIntent != null) {
-                            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(launchIntent)
+                    if (context !is android.app.Activity) {
+                        LockscreenActionActivity.start(context, action)
+                    } else {
+                        try {
+                            if (FreezeManager.isAppFrozen(context, action.packageName)) {
+                                FreezeManager.unfreezeApp(context, action.packageName)
+                                delay(300)
+                            }
+                            val launchIntent =
+                                context.packageManager.getLaunchIntentForPackage(action.packageName)
+                            if (launchIntent != null) {
+                                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                context.startActivity(launchIntent)
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, R.string.error_app_uninstalled, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
                     }
                 }
 
-                is Action.OpenActivity -> openActivity(context, action)
+                is Action.OpenActivity -> {
+                    if (context !is android.app.Activity && !action.requiresRoot) {
+                        LockscreenActionActivity.start(context, action)
+                    } else {
+                        openActivity(context, action)
+                    }
+                }
 
                 is Action.TurnOnHotspot -> setHotspotEnabled(context, true)
                 is Action.TurnOffHotspot -> setHotspotEnabled(context, false)

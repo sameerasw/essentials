@@ -60,7 +60,15 @@ object QuickBallHud {
             val iconPack = QuickBallIconPack.fromName(settings.getQuickBallIconPack())
             QuickBallIconResolver.resolveIcon(action, iconPack)
         }
-        val label = customMessage ?: runCatching { context.getString(action.title) }.getOrDefault("")
+        val label = customMessage ?: runCatching {
+            if (action is Action.OpenApp && action.packageName.isNotBlank()) {
+                val pm = context.packageManager
+                val appInfo = pm.getApplicationInfo(action.packageName, 0)
+                pm.getApplicationLabel(appInfo).toString()
+            } else {
+                context.getString(action.title)
+            }
+        }.getOrDefault("")
 
         showInternal(context, iconRes, label)
     }

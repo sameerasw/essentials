@@ -45,6 +45,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -62,7 +63,7 @@ class QuickBallHandler(
     private val keyguardManager by lazy { service.getSystemService<KeyguardManager>() }
     private val settings = SettingsRepository(service)
     private val handler = Handler(Looper.getMainLooper())
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private val density get() = service.resources.displayMetrics.density
     private val fabSizePx get() = (settings.getQuickBallSize() * density).roundToInt()
@@ -108,6 +109,10 @@ class QuickBallHandler(
         if (!settings.isQuickBallEnabled()) {
             destroy()
             return
+        }
+
+        if (!scope.isActive) {
+            scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
 
         val isLandscape = service.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -159,6 +164,10 @@ class QuickBallHandler(
         if (!settings.isQuickBallEnabled()) {
             destroy()
             return
+        }
+
+        if (!scope.isActive) {
+            scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
 
         val isLocked = keyguardManager?.isKeyguardLocked == true
@@ -683,8 +692,8 @@ class QuickBallHandler(
         if (settings.isQuickBallHaptic()) {
             IslandHaptics.commit(service)
         }
-        val isLocked = keyguardManager?.isKeyguardLocked == true
-        if (isLocked && opensUi(action)) {
+        if (opensUi(action)) {
+            QuickBallHud.show(service, action)
             LockscreenActionActivity.start(service, action)
             return
         }
