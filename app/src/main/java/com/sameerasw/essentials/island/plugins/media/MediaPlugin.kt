@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.model.StackIcon
 import com.sameerasw.essentials.island.model.IslandStage
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.size
@@ -69,6 +70,7 @@ class MediaPlugin : BaseIslandPlugin() {
         val artist: String,
         val artwork: Bitmap?,
         val accent: Int?,
+        val hasArt: Boolean = true,
     )
 
     private var source: MediaSessionSource? = null
@@ -150,7 +152,7 @@ class MediaPlugin : BaseIslandPlugin() {
                     resolved to accentFrom(resolved)
                 }
                 if (active?.sessionToken != playingController.sessionToken) return@launch
-                track = Track(key, playingController.packageName, title, artist, art, accent)
+                track = Track(key, playingController.packageName, title, artist, art, accent, hadArt)
                 lastTrack = track
                 render()
                 if (isNewTrack && settings.isIslandMediaPeekSongChangeEnabled()) {
@@ -262,7 +264,7 @@ class MediaPlugin : BaseIslandPlugin() {
                 priority = IslandPriority.MEDIA,
                 placement = CompactPlacement.Dynamic,
                 compact = listOf(
-                    CompactCell("media.art") { MediaArtCue(t.artwork, mediaAccent(artAccent), 22.dp) },
+                    CompactCell("media.art") { MediaArtCue(t.artwork, mediaAccent(artAccent), 22.dp, rememberArtSpin(isPlaying && t.hasArt)) },
                     CompactCell("media.eq") {
                         val slide by IslandSlideFeedback.state.collectAsState()
                         val track = slide as? SlideFeedback.Track
@@ -274,7 +276,10 @@ class MediaPlugin : BaseIslandPlugin() {
                     },
                 ),
                 line = LineContent(
-                    icon = { IslandBitmap(t.artwork, 24.dp, circle = true) },
+                    icon = {
+                        val spin = rememberArtSpin(isPlaying && t.hasArt)
+                        IslandBitmap(t.artwork, 24.dp, Modifier.graphicsLayer { rotationZ = spin }, circle = true)
+                    },
                     start = t.artist,
                     end = t.title,
                     endSlot = { EqualizerBars(isPlaying, mediaAccent(artAccent)) },
@@ -300,12 +305,12 @@ class MediaPlugin : BaseIslandPlugin() {
         val open = { ctx?.request?.invoke(PluginRequest.Expand(ITEM_KEY)); Unit }
         val fillArt = settings.isIslandMediaBubbleFillArtEnabled()
         val round = StackIcon("media.bubble", onSelect = open, fill = true) { size ->
-            MediaBubbleRing(art, playing, progress, mediaAccent(artAccent), size)
+            MediaBubbleRing(art, playing && t.hasArt, playing, progress, mediaAccent(artAccent), size)
         }
         val wide = if (settings.isIslandMediaBubbleWideEnabled()) {
             listOf(
                 StackIcon("media.bubble", onSelect = open, fill = true, widthFactor = MEDIA_PILL_WIDTH) { size ->
-                    MediaBubblePill(art, playing, progress, mediaAccent(artAccent), size, fillArt)
+                    MediaBubblePill(art, playing && t.hasArt, playing, progress, mediaAccent(artAccent), size, fillArt)
                 },
             )
         } else {
@@ -366,7 +371,7 @@ class MediaPlugin : BaseIslandPlugin() {
             if (track?.key != key || active?.sessionToken != controller.sessionToken) return
             val art = withContext(Dispatchers.IO) { MediaSessionSource.artwork(context, controller.metadata) } ?: return@forEach
             if (track?.key != key || active?.sessionToken != controller.sessionToken) return
-            track = track?.copy(artwork = art, accent = accentFrom(art))
+            track = track?.copy(artwork = art, accent = accentFrom(art), hasArt = true)
             lastTrack = track
             render()
             return

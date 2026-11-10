@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -33,11 +34,17 @@ import androidx.compose.ui.unit.Dp
 import com.sameerasw.essentials.island.plugins.progress.ProgressRing
 import com.sameerasw.essentials.island.ui.IslandMotion
 import com.sameerasw.essentials.island.ui.components.EqualizerBars
+import com.sameerasw.essentials.island.ui.components.rememberLoopValue
 import kotlinx.coroutines.delay
 
 const val MEDIA_PILL_WIDTH = 2.2f
 
 private const val STILL_PROGRESS_POLL_MS = 30_000L
+
+private const val ART_SPIN_MS = 8_000
+
+@Composable
+fun rememberArtSpin(spinning: Boolean): Float = rememberLoopValue(spinning && !islandStill(), 360f, ART_SPIN_MS)
 
 @Composable
 private fun rememberPlaybackProgress(playing: Boolean, read: () -> Float): Float {
@@ -54,12 +61,13 @@ private fun rememberPlaybackProgress(playing: Boolean, read: () -> Float): Float
 }
 
 @Composable
-fun MediaBubbleRing(art: ImageBitmap?, playing: Boolean, progress: () -> Float, accent: Color, size: Dp) {
-    ProgressRing(rememberPlaybackProgress(playing, progress), false, art, accent, size)
+fun MediaBubbleRing(art: ImageBitmap?, spinning: Boolean, playing: Boolean, progress: () -> Float, accent: Color, size: Dp) {
+    ProgressRing(rememberPlaybackProgress(playing, progress), false, art, accent, size, iconRotation = rememberArtSpin(spinning))
 }
 
 @Composable
-fun MediaBubblePill(art: ImageBitmap?, playing: Boolean, progress: () -> Float, accent: Color, height: Dp, fillArt: Boolean) {
+fun MediaBubblePill(art: ImageBitmap?, spinning: Boolean, playing: Boolean, progress: () -> Float, accent: Color, height: Dp, fillArt: Boolean) {
+    val spin = rememberArtSpin(spinning)
     val fraction by animateFloatAsState(rememberPlaybackProgress(playing, progress).coerceIn(0f, 1f), IslandMotion.float(), label = "mediaPillProgress")
     Box(Modifier.fillMaxSize()) {
         if (fillArt && art != null) {
@@ -80,7 +88,7 @@ fun MediaBubblePill(art: ImageBitmap?, playing: Boolean, progress: () -> Float, 
                         bitmap = art,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(height * 0.62f).clip(CircleShape),
+                        modifier = Modifier.size(height * 0.62f).graphicsLayer { rotationZ = spin }.clip(CircleShape),
                     )
                 }
                 EqualizerBars(playing, accent, size = height * 0.5f)
