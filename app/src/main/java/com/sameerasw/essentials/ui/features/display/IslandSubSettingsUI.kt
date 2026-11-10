@@ -465,6 +465,20 @@ fun IslandVisualsSettingsUI(
             )
 
             ConfigSliderItem(
+                title = stringResource(R.string.island_expanded_offset_y_title),
+                value = viewModel.islandExpandedOffsetY.floatValue,
+                onValueChange = {
+                    HapticUtil.performUIHaptic(view)
+                    viewModel.setIslandExpandedOffsetY(it)
+                },
+                valueRange = 0f..120f,
+                increment = 2f,
+                iconRes = R.drawable.rounded_south_24,
+                valueFormatter = { "${it.toInt()} dp" },
+                modifier = Modifier.highlight(highlightSetting == "island_expanded_offset_y"),
+            )
+
+            ConfigSliderItem(
                 title = stringResource(R.string.island_expanded_bottom_padding_title),
                 value = viewModel.islandExpandedBottomPadding.floatValue,
                 onValueChange = {

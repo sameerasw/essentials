@@ -58,10 +58,10 @@ fun IslandBorderOutlineOptionsBottomSheet(
                         HapticUtil.performUIHaptic(view)
                         viewModel.setIslandBorderOutlineThickness(it)
                     },
-                    valueRange = 1f..5f,
-                    increment = 1f,
+                    valueRange = 0.5f..5f,
+                    increment = 0.5f,
                     iconRes = R.drawable.rounded_line_weight_24,
-                    valueFormatter = { "${it.toInt()} dp" },
+                    valueFormatter = { if (it % 1f == 0f) "${it.toInt()} dp" else "$it dp" },
                 )
 
                 IconToggleItem(

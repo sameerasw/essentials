@@ -3339,6 +3339,7 @@
     <string name="island_reply_send">Send</string>
     <string name="island_expanded_padding_title">Expanded padding</string>
     <string name="island_expanded_top_padding_title">Expanded top padding</string>
+    <string name="island_expanded_offset_y_title">Expanded vertical offset</string>
     <string name="island_expanded_bottom_padding_title">Expanded bottom padding</string>
     <string name="island_catch_up_title">Catch up</string>
     <string name="island_catch_up_desc">Keep last notification in island for longer</string>
