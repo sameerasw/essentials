@@ -8,6 +8,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Looper
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Chronometer
+import android.widget.FrameLayout
+import android.widget.TextView
+import com.sameerasw.essentials.R
 import android.service.notification.StatusBarNotification
 import com.sameerasw.essentials.utils.AppUtil
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,13 +22,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.abs
 
-class ChronometerAction(val title: String, val intent: PendingIntent)
+class ChronometerAction(val title: String, val intent: PendingIntent?, val click: (() -> Unit)? = null) {
+    fun perform(context: Context) {
+        click?.invoke() ?: intent?.let { runCatching { it.send() } }
+    }
+}
 
 data class ChronometerEntry(
     val key: String,
     val packageName: String,
     val appName: String?,
     val appIcon: Bitmap?,
+    val glyph: Bitmap?,
     val title: String?,
 
     val countDown: Boolean,
@@ -91,8 +103,16 @@ object ChronometerRepository {
 
     private val tracked = LinkedHashMap<String, ChronometerEntry>()
 
+    // Google Recorder posts a custom media-style view with no chronometer extras; `when` is the recording start.
+    private const val RECORDER_PACKAGE = "com.google.android.apps.recorder"
+    private const val RECORDER_CHANNEL = "Record"
+
+    private fun isRecorderSession(sbn: StatusBarNotification): Boolean =
+        sbn.packageName == RECORDER_PACKAGE && sbn.notification.channelId == RECORDER_CHANNEL && sbn.isOngoing
+
     fun isCandidate(sbn: StatusBarNotification): Boolean {
         val n = sbn.notification
+        if (isRecorderSession(sbn)) return true
         if (n.category == Notification.CATEGORY_CALL || n.category == Notification.CATEGORY_TRANSPORT) return false
         if (n.extras.containsKey(Notification.EXTRA_MEDIA_SESSION)) return false
         val chronometer = n.extras.getBoolean(Notification.EXTRA_SHOW_CHRONOMETER) || timeMetric(n.extras) != null
@@ -114,12 +134,31 @@ object ChronometerRepository {
             return
         }
         val metric = timeMetric(extras)
+        val recorder = isRecorderSession(sbn)
         val now = System.currentTimeMillis()
         val running: Boolean
         val countDown: Boolean
         val base: Long
         val frozen: Long
-        if (metric != null) {
+        val custom = if (recorder || n.actions.isNullOrEmpty()) inflateCustom(context, n) else null
+        val clock = custom?.let { findChronometer(it) }
+        if (recorder && clock != null) {
+            // The custom view's Chronometer is the real counter; `when` is reset on every pause/resume repost.
+            val elapsed = (SystemClock.elapsedRealtime() - clock.base).coerceAtLeast(0L)
+            running = chronometerStarted(clock) ?: !hasResumeButton(custom)
+            countDown = false
+            base = now - elapsed
+            frozen = when {
+                running -> 0L
+                previous?.running == true -> previous.displayMillis(now)
+                else -> elapsed
+            }
+        } else if (recorder) {
+            running = previous?.running ?: true
+            countDown = false
+            base = previous?.base ?: n.`when`
+            frozen = previous?.frozenMillis ?: 0L
+        } else if (metric != null) {
             running = metric.zeroEpochMillis != null
             countDown = metric.countDown
             base = metric.zeroEpochMillis ?: previous?.base ?: now
@@ -148,25 +187,71 @@ object ChronometerRepository {
         } catch (_: Exception) {
             null
         }
+        val glyph = previous?.glyph ?: try {
+            n.smallIcon?.loadDrawable(context)?.let { AppUtil.drawableToBitmap(it) }
+        } catch (_: Exception) {
+            null
+        } ?: runCatching { AppIconUtil.monochromeAppIcon(context, sbn.packageName) }.getOrNull()
+        val notifActions = n.actions.orEmpty().mapNotNull { a ->
+            val title = a.title?.toString()?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            a.actionIntent?.let { ChronometerAction(title, it) }
+        }
         tracked[sbn.key] = ChronometerEntry(
             key = sbn.key,
             packageName = sbn.packageName,
             appName = appName,
             appIcon = appIcon,
+            glyph = glyph,
             title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString()?.takeIf { it.isNotBlank() }
-                ?: metric?.label?.takeIf { it.isNotBlank() },
+                ?: metric?.label?.takeIf { it.isNotBlank() }
+                ?: context.getString(R.string.island_recording_default).takeIf { recorder },
             countDown = countDown,
             base = base,
             running = running,
             frozenMillis = frozen,
-            actions = n.actions.orEmpty().mapNotNull { a ->
-                val title = a.title?.toString()?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
-                a.actionIntent?.let { ChronometerAction(title, it) }
-            },
+            actions = notifActions.ifEmpty { custom?.let { customViewActions(it) }.orEmpty() },
             contentIntent = n.contentIntent,
             postedAt = sbn.postTime,
         )
         publish()
+    }
+
+    // Apps like Recorder put their buttons only in a custom RemoteViews layout; inflate it and reuse its click handlers.
+    private fun inflateCustom(context: Context, n: Notification): View? {
+        val remote = n.bigContentView ?: n.contentView ?: return null
+        if (Looper.myLooper() != Looper.getMainLooper()) return null
+        return runCatching { remote.apply(context, FrameLayout(context)) }.getOrNull()
+    }
+
+    private fun findChronometer(v: View): Chronometer? {
+        if (v is Chronometer) return v
+        if (v is ViewGroup) for (i in 0 until v.childCount) findChronometer(v.getChildAt(i))?.let { return it }
+        return null
+    }
+
+    private fun chronometerStarted(c: Chronometer): Boolean? = runCatching {
+        Chronometer::class.java.getDeclaredField("mStarted").apply { isAccessible = true }.getBoolean(c)
+    }.getOrNull()
+
+    private val RESUME_WORDS = listOf("resume", "continue", "play")
+
+    private fun hasResumeButton(root: View): Boolean {
+        val labels = customViewActions(root).map { it.title.lowercase() }
+        return labels.any { l -> RESUME_WORDS.any { l.contains(it) } } && labels.none { it.contains("pause") }
+    }
+
+    private fun customViewActions(root: View): List<ChronometerAction> {
+        val found = ArrayList<ChronometerAction>()
+        fun walk(v: View) {
+            if (v !== root && v.isClickable && v.hasOnClickListeners() && v.visibility == View.VISIBLE) {
+                val label = v.contentDescription?.toString()?.takeIf { it.isNotBlank() }
+                    ?: (v as? TextView)?.text?.toString()?.takeIf { it.isNotBlank() }
+                if (label != null) found += ChronometerAction(label, null) { v.performClick() }
+            }
+            if (v is ViewGroup) for (i in 0 until v.childCount) walk(v.getChildAt(i))
+        }
+        walk(root)
+        return found.distinctBy { it.title }
     }
 
     @Synchronized
