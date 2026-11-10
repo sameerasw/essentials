@@ -255,6 +255,8 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val timeText = time
         val dayText = day
         val batteryLevel = level
+        val isCharging = charging
+        val isSaving = powerSave
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
@@ -303,7 +305,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             compact = listOf(
                 CompactCell("battery") {
                     when {
-                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
+                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving)
                         else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
                     }
                 },
@@ -363,7 +365,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             charging && settings.isDuoBatteryChargingColorEnabled() ->
                 if (charge.equals("auto", ignoreCase = true)) AUTO_CHARGING else parse(charge, AUTO_CHARGING)
             powerSave && settings.isDuoBatteryPowerSaveColorEnabled() ->
-                parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 152, 0))
+                parse(settings.getDuoBatteryPowerSaveColor(), AndroidColor.rgb(255, 196, 0))
             level in 0..settings.getDuoBatteryCriticalLevel() && settings.isDuoBatteryCriticalColorEnabled() ->
                 parse(settings.getDuoBatteryCriticalColor(), AndroidColor.rgb(244, 67, 54))
             level in 0..settings.getDuoBatteryLowLevel() && settings.isDuoBatteryLowColorEnabled() ->

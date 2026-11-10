@@ -4038,7 +4038,7 @@ class SettingsRepository(
     fun isDuoBatteryPowerSaveColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED, true)
     fun setDuoBatteryPowerSaveColorEnabled(enabled: Boolean) = putBoolean(KEY_DUO_BATTERY_POWER_SAVE_COLOR_ENABLED, enabled)
 
-    fun getDuoBatteryPowerSaveColor(): String = getString(KEY_DUO_BATTERY_POWER_SAVE_COLOR, "#FF9800") ?: "#FF9800"
+    fun getDuoBatteryPowerSaveColor(): String = getString(KEY_DUO_BATTERY_POWER_SAVE_COLOR, "#FFC400") ?: "#FFC400"
     fun setDuoBatteryPowerSaveColor(colorHex: String) = putString(KEY_DUO_BATTERY_POWER_SAVE_COLOR, colorHex)
 
     fun isDuoBatteryLowColorEnabled(): Boolean = getBoolean(KEY_DUO_BATTERY_LOW_COLOR_ENABLED, true)
