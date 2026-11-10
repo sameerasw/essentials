@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
@@ -303,6 +304,7 @@ fun BatteryGlyph(
     showLevel: Boolean = true,
     charging: Boolean = false,
     powerSave: Boolean = false,
+    limited: Boolean = false,
 ) {
     val fraction by animateFloatAsState(level.coerceIn(0, 100) / 100f, IslandMotion.float(), label = "batteryFill")
     val fillColor by animateColorAsState(color, label = "batteryGlyphColor")
@@ -315,6 +317,7 @@ fun BatteryGlyph(
     val paint = remember { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG) }
     val bounds = remember { android.graphics.Rect() }
     val symbol = when {
+        limited -> 3
         charging -> 1
         powerSave -> 2
         else -> 0
@@ -357,13 +360,13 @@ fun BatteryGlyph(
         if (symbol != 0) {
             Canvas(
                 Modifier
-                    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                    .then(if (symbol == 3) Modifier else Modifier.graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen))
                     .layout { measurable, constraints ->
                         val placeable = measurable.measure(constraints)
                         val overlap = 7.dp.roundToPx()
                         layout((placeable.width - overlap).coerceAtLeast(0), placeable.height) { placeable.place(-overlap, 0) }
                     }
-                    .size(11.dp, 13.dp),
+                    .then(if (symbol == 3) Modifier.size(9.dp, 11.dp) else Modifier.size(11.dp, 13.dp)),
             ) {
                 val stroke = 1.8.dp.toPx()
                 val gap = 0.8.dp.toPx()
@@ -377,6 +380,23 @@ fun BatteryGlyph(
                         drawLine(paintColor, Offset(c.x - arm, c.y), Offset(c.x + arm, c.y), width, StrokeCap.Round, blendMode = mode)
                         drawLine(paintColor, Offset(c.x, c.y - arm), Offset(c.x, c.y + arm), width, StrokeCap.Round, blendMode = mode)
                     }
+                } else if (symbol == 3) {
+                    val w = size.width
+                    val h = size.height
+                    val shield = Path().apply {
+                        moveTo(w * 0.5f, h * 0.04f)
+                        lineTo(w * 0.94f, h * 0.2f)
+                        lineTo(w * 0.94f, h * 0.5f)
+                        cubicTo(w * 0.94f, h * 0.76f, w * 0.74f, h * 0.92f, w * 0.5f, h * 0.98f)
+                        cubicTo(w * 0.26f, h * 0.92f, w * 0.06f, h * 0.76f, w * 0.06f, h * 0.5f)
+                        lineTo(w * 0.06f, h * 0.2f)
+                        close()
+                    }
+                    val outline = stroke * 0.7f
+                    drawPath(shield, Color.Black, style = Stroke(gap * 3 + outline, join = StrokeJoin.Round), blendMode = BlendMode.Clear)
+                    drawPath(shield, Color.Black, blendMode = BlendMode.Clear)
+                    drawPath(shield, Color.White, style = Stroke(outline, join = StrokeJoin.Round))
+                    clipRect(right = w * 0.5f) { drawPath(shield, Color.White) }
                 } else {
                     val w = size.width
                     val h = size.height

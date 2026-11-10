@@ -84,6 +84,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
     private var level = -1
     private var charging = false
     private var shielded = false
+    private var limited = false
     private var powerSave = false
     private var registered = false
     private var peekUntil = 0L
@@ -212,6 +213,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val plugged = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
         shielded = com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isShielded(context, level, plugged)
         charging = plugged && !shielded
+        limited = plugged && com.sameerasw.essentials.utils.battery.ChargeLimitUtil.isLimitActive(context)
         powerSave = (context.getSystemService(Context.POWER_SERVICE) as? PowerManager)?.isPowerSaveMode ?: false
     }
 
@@ -257,6 +259,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
         val batteryLevel = level
         val isCharging = charging
         val isSaving = powerSave
+        val isLimited = limited
         val stateColor = stateColor()
         val displayColor = stateColor ?: idleColor()
         val iconStyle = settings.getIslandBatteryStyle() == SettingsRepository.ISLAND_BATTERY_STYLE_ICON
@@ -305,7 +308,7 @@ class TimeBatteryPlugin : BaseIslandPlugin() {
             compact = listOf(
                 CompactCell("battery") {
                     when {
-                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving)
+                        iconStyle -> BatteryGlyph(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel, charging = isCharging, powerSave = isSaving, limited = isLimited)
                         else -> BatteryRing(batteryLevel, displayColor ?: islandAccent(), showLevel = showLevel)
                     }
                 },
