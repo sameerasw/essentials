@@ -951,7 +951,7 @@ class IslandCoordinator(
         return (((px + (geometry?.contentGap ?: 0f)) / unit) * 4f).roundToInt() / 4f
     }
 
-    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, growing: Boolean): Int? {
+    private fun fitsCompactWidth(before: List<String>, after: List<String>, leftExtra: Int, hubFactor: Float, growing: Boolean): Int? {
         val geo = geometry ?: return 0
         val density = service.resources.displayMetrics.density
         val cell = geo.contentSize.toInt()
@@ -959,7 +959,11 @@ class IslandCoordinator(
         val inset = geo.edgeInset.toInt()
         fun need(keys: List<String>, extra: Int): Int =
             if (keys.isEmpty() && extra == 0) 0 else keys.sumOf { CompactCellWidths.get(it) ?: cell } + spacing * keys.size + inset +
-                if (extra > 0) maxOf(CompactCellWidths.bubbleExtent, extra * (cell + spacing)) else 0
+                when {
+                    extra == 0 -> 0
+                    hubFactor > 0f -> (geo.compactHeight * hubFactor).roundToInt() + spacing
+                    else -> geo.compactHeight.toInt() + spacing + (extra - 1) * (cell + spacing)
+                }
         val slack = if (growing) (GROW_SLACK_DP * density).toInt() else 0
         val (leftRoom, rightRoom) = sideRooms()
         val left = if (leftRoom == Int.MAX_VALUE) leftRoom else leftRoom - slack

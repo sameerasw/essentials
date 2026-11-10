@@ -274,7 +274,10 @@ fun CompactTemplate(
             if (state.sideBubble != null) maxOf(bubbleNow, com.sameerasw.essentials.island.state.CompactCellWidths.bubbleExtent) else 0
         val side = if (spec.growDirection == 0) bubbleSide().coerceIn(0f, 1f) else 0f
         val bubbleOnRight = side >= 0.5f
-        fun bodyLimit(limit: Int) = if (limit == Int.MAX_VALUE) limit else (limit - bubbleNow).coerceAtLeast(0)
+        val hubReserve = state.sideBubble?.let { hub ->
+            minOf(bubbleNow, (spec.compactHeight.toPx() * overlapMinFactor(hub.icons)).roundToInt() + spec.contentGap.roundToPx())
+        } ?: 0
+        fun bodyLimit(limit: Int) = if (limit == Int.MAX_VALUE) limit else (limit - hubReserve).coerceAtLeast(0)
         val bodyLimitLeft = if (bubbleOnRight) limitLeft else bodyLimit(limitLeft)
         val bodyLimitRight = if (bubbleOnRight) bodyLimit(limitRight) else limitRight
         val measuredSlots = arrayOfNulls<Placeable>(measurables.size)

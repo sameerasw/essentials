@@ -222,7 +222,10 @@ fun stackOverlapWidth(count: Int, size: Dp, maxIcons: Int = OVERLAP_MAX, overflo
 }
 
 fun overlapSlots(icons: List<StackIcon>, maxIcons: Int): Int =
-    (maxIcons - icons.take(maxIcons).count { it.widthFactor > 1f }).coerceAtLeast(1)
+    (maxIcons - icons.take(maxIcons).count { it.widthFactor > 1f }).coerceAtLeast(if (icons.size > 1) 2 else 1)
+
+fun overlapMinFactor(icons: List<StackIcon>): Float =
+    (icons.firstOrNull()?.widthFactor ?: 1f).coerceAtLeast(1f) + if (icons.size > 1) OVERFLOW_STEP else 0f
 
 fun overlapExtraWidth(icons: List<StackIcon>, size: Dp, maxIcons: Int = OVERLAP_MAX, overflow: QueueOverflow = QueueOverflow.Number): Dp =
     queueVisible(icons, overlapSlots(icons, maxIcons), overflow).fold(0.dp) { acc, icon -> acc + size * (icon.widthFactor - 1f).coerceAtLeast(0f) }
