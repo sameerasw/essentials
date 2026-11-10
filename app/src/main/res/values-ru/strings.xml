@@ -1723,7 +1723,7 @@
     <string name="island_show_timers_title">Таймеры и секундомеры </string>
     <string name="feat_conscious_gate_title">Осознанная пауза</string>
     <string name="island_show_glow_title">Показывать акцентное свечение</string>
-    <string name="island_glow_intensity_title">Glow intensity</string>
+    <string name="island_glow_intensity_title">Интенсивность свечения</string>
     <string name="island_prefer_still_title">Prefer still island</string>
     <string name="island_prefer_still_info">Stops the island\'s animations after a few seconds without interaction, so the display can drop to a low refresh rate and save battery. Media visualizers, second by second counters and other looping animations pause until you interact with the island again.</string>
     <string name="island_line_peek_desc">Кратко покажите обновления по всему острову, затем вернитесь к компактному</string>
@@ -1874,9 +1874,9 @@
     <string name="keep_in_full_screen_title">Держать в полном экране</string>
     <string name="disable_interactions_in_full_screen_title">Отключить взаимодействия в полном экране</string>
     <string name="island_balance_compact_title">Визуальная балансировка компактного острова</string>
-    <string name="island_neural_expressive_title">Neural Expressive expanded animations</string>
-    <string name="island_neural_expressive_always_title">Always show on expansion</string>
-    <string name="island_statusbar_aware_width_title">Statusbar aware width</string>
+    <string name="island_neural_expressive_title">Анимация раскрытия Neural Expressive</string>
+    <string name="island_neural_expressive_always_title">Всегда показывать при раскрытии</string>
+    <string name="island_statusbar_aware_width_title">Ширина учитывающая строку состояния</string>
     <string name="island_secondary_bubble_title">Вторичный пузырь</string>
     <string name="island_max_items_title">Максимальное количество отображаемых предметов</string>
     <string name="duo_action_horizontal_slide_brightness">Яркость</string>
@@ -2032,7 +2032,7 @@
     <string name="island_media_use_art_color_title">Advertise album art color</string>
     <string name="island_media_player_style_title">Player style</string>
     <string name="debug_ui_margin_overlay_title">Debug UI margin overlay</string>
-    <string name="island_statusbar_ignore_notifications_title">Ignore notifications</string>
+    <string name="island_statusbar_ignore_notifications_title">Игнорировать уведомления</string>
     <string name="app_volume_apps_section">Приложения </string>
     <string name="label_battery_charging_policy">Политика зарядки</string>
     <string name="label_battery_avg_remaining">Примерно до полной разрядки</string>
@@ -2098,7 +2098,7 @@
     <string name="island_media_bubble_title">Show as a bubble</string>
     <string name="island_media_bubble_wide_title">Wider pill</string>
     <string name="island_media_bubble_fill_art_title">Fill album art</string>
-    <string name="island_transparency_title">Island transparency</string>
+    <string name="island_transparency_title">Прозрачность острова</string>
     <string name="what_is_this">What is this?</string>
     <string name="label_feature_designed_by">Designed by</string>
     <string name="label_how_to_use">How to use</string>
